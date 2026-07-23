@@ -13,109 +13,109 @@ const oldDataset = [
         selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Menu Manager")]',
         fields: [
             {
-                selector: '.switch-wrapper-placeholder.products label.switch',
+                selector: 'label.switch:has(input[value="products"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Orders toggle
-                selector: '.switch-wrapper-placeholder.orders label.switch',
+                selector: 'label.switch:has(input[value="orders"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Request Quotes toggle
-                selector: '.switch-wrapper-placeholder.requested-quotes label.switch',
+                selector: 'label.switch:has(input[value="requested-quotes"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Coupons toggle
-                selector: '.switch-wrapper-placeholder.coupons label.switch',
+                selector: 'label.switch:has(input[value="coupons"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Reports toggle
-                selector: '.switch-wrapper-placeholder.reports label.switch',
+                selector: 'label.switch:has(input[value="reports"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Delivery Time toggle
-                selector: '.switch-wrapper-placeholder.delivery-time-dashboard label.switch',
+                selector: 'label.switch:has(input[value="delivery-time-dashboard"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Reviews toggle
-                selector: '.switch-wrapper-placeholder.reviews label.switch',
+                selector: 'label.switch:has(input[value="reviews"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Withdraw toggle
-                selector: '.switch-wrapper-placeholder.withdraw label.switch',
+                selector: 'label.switch:has(input[value="withdraw"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Badge toggle
-                selector: '.switch-wrapper-placeholder.seller-badge label.switch',
+                selector: 'label.switch:has(input[value="seller-badge"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Product Q&A toggle
-                selector: '.switch-wrapper-placeholder.product-questions-answers label.switch',
+                selector: 'label.switch:has(input[value="product-questions-answers"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Return Requests toggle
-                selector: '.switch-wrapper-placeholder.return-request label.switch',
+                selector: 'label.switch:has(input[value="return-request"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Staff toggle
-                selector: '.switch-wrapper-placeholder.staffs label.switch',
+                selector: 'label.switch:has(input[value="staffs"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Followers toggle
-                selector: '.switch-wrapper-placeholder.followers label.switch',
+                selector: 'label.switch:has(input[value="followers"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Subscription toggle
-                selector: '.switch-wrapper-placeholder.subscription label.switch',
+                selector: 'label.switch:has(input[value="user-subscription"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Announcements toggle
-                selector: '.switch-wrapper-placeholder.announcement label.switch',
+                selector: 'label.switch:has(input[value="announcement"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Admin Support toggle
-                selector: '.switch-wrapper-placeholder.vendor-support label.switch',
+                selector: 'label.switch:has(input[value="vendor-support"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Tools toggle
-                selector: '.switch-wrapper-placeholder.tools label.switch',
+                selector: 'label.switch:has(input[value="tools"])',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Support toggle
-                selector: '.switch-wrapper-placeholder.support label.switch',
+                selector: 'label.switch:has(input[value="support"])',
                 type: 'checkbox',
                 value: true,
             },
@@ -173,7 +173,7 @@ const newDataset = {
         },
         {
             selector: '[data-testid="settings-field-menu_manager_left_menus"]',
-            label: 'Announcement',
+            label: 'Announcements',
             type: 'labeled-switch',
             value: true,
         },
@@ -191,7 +191,7 @@ const newDataset = {
         },
         {
             selector: '[data-testid="settings-field-menu_manager_left_menus"]',
-            label: 'Seller Badge',
+            label: 'Badge',
             type: 'labeled-switch',
             value: true,
         },
@@ -203,13 +203,13 @@ const newDataset = {
         },
         {
             selector: '[data-testid="settings-field-menu_manager_left_menus"]',
-            label: 'Return Request',
+            label: 'Return Requests',
             type: 'labeled-switch',
             value: true,
         },
         {
             selector: '[data-testid="settings-field-menu_manager_left_menus"]',
-            label: 'Staffs',
+            label: 'Staff',
             type: 'labeled-switch',
             value: true,
         },
@@ -228,14 +228,14 @@ const newDataset = {
         {
             // Announcements toggle
             selector: '[data-testid="settings-field-menu_manager_left_menus"]',
-            label: 'Announcement',
+            label: 'Announcements',
             type: 'labeled-switch',
             value: true,
         },
         {
             // Admin Support toggle
             selector: '[data-testid="settings-field-menu_manager_left_menus"]',
-            label: 'Vendor Support',
+            label: 'Admin Support',
             type: 'labeled-switch',
             value: true,
         },
