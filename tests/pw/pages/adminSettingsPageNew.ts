@@ -60,13 +60,20 @@ export class AdminSettingsPageNew extends AdminPage {
     }
 
     async saveSettings() {
-        const saveBtn = this.page.locator(this.saveButtonSelector);
-        if (await saveBtn.isVisible()) {
-            await saveBtn.click();
-            await this.waitForLoadState();
-        } else {
+        const saveBtn = this.page.locator(this.saveButtonSelector).first();
+        if (!(await saveBtn.isVisible())) {
             console.log('Save button not visible. Skipping save.');
+            return;
         }
+        // The new UI disables "Save Changes" until a field is dirty. When the
+        // desired values already match what is stored, `setFieldValues` makes
+        // no change and the button stays disabled — there is nothing to
+        // persist, so treat it as a no-op instead of waiting out the timeout.
+        if (await saveBtn.isDisabled()) {
+            return;
+        }
+        await saveBtn.click();
+        await this.waitForLoadState();
     }
 
     async setFieldValues(fields: Array<any>) {
