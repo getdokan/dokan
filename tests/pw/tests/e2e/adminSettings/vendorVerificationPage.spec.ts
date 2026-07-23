@@ -3,20 +3,42 @@ import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
 
-// Old UI dataset - Locators updated based on the latest HTML structure
-const oldDataset = [
-    {
-        title: 'Admin Old Setting: Vendor Verification Settings',
-        url: 'wp-admin/admin.php?page=dokan#/settings',
-        selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Vendor Verification")]',
-        fields: [
-        ],
-    },
+// Both UIs expose the same two things for vendor verification: the verified
+// icon and the list of verification methods. The Social Connect credentials
+// (app id / secret per provider) only render once a provider panel is expanded
+// in the legacy UI, so they are left to dedicated social coverage.
+//
+// The legacy page identifies a verification method by the method id on its
+// checkbox (1..5); the new UI renders each method as a card whose title labels
+// the row, so the same method is addressed by label there.
+const methods = [
+    { id: '1', label: 'Passport' },
+    { id: '2', label: 'National ID' },
+    { id: '3', label: 'Driving License' },
+    { id: '4', label: 'Address' },
+    { id: '5', label: 'Company' },
 ];
 
-// New UI dataset - Locators previously fixed and are stable based on new UI HTML
+const oldDataset = {
+    title: 'Admin Old Setting: Vendor Verification',
+    url: 'wp-admin/admin.php?page=dokan#/settings',
+    selector: '//div[@class="nav-title" and contains(text(),"Vendor Verification")]',
+    fields: [
+        {
+            // The verified icon is a radio group keyed by icon slug.
+            selector: '//input[@id="dokan_verification[verified_icon][check_circle_solid]"]',
+            type: 'radio-input',
+        },
+        ...methods.map(method => ({
+            selector: `label.switch:has(input[value="${method.id}"])`,
+            type: 'checkbox',
+            value: true,
+        })),
+    ],
+};
+
 const newDataset = {
-    title: 'Admin Setting: Vendor -> Vendor Verification',
+    title: 'Admin Setting: Verification -> Vendor Verification',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
     selector: '[data-testid="settings-menu-verification"] >> [data-testid="settings-menu-vendor-verification-page"]',
     fields: [
@@ -25,11 +47,18 @@ const newDataset = {
             type: 'radix-dropdown',
             value: 'Check Circle (Solid)',
         },
+        ...methods.map(method => ({
+            // The methods list is a custom renderer, so it carries a section
+            // testid rather than a per-field one.
+            selector: '[data-testid="settings-section-verification-methods-section"]',
+            label: method.label,
+            type: 'labeled-switch',
+            value: true,
+        })),
     ],
 };
 
-// Playwright Test suite begins here
-test.describe('Admin Setting: Vendor -> Vendor Verification', () => {
+test.describe('Admin Setting: Verification -> Vendor Verification', () => {
     let loginPage: LoginPage;
     let adminSettingsPage: AdminSettingsPage;
 
@@ -37,7 +66,6 @@ test.describe('Admin Setting: Vendor -> Vendor Verification', () => {
         loginPage = new LoginPage(page);
         adminSettingsPage = new AdminSettingsPage(page);
 
-        // Login as admin
         await loginPage.adminLogin(data.admin);
     });
 
@@ -47,15 +75,7 @@ test.describe('Admin Setting: Vendor -> Vendor Verification', () => {
         });
 
         await test.step('Check old settings', async () => {
-            for (const dataset of oldDataset) {
-                await test.step(dataset.title, async () => {
-                    await adminSettingsPage.checkSettings(dataset);
-                });
-            }
-        });
-
-        await test.step('Reload new settings urls', async () => {
-            await adminSettingsPage.reloadUrl(newDataset.url);
+            await adminSettingsPage.checkSettings(oldDataset);
         });
 
         await test.step('Check new settings', async () => {
@@ -63,25 +83,14 @@ test.describe('Admin Setting: Vendor -> Vendor Verification', () => {
         });
     });
 
-    test('Old to new Vendor Verification Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    test('Old to New Vendor Verification Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update old settings', async () => {
-            // Assuming this method sets the save button selector for the old UI
             await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);
-            for (const dataset of oldDataset) {
-                await test.step('Update ' + dataset.title, async () => {
-                    await adminSettingsPage.updateSettings(dataset);
-                });
-            }
+            await adminSettingsPage.updateSettings(oldDataset);
         });
 
-        await test.step('Reload old settings urls', async () => {
-            for (const dataset of oldDataset) {
-                await adminSettingsPage.reloadUrl(dataset.url);
-            }
-        });
-
-        await test.step('Reload new settings urls', async () => {
-            await adminSettingsPage.reloadUrl(newDataset.url);
+        await test.step('Reload old settings url', async () => {
+            await adminSettingsPage.reloadUrl(oldDataset.url);
         });
 
         await test.step('Check new settings', async () => {
