@@ -12,6 +12,8 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * bulk edit wrote `_dokan_catalog_mode` meta to caller-supplied product ids with no ownership
  * check, while the sibling bulk-delete handler already guards each id.
  *
+ * @since DOKAN_SINCE
+ *
  * @group catalog-mode
  * @group dokan-authorization
  * @group security
@@ -47,11 +49,21 @@ class CatalogModeBulkEditOwnershipTest extends DokanTestCase {
 
         $this->own_product = $this->factory()->product
             ->set_seller_id( $this->seller_id1 )
-            ->create( [ 'name' => 'Own Product', 'regular_price' => '10' ] );
+            ->create(
+                [
+                    'name'          => 'Own Product',
+                    'regular_price' => '10',
+                ]
+            );
 
         $this->foreign_product = $this->factory()->product
             ->set_seller_id( $this->seller_id2 )
-            ->create( [ 'name' => 'Foreign Product', 'regular_price' => '20' ] );
+            ->create(
+                [
+                    'name'          => 'Foreign Product',
+                    'regular_price' => '20',
+                ]
+            );
     }
 
     /**
