@@ -2,6 +2,16 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { ApiUtils } from '@utils/apiUtils';
+import { payloads } from '@utils/payloads';
+
+// Both the legacy `subscription_pack` select and the new `subscription_view_page`
+// picker list real WP pages, so the dataset can only name a page that exists —
+// a hardcoded post id or title from another install just never appears as an
+// option. Saving the setting also stamps the subscription-pack shortcode into
+// the chosen page (Shortcode::insert_pack_shortcode_into_page), so this uses a
+// dedicated page rather than a shared one such as Dashboard or Store List.
+const subscriptionPageTitle = 'Product Subscription';
 
 const oldDataset = [
     {
@@ -12,7 +22,7 @@ const oldDataset = [
             {
                 selector: '//select[@id="dokan_product_subscription[subscription_pack]"]',
                 type: 'select',
-                value: '69' // Privacy Policy (example)
+                value: subscriptionPageTitle,
             },
             {
                 selector: '//label[@for="dokan_product_subscription[enable_pricing]"]//label[@class="switch tips"]',
@@ -53,7 +63,7 @@ const newDataset = {
         {
             selector: '[data-testid="settings-field-subscription_view_page"] button[role="combobox"]',
             type: 'radix-dropdown',
-            value: 'Product Subscription',
+            value: subscriptionPageTitle,
         },
         {
             selector: '[data-testid="settings-field-subscription_in_registration"] [role="switch"]',
@@ -76,6 +86,13 @@ const newDataset = {
 test.describe('Admin Setting: Vendor -> vendor_subscription', () => {
     let loginPage: LoginPage;
     let adminSettingsPage: AdminSettingsPage;
+
+    test.beforeAll(async () => {
+        // `createPage` is idempotent — it reuses the page when the slug already
+        // exists, so repeat runs keep pointing at the same post id.
+        const apiUtils = new ApiUtils(null);
+        await apiUtils.createPage({ title: subscriptionPageTitle, status: 'publish' }, payloads.adminAuth);
+    });
 
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
