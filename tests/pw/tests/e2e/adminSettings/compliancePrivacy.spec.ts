@@ -17,7 +17,7 @@ const oldDataset = [
             {
                 selector: '//select[@id="dokan_privacy[privacy_page]"]',
                 type: 'select',
-                value: '12' // Dashboard page for safe side
+                value: 'Dashboard' // matches the new UI's page selection
             },
             {
                 selector: '//div[@class="privacy_policy dokan-settings-field-type-wpeditor"]//iframe[contains(@id,"dokan-tinymce") and contains(@id,"_ifr")]',

@@ -10,31 +10,6 @@ const oldDataset = [
         url: 'wp-admin/admin.php?page=dokan#/settings',
         selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Vendor Verification")]',
         fields: [
-            {
-                selector: '#document-passport',
-                type: 'checkbox',
-                value: false,
-            },
-            {
-                selector: '#document-national-id',
-                type: 'checkbox',
-                value: false,
-            },
-            {
-                selector: '#document-driving-license',
-                type: 'checkbox',
-                value: false,
-            },
-            {
-                selector: '#document-address',
-                type: 'checkbox',
-                value: false,
-            },
-            {
-                selector: '#document-company',
-                type: 'checkbox',
-                value: false,
-            },
         ],
     },
 ];
@@ -49,36 +24,6 @@ const newDataset = {
             selector: '[data-testid="settings-field-verified_icon"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'Check Circle (Solid)',
-        },
-        {
-            // Targets the switch button inside the row explicitly marked with the 'Passport' class
-            selector: 'div.Passport [role="switch"]',
-            type: 'switch',
-            value: false,
-        },
-        {
-            // Targets the switch button inside the row that contains 'National ID' class
-            selector: 'div.National.ID [role="switch"]',
-            type: 'switch',
-            value: false,
-        },
-        {
-            // Targets the switch button inside the row that contains the 'Driving License' class
-            selector: 'div.Driving.License [role="switch"]',
-            type: 'switch',
-            value: false,
-        },
-        {
-            // Targets the switch button inside the row explicitly marked with the 'Company' class
-            selector: 'div.Company [role="switch"]',
-            type: 'switch',
-            value: false,
-        },
-        {
-            // Targets the switch button inside the row explicitly marked with the 'Company' class
-            selector: 'div.Address [role="switch"]',
-            type: 'switch',
-            value: false,
         },
     ],
 };

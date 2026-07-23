@@ -10,8 +10,10 @@ const oldDataset = [
         url: 'wp-admin/admin.php?page=dokan#/settings',
         selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Appearance")]',
         fields: [
-         {
-            selector: '.recaptcha_validation_label .social-switch-wraper .switch',
+        {
+            // Captcha lives under Moderation -> Captcha in the new UI but still
+            // bridges to dokan_appearance on the legacy Appearance page.
+            selector: 'label[for="dokan_appearance[captcha_enable_status]"]',
             type: 'checkbox',
             value: true,
         },
@@ -31,9 +33,10 @@ const oldDataset = [
             value: true,
         },
         {
+            // Inverted bridge: new "Dokan font-awesome" on == legacy "disable" off.
             selector: 'label[for="dokan_appearance[disable_dokan_fontawesome]"] .switch',
             type: 'checkbox',
-            value: true,
+            value: false,
         },
         ]
     }

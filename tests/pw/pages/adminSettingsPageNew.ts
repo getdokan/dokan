@@ -165,6 +165,17 @@ export class AdminSettingsPageNew extends AdminPage {
                     await editor.fill(field.value);
                     break;
                 }
+                case 'labeled-switch': {
+                    // Repeater rows (menu manager, verification methods) render a
+                    // switch per row with no id of its own, so the row is found by
+                    // its visible label and the switch taken from within it.
+                    const sw = this.labeledSwitch(field);
+                    await sw.waitFor({ state: 'visible', timeout: 15000 });
+                    if ((await sw.getAttribute('aria-checked') === 'true') !== field.value) {
+                        await sw.click();
+                    }
+                    break;
+                }
                 case 'radio-input': {
                     // Plain `input[type="radio"]` (legacy settings markup).
                     await this.page.locator(field.selector).first().check();
@@ -249,13 +260,16 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'color-picker': {
-                    const picker = this.page.locator(field.selector);
-                    await picker.click();
-                    const input = picker.locator('input[type="text"]');
-                    if (await input.count() > 0) {
-                        await input.fill(field.value);
-                        await input.press('Enter');
-                    }
+                    // The field renders a popover trigger whose swatch shows the
+                    // current colour; the popover itself is a WP ColorPicker with
+                    // a hex text input. `field.value` is a hex string.
+                    const wrapper = this.page.locator(field.selector);
+                    await wrapper.locator('button').first().click();
+                    const hex = this.page.locator('[role="dialog"] input.components-input-control__input').last();
+                    await hex.waitFor({ state: 'visible', timeout: 15000 });
+                    await hex.fill(field.value.replace('#', ''));
+                    await hex.press('Enter');
+                    await this.page.keyboard.press('Escape');
                     break;
                 }
                 case 'readOnly': {
@@ -338,10 +352,9 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'color-picker': {
-                    const color = await this.page.locator(field.selector).evaluate(el => {
-                        return getComputedStyle(el).backgroundColor;
-                    });
-                    expect(color, field.selector).toBe(field.value);
+                    const swatch = this.page.locator(field.selector).locator('button div').first();
+                    const color = await swatch.evaluate(el => getComputedStyle(el).backgroundColor);
+                    expect(color, field.selector).toBe(this.hexToRgb(field.value));
                     break;
                 }
                 case 'textareaOld': {
@@ -396,6 +409,11 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect((await editor.innerText()).trim(), field.selector).toBe(field.value);
                     break;
                 }
+                case 'labeled-switch': {
+                    await expect(this.labeledSwitch(field), `${field.selector} [${field.label}]`)
+                        .toHaveAttribute('aria-checked', String(field.value));
+                    break;
+                }
                 case 'radio-input': {
                     await expect(this.page.locator(field.selector).first()).toBeChecked();
                     break;
@@ -413,6 +431,21 @@ export class AdminSettingsPageNew extends AdminPage {
     }
 
     // ---- control helpers shared by set/assert -------------------------------
+
+    labeledSwitch(field: any) {
+        // Climb from the row's label text to the nearest ancestor that owns a
+        // switch, then take that switch.
+        const xpath =
+            `xpath=.//*[normalize-space(text())=${JSON.stringify(field.label)}]` +
+            `/ancestor::*[.//*[@role="switch"]][1]//*[@role="switch"]`;
+        return this.page.locator(field.selector).locator(xpath).first();
+    }
+
+    hexToRgb(hex: string): string {
+        const h = hex.replace('#', '');
+        const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+        return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+    }
 
     async selectNativeOption(field: any) {
         const select = this.page.locator(field.selector).first();

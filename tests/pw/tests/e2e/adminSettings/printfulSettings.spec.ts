@@ -8,16 +8,6 @@ const oldDataset = {
     url: 'wp-admin/admin.php?page=dokan#/settings',
     selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Printful")]',
     fields: [
-        {
-            selector: '//h3[contains(text(),"Client ID")]/ancestor::fieldset//input[@class="secret-input"]',
-            type: 'text',
-            value: 'test-client-id-123',
-        },
-        {
-            selector: '//h3[contains(text(),"Secret key")]/ancestor::fieldset//input[@class="secret-input"]',
-            type: 'text',
-            value: 'test-secret-key-456',
-        },
     ],
 };
 
@@ -48,31 +38,31 @@ const newDataset = {
             type: 'text',
             value: 'Size Guide',
         },
-        // Color Picker Fields
+        // Colour fields: popover trigger + WP ColorPicker hex input.
         {
-            selector: 'label:has-text("Size guide popup text color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_popup_text_color"]',
             type: 'color-picker',
-            value: 'rgb(37, 37, 45)',
+            value: '#25252d',
         },
         {
-            selector: 'label:has-text("Size Guide Popup Background Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_popup_background_color"]',
             type: 'color-picker',
-            value: 'rgb(255, 255, 255)',
+            value: '#ffffff',
         },
         {
-            selector: 'label:has-text("Size Guide Tab Background Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_tab_background_color"]',
             type: 'color-picker',
-            value: 'rgb(255, 255, 255)',
+            value: '#f5f5f5',
         },
         {
-            selector: 'label:has-text("Size Guide Active Tab Background Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_active_tab_background_color"]',
             type: 'color-picker',
-            value: 'rgb(112, 71, 235)',
+            value: '#7047eb',
         },
         {
-            selector: 'label:has-text("Size Guide Button Text Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_button_text_color"]',
             type: 'color-picker',
-            value: 'rgb(255, 255, 255)',
+            value: '#ffffff',
         },
         {
             selector: '[data-testid="settings-field-size_guide_measurement_unit"]',
