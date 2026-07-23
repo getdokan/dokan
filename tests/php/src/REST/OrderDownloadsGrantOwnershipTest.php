@@ -16,6 +16,8 @@ use WP_REST_Request;
  * twin of L4 (getdokan/dokan#3293). A vendor granting downloads on their own order
  * must not be able to grant access to another vendor's downloadable files.
  *
+ * @since DOKAN_SINCE
+ *
  * @group dokan-order-downloads
  * @group dokan-authorization
  * @group security
@@ -52,11 +54,20 @@ class OrderDownloadsGrantOwnershipTest extends DokanTestCase {
      */
     protected int $order_id;
 
+    /**
+     * Approved-directories mode captured in set_up() and restored in tear_down().
+     *
+     * @var string
+     */
+    protected string $previous_download_mode;
+
     public function set_up() {
         parent::set_up();
 
-        // Let the test's example.com download files validate without the approved-directories gate.
-        wc_get_container()->get( DownloadApprovedDirectories::class )->set_mode( DownloadApprovedDirectories::MODE_DISABLED );
+        // Disable the approved-directories gate so the test's example.com files validate; restored in tear_down().
+        $approved_directories         = wc_get_container()->get( DownloadApprovedDirectories::class );
+        $this->previous_download_mode = $approved_directories->get_mode();
+        $approved_directories->set_mode( DownloadApprovedDirectories::MODE_DISABLED );
 
         ( new OrderControllerV2() )->register_routes();
 
@@ -80,6 +91,23 @@ class OrderDownloadsGrantOwnershipTest extends DokanTestCase {
         $granted = $this->granted_product_ids( $this->order_id );
         $this->assertContains( $this->own_product, $granted, 'Vendor should grant downloads for their own product.' );
         $this->assertNotContains( $this->foreign_product, $granted, 'Vendor must not grant downloads for another vendor\'s product.' );
+    }
+
+    /**
+     * An admin / shop manager is exempt from the ownership guard and may grant any vendor's product downloads.
+     */
+    public function test_admin_can_grant_downloads_for_any_product() {
+        wp_set_current_user( $this->admin_id );
+
+        $request = new WP_REST_Request( 'POST', "/dokan/v2/orders/{$this->order_id}/downloads" );
+        $request->set_body_params( [ 'ids' => [ $this->own_product, $this->foreign_product ] ] );
+        $response = $this->server->dispatch( $request );
+
+        $this->assertSame( 200, $response->get_status() );
+
+        $granted = $this->granted_product_ids( $this->order_id );
+        $this->assertContains( $this->own_product, $granted, 'Admin should grant downloads for any product.' );
+        $this->assertContains( $this->foreign_product, $granted, 'Admin (manage_woocommerce) is exempt from the vendor ownership guard.' );
     }
 
     /**
@@ -118,6 +146,10 @@ class OrderDownloadsGrantOwnershipTest extends DokanTestCase {
 
     public function tear_down() {
         wp_set_current_user( 0 );
+
+        // Restore the shared approved-directories mode so disabling it here doesn't leak into later tests.
+        wc_get_container()->get( DownloadApprovedDirectories::class )->set_mode( $this->previous_download_mode );
+
         parent::tear_down();
     }
 }
