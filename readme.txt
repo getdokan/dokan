@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.9
+Stable tag: 5.0.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.10 ( Jul 21, 2026 ) =
+- **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
+- **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
+- **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
+
 = v5.0.9 ( Jul 14, 2026 ) =
 - **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
 - **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
@@ -400,26 +405,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
 - **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
 - **fix:** Enabled the "View in site" button for all published products.
-
-= v5.0.5 ( Jun 19, 2026 ) =
-- **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
-- **update:** Updated price formatting in the product editor to use locale-specific display.
-- **fix:** Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.
-- **fix:** Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.
-- **fix:** Restricted the Products REST endpoint so vendors can no longer access other vendors' products via the id parameter.
-- **fix:** Decoded HTML entities in product category labels for correct rendering.
-- **fix:** Corrected the product edit URL and improved dashboard navigation for the new product UI.
-
-= v5.0.4 ( Jun 08, 2026 ) =
-- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
-- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
-- **fix:** Allowed vendors to create new product tags inline from the new product editor.
-- **fix:** Resolved withdraw approval failing on an exact fractional balance.
-- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
-
-= v5.0.3 ( May 21, 2026 ) =
-- **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
-- **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
-- **fix:** Translated the "Actions" column header on vendor dashboard DataViews tables.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
