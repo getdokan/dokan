@@ -24,34 +24,27 @@ const oldDataset = {
 const newDataset = {
     title: 'Admin Setting: Printful Integration',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_product >> #dokan_settings_product_printful_integration',
+    selector: '[data-testid="settings-menu-product"] >> [data-testid="settings-menu-printful_integration"]',
     fields: [
+        // The Printful app enable toggle and app-name field were dropped from the
+        // schema; the integration is now driven by the Client ID / Secret Key pair.
         {
-            selector: '#dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_enable button[role="switch"]',
-            type: 'toggle',
-        },
-        {
-            selector: '#dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_app_name input[placeholder="Enter your app name"]',
-            type: 'text',
-            value: 'Test Printful App',
-        },
-        {
-            selector: 'input[placeholder="Enter your Client ID"]',
+            selector: '[data-testid="settings-field-printful_client_id"] input[type="password"]',
             type: 'text',
             value: 'test-client-id-123',
         },
         {
-            selector: 'input[placeholder="Enter your Secret Key"]',
+            selector: '[data-testid="settings-field-printful_secret_key"] input[type="password"]',
             type: 'text',
             value: 'test-secret-key-456',
         },
         {
-            selector: '#dokan_settings_product_printful_integration_size_guide_settings_size_guide_popup_title input',
+            selector: '[data-testid="settings-field-size_guide_popup_title"] input',
             type: 'text',
             value: 'Size Guide',
         },
         {
-            selector: '#dokan_settings_product_printful_integration_size_guide_settings_size_guide_button_text input',
+            selector: '[data-testid="settings-field-size_guide_button_text"] input',
             type: 'text',
             value: 'Size Guide',
         },
@@ -82,9 +75,9 @@ const newDataset = {
             value: 'rgb(255, 255, 255)',
         },
         {
-            selector: '#dokan_settings_product_printful_integration_size_guide_settings_size_guide_measurement_unit button[name="inches"][role="radio"]',
-            type: 'radio',
-            value: 'inches',
+            selector: '[data-testid="settings-field-size_guide_measurement_unit"]',
+            type: 'radio-capsule',
+            value: 'Inches',
         },
     ],
 };

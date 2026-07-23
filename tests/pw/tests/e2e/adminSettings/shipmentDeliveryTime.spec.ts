@@ -66,15 +66,15 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Shipment -> dashboard-delivery-days-page',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_shipment >> #dokan_settings_shipment_dashboard-delivery-days-page',
+    selector: '[data-testid="settings-menu-shipment"] >> [data-testid="settings-menu-dashboard-delivery-days-page"]',
     fields: [
         {
-            selector: '#dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_allow_vendor_override_settings button',
+            selector: '[data-testid="settings-field-allow_vendor_override_settings"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_selection_required button',
+            selector: '[data-testid="settings-field-selection_required"] [role="switch"]',
             type: 'switch',
             value: true,
         },
@@ -89,27 +89,27 @@ const newDataset = {
         //     value: true,
         // },
         {
-            selector: '#dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_date_label input[type="field"]',
+            selector: '[data-testid="settings-field-delivery_date_label"] input',
             type: 'text',
             value: 'Delivery Date Set',
         },
         {
-            selector: '#dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_preorder_date input[type="number"]',
+            selector: '[data-testid="settings-field-preorder_date"] input[type="number"]',
             type: 'number',
             value: '10',
         },
         {
-            selector: '#dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_time_slot_minutes input[type="number"]',
+            selector: '[data-testid="settings-field-time_slot_minutes"] input[type="number"]',
             type: 'number',
             value: '60',
         },
         {
-            selector: '#dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_order_per_slot input[type="number"]',
+            selector: '[data-testid="settings-field-order_per_slot"] input[type="number"]',
             type: 'number',
             value: '5',
         },
         {
-            selector: '#dokan_settings_shipment_dashboard-delivery-days-page_dokan_delivery_time_delivery_box_info textarea',
+            selector: '[data-testid="settings-field-delivery_box_info"] textarea',
             type: 'text',
             value: 'This store needs Y% day(s) to process your delivery request new',
         },

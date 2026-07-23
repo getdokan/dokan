@@ -43,10 +43,10 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor -> Vendor Subscription',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_vendor >> #dokan_settings_vendor_vendor_subscription',
+    selector: '[data-testid="settings-menu-vendor"] >> [data-testid="settings-menu-vendor_subscription"]',
     fields: [
         {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_vendor_subscription button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_subscription"] [role="switch"]',
             type: 'switch',
             value: true,
         },
@@ -56,19 +56,19 @@ const newDataset = {
             value: 'Product Subscription',
         },
         {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_subscription_in_registration button[role="switch"]',
+            selector: '[data-testid="settings-field-subscription_in_registration"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_alert_days_before_expiry input[type="number"]',
+            selector: '[data-testid="settings-field-alert_days_before_expiry"] input[type="number"]',
             type: 'number',
             value: '14',
         },
         {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_products_status_on_expiry button[name="draft"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-products_status_on_expiry"]',
+            type: 'radio-capsule',
+            value: 'Draft',
         },
     ],
 };

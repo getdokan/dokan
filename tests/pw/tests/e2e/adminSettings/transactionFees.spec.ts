@@ -31,22 +31,22 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Transaction -> Fees',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_transaction >> #dokan_settings_transaction_fees',
+    selector: '[data-testid="settings-menu-transaction"] >> [data-testid="settings-menu-fees"]',
     fields: [
         {
-            selector: '#dokan_settings_transaction_fees_fees_shipping_fee button[name="seller"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-shipping_fee_recipient"]',
+            type: 'radio-capsule',
+            value: 'Vendor',
         },
         {
-            selector: '#dokan_settings_transaction_fees_fees_product_tax_fee button[name="seller"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-product_tax_fee_recipient"]',
+            type: 'radio-capsule',
+            value: 'Vendor',
         },
         {
-            selector: '#dokan_settings_transaction_fees_fees_shipping_tax_fee button[name="seller"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-shipping_tax_fee_recipient"]',
+            type: 'radio-capsule',
+            value: 'Vendor',
         },
     ],
 };

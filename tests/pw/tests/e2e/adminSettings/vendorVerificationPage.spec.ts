@@ -43,7 +43,7 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor -> Vendor Verification',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_verification >> #dokan_settings_verification_vendor-verification-page',
+    selector: '[data-testid="settings-menu-verification"] >> [data-testid="settings-menu-vendor-verification-page"]',
     fields: [
         {
             selector: '#verified_icon',

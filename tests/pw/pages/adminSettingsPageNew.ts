@@ -2,7 +2,12 @@ import { expect } from '@playwright/test';
 import { AdminPage } from './adminPage';
 
 export class AdminSettingsPageNew extends AdminPage {
-    saveButtonSelector: string = '#dokan-admin-settings-save-btn button'
+    // The new settings UI renders one save control per visible scope, tagged
+    // `settings-save-{scopeId}` (settings-content.tsx). The old
+    // `#dokan-admin-settings-save-btn` id no longer exists, and `saveSettings()`
+    // skips silently when the selector misses — so a stale value here means
+    // "update" steps quietly never persist.
+    saveButtonSelector: string = '[data-testid^="settings-save-"] button'
     oldSaveButtonSelector: string = '#submit'
 
     setSaveButtonSelector(selector: string) {
@@ -114,6 +119,53 @@ export class AdminSettingsPageNew extends AdminPage {
                     }
                     break;
                 }
+                case 'radio-capsule': {
+                    // Toggle group: `field.selector` is the field wrapper and
+                    // `field.value` the option's visible label. The selected
+                    // button carries aria-pressed="true".
+                    const option = this.radioCapsuleOption(field);
+                    await option.waitFor({ state: 'visible', timeout: 15000 });
+                    if (await option.getAttribute('aria-pressed') !== 'true') {
+                        await option.click();
+                    }
+                    break;
+                }
+                case 'customize-radio': {
+                    // Card-style radio group: each option renders a visible
+                    // `span[role="radio"]` next to a hidden radio input that
+                    // carries the stored option value.
+                    const input = this.customizeRadioInput(field);
+                    await input.waitFor({ state: 'attached', timeout: 15000 });
+                    if (!(await input.isChecked())) {
+                        await input.locator('xpath=preceding-sibling::span[@role="radio"][1]').click();
+                    }
+                    break;
+                }
+                case 'multicheck': {
+                    // `field.value` is the list of option labels that must end up checked.
+                    for (const label of field.value as string[]) {
+                        const box = this.multicheckOption(field, label);
+                        await box.waitFor({ state: 'visible', timeout: 15000 });
+                        if (await box.getAttribute('aria-checked') !== 'true') {
+                            await box.click();
+                        }
+                    }
+                    break;
+                }
+                case 'richtext': {
+                    const editor = this.page.locator(field.selector).first();
+                    await editor.waitFor({ state: 'visible' });
+                    await editor.fill(field.value);
+                    break;
+                }
+                case 'radio-input': {
+                    // Plain `input[type="radio"]` (legacy settings markup).
+                    await this.page.locator(field.selector).first().check();
+                    break;
+                }
+                case 'visible':
+                    // Presence-only field: nothing to set.
+                    break;
                 case 'checkbox': {
                     // Handle checkbox with "enabled" class - Check input element state but click on label
                     const inputElement = this.page.locator(field.selector).locator('input[type="checkbox"]');
@@ -306,9 +358,41 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(isChecked).toBe(field.value);
                     break;
                 }
+                case 'radio-capsule': {
+                    await expect(this.radioCapsuleOption(field)).toHaveAttribute('aria-pressed', 'true');
+                    break;
+                }
                 case 'customize-radio': {
-                    const locator = this.page.locator(field.selector);
-                    await expect(locator).toBeVisible();
+                    await expect(this.customizeRadioInput(field)).toBeChecked();
+                    break;
+                }
+                case 'visible': {
+                    // For legacy widgets that expose no input and mark the
+                    // selected item with a class: the selector encodes the
+                    // expected state, so resolving it is the assertion.
+                    // `setFieldValues` has no matching case — these fields are
+                    // read-only, as they were before.
+                    await expect(this.page.locator(field.selector)).toBeVisible();
+                    break;
+                }
+                case 'multicheck': {
+                    for (const label of field.value as string[]) {
+                        await expect(this.multicheckOption(field, label)).toHaveAttribute('aria-checked', 'true');
+                    }
+                    break;
+                }
+                case 'richtext': {
+                    const editor = this.page.locator(field.selector).first();
+                    await editor.waitFor({ state: 'visible' });
+                    expect((await editor.innerText()).trim()).toBe(field.value);
+                    break;
+                }
+                case 'radio-input': {
+                    await expect(this.page.locator(field.selector).first()).toBeChecked();
+                    break;
+                }
+                case 'visible': {
+                    await expect(this.page.locator(field.selector).first()).toBeVisible();
                     break;
                 }
             }
@@ -317,5 +401,23 @@ export class AdminSettingsPageNew extends AdminPage {
 
     splitSelectors(selector: string): string[] {
         return selector.split('>>').map(s => s.trim());
+    }
+
+    // ---- control helpers shared by set/assert -------------------------------
+
+    radioCapsuleOption(field: any) {
+        return this.page.locator(field.selector).getByRole('button', { name: field.value, exact: true });
+    }
+
+    customizeRadioInput(field: any) {
+        return this.page.locator(`${field.selector} input[type="radio"][value="${field.value}"]`);
+    }
+
+    multicheckOption(field: any, label: string) {
+        return this.page
+            .locator(`${field.selector} div[role="group"]`)
+            .filter({ hasText: label })
+            .locator('[role="checkbox"]')
+            .first();
     }
 }

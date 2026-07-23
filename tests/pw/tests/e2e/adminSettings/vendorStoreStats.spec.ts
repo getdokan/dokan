@@ -10,7 +10,9 @@ const oldDataset = [
         selector: '//div[@class="nav-title" and contains(text(),"Store Stats")]',
         fields: [
             {
-                selector: '//label[@for="dokan_store_stats[enable]"]//label[@class="switch tips"]',
+                // Legacy "Store Stats" section is the vendor-analytics module's
+                // `dokan_vendor_analytics` settings group.
+                selector: '//label[@for="dokan_vendor_analytics[add_tracking_code]"]//label[@class="switch tips"]',
                 type: 'checkbox',
                 value: true,
             },
@@ -21,10 +23,10 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor -> store_state',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_vendor >> #dokan_settings_vendor_store_state',
+    selector: '[data-testid="settings-menu-vendor"] >> [data-testid="settings-menu-store_state"]',
     fields: [
         {
-            selector: '#dokan_settings_vendor_store_state_store_stats_overview button',
+            selector: '[data-testid="settings-field-analytics_add_tracking_code"] [role="switch"]',
             type: 'switch',
             value: true,
         },

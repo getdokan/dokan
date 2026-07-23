@@ -127,7 +127,7 @@ const oldDataset = [
 const newDataset = { 
     title: 'Admin Setting: Email Verification', 
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_appearance >> #dokan_settings_appearance_dashboard-menu-manager-page',
+    selector: '[data-testid="settings-menu-appearance"] >> [data-testid="settings-menu-dashboard-menu-manager"]',
     fields: [
         {
             selector: '#switch-wrapper-dashboard button[role="switch"]',

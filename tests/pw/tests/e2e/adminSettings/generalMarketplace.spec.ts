@@ -65,42 +65,42 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: General -> marketplace',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_general >> #dokan_settings_general_marketplace',
+    selector: '[data-testid="settings-menu-general"] >> [data-testid="settings-menu-marketplace"]',
     fields: [
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url_slug input',
+            selector: '[data-testid="settings-field-vendor_store_url_slug"] input',
             type: 'text',
             value: 'my-url',
         },
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode button',
+            selector: '[data-testid="settings-field-enable_single_seller_mode"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode button[name="none"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-store_category_mode"]',
+            type: 'radio-capsule',
+            value: 'None',
         },
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors button[role="switch"]',
+            selector: '[data-testid="settings-field-show_customer_details_to_vendors"] [role="switch"]',
             type: 'switch',
             value: false, // Note: Inverted value compared to old setting
         },
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_guest_product_enquiry button[role="switch"]',
+            selector: '[data-testid="settings-field-guest_product_enquiry"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_add_to_cart_button_visibility button[role="switch"]',
+            selector: '[data-testid="settings-field-catalog_mode_add_to_cart_button_visibility"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_general_marketplace_live_search_search_box_radio div[role="radio"][aria-label="Search with Suggestion Box"]',
-            type: 'radio',
-            value: 'true', // Options: 'Search with Suggestion Box', 'Autoload Replace Current Content'
+            selector: '[data-testid="settings-field-live_search_option"]',
+            type: 'customize-radio',
+            value: 'suggestion_box', // Options: 'Search with Suggestion Box', 'Autoload Replace Current Content'
         },
     ],
 };

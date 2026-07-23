@@ -68,20 +68,20 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor → Verification SMS Gateways',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_verification >> #dokan_settings_verification_sms-gateways-page',
+    selector: '[data-testid="settings-menu-verification"] >> [data-testid="settings-menu-sms-gateways-page"]',
     fields: [
         {
-            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_sms_provider button[name="twilio"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-sms_provider"]',
+            type: 'radio-capsule',
+            value: 'Twilio',
         },
         {
-            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_connect_to_twilio button[role="switch"]',
+            selector: '[data-testid="settings-field-connect_to_twilio"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_from_number input[type="password"]',
+            selector: '[data-testid="settings-field-from_number"] input[type="password"]',
             type: 'text',
             value: '+1234567890',
         },
@@ -96,9 +96,9 @@ const newDataset = {
             value: 'auth_token_123',
         },
         {
-            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_sms_code_type button[name="numeric"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-sms_code_type"]',
+            type: 'radio-capsule',
+            value: 'Numeric',
         },
         {
             selector: 'input[placeholder="Enter sender name..."]',

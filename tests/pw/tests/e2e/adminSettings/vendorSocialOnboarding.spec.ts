@@ -20,106 +20,106 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor -> social_onboarding',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_vendor >> #dokan_settings_vendor_social_onboarding',
+    selector: '[data-testid="settings-menu-vendor"] >> [data-testid="settings-menu-vendor_social_onboarding"]',
     fields: [
         // Main Social Login Toggle
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_social_login button[role="switch"]',
+            selector: '[data-testid="settings-field-vso_social_login"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Facebook Section - Enable first, then inputs
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_enabled button[role="switch"]',
+            selector: '[data-testid="settings-field-vso_facebook_enabled"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_app_id input',
+            selector: '[data-testid="settings-field-vso_facebook_app_id"] input[type="password"]',
             type: 'text',
             value: 'facebook-app-id-test-12345',
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_app_secret input',
+            selector: '[data-testid="settings-field-vso_facebook_app_secret"] input[type="password"]',
             type: 'text',
             value: 'facebook-app-secret-test-67890',
         },
         
         // X (Twitter) Section - Enable first, then inputs
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_enabled button[role="switch"]',
+            selector: '[data-testid="settings-field-vso_x_enabled"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_api_key input',
+            selector: '[data-testid="settings-field-vso_x_api_key"] input[type="password"]',
             type: 'text',
             value: 'x-api-key-test-12345',
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_api_secret input',
+            selector: '[data-testid="settings-field-vso_x_api_secret"] input[type="password"]',
             type: 'text',
             value: 'x-api-secret-test-67890',
         },
         
         // Google Section - Enable first, then inputs
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_enabled button[role="switch"]',
+            selector: '[data-testid="settings-field-vso_google_enabled"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_client_id input',
+            selector: '[data-testid="settings-field-vso_google_client_id"] input[type="password"]',
             type: 'text',
             value: 'google-client-id-test-12345',
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_client_secret input',
+            selector: '[data-testid="settings-field-vso_google_client_secret"] input[type="password"]',
             type: 'text',
             value: 'google-client-secret-test-67890',
         },
         
         // LinkedIn Section - Enable first, then inputs
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_enabled button[role="switch"]',
+            selector: '[data-testid="settings-field-vso_linkedin_enabled"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_client_id input',
+            selector: '[data-testid="settings-field-vso_linkedin_client_id"] input[type="password"]',
             type: 'text',
             value: 'linkedin-client-id-test-12345',
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_client_secret input',
+            selector: '[data-testid="settings-field-vso_linkedin_client_secret"] input[type="password"]',
             type: 'text',
             value: 'linkedin-client-secret-test-67890',
         },
         
         // Apple Section - Enable first, then inputs
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_enabled button[role="switch"]',
+            selector: '[data-testid="settings-field-vso_apple_enabled"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_service_id input',
+            selector: '[data-testid="settings-field-vso_apple_service_id"] input[type="password"]',
             type: 'text',
             value: 'apple-service-id-test-12345',
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_team_id input',
+            selector: '[data-testid="settings-field-vso_apple_team_id"] input[type="password"]',
             type: 'text',
             value: 'apple-team-id-test-67890',
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_key_id input',
+            selector: '[data-testid="settings-field-vso_apple_key_id"] input[type="password"]',
             type: 'text',
             value: 'apple-key-id-test-11223',
         },
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_key_content textarea',
+            selector: '[data-testid="settings-field-vso_apple_key_content"] textarea',
             type: 'text',
             value: 'Hello Apple Key Content',
         },

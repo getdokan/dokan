@@ -34,25 +34,25 @@ const oldWholesaleDataset = {
 const newWholesaleDataset = {
     title: 'Admin Setting: Wholesale',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_product >> #dokan_settings_product_wholesale',
+    selector: '[data-testid="settings-menu-product"] >> [data-testid="settings-menu-wholesale"]',
     fields: [
         {
-            selector: '#dokan_settings_product_wholesale_display_wholesale_pricing_to button[name="all_user"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-display_wholesale_pricing_to"]',
+            type: 'radio-capsule',
+            value: 'All Users',
         },
         {
-            selector: '#dokan_settings_product_wholesale_display_wholesale_pricing_to button[name="wholesale_customer"]',
-            type: 'radio',
-            value: 'false',
+            selector: '[data-testid="settings-field-display_wholesale_pricing_to"]',
+            type: 'radio-capsule',
+            value: 'Only Wholesale Customer',
         },
         {
-            selector: '#dokan_settings_product_wholesale_wholesale_price_on_shop_archive button[role="switch"]',
+            selector: '[data-testid="settings-field-wholesale_price_on_shop_archive"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_product_wholesale_need_approval_for_customer button[role="switch"]',
+            selector: '[data-testid="settings-field-need_approval_for_customer"] [role="switch"]',
             type: 'switch',
             value: true,
         },

@@ -32,16 +32,13 @@ const oldDataset = {
 // page=dokan-dashboard. NOTE: the text engine is set to OpenAI so the OpenAI
 // API key/model fields it fills stay visible (engine selection gates which
 // provider group renders) and to mirror the legacy `oldDataset` (OpenAI).
+// The AI Product Info Generator section is header-only — it has no enable
+// toggle, matching the legacy `dokan_ai_product_info` sub_section.
 const newDataset = {
     title: 'Admin Setting: AI Assist',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
     selector: '[data-testid="settings-menu-ai_assist"] >> [data-testid="settings-menu-product_generation"]',
     fields: [
-        {
-            selector: '[data-testid="settings-field-ai_product_info_generate"] [role="switch"]',
-            type: 'switch',
-            value: true,
-        },
         {
             selector: '[data-testid="settings-field-ai_product_info_engine"] button[role="combobox"]',
             type: 'radix-dropdown',
