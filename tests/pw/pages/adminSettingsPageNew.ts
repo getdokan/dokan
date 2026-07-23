@@ -295,8 +295,6 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'checkbox': {
                     const inputElement = this.page.locator(field.selector).locator('input[type="checkbox"]');
                     const hasEnabledClass = await inputElement.evaluate(el => el.classList.contains('enabled'));
-                    console.log('hasEnabledClass', hasEnabledClass);
-                    console.log('field.value', field.value);
                     expect(hasEnabledClass, field.selector).toBe(field.value);
                     break;
                 }
