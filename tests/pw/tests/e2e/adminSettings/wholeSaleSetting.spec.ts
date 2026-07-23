@@ -19,13 +19,13 @@ const oldWholesaleDataset = {
         //     value: 'wholesale_customer',
         // },
         {
-            selector: 'label[for="dokan_wholesale[display_price_in_shop_archieve]"] .slider',
-            type: 'switch',
+            selector: 'label[for=\"dokan_wholesale[display_price_in_shop_archieve]\"]',
+            type: 'checkbox',
             value: false,
         },
         {
-            selector: 'label[for="dokan_wholesale[need_approval_for_wholesale_customer]"] .slider',
-            type: 'switch',
+            selector: 'label[for=\"dokan_wholesale[need_approval_for_wholesale_customer]\"]',
+            type: 'checkbox',
             value: false,
         },
     ],
@@ -40,11 +40,6 @@ const newWholesaleDataset = {
             selector: '[data-testid="settings-field-display_wholesale_pricing_to"]',
             type: 'radio-capsule',
             value: 'All Users',
-        },
-        {
-            selector: '[data-testid="settings-field-display_wholesale_pricing_to"]',
-            type: 'radio-capsule',
-            value: 'Only Wholesale Customer',
         },
         {
             selector: '[data-testid="settings-field-wholesale_price_on_shop_archive"] [role="switch"]',

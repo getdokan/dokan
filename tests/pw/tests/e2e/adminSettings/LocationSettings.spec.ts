@@ -32,8 +32,8 @@ const oldDataset = [
                 value: 'top',
                 },
                 {
-               selector: '.show_filters_before_locations_map label.switch',
-                type: 'toggle',
+               selector: '.show_filters_before_locations_map',
+                type: 'checkbox',
                 value: true,
                 },
                 {

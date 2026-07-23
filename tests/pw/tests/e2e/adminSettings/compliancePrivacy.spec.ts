@@ -42,8 +42,8 @@ const newDataset = {
 
         // Privacy Policy Page - Dropdown
         {
-            selector: '#privacy_policy_page',
-            type: 'dropdown',
+            selector: '[data-testid="settings-field-privacy_policy_page"] button[role="combobox"]',
+            type: 'radix-dropdown',
             value: 'Dashboard', // Dashboard page for safe side
         },
 

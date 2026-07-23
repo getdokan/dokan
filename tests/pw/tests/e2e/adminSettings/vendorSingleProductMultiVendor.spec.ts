@@ -64,8 +64,8 @@ const newDataset = {
             value: 'top_of_product_tab', // Options: 'Search with Suggestion Box', 'Autoload Replace Current Content'
         },
         {
-            selector: '#spmv_products_display',
-            type: 'dropdown',
+            selector: '[data-testid="settings-field-spmv_products_display"] button[role="combobox"]',
+            type: 'radix-dropdown',
             value: 'Top rated vendor',
         },
     ],

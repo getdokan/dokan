@@ -130,106 +130,106 @@ const newDataset = {
     selector: '[data-testid="settings-menu-appearance"] >> [data-testid="settings-menu-dashboard-menu-manager"]',
     fields: [
         {
-            selector: '#switch-wrapper-dashboard button[role="switch"]',
+            selector: '#switch-wrapper-dashboard [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-products button[role="switch"]',
+            selector: '#switch-wrapper-products [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-orders button[role="switch"]',
+            selector: '#switch-wrapper-orders [role="switch"]',
             type: 'switch',
             value: true,
         },
          {
-            selector: '#switch-wrapper-requested-quotes button[role="switch"]',
+            selector: '#switch-wrapper-requested-quotes [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-coupons button[role="switch"]',
+            selector: '#switch-wrapper-coupons [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-reports button[role="switch"]',
+            selector: '#switch-wrapper-reports [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-delivery-time-dashboard button[role="switch"]',
+            selector: '#switch-wrapper-delivery-time-dashboard [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-announcement button[role="switch"]',
+            selector: '#switch-wrapper-announcement [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-reviews button[role="switch"]',
+            selector: '#switch-wrapper-reviews [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-withdraw button[role="switch"]',
+            selector: '#switch-wrapper-withdraw [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-seller-badge button[role="switch"]',
+            selector: '#switch-wrapper-seller-badge [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-product-questions-answers button[role="switch"]',
+            selector: '#switch-wrapper-product-questions-answers [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-return-request button[role="switch"]',
+            selector: '#switch-wrapper-return-request [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-staffs button[role="switch"]',
+            selector: '#switch-wrapper-staffs [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-followers button[role="switch"]',
+            selector: '#switch-wrapper-followers [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#switch-wrapper-subscription button[role="switch"]',
+            selector: '#switch-wrapper-subscription [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
             // Announcements toggle
-            selector: '#switch-wrapper-announcement button[role="switch"]',
+            selector: '#switch-wrapper-announcement [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
             // Admin Support toggle
-            selector: '#switch-wrapper-vendor-support button[role="switch"]',
+            selector: '#switch-wrapper-vendor-support [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
             // Tools toggle
-            selector: '#switch-wrapper-tools button[role="switch"]',
+            selector: '#switch-wrapper-tools [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
             // Support toggle
-            selector: '#switch-wrapper-support button[role="switch"]',
+            selector: '#switch-wrapper-support [role="switch"]',
             type: 'switch',
             value: true,
         },

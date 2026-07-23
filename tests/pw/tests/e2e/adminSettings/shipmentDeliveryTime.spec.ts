@@ -113,10 +113,7 @@ const newDataset = {
             type: 'text',
             value: 'This store needs Y% day(s) to process your delivery request new',
         },
-        {
-            // Todo
-            // Delivery time filed will be checked manually.
-        },
+        // Todo: delivery time slots are verified manually.
     ],
 };
 

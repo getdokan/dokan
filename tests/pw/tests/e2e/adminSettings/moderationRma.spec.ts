@@ -39,8 +39,8 @@ const newDataset = {
     selector: '[data-testid="settings-menu-moderation"] >> [data-testid="settings-menu-rma"]',
     fields: [
         {
-            selector: '#rma_order_status',
-            type: 'dropdown',
+            selector: '[data-testid="settings-field-rma_order_status"] button[role="combobox"]',
+            type: 'radix-dropdown',
             value: 'Completed',
         },
         {

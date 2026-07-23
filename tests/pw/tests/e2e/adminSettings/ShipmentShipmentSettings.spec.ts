@@ -2,26 +2,26 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
-// Shipping Providers – New UI locators (button[role="switch"])
+// Shipping Providers – New UI locators ([role="switch"])
 const shippingProviderLocators = {
-    australiaPost:      '[data-testid="settings-field-sp-australia-post"] button[role="switch"]',
-    canadaPost:         '[data-testid="settings-field-sp-canada-post"] button[role="switch"]',
-    cityLink:           '[data-testid="settings-field-sp-city-link"] button[role="switch"]',
-    dhl:                '[data-testid="settings-field-sp-dhl"] button[role="switch"]',
-    dpd:                '[data-testid="settings-field-sp-dpd"] button[role="switch"]',
-    fastwaySouthAfrica: '[data-testid="settings-field-sp-fastway-south-africa"] button[role="switch"]',
-    fedex:              '[data-testid="settings-field-sp-fedex"] button[role="switch"]',
-    onTrac:             '[data-testid="settings-field-sp-ontrac"] button[role="switch"]',
-    parcelForce:        '[data-testid="settings-field-sp-parcelforce"] button[role="switch"]',
-    polishProviders:    '[data-testid="settings-field-sp-polish-shipping-providers"] button[role="switch"]',
-    royalMail:          '[data-testid="settings-field-sp-royal-mail"] button[role="switch"]',
-    tntConsignment:     '[data-testid="settings-field-sp-tnt-express-consignment"] button[role="switch"]',
-    tntReference:       '[data-testid="settings-field-sp-tnt-express-reference"] button[role="switch"]',
-    fedexSameday:       '[data-testid="settings-field-sp-fedex-sameday"] button[role="switch"]',
-    ups:                '[data-testid="settings-field-sp-ups"] button[role="switch"]',
-    usps:               '[data-testid="settings-field-sp-usps"] button[role="switch"]',
-    dhlUs:              '[data-testid="settings-field-sp-dhl-us"] button[role="switch"]',
-    other:              '[data-testid="settings-field-sp-other"] button[role="switch"]',
+    australiaPost:      '[data-testid="settings-field-sp-australia-post"] [role="switch"]',
+    canadaPost:         '[data-testid="settings-field-sp-canada-post"] [role="switch"]',
+    cityLink:           '[data-testid="settings-field-sp-city-link"] [role="switch"]',
+    dhl:                '[data-testid="settings-field-sp-dhl"] [role="switch"]',
+    dpd:                '[data-testid="settings-field-sp-dpd"] [role="switch"]',
+    fastwaySouthAfrica: '[data-testid="settings-field-sp-fastway-south-africa"] [role="switch"]',
+    fedex:              '[data-testid="settings-field-sp-fedex"] [role="switch"]',
+    onTrac:             '[data-testid="settings-field-sp-ontrac"] [role="switch"]',
+    parcelForce:        '[data-testid="settings-field-sp-parcelforce"] [role="switch"]',
+    polishProviders:    '[data-testid="settings-field-sp-polish-shipping-providers"] [role="switch"]',
+    royalMail:          '[data-testid="settings-field-sp-royal-mail"] [role="switch"]',
+    tntConsignment:     '[data-testid="settings-field-sp-tnt-express-consignment"] [role="switch"]',
+    tntReference:       '[data-testid="settings-field-sp-tnt-express-reference"] [role="switch"]',
+    fedexSameday:       '[data-testid="settings-field-sp-fedex-sameday"] [role="switch"]',
+    ups:                '[data-testid="settings-field-sp-ups"] [role="switch"]',
+    usps:               '[data-testid="settings-field-sp-usps"] [role="switch"]',
+    dhlUs:              '[data-testid="settings-field-sp-dhl-us"] [role="switch"]',
+    other:              '[data-testid="settings-field-sp-other"] [role="switch"]',
 };
 
 // Old UI - All Shipping Provider Switch Locators (label containing text → switch)

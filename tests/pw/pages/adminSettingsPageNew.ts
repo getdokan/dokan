@@ -214,7 +214,11 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'select':
-                    await this.page.click(field.selector);
+                    // Legacy native <select>. Datasets identify the option by
+                    // its stored value in some specs and by its visible label in
+                    // others (page pickers), so accept either. Clicking alone
+                    // never changed the selection.
+                    await this.selectNativeOption(field);
                     break;
                 case 'toggle':
                     await this.page.click(field.selector);
@@ -317,8 +321,8 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'select': {
-                    const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    const { value, label } = await this.nativeSelection(field.selector);
+                    expect([value, label]).toContain(field.value);
                     break;
                 }
                 case 'radix-dropdown': {
@@ -411,6 +415,22 @@ export class AdminSettingsPageNew extends AdminPage {
     }
 
     // ---- control helpers shared by set/assert -------------------------------
+
+    async selectNativeOption(field: any) {
+        const select = this.page.locator(field.selector).first();
+        try {
+            await select.selectOption(field.value);
+        } catch {
+            await select.selectOption({ label: field.value });
+        }
+    }
+
+    async nativeSelection(selector: string): Promise<{ value: string; label: string }> {
+        return this.page.locator(selector).first().evaluate(el => {
+            const select = el as HTMLSelectElement;
+            return { value: select.value, label: select.selectedOptions[0]?.text.trim() ?? '' };
+        });
+    }
 
     radioCapsuleOption(field: any) {
         return this.page.locator(field.selector).getByRole('button', { name: field.value, exact: true });

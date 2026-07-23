@@ -51,8 +51,8 @@ const newDataset = {
             value: true,
         },
         {
-            selector: '#subscription_view_page',
-            type: 'dropdown',
+            selector: '[data-testid="settings-field-subscription_view_page"] button[role="combobox"]',
+            type: 'radix-dropdown',
             value: 'Product Subscription',
         },
         {
