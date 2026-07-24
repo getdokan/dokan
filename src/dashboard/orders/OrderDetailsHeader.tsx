@@ -2,7 +2,8 @@ import { useEffect, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { Slot } from '@wordpress/components';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { ArrowLeft, Pencil } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, Pencil } from 'lucide-react';
+import { Button } from '@wedevs/plugin-ui';
 import { DokanBadge, DokanButton } from '@dokan/components';
 import { usePermission } from '@dokan/hooks';
 import {
@@ -11,6 +12,9 @@ import {
     onOrderDetailsEvent,
 } from './events';
 import { getStatusBadgeVariant, getStatusLabel } from './status';
+import { isReactOrderDetailsView } from './details/marker';
+import StatusDropdown from './details/StatusDropdown';
+import StatusPill from './details/StatusPill';
 import type { OrderDetailsMeta } from './types';
 
 /**
@@ -38,7 +42,22 @@ const OrderDetailsHeader = () => {
     const [ order, setOrder ] = useState< OrderDetailsMeta | null >( null );
     const [ status, setStatus ] = useState< string >( '' );
 
-    const canEditOrder = usePermission( 'dokan_manage_manual_order' );
+    // Match the legacy page: Pro only offers Edit Order when the manual-order
+    // feature is enabled for this vendor, which is exactly when its bundle
+    // publishes `dokanManualOrder`. Capability alone is not enough — the edit
+    // screen refuses vendors the feature is disabled for.
+    const isManualOrderAvailable = Boolean(
+        ( window as unknown as { dokanManualOrder?: unknown } ).dokanManualOrder
+    );
+    // The React view's meta says whether this specific order is editable
+    // (vendor-created only); the fragment meta doesn't carry it, so fragment
+    // mode keeps the legacy always-offer behaviour.
+    const isOrderEditable = order?.manual_order_editable ?? true;
+    const canEditOrder =
+        usePermission( 'dokan_manage_manual_order' ) &&
+        isManualOrderAvailable &&
+        isOrderEditable;
+    const isReactView = isReactOrderDetailsView();
 
     useEffect( () => {
         const unsubscribeLoaded = onOrderDetailsEvent(
@@ -98,42 +117,78 @@ const OrderDetailsHeader = () => {
             <div className="@container/before-header grid grid-cols-4 gap-4">
                 <Slot name="dokan-before-header" />
             </div>
+            { isReactView && (
+                // !important utilities: front-end theme button CSS paints
+                // default backgrounds/borders that wp-admin screens never
+                // face — this must read as a plain breadcrumb link.
+                <button
+                    type="button"
+                    onClick={ goBackToList }
+                    className="flex w-fit items-center gap-1 border-0! bg-transparent! p-0! shadow-none! text-sm text-gray-500! hover:text-dokan-link!"
+                >
+                    <ChevronLeft size={ 16 } />
+                    { __( 'All Orders', 'dokan-lite' ) }
+                </button>
+            ) }
             <div className="dokan-header-title-section @container/header-title-section flex gap-y-4 justify-between items-center flex-wrap">
                 <div className="dokan-header-title w-full md:!w-1/2 flex flex-wrap items-center gap-3">
                     <h3 className="text-2xl font-semibold text-gray-800 md:text-4xl lg:text-3xl">
                         { title }
                     </h3>
-                    { status && (
-                        <DokanBadge
-                            variant={ getStatusBadgeVariant( status ) }
-                            label={ getStatusLabel( status ) }
-                        />
-                    ) }
+                    { status &&
+                        ( isReactView ? (
+                            <StatusPill status={ status } />
+                        ) : (
+                            <DokanBadge
+                                variant={ getStatusBadgeVariant( status ) }
+                                label={ getStatusLabel( status ) }
+                            />
+                        ) ) }
                     <Slot
                         name="dokan-header-after-title"
                         fillProps={ { title, navigate, params, location } }
                     />
                 </div>
                 <div className="dokan-header-actions w-full md:!w-1/2 flex flex-wrap gap-2.5 md:!justify-end">
-                    <DokanButton variant="secondary" onClick={ goBackToList }>
-                        <ArrowLeft className="text-dokan-link" size={ 16 } />
-                        { __( 'Back', 'dokan-lite' ) }
-                    </DokanButton>
-                    { canEditOrder && orderId > 0 && (
+                    { /* The React view carries the RFQ-style breadcrumb above
+                         the title instead of a Back button. */ }
+                    { ! isReactView && (
                         <DokanButton
                             variant="secondary"
+                            onClick={ goBackToList }
+                        >
+                            <ArrowLeft
+                                className="text-dokan-link"
+                                size={ 16 }
+                            />
+                            { __( 'Back', 'dokan-lite' ) }
+                        </DokanButton>
+                    ) }
+                    { /* No Print control: the legacy order details page never
+                         had one, and no printing evidence exists in its
+                         templates — browser print still works natively. */ }
+                    { canEditOrder && orderId > 0 && (
+                        <Button
+                            variant="outline"
+                            className="h-10 gap-2 rounded-lg! border! border-gray-200! bg-white! px-4! text-sm font-medium text-gray-800! shadow-none! hover:bg-gray-50!"
                             onClick={ () =>
                                 navigate( `/orders/edit/${ orderId }` )
                             }
                         >
-                            <Pencil className="text-dokan-link" size={ 16 } />
+                            { ! isReactView && (
+                                <Pencil
+                                    className="text-dokan-link"
+                                    size={ 16 }
+                                />
+                            ) }
                             { __( 'Edit Order', 'dokan-lite' ) }
-                        </DokanButton>
+                        </Button>
                     ) }
                     <Slot
                         name="dokan-header-actions"
                         fillProps={ { navigate, params, location } }
                     />
+                    { isReactView && <StatusDropdown orderId={ orderId } /> }
                 </div>
             </div>
             <div className="@container/after-header grid grid-cols-4 gap-4">
