@@ -69,8 +69,11 @@ export const shouldBlockNavigation = () => {
             ( rule ) => rule.path === currentURLPath
         );
 
+    // On a dashboard root with no analytics `path` query, render the default report inline
+    // (handled by the `/` route in controller.js) instead of hard-redirecting the browser.
+    // This keeps the URL at the dashboard root and avoids a second full page load.
     if ( isAnalyticsExcluded && matchingRedirectRule ) {
-        document.location.href = matchingRedirectRule.redirect;
+        return applyFilters( BLOCK_NAVIGATION_FILTER, false );
     }
 
     return applyFilters( BLOCK_NAVIGATION_FILTER, isAnalyticsExcluded );
