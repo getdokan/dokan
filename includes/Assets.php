@@ -869,7 +869,7 @@ class Assets {
                 'routes'          => $this->get_vue_frontend_routes(),
                 'urls'            => [
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
-                    'dashboardUrl' => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
+                    'dashboardUrl' => ReportUtil::is_analytics_enabled() ? add_query_arg( 'path', '/analytics/Overview', dokan_get_navigation_url() ) : dokan_get_navigation_url(),
                     'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
                     'ordersUrl'        => dokan_get_navigation_url( 'orders' ),
                     'legacyOrdersUrl'  => dokan_add_subpage_to_url( rtrim( get_permalink( (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 ) ), '/' ) . '/', 'orders/' ),
