@@ -27,13 +27,29 @@ class FullWidthVendorLayout implements Hookable {
      */
     public function register_hooks(): void {
         add_action( 'dokan_setup_wizard_styles', [ $this, 'update_layout_style' ] );
-        // Register vendor dashboard assets if the vendor layout is not legacy.
-        $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
-        if ( 'latest' === $vendor_layout ) {
-            add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ], 99 );
-            add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
-            add_filter( 'template_include', [ $this, 'rewrite_vendor_dashboard_template' ] );
-        }
+        add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ], 99 );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
+        add_filter( 'template_include', [ $this, 'rewrite_vendor_dashboard_template' ] );
+    }
+
+    /**
+     * Whether the marketplace runs the React (latest) vendor dashboard layout.
+     *
+     * Deliberately resolved per callback instead of once in `register_hooks()`:
+     * hooks are registered on `plugins_loaded`, and reading a Dokan setting
+     * walks the legacy settings bridge, which builds the translated admin
+     * settings schema. Doing that before `init` — where
+     * `load_plugin_textdomain()` runs — trips WordPress 6.7+'s
+     * `_load_textdomain_just_in_time` notice on every request. Every callback
+     * below fires on `init` or later, and the repository memoizes the section
+     * snapshot, so the deferred read costs nothing.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function is_latest_layout(): bool {
+        return 'latest' === dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
     }
 
     /**
@@ -70,6 +86,10 @@ class FullWidthVendorLayout implements Hookable {
      * @return string Modified template path
      */
     public function rewrite_vendor_dashboard_template( $template ) {
+        if ( ! $this->is_latest_layout() ) {
+            return $template;
+        }
+
         // Check if we should load the fullwidth template.
         if ( ! dokan_is_seller_dashboard() ) {
             return $template;
@@ -94,6 +114,10 @@ class FullWidthVendorLayout implements Hookable {
      * @return void
      */
     public function register_vendor_dashboard_assets() {
+        if ( ! $this->is_latest_layout() ) {
+            return;
+        }
+
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/vendor-dashboard/layout/index.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
@@ -213,6 +237,10 @@ class FullWidthVendorLayout implements Hookable {
      * @return void
      */
     public function enqueue_vendor_dashboard_assets() {
+        if ( ! $this->is_latest_layout() ) {
+            return;
+        }
+
         if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
             return;
         }
