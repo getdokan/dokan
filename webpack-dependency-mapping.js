@@ -9,6 +9,25 @@ const { kebabCase } = require( 'lodash' );
 
 const WOOCOMMERCE_NAMESPACE = '@woocommerce/';
 
+/**
+ * Third-party UI packages that are shared across multiple entry points.
+ *
+ * Each is built once as a standalone bundle exposed on a `window.dokan.*` global, so consuming
+ * bundles reference the global instead of inlining their own copy of the package.
+ *
+ * @type {Object.<string, {external: string[], handle: string}>}
+ */
+const SHARED_UI_EXTERNALS = {
+    '@wedevs/plugin-ui': {
+        external: [ 'dokan', 'pluginUI' ],
+        handle: 'dokan-plugin-ui',
+    },
+    '@getdokan/dokan-ui': {
+        external: [ 'dokan', 'dokanUI' ],
+        handle: 'dokan-ui',
+    },
+};
+
 const packages = [
     // wc-admin packages
     '@woocommerce/admin-layout',
@@ -127,6 +146,14 @@ const requestToExternal = ( request ) => {
         return false;
     }
 
+    // Shared UI packages: built once as their own bundles (see webpack.config.js) so they are
+    // not inlined into every entry that imports them. Only the bare specifier is mapped —
+    // deep imports such as `@getdokan/dokan-ui/dist/components/Button` stay bundled, and the
+    // shim entries in src/externals/ rely on that to avoid re-exporting themselves.
+    if ( SHARED_UI_EXTERNALS[ request ] ) {
+        return SHARED_UI_EXTERNALS[ request ].external;
+    }
+
     const dokanStores = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
     const dokan = request.match( /^@dokan\/([^/]+)$/ );
@@ -162,6 +189,9 @@ const requestToExternal = ( request ) => {
  * @return {string} Handle name for the package.
  */
 const requestToHandle = ( request ) => {
+    if ( SHARED_UI_EXTERNALS[ request ] ) {
+        return SHARED_UI_EXTERNALS[ request ].handle;
+    }
 
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
