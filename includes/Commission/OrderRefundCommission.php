@@ -13,7 +13,7 @@ use WeDevs\Dokan\Commission\Model\Commission;
  * (see Calculator::calculate_for_refund()), while refunded tax, shipping
  * and gateway fees are routed to whichever party received them originally.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.10
  *
  * @package WeDevs\Dokan\Commission
  */
@@ -53,7 +53,7 @@ class OrderRefundCommission {
     /**
      * Set the refund to calculate for.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param WC_Order_Refund $refund
      *
@@ -69,7 +69,7 @@ class OrderRefundCommission {
     /**
      * Get the refund.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return WC_Order_Refund|null
      */
@@ -82,7 +82,7 @@ class OrderRefundCommission {
      *
      * Optional; when omitted the order is resolved from the refund's parent ID.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param WC_Order $order
      *
@@ -98,7 +98,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded order.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return WC_Order|null
      */
@@ -115,7 +115,7 @@ class OrderRefundCommission {
     /**
      * Calculate the commission portions of the refund.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @throws \Exception If the refund or its parent order is not resolvable.
      *
@@ -150,7 +150,7 @@ class OrderRefundCommission {
     /**
      * Get the vendor's prorated net earning in the refund (line items only).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -163,7 +163,7 @@ class OrderRefundCommission {
     /**
      * Get the admin's prorated net commission in the refund (line items only).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -179,7 +179,7 @@ class OrderRefundCommission {
      * Populated instead of commission/vendor earning for admin-earning
      * order types (subscriptions, advertisements, etc.).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -192,7 +192,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded tax (product tax + shipping tax) allocated to the vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -205,7 +205,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded tax (product tax + shipping tax) allocated to the admin.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -218,7 +218,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded shipping allocated to the vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -231,7 +231,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded shipping allocated to the admin.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -247,7 +247,7 @@ class OrderRefundCommission {
      * Defaults to 0 via the `dokan_refund_gateway_fee` filter; supplied by the
      * associated payment gateway when it returns its fee on refund.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -263,7 +263,7 @@ class OrderRefundCommission {
      * Defaults to 0 via the `dokan_refund_gateway_fee` filter; supplied by the
      * associated payment gateway when it returns its fee on refund.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -280,7 +280,7 @@ class OrderRefundCommission {
      * vendor, minus any gateway fee the payment gateway returns to the vendor
      * (0 unless the gateway supplies it via `dokan_refund_gateway_fee`).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -302,7 +302,7 @@ class OrderRefundCommission {
      * gateway fee the payment gateway returns to the admin (0 unless the
      * gateway supplies it via `dokan_refund_gateway_fee`).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return float
      */
@@ -322,7 +322,7 @@ class OrderRefundCommission {
      * Parent orders are excluded from commission adjustment; the vendor
      * sub-orders carry the actual earnings.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return bool
      */
@@ -335,7 +335,7 @@ class OrderRefundCommission {
     /**
      * Ensure the refund commission has been calculated.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return void
      */
@@ -348,7 +348,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded tax allocated to the given recipient.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param string $recipient Either self::SELLER or self::ADMIN.
      *
@@ -378,7 +378,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded shipping allocated to the given recipient.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param string $recipient Either self::SELLER or self::ADMIN.
      *
@@ -408,7 +408,7 @@ class OrderRefundCommission {
      * ( order_gateway_fee × |refund_total| / order_total ) is provided as a
      * convenience.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param string $recipient Either self::SELLER or self::ADMIN.
      *
@@ -443,7 +443,7 @@ class OrderRefundCommission {
          * portion (`dokan_admin_gateway_fee` meta) for the admin recipient —
          * and 0 when the recipient bore no fee.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.10
          *
          * @param float            $gateway_fee_refund The gateway fee amount returned for this refund. Default 0.
          * @param float            $prorated_fee       The recipient's prorated share of the stored gateway fee for the refunded portion.
@@ -457,7 +457,7 @@ class OrderRefundCommission {
     /**
      * Get the refunded tax and shipping-tax totals from the refund's tax items.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return array{tax: float, shipping_tax: float}
      */
@@ -488,7 +488,7 @@ class OrderRefundCommission {
      * seller pays the vendor share — e.g. Paystack split payments distribute
      * the fee between the vendor and the admin.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param string $recipient Either self::SELLER or self::ADMIN.
      *
@@ -511,7 +511,7 @@ class OrderRefundCommission {
     /**
      * Get the order's gateway fee and who paid it.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return array{fee: float, paid_by: string}
      */
