@@ -196,7 +196,16 @@ export class AbuseReportsPage {
         customerEmailInput: "//input[@name='customer_email']",
         descriptionInput: "//textarea[@name='description']",
         submitButton: "//button[@id='dokan-report-abuse-form-submit-btn']",
-        confirmOkButton: "//button[normalize-space()='OK']",
+        // The submission confirmation is a `dokan_sweetalert()` (SweetAlert2) alert — see
+        // dokan-pro/modules/report-abuse/assets/src/js/frontend/main.js `afterPopupClose()` — so it is
+        // the SweetAlert2 confirm button, matched here by its own class instead of its "OK" label.
+        // Matching on the label is what broke: the single-product page also carries Google Maps' own
+        // `<button class="dismissButton">OK</button>` (the Maps JS API error dialog, present in the
+        // DOM whenever the site has no valid Maps key, as on CI), so `//button[text()='OK']` resolved
+        // to 2 elements the moment the popup opened and Playwright aborted with a strict-mode
+        // violation. Deliberately NOT text-constrained, so the negative assertions ("no success
+        // confirmation must appear") still catch a confirmation popup with unexpected wording.
+        confirmOkButton: 'button.swal2-confirm',
         formError: ".dokan-popup-error",
         customReasonLabel: (reason: string) => `//label[normalize-space()='${reason}']`,
     };
@@ -703,13 +712,12 @@ export class AbuseReportsPage {
     }
 
     /**
-     * The submission confirmation is a `dokan_sweetalert` (SweetAlert2) popup whose button reads "OK".
-     * Under load a second "OK" button can transiently coexist in the DOM (a prior popup mid-close, or a
-     * theme/consent control), so the bare `//button[text()='OK']` locator intermittently hits a strict-mode
-     * violation ("resolved to 2 elements"). Scope to the currently-visible one (the active dialog).
+     * The confirm button of the SweetAlert2 submission-success popup. Single match by construction —
+     * SweetAlert2 keeps at most one popup mounted — so no `.first()` / visibility filtering is needed
+     * and every wait below asserts this exact button.
      */
-    private confirmOk() {
-        return this.page.locator(this.abuseReports.confirmOkButton).filter({ visible: true }).last();
+    confirmOk() {
+        return this.page.locator(this.abuseReports.confirmOkButton);
     }
 
     async submitAbuseReport() {
@@ -719,7 +727,7 @@ export class AbuseReportsPage {
 
     async confirmAbuseReportSubmission() {
         await this.confirmOk().click();
-        await this.page.locator(this.abuseReports.confirmOkButton).filter({ visible: true }).waitFor({ state: 'hidden' });
+        await this.confirmOk().waitFor({ state: 'hidden' });
     }
 
     async clickCustomReasonLabel(reason: string) {
