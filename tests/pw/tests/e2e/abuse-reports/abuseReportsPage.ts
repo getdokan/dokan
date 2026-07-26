@@ -200,8 +200,9 @@ export class AbuseReportsPage {
         // dokan-pro/modules/report-abuse/assets/src/js/frontend/main.js `afterPopupClose()` — so it is
         // the SweetAlert2 confirm button, matched here by its own class instead of its "OK" label.
         // Matching on the label is what broke: the single-product page also carries Google Maps' own
-        // `<button class="dismissButton">OK</button>` (the Maps JS API error dialog, present in the
-        // DOM whenever the site has no valid Maps key, as on CI), so `//button[text()='OK']` resolved
+        // `<button class="dismissButton">OK</button>` (the Maps JS API error dialog, injected whenever
+        // a Maps key IS configured but Google rejects it for the requesting host — expired or
+        // referrer-restricted, as on CI runners), so `//button[text()='OK']` resolved
         // to 2 elements the moment the popup opened and Playwright aborted with a strict-mode
         // violation. Deliberately NOT text-constrained, so the negative assertions ("no success
         // confirmation must appear") still catch a confirmation popup with unexpected wording.
@@ -340,9 +341,17 @@ export class AbuseReportsPage {
         await this.page.locator(this.admin.settingsHeading).waitFor({ state: 'visible' });
     }
 
-    async isSettingsHeadingVisible(): Promise<boolean> {
-        await this.page.getByRole('heading', { name: /Product Report Abuse Settings/i }).waitFor({ state: 'visible', timeout: 10000 });
-        return true;
+    // These three used to be `is*Visible(): Promise<boolean>` that awaited a
+    // waitFor() and then `return true` unconditionally. The enforcement was real
+    // (waitFor throws), but the boolean was a constant, so the `.toBe(true)` at
+    // every call site asserted nothing and a failure surfaced as an opaque
+    // locator timeout instead of the assertion's own message. Expose them as
+    // assertions so the intent and the diagnostics live in the same place.
+    async assertSettingsHeadingVisible() {
+        await expect(
+            this.page.getByRole('heading', { name: /Product Report Abuse Settings/i }),
+            '"Product Report Abuse Settings" heading should be visible',
+        ).toBeVisible({ timeout: 10000 });
     }
 
     async getSettingsDocLinkHref(): Promise<string> {
@@ -350,14 +359,18 @@ export class AbuseReportsPage {
         return href ?? '';
     }
 
-    async isReportedByHeadingVisible(): Promise<boolean> {
-        await this.page.locator(this.admin.reportedByHeading).waitFor({ state: 'visible', timeout: 10000 });
-        return true;
+    async assertReportedByHeadingVisible() {
+        await expect(
+            this.page.locator(this.admin.reportedByHeading),
+            '"Reported by" heading should be visible',
+        ).toBeVisible({ timeout: 10000 });
     }
 
-    async isReasonsHeadingVisible(): Promise<boolean> {
-        await this.page.locator(this.admin.reasonsHeading).waitFor({ state: 'visible', timeout: 10000 });
-        return true;
+    async assertReasonsHeadingVisible() {
+        await expect(
+            this.page.locator(this.admin.reasonsHeading),
+            '"Reasons for Abuse Report" heading should be visible',
+        ).toBeVisible({ timeout: 10000 });
     }
 
     async enableReportedBySliderIfDisabled() {
@@ -576,7 +589,16 @@ export class AbuseReportsPage {
         // The DataViews UI may issue either a true DELETE on the single
         // resource endpoint OR a POST to the batch endpoint depending on the
         // selection size and the underlying store action — accept either.
-        await Promise.all([
+        //
+        // The response wait is REQUIRED, not decorative. It previously carried
+        // `.catch(() => null)` and its result was discarded, so "the request was
+        // never issued" cost a silent 30s and then reported success. The
+        // modal-hidden check below cannot substitute: the AlertDialog closes in a
+        // `finally` (@wedevs/plugin-ui dataviews.tsx) and ReportAbusePage's
+        // handleSingleDelete catches its own errors into a toast without
+        // rethrowing — so the modal closes identically on success, on 500/403,
+        // and when nothing was requested at all.
+        const [response] = await Promise.all([
             this.page.waitForResponse(
                 res => {
                     if (!res.url().includes('/wp-json/dokan/v1/abuse-reports')) return false;
@@ -584,10 +606,14 @@ export class AbuseReportsPage {
                     return m === 'DELETE' || m === 'POST';
                 },
                 { timeout: 30000 },
-            ).catch(() => null),
+            ),
             this.page.locator(this.adminReact.deleteModalConfirmBtn).click(),
         ]);
-        // Modal closes once the request resolves (success or failure).
+        expect(
+            response.status(),
+            `Delete request ${response.request().method()} ${response.url()} should succeed`,
+        ).toBeLessThan(300);
+        // Modal closes once the request resolves.
         await this.page.locator(this.adminReact.deleteModalConfirmBtn).waitFor({ state: 'hidden', timeout: 15000 });
     }
 
