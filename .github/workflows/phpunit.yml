@@ -53,17 +53,25 @@ jobs:
         timeout-minutes: 25
 
         strategy:
-            # 7.4 is the floor the plugin declares (`Requires PHP: 7.4`) and what
-            # .wp-env.json pins; 8.4 is the top of the range users actually run on.
-            # The "Prepare wp-env config" step below rewrites .wp-env.json's
-            # phpVersion from this value, and the wp-env image cache key includes
-            # it, so adding a version needs no other change.
+            # 7.4 is the floor both Dokan and WooCommerce declare (`Requires PHP: 7.4`)
+            # and what .wp-env.json pins. 8.2 is what tests/pw/.wp-env.json already runs
+            # the e2e suite on nightly against this same WooCommerce, so it is a
+            # combination known to boot — and it lets the image cache below be shared
+            # with e2e rather than pulled fresh.
             #
-            # fail-fast is off on purpose: a failure on one version must not
-            # cancel the other, or a single 8.4 deprecation would hide 7.4's result.
+            # 8.4 was tried and is not viable yet: WooCommerce fails to activate under
+            # it in wp-env, so `wp-env start` dies before PHPUnit is invoked. WooCommerce
+            # declares only a 7.4 floor and no tested-up-to ceiling.
+            #
+            # The "Prepare wp-env config" step below rewrites .wp-env.json's phpVersion
+            # from this value, and the image cache key includes it, so adding a version
+            # needs no other change.
+            #
+            # fail-fast is off on purpose: a failure on one version must not cancel the
+            # other, or a single 8.2 deprecation would hide 7.4's result.
             fail-fast: false
             matrix:
-                php: ['7.4', '8.4']
+                php: ['7.4', '8.2']
 
         steps:
             - uses: actions/checkout@v4
@@ -205,7 +213,11 @@ jobs:
               run: |
                   IMAGES="mariadb:lts phpmyadmin:latest wordpress:php$PHP_VERSION wordpress:cli-php$PHP_VERSION"
                   echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
-                  echo "key=phpunit-wp-env-images-v1-php$PHP_VERSION-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+                  # Same key format as e2e_api_tests.yml, and the same four images, so
+                  # the 8.2 entry reuses the ~529MB set e2e already keeps warm on
+                  # refs/heads/develop instead of pulling it again. Keep this key
+                  # byte-identical to the e2e one.
+                  echo "key=wp-env-images-v1-php$PHP_VERSION-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
                   echo "images: $IMAGES"
 
             - name: Restore wp-env docker images from cache
