@@ -53,25 +53,22 @@ jobs:
         timeout-minutes: 25
 
         strategy:
-            # 7.4 is the floor both Dokan and WooCommerce declare (`Requires PHP: 7.4`)
-            # and what .wp-env.json pins. 8.2 is what tests/pw/.wp-env.json already runs
-            # the e2e suite on nightly against this same WooCommerce, so it is a
-            # combination known to boot — and it lets the image cache below be shared
-            # with e2e rather than pulled fresh.
-            #
-            # 8.4 was tried and is not viable yet: WooCommerce fails to activate under
-            # it in wp-env, so `wp-env start` dies before PHPUnit is invoked. WooCommerce
-            # declares only a 7.4 floor and no tested-up-to ceiling.
+            # 7.4 is the floor Dokan declares (`Requires PHP: 7.4`) and WooCommerce's
+            # legacy minimum. 8.3 is what WooCommerce actually requires from 10.8
+            # onward and what WordPress recommends, so it is the version real installs
+            # are expected to be on:
+            #   https://woocommerce.com/document/server-requirements/
+            #   https://wordpress.org/about/requirements/
             #
             # The "Prepare wp-env config" step below rewrites .wp-env.json's phpVersion
             # from this value, and the image cache key includes it, so adding a version
             # needs no other change.
             #
             # fail-fast is off on purpose: a failure on one version must not cancel the
-            # other, or a single 8.2 deprecation would hide 7.4's result.
+            # other, or a single 8.3 deprecation would hide 7.4's result.
             fail-fast: false
             matrix:
-                php: ['7.4', '8.2']
+                php: ['7.4', '8.3']
 
         steps:
             - uses: actions/checkout@v4
