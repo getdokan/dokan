@@ -33,7 +33,24 @@ const Upload = ( {
         if ( uploaderParams ) {
             // Extra plupload multipart params, e.g. `type: 'downloadable_product'` routes uploads into woocommerce_uploads.
             mediaFrame.on( 'ready', () => {
-                mediaFrame.uploader.options.uploader.params = uploaderParams;
+                // A frame has no uploader when the upload limit is exceeded or the browser is unsupported.
+                const uploaderWindow = mediaFrame.uploader;
+
+                if ( ! uploaderWindow ) {
+                    return;
+                }
+
+                // Once plupload is live only param() reaches it; before that the pending options are the only target.
+                if ( uploaderWindow.uploader ) {
+                    uploaderWindow.uploader.param( { ...uploaderParams } );
+                    return;
+                }
+
+                // Merge so WordPress' own params (nonce, post_id) survive alongside ours.
+                uploaderWindow.options.uploader.params = {
+                    ...uploaderWindow.options.uploader.params,
+                    ...uploaderParams,
+                };
             } );
         }
         mediaFrame.on( 'select', () => {
