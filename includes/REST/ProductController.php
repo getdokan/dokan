@@ -985,7 +985,7 @@ class ProductController extends DokanRESTController {
                  * truncated away before the `author` constraint applies; large marketplaces can
                  * bound the query at the cost of that guarantee.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.0.11
                  *
                  * @param int|null $limit Maximum matches, or null for unlimited.
                  */
