@@ -110,13 +110,19 @@ jobs:
               with:
                   node-version: 20
 
-            # Keyed on the lockfile so any dependency change invalidates it.
+            # Deliberately the SAME key as e2e_api_tests.yml's "Cache lite node_modules"
+            # (`lite-nm-<os>-<hash of package-lock.json>`, same `node_modules` path, same
+            # `npm ci` contents), so the two workflows share one entry instead of storing
+            # ~200MB twice. The payoff is on cold runs: e2e keeps this cache populated on
+            # refs/heads/develop, and PR runs inherit caches from the base branch, so a
+            # brand-new PR branch restores node_modules on its very first run rather than
+            # spending ~200s in `npm ci`. Keep this key byte-identical to the e2e one.
             - name: Cache node_modules
               id: node-modules
               uses: actions/cache@v4
               with:
                   path: node_modules
-                  key: dokan-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
             - name: Npm install
               if: steps.node-modules.outputs.cache-hit != 'true'
