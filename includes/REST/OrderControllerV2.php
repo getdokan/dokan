@@ -393,8 +393,24 @@ class OrderControllerV2 extends OrderController {
     public function revoke_order_downloads( $requests ) {
         $download_id   = $requests->get_param( 'download_id' );
         $product_id    = $requests->get_param( 'product_id' );
-        $order_id      = $requests->get_param( 'id' );
-        $permission_id = $requests->get_param( 'permission_id' );
+        $order_id      = absint( $requests->get_param( 'id' ) );
+        $permission_id = absint( $requests->get_param( 'permission_id' ) );
+
+        // Only this order's own permission may be revoked; a foreign or unknown id is rejected (WC throws on an unknown id, caught here).
+        try {
+            $download         = new WC_Customer_Download( $permission_id );
+            $belongs_to_order = $download->get_id() && $download->get_order_id() === $order_id;
+        } catch ( \Exception $e ) {
+            $belongs_to_order = false;
+        }
+
+        if ( ! $belongs_to_order ) {
+            return new WP_Error(
+                'dokan_rest_download_permission_invalid_order',
+                esc_html__( 'Download permission does not belong to this order.', 'dokan-lite' ),
+                [ 'status' => 400 ]
+            );
+        }
 
         try {
             $data_store = WC_Data_Store::load( 'customer-download' );
