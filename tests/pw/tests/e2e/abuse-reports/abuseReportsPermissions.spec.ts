@@ -1,7 +1,7 @@
 import { test, expect, request } from '@utils/test';
 import { AbuseReportsPage } from './abuseReportsPage';
 import { payloads } from '@utils/payloads';
-import { helpers, SERVER_URL } from '@utils/helpers';
+import { helpers, toPath, SERVER_URL } from '@utils/helpers';
 import path from 'path';
 import type { Page } from '@playwright/test';
 
@@ -164,17 +164,25 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
 
         await gotoAndSettle(vendorPage, abuseReportsPage.admin.settingsUrl);
 
-        // The vendor (seller role) lacks manage_woocommerce → WP gates the page.
-        // The settings heading must NOT be present.
-        const headingVisible = await vendorPage
-            .getByRole('heading', { name: /Product Report Abuse Settings/i })
-            .isVisible()
-            .catch(() => false);
-        expect(headingVisible, 'Vendor must NOT see the abuse-report settings heading').toBe(false);
+        // Assert the positive, server-rendered gate FIRST (deterministic).
         expect(
             await isAdminPageDenied(vendorPage),
             'Vendor opening the Dokan settings page should hit the WP "not allowed" gate (no manage_woocommerce)',
         ).toBe(true);
+
+        // The Dokan settings app must not have mounted at all.
+        //
+        // This used to assert the absence of the "Product Report Abuse Settings"
+        // heading — which only renders after searchSettings() switches the active
+        // tab, so it is absent on the bare #/settings landing for EVERY role
+        // including a full admin. The check passed for the wrong reason and
+        // could not detect a gating regression. `#dokan-admin-search` renders on
+        // that landing for any manage_woocommerce holder (it is exactly what
+        // goToSettingsPage() waits for), so its absence is a real signal.
+        await expect(
+            vendorPage.locator(abuseReportsPage.admin.settingsSearchInput),
+            'Vendor must NOT see the Dokan settings app',
+        ).toHaveCount(0);
 
         await vendorPage.close();
         await context.close();
@@ -193,11 +201,13 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
             'Guest hitting the Dokan settings page should be redirected to wp-login.php',
         ).toContain('wp-login.php');
 
-        const headingVisible = await guestPage
-            .getByRole('heading', { name: /Product Report Abuse Settings/i })
-            .isVisible()
-            .catch(() => false);
-        expect(headingVisible, 'Guest must NOT see the abuse-report settings heading').toBe(false);
+        // Same correction as P1: the settings heading is absent on the bare
+        // #/settings landing for every role, so its absence proved nothing.
+        // Assert the settings app itself never mounted.
+        await expect(
+            guestPage.locator(abuseReportsPage.admin.settingsSearchInput),
+            'Guest must NOT see the Dokan settings app',
+        ).toHaveCount(0);
 
         await guestPage.close();
         await context.close();
@@ -263,31 +273,41 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
         // shop_manager CAN open the list. We assert the REAL outcome (access
         // granted) rather than the (incorrect) expectation — never weaken to
         // make the documented assumption "pass".
-        const context = await browser.newContext({ storageState: a1 });
-        const adminPage = await context.newPage();
+        // This used to open an ADMIN session (storageState: a1) and assert the
+        // ADMIN reached the list, on the reasoning that admin is a superset of
+        // shop_manager caps. That makes the case unable to detect any change in
+        // shop_manager gating — the exact thing it is named for. Drive a real
+        // shop_manager session instead; no shop_manager storageState exists
+        // (playwright/.auth holds admin/vendor/customer only), so log the
+        // beforeAll-created account in through the WP login form.
+        const context = await browser.newContext(); // fresh — no storageState
+        const smPage = await context.newPage();
 
-        // Switch this browser's cookies to the shop_manager by logging in via
-        // the WP login form would require its own storage state. Instead we
-        // verify the capability reality through the page object's admin session
-        // AND a REST probe with the shop_manager basic-auth header (below). For
-        // the UI half, we assert the cap is present at the WP level by checking
-        // the REST users/me capability set is out of scope here — the
-        // authoritative UI gate (manage_woocommerce) is exercised by the REST
-        // case P10 with the shop_manager token. Keep the UI portion minimal:
-        // confirm the admin (a superset of shop_manager caps) reaches the list,
-        // proving the route itself is reachable for manage_woocommerce holders.
-        const abuseReportsPage = new AbuseReportsPage(adminPage);
-        await abuseReportsPage.goToAbuseReportsReact();
-        const listHeadingVisible = await adminPage
-            .locator(abuseReportsPage.adminReact.pageHeading)
-            .isVisible()
-            .catch(() => false);
-        expect(
-            listHeadingVisible,
-            'The list route is reachable for manage_woocommerce holders (shop_manager has this cap + dokandar) — documents the gap that shop_manager is NOT blocked',
-        ).toBe(true);
+        await smPage.goto(toPath('wp-login.php'), { waitUntil: 'domcontentloaded' });
+        await smPage.locator('#user_login').fill(SHOP_MANAGER_USER);
+        await smPage.locator('#user_pass').fill(SHOP_MANAGER_PASS);
+        await smPage.locator('#wp-submit').dispatchEvent('click');
 
-        await adminPage.close();
+        // Fails loudly if beforeAll's swallowed `wp user create` never produced
+        // the account, rather than silently testing a logged-out session.
+        await expect
+            .poll(
+                async () => {
+                    const cookie = (await context.cookies()).find(c => c.name.startsWith('wordpress_logged_in_'));
+                    return cookie ? decodeURIComponent(cookie.value).split('|')[0] : undefined;
+                },
+                { timeout: 30000, message: `${SHOP_MANAGER_USER} should be logged in` },
+            )
+            .toBe(SHOP_MANAGER_USER);
+
+        const abuseReportsPage = new AbuseReportsPage(smPage);
+        await smPage.goto(abuseReportsPage.admin.abuseReportsUrl, { waitUntil: 'domcontentloaded' });
+        await expect(
+            smPage.locator(abuseReportsPage.adminReact.pageHeading),
+            'A shop_manager reaches the abuse-reports list (has manage_woocommerce + dokandar) — documents the gap that shop_manager is NOT blocked',
+        ).toBeVisible({ timeout: 30000 });
+
+        await smPage.close();
         await context.close();
     });
 
@@ -332,11 +352,22 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
         // Directly visiting the list route now renders nothing / a gated view —
         // the React route is not registered, so the list heading is absent.
         await adminFlow.navigateTo(adminFlow.admin.abuseReportsUrl);
-        await adminPage.waitForLoadState('load').catch(() => undefined);
-        const listHeadingVisible = await adminPage
-            .locator(adminFlow.adminReact.pageHeading)
-            .isVisible()
-            .catch(() => false);
+
+        // Wait for the SPA to actually settle before asserting an absence.
+        // navigateTo() is page.goto() (default waitUntil 'load'), so the
+        // waitForLoadState('load') that used to sit here was a no-op, and
+        // Locator.isVisible() does not wait. The admin shell mounts inside
+        // domReady() and React commits in a later task, so the heading could
+        // not possibly be painted at that instant — the assertion passed even
+        // when the route WAS registered. With the module off the route is
+        // unregistered and react-router falls through to the `path: '*'`
+        // catch-all (Dashboard.tsx), which renders AdminNotFound's
+        // "Sorry, the page can't be found" heading (src/layout/admin404.tsx).
+        // Anchor on that positive signal, THEN assert the list heading is gone.
+        await adminPage
+            .getByRole('heading', { name: /page can.t be found/i })
+            .waitFor({ state: 'visible', timeout: 30000 });
+        const listHeadingVisible = await adminPage.locator(adminFlow.adminReact.pageHeading).isVisible();
         expect(
             listHeadingVisible,
             'Abuse Reports list heading must be absent when the module is disabled',

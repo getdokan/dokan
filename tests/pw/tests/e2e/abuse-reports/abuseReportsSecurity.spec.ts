@@ -421,11 +421,14 @@ test.describe('Abuse Reports — Security (XSS / CSRF / SQLi) @pro', () => {
             // reason, so the filter clause is dropped and we get the unfiltered
             // list back — but it is NEVER concatenated into SQL. We assert it
             // returns a valid JSON array and did not error 5xx.
-            expect(response.status(), `Injection reason "${reason}" should not 5xx the endpoint`).toBeLessThan(500);
-            if (response.status() === 200) {
-                const body = await response.json();
-                expect(Array.isArray(body), 'Body should be a JSON array (no SQL error leaked)').toBe(true);
-            }
+            // Asserted unconditionally at 200, not `< 500` with the body check
+            // nested behind `if (status === 200)`: any 4xx used to satisfy the
+            // outer tolerance AND skip the substantive JSON-shape check, so the
+            // only assertion proving no SQL error leaked was silently bypassed.
+            // 200 subsumes the `< 500` intent and matches abuseReportsList.spec.ts:474.
+            expect(response.status(), `Injection reason "${reason}" should be accepted as a plain string filter (200)`).toBe(200);
+            const body = await response.json();
+            expect(Array.isArray(body), 'Body should be a JSON array (no SQL error leaked)').toBe(true);
         }
 
         await ctx.dispose();
@@ -471,11 +474,18 @@ test.describe('Abuse Reports — Security (XSS / CSRF / SQLi) @pro', () => {
         // check_ajax_referer() dies with `-1` (HTTP 200 body "-1") or 403 when
         // the nonce is missing/invalid. Accept either: assert the body is NOT a
         // success envelope.
+        // The third disjunct used to be `!body.includes('"success":true')`, which
+        // is satisfied by a 500, an empty body, or admin-ajax's "0" for an action
+        // that is not registered at all — so this reported "CSRF correctly
+        // rejected" for outcomes proving no nonce check ever ran. Assert the
+        // check_ajax_referer signature specifically, with a positive control
+        // that the action exists.
         const noNonceBody = await noNonce.text();
-        const noNonceRejected =
-            noNonce.status() === 403 ||
-            noNonceBody.trim() === '-1' ||
-            !noNonceBody.includes('"success":true');
+        expect(
+            noNonceBody.trim(),
+            'admin-ajax returned "0": the dokan_report_abuse_submit_form action is not registered, so this probe proves nothing about nonce enforcement',
+        ).not.toBe('0');
+        const noNonceRejected = noNonce.status() === 403 || noNonceBody.trim() === '-1';
         expect(noNonceRejected, `Submit with NO nonce should be rejected (status ${noNonce.status()}, body ${noNonceBody.slice(0, 80)})`).toBe(true);
 
         // (b) Wrong/garbage nonce.
@@ -491,10 +501,11 @@ test.describe('Abuse Reports — Security (XSS / CSRF / SQLi) @pro', () => {
             },
         });
         const wrongNonceBody = await wrongNonce.text();
-        const wrongNonceRejected =
-            wrongNonce.status() === 403 ||
-            wrongNonceBody.trim() === '-1' ||
-            !wrongNonceBody.includes('"success":true');
+        expect(
+            wrongNonceBody.trim(),
+            'admin-ajax returned "0": the dokan_report_abuse_submit_form action is not registered, so this probe proves nothing about nonce enforcement',
+        ).not.toBe('0');
+        const wrongNonceRejected = wrongNonce.status() === 403 || wrongNonceBody.trim() === '-1';
         expect(wrongNonceRejected, `Submit with WRONG nonce should be rejected (status ${wrongNonce.status()}, body ${wrongNonceBody.slice(0, 80)})`).toBe(true);
 
         await ctx.dispose();
