@@ -69,11 +69,17 @@ export const shouldBlockNavigation = () => {
             ( rule ) => rule.path === currentURLPath
         );
 
-    // On a dashboard root with no analytics `path` query, render the default report inline
-    // (handled by the `/` route in controller.js) instead of hard-redirecting the browser.
-    // This keeps the URL at the dashboard root and avoids a second full page load.
     if ( isAnalyticsExcluded && matchingRedirectRule ) {
-        return applyFilters( BLOCK_NAVIGATION_FILTER, false );
+        // On the dashboard root the `/` route registered in controller.js renders the default
+        // report inline, so no hard redirect is needed. That redirect cost a second full page
+        // load; skipping it keeps the URL at the dashboard root and loads the page once.
+        if ( currentURLPath === vendorAnalyticsDokanConfig.dashboardPath ) {
+            return applyFilters( BLOCK_NAVIGATION_FILTER, false );
+        }
+
+        // Every other rule (e.g. the reports page) keeps its original redirect fallback,
+        // since no inline route is registered for those paths.
+        document.location.href = matchingRedirectRule.redirect;
     }
 
     return applyFilters( BLOCK_NAVIGATION_FILTER, isAnalyticsExcluded );

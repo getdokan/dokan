@@ -759,6 +759,21 @@ class Assets {
             $shared_ui_asset_file = DOKAN_DIR . '/assets/js/' . $bundle . '.asset.php';
 
             if ( ! file_exists( $shared_ui_asset_file ) ) {
+                /*
+                 * Unlike the other bundles above, these handles are declared as dependencies of the
+                 * consuming bundles. A missing artifact therefore does not just drop this script —
+                 * WordPress refuses to enqueue every consumer too, taking the React UI down with it.
+                 * Log loudly so a broken build is diagnosable instead of failing silently.
+                 */
+                dokan_log(
+                    sprintf(
+                        'Missing shared UI asset file %1$s. The "%2$s" script handle will not be registered, so every bundle depending on it will be skipped by WordPress. Run the asset build.',
+                        $shared_ui_asset_file,
+                        $handle
+                    ),
+                    'error'
+                );
+
                 continue;
             }
 

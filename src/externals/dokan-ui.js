@@ -11,5 +11,7 @@
  *
  * Existing deep imports elsewhere (`@getdokan/dokan-ui/dist/components/*`) are left untouched:
  * they do not match the externalised bare specifier and remain bundled with their consumer.
+ *
+ * @since DOKAN_SINCE
  */
 export * from '@getdokan/dokan-ui/dist/index.js';

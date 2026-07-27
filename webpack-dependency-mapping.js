@@ -15,6 +15,8 @@ const WOOCOMMERCE_NAMESPACE = '@woocommerce/';
  * Each is built once as a standalone bundle exposed on a `window.dokan.*` global, so consuming
  * bundles reference the global instead of inlining their own copy of the package.
  *
+ * @since DOKAN_SINCE
+ *
  * @type {Object.<string, {external: string[], handle: string}>}
  */
 const SHARED_UI_EXTERNALS = {

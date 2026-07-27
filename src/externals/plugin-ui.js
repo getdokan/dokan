@@ -13,5 +13,7 @@
  * bare specifier. The bare specifier is externalised, so importing it here would make this
  * bundle re-export itself; the package's `exports` map also does not expose `./dist/*`, which
  * rules out a deep package import.
+ *
+ * @since DOKAN_SINCE
  */
 export * from '../../node_modules/@wedevs/plugin-ui/dist/index.js';
