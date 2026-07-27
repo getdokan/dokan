@@ -68,6 +68,40 @@ jobs:
             - uses: actions/checkout@v4
 
             # ---------------------------------------------------------------
+            # Built assets
+            #
+            # PHPUnit CANNOT run without a webpack build. This is not an
+            # optimisation that can be dropped — see docs/adr/0005. In short:
+            #   dokan-class.php:266  add_action('init', 'init_classes', 4)
+            #   init_classes()       resolves the whole 'container-service' tag
+            #   Assets::__construct  add_action('init', 'register_all_scripts', 10)
+            #   get_scripts():424    require DOKAN_DIR.'/assets/js/frontend.asset.php'
+            # assets/js is gitignored build output, so with no build that bare
+            # `require` is a FATAL error during bootstrap and zero tests run.
+            #
+            # Cache the two generated directories (neither contains any
+            # committed file) keyed on everything that can change bundle
+            # output. On a hit — the common case for a PHP-only PR, which is
+            # exactly what the `paths` filter above selects for — the whole
+            # webpack run is skipped.
+            #
+            # This step MUST stay ahead of `Npm install`. The install falls back to
+            # `npm i` when `npm ci` fails, and `npm i` rewrites package-lock.json
+            # (this repo has `github:` dependencies whose resolved commits get
+            # re-pinned). Hashing the lockfile after that ran produced a different
+            # key on warm runs than on cold ones, so the cache could never hit.
+            # Computing the key against the pristine checkout keeps it stable.
+            # ---------------------------------------------------------------
+            - name: Cache built assets
+              id: assets
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      assets/js
+                      assets/css
+                  key: dokan-assets-v1-${{ runner.os }}-${{ hashFiles('src/**', 'webpack.config.js', 'webpack-entries.js', 'webpack-dependency-mapping.js', 'postcss.config.js', 'tsconfig.json', 'package-lock.json', 'package.json') }}
+
+            # ---------------------------------------------------------------
             # Node — needed on every run, because wp-env itself is a
             # devDependency. Only the webpack build below is skippable.
             # ---------------------------------------------------------------
@@ -87,33 +121,6 @@ jobs:
             - name: Npm install
               if: steps.node-modules.outputs.cache-hit != 'true'
               run: npm ci --prefer-offline --no-audit --no-fund || npm i
-
-            # ---------------------------------------------------------------
-            # Built assets
-            #
-            # PHPUnit CANNOT run without a webpack build. This is not an
-            # optimisation that can be dropped — see docs/adr/0005. In short:
-            #   dokan-class.php:266  add_action('init', 'init_classes', 4)
-            #   init_classes()       resolves the whole 'container-service' tag
-            #   Assets::__construct  add_action('init', 'register_all_scripts', 10)
-            #   get_scripts():424    require DOKAN_DIR.'/assets/js/frontend.asset.php'
-            # assets/js is gitignored build output, so with no build that bare
-            # `require` is a FATAL error during bootstrap and zero tests run.
-            #
-            # Cache the two generated directories (neither contains any
-            # committed file) keyed on everything that can change bundle
-            # output. On a hit — the common case for a PHP-only PR, which is
-            # exactly what the `paths` filter above selects for — the whole
-            # webpack run is skipped.
-            # ---------------------------------------------------------------
-            - name: Cache built assets
-              id: assets
-              uses: actions/cache@v4
-              with:
-                  path: |
-                      assets/js
-                      assets/css
-                  key: dokan-assets-v1-${{ runner.os }}-${{ hashFiles('src/**', 'webpack.config.js', 'webpack-entries.js', 'webpack-dependency-mapping.js', 'postcss.config.js', 'tsconfig.json', 'package-lock.json', 'package.json') }}
 
             - name: Build assets
               if: steps.assets.outputs.cache-hit != 'true'
@@ -271,8 +278,9 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 7
 
-            - name: Dump container logs and stop environment
-              if: always()
-              run: |
-                  npx wp-env logs all --watch=false || true
-                  npx wp-env stop || true
+            # Diagnostics only on failure. `wp-env stop` is deliberately absent:
+            # the runner is torn down immediately after the job, so stopping the
+            # containers costs ~15s per run and buys nothing.
+            - name: Dump container logs
+              if: failure()
+              run: npx wp-env logs all --watch=false || true
