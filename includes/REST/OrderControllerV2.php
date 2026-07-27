@@ -282,7 +282,9 @@ class OrderControllerV2 extends OrderController {
 
         foreach ( $product_ids as $product_id ) {
             $product = dokan()->product->get( $product_id );
-            if ( ! $product ) {
+
+            // Only grant downloads for the vendor's own products, never another vendor's files (admins/shop managers exempt).
+            if ( ! $product || ( ! current_user_can( 'manage_woocommerce' ) && ! dokan_is_product_author( $product_id ) ) ) {
                 continue;
             }
 
