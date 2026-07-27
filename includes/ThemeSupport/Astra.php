@@ -65,7 +65,7 @@ class Astra {
      * all of which Dokan's `.dokan-btn` rules outrank, so vendor store and store listing pages
      * silently ignore the theme's button geometry while every other page on the site honours it.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @return void
      */
@@ -95,7 +95,7 @@ class Astra {
     /**
      * Check that every Astra helper the button bridge reads through is loaded.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @return bool
      */
@@ -122,7 +122,7 @@ class Astra {
     /**
      * Build the button preset CSS for every breakpoint Astra exposes.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @return string
      */
@@ -157,7 +157,7 @@ class Astra {
      * Empty values are left in place for Astra to drop, so a preset the admin never
      * configured keeps falling through to Dokan's own styling instead of blanking it.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @param array  $preset Astra button options keyed by the role they play here.
      * @param string $device One of `desktop`, `tablet` or `mobile`.
@@ -198,7 +198,7 @@ class Astra {
     /**
      * Selector list that carries the preset onto Dokan's buttons.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @return string
      */
@@ -221,7 +221,7 @@ class Astra {
      * frame, so the server-built bridge CSS would stay stale inside the customizer and store
      * page buttons would look out of sync exactly where the admin is configuring them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @return void
      */
@@ -265,7 +265,7 @@ class Astra {
      * Astra returns theme option data verbatim when it is not a well formed responsive array,
      * so nothing from the customizer is trusted before it reaches the style block.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @param mixed $value              Raw value returned by an Astra helper.
      * @param bool  $allow_rem_fallback Astra folds a rem fallback into pixel font sizes (`16px;font-size:1.0666rem`).

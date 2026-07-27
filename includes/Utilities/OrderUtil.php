@@ -244,7 +244,7 @@ class OrderUtil {
      * may act on any order. Centralizing this keeps every bulk-order entry point — the REST
      * bulk-actions endpoint and the legacy vendor-dashboard bulk form — guarded by one rule.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.11
      *
      * @param int|string $order_id Order id to check.
      *
