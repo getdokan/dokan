@@ -78,6 +78,11 @@ class Astra {
             return;
         }
 
+        // Registered before the CSS bail-out so the admin's first-ever preset change already refreshes the preview.
+        if ( is_customize_preview() ) {
+            $this->sync_customizer_preview();
+        }
+
         $css = $this->build_button_preset_css();
 
         if ( '' === $css ) {
@@ -85,10 +90,6 @@ class Astra {
         }
 
         wp_add_inline_style( 'dokan-style', $css );
-
-        if ( is_customize_preview() ) {
-            $this->sync_customizer_preview();
-        }
     }
 
     /**
