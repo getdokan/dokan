@@ -236,4 +236,25 @@ class OrderUtil {
          */
         return (bool) apply_filters( 'dokan_email_show_customer_details', true, $order );
     }
+
+    /**
+     * Whether the current user may act on the given order in a bulk operation.
+     *
+     * A vendor may act only on their own orders; admins and shop managers (manage_woocommerce)
+     * may act on any order. Centralizing this keeps every bulk-order entry point — the REST
+     * bulk-actions endpoint and the legacy vendor-dashboard bulk form — guarded by one rule.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int|string $order_id Order id to check.
+     *
+     * @return bool
+     */
+    public static function current_user_can_manage_order( $order_id ): bool {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        return dokan_is_seller_has_order( dokan_get_current_user_id(), absint( $order_id ) );
+    }
 }

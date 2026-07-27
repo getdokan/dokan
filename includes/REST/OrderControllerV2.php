@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use WC_Customer_Download;
 use WC_Data_Store;
 use WC_Product;
+use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Error;
 use WP_REST_Server;
 
@@ -414,18 +415,8 @@ class OrderControllerV2 extends OrderController {
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function process_orders_bulk_action( $requests ) {
-        $order_ids = $requests->get_param( 'order_ids' );
-
-        // A vendor may only bulk-update their own orders; foreign order ids are dropped (admins/shop managers are exempt).
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            $vendor_id = dokan_get_current_user_id();
-            $order_ids = array_filter(
-                $order_ids,
-                function ( $order_id ) use ( $vendor_id ) {
-                    return dokan_is_seller_has_order( $vendor_id, $order_id );
-                }
-            );
-        }
+        // A vendor may only bulk-update their own orders; admins/shop managers are exempt.
+        $order_ids = array_filter( (array) $requests->get_param( 'order_ids' ), [ OrderUtil::class, 'current_user_can_manage_order' ] );
 
         $data = [
             'bulk_orders' => $order_ids,
