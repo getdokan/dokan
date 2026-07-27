@@ -4,6 +4,44 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.11',
+        'released' => '2026-07-27',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Vendors can now search for products by SKU as well as by name.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Store-page buttons now respect the Astra theme\'s global button styling.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Downloadable files from the new product editor are now saved to WooCommerce\'s approved uploads directory.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from changing the status of another vendor\'s orders through dashboard bulk actions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from granting download access to another vendor\'s files.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from revoking download permissions on another vendor\'s orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from toggling Catalog Mode on another vendor\'s products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.10',
         'released' => '2026-07-21',
         'changes'  => [
