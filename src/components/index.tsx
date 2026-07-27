@@ -91,6 +91,11 @@ export type {
     WeeklyTimeSlotsProps,
 } from './WeeklyTimeSlots';
 
+// Provider-agnostic map location picker (Google Maps / Mapbox). Shared by the
+// admin Location settings (Default Location) and the vendor store map.
+export { default as MapPicker } from './MapPicker';
+export type { MapPickerProps, MapLocation, MapProvider } from './MapPicker';
+
 // Commission Components
 export * from './commission';
 export { default as LucideIcon } from './Icons/LucideIcon';

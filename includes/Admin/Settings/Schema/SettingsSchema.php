@@ -503,7 +503,7 @@ class SettingsSchema {
 				'type'               => 'field',
 				'variant'            => 'multicheck',
 				'section_id'         => 'map_placement',
-				'title'              => esc_html__( 'Map Placement Locations', 'dokan-lite' ),
+				'title'              => esc_html__( 'Map Placement', 'dokan-lite' ),
 				'description'        => esc_html__( 'Choose where the store location map appears', 'dokan-lite' ),
 				'tooltip'            => esc_html__( 'Select the pages where you want to display the store location map.', 'dokan-lite' ),
 				'default'            => [ 'store_listing' ],
