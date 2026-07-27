@@ -1,6 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
+import { applyFilters } from '@wordpress/hooks';
 import { ChevronDown } from 'lucide-react';
 import { useToast } from '@getdokan/dokan-ui';
 import {
@@ -18,6 +19,7 @@ import {
 } from '../events';
 import { getStatusLabel } from '../status';
 import { getOrderDetailsMarker } from './marker';
+import { ORDER_DETAILS_STATUSES_FILTER } from './slots';
 import type { OrderDetailsMeta } from '../types';
 
 const unprefix = ( status: string ) =>
@@ -79,9 +81,24 @@ const StatusDropdown = ( { orderId }: { orderId: number } ) => {
         return null;
     }
 
-    const statuses = ( marker.statuses ?? [] ).filter(
-        ( option ) => unprefix( option.value ) !== status
-    );
+    /**
+     * Filters the statuses a Vendor can switch this order to.
+     *
+     * The server publishes the list; this is where a store narrows it — a
+     * workflow that forbids jumping straight to Completed, say.
+     *
+     * @param {Array}  statuses Selectable statuses as `{ value, label }`.
+     * @param {string} status   The order's current (unprefixed) status.
+     * @param {number} orderId  The order being changed.
+     */
+    const statuses = applyFilters(
+        ORDER_DETAILS_STATUSES_FILTER,
+        ( marker.statuses ?? [] ).filter(
+            ( option ) => unprefix( option.value ) !== status
+        ),
+        status,
+        orderId
+    ) as Array< { value: string; label: string } >;
 
     const changeStatus = async ( wcStatus: string ) => {
         if ( unprefix( wcStatus ) === status || isSaving ) {

@@ -1,6 +1,5 @@
 import { useMemo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import { Slot } from '@wordpress/components';
 import { useNavigate } from 'react-router-dom';
 import { DokanAlert } from '@dokan/components';
 import useOrderDetails from './useOrderDetails';
@@ -12,9 +11,8 @@ import DownloadsCard from './DownloadsCard';
 import CustomerCard from './sidebar/CustomerCard';
 import AddressCard from './sidebar/AddressCard';
 import NotesCard from './sidebar/NotesCard';
+import { SectionSlot, SectionWithSlots } from './SectionSlot';
 import {
-    ORDER_DETAILS_AFTER_ITEMS_SLOT,
-    ORDER_DETAILS_AFTER_SUMMARY_SLOT,
     ORDER_DETAILS_SIDEBAR_AFTER_SLOT,
     ORDER_DETAILS_SIDEBAR_BEFORE_SLOT,
     ORDER_DETAILS_SIDEBAR_MIDDLE_SLOT,
@@ -100,48 +98,43 @@ const OrderDetailsView = ( { params }: { params?: { orderId?: string } } ) => {
         return <LoadingSkeleton />;
     }
 
-    const fillProps = context;
-
     return (
         <OrderDetailsProvider value={ context }>
             <style>{ PRINT_STYLES }</style>
             { /* mt-2 tops the layout's 16px up to the 24px header→card gap. */ }
             <div className="dokan-order-details-react-view mt-2 flex flex-col lg:flex-row gap-4">
                 <div className="flex-1 min-w-0 flex flex-col gap-4">
-                    <SummaryStrip />
-                    <Slot
-                        name={ ORDER_DETAILS_AFTER_SUMMARY_SLOT }
-                        fillProps={ fillProps }
-                    />
-                    <ItemsCard />
-                    <Slot
-                        name={ ORDER_DETAILS_AFTER_ITEMS_SLOT }
-                        fillProps={ fillProps }
-                    />
+                    <SectionWithSlots section="summary">
+                        <SummaryStrip />
+                    </SectionWithSlots>
+                    <SectionWithSlots section="items">
+                        <ItemsCard />
+                    </SectionWithSlots>
                     { isOrderDetailsSectionEnabled( 'downloads' ) && (
-                        <DownloadsCard />
+                        <SectionWithSlots section="downloads">
+                            <DownloadsCard />
+                        </SectionWithSlots>
                     ) }
                 </div>
                 { /* The sidebar prints too — legacy printing covers the whole
                      details page, customer info included. */ }
                 <aside className="w-full lg:w-80 shrink-0 flex flex-col gap-4">
-                    <Slot
-                        name={ ORDER_DETAILS_SIDEBAR_BEFORE_SLOT }
-                        fillProps={ fillProps }
-                    />
-                    <CustomerCard />
-                    <AddressCard />
+                    <SectionSlot name={ ORDER_DETAILS_SIDEBAR_BEFORE_SLOT } />
+                    <SectionWithSlots section="customer">
+                        <CustomerCard />
+                    </SectionWithSlots>
+                    <SectionWithSlots section="address">
+                        <AddressCard />
+                    </SectionWithSlots>
                     { /* Pro's Delivery Time card fills here, keeping the
                          sidebar order: Customer, Address, Delivery, Notes. */ }
-                    <Slot
-                        name={ ORDER_DETAILS_SIDEBAR_MIDDLE_SLOT }
-                        fillProps={ fillProps }
-                    />
-                    { isOrderDetailsSectionEnabled( 'notes' ) && <NotesCard /> }
-                    <Slot
-                        name={ ORDER_DETAILS_SIDEBAR_AFTER_SLOT }
-                        fillProps={ fillProps }
-                    />
+                    <SectionSlot name={ ORDER_DETAILS_SIDEBAR_MIDDLE_SLOT } />
+                    { isOrderDetailsSectionEnabled( 'notes' ) && (
+                        <SectionWithSlots section="notes">
+                            <NotesCard />
+                        </SectionWithSlots>
+                    ) }
+                    <SectionSlot name={ ORDER_DETAILS_SIDEBAR_AFTER_SLOT } />
                 </aside>
             </div>
         </OrderDetailsProvider>

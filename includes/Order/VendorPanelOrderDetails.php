@@ -67,10 +67,29 @@ class VendorPanelOrderDetails implements Hookable {
         }
 
         /**
-         * Filters the order-details marker payload for the Vendor panel.
+         * Filters which first-party order-details sections the panel renders.
          *
-         * Pro modules and extensions append their section flags here so the React
-         * view knows which sections exist on this store.
+         * Turning a flag off removes that section from the React view; the slot
+         * around it still renders, so an extension can replace a section rather
+         * than only hide it.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $sections Section id => enabled.
+         */
+        $sections = apply_filters(
+            'dokan_vendor_panel_order_details_sections',
+            [
+                'notes'     => true,
+                'downloads' => true,
+            ]
+        );
+
+        /**
+         * Filters the whole order-details marker payload for the Vendor panel.
+         *
+         * Pro modules and extensions append their section flags and any data
+         * their panel bundle needs before the view mounts.
          *
          * @since DOKAN_SINCE
          *
@@ -82,12 +101,16 @@ class VendorPanelOrderDetails implements Hookable {
                 $existing,
                 [
                     'view'                  => $this->get_view(),
-                    'statuses'              => $statuses,
+                    /**
+                     * Filters the statuses offered by the panel's status control.
+                     *
+                     * @since DOKAN_SINCE
+                     *
+                     * @param array $statuses List of `[ 'value' => ..., 'label' => ... ]`.
+                     */
+                    'statuses'              => apply_filters( 'dokan_vendor_panel_order_details_statuses', $statuses ),
                     'status_change_allowed' => 'on' === dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ),
-                    'sections'              => [
-                        'notes'     => true,
-                        'downloads' => true,
-                    ],
+                    'sections'              => $sections,
                 ]
             )
         );
