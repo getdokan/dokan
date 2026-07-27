@@ -63,6 +63,12 @@ export interface OrderDetailsMeta {
     status: string;
     status_label: string;
     date_created: string | null;
+    /**
+     * Whether Pro's manual-order screen can edit this order (vendor-created
+     * orders only). Absent when the fragment endpoint announces the meta —
+     * consumers fall back to the legacy always-offer behaviour then.
+     */
+    manual_order_editable?: boolean;
 }
 
 /**
