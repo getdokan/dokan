@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Order;
 
 use WC_Order;
+use WP_User;
 use WeDevs\Dokan\FakeMailer;
 
 // don't call the file directly
@@ -82,7 +83,23 @@ class EmailHooks {
         // get the order id from order object
         $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
 
-        $seller_info  = get_userdata( $seller_id );
+        $seller_info = get_userdata( $seller_id );
+
+        /*
+         * A multi-vendor parent order has no vendor of its own, so
+         * dokan_get_seller_id_by_order() returns 0 for it by design, and a vendor
+         * account may since have been deleted. get_userdata() returns false in both
+         * cases and there is no address to add.
+         *
+         * Without this guard the property read fatals on PHP 8 ("Attempt to read
+         * property on bool"). That Error does not extend Exception, so WooCommerce's
+         * catch in WC_Emails::send_transactional_email() cannot contain it, and the
+         * whole cancelled-order transition is aborted — leaving sub-orders unsynced.
+         */
+        if ( ! $seller_info instanceof WP_User ) {
+            return $recipient;
+        }
+
         $seller_email = $seller_info->user_email;
 
         // if admin email & seller email is same
