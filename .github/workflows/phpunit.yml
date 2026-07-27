@@ -53,16 +53,17 @@ jobs:
         timeout-minutes: 25
 
         strategy:
-            # One entry today. The plugin declares `Requires PHP: 7.4` and
-            # .wp-env.json pins 7.4, so that is the only combination with any
-            # coverage — PHP 8.x incompatibilities currently ship untested.
-            # To expand, add versions here (e.g. '8.1', '8.3'); the
-            # "Prepare wp-env config" step below already rewrites .wp-env.json's
-            # phpVersion from this value, so no other change is needed.
-            # Expect first-run failures on 8.x.
+            # 7.4 is the floor the plugin declares (`Requires PHP: 7.4`) and what
+            # .wp-env.json pins; 8.4 is the top of the range users actually run on.
+            # The "Prepare wp-env config" step below rewrites .wp-env.json's
+            # phpVersion from this value, and the wp-env image cache key includes
+            # it, so adding a version needs no other change.
+            #
+            # fail-fast is off on purpose: a failure on one version must not
+            # cancel the other, or a single 8.4 deprecation would hide 7.4's result.
             fail-fast: false
             matrix:
-                php: ['7.4']
+                php: ['7.4', '8.4']
 
         steps:
             - uses: actions/checkout@v4
