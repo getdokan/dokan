@@ -51,6 +51,20 @@ class AdminExtensionsController extends DokanBaseAdminController {
     }
 
     /**
+     * Check whether the current user may install plugins.
+     *
+     * Overrides the admin base check: this route installs code from wordpress.org, so
+     * `manage_woocommerce` is not enough — a Shop Manager holds it without `install_plugins`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function check_permission() {
+        return current_user_can( 'install_plugins' );
+    }
+
+    /**
      * Install a plugin from WordPress.org.
      *
      * @since SUSPENDED

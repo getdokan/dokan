@@ -943,8 +943,9 @@ class SetupWizard {
      *
      * @return boolean
      */
-    protected function user_can_install_plugin() {
-        return current_user_can( 'install_plugins' );
+    public function user_can_install_plugin() {
+        // The background installer activates what it installs, so both caps are required.
+        return current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' );
     }
 
     protected function display_recommended_item( $item_info ) {
@@ -1009,7 +1010,8 @@ class SetupWizard {
      * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
      */
     public function install_plugin( $plugin_id, $plugin_info ) {
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        // Installing and activating arbitrary code is a full-trust action, so require the caps WordPress requires for it — not `manage_woocommerce`, which Shop Managers hold.
+        if ( ! $this->user_can_install_plugin() ) {
             return;
         }
 
