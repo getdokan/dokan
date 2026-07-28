@@ -19,7 +19,7 @@ use Closure;
  * Schema authors pass the slot list so `to_legacy` can clear unselected
  * slots — exactly the same factory signature as the sibling transformer:
  *
- *     'legacy_transformer' => MulticheckArrayBooleanTransformer::for_slots( [ 'store_listing' ] ),
+ *     'legacy_transformer' => MulticheckArrayBooleanTransformer::for_slots( [ 'store_map' ] ),
  *
  * Closures are filter-safe in the current pipeline (no schema persistence);
  * swap to a dedicated class if the schema ever gets cached to a transient.
