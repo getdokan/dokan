@@ -20,9 +20,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Full history so the 24-hour git log window below can resolve commits.
+      # The job never pushes, so the checkout token is not kept on disk.
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -56,11 +58,15 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
 
-      # PHP files touched by commits in the last 24 hours. Deleted files are
-      # dropped by the -f existence test, same as the old pull-request check.
+      # PHP files that reached this branch in the last 24 hours. --first-parent
+      # plus --diff-merges=first-parent counts a merge by when it landed, not by
+      # when its commits were originally written, so a pull request merged today
+      # is inspected even when the work inside it is older than the window.
+      # Deleted files are dropped by the -f test, as in the old PR check.
       - id: changes
         run: |
-          FILES=$(git log --since='24 hours ago' --name-only --pretty=format: -- '*.php' \
+          FILES=$(git log --first-parent --diff-merges=first-parent \
+              --since='24 hours ago' --name-only --pretty=format: -- '*.php' \
             | sort -u \
             | while read -r f; do [ -n "$f" ] && [ -f "$f" ] && echo "$f"; done \
             | xargs)
