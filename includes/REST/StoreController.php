@@ -779,10 +779,8 @@ class StoreController extends WP_REST_Controller {
 
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
 
-        $is_admin = current_user_can( 'manage_options' );
-
         // Restrict admin commission fields for all except admins and vendor only
-        if ( ! $is_admin && ! dokan_is_user_seller( get_current_user_id(), true ) ) {
+        if ( ! $this->can_view_commission_settings() ) {
             $restricted_fields[] = 'admin_category_commission';
             $restricted_fields[] = 'admin_commission';
             $restricted_fields[] = 'admin_additional_fee';
@@ -811,6 +809,20 @@ class StoreController extends WP_REST_Controller {
         }
 
         return apply_filters( 'dokan_rest_store_restricted_fields_for_view', $restricted_fields, $store, $request );
+    }
+
+    /**
+     * Whether the current user's role may see admin-configured commission settings at all.
+     *
+     * Callers must additionally confirm the user is authorized for the store in question,
+     * since this only answers the role question — vendor staff are excluded deliberately.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function can_view_commission_settings(): bool {
+        return current_user_can( 'manage_options' ) || dokan_is_user_seller( get_current_user_id(), true );
     }
 
     /**
@@ -1108,11 +1120,18 @@ class StoreController extends WP_REST_Controller {
         }
 
         $category_data = $store->get_store_categories( $best_selling );
-        $commission_settings = $store->get_commission_settings();
+
+        // Terms stay public, but commission is admin-configured data, so it is limited to the callers the single-store endpoint shows it to.
+        if ( ! $this->can_access_vendor_store( $store_id ) || ! $this->can_view_commission_settings() ) {
+            return rest_ensure_response( $category_data );
+        }
+
+        $commission_settings  = $store->get_commission_settings();
         $category_commissions = $commission_settings->get_category_commissions();
+        $commission_type      = $commission_settings->get_type();
 
         foreach ( $category_data as $term ) {
-            $term->admin_commission_type = $commission_settings->get_type();
+            $term->admin_commission_type = $commission_type;
 
             if ( isset( $category_commissions['items'][ $term->term_id ] ) ) {
                 $term->commission = $category_commissions['items'][ $term->term_id ];
@@ -1123,9 +1142,7 @@ class StoreController extends WP_REST_Controller {
             }
         }
 
-        $response = rest_ensure_response( $category_data );
-
-        return $response;
+        return rest_ensure_response( $category_data );
     }
 
     /**
