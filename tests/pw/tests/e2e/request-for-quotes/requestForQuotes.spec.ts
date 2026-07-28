@@ -152,6 +152,11 @@ test.describe('Request for quotation test customer', () => {
                 await apiUtils.updatePaymentGateway(id, { ...payload, enabled: false }, payloads.adminAuth);
             }
         }
+        // The converted order is paid via Direct Bank Transfer (bacs). It is enabled by default, but an
+        // earlier test in the shard can leave it disabled (the Docker DB is shared across the whole shard),
+        // and then its checkout radio never renders → a 30s locator.click timeout on the pay page. Assert
+        // the precondition instead of assuming it, symmetric with disabling the marketplace gateways above.
+        await apiUtils.updatePaymentGateway('bacs', { enabled: true }, payloads.adminAuth);
         await apiUtils.convertQuoteToOrder(quoteId, payloads.adminAuth);
         await customer.payConvertedQuote(quoteId);
     });

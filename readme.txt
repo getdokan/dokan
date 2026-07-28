@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.10
+Stable tag: 5.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.11 ( Jul 27, 2026 ) =
+- **update:** Vendors can now search for products by SKU as well as by name.
+- **fix:** Store-page buttons now respect the Astra theme's global button styling.
+- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
+- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
+- **fix:** Prevented vendors from granting download access to another vendor's files.
+- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
+- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
+
 = v5.0.10 ( Jul 21, 2026 ) =
 - **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
 - **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
@@ -396,14 +405,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v5.0.7 ( Jun 29, 2026 ) =
 - **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
 - **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
-
-= v5.0.6 ( Jun 26, 2026 ) =
-- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
-- **update:** Added weDocs to the admin Extensions page as an installable add-on.
-- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
-- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
-- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
-- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
-- **fix:** Enabled the "View in site" button for all published products.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

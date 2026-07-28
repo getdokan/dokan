@@ -1,3 +1,13 @@
+### v5.0.11 ( Jul 27, 2026 ) ###
+
+- **update:** Vendors can now search for products by SKU as well as by name.
+- **fix:** Store-page buttons now respect the Astra theme's global button styling.
+- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
+- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
+- **fix:** Prevented vendors from granting download access to another vendor's files.
+- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
+- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
+
 ### v5.0.10 ( Jul 21, 2026 ) ###
 
 - **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.

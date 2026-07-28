@@ -973,10 +973,49 @@ class ProductController extends DokanRESTController {
             ];
         }
 
+        // WP_Query's `s` can't match SKUs — reuse WP Admin's WooCommerce product search so SKU, numeric-ID and variation-SKU lookups behave identically here.
+        if ( isset( $request['search'] ) && '' !== $request['search'] && 'product' === $this->post_type ) {
+            $data_store = \WC_Data_Store::load( 'product' );
+
+            if ( $data_store->has_callable( 'search_products' ) ) {
+                /**
+                 * Filters the maximum number of products the product search may match.
+                 *
+                 * Null (default) keeps the match set unbounded so a vendor's own product is never
+                 * truncated away before the `author` constraint applies; large marketplaces can
+                 * bound the query at the cost of that guarantee.
+                 *
+                 * @since 5.0.11
+                 *
+                 * @param int|null $limit Maximum matches, or null for unlimited.
+                 */
+                $search_limit = apply_filters( 'dokan_rest_product_search_limit', null );
+
+                // All statuses searched — vendors must find their drafts; the query's `author` arg keeps results vendor-scoped.
+                $search_ids = array_filter( wp_parse_id_list( $data_store->search_products( wc_clean( $request['search'] ), '', true, true, $search_limit ) ) );
+
+                // Search runs last so any post__in set above (`include` param, on_sale) narrows the matches instead of being widened by them.
+                if ( ! empty( $args['post__in'] ) ) {
+                    $search_ids = array_intersect( $search_ids, wp_parse_id_list( $args['post__in'] ) );
+                }
+
+                // WP_Query ignores post__not_in once post__in is set, so honour `exclude` by hand.
+                if ( ! empty( $args['post__not_in'] ) ) {
+                    $search_ids = array_diff( $search_ids, wp_parse_id_list( $args['post__not_in'] ) );
+                }
+
+                // A zero-match search must return nothing — an empty post__in would drop the constraint and return the whole catalogue.
+                $args['post__in'] = ! empty( $search_ids ) ? $search_ids : [ 0 ];
+
+                unset( $args['s'] );
+            }
+        }
+
         /**
          * Filter the WP_Query args before executing the product listing query.
          * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
-         * filtering for both v1 and v2 REST endpoints.
+         * filtering for both v1 and v2 REST endpoints. Note: `post__in` may already
+         * carry the search/on_sale constraints — callbacks should narrow it, never widen it.
          *
          * @since 5.0.0
          *
