@@ -1,10 +1,17 @@
-on: pull_request
+on:
+  # Runs once a day only, to keep Actions cost down. Pull requests no longer
+  # trigger this workflow -- it now inspects every PHP file committed to the
+  # default branch in the last 24 hours.
+  # workflow will run daily at 9:00 AM BDT (3:00 AM UTC)
+  schedule:
+    - cron: 0 3 * * *
+  # workflow can be manually triggered
+  workflow_dispatch:
 
-# Cancels all previous workflow runs for pull requests that have not completed.
+# Cancels a previous run of this workflow that has not completed.
 concurrency:
-    # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 name: PHPCS Inspections
 jobs:
@@ -12,7 +19,10 @@ jobs:
     name: Run PHPCS inspection
     runs-on: ubuntu-latest
     steps:
+      # Full history so the 24-hour git log window below can resolve commits.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -46,15 +56,16 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
 
+      # PHP files touched by commits in the last 24 hours. Deleted files are
+      # dropped by the -f existence test, same as the old pull-request check.
       - id: changes
         run: |
-          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G "$URL" \
-            | jq -r '.[] | select(.status != "removed") | .filename' \
-            | grep -E '\.php$' \
-            | while read -r f; do [ -f "$f" ] && echo "$f"; done \
+          FILES=$(git log --since='24 hours ago' --name-only --pretty=format: -- '*.php' \
+            | sort -u \
+            | while read -r f; do [ -n "$f" ] && [ -f "$f" ] && echo "$f"; done \
             | xargs)
           echo "files=$FILES" >> $GITHUB_OUTPUT
+          echo "PHP files changed in the last 24h: ${FILES:-none}" >> $GITHUB_STEP_SUMMARY
 
       - name: Detect coding standard violations
         if: steps.changes.outputs.files != ''
