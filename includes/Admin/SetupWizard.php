@@ -652,7 +652,7 @@ class SetupWizard {
         $options['admin_percentage']                          = $dokan_commission_percentage;
         $options['additional_fee']                            = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
         $options['commission_category_based_values']          = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
-        $options['reset_sub_category_when_edit_all_category'] = isset( $_POST['reset_sub_category'] ) && false === dokan_string_to_bool( $_POST['reset_sub_category'] ) ? 'off' : 'on';
+        $options['reset_sub_category_when_edit_all_category'] = isset( $_POST['reset_sub_category'] ) && false === dokan_string_to_bool( sanitize_text_field( wp_unslash( $_POST['reset_sub_category'] ) ) ) ? 'off' : 'on';
 
         update_option( 'dokan_selling', $options );
 
