@@ -112,7 +112,7 @@ class AdminPluginInstallCapabilityTest extends DokanTestCase {
     }
 
     /**
-     * install_plugins alone is not enough: the queued installer also activates.
+     * The install_plugins cap alone is not enough: the queued installer also activates.
      */
     public function test_onboarding_does_not_install_for_user_who_cannot_activate() {
         $role_name = 'dokan_test_installer_only';
