@@ -112,6 +112,37 @@ class AdminPluginInstallCapabilityTest extends DokanTestCase {
     }
 
     /**
+     * install_plugins alone is not enough: the queued installer also activates.
+     */
+    public function test_onboarding_does_not_install_for_user_who_cannot_activate() {
+        $role_name = 'dokan_test_installer_only';
+        add_role(
+            $role_name,
+            'Installer Only',
+            [
+                'read'               => true,
+                'manage_woocommerce' => true,
+                'install_plugins'    => true,
+            ]
+        );
+
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => $role_name ] ) );
+
+        $this->assertTrue( current_user_can( 'install_plugins' ), 'Precondition: this user may install.' );
+        $this->assertFalse( current_user_can( 'activate_plugins' ), 'Precondition: this user may not activate.' );
+
+        $response = $this->post_request( 'admin/onboarding', $this->onboarding_payload() );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertFalse(
+            get_option( 'woocommerce_setup_background_installing_' . self::PLUGIN_ID ),
+            'The install queues an activation, so install_plugins without activate_plugins must not be enough.'
+        );
+
+        remove_role( $role_name );
+    }
+
+    /**
      * Onboarding request body carrying one plugin to install.
      */
     protected function onboarding_payload(): array {
@@ -135,6 +166,9 @@ class AdminPluginInstallCapabilityTest extends DokanTestCase {
     public function tear_down() {
         // install_plugin() defers the real download to shutdown; drop it so no test ever hits wordpress.org.
         remove_all_actions( 'shutdown' );
+
+        // Clear the queue flag too, or a later test would hit install_plugin()'s "already queued" early return.
+        delete_option( 'woocommerce_setup_background_installing_' . self::PLUGIN_ID );
 
         wp_set_current_user( 0 );
 
