@@ -85,12 +85,25 @@ class StoreCategoriesCommissionDisclosureTest extends DokanTestCase {
     }
 
     /**
-     * An admin / shop manager still sees commission settings for any store.
+     * An admin still sees commission settings for any store.
      */
     public function test_admin_receives_commission_fields() {
         wp_set_current_user( $this->admin_id );
 
         $this->assertCommissionFieldsVisible( true, 'An admin' );
+    }
+
+    /**
+     * A shop manager keeps access too — Installer grants them 'dokandar', which is what the gate accepts.
+     */
+    public function test_shop_manager_receives_commission_fields() {
+        $shop_manager_id = $this->factory()->user->create( [ 'role' => 'shop_manager' ] );
+        wp_set_current_user( $shop_manager_id );
+
+        $this->assertTrue( current_user_can( 'manage_woocommerce' ), 'Precondition: the fixture really is a shop manager.' );
+        $this->assertFalse( current_user_can( 'manage_options' ), 'Precondition: shop managers are not administrators.' );
+
+        $this->assertCommissionFieldsVisible( true, 'A shop manager' );
     }
 
     /**
