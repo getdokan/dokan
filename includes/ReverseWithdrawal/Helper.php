@@ -729,7 +729,37 @@ class Helper {
 
         // now check for data validation
         if ( $amount <= 0 ) {
-            return new WP_Error( 'invalid-amount', __( 'Payment can not be less than or equal to zero.', 'dokan-lite' ) );
+            return new WP_Error( 'invalid-amount', __( 'Payment can not be less than or equal to zero.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        // The amount is client-supplied and lands in the vendor's ledger verbatim, so it must never exceed what they actually owe.
+        $balance_data = self::get_vendor_balance();
+
+        if ( is_wp_error( $balance_data ) ) {
+            return $balance_data;
+        }
+
+        // Cap against total `balance`, not `payable_amount`, so paying a not-yet-due balance early still works under by_month billing.
+        $due = (float) wc_format_decimal( $balance_data['balance'], wc_get_price_decimals() );
+
+        if ( $due <= 0 ) {
+            return new WP_Error( 'no-due-balance', __( 'You do not have any due balance to pay.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        // Compare as scaled integers so paying the exact outstanding balance is not rejected by IEEE-754 drift.
+        $scale = 10 ** wc_get_price_decimals();
+
+        if ( (int) round( $amount * $scale ) > (int) round( $due * $scale ) ) {
+            return new WP_Error(
+                'amount-exceeds-due-balance',
+                sprintf(
+                    /* translators: %s: the vendor's outstanding reverse withdrawal balance */
+                    __( 'Payment can not be greater than your due balance of %s.', 'dokan-lite' ),
+                    // The AJAX caller renders this message as plain text, so the price must not carry markup.
+                    wp_strip_all_tags( html_entity_decode( wc_price( $due ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) )
+                ),
+                [ 'status' => 400 ]
+            );
         }
 
         // get reverse withdrawal product id
