@@ -1,0 +1,37 @@
+/* Front-end + editor styles for dokan/store-list. */
+
+/*
+ * Dokan's listing stylesheet only defines two and three column layouts, and
+ * forces three columns from 992px up, so the block's Columns setting would have
+ * no effect on desktop. These rules are scoped to the block so the classic
+ * `[dokan-stores]` shortcode keeps its current behaviour.
+ */
+.wp-block-dokan-store-list {
+	@media (min-width: 992px) {
+		#dokan-seller-listing-wrap ul.dokan-seller-wrap > li.dokan-single-seller {
+			&.coloum-1 {
+				width: 100%;
+			}
+
+			&.coloum-2 {
+				width: 50%;
+			}
+
+			&.coloum-3 {
+				width: 33.3333%;
+			}
+
+			&.coloum-4 {
+				width: 25%;
+			}
+
+			&.coloum-5 {
+				width: 20%;
+			}
+
+			&.coloum-6 {
+				width: 16.6666%;
+			}
+		}
+	}
+}

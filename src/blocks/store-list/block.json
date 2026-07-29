@@ -6,24 +6,61 @@
     "title": "Store List",
     "category": "dokan",
     "description": "Display a grid of vendor stores.",
-    "keywords": [ "vendor", "store", "stores", "marketplace", "dokan" ],
+    "keywords": [
+        "vendor",
+        "store",
+        "stores",
+        "marketplace",
+        "dokan"
+    ],
     "textdomain": "dokan-lite",
     "attributes": {
-        "perPage": { "type": "number", "default": 10 },
-        "columns": { "type": "number", "default": 3 },
-        "featured": { "type": "boolean", "default": false },
-        "category": { "type": "string", "default": "" },
-        "storeIds": { "type": "array", "default": [] },
-        "withProductsOnly": { "type": "boolean", "default": false },
-        "orderby": { "type": "string", "default": "" },
-        "order": { "type": "string", "default": "" }
+        "perPage": {
+            "type": "number",
+            "default": 10
+        },
+        "columns": {
+            "type": "number",
+            "default": 3
+        },
+        "featured": {
+            "type": "boolean",
+            "default": false
+        },
+        "category": {
+            "type": "string",
+            "default": ""
+        },
+        "storeIds": {
+            "type": "array",
+            "default": []
+        },
+        "withProductsOnly": {
+            "type": "boolean",
+            "default": false
+        },
+        "orderby": {
+            "type": "string",
+            "default": ""
+        },
+        "order": {
+            "type": "string",
+            "default": ""
+        }
     },
     "supports": {
-        "align": [ "wide", "full" ],
-        "spacing": { "margin": true, "padding": true },
+        "align": [
+            "wide",
+            "full"
+        ],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
         "html": false
     },
     "example": {},
     "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
     "render": "file:./render.php"
 }
