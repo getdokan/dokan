@@ -2,16 +2,19 @@
 /*
  * Resolves the spec list for a given Playwright shard using a duration baseline.
  *
- * Usage: node getShardSpecs.js <shardIndex> <shardTotal>
+ * Usage: node getShardSpecs.js <shardIndex> <shardTotal> [--smoke]
  *
  * Strategy:
  *   1. Read tests/pw/utils/shard-durations.json (committed baseline of spec → ms).
  *   2. Discover every *.spec.ts under tests/e2e (so newly-added specs are not lost).
- *   3. Greedy bin-pack longest-first into N bins.
- *   4. Print spec paths (one per line, relative to tests/pw) for the requested shard.
+ *   3. With --smoke, keep only specs listed in pr-smoke-specs.json.
+ *   4. Greedy bin-pack longest-first into N bins.
+ *   5. Print spec paths (one per line, relative to tests/pw) for the requested shard.
  *
  * If the baseline is missing, exits 0 with no output so the workflow can fall
- * back to Playwright's built-in --shard.
+ * back to Playwright's built-in --shard — except in --smoke mode, where falling
+ * back would silently run the FULL suite; there we pack the smoke list with
+ * equal weights instead.
  */
 
 'use strict';
@@ -19,7 +22,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const [, , shardIndexArg, shardTotalArg] = process.argv;
+const cliArgs = process.argv.slice(2);
+const smoke = cliArgs.includes('--smoke');
+const [shardIndexArg, shardTotalArg] = cliArgs.filter(a => !a.startsWith('--'));
 const shardIndex = parseInt(shardIndexArg, 10);
 const shardTotal = parseInt(shardTotalArg, 10);
 if (!shardIndex || !shardTotal || shardIndex < 1 || shardIndex > shardTotal) {
@@ -31,12 +36,14 @@ const pwRoot = path.resolve(__dirname, '..');
 const baselinePath = path.join(__dirname, 'shard-durations.json');
 const e2eRoot = path.join(pwRoot, 'tests', 'e2e');
 
-if (!fs.existsSync(baselinePath)) {
+if (!fs.existsSync(baselinePath) && !smoke) {
     // No baseline → fall back to alphabetical sharding upstream.
     process.exit(0);
 }
 
-const baseline = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
+const baseline = fs.existsSync(baselinePath)
+    ? JSON.parse(fs.readFileSync(baselinePath, 'utf8'))
+    : { specs: [] };
 const baselineByFile = new Map();
 for (const entry of baseline.specs || []) {
     baselineByFile.set(entry.file, entry.ms || 0);
@@ -64,7 +71,25 @@ if (!fs.existsSync(e2eRoot)) {
     process.exit(0);
 }
 
-const allSpecs = walkSpecs(e2eRoot)
+let specFiles = walkSpecs(e2eRoot).map(f => f.split(path.sep).join('/'));
+
+if (smoke) {
+    const smokePath = path.join(__dirname, 'pr-smoke-specs.json');
+    if (fs.existsSync(smokePath)) {
+        const { include } = JSON.parse(fs.readFileSync(smokePath, 'utf8'));
+        specFiles = specFiles.filter(f =>
+            include.some(entry => (entry.endsWith('/') ? f.startsWith(entry) : f === entry))
+        );
+        if (specFiles.length === 0) {
+            console.error('pr-smoke-specs.json matched no specs — check the include list');
+            process.exit(2);
+        }
+    } else {
+        console.error('pr-smoke-specs.json missing — packing the full suite instead');
+    }
+}
+
+const allSpecs = specFiles
     .map(file => ({
         file,
         // Default newly-added (unmeasured) specs to the global mean so they

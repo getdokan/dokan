@@ -1,0 +1,32 @@
+{
+    "description": "Curated e2e smoke subset run on pull_request events (full suite still runs on develop pushes and the nightly schedule). Entries are paths relative to tests/e2e/: a trailing slash includes the whole feature folder, otherwise the entry must match a spec file exactly. Consumed by getShardSpecs.js --smoke.",
+    "include": [
+        "products/",
+        "product-form-manager/",
+        "vendor-products/",
+        "orders/",
+        "my-orders/",
+        "manual-order/",
+        "refunds/",
+        "coupons/",
+        "dashboard/",
+        "withdraws/",
+        "reverse-withdraws/",
+        "payments/",
+        "commission/",
+        "settings/",
+        "vendor-settings/",
+        "vendor/",
+        "stores/",
+        "store-listing/",
+        "single-store/",
+        "single-product/",
+        "shop/",
+        "customer/",
+        "plugin/",
+        "admin/admin.spec.ts",
+        "admin/adminDashboardHome.spec.ts",
+        "admin/adminVendors.spec.ts",
+        "admin/adminWithdraw.spec.ts"
+    ]
+}
