@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-filter-bar",
+    "version": "1.0.0",
+    "title": "Store Filter Bar",
+    "category": "dokan",
+    "description": "Store count, search, sorting and view controls for the store list.",
+    "keywords": [ "vendor", "store", "filter", "search", "dokan" ],
+    "textdomain": "dokan-lite",
+    "attributes": {
+        "showStoreCount": { "type": "boolean", "default": true },
+        "showSearch": { "type": "boolean", "default": true },
+        "showSort": { "type": "boolean", "default": true },
+        "showViewToggle": { "type": "boolean", "default": true }
+    },
+    "supports": {
+        "align": [ "wide", "full" ],
+        "spacing": { "margin": true, "padding": true },
+        "html": false
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "render": "file:./render.php"
+}

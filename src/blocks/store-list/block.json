@@ -1,0 +1,29 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-list",
+    "version": "1.0.0",
+    "title": "Store List",
+    "category": "dokan",
+    "description": "Display a grid of vendor stores.",
+    "keywords": [ "vendor", "store", "stores", "marketplace", "dokan" ],
+    "textdomain": "dokan-lite",
+    "attributes": {
+        "perPage": { "type": "number", "default": 10 },
+        "columns": { "type": "number", "default": 3 },
+        "featured": { "type": "boolean", "default": false },
+        "category": { "type": "string", "default": "" },
+        "storeIds": { "type": "array", "default": [] },
+        "withProductsOnly": { "type": "boolean", "default": false },
+        "orderby": { "type": "string", "default": "" },
+        "order": { "type": "string", "default": "" }
+    },
+    "supports": {
+        "align": [ "wide", "full" ],
+        "spacing": { "margin": true, "padding": true },
+        "html": false
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "render": "file:./render.php"
+}
