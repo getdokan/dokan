@@ -283,8 +283,8 @@ jobs:
         strategy:
             fail-fast: false
             # PRs run the curated smoke subset (tests/pw/utils/pr-smoke-specs.json,
-            # ~75 min serial) across 5 shards; develop pushes and the nightly
-            # schedule run the full suite across 12. This caps a PR push at
+            # ~75 min serial) across 5 shards; the nightly schedule and manual
+            # dispatch run the full suite across 12. This caps a PR push at
             # ~9 jobs / ~125 runner-minutes instead of 16 jobs / ~370, so
             # concurrent PRs stop starving the org's runner pool.
             matrix:

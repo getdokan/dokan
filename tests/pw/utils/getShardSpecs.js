@@ -74,18 +74,20 @@ if (!fs.existsSync(e2eRoot)) {
 let specFiles = walkSpecs(e2eRoot).map(f => f.split(path.sep).join('/'));
 
 if (smoke) {
+    // Fail closed: silently degrading to the full 194-spec suite on a 5-shard
+    // PR matrix is the exact cost blow-up --smoke exists to prevent.
     const smokePath = path.join(__dirname, 'pr-smoke-specs.json');
-    if (fs.existsSync(smokePath)) {
-        const { include } = JSON.parse(fs.readFileSync(smokePath, 'utf8'));
-        specFiles = specFiles.filter(f =>
-            include.some(entry => (entry.endsWith('/') ? f.startsWith(entry) : f === entry))
-        );
-        if (specFiles.length === 0) {
-            console.error('pr-smoke-specs.json matched no specs — check the include list');
-            process.exit(2);
-        }
-    } else {
-        console.error('pr-smoke-specs.json missing — packing the full suite instead');
+    if (!fs.existsSync(smokePath)) {
+        console.error('pr-smoke-specs.json missing — refusing to pack the full suite in smoke mode');
+        process.exit(2);
+    }
+    const { include } = JSON.parse(fs.readFileSync(smokePath, 'utf8'));
+    specFiles = specFiles.filter(f =>
+        include.some(entry => (entry.endsWith('/') ? f.startsWith(entry) : f === entry))
+    );
+    if (specFiles.length === 0) {
+        console.error('pr-smoke-specs.json matched no specs — check the include list');
+        process.exit(2);
     }
 }
 

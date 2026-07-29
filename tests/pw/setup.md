@@ -222,6 +222,13 @@ Every new test MUST carry one Lite/Pro gate (`@lite`, `@liteOnly`, or `@pro`) an
 | **PR**        | `DOKAN_PRO=true`, fast PR-gate run — `e2e_tests` only, skips `@serial`/`@exploratory`. Command: `NO_SETUP=true npx playwright test --project=e2e_tests --grep-invert "@exploratory\|@serial"` |
 | **Full Suite**| `DOKAN_PRO=true`, full bootstrap if needed. E2E + API. Commands: `npm run docker:full && npm run test:e2e && npm run test:api` |
 
+These are *local* run modes. CI is different: pull requests run only the curated
+smoke subset listed in `utils/pr-smoke-specs.json` (resolved per shard by
+`utils/getShardSpecs.js --smoke`; trailing `/` = whole feature folder, otherwise
+exact spec-file match), while the nightly schedule and manual `workflow_dispatch`
+run the full sharded matrix. To gate a feature on PRs, add its folder to that
+JSON list — tags don't control CI spec selection.
+
 ---
 
 ## 9. Hard preconditions (skill checks these before running)
