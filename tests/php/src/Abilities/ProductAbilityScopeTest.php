@@ -431,6 +431,28 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertArrayNotHasKey( 'post_status', $query );
     }
 
+    public function test_write_context_is_left_to_native_caps_and_still_denies_cross_vendor() {
+        $other_product = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
+
+        $this->force_mcp_request();
+        wp_set_current_user( $this->seller_id1 );
+
+        $this->assertTrue( $this->sut->scope_product_permissions( true, 'edit', $other_product, 'product' ) );
+        $this->assertTrue( $this->sut->scope_product_permissions( true, 'delete', $other_product, 'product' ) );
+
+        $this->assertFalse( current_user_can( 'edit_post', $other_product ) );
+        $this->assertFalse( current_user_can( 'delete_post', $other_product ) );
+    }
+
+    public function test_write_context_native_caps_allow_own_product() {
+        $own_product = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+
+        wp_set_current_user( $this->seller_id1 );
+
+        $this->assertTrue( current_user_can( 'edit_post', $own_product ) );
+        $this->assertTrue( current_user_can( 'delete_post', $own_product ) );
+    }
+
     public function test_admin_who_is_vendor_creates_for_own_store_without_vendor_id() {
         update_user_meta( $this->admin_id, 'dokan_enable_selling', 'yes' );
 

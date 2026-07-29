@@ -48,6 +48,23 @@ class OrderAbilityScopeTest extends DokanTestCase {
         $this->assertFalse( $this->sut->scope_order_permissions( true, 'read', $order2, 'shop_order' ) );
     }
 
+    public function test_order_write_context_also_restricted_to_owning_vendor() {
+        $order1 = $this->create_single_vendor_order( $this->seller_id1 );
+        $order2 = $this->create_single_vendor_order( $this->seller_id2 );
+
+        $this->force_mcp_request();
+        wp_set_current_user( $this->seller_id1 );
+
+        $this->assertTrue( $this->sut->scope_order_permissions( true, 'edit', $order1, 'shop_order' ) );
+        $this->assertFalse( $this->sut->scope_order_permissions( true, 'edit', $order2, 'shop_order' ) );
+        $this->assertFalse( $this->sut->scope_order_permissions( true, 'delete', $order2, 'shop_order' ) );
+
+        // Admins are unscoped: the incoming (native) permission passes through untouched.
+        wp_set_current_user( $this->admin_id );
+        $this->assertTrue( $this->sut->scope_order_permissions( true, 'edit', $order2, 'shop_order' ) );
+        $this->assertFalse( $this->sut->scope_order_permissions( false, 'edit', $order2, 'shop_order' ) );
+    }
+
     public function test_scope_order_permissions_is_noop_for_unrelated_post_type() {
         $this->force_mcp_request();
         wp_set_current_user( $this->seller_id1 );
