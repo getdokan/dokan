@@ -11,6 +11,10 @@ type SSREditProps = {
  * Shared editor canvas for Dokan's dynamic store blocks: the server render
  * (with preview-vendor data outside a store context) plus optional
  * InspectorControls passed as children.
+ * @param root0
+ * @param root0.name
+ * @param root0.attributes
+ * @param root0.children
  */
 const SSREdit = ( { name, attributes, children }: SSREditProps ) => {
     const blockProps = useBlockProps();

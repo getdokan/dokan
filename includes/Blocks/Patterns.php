@@ -67,7 +67,8 @@ class Patterns implements Hookable {
      * @return void
      */
     protected function register_categories(): void {
-        register_block_pattern_category( 'dokan', [ 'label' => __( 'Dokan', 'dokan-lite' ) ] );
+        // One category per pattern: a shared "Dokan" bucket alongside these would
+        // list every pattern twice in the inserter.
         register_block_pattern_category( 'dokan-store', [ 'label' => __( 'Dokan Single Store', 'dokan-lite' ) ] );
         register_block_pattern_category( 'dokan-store-listing', [ 'label' => __( 'Dokan Store Listing', 'dokan-lite' ) ] );
     }

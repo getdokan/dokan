@@ -33,7 +33,9 @@ class Manager implements Hookable {
         // Before Pro's category registration (@10) so the dedupe guard wins in either load order.
         add_filter( 'block_categories_all', [ $this, 'register_block_category' ], 9 );
         add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_styles' ] );
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_block_styles' ] );
+        add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_scripts' ] );
+        // After Dokan's own asset logic (@10) so store pages keep their enqueue order.
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_block_styles' ], 20 );
     }
 
     /**
@@ -107,6 +109,60 @@ class Manager implements Hookable {
         foreach ( (array) $handles as $handle ) {
             if ( wp_style_is( $handle, 'registered' ) ) {
                 wp_enqueue_style( $handle );
+            }
+        }
+
+        /**
+         * Extra CSS to print inside the block editor canvas.
+         *
+         * Appearance settings such as the colour scheme are printed inline on
+         * `wp_head`, which the editor iframe never runs, so previews fall back to
+         * the default palette. Extensions return their front-end CSS here to keep
+         * the preview honest.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string $css Inline CSS.
+         */
+        $inline_css = apply_filters( 'dokan_blocks_editor_preview_inline_css', '' );
+
+        if ( ! empty( $inline_css ) && wp_style_is( 'dokan-style', 'enqueued' ) ) {
+            wp_add_inline_style( 'dokan-style', $inline_css );
+        }
+    }
+
+    /**
+     * Load the editor preview scripts for Dokan blocks.
+     *
+     * Server rendered previews are inert HTML — nothing wires up the filter,
+     * sort or layout controls the way the front end does. These load in the
+     * editor document; the canvas is a same-origin iframe that scripts reach
+     * into, since WordPress only carries a block's own view script inside it.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function enqueue_editor_preview_scripts(): void {
+        if ( ! is_admin() ) {
+            return; // Block.json already loads these on the front end.
+        }
+
+        /**
+         * Script handles to load inside the block editor canvas.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string[] $handles Registered script handles.
+         */
+        $handles = apply_filters(
+            'dokan_blocks_editor_preview_scripts',
+            [ 'dokan-store-filter-bar-view-script' ]
+        );
+
+        foreach ( (array) $handles as $handle ) {
+            if ( wp_script_is( $handle, 'registered' ) ) {
+                wp_enqueue_script( $handle );
             }
         }
     }

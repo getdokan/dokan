@@ -235,9 +235,9 @@ class Rewrites {
          *
          * @since DOKAN_SINCE
          *
-         * @param bool $use_block_template Defaults to whether a block theme is active.
+         * @param bool $use_block_template Defaults to whether a single store block template is available.
          */
-        return apply_filters( 'dokan_use_store_block_template', wp_is_block_theme() );
+        return apply_filters( 'dokan_use_store_block_template', Blocks\Templates::is_available() );
     }
 
     /**
