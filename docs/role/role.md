@@ -151,6 +151,25 @@ calls) — `includes/Abilities/`. Only active when
 `RequestContext::is_mcp_request()` is true; normal storefront/REST/admin
 traffic is untouched.
 
+`is_mcp_request()` (`includes/Abilities/Support/RequestContext.php:86-100`) is
+true via **either** of two independent signals, not URL detection alone:
+
+1. **Ability-execution context** — `is_executing_ability()` (`:109-111`): true
+   whenever any registered ability is currently running
+   (`wp_before_execute_ability`/`wp_after_execute_ability`), regardless of
+   which MCP server (or non-MCP caller) invoked it. This is the primary,
+   server-agnostic signal.
+2. **Adapter pre-flight flag** — `flag_mcp_request()` (`:152-156`), set the
+   moment the MCP adapter begins a tool call, before any ability-execution
+   window opens (needed because the adapter checks the target ability's
+   permission callback *before* `wp_before_execute_ability` fires).
+
+A URL match against `/(?:woocommerce|dokan)/mcp(?:/|$)` (`:205-215`) is only a
+secondary fallback, and the whole result is filterable via
+`dokan_is_mcp_request`. In short: **any ability execution is treated as MCP
+context**, not just requests hitting a known MCP endpoint — so integrations
+should not assume a non-MCP-URL ability call is unscoped.
+
 - `ProductAbilityScope` — published products public to any caller; unpublished
   readable only by owner or `manage_woocommerce`. List queries: own-store
   filter (`vendor_id` == caller) allows all statuses, any other filter (or
