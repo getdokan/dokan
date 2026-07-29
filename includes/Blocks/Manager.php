@@ -76,10 +76,6 @@ class Manager implements Hookable {
             return; // The front end loads these through the block render callbacks.
         }
 
-        wp_enqueue_style( 'dokan-style' );
-        wp_enqueue_style( 'dokan-fontawesome' );
-        wp_enqueue_style( 'dashicons' );
-
         // Star ratings inside store blocks are styled by WooCommerce, which only
         // registers its front-end stylesheet on the front end.
         if ( ! wp_style_is( 'woocommerce-general', 'registered' ) && function_exists( 'WC' ) ) {
@@ -91,7 +87,28 @@ class Manager implements Hookable {
             );
         }
 
-        wp_enqueue_style( 'woocommerce-general' );
+        /**
+         * Front-end stylesheets to load inside the block editor canvas.
+         *
+         * Store blocks render through Dokan's own templates, and anything those
+         * templates hook into — vendor buttons, badges, colour schemes — is
+         * styled by the stylesheet that registered it. Extensions add their
+         * handles here so their markup previews the way it looks on the store.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string[] $handles Registered style handles.
+         */
+        $handles = apply_filters(
+            'dokan_blocks_editor_preview_styles',
+            [ 'dokan-style', 'dokan-fontawesome', 'dashicons', 'woocommerce-general' ]
+        );
+
+        foreach ( (array) $handles as $handle ) {
+            if ( wp_style_is( $handle, 'registered' ) ) {
+                wp_enqueue_style( $handle );
+            }
+        }
     }
 
     /**
