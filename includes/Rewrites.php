@@ -208,10 +208,36 @@ class Rewrites {
                 return get_404_template();
             }
 
+            if ( $this->use_block_template() ) {
+                // Block themes render the registered `dokan//single-store` template through the template canvas.
+                return $template;
+            }
+
             return dokan_locate_template( 'store.php' );
         }
 
         return $template;
+    }
+
+    /**
+     * Whether the single store page should render through the block template.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function use_block_template(): bool {
+        /**
+         * Filters whether the single store page uses the registered block template.
+         *
+         * Page-builder integrations (e.g. the Elementor module) can return false
+         * to keep their own template takeover on block themes.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $use_block_template Defaults to whether a block theme is active.
+         */
+        return apply_filters( 'dokan_use_store_block_template', wp_is_block_theme() );
     }
 
     /**
@@ -237,6 +263,11 @@ class Rewrites {
                 //redirect to 404 if no seller found
                 if ( ! $seller ) {
                     return get_404_template();
+                }
+
+                if ( $this->use_block_template() ) {
+                    // The terms and conditions tab renders inside the single store block template.
+                    return $template;
                 }
 
                 return dokan_locate_template( 'store-toc.php' );
