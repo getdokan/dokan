@@ -248,6 +248,16 @@
 
 #dokan-seller-listing-wrap {
 
+    // The listing is laid out in percentages that already account for their own
+    // padding — cards at 33.33% with 15px gutters, list rows at 20/43/33% — so on a
+    // theme that never opts into border-box every row overflows and wraps.
+    &,
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
     .seller-listing-content {
         .dokan-seller-wrap {
             .dokan-single-seller {

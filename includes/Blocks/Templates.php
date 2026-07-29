@@ -67,6 +67,25 @@ class Templates implements Hookable {
     }
 
     /**
+     * Whether a single store block template can actually render the page.
+     *
+     * The theme, a Site Editor edit or this plugin may provide it. Without one,
+     * handing the request to the block canvas would fall through to the index
+     * template and show the blog instead of the store.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_available(): bool {
+        if ( ! wp_is_block_theme() || ! function_exists( 'resolve_block_template' ) ) {
+            return false;
+        }
+
+        return null !== resolve_block_template( self::TEMPLATE_SLUG, [ self::TEMPLATE_SLUG ], '' );
+    }
+
+    /**
      * Put the single store template first in line on store page requests.
      *
      * @since DOKAN_SINCE

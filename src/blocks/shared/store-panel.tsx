@@ -18,6 +18,9 @@ type StoreOption = { value: number; label: string };
  * Store blocks follow the vendor whose store page is being viewed. Choosing a
  * vendor here pins the block to that store instead, which is what makes the
  * blocks usable on ordinary pages, where there is no store context to follow.
+ * @param root0
+ * @param root0.attributes
+ * @param root0.setAttributes
  */
 const StorePanel = ( { attributes, setAttributes }: StorePanelProps ) => {
     const storeId = attributes?.storeId ? Number( attributes.storeId ) : 0;
@@ -27,7 +30,9 @@ const StorePanel = ( { attributes, setAttributes }: StorePanelProps ) => {
     useEffect( () => {
         let cancelled = false;
 
-        apiFetch< Array< { id: number; store_name?: string; email?: string } > >( {
+        apiFetch<
+            Array< { id: number; store_name?: string; email?: string } >
+        >( {
             path: addQueryArgs( '/dokan/v1/stores', {
                 per_page: 20,
                 search,
@@ -42,7 +47,8 @@ const StorePanel = ( { attributes, setAttributes }: StorePanelProps ) => {
                 setOptions(
                     ( stores || [] ).map( ( store ) => ( {
                         value: Number( store.id ),
-                        label: store.store_name || store.email || `#${ store.id }`,
+                        label:
+                            store.store_name || store.email || `#${ store.id }`,
                     } ) )
                 );
             } )
@@ -58,13 +64,17 @@ const StorePanel = ( { attributes, setAttributes }: StorePanelProps ) => {
     }, [ search ] );
 
     // Keep the pinned vendor visible in the list even when it is outside the current search results.
-    const knownOptions = storeId && ! options.some( ( option ) => option.value === storeId )
-        ? [ { value: storeId, label: `#${ storeId }` }, ...options ]
-        : options;
+    const knownOptions =
+        storeId && ! options.some( ( option ) => option.value === storeId )
+            ? [ { value: storeId, label: `#${ storeId }` }, ...options ]
+            : options;
 
     return (
         <InspectorControls>
-            <PanelBody title={ __( 'Store', 'dokan-lite' ) } initialOpen={ false }>
+            <PanelBody
+                title={ __( 'Store', 'dokan-lite' ) }
+                initialOpen={ false }
+            >
                 <ComboboxControl
                     label={ __( 'Show store', 'dokan-lite' ) }
                     help={ __(
@@ -73,12 +83,22 @@ const StorePanel = ( { attributes, setAttributes }: StorePanelProps ) => {
                     ) }
                     value={ storeId || null }
                     options={ [
-                        { value: 0, label: __( 'Current store (automatic)', 'dokan-lite' ) },
+                        {
+                            value: 0,
+                            label: __(
+                                'Current store (automatic)',
+                                'dokan-lite'
+                            ),
+                        },
                         ...knownOptions,
                     ] }
-                    onFilterValueChange={ ( value: string ) => setSearch( value ?? '' ) }
+                    onFilterValueChange={ ( value: string ) =>
+                        setSearch( value ?? '' )
+                    }
                     onChange={ ( value: number | null ) =>
-                        setAttributes( { storeId: value ? Number( value ) : 0 } )
+                        setAttributes( {
+                            storeId: value ? Number( value ) : 0,
+                        } )
                     }
                     __next40pxDefaultSize
                     __nextHasNoMarginBottom
