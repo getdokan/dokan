@@ -794,7 +794,7 @@
     },
     {
       "file": "spmv/spmv.spec.ts",
-      "ms": 15212,
+      "ms": 15832,
       "tests": 18
     },
     {
@@ -829,7 +829,7 @@
     },
     {
       "file": "store-reviews/storeReviews.spec.ts",
-      "ms": 8485,
+      "ms": 8525,
       "tests": 17
     },
     {
@@ -874,7 +874,7 @@
     },
     {
       "file": "live-search/liveSearch.spec.ts",
-      "ms": 3766,
+      "ms": 3809,
       "tests": 7
     },
     {
@@ -884,22 +884,22 @@
     },
     {
       "file": "live-chat/liveChat.spec.ts",
-      "ms": 3123,
+      "ms": 3184,
       "tests": 12
     },
     {
       "file": "single-product/singleProduct.spec.ts",
-      "ms": 3045,
+      "ms": 3900,
       "tests": 8
     },
     {
       "file": "privacy-policy/privacyPolicy.spec.ts",
-      "ms": 1494,
+      "ms": 1725,
       "tests": 4
     },
     {
       "file": "products-details-bookings/productsDetailsBookings.spec.ts",
-      "ms": 274,
+      "ms": 276,
       "tests": 2
     },
     {
@@ -909,32 +909,32 @@
     },
     {
       "file": "shipping/shipping.spec.ts",
-      "ms": 88,
+      "ms": 114,
       "tests": 10
     },
     {
       "file": "shop/shop.spec.ts",
-      "ms": 54,
+      "ms": 89,
       "tests": 7
     },
     {
       "file": "menu-manager/menuManager.spec.ts",
-      "ms": 53,
+      "ms": 67,
       "tests": 8
     },
     {
       "file": "request-for-quote-rules/requestForQuoteRules.spec.ts",
-      "ms": 50,
+      "ms": 58,
       "tests": 6
     },
     {
       "file": "my-orders/myOrders.spec.ts",
-      "ms": 42,
+      "ms": 52,
       "tests": 6
     },
     {
       "file": "stripe-express/stripeExpress3ds.spec.ts",
-      "ms": 42,
+      "ms": 400000,
       "tests": 5
     },
     {
@@ -944,33 +944,34 @@
     },
     {
       "file": "tax/tax.spec.ts",
-      "ms": 23,
+      "ms": 45,
       "tests": 2
     },
     {
       "file": "stripe-express/stripeExpressPreflight.spec.ts",
-      "ms": 9,
+      "ms": 120000,
       "tests": 1
     },
     {
       "file": "stripe-express/stripeExpressSubscriptions.spec.ts",
-      "ms": 6,
+      "ms": 1040000,
       "tests": 11
     },
     {
       "file": "admin/adminTools.spec.ts",
-      "ms": 0,
+      "ms": 500,
       "tests": 16
     },
     {
       "file": "tools/tools.spec.ts",
-      "ms": 0,
+      "ms": 500,
       "tests": 9
     },
     {
       "file": "visual/visual.spec.ts",
-      "ms": 0,
+      "ms": 287147,
       "tests": 57
     }
-  ]
+  ],
+  "note": "merged from run 30346616808 with a skip-guard: specs measured at <1s/test in that run (i.e. skipped, not fast) keep their prior baseline weight \u2014 as of 2026-07-29 that is visual, stripeExpress3ds/Preflight/Subscriptions, and the tools/adminTools floors. Refresh only from non-PR (nightly/dispatch) runs; PR smoke runs measure a subset only."
 }
