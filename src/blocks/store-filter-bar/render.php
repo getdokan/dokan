@@ -66,7 +66,24 @@ if ( ! array_key_exists( $sort_by, $sort_filters ) ) {
 
 ?>
 <div <?php echo get_block_wrapper_attributes( [ 'class' => 'dokan-store-filter-bar-block' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-    <?php do_action( 'dokan_before_store_lists_filter', $stores ); ?>
+    <?php
+    if ( ! did_action( 'dokan_store_lists_filter_form' ) ) {
+        // Extensions plug into the filter bar from this action — the geolocation module
+        // registers its location search and map here. Dokan's own listener renders the
+        // classic filter template that this block replaces, so it stands aside while the
+        // action is dispatched, then goes back on the hook for the rest of the request.
+        $dokan_store_lists_filter = dokan()->get_container()->get( \WeDevs\Dokan\Vendor\StoreListsFilter::class );
+
+        remove_action( 'dokan_store_lists_filter_form', [ $dokan_store_lists_filter, 'filter_area' ] );
+
+        /** This action is documented in templates/store-lists.php */
+        do_action( 'dokan_store_lists_filter_form', $stores );
+
+        add_action( 'dokan_store_lists_filter_form', [ $dokan_store_lists_filter, 'filter_area' ] );
+    }
+
+    do_action( 'dokan_before_store_lists_filter', $stores );
+    ?>
 
     <div id="dokan-store-listing-filter-wrap">
         <?php do_action( 'dokan_before_store_lists_filter_left', $stores ); ?>
@@ -111,7 +128,8 @@ if ( ! array_key_exists( $sort_by, $sort_filters ) ) {
 
             <?php if ( $attributes['showViewToggle'] ) : ?>
                 <div class="toggle-view item">
-                    <span class="dashicons dashicons-screenoptions" data-view="grid-view"></span>
+                    <?php // Grid is what the listing actually renders before any preference is restored, so mark it now instead of leaving both icons idle. ?>
+                    <span class="dashicons dashicons-screenoptions active" data-view="grid-view"></span>
                     <span class="dashicons dashicons-menu-alt" data-view="list-view"></span>
                 </div>
             <?php endif; ?>

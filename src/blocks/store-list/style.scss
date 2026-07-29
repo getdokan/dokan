@@ -1,37 +1,47 @@
 /* Front-end + editor styles for dokan/store-list. */
 
-/*
- * Dokan's listing stylesheet only defines two and three column layouts, and
- * forces three columns from 992px up, so the block's Columns setting would have
- * no effect on desktop. These rules are scoped to the block so the classic
- * `[dokan-stores]` shortcode keeps its current behaviour.
- */
+@use 'sass:math';
+
+/* Below this a card can no longer show a banner, name and address legibly. */
+$dokan-store-card-min-width: 260px;
+$dokan-store-max-columns: 6;
+
 .wp-block-dokan-store-list {
-	@media (min-width: 992px) {
-		#dokan-seller-listing-wrap ul.dokan-seller-wrap > li.dokan-single-seller {
-			&.coloum-1 {
-				width: 100%;
-			}
+	/*
+	 * Dokan sizes the cards off the viewport, which is wrong for a block: the
+	 * same grid can sit in a narrow column, and in the editor it renders inside
+	 * an iframe far narrower than the browser window. Sizing off the block's own
+	 * width makes the editor preview match what visitors get.
+	 */
+	container-type: inline-size;
+	container-name: dokan-store-list;
 
-			&.coloum-2 {
-				width: 50%;
-			}
+	#dokan-seller-listing-wrap:not(.list-view) ul.dokan-seller-wrap > li.dokan-single-seller {
+		width: 100% !important;
+		float: none !important;
+	}
 
-			&.coloum-3 {
-				width: 33.3333%;
-			}
-
-			&.coloum-4 {
-				width: 25%;
-			}
-
-			&.coloum-5 {
-				width: 20%;
-			}
-
-			&.coloum-6 {
-				width: 16.6666%;
+	/*
+	 * Columns is a maximum, not a promise: the grid drops to as many columns as
+	 * the block is actually wide enough for, rather than collapsing to one. Each
+	 * step is emitted widest-last so the largest one that fits wins. Dokan's own
+	 * widths are viewport media queries ending in `!important`, hence the same
+	 * here — scoped to the block, leaving the `[dokan-stores]` shortcode alone.
+	 */
+	@for $columns from 2 through $dokan-store-max-columns {
+		@for $fits from 2 through $columns {
+			@container dokan-store-list (min-width: #{$fits * $dokan-store-card-min-width}) {
+				#dokan-seller-listing-wrap:not(.list-view) ul.dokan-seller-wrap > li.dokan-single-seller.coloum-#{$columns} {
+					width: math.div( 100%, $fits ) !important;
+					float: left !important;
+				}
 			}
 		}
+	}
+
+	/* List view stacks the cards whatever the Columns setting says. */
+	#dokan-seller-listing-wrap.list-view ul.dokan-seller-wrap > li.dokan-single-seller {
+		width: 100% !important;
+		float: none !important;
 	}
 }

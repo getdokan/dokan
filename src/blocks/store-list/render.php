@@ -111,6 +111,10 @@ $pagination_base = empty( $post ) ? '' : str_replace( (string) $post->ID, '%#%',
 ?>
 <div <?php echo get_block_wrapper_attributes( [ 'class' => 'dokan-store-list-block' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <?php
+    // Modules render around the grid from these — the geolocation map is one of them.
+    /** This action is documented in templates/store-lists.php */
+    do_action( 'dokan_before_seller_listing_loop', $sellers );
+
     dokan_get_template_part(
         'store-lists-loop',
         false,
@@ -126,5 +130,8 @@ $pagination_base = empty( $post ) ? '' : str_replace( (string) $post->ID, '%#%',
             'image_size'      => 'full',
         ]
     );
+
+    /** This action is documented in templates/store-lists.php */
+    do_action( 'dokan_after_seller_listing_loop', $sellers );
     ?>
 </div>

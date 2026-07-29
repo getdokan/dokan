@@ -1,107 +1,268 @@
 /**
- * Front-end behaviour for the store filter bar block.
+ * Behaviour for the store filter bar block.
  *
- * Dokan's listing script binds these controls by id and only initialises on the
- * classic store listing page, so the block carries its own behaviour. It steps
- * aside when that script is already driving the page, and scopes everything to
- * the block so several filter bars can coexist.
+ * On the front end Dokan's own listing script owns these controls, so this only
+ * steps in when that script is absent. In the block editor it always runs: the
+ * server rendered preview is inert HTML, and the editor never loads the listing
+ * script. Everything is delegated from the document because editor previews
+ * replace their markup on every attribute change.
  */
-document.addEventListener( 'DOMContentLoaded', function () {
-	if ( window.dokan && window.dokan.storeLists ) {
-		return;
-	}
+( function () {
+    // The canvas is its own iframe with no `wp` global, so detect it from the DOM.
+    const isEditor = () =>
+        !! document.body &&
+        ( document.body.classList.contains( 'block-editor-iframe__body' ) ||
+            !! document.querySelector( '.block-editor-block-list__layout' ) );
 
-	const bars = document.querySelectorAll( '.dokan-store-filter-bar-block' );
+    // Dokan's listing script binds the same controls by id; let it win.
+    const legacyDrivesPage = () =>
+        ! isEditor() && !! ( window.dokan && window.dokan.storeLists );
 
-	if ( ! bars.length ) {
-		return;
-	}
+    const closestBar = ( target ) =>
+        target && target.closest
+            ? target.closest( '.dokan-store-filter-bar-block' )
+            : null;
 
-	const readLayout = () => {
-		try {
-			return window.localStorage.getItem( 'dokan-layout' );
-		} catch ( error ) {
-			return null;
-		}
-	};
+    const getForm = ( bar ) =>
+        bar
+            ? bar.querySelector( 'form[name="dokan_store_lists_filter_form"]' )
+            : null;
 
-	const applyLayout = ( view ) => {
-		document
-			.querySelectorAll( '.dokan-store-list-block [id="dokan-seller-listing-wrap"]' )
-			.forEach( ( wrap ) => {
-				wrap.classList.remove( 'grid-view', 'list-view' );
-				wrap.classList.add( view );
-			} );
+    const toggleForm = ( bar ) => {
+        const form = getForm( bar );
 
-		document
-			.querySelectorAll( '.dokan-store-filter-bar-block .toggle-view span' )
-			.forEach( ( span ) => {
-				span.classList.toggle( 'active', span.dataset.view === view );
-			} );
+        if ( ! form ) {
+            return;
+        }
 
-		try {
-			window.localStorage.setItem( 'dokan-layout', view );
-		} catch ( error ) {
-			// Layout preference is optional.
-		}
-	};
+        form.style.display =
+            window.getComputedStyle( form ).display === 'none'
+                ? 'block'
+                : 'none';
+    };
 
-	const storedLayout = readLayout();
+    const applyLayout = ( view ) => {
+        document
+            .querySelectorAll(
+                '.dokan-store-list-block [id="dokan-seller-listing-wrap"]'
+            )
+            .forEach( ( wrap ) => {
+                wrap.classList.remove( 'grid-view', 'list-view' );
+                wrap.classList.add( view );
+            } );
 
-	if ( storedLayout ) {
-		applyLayout( storedLayout );
-	}
+        document
+            .querySelectorAll(
+                '.dokan-store-filter-bar-block .toggle-view span'
+            )
+            .forEach( ( span ) => {
+                span.classList.toggle( 'active', span.dataset.view === view );
+            } );
 
-	bars.forEach( ( bar ) => {
-		const form = bar.querySelector( 'form[name="dokan_store_lists_filter_form"]' );
+        if ( isEditor() ) {
+            return; // A preview must not rewrite the visitor's saved preference.
+        }
 
-		const toggleForm = ( event ) => {
-			event.preventDefault();
+        try {
+            window.localStorage.setItem( 'dokan-layout', view );
+        } catch ( error ) {
+            // Layout preference is optional.
+        }
+    };
 
-			if ( ! form ) {
-				return;
-			}
+    /*
+     * Controls added to the bar by other plugins opt into preview behaviour with
+     * markup instead of script, because the editor canvas is an iframe and the
+     * only script WordPress loads inside it is this block's own view script.
+     *
+     *   data-dokan-preview-toggle="<selector>"  show/hide that element on click
+     *   data-dokan-preview-choices              marks a group of choices, with
+     *     data-dokan-preview-single             one choice at a time
+     *     data-dokan-preview-active-class       class marking a chosen item
+     *     data-dokan-preview-label="<selector>" element listing the chosen items
+     *   data-dokan-preview-choice               a choice inside such a group
+     */
+    const togglePreviewTarget = ( trigger, bar ) => {
+        const target = bar.querySelector( trigger.dataset.dokanPreviewToggle );
 
-			const hidden = window.getComputedStyle( form ).display === 'none';
-			form.style.display = hidden ? 'block' : 'none';
-		};
+        if ( target ) {
+            target.style.display =
+                window.getComputedStyle( target ).display === 'none'
+                    ? 'block'
+                    : 'none';
+        }
+    };
 
-		bar.querySelectorAll( '.dokan-store-list-filter-button, .dokan-icons' ).forEach(
-			( trigger ) => trigger.addEventListener( 'click', toggleForm )
-		);
+    const choosePreviewItem = ( item ) => {
+        const group = item.closest( '[data-dokan-preview-choices]' );
 
-		const cancel = bar.querySelector( '#cancel-filter-btn' );
+        if ( ! group ) {
+            return;
+        }
 
-		if ( cancel ) {
-			cancel.addEventListener( 'click', toggleForm );
-		}
+        const activeClass = group.dataset.dokanPreviewActiveClass || 'active';
+        const wasActive = item.classList.contains( activeClass );
 
-		const sort = bar.querySelector( 'select[name="stores_orderby"]' );
+        if ( group.hasAttribute( 'data-dokan-preview-single' ) ) {
+            group
+                .querySelectorAll( '[data-dokan-preview-choice]' )
+                .forEach( ( other ) => other.classList.remove( activeClass ) );
+        }
 
-		if ( sort ) {
-			sort.addEventListener( 'change', () => {
-				const url = new URL( window.location.href );
+        item.classList.toggle( activeClass, ! wasActive );
 
-				url.searchParams.set( 'stores_orderby', sort.value );
-				url.searchParams.delete( 'paged' );
+        const label = group.dataset.dokanPreviewLabel
+            ? group.querySelector( group.dataset.dokanPreviewLabel )
+            : null;
 
-				window.location.assign( url.toString() );
-			} );
-		}
+        if ( ! label ) {
+            return;
+        }
 
-		bar.querySelectorAll( '.toggle-view span' ).forEach( ( span ) =>
-			span.addEventListener( 'click', () => applyLayout( span.dataset.view ) )
-		);
-	} );
+        if ( ! label.dataset.dokanPreviewDefault ) {
+            label.dataset.dokanPreviewDefault = label.textContent.trim();
+        }
 
-	// Keep the filter form open when a search is active, matching the classic page.
-	if ( new URL( window.location.href ).searchParams.get( 'dokan_seller_search' ) ) {
-		bars.forEach( ( bar ) => {
-			const form = bar.querySelector( 'form[name="dokan_store_lists_filter_form"]' );
+        const chosen = Array.from(
+            group.querySelectorAll( '[data-dokan-preview-choice]' )
+        )
+            .filter( ( other ) => other.classList.contains( activeClass ) )
+            .map( ( other ) => other.textContent.trim() );
 
-			if ( form ) {
-				form.style.display = 'block';
-			}
-		} );
-	}
-} );
+        label.textContent = chosen.length
+            ? chosen.join( ', ' )
+            : label.dataset.dokanPreviewDefault;
+    };
+
+    document.addEventListener(
+        'click',
+        function ( event ) {
+            if ( legacyDrivesPage() ) {
+                return;
+            }
+
+            const bar = closestBar( event.target );
+
+            if ( bar ) {
+                const layoutToggle =
+                    event.target.closest( '.toggle-view span' );
+
+                if ( layoutToggle ) {
+                    applyLayout( layoutToggle.dataset.view );
+                    return;
+                }
+
+                const previewToggle = event.target.closest(
+                    '[data-dokan-preview-toggle]'
+                );
+
+                if ( previewToggle ) {
+                    event.preventDefault();
+                    togglePreviewTarget( previewToggle, bar );
+                    return;
+                }
+
+                const previewChoice = event.target.closest(
+                    '[data-dokan-preview-choice]'
+                );
+
+                if ( previewChoice ) {
+                    event.preventDefault();
+                    choosePreviewItem( previewChoice );
+                    return;
+                }
+
+                if (
+                    event.target.closest(
+                        '.dokan-store-list-filter-button, .dokan-icons, #cancel-filter-btn'
+                    )
+                ) {
+                    event.preventDefault();
+                    toggleForm( bar );
+                    return;
+                }
+            }
+
+            if ( ! isEditor() ) {
+                return;
+            }
+
+            // Store cards, pagination and Apply are real links and forms in the
+            // preview; following one would navigate the editor away from the post.
+            const block = event.target.closest(
+                '.dokan-store-filter-bar-block, .dokan-store-list-block'
+            );
+
+            if (
+                block &&
+                event.target.closest( 'a[href], button[type="submit"]' )
+            ) {
+                event.preventDefault();
+            }
+        },
+        true
+    );
+
+    document.addEventListener( 'change', function ( event ) {
+        if ( legacyDrivesPage() || ! closestBar( event.target ) ) {
+            return;
+        }
+
+        if (
+            ! event.target.matches( 'select[name="stores_orderby"]' ) ||
+            isEditor()
+        ) {
+            return; // Sorting in a preview would reload the editor.
+        }
+
+        const url = new URL( window.location.href );
+
+        url.searchParams.set( 'stores_orderby', event.target.value );
+        url.searchParams.delete( 'paged' );
+
+        window.location.assign( url.toString() );
+    } );
+
+    const restoreState = () => {
+        if ( legacyDrivesPage() ) {
+            return;
+        }
+
+        if ( ! isEditor() ) {
+            let storedLayout = null;
+
+            try {
+                storedLayout = window.localStorage.getItem( 'dokan-layout' );
+            } catch ( error ) {
+                storedLayout = null;
+            }
+
+            if ( storedLayout ) {
+                applyLayout( storedLayout );
+            }
+
+            // Keep the filter form open on an active search, matching the classic page.
+            if (
+                new URL( window.location.href ).searchParams.get(
+                    'dokan_seller_search'
+                )
+            ) {
+                document
+                    .querySelectorAll( '.dokan-store-filter-bar-block' )
+                    .forEach( ( bar ) => {
+                        const form = getForm( bar );
+
+                        if ( form ) {
+                            form.style.display = 'block';
+                        }
+                    } );
+            }
+        }
+    };
+
+    if ( document.readyState === 'loading' ) {
+        document.addEventListener( 'DOMContentLoaded', restoreState );
+    } else {
+        restoreState();
+    }
+} )();

@@ -34,10 +34,15 @@ registerBlockType( metadata.name, {
                     <ToggleControl
                         label={ __( 'Featured vendors only', 'dokan-lite' ) }
                         checked={ attributes.featured }
-                        onChange={ ( featured ) => setAttributes( { featured } ) }
+                        onChange={ ( featured ) =>
+                            setAttributes( { featured } )
+                        }
                     />
                     <ToggleControl
-                        label={ __( 'Vendors with products only', 'dokan-lite' ) }
+                        label={ __(
+                            'Vendors with products only',
+                            'dokan-lite'
+                        ) }
                         checked={ attributes.withProductsOnly }
                         onChange={ ( withProductsOnly ) =>
                             setAttributes( { withProductsOnly } )
@@ -50,16 +55,30 @@ registerBlockType( metadata.name, {
                             'dokan-lite'
                         ) }
                         value={ attributes.category }
-                        onChange={ ( category ) => setAttributes( { category } ) }
+                        onChange={ ( category ) =>
+                            setAttributes( { category } )
+                        }
                     />
                     <SelectControl
                         label={ __( 'Order by', 'dokan-lite' ) }
                         value={ attributes.orderby }
                         options={ [
-                            { value: '', label: __( 'Site default', 'dokan-lite' ) },
-                            { value: 'most_recent', label: __( 'Most Recent', 'dokan-lite' ) },
-                            { value: 'total_orders', label: __( 'Most Popular', 'dokan-lite' ) },
-                            { value: 'random', label: __( 'Random', 'dokan-lite' ) },
+                            {
+                                value: '',
+                                label: __( 'Site default', 'dokan-lite' ),
+                            },
+                            {
+                                value: 'most_recent',
+                                label: __( 'Most Recent', 'dokan-lite' ),
+                            },
+                            {
+                                value: 'total_orders',
+                                label: __( 'Most Popular', 'dokan-lite' ),
+                            },
+                            {
+                                value: 'random',
+                                label: __( 'Random', 'dokan-lite' ),
+                            },
                         ] }
                         onChange={ ( orderby ) => setAttributes( { orderby } ) }
                     />

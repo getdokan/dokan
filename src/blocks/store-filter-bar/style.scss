@@ -1,0 +1,32 @@
+/* Front-end + editor styles for dokan/store-filter-bar. */
+
+.wp-block-dokan-store-filter-bar {
+	/*
+	 * Dokan only switches the bar to its stacked layout on a narrow viewport, so
+	 * a bar placed in a sidebar or a narrow column keeps the desktop layout and
+	 * its controls crowd each other. Sizing off the block's own width gives the
+	 * same treatment to a narrow block on a wide screen.
+	 */
+	container-type: inline-size;
+	container-name: dokan-store-filter-bar;
+
+	/*
+	 * The container is named so extensions can give their own filter fields the
+	 * same treatment — Dokan Pro matches this query for its category, featured,
+	 * open-now and rating controls.
+	 */
+	@container dokan-store-filter-bar (max-width: 767px) {
+		#dokan-store-listing-filter-wrap {
+			display: block;
+
+			.right {
+				justify-content: space-between;
+				margin-top: 15px;
+
+				.item.sort-by {
+					margin: 0;
+				}
+			}
+		}
+	}
+}
