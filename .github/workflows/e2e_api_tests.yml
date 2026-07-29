@@ -283,13 +283,15 @@ jobs:
         strategy:
             fail-fast: false
             # PRs run the curated smoke subset (tests/pw/utils/pr-smoke-specs.json,
-            # ~75 min serial) across 5 shards; the nightly schedule and manual
+            # ~79 min serial) across 8 shards; the nightly schedule and manual
             # dispatch run the full suite across 12. This caps a PR push at
-            # ~9 jobs / ~125 runner-minutes instead of 16 jobs / ~370, so
-            # concurrent PRs stop starving the org's runner pool.
+            # ~12 jobs / ~165 runner-minutes instead of 16 jobs / ~370, so
+            # concurrent PRs stop starving the org's runner pool. 8 is where the
+            # returns flatten: each shard carries ~4.6 min of fixed wp-env setup,
+            # so past ~12 min of tests per shard the setup starts to dominate.
             matrix:
-                shardIndex: ${{ github.event_name == 'pull_request' && fromJSON('[1, 2, 3, 4, 5]') || fromJSON('[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]') }}
-                shardTotal: ${{ github.event_name == 'pull_request' && fromJSON('[5]') || fromJSON('[12]') }}
+                shardIndex: ${{ github.event_name == 'pull_request' && fromJSON('[1, 2, 3, 4, 5, 6, 7, 8]') || fromJSON('[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]') }}
+                shardTotal: ${{ github.event_name == 'pull_request' && fromJSON('[8]') || fromJSON('[12]') }}
 
         steps:
             - name: Download dokan-lite build artifact
