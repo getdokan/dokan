@@ -6,20 +6,45 @@
     "title": "Store Filter Bar",
     "category": "dokan",
     "description": "Store count, search, sorting and view controls for the store list.",
-    "keywords": [ "vendor", "store", "filter", "search", "dokan" ],
+    "keywords": [
+        "vendor",
+        "store",
+        "filter",
+        "search",
+        "dokan"
+    ],
     "textdomain": "dokan-lite",
     "attributes": {
-        "showStoreCount": { "type": "boolean", "default": true },
-        "showSearch": { "type": "boolean", "default": true },
-        "showSort": { "type": "boolean", "default": true },
-        "showViewToggle": { "type": "boolean", "default": true }
+        "showStoreCount": {
+            "type": "boolean",
+            "default": true
+        },
+        "showSearch": {
+            "type": "boolean",
+            "default": true
+        },
+        "showSort": {
+            "type": "boolean",
+            "default": true
+        },
+        "showViewToggle": {
+            "type": "boolean",
+            "default": true
+        }
     },
     "supports": {
-        "align": [ "wide", "full" ],
-        "spacing": { "margin": true, "padding": true },
+        "align": [
+            "wide",
+            "full"
+        ],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
         "html": false
     },
     "example": {},
     "editorScript": "file:./index.js",
+    "viewScript": "file:./view.js",
     "render": "file:./render.php"
 }

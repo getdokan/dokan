@@ -29,8 +29,32 @@ wp_enqueue_style( 'dokan-style' );
 wp_enqueue_style( 'dashicons' );
 wp_enqueue_script( 'dokan-script' );
 
-// A one-row query is enough to learn the total vendor count for the bar.
-$stores          = dokan_get_sellers( [ 'number' => 1 ] );
+// The count reflects the filters currently applied to the listing, so it has to
+// run the same query the grid does. One row is enough — only the total is used.
+$requested_data = [];
+
+if ( isset( $_GET['_store_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_store_filter_nonce'] ) ), 'dokan_store_lists_filter_nonce' ) ) {
+    $requested_data = wc_clean( wp_unslash( $_GET ) );
+}
+
+if ( isset( $_GET['store_categories'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    $requested_data['store_categories'] = wc_clean( wp_unslash( $_GET['store_categories'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+}
+
+$count_args = [ 'number' => 1 ];
+
+if ( ! empty( $requested_data['dokan_seller_search'] ) ) {
+    $count_args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+        [
+            'key'     => 'dokan_store_name',
+            'value'   => $requested_data['dokan_seller_search'],
+            'compare' => 'LIKE',
+        ],
+    ];
+}
+
+/** This filter is documented in includes/Shortcodes/Stores.php */
+$stores          = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $count_args, $requested_data ) );
 $number_of_store = absint( $stores['count'] );
 $sort_filters    = \WeDevs\Dokan\Vendor\StoreListsFilter::sort_by_options();
 

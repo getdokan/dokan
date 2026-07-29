@@ -2,7 +2,7 @@
 /**
  * Title: Store Listing
  * Slug: dokan/store-listing-default
- * Description: Heading, filter bar and vendor grid — the classic store listing page.
+ * Description: The store listing page: filter bar and the vendor grid.
  * Categories: dokan, dokan-store-listing
  * Block Types: dokan/store-list
  * Viewport Width: 1400
@@ -15,14 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 ?>
-<!-- wp:group {"align":"wide","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignwide">
-    <!-- wp:heading {"level":1} -->
-    <h1 class="wp-block-heading"><?php esc_html_e( 'Our Stores', 'dokan-lite' ); ?></h1>
-    <!-- /wp:heading -->
-
+<!-- wp:group {"align":"wide","className":"dokan-store-listing","layout":{"type":"default"}} -->
+<div class="wp-block-group alignwide dokan-store-listing">
     <!-- wp:dokan/store-filter-bar /-->
 
-    <!-- wp:dokan/store-list {"columns":3} /-->
+    <!-- wp:dokan/store-list /-->
 </div>
 <!-- /wp:group -->
