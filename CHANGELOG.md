@@ -1,3 +1,8 @@
+### v5.0.12 ( Aug 03, 2026 ) ###
+
+- **new:** Made the WooCommerce Abilities (MCP) layer vendor-aware, so AI assistants and MCP tools only access a vendor's own products and orders, and added Dokan-native abilities for vendor data WooCommerce doesn't cover.
+- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
+
 ### v5.0.11 ( Jul 27, 2026 ) ###
 
 - **update:** Vendors can now search for products by SKU as well as by name.

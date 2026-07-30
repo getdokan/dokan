@@ -14,6 +14,6 @@
  * bundle re-export itself; the package's `exports` map also does not expose `./dist/*`, which
  * rules out a deep package import.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.12
  */
 export * from '../../node_modules/@wedevs/plugin-ui/dist/index.js';
