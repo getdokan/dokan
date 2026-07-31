@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Abilities;
 
+use WeDevs\Dokan\Abilities\Support\OwnershipGate;
 use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Abilities\Support\VendorPayload;
 use WeDevs\Dokan\Contracts\Hookable;
@@ -29,8 +30,8 @@ defined( 'ABSPATH' ) || exit;
  *  - In-place extension: the product-create abilities gain a `vendor_id` selector, and product
  *    output is enriched with the owning vendor.
  *
- * Everything is gated to (MCP request && vendor) so normal storefront / admin / REST traffic is
- * untouched, and store admins (manage_woocommerce) stay unscoped.
+ * Everything is gated to (Ability Context && vendor) so normal storefront / admin / REST traffic
+ * is untouched, and store admins (manage_woocommerce) stay unscoped.
  *
  * @since DOKAN_SINCE
  */
@@ -44,21 +45,21 @@ class ProductAbilityScope implements Hookable {
      *
      * @var int
      */
-    private $forced_product_author = 0;
+    private int $forced_product_author = 0;
 
     /**
      * Author (vendor) to constrain the in-progress product query to. `0` means no constraint.
      *
      * @var int
      */
-    private $forced_query_author = 0;
+    private int $forced_query_author = 0;
 
     /**
      * Whether the in-progress product query must be limited to published products.
      *
      * @var bool
      */
-    private $force_published_only = false;
+    private bool $force_published_only = false;
 
     /**
      * WooCommerce product-create ability names this class extends in place.
@@ -70,16 +71,33 @@ class ProductAbilityScope implements Hookable {
     /**
      * WooCommerce product-list ability names that gain an optional `vendor_id` filter.
      *
+     * Both layers are named: `/woocommerce/mcp` exposes only the Layer 1 (REST proxy) abilities,
+     * while Layer 2 is reached through the abilities REST API and third-party MCP servers. Naming
+     * one layer only would leave the filter inert on whichever surface a client happens to use.
+     *
      * @var string[]
      */
-    private const PRODUCT_FILTER_ABILITIES = [ 'woocommerce/products-query' ];
+    private const PRODUCT_FILTER_ABILITIES = [
+        'woocommerce/products-query', // Layer 2.
+        'woocommerce/products-list',  // Layer 1.
+    ];
 
     /**
      * WooCommerce product abilities whose output is enriched with the owning vendor.
      *
      * @var string[]
      */
-    private const PRODUCT_OUTPUT_ABILITIES = [ 'woocommerce/products-query', 'woocommerce/product-create', 'woocommerce/product-update' ];
+    private const PRODUCT_OUTPUT_ABILITIES = [
+        // Layer 2.
+        'woocommerce/products-query',
+        'woocommerce/product-create',
+        'woocommerce/product-update',
+        // Layer 1.
+        'woocommerce/products-list',
+        'woocommerce/products-get',
+        'woocommerce/products-create',
+        'woocommerce/products-update',
+    ];
 
     /**
      * Register hooks.
@@ -89,7 +107,7 @@ class ProductAbilityScope implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        // Shared MCP-detection signals (registered once across the product / order scopers).
+        // Shared Ability-Context signals (registered once across the product / order scopers).
         RequestContext::register_detection_hooks();
 
         // Per-object permission: published products are public; unpublished products are
@@ -113,8 +131,12 @@ class ProductAbilityScope implements Hookable {
      *
      * Governs `wc_rest_check_post_permissions()` for products. Published products are public (any
      * caller may read one by ID); unpublished products are readable only by their owner or a store
-     * admin. Writes are left to WooCommerce's native capabilities, which already deny cross-vendor
-     * mutations.
+     * admin.
+     *
+     * Writes go through {@see OwnershipGate}. Native capabilities happen to deny cross-vendor
+     * product writes today, but the equivalent order check does not — so ownership is asserted
+     * rather than delegated, and the gate additionally grants vendor staff the writes their
+     * `dokan_*` capabilities allow but `edit_others_products` refuses. See ADR-0006 and ADR-0007.
      *
      * @since DOKAN_SINCE
      *
@@ -126,7 +148,7 @@ class ProductAbilityScope implements Hookable {
      * @return bool
      */
     public function scope_product_permissions( $permission, $context, $object_id, $post_type ) {
-        if ( 'product' !== $post_type || ! RequestContext::is_mcp_request() ) {
+        if ( 'product' !== $post_type || ! RequestContext::is_ability_context() ) {
             return $permission;
         }
 
@@ -145,7 +167,11 @@ class ProductAbilityScope implements Hookable {
      * @return bool
      */
     private function scope_product_permission( $permission, $context, $object_id ) {
-        // List reads and writes are governed by the query scoping / WooCommerce caps.
+        if ( OwnershipGate::is_write_context( $context ) ) {
+            return OwnershipGate::can_write( 'product', $context, $object_id, $permission );
+        }
+
+        // Collection reads are governed by the query scoping.
         if ( 'read' !== $context || $object_id <= 0 ) {
             return $permission;
         }
@@ -229,7 +255,7 @@ class ProductAbilityScope implements Hookable {
     public function assign_vendor_as_product_author( $product_id ) {
         if ( $this->forced_product_author > 0 ) {
             $vendor_id = $this->forced_product_author;
-        } elseif ( RequestContext::is_vendor_mcp_context() ) {
+        } elseif ( RequestContext::is_vendor_ability_context() ) {
             $vendor_id = dokan_get_current_user_id();
         } else {
             return;
@@ -446,17 +472,22 @@ class ProductAbilityScope implements Hookable {
 
         $props = &$args['output_schema']['properties'];
 
-        // Collection of products (e.g. products-query).
-        if ( isset( $props['products']['items']['properties'] ) && is_array( $props['products']['items']['properties'] ) ) {
-            $props['products']['items']['properties']['vendor'] = $vendor_schema;
-            $props['products']['items']['required']             = array_values(
-                array_unique( array_merge( $props['products']['items']['required'] ?? [], [ 'vendor' ] ) )
-            );
+        // Collection of products: Layer 2 returns `products`, the Layer 1 REST proxy wraps rows
+        // in `data`.
+        foreach ( [ 'products', 'data' ] as $collection ) {
+            if ( isset( $props[ $collection ]['items']['properties'] ) && is_array( $props[ $collection ]['items']['properties'] ) ) {
+                $props[ $collection ]['items']['properties']['vendor'] = $vendor_schema;
+                $props[ $collection ]['items']['required']             = array_values(
+                    array_unique( array_merge( $props[ $collection ]['items']['required'] ?? [], [ 'vendor' ] ) )
+                );
+            }
         }
 
-        // Single product entity (e.g. product-create / product-update).
+        // Single product entity: Layer 2 wraps it in `product`, Layer 1 returns the product itself.
         if ( isset( $props['product']['properties'] ) && is_array( $props['product']['properties'] ) ) {
             $props['product']['properties']['vendor'] = $vendor_schema;
+        } elseif ( isset( $props['id'] ) ) {
+            $props['vendor'] = $vendor_schema;
         }
 
         unset( $props );
@@ -478,10 +509,25 @@ class ProductAbilityScope implements Hookable {
             return $result;
         }
 
-        if ( isset( $result['products'] ) && is_array( $result['products'] ) ) {
-            $result['products'] = array_map( [ $this, 'add_vendor_to_product' ], $result['products'] );
-        } elseif ( isset( $result['product'] ) && is_array( $result['product'] ) ) {
+        // Collections: Layer 2 returns `products`, the Layer 1 REST proxy wraps rows in `data`.
+        foreach ( [ 'products', 'data' ] as $collection ) {
+            if ( isset( $result[ $collection ] ) && is_array( $result[ $collection ] ) ) {
+                $result[ $collection ] = array_map( [ $this, 'add_vendor_to_product' ], $result[ $collection ] );
+
+                return $result;
+            }
+        }
+
+        // Layer 2 single entity.
+        if ( isset( $result['product'] ) && is_array( $result['product'] ) ) {
             $result['product'] = $this->add_vendor_to_product( $result['product'] );
+
+            return $result;
+        }
+
+        // Layer 1 single entity: the product payload itself.
+        if ( isset( $result['id'] ) ) {
+            return $this->add_vendor_to_product( $result );
         }
 
         return $result;
@@ -555,7 +601,7 @@ class ProductAbilityScope implements Hookable {
             }
 
             // A pure admin / shop manager must select a vendor when creating over MCP.
-            if ( RequestContext::is_mcp_request() ) {
+            if ( RequestContext::is_ability_context() ) {
                 return new \WP_Error(
                     'dokan_ability_vendor_required',
                     __( 'Please select a vendor: vendor_id is required when creating a product as an admin or shop manager.', 'dokan-lite' ),

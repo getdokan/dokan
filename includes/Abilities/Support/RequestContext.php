@@ -5,18 +5,20 @@ namespace WeDevs\Dokan\Abilities\Support;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Request context helpers for the WordPress Abilities / MCP layer.
+ * Detects an **Ability Context**: any execution of a registered WordPress Ability.
  *
- * WooCommerce 10.9.0 exposes abilities to MCP clients. Dokan only wants to apply
- * vendor scoping during such requests, so the heavy data-store / permission filters
- * stay inert for normal storefront and admin traffic.
+ * WooCommerce 10.9.0 exposes abilities to MCP clients. Dokan applies vendor scoping only inside
+ * an Ability Context, so the heavy data-store / permission filters stay inert for normal
+ * storefront and admin traffic.
  *
  * The primary, server-agnostic signal is "are we currently executing a registered ability"
- * (tracked via the `wp_before_execute_ability` / `wp_after_execute_ability` actions). This works
- * no matter which MCP server invoked the ability — WooCommerce's `/woocommerce/mcp`, a future
- * Dokan server, or a third-party server such as the MCP Site Manager. A URI check (preferring
- * WooCommerce's own detection when present) is kept as a secondary signal, and the final result
- * is filterable via `dokan_is_mcp_request`.
+ * (tracked via the `wp_before_execute_ability` / `wp_after_execute_ability` actions). That action
+ * fires inside `WP_Ability::execute()`, so it is true no matter what invoked the ability — an MCP
+ * server, another plugin in-process, or WP-CLI. Scoping deliberately follows the Ability rather
+ * than the transport: an ability call that never touches an MCP URL is still scoped.
+ *
+ * A URI check (preferring WooCommerce's own detection when present) is kept as a secondary
+ * signal, and the result is filterable via `dokan_is_ability_context`.
  *
  * @since DOKAN_SINCE
  */
@@ -27,7 +29,7 @@ class RequestContext {
      *
      * @var int
      */
-    private static $ability_execution_depth = 0;
+    private static int $ability_execution_depth = 0;
 
     /**
      * Whether the current request has been positively identified as an MCP request.
@@ -39,14 +41,14 @@ class RequestContext {
      *
      * @var bool
      */
-    private static $request_is_mcp = false;
+    private static bool $request_is_mcp = false;
 
     /**
      * Whether the shared MCP detection hooks have been registered this request.
      *
      * @var bool
      */
-    private static $detection_hooks_registered = false;
+    private static bool $detection_hooks_registered = false;
 
     /**
      * Register the shared MCP-detection hooks exactly once.
@@ -77,26 +79,57 @@ class RequestContext {
     }
 
     /**
-     * Whether the current request targets an MCP / abilities endpoint.
+     * Whether an Ability is currently executing, whatever invoked it.
+     *
+     * True for an MCP tool call, an in-process ability call from another plugin, or WP-CLI —
+     * `wp_before_execute_ability` fires inside `WP_Ability::execute()` regardless of transport.
+     * Vendor scoping follows the Ability, not the URL that reached it, so integrations must not
+     * assume a non-MCP ability call is unscoped.
      *
      * @since DOKAN_SINCE
      *
      * @return bool
      */
-    public static function is_mcp_request(): bool {
+    public static function is_ability_context(): bool {
         $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-        $is_mcp_request = self::$request_is_mcp || self::is_executing_ability() || self::matches_mcp_endpoint( $request_uri );
+        $is_ability_context = self::$request_is_mcp || self::is_executing_ability() || self::matches_mcp_endpoint( $request_uri );
 
         /**
-         * Filters whether the current request should be treated as an MCP / abilities request.
+         * Filters whether the current request should be treated as an Ability Context.
          *
          * @since DOKAN_SINCE
          *
-         * @param bool   $is_mcp_request Whether the request targets an MCP endpoint.
-         * @param string $request_uri    The current request URI.
+         * @param bool   $is_ability_context Whether an ability is executing / about to execute.
+         * @param string $request_uri        The current request URI.
          */
-        return (bool) apply_filters( 'dokan_is_mcp_request', $is_mcp_request, $request_uri );
+        $is_ability_context = (bool) apply_filters( 'dokan_is_ability_context', $is_ability_context, $request_uri );
+
+        // Only run the superseded filter when something is actually listening, so sites that never
+        // used it are not warned about a hook they do not have.
+        if ( has_filter( 'dokan_is_mcp_request' ) ) {
+            $is_ability_context = (bool) apply_filters_deprecated(
+                'dokan_is_mcp_request',
+                [ $is_ability_context, $request_uri ],
+                'DOKAN_SINCE',
+                'dokan_is_ability_context'
+            );
+        }
+
+        return $is_ability_context;
+    }
+
+    /**
+     * Whether the current request targets an MCP / abilities endpoint.
+     *
+     * @since      DOKAN_SINCE
+     * @deprecated DOKAN_SINCE Renamed: the condition is any ability executing, not an MCP
+     *             request specifically. Use {@see self::is_ability_context()}.
+     *
+     * @return bool
+     */
+    public static function is_mcp_request(): bool {
+        return self::is_ability_context();
     }
 
     /**
@@ -111,7 +144,7 @@ class RequestContext {
     }
 
     /**
-     * Whether the current request is a vendor acting over an MCP / abilities endpoint.
+     * Whether a vendor is acting inside an Ability Context.
      *
      * Store admins (manage_woocommerce) are intentionally left unscoped. Vendor staff resolve to
      * their parent vendor via dokan_get_current_user_id().
@@ -120,8 +153,8 @@ class RequestContext {
      *
      * @return bool
      */
-    public static function is_vendor_mcp_context(): bool {
-        if ( ! self::is_mcp_request() ) {
+    public static function is_vendor_ability_context(): bool {
+        if ( ! self::is_ability_context() ) {
             return false;
         }
 
@@ -130,6 +163,18 @@ class RequestContext {
         }
 
         return dokan_is_user_seller( dokan_get_current_user_id() );
+    }
+
+    /**
+     * Whether the current request is a vendor acting over an MCP / abilities endpoint.
+     *
+     * @since      DOKAN_SINCE
+     * @deprecated DOKAN_SINCE Use {@see self::is_vendor_ability_context()}.
+     *
+     * @return bool
+     */
+    public static function is_vendor_mcp_context(): bool {
+        return self::is_vendor_ability_context();
     }
 
     /**

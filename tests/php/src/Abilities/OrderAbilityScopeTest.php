@@ -33,15 +33,15 @@ class OrderAbilityScopeTest extends DokanTestCase {
      *
      * @return void
      */
-    private function force_mcp_request(): void {
-        add_filter( 'dokan_is_mcp_request', '__return_true' );
+    private function force_ability_context(): void {
+        add_filter( 'dokan_is_ability_context', '__return_true' );
     }
 
     public function test_order_read_restricted_to_owning_vendor() {
         $order1 = $this->create_single_vendor_order( $this->seller_id1 );
         $order2 = $this->create_single_vendor_order( $this->seller_id2 );
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         $this->assertTrue( $this->sut->scope_order_permissions( true, 'read', $order1, 'shop_order' ) );
@@ -52,7 +52,7 @@ class OrderAbilityScopeTest extends DokanTestCase {
         $order1 = $this->create_single_vendor_order( $this->seller_id1 );
         $order2 = $this->create_single_vendor_order( $this->seller_id2 );
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         $this->assertTrue( $this->sut->scope_order_permissions( true, 'edit', $order1, 'shop_order' ) );
@@ -66,7 +66,7 @@ class OrderAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_scope_order_permissions_is_noop_for_unrelated_post_type() {
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         // Unrelated post types must pass the incoming permission through untouched.
@@ -94,7 +94,7 @@ class OrderAbilityScopeTest extends DokanTestCase {
         // The adapter fires this filter before checking the target ability's permission.
         $capability = RequestContext::flag_mcp_request( 'read' );
         $this->assertSame( 'read', $capability, 'The filter value must pass through unchanged.' );
-        $this->assertTrue( RequestContext::is_mcp_request() );
+        $this->assertTrue( RequestContext::is_ability_context() );
         $this->assertFalse( RequestContext::is_executing_ability() );
 
         // Collection-level read is now granted (so the vendor can list), the owned order is
@@ -113,26 +113,26 @@ class OrderAbilityScopeTest extends DokanTestCase {
         );
 
         // Simulate the adapter firing the filter; the request must then be detected as MCP.
-        $this->assertFalse( RequestContext::is_mcp_request() );
+        $this->assertFalse( RequestContext::is_ability_context() );
         apply_filters( 'mcp_adapter_execute_ability_capability', 'read' );
-        $this->assertTrue( RequestContext::is_mcp_request() );
+        $this->assertTrue( RequestContext::is_ability_context() );
     }
 
-    public function test_is_mcp_request_true_during_ability_execution() {
-        $this->assertFalse( RequestContext::is_mcp_request() );
+    public function test_is_ability_context_true_during_ability_execution() {
+        $this->assertFalse( RequestContext::is_ability_context() );
 
         RequestContext::mark_ability_execution_started();
-        $this->assertTrue( RequestContext::is_mcp_request() );
+        $this->assertTrue( RequestContext::is_ability_context() );
 
         RequestContext::mark_ability_execution_finished();
-        $this->assertFalse( RequestContext::is_mcp_request() );
+        $this->assertFalse( RequestContext::is_ability_context() );
     }
 
     public function test_scope_orders_query_limits_to_vendor_orders() {
         $order1 = $this->create_single_vendor_order( $this->seller_id1 );
         $order2 = $this->create_single_vendor_order( $this->seller_id2 );
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         $query = $this->sut->scope_orders_query( [] );

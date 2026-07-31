@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Abilities;
 
+use WeDevs\Dokan\Abilities\Support\OwnershipGate;
 use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Abilities\Support\VendorPayload;
 use WeDevs\Dokan\Contracts\Hookable;
@@ -34,8 +35,8 @@ defined( 'ABSPATH' ) || exit;
  * (their portion); a single-vendor order is not split. A vendor owns their sub-orders / single
  * orders, never the parent.
  *
- * Everything is gated to (MCP request && vendor) so normal storefront / admin / REST traffic is
- * untouched, and store admins (manage_woocommerce) stay unscoped.
+ * Everything is gated to (Ability Context && vendor) so normal storefront / admin / REST traffic
+ * is untouched, and store admins (manage_woocommerce) stay unscoped.
  *
  * @since DOKAN_SINCE
  */
@@ -46,7 +47,7 @@ class OrderAbilityScope implements Hookable {
      *
      * @var int[]|null
      */
-    private $vendor_order_ids = null;
+    private ?array $vendor_order_ids = null;
 
     /**
      * Re-entrancy guard while resolving the vendor order IDs.
@@ -56,14 +57,26 @@ class OrderAbilityScope implements Hookable {
      *
      * @var bool
      */
-    private $resolving_order_ids = false;
+    private bool $resolving_order_ids = false;
 
     /**
-     * WooCommerce order-list abilities whose output is enriched with Dokan order relationships.
+     * WooCommerce order abilities whose output is enriched with Dokan order relationships.
+     *
+     * Both layers are named: `/woocommerce/mcp` exposes only the Layer 1 (REST proxy) abilities,
+     * while Layer 2 is reached through the abilities REST API and third-party MCP servers. Naming
+     * one layer only would leave the annotation inert on whichever surface a client happens to use.
      *
      * @var string[]
      */
-    private const ORDER_OUTPUT_ABILITIES = [ 'woocommerce/orders-query' ];
+    private const ORDER_OUTPUT_ABILITIES = [
+        // Layer 2.
+        'woocommerce/orders-query',
+        // Layer 1.
+        'woocommerce/orders-list',
+        'woocommerce/orders-get',
+        'woocommerce/orders-create',
+        'woocommerce/orders-update',
+    ];
 
     /**
      * Register hooks.
@@ -73,7 +86,7 @@ class OrderAbilityScope implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        // Shared MCP-detection signals (registered once across the product / order scopers).
+        // Shared Ability-Context signals (registered once across the product / order scopers).
         RequestContext::register_detection_hooks();
 
         // Per-object permission: orders are private to the owning vendor (admins unscoped).
@@ -93,8 +106,12 @@ class OrderAbilityScope implements Hookable {
      * Keep orders private to the owning vendor on per-object WooCommerce REST permission checks.
      *
      * Governs `wc_rest_check_post_permissions()` for shop orders. Reads are allowed at the
-     * collection level (rows are scoped by the order query) and for a vendor's own orders; writes
-     * are left to WooCommerce's native capabilities, which already deny cross-vendor mutations.
+     * collection level (rows are scoped by the order query) and for a vendor's own orders.
+     *
+     * Writes go through {@see OwnershipGate}, which asserts ownership here rather than delegating
+     * to WooCommerce. Native capabilities do **not** deny cross-vendor order writes: with this
+     * filter removed, `wc_rest_check_post_permissions( 'shop_order', 'edit', $foreign )` returns
+     * `true`. This class is load-bearing — see ADR-0006.
      *
      * @since DOKAN_SINCE
      *
@@ -106,7 +123,7 @@ class OrderAbilityScope implements Hookable {
      * @return bool
      */
     public function scope_order_permissions( $permission, $context, $object_id, $post_type ) {
-        if ( 'shop_order' !== $post_type || ! RequestContext::is_mcp_request() ) {
+        if ( 'shop_order' !== $post_type || ! RequestContext::is_ability_context() ) {
             return $permission;
         }
 
@@ -127,6 +144,10 @@ class OrderAbilityScope implements Hookable {
     private function scope_order_permission( $permission, $context, $object_id ) {
         if ( current_user_can( 'manage_woocommerce' ) || ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
             return $permission;
+        }
+
+        if ( OwnershipGate::is_write_context( $context ) ) {
+            return OwnershipGate::can_write( 'shop_order', $context, $object_id, $permission );
         }
 
         if ( $object_id > 0 ) {
@@ -151,7 +172,7 @@ class OrderAbilityScope implements Hookable {
      * @return array
      */
     public function scope_orders_query( $query ) {
-        if ( ! is_array( $query ) || $this->resolving_order_ids || ! RequestContext::is_vendor_mcp_context() ) {
+        if ( ! is_array( $query ) || $this->resolving_order_ids || ! RequestContext::is_vendor_ability_context() ) {
             return $query;
         }
 
@@ -227,36 +248,62 @@ class OrderAbilityScope implements Hookable {
      * @return array
      */
     private function inject_order_output_schema( array $args ): array {
-        if ( ! isset( $args['output_schema']['properties']['orders']['items']['properties'] )
-            || ! is_array( $args['output_schema']['properties']['orders']['items']['properties'] ) ) {
+        if ( ! isset( $args['output_schema']['properties'] ) || ! is_array( $args['output_schema']['properties'] ) ) {
             return $args;
         }
 
-        $props = &$args['output_schema']['properties']['orders']['items']['properties'];
+        $annotations = $this->order_annotation_schema();
 
-        $props['parent_id'] = [
-            'type'        => 'integer',
-            'description' => __( 'Parent order ID, or 0 for a top-level order.', 'dokan-lite' ),
-        ];
+        $props = &$args['output_schema']['properties'];
 
-        $props['order_relation'] = [
-            'type'        => 'string',
-            'enum'        => [ 'parent', 'sub_order', 'single' ],
-            'description' => __( 'Dokan order relationship. "parent": a multi-vendor order whose total equals the combined total of its sub-orders. "sub_order": one vendor\'s portion of a parent order. "single": a one-vendor order. To total order amounts without double-counting, sum only orders where order_relation is "parent" or "single" (marketplace gross), or only "sub_order" or "single" for a single vendor — never a parent together with its sub-orders.', 'dokan-lite' ),
-        ];
+        // Collection of orders: Layer 2 returns `orders`, the Layer 1 REST proxy wraps rows in
+        // `data`.
+        foreach ( [ 'orders', 'data' ] as $collection ) {
+            if ( isset( $props[ $collection ]['items']['properties'] ) && is_array( $props[ $collection ]['items']['properties'] ) ) {
+                $props[ $collection ]['items']['properties'] = array_merge(
+                    $props[ $collection ]['items']['properties'],
+                    $annotations
+                );
+            }
+        }
 
-        $props['vendor'] = [
-            'type'        => 'object',
-            'description' => __( 'The vendor (store) the order belongs to. Empty for a multi-vendor parent order.', 'dokan-lite' ),
-            'properties'  => [
-                'id'         => [ 'type' => 'integer' ],
-                'store_name' => [ 'type' => 'string' ],
-            ],
-        ];
+        // Layer 1 single entity: the order payload itself.
+        if ( isset( $props['id'] ) ) {
+            $props = array_merge( $props, $annotations );
+        }
 
         unset( $props );
 
         return $args;
+    }
+
+    /**
+     * The Dokan order-relationship properties added to an order output schema.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    private function order_annotation_schema(): array {
+        return [
+            'parent_id'      => [
+                'type'        => 'integer',
+                'description' => __( 'Parent order ID, or 0 for a top-level order.', 'dokan-lite' ),
+            ],
+            'order_relation' => [
+                'type'        => 'string',
+                'enum'        => [ 'parent', 'sub_order', 'single' ],
+                'description' => __( 'Dokan order relationship. "parent": a multi-vendor order whose total equals the combined total of its sub-orders. "sub_order": one vendor\'s portion of a parent order. "single": a one-vendor order. To total order amounts without double-counting, sum only orders where order_relation is "parent" or "single" (marketplace gross), or only "sub_order" or "single" for a single vendor — never a parent together with its sub-orders.', 'dokan-lite' ),
+            ],
+            'vendor'         => [
+                'type'        => 'object',
+                'description' => __( 'The vendor (store) the order belongs to. Empty for a multi-vendor parent order.', 'dokan-lite' ),
+                'properties'  => [
+                    'id'         => [ 'type' => 'integer' ],
+                    'store_name' => [ 'type' => 'string' ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -269,8 +316,22 @@ class OrderAbilityScope implements Hookable {
      * @return mixed
      */
     private function enrich_order_result( $result ) {
-        if ( is_array( $result ) && isset( $result['orders'] ) && is_array( $result['orders'] ) ) {
-            $result['orders'] = array_map( [ $this, 'add_relationship_to_order' ], $result['orders'] );
+        if ( ! is_array( $result ) ) {
+            return $result;
+        }
+
+        // Collections: Layer 2 returns `orders`, the Layer 1 REST proxy wraps rows in `data`.
+        foreach ( [ 'orders', 'data' ] as $collection ) {
+            if ( isset( $result[ $collection ] ) && is_array( $result[ $collection ] ) ) {
+                $result[ $collection ] = array_map( [ $this, 'add_relationship_to_order' ], $result[ $collection ] );
+
+                return $result;
+            }
+        }
+
+        // Layer 1 single entity: the order payload itself.
+        if ( isset( $result['id'] ) ) {
+            return $this->add_relationship_to_order( $result );
         }
 
         return $result;

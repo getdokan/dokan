@@ -32,8 +32,8 @@ class ProductAbilityScopeTest extends DokanTestCase {
      *
      * @return void
      */
-    private function force_mcp_request(): void {
-        add_filter( 'dokan_is_mcp_request', '__return_true' );
+    private function force_ability_context(): void {
+        add_filter( 'dokan_is_ability_context', '__return_true' );
     }
 
     public function test_scope_products_query_is_noop_without_active_filter() {
@@ -49,7 +49,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     public function test_published_product_is_publicly_readable() {
         $other_published = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         // A published product is public, even another vendor's.
@@ -72,7 +72,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
 			]
         );
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
 
         wp_set_current_user( $this->seller_id1 );
         $this->assertFalse( $this->sut->scope_product_permissions( true, 'read', $other_draft, 'product' ) );
@@ -83,7 +83,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_scope_product_permissions_is_noop_for_unrelated_post_type() {
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         // Unrelated post types must pass the incoming permission through untouched.
@@ -109,7 +109,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     public function test_staff_created_product_is_authored_to_parent_vendor() {
         $staff_id = $this->create_vendor_staff( $this->seller_id1 );
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $staff_id );
         $this->sut->register_hooks();
 
@@ -122,7 +122,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_vendor_created_product_keeps_vendor_author() {
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
         $this->sut->register_hooks();
 
@@ -228,7 +228,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_admin_must_select_vendor_when_creating_over_mcp() {
-        $this->force_mcp_request();
+        $this->force_ability_context();
         $this->sut->register_hooks();
         wp_set_current_user( $this->admin_id );
 
@@ -239,7 +239,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_admin_rejects_invalid_vendor_when_creating() {
-        $this->force_mcp_request();
+        $this->force_ability_context();
         $this->sut->register_hooks();
         wp_set_current_user( $this->admin_id );
 
@@ -255,7 +255,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_admin_create_authors_product_to_selected_vendor() {
-        $this->force_mcp_request();
+        $this->force_ability_context();
         $this->sut->register_hooks();
         wp_set_current_user( $this->admin_id );
 
@@ -270,7 +270,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_vendor_create_is_forced_to_own_store() {
-        $this->force_mcp_request();
+        $this->force_ability_context();
         $this->sut->register_hooks();
         wp_set_current_user( $this->seller_id1 );
 
@@ -389,7 +389,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
 
     public function test_products_query_with_no_filter_is_published_only_for_vendor() {
         $this->sut->register_hooks();
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         $query = $this->products_query_scope_for( [] );
@@ -400,7 +400,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
 
     public function test_products_query_filtering_own_store_shows_all_statuses() {
         $this->sut->register_hooks();
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         $query = $this->products_query_scope_for( [ 'vendor_id' => $this->seller_id1 ] );
@@ -411,7 +411,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
 
     public function test_products_query_filtering_other_vendor_is_published_only() {
         $this->sut->register_hooks();
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
         $query = $this->products_query_scope_for( [ 'vendor_id' => $this->seller_id2 ] );
@@ -422,7 +422,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
 
     public function test_products_query_admin_sees_all_statuses_for_target_vendor() {
         $this->sut->register_hooks();
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->admin_id );
 
         $query = $this->products_query_scope_for( [ 'vendor_id' => $this->seller_id2 ] );
@@ -431,17 +431,87 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertArrayNotHasKey( 'post_status', $query );
     }
 
-    public function test_write_context_is_left_to_native_caps_and_still_denies_cross_vendor() {
+    /**
+     * The gate denies cross-vendor writes itself rather than relying on native capabilities.
+     *
+     * The incoming permission is deliberately `true` here: native capabilities happen to deny
+     * cross-vendor product writes, but the equivalent order check does not, so the layer must not
+     * depend on them. See ADR-0006.
+     */
+    public function test_cross_vendor_writes_are_denied_by_the_ownership_gate() {
         $other_product = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
-        $this->assertTrue( $this->sut->scope_product_permissions( true, 'edit', $other_product, 'product' ) );
-        $this->assertTrue( $this->sut->scope_product_permissions( true, 'delete', $other_product, 'product' ) );
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'edit', $other_product, 'product' ) );
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'delete', $other_product, 'product' ) );
 
+        // Native capabilities agree for products; the gate does not depend on that.
         $this->assertFalse( current_user_can( 'edit_post', $other_product ) );
         $this->assertFalse( current_user_can( 'delete_post', $other_product ) );
+    }
+
+    /**
+     * Vendor staff act on records authored by their parent vendor, which native capabilities
+     * cannot express — they hold `edit_product` but not `edit_others_products`. Without this the
+     * MCP surface grants staff *less* than Dokan's own REST API. See ADR-0007.
+     */
+    public function test_staff_may_write_their_vendors_product_despite_native_caps() {
+        $own_product = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        ( new \WP_User( $staff_id ) )->add_cap( 'dokan_edit_product' );
+
+        $this->force_ability_context();
+        wp_set_current_user( $staff_id );
+
+        // Native capabilities refuse this write.
+        $this->assertFalse( current_user_can( 'edit_post', $own_product ) );
+
+        // The gate grants it, matching the vendor dashboard.
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'edit', $own_product, 'product' ) );
+    }
+
+    public function test_staff_without_the_capability_may_not_write() {
+        $own_product = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+
+        $this->force_ability_context();
+
+        $this->assertFalse( current_user_can( 'dokan_edit_product' ) );
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'edit', $own_product, 'product' ) );
+    }
+
+    public function test_store_admin_writes_are_left_unscoped() {
+        $other_product = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
+
+        $this->force_ability_context();
+        wp_set_current_user( $this->admin_id );
+
+        $this->assertTrue( $this->sut->scope_product_permissions( true, 'edit', $other_product, 'product' ) );
+    }
+
+    public function test_write_capability_requirement_is_filterable() {
+        $own_product = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+        $this->force_ability_context();
+
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'edit', $own_product, 'product' ) );
+
+        $drop = static function ( $capability, $object_type ) {
+            return 'product' === $object_type ? '' : $capability;
+        };
+
+        add_filter( 'dokan_ability_write_capability', $drop, 10, 2 );
+        $permitted = $this->sut->scope_product_permissions( true, 'edit', $own_product, 'product' );
+        remove_filter( 'dokan_ability_write_capability', $drop, 10 );
+
+        $this->assertTrue( $permitted );
     }
 
     public function test_write_context_native_caps_allow_own_product() {
@@ -456,7 +526,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
     public function test_admin_who_is_vendor_creates_for_own_store_without_vendor_id() {
         update_user_meta( $this->admin_id, 'dokan_enable_selling', 'yes' );
 
-        $this->force_mcp_request();
+        $this->force_ability_context();
         $this->sut->register_hooks();
         wp_set_current_user( $this->admin_id );
 

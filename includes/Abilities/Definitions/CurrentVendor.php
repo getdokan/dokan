@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Abilities\Definitions;
 
+use WeDevs\Dokan\Abilities\Support\VendorPayload;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -92,11 +94,9 @@ class CurrentVendor extends AbstractVendorAbility {
         $is_vendor = dokan_is_user_seller( $vendor_id )
             && ( ! $is_admin || dokan_is_seller_enabled( $vendor_id ) );
 
-        $store_name = '';
-        if ( $is_vendor ) {
-            $vendor     = dokan()->vendor->get( $vendor_id );
-            $store_name = $vendor ? (string) $vendor->get_shop_name() : '';
-        }
+        // Via VendorPayload so a vendor with no shop name falls back to their display name,
+        // matching the `vendor` block on product and order output.
+        $store_name = $is_vendor ? (string) VendorPayload::for_user( $vendor_id )['store_name'] : '';
 
         return [
             'user_id'    => $user_id,

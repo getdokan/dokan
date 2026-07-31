@@ -148,18 +148,36 @@ WooCommerce registers products/orders twice: **Layer 1** REST-proxy
 (`woocommerce/products-list|get|create|update|delete`) and **Layer 2** domain
 (`woocommerce/product-create|update`, `products-query`). `/woocommerce/mcp`
 exposes **Layer 1 only**; Layer 2 is reachable via the abilities REST API and
-third-party MCP servers. When targeting abilities by name, cover both.
+third-party MCP servers. When targeting abilities by name, cover both — the
+scope classes' ability-name constants list each layer explicitly, and the
+enrichment handles both result shapes (Layer 2 `products`/`orders`, Layer 1
+`data` or a bare payload).
+
+## Writing a vendor-owned record
+
+Never decide a write from a native capability check. Route it through
+`OwnershipGate::can_write( $object_type, $context, $object_id, $permission )`,
+which denies when the record belongs to another Vendor and grants when it
+belongs to the caller's Vendor Scope *and* they hold the Dokan capability for
+the action (`dokan_edit_product`, `dokan_manage_order`, …). Store admins and
+non-vendors pass through untouched; collection-level checks are left to the
+list-query scoping. The requirement is filterable via
+`dokan_ability_write_capability`.
+
+The grant half matters as much as the deny half: Vendor Staff hold
+`edit_product` but not `edit_others_products` while acting on records authored
+by their parent, so native capabilities refuse writes that Dokan's own REST API
+allows. The gate is what keeps the two surfaces in agreement.
 
 ## Known defects (open)
 
-- Staff get 403 on the WC abilities path for their own Vendor's product while
-  Dokan REST returns 200 — MCP grants *less* than the dashboard. Fixing this is
-  what ADR-0007 describes; only the `Definitions/*` half has shipped.
-- `ProductAbilityScope` still delegates write permission to native capabilities
-  rather than asserting Ownership itself (ADR-0006).
-- Feature constants (`PRODUCT_FILTER_ABILITIES`, `PRODUCT_OUTPUT_ABILITIES`,
-  `ORDER_OUTPUT_ABILITIES`) name Layer 2 abilities only, so vendor enrichment
-  and the `vendor_id` filter never fire on `/woocommerce/mcp`.
+- `StoreController::get_restricted_fields_for_update()` gates on
+  `manage_options` (vs `manage_woocommerce` elsewhere) and matches meta-key
+  names against request-parameter names, so it strips nothing. The real
+  protection is `Vendor\Manager::update()`'s capability gate.
+- `Manager::update():325-335` resets `dokan_publishing` and
+  `dokan_feature_seller` to `no` when those keys are simply absent, so a
+  partial admin update silently clears them.
 - `StoreController::get_restricted_fields_for_update()` gates on
   `manage_options` (vs `manage_woocommerce` elsewhere) and matches meta-key
   names against request-parameter names, so it strips nothing.
