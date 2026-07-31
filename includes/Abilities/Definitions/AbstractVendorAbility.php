@@ -45,6 +45,71 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     }
 
     /**
+     * Whether the current user is a store admin (administrator or shop manager).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_store_admin(): bool {
+        return current_user_can( 'manage_woocommerce' );
+    }
+
+    /**
+     * The Dokan capability a caller must hold to use this ability.
+     *
+     * An empty string means the ability needs no capability beyond being a vendor. Subclasses
+     * override this to declare their own gate.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected static function required_capability(): string {
+        return '';
+    }
+
+    /**
+     * Shared permission callback: store admins pass; everyone else must be a vendor and hold the
+     * ability's declared capability.
+     *
+     * Vendor staff resolve to their parent vendor for data scope but keep their own, narrower set
+     * of `dokan_*` capabilities — so scope alone is not authorization. Without this check a staff
+     * member reaches vendor data their assigned permissions exclude.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function check_permission(): bool {
+        if ( self::is_store_admin() ) {
+            return true;
+        }
+
+        if ( ! static::is_current_user_vendor() ) {
+            return false;
+        }
+
+        $capability = static::required_capability();
+
+        /**
+         * Filters the capability required to use a Dokan ability.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string $capability   Required capability, or an empty string for none.
+         * @param string $ability_name The ability being checked.
+         */
+        $capability = (string) apply_filters(
+            'dokan_ability_required_capability',
+            $capability,
+            static::get_name()
+        );
+
+        return '' === $capability || current_user_can( $capability );
+    }
+
+    /**
      * A standard "not a vendor" error.
      *
      * @since DOKAN_SINCE
@@ -57,6 +122,21 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
             __( 'You must be a vendor to perform this action.', 'dokan-lite' ),
             [ 'status' => 403 ]
         );
+    }
+
+    /**
+     * Guard an execute callback.
+     *
+     * Repeats {@see self::check_permission()} inside `execute()` rather than trusting the
+     * permission callback alone, because an ability's callbacks are public and reachable without
+     * the Abilities API running its own permission pre-flight.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_Error|null Error when the caller is not permitted, null otherwise.
+     */
+    protected static function guard(): ?WP_Error {
+        return static::check_permission() ? null : self::forbidden();
     }
 
     /**

@@ -8,7 +8,9 @@ defined( 'ABSPATH' ) || exit;
  * Ability: list / search vendors.
  *
  * Lets an admin or shop manager discover the vendor to assign a product to (the `vendor_id`
- * consumed by the product-create abilities). Restricted to store managers.
+ * consumed by the product-create abilities), and backs the public store directory.
+ *
+ * Listing approved vendors is public; listing pending ones is restricted to store managers.
  *
  * @since DOKAN_SINCE
  */
@@ -45,9 +47,10 @@ class VendorsQuery extends AbstractVendorAbility {
                         'description' => __( 'Filter vendors by name, email, or login.', 'dokan-lite' ),
                     ],
                     'status'   => [
-                        'type'    => 'string',
-                        'enum'    => [ 'approved', 'pending', 'all' ],
-                        'default' => 'approved',
+                        'type'        => 'string',
+                        'enum'        => [ 'approved', 'pending', 'all' ],
+                        'default'     => 'approved',
+                        'description' => __( 'Which vendors to list. Only store managers may list pending vendors; other callers always receive approved vendors.', 'dokan-lite' ),
                     ],
                     'page'     => [
                         'type'    => 'integer',
@@ -85,11 +88,39 @@ class VendorsQuery extends AbstractVendorAbility {
                 'additionalProperties' => false,
             ],
             'execute_callback'    => [ __CLASS__, 'execute' ],
-            // The store directory is public marketplace data (mirrors the public
+            // The approved store directory is public marketplace data (mirrors the public
             // `dokan/v1/stores` REST endpoint), so vendor listing is available to everyone.
+            // Pending vendors are not public — see resolve_status().
             'permission_callback' => '__return_true',
             'meta'                => self::base_meta( true ),
         ];
+    }
+
+    /**
+     * Resolve the vendor status a caller is allowed to list.
+     *
+     * A vendor awaiting approval has not been accepted into the marketplace and is not public
+     * information, so `pending` and `all` are restricted to store managers. Other callers are
+     * coerced to `approved` rather than rejected, keeping the public directory usable.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $input Ability input.
+     *
+     * @return string One of `approved`, `pending`, `all`.
+     */
+    protected static function resolve_status( array $input ): string {
+        $status = isset( $input['status'] ) ? sanitize_key( (string) $input['status'] ) : 'approved';
+
+        if ( ! in_array( $status, [ 'approved', 'pending', 'all' ], true ) ) {
+            return 'approved';
+        }
+
+        if ( 'approved' !== $status && ! self::is_store_admin() ) {
+            return 'approved';
+        }
+
+        return $status;
     }
 
     /**
@@ -102,7 +133,7 @@ class VendorsQuery extends AbstractVendorAbility {
      * @return array|\WP_Error
      */
     public static function execute( array $input ) {
-        $status   = isset( $input['status'] ) ? sanitize_key( (string) $input['status'] ) : 'approved';
+        $status   = self::resolve_status( $input );
         $page     = max( 1, (int) ( $input['page'] ?? 1 ) );
         $per_page = min( 100, max( 1, (int) ( $input['per_page'] ?? 10 ) ) );
 

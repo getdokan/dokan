@@ -83,9 +83,20 @@ class WithdrawsQuery extends AbstractVendorAbility {
                 'additionalProperties' => false,
             ],
             'execute_callback'    => [ __CLASS__, 'execute' ],
-            'permission_callback' => [ __CLASS__, 'is_current_user_vendor' ],
+            'permission_callback' => [ __CLASS__, 'check_permission' ],
             'meta'                => self::base_meta( true ),
         ];
+    }
+
+    /**
+     * Withdrawal records are gated on the withdraw capability.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected static function required_capability(): string {
+        return 'dokan_manage_withdraw';
     }
 
     /**
@@ -98,15 +109,16 @@ class WithdrawsQuery extends AbstractVendorAbility {
      * @return array|\WP_Error
      */
     public static function execute( array $input ) {
-        $vendor_id = self::current_vendor_id();
+        $denied = self::guard();
 
-        if ( ! dokan_is_user_seller( $vendor_id ) ) {
-            return self::forbidden();
+        if ( $denied ) {
+            return $denied;
         }
 
-        $withdraw = dokan()->withdraw;
+        $vendor_id = self::current_vendor_id();
+        $withdraw  = dokan()->withdraw;
 
-        $status   = isset( $input['status'] ) ? (string) $input['status'] : 'pending';
+        $status   = isset( $input['status'] ) ? sanitize_key( (string) $input['status'] ) : 'pending';
         $page     = max( 1, (int) ( $input['page'] ?? 1 ) );
         $per_page = min( 100, max( 1, (int) ( $input['per_page'] ?? 10 ) ) );
         $offset   = ( $page - 1 ) * $per_page;

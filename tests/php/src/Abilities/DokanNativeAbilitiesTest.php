@@ -226,4 +226,126 @@ class DokanNativeAbilitiesTest extends DokanTestCase {
         $this->assertTrue( $result['is_vendor'] );
         $this->assertSame( $this->admin_id, $result['vendor_id'] );
     }
+
+    /**
+     * Create a vendor whose store has not been approved yet.
+     *
+     * @param int $vendor_id Vendor user ID.
+     *
+     * @return void
+     */
+    private function make_vendor_pending( int $vendor_id ): void {
+        update_user_meta( $vendor_id, 'dokan_enable_selling', 'no' );
+    }
+
+    /**
+     * Vendor staff share their vendor's data scope but keep their own, narrower capabilities.
+     * Without a capability gate they reach vendor data their staff permissions exclude.
+     */
+    public function test_withdraws_query_denied_for_staff_without_withdraw_capability() {
+        $this->create_pending_withdraw( $this->seller_id1 );
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+
+        // Scope still resolves to the parent vendor — only the capability is missing.
+        $this->assertSame( $this->seller_id1, dokan_get_current_user_id() );
+        $this->assertFalse( current_user_can( 'dokan_manage_withdraw' ) );
+
+        $result = WithdrawsQuery::execute( [] );
+
+        $this->assertInstanceOf( WP_Error::class, $result );
+        $this->assertSame( 'dokan_ability_forbidden', $result->get_error_code() );
+    }
+
+    public function test_withdraws_query_allowed_for_staff_with_withdraw_capability() {
+        $this->create_pending_withdraw( $this->seller_id1 );
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        ( new \WP_User( $staff_id ) )->add_cap( 'dokan_manage_withdraw' );
+        wp_set_current_user( $staff_id );
+
+        $result = WithdrawsQuery::execute( [] );
+
+        $this->assertIsArray( $result );
+        $this->assertCount( 1, $result['withdraws'] );
+    }
+
+    public function test_vendor_stats_denied_for_staff_without_overview_capability() {
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+
+        $result = VendorStatsGet::execute( [] );
+
+        $this->assertInstanceOf( WP_Error::class, $result );
+        $this->assertSame( 'dokan_ability_forbidden', $result->get_error_code() );
+    }
+
+    public function test_store_admin_bypasses_the_capability_gate() {
+        wp_set_current_user( $this->admin_id );
+
+        $this->assertTrue( WithdrawsQuery::check_permission() );
+        $this->assertTrue( VendorStatsGet::check_permission() );
+    }
+
+    public function test_required_capability_is_filterable() {
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+
+        $this->assertFalse( WithdrawsQuery::check_permission() );
+
+        $drop_requirement = static function ( $capability, $ability_name ) {
+            return 'dokan/withdraws-query' === $ability_name ? '' : $capability;
+        };
+
+        add_filter( 'dokan_ability_required_capability', $drop_requirement, 10, 2 );
+        $permitted = WithdrawsQuery::check_permission();
+        remove_filter( 'dokan_ability_required_capability', $drop_requirement, 10 );
+
+        $this->assertTrue( $permitted );
+    }
+
+    /**
+     * A vendor awaiting approval is not public information, so an anonymous caller asking for
+     * pending vendors is served the approved directory instead.
+     */
+    public function test_vendors_query_pending_is_coerced_to_approved_for_anonymous() {
+        $this->make_vendor_pending( $this->seller_id2 );
+        wp_set_current_user( 0 );
+
+        $result = VendorsQuery::execute( [ 'status' => 'pending' ] );
+
+        $ids = wp_list_pluck( $result['vendors'], 'id' );
+        $this->assertNotContains( $this->seller_id2, $ids );
+    }
+
+    public function test_vendors_query_all_is_coerced_to_approved_for_a_vendor() {
+        $this->make_vendor_pending( $this->seller_id2 );
+        wp_set_current_user( $this->seller_id1 );
+
+        $result = VendorsQuery::execute( [ 'status' => 'all' ] );
+
+        $ids = wp_list_pluck( $result['vendors'], 'id' );
+        $this->assertContains( $this->seller_id1, $ids );
+        $this->assertNotContains( $this->seller_id2, $ids );
+    }
+
+    public function test_vendors_query_pending_is_allowed_for_store_admin() {
+        $this->make_vendor_pending( $this->seller_id2 );
+        wp_set_current_user( $this->admin_id );
+
+        $result = VendorsQuery::execute( [ 'status' => 'pending' ] );
+
+        $ids = wp_list_pluck( $result['vendors'], 'id' );
+        $this->assertContains( $this->seller_id2, $ids );
+    }
+
+    public function test_vendors_query_rejects_an_unknown_status() {
+        wp_set_current_user( $this->admin_id );
+
+        $result = VendorsQuery::execute( [ 'status' => 'bogus' ] );
+
+        $this->assertIsArray( $result );
+        $this->assertArrayHasKey( 'vendors', $result );
+    }
 }
