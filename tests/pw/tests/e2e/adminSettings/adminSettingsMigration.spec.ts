@@ -320,36 +320,28 @@ test.describe('Admin Settings Migration', () => {
 
     // Test for selecting and saving a Vendor Setup Wizard Logo
     test('should select and save a Vendor Setup Wizard Logo', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+        const logoField = page.locator('[data-testid="settings-field-vendor_setup_wizard_logo"]');
+
         // Step 1: Navigate to Vendor Onboarding Settings
         await adminSettingsPage.navigateToNewVendorOnboardingSettings();
 
-        // Step 2: Locate the "+ Choose File" button and click it
-        const chooseFileButton = page.locator('div.flex.items-center [role="button"] >> button:has-text("+ Choose File")');
-        await chooseFileButton.waitFor({ state: 'visible', timeout: 10000 });
-        await chooseFileButton.click();
+        // Step 2: Open the WP media uploader. The field shows "Upload Image" when
+        // empty and "Change" once a logo is already set, so match either.
+        await logoField.getByRole('button', { name: /Upload Image|Change/ }).first().click();
 
-        // Step 3: Select the first available image dynamically
-        const firstImageCheckbox = page.locator('.attachments-wrapper li[role="checkbox"]').first();
-        await firstImageCheckbox.waitFor({ state: 'visible', timeout: 10000 });
-        await firstImageCheckbox.check();
+        // Step 3: Upload a sample image (deterministic — does not rely on a pre-seeded library)
+        await page.locator('.media-modal input[type="file"]').first().setInputFiles('utils/assets/dokan_logo.png');
 
-        // Step 4: Click "Use this media" to confirm the selection
-        const useMediaButton = page.getByRole('button', { name: 'Use this media' });
-        await useMediaButton.waitFor({ state: 'visible', timeout: 5000 });
-        await useMediaButton.click();
+        // Step 4: The uploaded image is auto-selected; confirm with "Select"
+        const selectButton = page.locator('.media-modal').getByRole('button', { name: 'Select', exact: true });
+        await expect(selectButton).toBeEnabled({ timeout: 30000 });
+        await selectButton.click();
 
-        // Step 5: Click the "Save" button in Vendor Onboarding settings page
-        const saveSettingsButton = page.getByRole('button', { name: 'Save' });
-        await saveSettingsButton.waitFor({ state: 'visible', timeout: 5000 });
-        await saveSettingsButton.click();
+        // Step 5: Save the settings
+        await page.getByRole('button', { name: 'Save Changes' }).click();
 
-        // Step 6: Verify that the selected image URL appears in the input field
-        const logoInput = page.locator('input[name="dokan-file-upload-url"]');
-        await logoInput.waitFor({ state: 'visible', timeout: 5000 });
-        const selectedLogoUrl = await logoInput.inputValue();
-
-        expect(selectedLogoUrl).not.toBe('');
-        console.log('Selected Vendor Setup Wizard Logo URL:', selectedLogoUrl);
+        // Step 6: Verify the selected logo now previews in the field
+        await expect(logoField.locator('img')).toBeVisible({ timeout: 10000 });
     });
 
     test('should maintain bi-directional data synchronization for vendor setup wizard message settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
@@ -394,7 +386,7 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'vendor_duplicate_product'; 
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_duplicate_product'; 
+        const fieldSelectorId = 'vendor_can_duplicate_products';
         const fieldKey = 'dublicateProductField'; 
 
         // Step 1: Get current status from new settings and toggle it
@@ -426,7 +418,7 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'allow_vendor_create_manual_order'; 
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_allow_vendor_create_manual_order'; 
+        const fieldSelectorId = 'allow_vendor_create_manual_order';
         const fieldKey = 'allowVendorCreateOrderField'; 
 
         // Step 1: Get current status from new settings and toggle it
@@ -458,7 +450,7 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'one_step_product_create'; 
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
+        const fieldSelectorId = 'one_page_product_creation';
         const fieldKey = 'onePageProductCreationField'; 
 
         // Step 1: Get current status from new settings and toggle it
@@ -485,16 +477,22 @@ test.describe('Admin Settings Migration', () => {
     });
 
     // Test for `Vendor Capabilities -> Product Popup` settings synchronization.
+    // The new UI stores "Product Popup" enabled while the legacy option stores
+    // `disable_product_popup`, bridged through InvertOnOffTransformer, so the two
+    // sides always hold opposite values. `getOldSetting` reports the raw legacy
+    // checkbox, hence the flipped expectations below.
+    // The field is also gated on "One Page Product Creation" being off, which
+    // step 0 ensures - with it on, the field is absent from the DOM entirely.
     test('should maintain bi-directional data synchronization for Product Popup', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
-        const oldNavigationFunction = 'navigateToOldSellingOptions'; 
-        const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
-        const checkboxClass = 'disable_product_popup'; 
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_new_product_popup';
-        const fieldKey = 'productPopupField'; 
+        const oldNavigationFunction = 'navigateToOldSellingOptions';
+        const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings';
+        const checkboxClass = 'disable_product_popup';
+        const fieldSelectorId = 'vendor_new_product_popup';
+        const fieldKey = 'productPopupField';
 
         // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
-        const fieldSeletor0 = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
+        const fieldSeletor0 = 'one_page_product_creation';
         const onePageStatus = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSeletor0);
         if(onePageStatus) {
             await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSeletor0, false);
@@ -506,14 +504,15 @@ test.describe('Admin Settings Migration', () => {
         let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
         await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
 
-        // Step 2: Verify in old settings (mapping: dokan_selling.show_vendor_info)
+        // Step 2: Verify in old settings (mapping: dokan_selling.disable_product_popup, inverted)
         const oldValueAfterNewUpdate1 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
-        expect(oldValueAfterNewUpdate1).toBe(!status); // New toggle should reflect correctly in old settings
+        expect(oldValueAfterNewUpdate1).toBe(status); // popup enabled == "disable popup" off
 
-        // Step 3: Update old settings back to original status
-        await adminSettingsPage.updateOldSetting(status, oldNavigationFunction, fieldKey, checkboxClass);
+        // Step 3: Drive the legacy flag to the opposite of its current value, which
+        // restores the new setting to its original `status`.
+        await adminSettingsPage.updateOldSetting(!status, oldNavigationFunction, fieldKey, checkboxClass);
         const oldValueAfterNewUpdate2 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
-        expect(oldValueAfterNewUpdate2).toBe(status); // Old settings should match updated value
+        expect(oldValueAfterNewUpdate2).toBe(!status); // Old settings should match updated value
 
         // Step 4: Verify new settings reflect updated value from old settings
         const newValueAfterOldUpdate2 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
@@ -532,11 +531,11 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'order_status_change';
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_can_change_order_status';
+        const fieldSelectorId = 'vendor_can_change_order_status';
         const fieldKey = 'orderStatusChangeField'; 
 
         // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
-        const fieldSeletor0 = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
+        const fieldSeletor0 = 'one_page_product_creation';
         const onePageStatus = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSeletor0);
         if(onePageStatus) {
             await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSeletor0, false);
@@ -574,11 +573,11 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'dokan_any_category_selection'; 
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_select_any_category';
+        const fieldSelectorId = 'vendor_select_any_product_category';
         const fieldKey = 'selectAnyCategoryField'; 
 
         // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
-        const fieldSeletor0 = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
+        const fieldSeletor0 = 'one_page_product_creation';
         const onePageStatus = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSeletor0);
         if(onePageStatus) {
             await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSeletor0, false);
@@ -617,11 +616,11 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'new_seller_enable_auction'; 
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_auction_functions';
+        const fieldSelectorId = 'new_seller_enable_auction';
         const fieldKey = 'auctionFunctionsField'; 
 
         // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
-        const fieldSeletor0 = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
+        const fieldSeletor0 = 'one_page_product_creation';
         const onePageStatus = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSeletor0);
         if(onePageStatus) {
             await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSeletor0, false);

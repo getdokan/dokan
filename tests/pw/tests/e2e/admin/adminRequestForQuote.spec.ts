@@ -140,21 +140,6 @@ test.describe('Admin Request for Quote functionality', () => {
             expect(await rfq.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
 
-        // QUARANTINED @exploratory: the Quote Rules tab renders NO search input.
-        // QuoteRulesList.tsx DEFINES a SimpleInput (placeholder 'Search rules…') in
-        // its filterFields, but never passes it as the `filter` prop to
-        // AdminDataViewTable, so it is never mounted. This asserts search-driven
-        // filtering the UI cannot perform. Documented product gap (search defined
-        // but not wired) — re-enable when the rules filter is rendered.
-        test.fixme('searching the Quote Rules list filters to the matching rule', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            const name = `ARFQ Search Rule ${Date.now()}`;
-            await seedRule(name, 'publish');
-            await rfq.gotoRules();
-            await rfq.searchRules(name);
-            await expect(rfq.rowByText(name)).toBeVisible();
-            expect(await rfq.hasRow(adminRequestForQuoteData.rule.publishedName), 'unmatched rule is filtered out').toBe(false);
-        });
-
         test('admin can trash a quote request (it leaves the Pending tab)', { tag: ['@pro', '@admin'] }, async () => {
             const title = `ARFQ Trash Quote ${Date.now()}`;
             await seedQuote(title, 'pending');
@@ -205,16 +190,6 @@ test.describe('Admin Request for Quote functionality', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
-        });
-
-        // QUARANTINED @exploratory: the Quote Rules search input is defined in
-        // filterFields but never wired to AdminDataViewTable (see the rules-search
-        // test above), so a search-driven empty state is unreachable. Documented gap.
-        test.fixme('Quote Rules search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await rfq.gotoRules();
-            await rfq.searchRules(adminRequestForQuoteData.searchMiss);
-            const empty = (await rfq.isEmptyStateVisible()) || (await rfq.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched rule search').toBe(true);
         });
 
         test('reloading on #/request-for-quote preserves the route and re-mounts the list', { tag: ['@pro', '@admin'] }, async () => {

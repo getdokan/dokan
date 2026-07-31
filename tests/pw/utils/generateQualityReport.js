@@ -135,10 +135,15 @@ const coverageShape = (raw) => {
     if (!raw) return { pct: null, total: 0, covered: 0 };
     const pctRaw = String(raw.coverage ?? '').replace('%', '').trim();
     const pct = Number.isFinite(Number(pctRaw)) ? Number(pctRaw) : null;
+    // Coverage files differ by suite: the API report counts REST endpoints
+    // (total_endpoints / covered_endpoints); a feature-based report would use
+    // total_features / total_covered_features. Accept either so the weighted
+    // combine below has real counts to work with instead of silently falling
+    // back to averaging the pre-rounded percentages.
     return {
         pct,
-        total: num(raw.total_features),
-        covered: num(raw.total_covered_features),
+        total: num(raw.total_features) || num(raw.total_endpoints),
+        covered: num(raw.total_covered_features) || num(raw.covered_endpoints),
     };
 };
 
@@ -160,14 +165,17 @@ const totals = {
 totals.ran = totals.passed + totals.failed;
 totals.passRate = totals.ran > 0 ? Math.round((totals.passed / totals.ran) * 1000) / 10 : 0;
 
-// Combined coverage: weight by feature counts when available; else average pct.
+// Combined coverage: weight by endpoint/feature counts when available; else
+// average the percentages. Keep 2-decimal precision so this reconciles with the
+// per-suite figures (which display .toFixed(2)) instead of drifting by rounding
+// — e.g. 268/592 must read 45.27%, not a 1-dp-rounded 45.30%.
 let totalCoveragePct = null;
 const combinedTotal = apiCov.total + e2eCov.total;
 if (combinedTotal > 0) {
-    totalCoveragePct = Math.round(((apiCov.covered + e2eCov.covered) / combinedTotal) * 1000) / 10;
+    totalCoveragePct = Math.round(((apiCov.covered + e2eCov.covered) / combinedTotal) * 10000) / 100;
 } else if (apiCov.pct !== null || e2eCov.pct !== null) {
     const vals = [apiCov.pct, e2eCov.pct].filter(v => v !== null);
-    totalCoveragePct = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
+    totalCoveragePct = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100;
 }
 
 const overallFailed = totals.failed > 0;
@@ -220,6 +228,10 @@ const today = new Date().toISOString().slice(0, 10);
 
 /** @param {*} v */
 const fmtPct = v => v === null || v === undefined ? '—' : `${num(v).toFixed(1)}`;
+// Coverage is reported to 2 decimals everywhere else (the step-summary and the
+// Playwright report both use .toFixed(2)); use a matching formatter here so the
+// HTML template doesn't show a 1-dp value that disagrees with them.
+const fmtCoverage = v => v === null || v === undefined ? '—' : `${num(v).toFixed(2)}`;
 /** @param {*} v */
 const fmtCount = v => v === null || v === undefined ? '—' : String(num(v));
 
@@ -247,7 +259,7 @@ const placeholders = {
     FAILED_CLASS: totals.failed > 0 ? 'danger' : 'success',
     SKIPPED_TESTS: fmtCount(totals.skipped),
     TOTAL_DURATION: formatDuration(totals.durationMs),
-    TOTAL_COVERAGE: fmtPct(totalCoveragePct),
+    TOTAL_COVERAGE: fmtCoverage(totalCoveragePct),
 
     API_STATUS: api ? (api.failed > 0 ? 'Failed' : api.missingReports > 0 ? 'Incomplete' : 'Passed') : 'No data',
     API_STATUS_CLASS: api && (api.failed > 0 || api.missingReports > 0) ? 'failed' : '',
@@ -257,7 +269,7 @@ const placeholders = {
     API_FAILED_CLASS: api && api.failed > 0 ? 'failed' : '',
     API_SKIPPED: api ? fmtCount(api.skipped) : '—',
     API_DURATION: api ? formatDuration(api.durationMs) : '—',
-    API_COVERAGE: fmtPct(apiCov.pct),
+    API_COVERAGE: fmtCoverage(apiCov.pct),
     API_PASS_RATE: api ? fmtPct(api.passRate) : '0',
     API_PROGRESS_CLASS: api && api.failed > 0 ? 'failed' : '',
     API_TOTAL_RUN: api ? fmtCount(api.ran) : '—',
@@ -270,7 +282,7 @@ const placeholders = {
     E2E_FAILED_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
     E2E_SKIPPED: e2e ? fmtCount(e2e.skipped) : '—',
     E2E_DURATION: e2e ? formatDuration(e2e.durationMs) : '—',
-    E2E_COVERAGE: fmtPct(e2eCov.pct),
+    E2E_COVERAGE: fmtCoverage(e2eCov.pct),
     E2E_PASS_RATE: e2e ? fmtPct(e2e.passRate) : '0',
     E2E_PROGRESS_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
     E2E_TOTAL_RUN: e2e ? fmtCount(e2e.ran) : '—',

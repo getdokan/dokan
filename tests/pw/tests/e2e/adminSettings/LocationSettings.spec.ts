@@ -32,8 +32,8 @@ const oldDataset = [
                 value: 'top',
                 },
                 {
-               selector: '.show_filters_before_locations_map label.switch',
-                type: 'toggle',
+               selector: '.show_filters_before_locations_map',
+                type: 'checkbox',
                 value: true,
                 },
                 {
@@ -58,11 +58,11 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: General -> Location Settings',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_general >> #dokan_settings_general_location',
+    selector: '[data-testid="settings-menu-general"] >> [data-testid="settings-menu-location"]',
     fields: [
         {
-            selector: '#dokan_settings_general_location_map_api_configuration_map_api_source [role="radiogroup"]',
-            type: 'radio-group',
+            selector: '[data-testid="settings-field-map_api_source"]',
+            type: 'radio-capsule',
             value: 'Google Maps',
         },
         {
@@ -71,32 +71,32 @@ const newDataset = {
             value: 'NEW_GOOGLE_KEY_TEST',
         },
         {
-            selector: '#dokan_settings_general_location_map_display_settings_location_map_position [role="radiogroup"]',
-            type: 'radio-group',
+            selector: '[data-testid="settings-field-location_map_position"]',
+            type: 'radio-capsule',
             value: 'Top',
         },
         {
-            selector: '#dokan_settings_general_location_map_display_settings_show_filters_before_map button[role="switch"]',
+            selector: '[data-testid="settings-field-show_filters_before_map"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_general_location_map_display_settings_radius_search_unit [role="radiogroup"]',
-            type: 'radio-group',
+            selector: '[data-testid="settings-field-radius_search_unit"]',
+            type: 'radio-capsule',
             value: 'Miles',
         },
         {
-            selector: '#dokan_settings_general_location_map_display_settings_radius_search_min_distance input',
+            selector: '[data-testid="settings-field-radius_search_min_distance"] input[type="number"]',
             type: 'number',
             value: '2',
         },
         {
-            selector: '#dokan_settings_general_location_map_display_settings_radius_search_max_distance input',
+            selector: '[data-testid="settings-field-radius_search_max_distance"] input[type="number"]',
             type: 'number',
             value: '500',
         },
         {
-            selector: '#dokan_settings_general_location_map_display_settings_map_zoom_level input',
+            selector: '[data-testid="settings-field-map_zoom_level"] input[type="number"]',
             type: 'number',
             value: '14',
         },

@@ -243,20 +243,6 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory: the admin Verifications DataViews page renders
-        // NO free-text search input (VerificationList.tsx adds no <SearchInput> to
-        // tabs.additionalComponents; AdminDataViewTable bypasses the DataViews
-        // built-in search). Only the Vendors page has a search box. This asserts a
-        // search-driven empty state the UI cannot reach. Documented product gap —
-        // re-enable when admin search lands (or rewrite to assert the empty state
-        // via the genuinely-empty Rejected/Cancelled status tab).
-        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await seedRequest('pending');
-            await verifications.goto();
-            await verifications.search(adminVerificationsData.searchMiss);
-            const empty = (await verifications.isEmptyStateVisible()) || (await verifications.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
-        });
-
         test('reloading on #/verifications preserves the route and re-mounts the list', { tag: ['@pro', '@admin'] }, async () => {
             await seedRequest('pending');
             await verifications.goto();

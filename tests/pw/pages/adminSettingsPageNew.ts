@@ -2,7 +2,12 @@ import { expect } from '@playwright/test';
 import { AdminPage } from './adminPage';
 
 export class AdminSettingsPageNew extends AdminPage {
-    saveButtonSelector: string = '#dokan-admin-settings-save-btn button'
+    // The new settings UI renders one save control per visible scope, tagged
+    // `settings-save-{scopeId}` (settings-content.tsx). The old
+    // `#dokan-admin-settings-save-btn` id no longer exists, and `saveSettings()`
+    // skips silently when the selector misses — so a stale value here means
+    // "update" steps quietly never persist.
+    saveButtonSelector: string = '[data-testid^="settings-save-"] button'
     oldSaveButtonSelector: string = '#submit'
 
     setSaveButtonSelector(selector: string) {
@@ -55,13 +60,20 @@ export class AdminSettingsPageNew extends AdminPage {
     }
 
     async saveSettings() {
-        const saveBtn = this.page.locator(this.saveButtonSelector);
-        if (await saveBtn.isVisible()) {
-            await saveBtn.click();
-            await this.waitForLoadState();
-        } else {
+        const saveBtn = this.page.locator(this.saveButtonSelector).first();
+        if (!(await saveBtn.isVisible())) {
             console.log('Save button not visible. Skipping save.');
+            return;
         }
+        // The new UI disables "Save Changes" until a field is dirty. When the
+        // desired values already match what is stored, `setFieldValues` makes
+        // no change and the button stays disabled — there is nothing to
+        // persist, so treat it as a no-op instead of waiting out the timeout.
+        if (await saveBtn.isDisabled()) {
+            return;
+        }
+        await saveBtn.click();
+        await this.waitForLoadState();
     }
 
     async setFieldValues(fields: Array<any>) {
@@ -94,6 +106,15 @@ export class AdminSettingsPageNew extends AdminPage {
                     // reflects the chosen label.
                     const trigger = this.page.locator(field.selector);
                     await trigger.waitFor({ state: 'visible' });
+
+                    // Nothing to change when the trigger already shows the wanted
+                    // option. Opening the popup anyway is not harmless: Base UI
+                    // scroll-aligns the list to the selected item, so the option
+                    // never settles and `click()` times out on "not stable".
+                    if ((await trigger.textContent())?.includes(field.value)) {
+                        break;
+                    }
+
                     await trigger.click();
 
                     const option = this.page.getByRole('option', { name: field.value, exact: true });
@@ -114,6 +135,64 @@ export class AdminSettingsPageNew extends AdminPage {
                     }
                     break;
                 }
+                case 'radio-capsule': {
+                    // Toggle group: `field.selector` is the field wrapper and
+                    // `field.value` the option's visible label. The selected
+                    // button carries aria-pressed="true".
+                    const option = this.radioCapsuleOption(field);
+                    await option.waitFor({ state: 'visible', timeout: 15000 });
+                    if (await option.getAttribute('aria-pressed') !== 'true') {
+                        await option.click();
+                    }
+                    break;
+                }
+                case 'customize-radio': {
+                    // Card-style radio group: each option renders a visible
+                    // `span[role="radio"]` next to a hidden radio input that
+                    // carries the stored option value.
+                    const input = this.customizeRadioInput(field);
+                    await input.waitFor({ state: 'attached', timeout: 15000 });
+                    if (!(await input.isChecked())) {
+                        await input.locator('xpath=preceding-sibling::span[@role="radio"][1]').click();
+                    }
+                    break;
+                }
+                case 'multicheck': {
+                    // `field.value` is the list of option labels that must end up checked.
+                    for (const label of field.value as string[]) {
+                        const box = this.multicheckOption(field, label);
+                        await box.waitFor({ state: 'visible', timeout: 15000 });
+                        if (await box.getAttribute('aria-checked') !== 'true') {
+                            await box.click();
+                        }
+                    }
+                    break;
+                }
+                case 'richtext': {
+                    const editor = this.page.locator(field.selector).first();
+                    await editor.waitFor({ state: 'visible' });
+                    await editor.fill(field.value);
+                    break;
+                }
+                case 'labeled-switch': {
+                    // Repeater rows (menu manager, verification methods) render a
+                    // switch per row with no id of its own, so the row is found by
+                    // its visible label and the switch taken from within it.
+                    const sw = this.labeledSwitch(field);
+                    await sw.waitFor({ state: 'visible', timeout: 15000 });
+                    if ((await sw.getAttribute('aria-checked') === 'true') !== field.value) {
+                        await sw.click();
+                    }
+                    break;
+                }
+                case 'radio-input': {
+                    // Plain `input[type="radio"]` (legacy settings markup).
+                    await this.page.locator(field.selector).first().check();
+                    break;
+                }
+                case 'visible':
+                    // Presence-only field: nothing to set.
+                    break;
                 case 'checkbox': {
                     // Handle checkbox with "enabled" class - Check input element state but click on label
                     const inputElement = this.page.locator(field.selector).locator('input[type="checkbox"]');
@@ -155,7 +234,11 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'select':
-                    await this.page.click(field.selector);
+                    // Legacy native <select>. Datasets identify the option by
+                    // its stored value in some specs and by its visible label in
+                    // others (page pickers), so accept either. Clicking alone
+                    // never changed the selection.
+                    await this.selectNativeOption(field);
                     break;
                 case 'toggle':
                     await this.page.click(field.selector);
@@ -186,18 +269,21 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'color-picker': {
-                    const picker = this.page.locator(field.selector);
-                    await picker.click();
-                    const input = picker.locator('input[type="text"]');
-                    if (await input.count() > 0) {
-                        await input.fill(field.value);
-                        await input.press('Enter');
-                    }
+                    // The field renders a popover trigger whose swatch shows the
+                    // current colour; the popover itself is a WP ColorPicker with
+                    // a hex text input. `field.value` is a hex string.
+                    const wrapper = this.page.locator(field.selector);
+                    await wrapper.locator('button').first().click();
+                    const hex = this.page.locator('[role="dialog"] input.components-input-control__input').last();
+                    await hex.waitFor({ state: 'visible', timeout: 15000 });
+                    await hex.fill(field.value.replace('#', ''));
+                    await hex.press('Enter');
+                    await this.page.keyboard.press('Escape');
                     break;
                 }
                 case 'readOnly': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
             }
@@ -210,36 +296,34 @@ export class AdminSettingsPageNew extends AdminPage {
             switch (field.type) {
                 case 'text': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'number': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'email': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'switch': {
                     const ariaChecked = await this.page.locator(field.selector).getAttribute('aria-checked');
                     const isChecked = ariaChecked === 'true';
-                    expect(isChecked).toBe(field.value);
+                    expect(isChecked, field.selector).toBe(field.value);
                     break;
                 }
                 case 'checkbox': {
                     const inputElement = this.page.locator(field.selector).locator('input[type="checkbox"]');
                     const hasEnabledClass = await inputElement.evaluate(el => el.classList.contains('enabled'));
-                    console.log('hasEnabledClass', hasEnabledClass);
-                    console.log('field.value', field.value);
-                    expect(hasEnabledClass).toBe(field.value);
+                    expect(hasEnabledClass, field.selector).toBe(field.value);
                     break;
                 }
                 case 'radio': {
                     const ariaChecked = await this.page.locator(field.selector).getAttribute('aria-checked');
-                    expect(ariaChecked).toBe(field.value);
+                    expect(ariaChecked, field.selector).toBe(field.value);
                     break;
                 }
                 case 'radioOld': {
@@ -254,12 +338,12 @@ export class AdminSettingsPageNew extends AdminPage {
                             isSelected = await inputLocator.isChecked().catch(() => false);
                         }
                     }
-                    expect(isSelected).toBe(desiredSelected);
+                    expect(isSelected, field.selector).toBe(desiredSelected);
                     break;
                 }
                 case 'select': {
-                    const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    const { value, label } = await this.nativeSelection(field.selector);
+                    expect([value, label], field.selector).toContain(field.value);
                     break;
                 }
                 case 'radix-dropdown': {
@@ -273,20 +357,19 @@ export class AdminSettingsPageNew extends AdminPage {
                     const editor = this.page.locator(field.selector).first();
                     await editor.waitFor({ state: 'visible' });
                     const value = await editor.innerText(); // use innerText for Quill editor
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'color-picker': {
-                    const color = await this.page.locator(field.selector).evaluate(el => {
-                        return getComputedStyle(el).backgroundColor;
-                    });
-                    expect(color).toBe(field.value);
+                    const swatch = this.page.locator(field.selector).locator('button div').first();
+                    const color = await swatch.evaluate(el => getComputedStyle(el).backgroundColor);
+                    expect(color, field.selector).toBe(this.hexToRgb(field.value));
                     break;
                 }
                 case 'textareaOld': {
                     const frameHandle = this.page.frameLocator(field.selector);
                     const textValue = await frameHandle.locator('body').innerText();
-                    expect(textValue.trim()).toBe(field.value);
+                    expect(textValue.trim(), field.selector).toBe(field.value);
                     return;
                 }
                 case 'radioLabel': {
@@ -297,18 +380,55 @@ export class AdminSettingsPageNew extends AdminPage {
                     await selectedLocator.waitFor({ state: 'visible', timeout: 15000 });
 
                     const labelText = (await selectedLocator.innerText()).trim();
-                    expect(labelText).toBe(field.value);
+                    expect(labelText, field.selector).toBe(field.value);
                     break;
                 }
                 case 'checkbox-switch': {
                     const locator = this.page.locator(field.selector);
                     const isChecked = await locator.isChecked();
-                    expect(isChecked).toBe(field.value);
+                    expect(isChecked, field.selector).toBe(field.value);
+                    break;
+                }
+                case 'radio-capsule': {
+                    await expect(this.radioCapsuleOption(field)).toHaveAttribute('aria-pressed', 'true');
                     break;
                 }
                 case 'customize-radio': {
-                    const locator = this.page.locator(field.selector);
-                    await expect(locator).toBeVisible();
+                    await expect(this.customizeRadioInput(field)).toBeChecked();
+                    break;
+                }
+                case 'visible': {
+                    // For legacy widgets that expose no input and mark the
+                    // selected item with a class: the selector encodes the
+                    // expected state, so resolving it is the assertion.
+                    // `setFieldValues` has no matching case — these fields are
+                    // read-only, as they were before.
+                    await expect(this.page.locator(field.selector)).toBeVisible();
+                    break;
+                }
+                case 'multicheck': {
+                    for (const label of field.value as string[]) {
+                        await expect(this.multicheckOption(field, label)).toHaveAttribute('aria-checked', 'true');
+                    }
+                    break;
+                }
+                case 'richtext': {
+                    const editor = this.page.locator(field.selector).first();
+                    await editor.waitFor({ state: 'visible' });
+                    expect((await editor.innerText()).trim(), field.selector).toBe(field.value);
+                    break;
+                }
+                case 'labeled-switch': {
+                    await expect(this.labeledSwitch(field), `${field.selector} [${field.label}]`)
+                        .toHaveAttribute('aria-checked', String(field.value));
+                    break;
+                }
+                case 'radio-input': {
+                    await expect(this.page.locator(field.selector).first()).toBeChecked();
+                    break;
+                }
+                case 'visible': {
+                    await expect(this.page.locator(field.selector).first()).toBeVisible();
                     break;
                 }
             }
@@ -317,5 +437,54 @@ export class AdminSettingsPageNew extends AdminPage {
 
     splitSelectors(selector: string): string[] {
         return selector.split('>>').map(s => s.trim());
+    }
+
+    // ---- control helpers shared by set/assert -------------------------------
+
+    labeledSwitch(field: any) {
+        // Climb from the row's label text to the nearest ancestor that owns a
+        // switch, then take that switch.
+        const xpath =
+            `xpath=.//*[normalize-space(text())=${JSON.stringify(field.label)}]` +
+            `/ancestor::*[.//*[@role="switch"]][1]//*[@role="switch"]`;
+        return this.page.locator(field.selector).locator(xpath).first();
+    }
+
+    hexToRgb(hex: string): string {
+        const h = hex.replace('#', '');
+        const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+        return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+    }
+
+    async selectNativeOption(field: any) {
+        const select = this.page.locator(field.selector).first();
+        try {
+            await select.selectOption(field.value);
+        } catch {
+            await select.selectOption({ label: field.value });
+        }
+    }
+
+    async nativeSelection(selector: string): Promise<{ value: string; label: string }> {
+        return this.page.locator(selector).first().evaluate(el => {
+            const select = el as HTMLSelectElement;
+            return { value: select.value, label: select.selectedOptions[0]?.text.trim() ?? '' };
+        });
+    }
+
+    radioCapsuleOption(field: any) {
+        return this.page.locator(field.selector).getByRole('button', { name: field.value, exact: true });
+    }
+
+    customizeRadioInput(field: any) {
+        return this.page.locator(`${field.selector} input[type="radio"][value="${field.value}"]`);
+    }
+
+    multicheckOption(field: any, label: string) {
+        return this.page
+            .locator(`${field.selector} div[role="group"]`)
+            .filter({ hasText: label })
+            .locator('[role="checkbox"]')
+            .first();
     }
 }

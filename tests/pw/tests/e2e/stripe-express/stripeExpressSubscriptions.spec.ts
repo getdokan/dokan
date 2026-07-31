@@ -327,8 +327,7 @@ test.describe.serial('Stripe Express — recurring pack creates exactly one subs
             await stripe.assertBlockPaymentElementReady();
 
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+            orderId = await stripe.placeBlockOrderExpectReceived();
         } finally {
             await page.close();
             await ctx.close();

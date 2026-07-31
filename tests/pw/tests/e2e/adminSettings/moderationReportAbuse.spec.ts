@@ -26,15 +26,15 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Moderation -> report_abuse',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_moderation >> #dokan_settings_moderation_report_abuse',
+    selector: '[data-testid="settings-menu-moderation"] >> [data-testid="settings-menu-report_abuse"]',
     fields: [
         {
-            selector: '#dokan_settings_moderation_report_abuse_report_abuse_settings_report_abuse_reported_by button[name="all_users"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-report_abuse_reported_by"]',
+            type: 'radio-capsule',
+            value: 'All Users',
         },
         // { //Todo
-        //     selector: '#dokan_settings_moderation_report_abuse_reasons_for_abuse_reports_report_abuse_reasons textarea',
+        //     selector: '[data-testid="settings-field-report_abuse_reasons"] textarea',
         //     type: 'textarea',
         //     value: 'Spam\nInappropriate',
         // },

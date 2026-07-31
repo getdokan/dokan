@@ -85,27 +85,27 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Compliance -> EU Compliance',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_compliance >> #dokan_settings_compliance_eu_compliance',
+    selector: '[data-testid="settings-menu-compliance"] >> [data-testid="settings-menu-eu_compliance"]',
     fields: [
         // EU Compliance Settings Section
         
         // Display in Vendor Registration Form - Switch
         {
-            selector: '#dokan_settings_compliance_eu_compliance_eu_compliance_settings_eu_vendor_registration_display button[role="switch"]',
+            selector: '[data-testid="settings-field-eu_vendor_registration_display"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         
         // Enable Germanized Support For Vendors - Switch
         {
-            selector: '#dokan_settings_compliance_eu_compliance_eu_compliance_settings_germanized_support_vendors button[role="switch"]',
+            selector: '[data-testid="settings-field-germanized_support_vendors"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         
         // Vendor's Can Override Invoice Number - Switch
         {
-            selector: '#dokan_settings_compliance_eu_compliance_eu_compliance_settings_vendor_invoice_number_override button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_invoice_number_override"] [role="switch"]',
             type: 'switch',
             value: false,
         },

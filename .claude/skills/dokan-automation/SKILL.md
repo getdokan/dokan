@@ -20,6 +20,18 @@ The full project reference lives in `tests/pw/setup.md` (relative to the dokan-l
 
 ---
 
+## Non-negotiables (apply to every flow)
+
+These four rules override convenience. A scaffold that breaks any of them is wrong, not "good enough."
+
+1. **Folderized structure, exactly.** One feature = one folder under `tests/e2e/<slug>/` holding `<slug>.spec.ts` + `<slug>Page.ts` (+ optional `<slug>TestData.ts`). Folders never import from each other. Specs never touch `page.locator(...)` — every selector lives in the page object. No new top-level layout, no shared "helpers" folder inside `e2e/`. Match `setup.md` §2/§3 to the character.
+2. **Locators come from the Playwright MCP plugin — mandatory and verified.** Never hand-write or guess a selector. Discover it live via `mcp__plugin_playwright_playwright__*` against a running site, then keep the exact locator the snapshot proves resolves to one element. See "LOCATORS" below.
+3. **Minimal comments.** Code reads itself. A comment earns its place only when it explains *why* (a non-obvious workaround, a Dokan sharp edge from `setup.md` §10). No banner comments, no restating what the line does, no `// click button`. Delete the template's teaching comments when you scaffold real specs.
+4. **CI/CD-oriented, deterministic.** Web-first assertions only, zero fixed waits, parallel-safe, tagged. See "CI/CD best practices" below.
+5. **Maximum coverage.** Every scaffold exhausts the feature — all happy paths, plus every edge and negative case the surface allows: each role that can act, each field's validation, empty/boundary/permission-denied states, and every REST route the flow hits (`//COVERAGE_TAG`). Partial coverage is a gap, not a smaller task. See "COVERAGE" below.
+
+---
+
 ## Quick orientation
 
 Suite root:
@@ -151,9 +163,11 @@ For each feature with `Status: build` (and at least one Happy Path):
 **E2E features** (`Type: e2e`):
 - Create `$SUITE_ROOT/tests/e2e/<slug>/<slug>.spec.ts` from setup.md §3.
 - Inside the outer `test.describe('<feature> functionality', ...)`, create one nested `test.describe('happy paths', ...)` and (only if the section exists with at least one case) `test.describe('edge cases', ...)` and `test.describe('negative cases', ...)`. This keeps the section structure visible in the report.
-- Create `$SUITE_ROOT/tests/e2e/<slug>/<slug>Page.ts` from setup.md §4.
+- **Source every selector via the Playwright MCP plugin before writing the page object** (see "LOCATORS"). Do not scaffold `<slug>Page.ts` with placeholder/guessed selectors and fix them later — capture real, verified locators first.
+- Create `$SUITE_ROOT/tests/e2e/<slug>/<slug>Page.ts` from setup.md §4, using the verified locators.
 - If `REST seed: yes`, include the `api` object (init/dispose) in the page file.
 - If the role list includes `vendor` or `vendor2`, register the announcement-modal handler in the page-object constructor (setup.md §10).
+- Strip the template's teaching comments — keep only *why* comments (Non-negotiable #3).
 
 **API features** (`Type: api`):
 - Create `$SUITE_ROOT/tests/api/<slug>.spec.ts` only — no page object.
@@ -188,6 +202,74 @@ Fix any errors before moving to the next feature. Don't run the test itself — 
 ### Step 6 — report
 
 Summarise: `N features scaffolded, M skipped (missing Happy Paths or Status=skip). Type-check + lint passed. Run npm run test:e2e -- tests/e2e/<slug> to execute.`
+
+---
+
+## COVERAGE — exhaust the feature
+
+Goal: a passing folder means the feature is proven, not sampled. Author and scaffold for the widest coverage the surface supports.
+
+### What "maximum" means
+
+- **Every role that can act** gets its own test — admin, vendor, vendor2, customer, guest. If a role is blocked from an action, that block is itself a negative test (permission denied / redirect / 4xx).
+- **Every happy path** in the feature, not just the primary one — create, read, edit, delete, bulk, filter, search, pagination, empty-state.
+- **Edge cases**: boundary values (min/max length, 0, negative, huge), empty/whitespace, duplicate, special chars/emoji/RTL, slow network, concurrent edit, re-submit.
+- **Negative cases**: each required field missing, each validation rule, unauthorized access, invalid IDs, expired nonce, 4xx/5xx handling.
+- **Every REST route the flow touches** is asserted — lead API specs and REST-seeding page objects with `//COVERAGE_TAG: <METHOD> <route>` for each, so the coverage crawler counts it.
+- **Both gates where relevant**: if a feature exists in Lite and behaves differently under Pro, cover both (`@lite` path + `@pro` path), don't assume one implies the other.
+
+### How to hit it
+
+- **Author flow:** after the user's cases, probe for the gaps above one round — "roles X and Y can also do this — cover them? Any validation on field Z?" Fill obvious holes; don't invent scenarios the feature can't reach.
+- **Build flow:** derive one `test()` per distinct (role × path × outcome). Group by section (`happy paths` / `edge cases` / `negative cases`) so the report shows the shape. Parametrize repetitive validation with a data-driven loop rather than copy-paste.
+- **Live discovery:** while capturing locators via MCP (below), note every interactive control the snapshot exposes — each is a candidate path. A control with no test is a coverage gap to flag.
+- **Report the gaps.** If a case is known but not covered (env can't reach it, out of scope), list it explicitly: `Uncovered: <case> — <reason>`. Silent omission reads as "covered."
+
+Balance against determinism — a flaky "extra" test is negative coverage. Every added case still obeys Non-negotiables #2–#4.
+
+---
+
+## LOCATORS — Playwright MCP plugin (mandatory, verified)
+
+Every selector that lands in a `<slug>Page.ts` MUST be discovered and proven live through the `mcp__plugin_playwright_playwright__*` tools. Guessing a selector from memory or by reading JSX is not allowed — Dokan's markup drifts across Lite/Pro and versions, and a guessed CSS/XPath is the #1 source of flake.
+
+### The loop
+
+1. **Load MCP tools once.** One `ToolSearch` call:
+   `select:mcp__plugin_playwright_playwright__browser_navigate,mcp__plugin_playwright_playwright__browser_snapshot,mcp__plugin_playwright_playwright__browser_find,mcp__plugin_playwright_playwright__browser_click,mcp__plugin_playwright_playwright__browser_type,mcp__plugin_playwright_playwright__browser_wait_for`
+2. **Navigate** to the page under test (`browser_navigate` to `BASE_URL` + the vendor/admin route). The env must be up (Docker + `docker:full`); if it isn't, run the Run-flow preconditions first or ask the user to boot it.
+3. **Snapshot** the page (`browser_snapshot`) to read the accessibility tree — roles, names, labels. Use `browser_find` to resolve a specific element.
+4. **Pick the most robust locator** in this priority order (Playwright's own guidance):
+   1. `getByRole(role, { name })` — accessible, survives restyles
+   2. `getByLabel` / `getByPlaceholder` — form fields
+   3. `getByText` — non-interactive copy
+   4. `getByTestId('[data-test=…]')` — when Dokan ships a stable hook
+   5. CSS **only** as a last resort, and only for a structural container with no accessible handle. Never XPath. Never nth-index chains. Never text that is a translatable string unless the test is locale-pinned.
+5. **Verify uniqueness live.** The chosen locator must resolve to exactly one element on the real page (`browser_find` / a `browser_click` that succeeds without a strict-mode violation). If it matches zero or many, refine and re-snapshot — do not ship it.
+6. **Record it in the page object**, grouped in the `<slug>Selectors` map (or inline `getByRole` calls). Keep the exact form you verified.
+
+### Rules
+
+- No selector enters a page object without step 5 passing against a running site.
+- Prefer Playwright's `getBy*` engine over raw `page.locator('css')`. `<slug>Selectors` may hold role/name pairs or `data-test` strings; the page object turns them into `getByRole`/`getByTestId`.
+- If the live env is genuinely unavailable and the user waives verification, say so explicitly in the report (`Locators UNVERIFIED — env down`) so the gap is visible. Default is: don't scaffold selectors you couldn't verify.
+- Re-verify when a spec starts failing on locators — markup drift, not test logic, is usually the cause.
+
+---
+
+## CI/CD best practices (every scaffolded test)
+
+Tests run headless, sharded, and in parallel on CI. Author them so a green run means the feature works and a red run means the feature broke — nothing else.
+
+- **Web-first assertions only.** `await expect(locator).toBeVisible()` / `toContainText()` / `toHaveCount()`. These auto-retry. Never assert on a value you read once.
+- **Zero fixed waits.** No `waitForTimeout`, no `sleep`, no arbitrary `setTimeout`. Wait on state: `browser_wait_for` while authoring, `expect(...).toBeVisible()` / `waitForResponse` in the spec.
+- **Deterministic data.** Generate unique fixtures with `faker` per run so parallel workers never collide on names/slugs. Never depend on data a previous test left behind.
+- **Parallel- and shard-safe.** No test depends on another's side effects or execution order. Cross-cutting stateful flows get `@serial` and are excluded from the default run (setup.md §7).
+- **Isolated auth.** Use the right `storageState` per role; don't log in through the UI inside a test when a stored state exists.
+- **Tagged for filtering.** Exactly one Lite/Pro gate (`@lite`/`@liteOnly`/`@pro`) + one role tag per test. This is what makes Lite-Only vs PR vs Full selection work in CI.
+- **Fast negative paths.** For `@negative` cases prefer asserting the guard (validation message / 4xx) over driving a long UI flow.
+- **Clean teardown.** Close contexts/pages in `afterAll`; dispose the `api` client. Leaked contexts slow the shard and mask leaks.
+- **Green on `type:check` + `lint` before it's done** (Build Step 5). CI runs both as gates.
 
 ---
 
@@ -302,9 +384,13 @@ Don't invent. If `setup.md` doesn't cover it and the code doesn't either, say so
 3. **Never run `npm run reset:env` without confirmation** — it deletes the database and forces a re-seed.
 4. **Never skip the Docker check.** Every other failure mode downstream is harder to diagnose than "Docker isn't running."
 5. **Never bypass the page-object pattern.** A spec that calls `page.locator(...)` directly is a bug, not a shortcut.
-6. **Every new test gets one Lite/Pro gate tag and at least one role tag.** No exceptions.
-7. **Every vendor-facing page object registers the announcement-modal handler** in its constructor (setup.md §10). Forgetting this is the #1 cause of flake.
-8. **For Pro-only features, verify `dokan-pro/` is cloned as a sibling under `wp-content/plugins/`** before running `@pro` tests.
+6. **Never hand-write or guess a selector.** Every locator is discovered and verified live via the Playwright MCP plugin (see "LOCATORS"). Prefer `getByRole`/`getByLabel`/`getByTestId`; XPath and nth-index chains are banned.
+7. **Minimal comments.** Only *why* comments survive. Strip the templates' teaching comments from real scaffolds.
+8. **Every new test gets one Lite/Pro gate tag and at least one role tag.** No exceptions.
+9. **Every vendor-facing page object registers the announcement-modal handler** in its constructor (setup.md §10). Forgetting this is the #1 cause of flake.
+10. **For Pro-only features, verify `dokan-pro/` is cloned as a sibling under `wp-content/plugins/`** before running `@pro` tests.
+11. **No fixed waits.** `waitForTimeout`/`sleep` in a spec is a bug — wait on state with web-first assertions.
+12. **Maximum coverage or a stated gap.** Exhaust roles × paths × outcomes and every REST route (see "COVERAGE"). Anything left uncovered is reported as `Uncovered: <case> — <reason>`, never dropped silently.
 
 ---
 

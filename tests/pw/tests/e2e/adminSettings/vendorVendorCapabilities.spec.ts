@@ -37,9 +37,10 @@ const oldDataset = [
                 "value": false
             },
             {
+                // Inverted bridge: new "Product Popup" on == legacy "disable product popup" off.
                 "selector": '//label[@for="dokan_selling[disable_product_popup]"]//label[@class="switch tips"]',
                 "type": "checkbox",
-                "value": true
+                "value": false
             },
             {
                 "selector": '//label[@for="dokan_selling[order_status_change]"]//label[@class="switch tips"]',
@@ -88,109 +89,109 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor -> vendor_capabilities',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_vendor >> #dokan_settings_vendor_vendor_capabilities',
+    selector: '[data-testid="settings-menu-vendor"] >> [data-testid="settings-menu-vendor_capabilities"]',
     fields: [
         // Selling Product Types - Radio Group
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_global_digital_mode button[name="sell_physical"]',
-            type: 'radio',
-            value: 'true', // Options: 'sell_physical', 'sell_digital', 'sell_both'
+            selector: '[data-testid="settings-field-vendor_product_type_mode"]',
+            type: 'radio-capsule',
+            value: 'Physical', // Options: 'sell_physical', 'sell_digital', 'sell_both'
         },
         
         // Product Status - Radio Group
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_status button[name="publish"]',
-            type: 'radio',
-            value: 'true', // Options: 'publish', 'pending'
+            selector: '[data-testid="settings-field-product_status"]',
+            type: 'radio-capsule',
+            value: 'Published', // Options: 'publish', 'pending'
         },
         
         // Duplicate Product - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_duplicate_product button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_can_duplicate_products"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Allow vendors to create orders - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_allow_vendor_create_manual_order button[role="switch"]',
+            selector: '[data-testid="settings-field-allow_vendor_create_manual_order"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // One Page Product Creation - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation button[role="switch"]',
+            selector: '[data-testid="settings-field-one_page_product_creation"] [role="switch"]',
             type: 'switch',
             value: false, // should be false for Product Popup to be visible
         },
         
         // Product Popup - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_new_product_popup button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_new_product_popup"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Order Status Change - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_can_change_order_status button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_can_change_order_status"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Select any category - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_select_any_category button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_select_any_product_category"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Product Category Selection - Radio Group
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_category_selection button[name="single"]',
-            type: 'radio',
-            value: 'true', // Options: 'single', 'multiple'
+            selector: '[data-testid="settings-field-vendor_product_category_selection_mode"]',
+            type: 'radio-capsule',
+            value: 'Single', // Options: 'single', 'multiple'
         },
         
         // Vendors Can Create Tags - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendors_create_tags button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_can_create_product_tags"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Add New Attribute Values - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_add_new_attribute_values button[role="switch"]',
+            selector: '[data-testid="settings-field-add_new_attribute_values"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Product Review Management by Vendors - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_review_management button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_can_manage_product_reviews"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Discount Editing - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_discount_order_settings button[role="switch"]',
-            type: 'switch',
-            value: true,
+            selector: '[data-testid="settings-field-discount_settings"]',
+            type: 'multicheck',
+            value: [ 'Order Discount', 'Product Quantity Discount' ],
         },
         
         // Order Discount - Checkbox (becomes visible when Discount Editing is enabled)
         // {
-        //     selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_discount_settings input[value="order-discount"]',
+        //     selector: '[data-testid="settings-field-discount_settings"] input[value="order-discount"]',
         //     type: 'checkbox',
         //     value: true,
         // },
         
         // // Product Quantity Discount - Checkbox (becomes visible when Discount Editing is enabled)
         // {
-        //     selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_discount_settings input[value="product-discount"]',
+        //     selector: '[data-testid="settings-field-discount_settings"] input[value="product-discount"]',
         //     type: 'checkbox',
         //     value: true,
         // },

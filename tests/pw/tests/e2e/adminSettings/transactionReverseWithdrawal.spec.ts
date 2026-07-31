@@ -86,33 +86,33 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Transaction -> Reverse Withdrawal',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_transaction >> #dokan_settings_transaction_reverse_withdrawal',
+    selector: '[data-testid="settings-menu-transaction"] >> [data-testid="settings-menu-reverse_withdrawal"]',
     fields: [
         // Activate Reverse Withdrawal (Cash On Delivery) - Switch
         // Those fields will be vary based on enabled payment gateways in the site.
         // {
-        //     selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_enabled button[role="switch"]',
+        //     selector: '[data-testid="settings-field-reverse_withdrawal_enabled"] button[role="switch"]',
         //     type: 'switch',
         //     value: true,
         // },
         
         // Billing Type - Radio Group
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_billing_type button[name="by_amount"]',
-            type: 'radio',
-            value: 'true', // Options: 'by_amount', 'by_month'
+            selector: '[data-testid="settings-field-reverse_withdrawal_billing_type"]',
+            type: 'radio-capsule',
+            value: 'By Amount Limit', // Options: 'by_amount', 'by_month'
         },
         
         // Reverse Balance Threshold (USD)
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_reverse_balance_threshold input[type="number"]',
+            selector: '[data-testid="settings-field-reverse_withdrawal_balance_threshold"] input[type="number"]',
             type: 'number',
             value: '150',
         },
         
         // Grace Period (Days)
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_due_period input[type="number"]',
+            selector: '[data-testid="settings-field-reverse_withdrawal_due_period"] input[type="number"]',
             type: 'number',
             value: '7',
         },
@@ -140,14 +140,14 @@ const newDataset = {
         
         // Display Notice During Grace Period - Switch
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_reverse_withdrawal_grace_period_notice button[role="switch"]',
+            selector: '[data-testid="settings-field-reverse_withdrawal_grace_period_notice"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Send Announcement - Switch
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_send_announcement button[role="switch"]',
+            selector: '[data-testid="settings-field-send_announcement"] [role="switch"]',
             type: 'switch',
             value: false,
         },
