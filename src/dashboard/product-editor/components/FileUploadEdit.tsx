@@ -1,10 +1,13 @@
 import { DokanButton } from '@dokan/components';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { MediaUploader } from '@src/components';
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import { Plus, Upload, X } from 'lucide-react';
 import CustomField, { getValidationError } from './CustomField';
+
+const DOWNLOADABLE_UPLOADER_PARAMS = { type: 'downloadable_product' };
 
 const FileUploadEdit = ( { field, onChange, validity }: any ) => {
     const [ files, setFiles ] = useState(
@@ -18,6 +21,29 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                   },
               ]
     );
+
+    // Re-sync rows when field.value loads/changes after mount (e.g. the create → edit SPA transition); the initial useState alone misses the late-arriving value.
+    useEffect( () => {
+        if ( field.value?.length > 0 ) {
+            setFiles( field.value );
+        }
+    }, [ field.value ] );
+
+    // Read-only by default (vendors attach via "Choose"); only the core Downloadable Files field is free-typeable — filter-overridable per field.
+    const readOnly = Boolean(
+        applyFilters(
+            'dokan_product_editor_file_field_read_only',
+            field?.id !== 'downloads',
+            field
+        )
+    );
+
+    // Downloadable files carry the `downloadable_product` upload type so WooCommerce stores them in woocommerce_uploads.
+    const uploaderParams = applyFilters(
+        'dokan_product_editor_file_field_uploader_params',
+        field?.id === 'downloads' ? DOWNLOADABLE_UPLOADER_PARAMS : undefined,
+        field
+    ) as Record< string, string > | undefined;
 
     const onAddRow = () => {
         const newFiles = [
@@ -93,8 +119,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter name',
                                             'dokan-lite'
                                         ),
-                                        readOnly: true,
-                                        disabled: true,
+                                        readOnly,
+                                        disabled: readOnly,
                                     } }
                                 />
                             </div>
@@ -114,13 +140,14 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter URL or select file',
                                             'dokan-lite'
                                         ),
-                                        readOnly: true,
-                                        disabled: true,
+                                        readOnly,
+                                        disabled: readOnly,
                                     } }
                                 />
                             </div>
                             <div className="flex gap-2 shrink-0 items-center">
                                 <MediaUploader
+                                    uploaderParams={ uploaderParams }
                                     onSelect={ ( val: any ) =>
                                         onSelectFile( val, index )
                                     }

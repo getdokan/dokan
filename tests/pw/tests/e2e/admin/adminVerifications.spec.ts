@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminVerificationsPage, adminVerificationsData } from './adminVerificationsPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
@@ -94,6 +95,15 @@ test.describe('Admin Verifications functionality', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
+        });
+
+        test('applying the Vendor filter refetches the list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await seedRequest('pending');
+            await verifications.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/verification-requests', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
         });
 
         test('admin can view the Verifications DataView with its columns', { tag: ['@pro', '@admin'] }, async () => {
@@ -233,20 +243,6 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory: the admin Verifications DataViews page renders
-        // NO free-text search input (VerificationList.tsx adds no <SearchInput> to
-        // tabs.additionalComponents; AdminDataViewTable bypasses the DataViews
-        // built-in search). Only the Vendors page has a search box. This asserts a
-        // search-driven empty state the UI cannot reach. Documented product gap —
-        // re-enable when admin search lands (or rewrite to assert the empty state
-        // via the genuinely-empty Rejected/Cancelled status tab).
-        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await seedRequest('pending');
-            await verifications.goto();
-            await verifications.search(adminVerificationsData.searchMiss);
-            const empty = (await verifications.isEmptyStateVisible()) || (await verifications.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
-        });
-
         test('reloading on #/verifications preserves the route and re-mounts the list', { tag: ['@pro', '@admin'] }, async () => {
             await seedRequest('pending');
             await verifications.goto();

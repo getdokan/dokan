@@ -21,6 +21,8 @@ import getReports from "../analytics/report/get-reports";
 import { getPages } from "./controller";
 import Navigation from "reports/navigation";
 
+const isSameNavItem = (page) => (item) => item.navArgs.id === page.navArgs.id;
+
 const NavigationPlugin = () => {
   const { persistedQuery } = useSelect((select) => {
     return {
@@ -49,6 +51,10 @@ const NavigationPlugin = () => {
 
   const pages = getPages()
     .filter((page) => page.navArgs)
+    // Overview is routed at both `/analytics/overview` and the dashboard root
+    // `/`. Aliases share a `navArgs.id`, so keep the first (canonical) one to
+    // avoid duplicate navigation items and duplicate React keys.
+    .filter((page, i, all) => all.findIndex(isSameNavItem(page)) === i)
     .map((page) => {
       if (page.path === "/analytics/settings") {
         return {

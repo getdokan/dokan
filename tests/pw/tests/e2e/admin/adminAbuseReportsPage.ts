@@ -1,6 +1,7 @@
 import { APIRequestContext, Locator, Page } from '@playwright/test';
 import { toPath, SERVER_URL } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
+import { confirmDataViewsAction, dismissDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -118,6 +119,7 @@ export class AdminAbuseReportsPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either >=1 row OR the empty-state has painted. */
@@ -129,12 +131,14 @@ export class AdminAbuseReportsPage {
             if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
+        await waitForDataViewsSettle(this.page);
     }
 
     async reload(): Promise<void> {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -160,7 +164,7 @@ export class AdminAbuseReportsPage {
         const input = this.searchBox;
         await input.waitFor({ state: 'visible', timeout: 10000 });
         await input.fill(query);
-        await this.page.waitForTimeout(900); // debounced search.
+        await waitForDataViewsSettle(this.page);
     }
 
     async clearSearch(): Promise<void> {
@@ -235,7 +239,7 @@ export class AdminAbuseReportsPage {
 
     /** The delete-confirmation modal's description copy (singular vs plural). */
     async getDeleteModalDescription(): Promise<string> {
-        const dialog = this.page.getByRole('dialog').first();
+        const dialog = this.page.getByRole('alertdialog').first();
         const desc = dialog.locator("//p[contains(., 'Are you sure you want to delete')]").first();
         await desc.waitFor({ state: 'visible', timeout: 10000 });
         return ((await desc.textContent()) || '').trim();
@@ -244,20 +248,14 @@ export class AdminAbuseReportsPage {
     /** Confirm the delete modal (button text is "Delete"); waits for the
      * DELETE + list refetch to settle. */
     async confirmDelete(): Promise<void> {
-        const dialog = this.page.getByRole('dialog').first();
-        const btn = dialog.getByRole('button', { name: 'Delete' }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
+        await confirmDataViewsAction(this.page);
         await this.deleteModalHeading.waitFor({ state: 'hidden', timeout: 15000 });
         await this.page.waitForTimeout(800); // list refetch + repaint.
     }
 
     /** Cancel the delete modal without deleting. */
     async cancelDelete(): Promise<void> {
-        const dialog = this.page.getByRole('dialog').first();
-        const btn = dialog.getByRole('button', { name: 'Cancel' }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
+        await dismissDataViewsAction(this.page);
         await this.deleteModalHeading.waitFor({ state: 'hidden', timeout: 10000 });
     }
 

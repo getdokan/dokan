@@ -36,7 +36,7 @@ export class AbuseReportsPage {
         // Abuse Reports List Selectors
         reportRowCheckbox: "input.components-checkbox-control__input:visible",
         deleteButton: "//button[normalize-space()='Delete']",
-        confirmDeleteButton: "button[class='inline-flex items-center gap-2 justify-center border rounded shadow-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 text-white bg-purple-600 hover:bg-purple-700 focus:ring-purple-600 px-5 py-2 text-sm dokan-btn']",
+        confirmDeleteButton: "//*[@role='alertdialog']//button[normalize-space()='Delete']",
         // Settings Page Selectors
         settingsSearchInput: "//input[@id='dokan-admin-search']",
         settingsHeading: "//h2[normalize-space()='Product Report Abuse Settings']",
@@ -57,8 +57,8 @@ export class AbuseReportsPage {
     adminReact = {
         // Page chrome
         pageHeading: "//*[self::h1 or self::h2 or self::h3][normalize-space()='Abuse Reports']",
-        allTab: "//button[.//span[contains(@class,'text-[#A5A5AA]')]]",
-        allTabBadge: "//button[.//div[contains(.,'All')]]//span[contains(@class,'text-[#A5A5AA]')]",
+        allTab: "//*[@role='tab'][contains(normalize-space(.),'All')]",
+        allTabBadge: "//*[@role='tab'][contains(normalize-space(.),'All')]",
         // List rows.
         dataRow: "table tbody tr",
         // IMPORTANT: the visible Reason cell text is truncated to 22 chars by the
@@ -97,18 +97,20 @@ export class AbuseReportsPage {
         // select-all + bulk-delete list case.
         bulkDeleteCompactButton:
             "button.components-button.is-compact:has-text('Delete')",
-        // Delete confirmation modal
-        deleteModal: "//*[@role='dialog'][.//*[normalize-space()='Delete Abuse Report'] or .//*[contains(., 'Are you sure you want to delete')]]",
+        // Delete confirmation modal. This is a base-ui AlertDialog rendered with
+        // role="alertdialog" (NOT role="dialog"), so every selector below matches
+        // either role to stay robust across the DataViews/base-ui rewrite.
+        deleteModal: "//*[(@role='dialog' or @role='alertdialog')][.//*[normalize-space()='Delete Abuse Report'] or .//*[contains(., 'Are you sure you want to delete')]]",
         deleteModalHeading:
-            "//*[@role='dialog']//*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space()='Delete Abuse Report']",
+            "//*[(@role='dialog' or @role='alertdialog')]//*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space()='Delete Abuse Report']",
         // The description renders inside a leaf <p>; scope to that to avoid
         // matching every wrapper div when used in strict-mode locators.
         deleteModalDescription:
-            "//*[@role='dialog']//p[contains(., 'Are you sure you want to delete')]",
+            "//*[(@role='dialog' or @role='alertdialog')]//p[contains(., 'Are you sure you want to delete')]",
         deleteModalConfirmBtn:
-            "//*[@role='dialog']//button[normalize-space()='Delete']",
+            "//*[(@role='dialog' or @role='alertdialog')]//button[normalize-space()='Delete']",
         deleteModalCancelBtn:
-            "//*[@role='dialog']//button[normalize-space()='Cancel']",
+            "//*[(@role='dialog' or @role='alertdialog')]//button[normalize-space()='Cancel']",
         // Detail modal
         detailModal:
             "//*[@role='dialog'][.//*[normalize-space()='Product Abuse Report']]",
@@ -194,7 +196,17 @@ export class AbuseReportsPage {
         customerEmailInput: "//input[@name='customer_email']",
         descriptionInput: "//textarea[@name='description']",
         submitButton: "//button[@id='dokan-report-abuse-form-submit-btn']",
-        confirmOkButton: "//button[normalize-space()='OK']",
+        // The submission confirmation is a `dokan_sweetalert()` (SweetAlert2) alert — see
+        // dokan-pro/modules/report-abuse/assets/src/js/frontend/main.js `afterPopupClose()` — so it is
+        // the SweetAlert2 confirm button, matched here by its own class instead of its "OK" label.
+        // Matching on the label is what broke: the single-product page also carries Google Maps' own
+        // `<button class="dismissButton">OK</button>` (the Maps JS API error dialog, injected whenever
+        // a Maps key IS configured but Google rejects it for the requesting host — expired or
+        // referrer-restricted, as on CI runners), so `//button[text()='OK']` resolved
+        // to 2 elements the moment the popup opened and Playwright aborted with a strict-mode
+        // violation. Deliberately NOT text-constrained, so the negative assertions ("no success
+        // confirmation must appear") still catch a confirmation popup with unexpected wording.
+        confirmOkButton: 'button.swal2-confirm',
         formError: ".dokan-popup-error",
         customReasonLabel: (reason: string) => `//label[normalize-space()='${reason}']`,
     };
@@ -329,9 +341,17 @@ export class AbuseReportsPage {
         await this.page.locator(this.admin.settingsHeading).waitFor({ state: 'visible' });
     }
 
-    async isSettingsHeadingVisible(): Promise<boolean> {
-        await this.page.getByRole('heading', { name: /Product Report Abuse Settings/i }).waitFor({ state: 'visible', timeout: 10000 });
-        return true;
+    // These three used to be `is*Visible(): Promise<boolean>` that awaited a
+    // waitFor() and then `return true` unconditionally. The enforcement was real
+    // (waitFor throws), but the boolean was a constant, so the `.toBe(true)` at
+    // every call site asserted nothing and a failure surfaced as an opaque
+    // locator timeout instead of the assertion's own message. Expose them as
+    // assertions so the intent and the diagnostics live in the same place.
+    async assertSettingsHeadingVisible() {
+        await expect(
+            this.page.getByRole('heading', { name: /Product Report Abuse Settings/i }),
+            '"Product Report Abuse Settings" heading should be visible',
+        ).toBeVisible({ timeout: 10000 });
     }
 
     async getSettingsDocLinkHref(): Promise<string> {
@@ -339,14 +359,18 @@ export class AbuseReportsPage {
         return href ?? '';
     }
 
-    async isReportedByHeadingVisible(): Promise<boolean> {
-        await this.page.locator(this.admin.reportedByHeading).waitFor({ state: 'visible', timeout: 10000 });
-        return true;
+    async assertReportedByHeadingVisible() {
+        await expect(
+            this.page.locator(this.admin.reportedByHeading),
+            '"Reported by" heading should be visible',
+        ).toBeVisible({ timeout: 10000 });
     }
 
-    async isReasonsHeadingVisible(): Promise<boolean> {
-        await this.page.locator(this.admin.reasonsHeading).waitFor({ state: 'visible', timeout: 10000 });
-        return true;
+    async assertReasonsHeadingVisible() {
+        await expect(
+            this.page.locator(this.admin.reasonsHeading),
+            '"Reasons for Abuse Report" heading should be visible',
+        ).toBeVisible({ timeout: 10000 });
     }
 
     async enableReportedBySliderIfDisabled() {
@@ -565,7 +589,16 @@ export class AbuseReportsPage {
         // The DataViews UI may issue either a true DELETE on the single
         // resource endpoint OR a POST to the batch endpoint depending on the
         // selection size and the underlying store action — accept either.
-        await Promise.all([
+        //
+        // The response wait is REQUIRED, not decorative. It previously carried
+        // `.catch(() => null)` and its result was discarded, so "the request was
+        // never issued" cost a silent 30s and then reported success. The
+        // modal-hidden check below cannot substitute: the AlertDialog closes in a
+        // `finally` (@wedevs/plugin-ui dataviews.tsx) and ReportAbusePage's
+        // handleSingleDelete catches its own errors into a toast without
+        // rethrowing — so the modal closes identically on success, on 500/403,
+        // and when nothing was requested at all.
+        const [response] = await Promise.all([
             this.page.waitForResponse(
                 res => {
                     if (!res.url().includes('/wp-json/dokan/v1/abuse-reports')) return false;
@@ -573,10 +606,14 @@ export class AbuseReportsPage {
                     return m === 'DELETE' || m === 'POST';
                 },
                 { timeout: 30000 },
-            ).catch(() => null),
+            ),
             this.page.locator(this.adminReact.deleteModalConfirmBtn).click(),
         ]);
-        // Modal closes once the request resolves (success or failure).
+        expect(
+            response.status(),
+            `Delete request ${response.request().method()} ${response.url()} should succeed`,
+        ).toBeLessThan(300);
+        // Modal closes once the request resolves.
         await this.page.locator(this.adminReact.deleteModalConfirmBtn).waitFor({ state: 'hidden', timeout: 15000 });
     }
 
@@ -700,14 +737,23 @@ export class AbuseReportsPage {
         return await this.page.locator(this.abuseReports.customerNameInput).isVisible().catch(() => false);
     }
 
+    /**
+     * The confirm button of the SweetAlert2 submission-success popup. Single match by construction —
+     * SweetAlert2 keeps at most one popup mounted — so no `.first()` / visibility filtering is needed
+     * and every wait below asserts this exact button.
+     */
+    confirmOk() {
+        return this.page.locator(this.abuseReports.confirmOkButton);
+    }
+
     async submitAbuseReport() {
         await this.page.locator(this.abuseReports.submitButton).click();
-        await this.page.locator(this.abuseReports.confirmOkButton).waitFor({ state: 'visible' });
+        await this.confirmOk().waitFor({ state: 'visible' });
     }
 
     async confirmAbuseReportSubmission() {
-        await this.page.locator(this.abuseReports.confirmOkButton).click();
-        await this.page.locator(this.abuseReports.confirmOkButton).waitFor({ state: 'hidden' });
+        await this.confirmOk().click();
+        await this.confirmOk().waitFor({ state: 'hidden' });
     }
 
     async clickCustomReasonLabel(reason: string) {

@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -112,6 +113,7 @@ export class AdminStoreReviewsPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either >=1 row OR the empty-state has painted. */
@@ -123,12 +125,14 @@ export class AdminStoreReviewsPage {
             if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
+        await waitForDataViewsSettle(this.page);
     }
 
     async reload(): Promise<void> {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -162,7 +166,7 @@ export class AdminStoreReviewsPage {
         await tab.waitFor({ state: 'visible', timeout: 10000 });
         await tab.scrollIntoViewIfNeeded().catch(() => undefined);
         await tab.click();
-        await this.page.waitForTimeout(900); // DataViews refetch + repaint.
+        await waitForDataViewsSettle(this.page);
     }
 
     async search(query: string): Promise<void> {
@@ -175,7 +179,7 @@ export class AdminStoreReviewsPage {
         const visible = await input.isVisible({ timeout: 3000 }).catch(() => false);
         if (!visible) return;
         await input.fill(query);
-        await this.page.waitForTimeout(900); // debounced search.
+        await waitForDataViewsSettle(this.page);
     }
 
     async clearSearch(): Promise<void> {
@@ -203,14 +207,10 @@ export class AdminStoreReviewsPage {
         await item.click();
     }
 
-    /** Confirm a DokanModal, e.g. 'Move to Trash' / 'Restore' / 'Delete'. */
-    async confirmModal(confirmLabel: string): Promise<void> {
-        const dialog = this.page.getByRole('dialog').first();
-        await dialog.waitFor({ state: 'visible', timeout: 10000 });
-        const btn = dialog.getByRole('button', { name: new RegExp(`^${escapeRegExp(confirmLabel)}$`, 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1200); // batch POST + list refetch.
+    /** Confirm the inline DataViews action (clicks the primary, non-Cancel button). */
+    async confirmModal(confirmLabel?: string): Promise<void> {
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Open the row menu for a published review, choose Move to Trash, confirm. */

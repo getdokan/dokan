@@ -963,6 +963,16 @@ const attributeTermSchema = z.object({
     _links: linksSchema,
 });
 
+// Dokan 5.0.5: the list (get-all) and create term endpoints return a slim "dropdown"
+// shape ({ id, name, value, label }) for the React product editor, while get-single,
+// update, delete and batch still return the full WC term shape (attributeTermSchema).
+const attributeTermDropdownSchema = z.object({
+    id: z.string().or(z.number()),
+    name: z.string(),
+    value: z.string().or(z.number()),
+    label: z.string(),
+});
+
 const abuseReportSchema = z.object({
     id: z.string().or(z.number()),
     reason: z.string(),
@@ -1695,10 +1705,11 @@ export const schemas = {
 
     // attribute terms schema
     attributeTermsSchema: {
-        attributeTermSchema: attributeTermSchema,
-        attributeTermsSchema: z.array(attributeTermSchema),
+        attributeTermSchema: attributeTermSchema, // get-single, update, delete (full WC shape)
+        attributeTermDropdownSchema: attributeTermDropdownSchema, // create (slim dropdown shape)
+        attributeTermsSchema: z.array(attributeTermDropdownSchema), // get-all returns slim dropdown items
         batchUpdateAttributesSchema: z.object({
-            update: z.array(attributeTermSchema),
+            update: z.array(attributeTermSchema), // batch update returns full WC shape
         }),
     },
 
@@ -2144,22 +2155,20 @@ export const schemas = {
             withdraw_limit: z.string(),
             withdraw_threshold: z.number(),
             withdraw_methods: z.array(z.string()),
+            // API returns an object: {} when there is no prior withdrawal, or a
+            // single withdraw record when there is one (not an array).
             last_withdraw: z
-                .array(
-                    z
-                        .object({
-                            id: z.string().or(z.number()).optional(),
-                            user_id: z.string().or(z.number()).optional(),
-                            amount: z.string().optional(),
-                            date: z.string().optional(),
-                            status: z.string().optional(),
-                            method: z.string().optional(),
-                            note: z.string().optional(),
-                            details: z.string().optional(),
-                            ip: z.string().optional(),
-                        })
-                        .optional(),
-                )
+                .object({
+                    id: z.string().or(z.number()).optional(),
+                    user_id: z.string().or(z.number()).optional(),
+                    amount: z.string().optional(),
+                    date: z.string().optional(),
+                    status: z.string().optional(),
+                    method: z.string().optional(),
+                    note: z.string().optional(),
+                    details: z.string().optional(),
+                    ip: z.string().optional(),
+                })
                 .optional(),
         }),
         withdrawSchema: withdrawSchema,
@@ -2525,19 +2534,19 @@ export const schemas = {
             social: socialSchema,
             payment: paymentSchema,
             phone: z.string(),
-            show_email: z.string(),
+            show_email: z.boolean(),
             address: addressSchema,
             location: z.string(),
-            banner: z.number(),
-            icon: z.string().or(z.number()),
-            gravatar: z.number(),
-            enable_tnc: z.string(),
-            store_tnc: z.string(),
-            show_min_order_discount: z.string(),
+            banner: z.string(),
+            icon: z.string().or(z.number()).optional(),
+            gravatar: z.string(),
+            toc_enabled: z.boolean(),
+            store_toc: z.string(),
+            show_min_order_discount: z.string().optional(),
             store_seo: storeSeo.optional(),
-            dokan_store_time_enabled: z.string(),
-            dokan_store_open_notice: z.string(),
-            dokan_store_close_notice: z.string(),
+            dokan_store_time_enabled: z.string().optional(),
+            dokan_store_open_notice: z.string().optional(),
+            dokan_store_close_notice: z.string().optional(),
             dokan_store_time: storeTimeSchema.optional(),
             sale_only_here: z.boolean().optional(),
             company_name: z.string().optional(),
@@ -2549,7 +2558,7 @@ export const schemas = {
             find_address: z.string().optional(),
             catalog_mode: catalogModeSchema.optional(),
             order_min_max: orderMinMaxSchema.optional(),
-            categories: z.array(categorySchema).optional(),
+            categories: z.array(productCategorySchema).optional(),
             vendor_biography: z.string().optional(),
             show_support_btn_product: z.string().optional(),
             support_btn_name: z.string().optional(),
@@ -2594,7 +2603,7 @@ export const schemas = {
             company_id_number: z.string().optional(),
             bank_name: z.string().optional(),
             bank_iban: z.string().optional(),
-            categories: z.array(categorySchema).optional(),
+            categories: z.array(productCategorySchema).optional(),
             _links: linksSchema,
         }),
 

@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminReverseWithdrawalPage, adminReverseWithdrawalData } from './adminReverseWithdrawalPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -133,6 +134,14 @@ test.describe('Admin Reverse Withdrawal functionality', () => {
             await ctx?.close();
         });
 
+        test('applying the Vendor filter refetches the list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await rw.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/reverse-withdrawal/stores-balance', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
+        });
+
         test('admin can view the Reverse Withdrawal list with stat cards and DataViews columns', { tag: ['@pro', '@admin'] }, async () => {
             await rw.goto();
             await expect(rw.reactRoot).toBeVisible();
@@ -241,18 +250,6 @@ test.describe('Admin Reverse Withdrawal functionality', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
-        });
-
-        // QUARANTINED @exploratory: the admin Reverse Withdrawal list renders NO
-        // free-text search input (index.tsx adds no <SearchInput> to
-        // additionalComponents; AdminDataViewTable bypasses the DataViews built-in
-        // search). Only the Vendors page has search. This asserts a search-driven
-        // empty state the UI cannot reach. Documented product gap.
-        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await rw.goto();
-            await rw.search('zzz_no_such_vendor_zzz');
-            const empty = (await rw.isEmptyStateVisible()) || (await rw.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
         test('a negative-balance transaction renders the amount wrapped in parentheses in the drill-down', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {

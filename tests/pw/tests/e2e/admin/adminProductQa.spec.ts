@@ -1,6 +1,8 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminProductQaPage, adminProductQaData } from './adminProductQaPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
+import { isDataViewsConfirmOpen, dismissDataViewsAction } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -16,26 +18,20 @@ async function questionIsAnswered(questionId: string): Promise<boolean> {
     return Boolean(body?.answer?.id);
 }
 
+// Whether a question is currently marked read (used to confirm a bulk read).
+async function questionIsRead(questionId: string): Promise<boolean> {
+    const [res, body] = await apiUtils.get(endPoints.getSingleProductQuestion(questionId), { headers: payloads.adminAuth }, false);
+    if (!res.ok()) {
+        return false;
+    }
+    return Boolean(Number(body?.read));
+}
+
 // Whether a question still resolves via REST (used to confirm a delete).
 async function questionExists(questionId: string): Promise<boolean> {
     const [res] = await apiUtils.get(endPoints.getSingleProductQuestion(questionId), { headers: payloads.adminAuth }, false);
     return res.ok();
 }
-
-// ============================================
-// ADMIN PRODUCT Q&A — new React admin dashboard (Dokan Pro 5.0.0+)
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/product-qa (AdminDataViews,
-// module-gated by the `product_qa` Pro module).
-//
-// ADMIN-ONLY spec. The admin #/product-qa DataView only MODERATES pre-existing
-// customer questions (status tabs All/Unread/Read/Unanswered/Answered, vendor +
-// product filters, bulk read/unread/delete, plus a single-question detail page
-// for answer/visibility/delete). This spec never drives the storefront question
-// form: the full chain (vendor store -> vendor product -> customer -> question
-// -> optional answer) is seeded programmatically via the REST API.
-// See tests/pw/test-cases/admin-dashboard-seeding-strategy.md (§ Product Q&A).
-// All seeded names are namespaced with the "AQA" prefix.
-// ============================================
 
 // SESSION STORAGE STATES
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
@@ -150,6 +146,14 @@ test.describe('Admin Product Q&A moderation', () => {
             await ctx?.close();
         });
 
+        test('applying the Vendor filter refetches the list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await qa.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/product-questions', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
+        });
+
         test('admin can view the Product Q&A DataView with columns and seeded rows', { tag: ['@pro', '@admin'] }, async () => {
             await qa.goto();
             await expect(qa.reactRoot).toBeVisible();
@@ -160,19 +164,6 @@ test.describe('Admin Product Q&A moderation', () => {
             await expect(qa.columnHeader('Status')).toBeVisible();
             expect(await qa.getRowCount(), 'seeded question rows render').toBeGreaterThan(0);
             expect(await qa.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
-        });
-
-        // QUARANTINED @exploratory: the admin Product Q&A DataViews page renders NO
-        // free-text search input (ProductQAList.tsx mounts no <SearchInput>; the
-        // component tracks searchValue state but never renders a box, and
-        // fetchQuestions sends no `search` param). Only the Vendors page has search.
-        // This asserts search-driven filtering the UI cannot perform. Documented
-        // product gap — re-enable when admin search lands.
-        test.fixme('searching by question text filters the list to the matching question', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await qa.goto();
-            await qa.search(adminProductQaData.answerTarget);
-            await expect(qa.rowByQuestion(adminProductQaData.answerTarget)).toBeVisible();
-            await expect(page.getByText(adminProductQaData.answered, { exact: false })).toHaveCount(0);
         });
 
         test('Unanswered tab requests answered=false and shows an Unanswered question', { tag: ['@pro', '@admin'] }, async () => {
@@ -228,7 +219,7 @@ test.describe('Admin Product Q&A moderation', () => {
             await expect.poll(async () => questionExists(qid), { timeout: 15000 }).toBe(false);
         });
 
-        test('admin can bulk Mark-as-Read questions and sees the success toast', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test('admin can bulk Mark-as-Read questions and the read state persists', { tag: ['@pro', '@admin'] }, async () => {
             // Reset the bulk targets to unread so the read action is eligible on the All tab.
             for (const id of ids.bulk) {
                 await apiUtils.updateProductQuestion(id, { read: false }, payloads.adminAuth);
@@ -238,8 +229,26 @@ test.describe('Admin Product Q&A moderation', () => {
             await qa.search('AQA bulk');
             await qa.selectAllVisibleRows();
             await qa.bulkAction(/Mark as Read/i);
-            const toast = await qa.successToastVisible();
-            expect(toast, 'success toast after bulk read').toBe(true);
+            // Assert the persisted read state, not the transient success toast (which auto-dismisses).
+            await expect.poll(async () => (await Promise.all(ids.bulk.map(id => questionIsRead(id)))).every(Boolean), { timeout: 15000 }).toBe(true);
+        });
+
+        test('the row Actions menu exposes Mark as Read / Mark as Unread / Delete', { tag: ['@pro', '@admin'] }, async () => {
+            await qa.goto();
+            await qa.clickTab(/^All/);
+            await qa.openFirstRowActionMenu();
+            expect(await qa.actionMenuItemVisible(/Mark as Read/i), 'Mark as Read offered').toBe(true);
+            expect(await qa.actionMenuItemVisible(/Mark as Unread/i), 'Mark as Unread offered').toBe(true);
+            expect(await qa.actionMenuItemVisible(/^Delete$/i), 'Delete offered').toBe(true);
+        });
+
+        test('row Delete must show an inline confirmation before deleting', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+            await qa.goto();
+            await qa.clickTab(/^All/);
+            await qa.openFirstRowActionMenu();
+            await qa.clickActionMenuItem(/^Delete$/i);
+            expect(await isDataViewsConfirmOpen(page), 'inline confirm opens before a destructive delete').toBe(true);
+            await dismissDataViewsAction(page);
         });
     });
 
@@ -258,16 +267,6 @@ test.describe('Admin Product Q&A moderation', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
-        });
-
-        // QUARANTINED @exploratory: no free-text search input on the admin Product
-        // Q&A page (see the "searching by question text" test above) — a
-        // search-driven empty state is unreachable via the UI. Documented product gap.
-        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await qa.goto();
-            await qa.search(adminProductQaData.searchMiss);
-            const empty = (await qa.isEmptyStateVisible()) || (await qa.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
         test('reloading on #/product-qa preserves the route and re-mounts the list', { tag: ['@pro', '@admin'] }, async () => {
@@ -309,16 +308,11 @@ test.describe('Admin Product Q&A moderation', () => {
             await ctx.close();
         });
 
-        // QUARANTINED @exploratory — SECURITY OBSERVATION, not a flaky test.
-        // Confirmed live: GET /dokan/v1/product-questions returns HTTP 200 to an
-        // ANONYMOUS caller, leaking every question with internal fields (user_id,
-        // read flag, status) and with no product scoping. The server does this by
-        // design: QuestionsApi::get_items_permissions_check() returns true
-        // unconditionally (product questions render on the storefront product page).
-        // The assertion below (must be 401/403) therefore fails against current
-        // product behavior. Left strict + quarantined so the gate stays honest;
-        // surfaced to the team as a potential information-exposure concern to review
-        // (the list endpoint exposes more than the storefront needs).
+        // QUARANTINED — security observation, not a flaky test. GET
+        // /dokan/v1/product-questions returns 200 to an anonymous caller (its
+        // permission check returns true unconditionally), so the 401/403 assertion
+        // below fails against current behavior. Left strict + quarantined so the gate
+        // stays honest and the potential info-exposure stays visible.
         test.fixme('an unauthenticated request to /dokan/v1/product-questions is rejected', { tag: ['@pro', '@customer', '@exploratory'] }, async () => {
             const anonCtx = await request.newContext();
             const res = await anonCtx.get(endPoints.getAllProductQuestions);

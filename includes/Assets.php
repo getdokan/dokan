@@ -186,6 +186,8 @@ class Assets {
         }
 
         $user_id = dokan_get_current_user_id();
+        $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+        $disable_product_popup   = $one_step_product_create || 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
 
         $args['product_listing'] = array_merge(
             $args['product_listing'] ?? [],
@@ -193,6 +195,9 @@ class Assets {
                 'can_add_product'            => dokan_is_seller_enabled( $user_id ) && current_user_can( 'dokan_add_product' ),
                 'new_product_url'            => dokan_edit_product_url( 0, true ),
                 'is_legacy_editor_preferred' => dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred( $user_id ),
+                // When "One Page Product Creation" is enabled, the Add-new-product
+                // button opens the lightweight schema-driven quick-create modal.
+                'is_quick_create_enabled'    => ! $disable_product_popup,
             ]
         );
 
@@ -271,6 +276,11 @@ class Assets {
                 'path'      => '/changelog',
                 'name'      => 'ChangeLog',
                 'component' => 'ChangeLog',
+            ],
+            [
+                'path'      => '/tools',
+                'name'      => 'Tools',
+                'component' => 'Tools',
             ],
         ];
 
@@ -732,6 +742,50 @@ class Assets {
                 'deps'    => $stores_asset['dependencies'],
             ];
         }
+        /*
+         * Shared third-party UI bundles.
+         *
+         * These packages are imported by several entries (components, frontend, product editor,
+         * admin dashboard). They are built once into their own bundles and externalised in
+         * webpack-dependency-mapping.js, so each is downloaded and parsed a single time instead
+         * of being inlined into every consuming bundle.
+         */
+        $shared_ui_bundles = [
+            'dokan-plugin-ui' => 'plugin-ui',
+            'dokan-ui'        => 'dokan-ui',
+        ];
+
+        foreach ( $shared_ui_bundles as $handle => $bundle ) {
+            $shared_ui_asset_file = DOKAN_DIR . '/assets/js/' . $bundle . '.asset.php';
+
+            if ( ! file_exists( $shared_ui_asset_file ) ) {
+                /*
+                 * Unlike the other bundles above, these handles are declared as dependencies of the
+                 * consuming bundles. A missing artifact therefore does not just drop this script —
+                 * WordPress refuses to enqueue every consumer too, taking the React UI down with it.
+                 * Log loudly so a broken build is diagnosable instead of failing silently.
+                 */
+                dokan_log(
+                    sprintf(
+                        'Missing shared UI asset file %1$s. The "%2$s" script handle will not be registered, so every bundle depending on it will be skipped by WordPress. Run the asset build.',
+                        $shared_ui_asset_file,
+                        $handle
+                    ),
+                    'error'
+                );
+
+                continue;
+            }
+
+            $shared_ui_asset = require $shared_ui_asset_file;
+
+            $scripts[ $handle ] = [
+                'version' => $shared_ui_asset['version'],
+                'src'     => $asset_url . '/js/' . $bundle . '.js',
+                'deps'    => $shared_ui_asset['dependencies'],
+            ];
+        }
+
         $product_editor_utils_file = DOKAN_DIR . '/assets/js/product-editor-utils.asset.php';
         if ( file_exists( $product_editor_utils_file ) ) {
             $utils_asset = require $product_editor_utils_file;

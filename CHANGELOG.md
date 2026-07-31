@@ -1,3 +1,48 @@
+### v5.0.11 ( Jul 27, 2026 ) ###
+
+- **update:** Vendors can now search for products by SKU as well as by name.
+- **fix:** Store-page buttons now respect the Astra theme's global button styling.
+- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
+- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
+- **fix:** Prevented vendors from granting download access to another vendor's files.
+- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
+- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
+
+### v5.0.10 ( Jul 21, 2026 ) ###
+
+- **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
+- **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
+- **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
+
+### v5.0.9 ( Jul 14, 2026 ) ###
+
+- **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
+- **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
+- **fix:** Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.
+- **fix:** Vendors can no longer give their customers download access to another vendor's downloadable files.
+- **fix:** Vendors can no longer change another vendor's product attributes.
+- **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
+- **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
+
+### v5.0.8 ( Jul 06, 2026 ) ###
+
+- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
+
+### v5.0.7 ( Jun 29, 2026 ) ###
+
+- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
+- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
+
+### v5.0.6 ( Jun 26, 2026 ) ###
+
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
+
 ### v5.0.5 ( Jun 19, 2026 ) ###
 
 - **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.

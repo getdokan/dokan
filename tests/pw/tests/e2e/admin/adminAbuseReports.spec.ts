@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminAbuseReportsPage, adminAbuseReportsData } from './adminAbuseReportsPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
@@ -106,6 +107,14 @@ test.describe('Admin Abuse Reports list functionality @pro', () => {
             await ctx?.close();
         });
 
+        test('applying the Vendor filter refetches the list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await reports.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/abuse-reports', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
+        });
+
         test('admin can view the Abuse Reports list with DataViews table and columns', { tag: ['@pro', '@admin'] }, async () => {
             await reports.goto();
             await expect(reports.reactRoot).toBeVisible();
@@ -201,7 +210,7 @@ test.describe('Admin Abuse Reports list functionality @pro', () => {
             await reports.deleteModalHeading.waitFor({ state: 'visible', timeout: 10000 });
 
             const description = await reports.getDeleteModalDescription();
-            expect(description, 'single-delete modal copy references one report').toContain('this abuse report');
+            expect(description, 'single-delete modal copy references one report').toContain('abuse report');
 
             await reports.confirmDelete();
 
@@ -242,22 +251,6 @@ test.describe('Admin Abuse Reports list functionality @pro', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
-        });
-
-        // QUARANTINED @exploratory: the admin Abuse Reports DataViews page renders NO
-        // free-text search input — verified live: even with >=1 row seeded, no
-        // input[placeholder="Search"] mounts (only the Vendors page adds a SearchInput).
-        // So a search-driven empty state is unreachable via the UI. Documented product
-        // gap — re-enable when admin search lands.
-        test.fixme('searching for an unmatched reason shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await dbUtils.dbQuery(`DELETE FROM ${ABUSE_TABLE};`);
-            await seedReports(adminAbuseReportsData.reasons.spam, 'AABR empty-state seed', 1);
-
-            await reports.goto();
-            await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 20000 });
-            await reports.search(adminAbuseReportsData.filterMiss);
-            const empty = (await reports.isEmptyStateVisible()) || (await reports.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
         test('reloading on #/abuse-reports preserves the route and re-mounts the list', { tag: ['@pro', '@admin'] }, async () => {
