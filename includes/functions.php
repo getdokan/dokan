@@ -4137,6 +4137,28 @@ function dokan_get_vendor_store_banner_height() {
 }
 
 /**
+ * Whether the store banner width is flexible during cropping.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool
+ */
+function dokan_get_vendor_store_banner_flex_width(): bool {
+    return (bool) dokan_get_option( 'store_banner_flex_width', 'dokan_general', true );
+}
+
+/**
+ * Whether the store banner height is flexible during cropping.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool
+ */
+function dokan_get_vendor_store_banner_flex_height(): bool {
+    return (bool) dokan_get_option( 'store_banner_flex_height', 'dokan_general', true );
+}
+
+/**
  * Get google recaptcha site key and secret key
  *
  * @since 3.3.3
