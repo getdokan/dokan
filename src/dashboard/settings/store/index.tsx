@@ -83,22 +83,33 @@ export default function StoreSettings() {
     const [ saving, setSaving ] = useState< boolean >( false );
     const [ resetKey, setResetKey ] = useState< number >( 0 );
 
-    useEffect( () => {
-        apiFetch< SettingsElement[] >( { path: ENDPOINT } )
-            .then( ( response ) => {
-                // plugin-ui v2 matches dependency keys literally against dot-path values.
-                setSchema( qualifyDependencyKeys( response ) );
-                setLoading( false );
-            } )
-            .catch( ( error ) => {
-                // eslint-disable-next-line no-console
-                console.error( 'Failed to fetch store settings:', error );
-                toast.error(
-                    ( error as { message?: string } )?.message ||
-                        __( 'Failed to load store settings.', 'dokan-lite' )
-                );
-                setLoading( false );
+    // Shared GET → qualify → mount sequence for both the initial load and Cancel.
+    const loadSchema = async ( remount = false ): Promise< void > => {
+        setLoading( true );
+        try {
+            const response = await apiFetch< SettingsElement[] >( {
+                path: ENDPOINT,
             } );
+            // plugin-ui v2 matches dependency keys literally against dot-path values.
+            setSchema( qualifyDependencyKeys( response ) );
+            if ( remount ) {
+                setResetKey( ( key ) => key + 1 );
+            }
+        } catch ( error ) {
+            // eslint-disable-next-line no-console
+            console.error( 'Failed to fetch store settings:', error );
+            toast.error(
+                ( error as { message?: string } )?.message ||
+                    __( 'Failed to load store settings.', 'dokan-lite' )
+            );
+        } finally {
+            setLoading( false );
+        }
+    };
+
+    useEffect( () => {
+        loadSchema();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [] );
 
     // A failed save may reject fields on a hidden tab — activate the first tab (in strip order) that carries an error so the vendor sees it.
@@ -187,21 +198,7 @@ export default function StoreSettings() {
     };
 
     // Cancel = refetch + remount the engine so every field resets to the saved state.
-    const handleCancel = async (): Promise< void > => {
-        setLoading( true );
-        try {
-            const response = await apiFetch< SettingsElement[] >( {
-                path: ENDPOINT,
-            } );
-            setSchema( qualifyDependencyKeys( response ) );
-            setResetKey( ( key ) => key + 1 );
-        } catch ( error ) {
-            // eslint-disable-next-line no-console
-            console.error( 'Failed to reload store settings:', error );
-        } finally {
-            setLoading( false );
-        }
-    };
+    const handleCancel = (): Promise< void > => loadSchema( true );
 
     // The engine's built-in skeleton draws the admin sidebar+panel frame; this
     // page renders as bare full-width cards, so it gets a matching skeleton.

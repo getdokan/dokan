@@ -129,6 +129,8 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
     const debounceRef = useRef< ReturnType< typeof setTimeout > | null >(
         null
     );
+    // One Geocoder serves every debounced query.
+    const geocoderRef = useRef< any >( null );
     // Keeps the latest composite value visible to map-event closures.
     const valueRef = useRef< MapValue >( value );
     valueRef.current = value;
@@ -142,7 +144,10 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         if ( ! window.google?.maps || ! recenterRef.current ) {
             return;
         }
-        const geocoder = new window.google.maps.Geocoder();
+        if ( ! geocoderRef.current ) {
+            geocoderRef.current = new window.google.maps.Geocoder();
+        }
+        const geocoder = geocoderRef.current;
         geocoder.geocode(
             { address: query },
             ( results: any[], status: string ) => {
@@ -254,6 +259,8 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         }
 
         let cancelled = false;
+        let mapInstance: any = null;
+        let markerInstance: any = null;
 
         // Google reports invalid keys through this global instead of onerror.
         window.gm_authFailure = () => setMapFailed( true );
@@ -283,6 +290,8 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                     map,
                     draggable: true,
                 } );
+                mapInstance = map;
+                markerInstance = marker;
 
                 recenterRef.current = ( lat: number, lng: number ) => {
                     const position = new window.google.maps.LatLng( lat, lng );
@@ -325,6 +334,18 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
 
         return () => {
             cancelled = true;
+            recenterRef.current = null;
+            // The page remounts on every save/cancel — drop listeners so instances don't pile up.
+            if ( markerInstance ) {
+                window.google?.maps?.event?.clearInstanceListeners(
+                    markerInstance
+                );
+            }
+            if ( mapInstance ) {
+                window.google?.maps?.event?.clearInstanceListeners(
+                    mapInstance
+                );
+            }
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ provider, apiKey ] );
@@ -336,6 +357,7 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         }
 
         let cancelled = false;
+        let mapInstance: any = null;
 
         loadMapbox()
             .then( () => {
@@ -361,6 +383,7 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                 } )
                     .setLngLat( [ center.lng, center.lat ] )
                     .addTo( map );
+                mapInstance = map;
 
                 recenterRef.current = ( lat: number, lng: number ) => {
                     map.setCenter( [ lng, lat ] );
@@ -379,6 +402,9 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
 
         return () => {
             cancelled = true;
+            recenterRef.current = null;
+            // Browsers cap live WebGL contexts (~16); the save/cancel remount would exhaust them without this.
+            mapInstance?.remove();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ provider, apiKey ] );
@@ -412,15 +438,13 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                 } }
             />
 
-            { showsCanvas && (
+            { showsCanvas ? (
                 <div
                     ref={ mapContainerRef }
                     // mt-2 doubles the column gap so the canvas doesn't crowd the search box.
                     className="mt-2 h-72 w-full overflow-hidden rounded-md border border-gray-200"
                 />
-            ) }
-
-            { ! showsCanvas && (
+            ) : (
                 <label
                     htmlFor={ `${ fieldKey }-location` }
                     className="flex flex-col gap-1 text-xs text-gray-600"

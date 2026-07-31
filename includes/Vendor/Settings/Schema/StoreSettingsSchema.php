@@ -273,6 +273,9 @@ class StoreSettingsSchema {
         $banner_id   = absint( $info['banner'] ?? 0 );
         $gravatar_id = absint( $info['gravatar'] ?? 0 );
 
+        $banner_width  = dokan_get_vendor_store_banner_width();
+        $banner_height = dokan_get_vendor_store_banner_height();
+
         return [
             [
                 'id'          => 'company_banner',
@@ -312,14 +315,16 @@ class StoreSettingsSchema {
                 'description'     => sprintf(
                     /* translators: 1) store banner width 2) store banner height */
                     __( 'Specification - %1$s X %2$s pixels, Format JPG or Png and file size 5mb max', 'dokan-lite' ),
-                    dokan_get_vendor_store_banner_width(),
-                    dokan_get_vendor_store_banner_height()
+                    $banner_width,
+                    $banner_height
                 ),
                 'value'           => $banner_id,
                 'default'         => 0,
                 'image_url'       => $banner_id ? (string) wp_get_attachment_url( $banner_id ) : '',
                 // Shown full-width when the vendor hasn't set a banner yet, same as the store page.
                 'placeholder_url' => VendorUtil::get_vendor_default_banner_url(),
+                // The picker crops to the admin dimension via the legacy custom-header-crop ajax.
+                'crop'            => self::crop_config( $banner_width, $banner_height ),
                 'legacy_key'      => 'banner',
             ],
             [
@@ -330,11 +335,32 @@ class StoreSettingsSchema {
                 'title'       => __( 'Logo', 'dokan-lite' ),
                 'description' => __( 'Specification - 150 X 150 pixels, file size 5mb max', 'dokan-lite' ),
                 'shape'       => 'round',
+                // Legacy profile-picture parity: fixed 150×150 crop, same flex flags.
+                'crop'        => self::crop_config( 150, 150 ),
                 'value'       => $gravatar_id,
                 'default'     => 0,
                 'image_url'   => $gravatar_id ? (string) wp_get_attachment_url( $gravatar_id ) : '',
                 'legacy_key'  => 'gravatar',
             ],
+        ];
+    }
+
+    /**
+     * Crop config for a `vendor_image` field — flex flags follow the admin banner settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $width  Target crop width.
+     * @param int $height Target crop height.
+     *
+     * @return array
+     */
+    protected static function crop_config( int $width, int $height ): array {
+        return [
+            'width'      => $width,
+            'height'     => $height,
+            'flexWidth'  => dokan_get_vendor_store_banner_flex_width(),
+            'flexHeight' => dokan_get_vendor_store_banner_flex_height(),
         ];
     }
 
