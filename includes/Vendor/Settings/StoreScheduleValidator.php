@@ -62,13 +62,15 @@ class StoreScheduleValidator {
      */
     public static function validate( $value ): array {
         $errors = [];
+        // One lookup for all days — each dokan_get_translated_days( $day ) call rebuilds the full week.
+        $day_labels = dokan_get_translated_days();
 
         foreach ( (array) $value as $day => $day_data ) {
             if ( 'open' !== ( $day_data['status'] ?? '' ) ) {
                 continue;
             }
 
-            $errors = array_merge( $errors, self::validate_open_day( dokan_get_translated_days( $day ), (array) $day_data ) );
+            $errors = array_merge( $errors, self::validate_open_day( $day_labels[ $day ] ?? (string) $day, (array) $day_data ) );
         }
 
         return $errors;

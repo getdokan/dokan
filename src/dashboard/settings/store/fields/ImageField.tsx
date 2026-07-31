@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Pencil, Trash, Upload } from 'lucide-react';
 import { useSettings, Button, type SettingsElement } from '@wedevs/plugin-ui';
@@ -8,6 +8,132 @@ import { fieldKeyOf } from './shared';
 type Attachment = {
     id: number;
     url: string;
+};
+
+type CropConfig = {
+    width: number;
+    height: number;
+    flexWidth?: boolean;
+    flexHeight?: boolean;
+};
+
+// Custom-header parity: cropping is only mandatory when the target dimension is rigid and the image is larger.
+const mustBeCropped = (
+    flexW: boolean,
+    flexH: boolean,
+    dstW: number,
+    dstH: number,
+    imgW: number,
+    imgH: number
+): boolean => {
+    if ( flexW && flexH ) {
+        return false;
+    }
+    if ( flexW && dstH === imgH ) {
+        return false;
+    }
+    if ( flexH && dstW === imgW ) {
+        return false;
+    }
+    if ( ( dstW === imgW && dstH === imgH ) || imgW <= dstW ) {
+        return false;
+    }
+    return true;
+};
+
+// Legacy uploader parity (script.js): seed the selection box at the admin dimension's aspect and lock it per the flex flags.
+const imageSelectOptions =
+    ( crop: CropConfig ) => ( attachment: any, controller: any ) => {
+        const realWidth = attachment.get( 'width' );
+        const realHeight = attachment.get( 'height' );
+        const flexWidth = !! crop.flexWidth;
+        const flexHeight = !! crop.flexHeight;
+        let xInit = Number( crop.width ) || realWidth;
+        let yInit = Number( crop.height ) || realHeight;
+
+        controller.set(
+            'canSkipCrop',
+            ! mustBeCropped(
+                flexWidth,
+                flexHeight,
+                xInit,
+                yInit,
+                realWidth,
+                realHeight
+            )
+        );
+
+        const ratio = xInit / yInit;
+        if ( realWidth / realHeight > ratio ) {
+            yInit = realHeight;
+            xInit = yInit * ratio;
+        } else {
+            xInit = realWidth;
+            yInit = xInit / ratio;
+        }
+
+        const options: Record< string, unknown > = {
+            handles: true,
+            keys: true,
+            instance: true,
+            persistent: true,
+            imageWidth: realWidth,
+            imageHeight: realHeight,
+            x1: 0,
+            y1: 0,
+            x2: xInit,
+            y2: yInit,
+        };
+
+        if ( ! flexHeight && ! flexWidth ) {
+            options.aspectRatio = `${ xInit }:${ yInit }`;
+        }
+        if ( ! flexHeight ) {
+            options.maxHeight = yInit;
+        }
+        if ( ! flexWidth ) {
+            options.maxWidth = xInit;
+        }
+
+        return options;
+    };
+
+// Crop-aware wp.media frame — the crop posts to Dokan's legacy custom-header-crop ajax, which sizes the copy from the admin settings.
+const openCropFrame = (
+    crop: CropConfig,
+    title: string,
+    onPick: ( attachment: Attachment ) => void
+) => {
+    const wpMedia = ( window as any ).wp?.media;
+    const frame = wpMedia( {
+        multiple: false,
+        button: { text: __( 'Select and Crop', 'dokan-lite' ), close: false },
+        states: [
+            new wpMedia.controller.Library( {
+                title,
+                library: wpMedia.query( { type: 'image' } ),
+                multiple: false,
+                date: false,
+                priority: 20,
+                suggestedWidth: crop.width,
+                suggestedHeight: crop.height,
+            } ),
+            new wpMedia.controller.Cropper( {
+                imgSelectOptions: imageSelectOptions( crop ),
+            } ),
+        ],
+    } );
+
+    frame.on( 'select', () => frame.setState( 'cropper' ) );
+    frame.on( 'cropped', ( img: any ) =>
+        onPick( { id: img.attachment_id, url: img.url } )
+    );
+    frame.on( 'skippedcrop', ( selection: any ) =>
+        onPick( { id: selection.id, url: selection.get( 'url' ) } )
+    );
+    frame.open();
+
+    return frame;
 };
 
 // Store-awning placeholder shown for an empty logo — mirrors the admin
@@ -42,11 +168,15 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
     const fieldKey = fieldKeyOf( element );
     const isRound = 'round' === ( element.shape as string );
     const placeholderUrl = ( element.placeholder_url as string ) || '';
+    // Admin-configured crop dimension arrives via the schema, so the picker enforces it like the legacy uploader.
+    const crop = element.crop as CropConfig | undefined;
+    const title = ( element.title as string ) || undefined;
 
     // The schema seeds the preview URL; a fresh selection swaps in the attachment's own URL.
     const [ previewUrl, setPreviewUrl ] = useState< string >(
         ( element.image_url as string ) || ''
     );
+    const cropFrameRef = useRef< any >( null );
     const hasCustomImage = '' !== previewUrl;
     const displayUrl = previewUrl || placeholderUrl;
 
@@ -59,6 +189,30 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
         setPreviewUrl( '' );
         updateValue( fieldKey, 0 );
     };
+
+    // Reuse one frame per field so repeated picks don't stack modal DOM and library queries.
+    const openCrop = () => {
+        if ( ! cropFrameRef.current ) {
+            cropFrameRef.current = openCropFrame(
+                crop as CropConfig,
+                title || __( 'Choose Image', 'dokan-lite' ),
+                handleSelect
+            );
+            return;
+        }
+        cropFrameRef.current.open();
+    };
+
+    const triggerClass =
+        'inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 text-xs font-medium text-gray-700 hover:bg-gray-50';
+    const triggerContent = (
+        <>
+            { hasCustomImage ? <Pencil size={ 14 } /> : <Upload size={ 14 } /> }
+            { hasCustomImage
+                ? __( 'Change', 'dokan-lite' )
+                : __( 'Upload', 'dokan-lite' ) }
+        </>
+    );
 
     return (
         <div className="dokan-vendor-image-field flex w-full flex-col gap-3 p-4">
@@ -75,20 +229,23 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
                     ) }
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
-                    <MediaUploader
-                        onSelect={ handleSelect }
-                        title={ ( element.title as string ) || undefined }
-                        className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 text-xs font-medium text-gray-700 hover:bg-gray-50"
-                    >
-                        { hasCustomImage ? (
-                            <Pencil size={ 14 } />
-                        ) : (
-                            <Upload size={ 14 } />
-                        ) }
-                        { hasCustomImage
-                            ? __( 'Change', 'dokan-lite' )
-                            : __( 'Upload', 'dokan-lite' ) }
-                    </MediaUploader>
+                    { crop ? (
+                        <button
+                            type="button"
+                            onClick={ openCrop }
+                            className={ triggerClass }
+                        >
+                            { triggerContent }
+                        </button>
+                    ) : (
+                        <MediaUploader
+                            onSelect={ handleSelect }
+                            title={ title }
+                            className={ triggerClass }
+                        >
+                            { triggerContent }
+                        </MediaUploader>
+                    ) }
                     { hasCustomImage && (
                         <Button
                             variant="outline"
