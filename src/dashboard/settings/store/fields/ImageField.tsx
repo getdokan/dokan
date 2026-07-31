@@ -41,21 +41,21 @@ const mustBeCropped = (
     return true;
 };
 
-// Legacy uploader parity (script.js): seed the selection box at the admin dimension's aspect and lock it per the flex flags.
+// Admin uploader parity (UploadImage.vue): the selection box IS the configured
+// dimension — locked to that aspect and capped at it — so the crop preview
+// tracks the admin's banner width/height instead of scaling to fill the image.
 const imageSelectOptions =
     ( crop: CropConfig ) => ( attachment: any, controller: any ) => {
         const realWidth = attachment.get( 'width' );
         const realHeight = attachment.get( 'height' );
-        const flexWidth = !! crop.flexWidth;
-        const flexHeight = !! crop.flexHeight;
-        let xInit = Number( crop.width ) || realWidth;
-        let yInit = Number( crop.height ) || realHeight;
+        const xInit = Number( crop.width ) || realWidth;
+        const yInit = Number( crop.height ) || realHeight;
 
         controller.set(
             'canSkipCrop',
             ! mustBeCropped(
-                flexWidth,
-                flexHeight,
+                !! crop.flexWidth,
+                !! crop.flexHeight,
                 xInit,
                 yInit,
                 realWidth,
@@ -63,16 +63,7 @@ const imageSelectOptions =
             )
         );
 
-        const ratio = xInit / yInit;
-        if ( realWidth / realHeight > ratio ) {
-            yInit = realHeight;
-            xInit = yInit * ratio;
-        } else {
-            xInit = realWidth;
-            yInit = xInit / ratio;
-        }
-
-        const options: Record< string, unknown > = {
+        return {
             handles: true,
             keys: true,
             instance: true,
@@ -83,19 +74,10 @@ const imageSelectOptions =
             y1: 0,
             x2: xInit,
             y2: yInit,
+            aspectRatio: `${ xInit }:${ yInit }`,
+            maxWidth: xInit,
+            maxHeight: yInit,
         };
-
-        if ( ! flexHeight && ! flexWidth ) {
-            options.aspectRatio = `${ xInit }:${ yInit }`;
-        }
-        if ( ! flexHeight ) {
-            options.maxHeight = yInit;
-        }
-        if ( ! flexWidth ) {
-            options.maxWidth = xInit;
-        }
-
-        return options;
     };
 
 // Crop-aware wp.media frame — the crop posts to Dokan's legacy custom-header-crop ajax, which sizes the copy from the admin settings.
