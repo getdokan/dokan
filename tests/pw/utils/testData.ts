@@ -1460,11 +1460,11 @@ export const data = {
         // Tabs and the section cards each tab must render (asserted by the tab/section
         // render test). Mirrors the schema for the fully-loaded (Pro-active) vendor.
         layout: {
-            general: { tab: 'General', sections: ['company_banner', 'store_information', 'vendor_biography_section'] },
-            location: { tab: 'Location', sections: ['store_map_section', 'location_details'] },
-            schedule: { tab: 'Schedule', sections: ['store_schedule', 'store_vacation'] },
-            business: { tab: 'Business', sections: ['catalog_mode_section', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'] },
-            policies: { tab: 'Policies', sections: ['terms_conditions'] },
+            general: ['company_banner', 'store_information', 'vendor_biography_section'],
+            location: ['store_map_section', 'location_details'],
+            schedule: ['store_schedule', 'store_vacation'],
+            business: ['catalog_mode_section', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'],
+            policies: ['terms_conditions'],
         },
 
         // Sections contributed by Pro modules — absent on a Lite-only site, so the
@@ -1476,13 +1476,13 @@ export const data = {
         // must be on for the field to be editable. Switches carry no `values` (toggled).
         syncFields: [
             // --- General ---
-            { key: 'store_name', label: 'Store Title', tab: 'general', section: 'company_banner', gate: '@lite', kind: 'text', id: 'store_name', legacy: '#dokan_store_name', legacyKind: 'text', values: { fromNew: 'Store Alpha', fromLegacy: 'Store Legacy', final: 'Store Final' } },
-            { key: 'phone', label: 'Phone', tab: 'general', section: 'store_information', gate: '@lite', kind: 'text', id: 'phone', legacy: '#setting_phone', legacyKind: 'text', values: { fromNew: '01711000001', fromLegacy: '01711000002', final: '01711000003' } },
-            { key: 'show_email', label: 'Show email address', tab: 'general', section: 'store_information', gate: '@lite', kind: 'switch', id: 'show_email', legacy: 'input[type="checkbox"][name="setting_show_email"]', legacyKind: 'checkbox' },
-            { key: 'vendor_biography', label: 'Store Biography', tab: 'general', section: 'vendor_biography_section', gate: '@pro', kind: 'richtext', id: 'vendor_biography', legacy: '', legacyKind: 'tinymce', legacyEditor: 'vendor_biography', values: { fromNew: 'Biography from the new page', fromLegacy: 'Biography from the legacy page', final: 'Biography final value' } },
+            { label: 'Store Title', tab: 'general', section: 'company_banner', gate: '@lite', kind: 'text', id: 'store_name', legacy: '#dokan_store_name', legacyKind: 'text', values: { fromNew: 'Store Alpha', fromLegacy: 'Store Legacy', final: 'Store Final' } },
+            { label: 'Phone', tab: 'general', section: 'store_information', gate: '@lite', kind: 'text', id: 'phone', legacy: '#setting_phone', legacyKind: 'text', values: { fromNew: '01711000001', fromLegacy: '01711000002', final: '01711000003' } },
+            { label: 'Show email address', tab: 'general', section: 'store_information', gate: '@lite', kind: 'switch', id: 'show_email', legacy: 'input[type="checkbox"][name="setting_show_email"]', legacyKind: 'checkbox' },
+            { label: 'Store Biography', tab: 'general', section: 'vendor_biography_section', gate: '@pro', kind: 'richtext', id: 'vendor_biography', legacy: '', legacyKind: 'tinymce', legacyEditor: 'vendor_biography', values: { fromNew: 'Biography from the new page', fromLegacy: 'Biography from the legacy page', final: 'Biography final value' } },
 
             // --- Location ---
-            { key: 'dokan_store_multiple_location', label: 'Multiple store locations', tab: 'location', section: 'location_details', gate: '@pro', kind: 'switch', id: 'dokan_store_multiple_location', legacy: '#multiple-store-location', legacyKind: 'checkbox' },
+            { label: 'Multiple store locations', tab: 'location', section: 'location_details', gate: '@pro', kind: 'switch', id: 'dokan_store_multiple_location', legacy: '#multiple-store-location', legacyKind: 'checkbox' },
 
             // --- Schedule ---
             // Note: the store-schedule toggle + open/close notices are covered by the
@@ -1493,11 +1493,11 @@ export const data = {
             // reliable; the vacation flow (below) still exercises the Schedule tab.
 
             // --- Business ---
-            { key: 'catalog_mode_hide_add_to_cart_button', label: 'Remove Add to Cart', tab: 'business', section: 'catalog_mode_section', gate: '@lite', kind: 'switch', id: 'catalog_mode_hide_add_to_cart_button', legacy: '#catalog_mode_hide_add_to_cart_button', legacyKind: 'checkbox' },
-            { key: 'catalog_mode_request_a_quote_enabled', label: 'Request a Quote', tab: 'business', section: 'catalog_mode_section', gate: '@pro', kind: 'switch', id: 'catalog_mode_request_a_quote_enabled', legacy: '#catalog_mode_request_a_quote_support', legacyKind: 'checkbox', requires: 'catalog_mode_hide_add_to_cart_button' },
-            { key: 'show_support_btn', label: 'Show support button', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn', legacy: '#support_checkbox', legacyKind: 'checkbox' },
-            { key: 'show_support_btn_product', label: 'Support on product page', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn_product', legacy: '#support_checkbox_product', legacyKind: 'checkbox' },
-            { key: 'support_btn_name', label: 'Support button name', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'text', id: 'support_btn_name', legacy: '#dokan_support_btn_name', legacyKind: 'text', values: { fromNew: 'Ask Alpha', fromLegacy: 'Ask Legacy', final: 'Ask Final' } },
+            { label: 'Remove Add to Cart', tab: 'business', section: 'catalog_mode_section', gate: '@lite', kind: 'switch', id: 'catalog_mode_hide_add_to_cart_button', legacy: '#catalog_mode_hide_add_to_cart_button', legacyKind: 'checkbox' },
+            { label: 'Request a Quote', tab: 'business', section: 'catalog_mode_section', gate: '@pro', kind: 'switch', id: 'catalog_mode_request_a_quote_enabled', legacy: '#catalog_mode_request_a_quote_support', legacyKind: 'checkbox', requires: 'catalog_mode_hide_add_to_cart_button' },
+            { label: 'Show support button', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn', legacy: '#support_checkbox', legacyKind: 'checkbox' },
+            { label: 'Support on product page', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn_product', legacy: '#support_checkbox_product', legacyKind: 'checkbox' },
+            { label: 'Support button name', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'text', id: 'support_btn_name', legacy: '#dokan_support_btn_name', legacyKind: 'text', values: { fromNew: 'Ask Alpha', fromLegacy: 'Ask Legacy', final: 'Ask Final' } },
         ],
 
         // Cross-field flows tested bespoke (a parent + its required/composite partner).
@@ -1520,7 +1520,6 @@ export const data = {
             id: 'store_name',
             tab: 'general',
             section: 'company_banner',
-            legacy: '#dokan_store_name',
             message: /Store title is required/i,
         },
 

@@ -4,9 +4,9 @@
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
-import { SERVER_URL } from '@utils/helpers';
+import { endPoints } from '@utils/apiEndPoints';
 
-const endpoint = `${SERVER_URL}/dokan/v1/vendor-settings/store`;
+const endpoint = endPoints.vendorStoreSettings;
 
 // Flat schema element as returned by the endpoint.
 type Element = { type?: string; id?: string; value?: unknown; default?: unknown };
@@ -23,11 +23,14 @@ let apiUtils: ApiUtils;
 // composite fields the UI suite can't drive.
 test.describe('vendor store settings api', () => {
     const original: Record<string, unknown> = {};
+    // Snapshot from beforeAll — the read-only GET tests assert against it instead of re-fetching.
+    let initialSchema: Element[] = [];
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
         // Snapshot every field value so the store is restored after the run.
         const [, schema] = await apiUtils.get(endpoint, { headers: payloads.vendorAuth });
+        initialSchema = schema as Element[];
         (schema as Element[]).forEach(e => {
             if (e.type === 'field' && typeof e.id === 'string') {
                 original[e.id] = e.value;
@@ -43,21 +46,18 @@ test.describe('vendor store settings api', () => {
     // ---- GET ----------------------------------------------------------------
 
     test('GET returns the flat schema with page, subpage and all tabs', { tag: ['@lite', '@vendor'] }, async () => {
-        const [response, schema] = await apiUtils.get(endpoint, { headers: payloads.vendorAuth });
-        expect(response.ok()).toBeTruthy();
-        expect(Array.isArray(schema)).toBeTruthy();
+        expect(Array.isArray(initialSchema)).toBeTruthy();
 
-        const types = (schema as Element[]).map(e => e.type);
+        const types = initialSchema.map(e => e.type);
         expect(types).toContain('page');
         expect(types).toContain('subpage');
 
-        const tabIds = (schema as Element[]).filter(e => e.type === 'tab').map(e => e.id);
+        const tabIds = initialSchema.filter(e => e.type === 'tab').map(e => e.id);
         expect(tabIds).toEqual(expect.arrayContaining(['tab_general', 'tab_location', 'tab_schedule', 'tab_business', 'tab_policies']));
     });
 
     test('GET exposes every core field across all sections', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, schema] = await apiUtils.get(endpoint, { headers: payloads.vendorAuth });
-        expect(ids(schema as Element[])).toEqual(
+        expect(ids(initialSchema)).toEqual(
             expect.arrayContaining([
                 'store_name', 'banner', 'gravatar', 'show_email', 'phone',
                 'dokan_store_time_enabled', 'dokan_store_open_notice', 'dokan_store_close_notice',
@@ -67,8 +67,7 @@ test.describe('vendor store settings api', () => {
     });
 
     test('GET reports the documented field defaults', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, schema] = await apiUtils.get(endpoint, { headers: payloads.vendorAuth });
-        const list = schema as Element[];
+        const list = initialSchema;
         expect(field(list, 'store_name')?.default).toBe('');
         expect(field(list, 'phone')?.default).toBe('');
         expect(field(list, 'show_email')?.default).toBe('no');

@@ -10,7 +10,6 @@ const legacyUI = selectors.legacyUI;
 
 // A standalone vice-versa field driven from the syncFields registry.
 export interface SyncField {
-    key: string;
     label: string;
     tab: string;
     section: string;
@@ -47,17 +46,25 @@ export class VendorStoreSettingsPage extends BasePage {
 
     // ---- New React page: navigation + primitives -----------------------------
 
-    // Re-open the new page and activate a tab so its fields mount.
-    private async openNewTab(tab: string): Promise<void> {
+    private async gotoNewPage(): Promise<void> {
         await this.page.goto(urls.newStoreSettings, { waitUntil: 'domcontentloaded' });
         await this.page.locator(newUI.panel).waitFor({ state: 'visible', timeout: 30000 });
+    }
 
+    // Client-side tab activation on an already-loaded page.
+    private async activateTab(tab: string): Promise<void> {
         const tabButton = this.page.locator(newUI.tabButton(tab));
         await tabButton.waitFor({ state: 'visible', timeout: 15000 });
         if ((await tabButton.getAttribute('aria-selected')) !== 'true') {
             await tabButton.click();
         }
         await expect(tabButton).toHaveAttribute('aria-selected', 'true', { timeout: 10000 });
+    }
+
+    // Re-open the new page and activate a tab — the full reload is deliberate so reads see PERSISTED state.
+    private async openNewTab(tab: string): Promise<void> {
+        await this.gotoNewPage();
+        await this.activateTab(tab);
     }
 
     // Open a field's tab and expand its (collapsible) section so the field is interactable.
@@ -109,24 +116,30 @@ export class VendorStoreSettingsPage extends BasePage {
         await this.saveNew();
     }
 
-    private async getNewSwitch(field: SyncField): Promise<boolean> {
-        const toggle = await this.revealNewControl(field);
+    private async isSwitchOn(toggle: Locator): Promise<boolean> {
         return (await toggle.getAttribute('aria-checked')) === 'true';
     }
 
-    private async setNewSwitch(field: SyncField, enabled: boolean): Promise<void> {
-        const toggle = await this.revealNewControl(field);
-        if (((await toggle.getAttribute('aria-checked')) === 'true') === enabled) {
+    // Shared primitive: flip a toggle to the target state (retrying missed clicks) and save.
+    private async applySwitchState(toggle: Locator, enabled: boolean): Promise<void> {
+        if ((await this.isSwitchOn(toggle)) === enabled) {
             return;
         }
-        // A switch click can silently miss under load; retry until aria-checked flips.
         await expect(async () => {
-            if (((await toggle.getAttribute('aria-checked')) === 'true') !== enabled) {
+            if ((await this.isSwitchOn(toggle)) !== enabled) {
                 await toggle.click();
             }
-            expect((await toggle.getAttribute('aria-checked')) === 'true').toBe(enabled);
+            expect(await this.isSwitchOn(toggle)).toBe(enabled);
         }).toPass({ timeout: 10000 });
         await this.saveNew();
+    }
+
+    private async getNewSwitch(field: SyncField): Promise<boolean> {
+        return this.isSwitchOn(await this.revealNewControl(field));
+    }
+
+    private async setNewSwitch(field: SyncField, enabled: boolean): Promise<void> {
+        await this.applySwitchState(await this.revealNewControl(field), enabled);
     }
 
     // Persist a parent switch to on once (idempotent) so its dependent fields mount.
@@ -135,17 +148,7 @@ export class VendorStoreSettingsPage extends BasePage {
         await this.openNewSection(parent?.tab ?? 'general', parent?.section ?? id);
         const toggle = this.page.locator(newUI.fieldSwitch(id)).first();
         await toggle.waitFor({ state: 'visible', timeout: 15000 });
-        if ((await toggle.getAttribute('aria-checked')) === 'true') {
-            return;
-        }
-        // Retry the click until it registers (a single click can miss under load).
-        await expect(async () => {
-            if ((await toggle.getAttribute('aria-checked')) !== 'true') {
-                await toggle.click();
-            }
-            expect(await toggle.getAttribute('aria-checked')).toBe('true');
-        }).toPass({ timeout: 10000 });
-        await this.saveNew();
+        await this.applySwitchState(toggle, true);
     }
 
     // The Save button enables only on change; click it and await the settings PUT.
@@ -215,13 +218,17 @@ export class VendorStoreSettingsPage extends BasePage {
     private async saveLegacy(): Promise<void> {
         const save = this.page.locator(legacyUI.saveButton).first();
         await save.scrollIntoViewIfNeeded();
+        // The legacy form saves through one deterministic admin-ajax call — wait on it, not on a sleep.
+        const saved = this.page.waitForResponse(
+            resp => resp.url().includes('admin-ajax.php') && (resp.request().postData() ?? '').includes('dokan_settings'),
+            { timeout: 15000 }
+        );
         await save.click();
+        await saved;
         await this.page
             .getByText(legacyUI.saveSuccessMessage, { exact: false })
             .first()
-            .waitFor({ state: 'visible', timeout: 15000 })
-            .catch(() => undefined);
-        await this.page.waitForTimeout(1500);
+            .waitFor({ state: 'visible', timeout: 15000 });
     }
 
     // ---- Generic vice-versa assertion (one syncFields entry) -----------------
@@ -335,9 +342,11 @@ export class VendorStoreSettingsPage extends BasePage {
 
     async assertTabsAndSections(): Promise<void> {
         const proActive = parseBoolean(process.env.DOKAN_PRO);
-        for (const [tab, config] of Object.entries(migration.layout)) {
-            await this.openNewTab(tab);
-            for (const section of config.sections) {
+        // Render-only assertions — one page load, then client-side tab clicks.
+        await this.gotoNewPage();
+        for (const [tab, sections] of Object.entries(migration.layout)) {
+            await this.activateTab(tab);
+            for (const section of sections) {
                 if (!proActive && migration.proSections.includes(section)) continue;
                 // Collapsible sections render collapsed (attached but hidden), so assert
                 // the section card is present on its tab rather than expanded.
