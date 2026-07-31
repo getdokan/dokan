@@ -120,90 +120,109 @@ class FullWidthVendorLayout implements Hookable {
                 $this->script_key,
                 'dokan-lite'
             );
+        }
+    }
 
-            $user_id      = get_current_user_id();
-            $seller_id    = dokan_get_current_user_id();
-            $vendor       = dokan()->vendor->get( $seller_id );
-            $is_admin     = current_user_can( 'manage_options' );
-            $user_name    = wp_get_current_user()->display_name ?? '';
-            $admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
-            $no_access    = OrderUtil::is_hpos_enabled() ? 'on' : $admin_access;
+    /**
+     * Attach the layout config (sidebar nav, vendor, site info) to the registered script.
+     *
+     * Deliberately runs at enqueue time, not at registration: the nav's
+     * new/legacy gates read `dokan_appearance`, whose flat-settings overlay is
+     * only filtered in at `init` priority 999 — long after this class registers
+     * its assets at `init` 99. Building the nav there hands the app the
+     * pre-overlay (legacy) URLs.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function add_dashboard_layout_config(): void {
+        if ( ! wp_script_is( $this->script_key, 'registered' ) ) {
+            return;
+        }
 
-            // Frontend header nav items.
-            // Build base with My Account and Log out; insert conditional admin links next.
-            $header_nav = [
+        $user_id      = get_current_user_id();
+        $seller_id    = dokan_get_current_user_id();
+        $vendor       = dokan()->vendor->get( $seller_id );
+        $is_admin     = current_user_can( 'manage_options' );
+        $user_name    = wp_get_current_user()->display_name ?? '';
+        $admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
+        $no_access    = OrderUtil::is_hpos_enabled() ? 'on' : $admin_access;
+
+        // Frontend header nav items.
+        // Build base with My Account and Log out; insert conditional admin links next.
+        $header_nav = [
+            [
+                'label' => esc_html__( 'My Account', 'dokan-lite' ),
+                'icon'  => 'UserRound',
+                'url'   => dokan_get_navigation_url( 'edit-account' ),
+            ],
+            [
+                'label' => esc_html__( 'Log out', 'dokan-lite' ),
+                'icon'  => 'LogOut',
+                'url'   => esc_url_raw( wp_logout_url( home_url() ) ),
+            ],
+        ];
+
+        if ( $is_admin ) {
+            // Only administrators: show Back to WP Panel.
+            array_splice(
+                $header_nav,
+                1,
+                0,
                 [
-                    'label' => esc_html__( 'My Account', 'dokan-lite' ),
-                    'icon'  => 'UserRound',
-                    'url'   => dokan_get_navigation_url( 'edit-account' ),
-                ],
+                    [
+                        'label' => esc_html__( 'Back to WP Panel', 'dokan-lite' ),
+                        'icon'  => 'WPLogo',
+                        'url'   => admin_url(),
+                        'isSvg' => true,
+                    ],
+                ]
+            );
+        } elseif ( 'on' !== $no_access ) {
+            // Non-admins with admin panel access: show Access Admin Panel.
+            array_splice(
+                $header_nav,
+                1,
+                0,
                 [
-                    'label' => esc_html__( 'Log out', 'dokan-lite' ),
-                    'icon'  => 'LogOut',
-                    'url'   => esc_url_raw( wp_logout_url( home_url() ) ),
-                ],
-            ];
-
-            if ( $is_admin ) {
-                // Only administrators: show Back to WP Panel.
-                array_splice(
-                    $header_nav,
-                    1,
-                    0,
                     [
-                        [
-                            'label' => esc_html__( 'Back to WP Panel', 'dokan-lite' ),
-                            'icon'  => 'WPLogo',
-                            'url'   => admin_url(),
-                            'isSvg' => true,
-                        ],
-                    ]
-                );
-            } elseif ( 'on' !== $no_access ) {
-                // Non-admins with admin panel access: show Access Admin Panel.
-                array_splice(
-                    $header_nav,
-                    1,
-                    0,
-                    [
-                        [
-                            'label' => esc_html__( 'Access Admin Panel', 'dokan-lite' ),
-                            'icon'  => 'LockOpen',
-                            'url'   => admin_url(),
-                        ],
-                    ]
-                );
-            }
-
-            wp_add_inline_script(
-                $this->script_key,
-                'var vendorDashboardLayoutConfig = ' . wp_json_encode(
-                    apply_filters(
-                        'dokan_vendor_dashboard_layout_config',
-                        [
-                            'siteInfo'   => [
-                                'siteTitle' => get_bloginfo( 'name' ),
-                                'siteIcon'  => get_site_icon_url(),
-                                'siteUrl'   => home_url(),
-                            ],
-                            'vendor'     => [
-                                'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
-                                'avatar' => $vendor->get_avatar() ?? VendorUtil::get_vendor_default_avatar_url(),
-                            ],
-                            'editUrl'    => dokan_get_navigation_url( 'edit-account' ),
-                            'user'       => [
-                                'name'   => $user_name,
-                                'avatar' => get_avatar_url( $user_id ),
-                            ],
-                            'sidebarNav' => dokan_get_dashboard_nav(),
-                            'headerNav'  => $header_nav,
-                        ],
-                        $vendor
-                    )
-                ),
-                'before'
+                        'label' => esc_html__( 'Access Admin Panel', 'dokan-lite' ),
+                        'icon'  => 'LockOpen',
+                        'url'   => admin_url(),
+                    ],
+                ]
             );
         }
+
+        wp_add_inline_script(
+            $this->script_key,
+            'var vendorDashboardLayoutConfig = ' . wp_json_encode(
+                apply_filters(
+                    'dokan_vendor_dashboard_layout_config',
+                    [
+                        'siteInfo'   => [
+                            'siteTitle' => get_bloginfo( 'name' ),
+                            'siteIcon'  => get_site_icon_url(),
+                            'siteUrl'   => home_url(),
+                        ],
+                        'vendor'     => [
+                            'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
+                            'avatar' => $vendor->get_avatar() ?? VendorUtil::get_vendor_default_avatar_url(),
+                        ],
+                        'editUrl'    => dokan_get_navigation_url( 'edit-account' ),
+                        'user'       => [
+                            'name'   => $user_name,
+                            'avatar' => get_avatar_url( $user_id ),
+                        ],
+                        'sidebarNav' => dokan_get_dashboard_nav(),
+                        'headerNav'  => $header_nav,
+                    ],
+                    $vendor
+                )
+            ),
+            'before'
+        );
     }
 
     /**
@@ -217,6 +236,8 @@ class FullWidthVendorLayout implements Hookable {
         if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
             return;
         }
+
+        $this->add_dashboard_layout_config();
 
         wp_enqueue_script( $this->script_key );
         wp_enqueue_style( $this->script_key );
