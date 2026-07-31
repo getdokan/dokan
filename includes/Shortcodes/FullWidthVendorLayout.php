@@ -51,6 +51,7 @@ class FullWidthVendorLayout implements Hookable {
         $appearance                          = get_option( 'dokan_appearance', [] );
         $appearance['vendor_layout_style']   = 'latest';
         $appearance['vendor_product_editor'] = 'latest';
+        $appearance['vendor_store_settings'] = 'latest';
 
         dokan_save_legacy_settings_section( 'dokan_appearance', $appearance );
     }
