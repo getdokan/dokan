@@ -21,6 +21,70 @@ settings, the REST `/stores` resource. Exactly one Store per Vendor — a facet 
 the Vendor, not a separate entity.
 _Avoid_: Shop, storefront
 
+**Store Admin**:
+An operator of the marketplace: may read and write any Vendor's data and set the
+Operating Terms Vendors are subject to. The canonical admin of the authorization
+model — where the model says "admin" unqualified, it means this.
+_Avoid_: admin, shop manager, store manager
+
+**Site Admin**:
+A WordPress-level administrator. Every Site Admin is also a Store Admin, and the
+term draws no boundary of its own in the marketplace model; it survives because
+parts of the REST surface still gate on it.
+_Avoid_: super admin, administrator (as a marketplace-authorization term)
+
+**Vendor Staff**:
+A user acting on behalf of exactly one Vendor, sharing that Vendor's data
+boundary while holding their own, narrower set of permitted actions. Sharing the
+boundary is not the same as sharing the permissions.
+_Avoid_: staff, sub-vendor, employee
+
+**Customer**:
+A buyer. Holds no vendor-facing permission and sees only public catalogue data
+and their own purchases.
+_Avoid_: client, user, account
+
+### Authorization
+
+**Ownership**:
+The relationship between a Vendor and a record belonging to their Store. The unit
+of authorization for vendor data: a capability decides whether an actor may
+perform a kind of action at all, Ownership decides whether they may perform it on
+a given record. Both must pass.
+
+**Vendor Scope**:
+The set of records an actor may act on, resolved from the acting Vendor — their
+own Store for a Vendor, their Vendor's Store for Vendor Staff. A caller-supplied
+identifier may narrow a Vendor Scope but never widen it.
+
+**Operating Terms**:
+The terms a Vendor is subject to but may never set for themselves — Commission,
+Selling Activation, Direct Publishing and featured status. The line they draw is
+between the marketplace and its Vendors, not between admin tiers.
+_Avoid_: admin settings, vendor settings
+
+**Ability Context**:
+Any execution of a registered WordPress Ability, whatever invoked it — an MCP
+client, another plugin in-process, or WP-CLI. Vendor Scope applies throughout an
+Ability Context, because an Ability is machine-facing wherever it runs; the
+transport that reached it is not the boundary.
+_Avoid_: MCP request, MCP context
+
+**Selling Activation**:
+Whether a Vendor's Store is live and may transact, independent of whether the
+Vendor role is held.
+_Avoid_: enabled, selling mode, active
+
+**Direct Publishing**:
+Whether a Vendor's products go live without marketplace review.
+_Avoid_: trusted, publishing, auto-publish
+
+**Approved Vendor**:
+A Vendor the marketplace has accepted, and the only kind that appears in public
+listings. A Vendor awaiting that decision is *Pending*, and is not public
+information.
+_Avoid_: active vendor, live vendor
+
 ### Orders
 
 **Order**:
