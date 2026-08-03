@@ -304,7 +304,8 @@ const WeeklyTimeSlots = ( {
                                 iconBtnBase,
                                 isFullDaySlot
                                     ? 'text-gray-500! cursor-not-allowed opacity-50'
-                                    : 'hover:bg-gray-50!',
+                                    : // Matches the delete button's tinted hover, on the brand colour (see .dokan-soft-primary).
+                                      'dokan-soft-primary',
                                 // Retire the glyph on the day-end row too, so a full
                                 // day reads like the legacy rows (× only, no add).
                                 ( index !== day.slots.length - 1 ||
