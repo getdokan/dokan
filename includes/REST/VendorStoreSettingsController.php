@@ -315,11 +315,12 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * @return string[] Error messages (empty when valid).
      */
     protected function validate_field_value( array $field, $value, array $all_values = [], int $vendor_id = 0 ): array {
-        $errors  = [];
-        $variant = $field['variant'] ?? '';
+        $errors            = [];
+        $variant           = $field['variant'] ?? '';
+        $field_validations = (array) ( $field['validations'] ?? [] );
 
         // Declarative rules — the same `[ { rules, message, params } ]` contract the client runs, so one declaration drives both sides.
-        foreach ( (array) ( $field['validations'] ?? [] ) as $validation ) {
+        foreach ( $field_validations as $validation ) {
             if ( ! is_array( $validation ) || empty( $validation['rules'] ) ) {
                 continue;
             }
