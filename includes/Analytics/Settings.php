@@ -56,7 +56,10 @@ class Settings implements Hookable {
          */
         $option_names = apply_filters(
             'dokan_analytics_reports_preload_options',
-            [ 'woocommerce_admin_install_timestamp' ]
+            [
+                'woocommerce_admin_install_timestamp',
+                'woocommerce_date_type',
+            ]
         );
 
         $preloaded = [];
