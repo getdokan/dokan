@@ -13,8 +13,6 @@ type Attachment = {
 type CropConfig = {
     width: number;
     height: number;
-    flexWidth?: boolean;
-    flexHeight?: boolean;
 };
 
 // Admin uploader parity (UploadImage.vue): the selection box IS the configured dimension, aspect-locked and capped there.
@@ -25,8 +23,11 @@ const imageSelectOptions =
         const xInit = Number( crop.width ) || realWidth;
         const yInit = Number( crop.height ) || realHeight;
 
-        // Banner and logo always crop to the configured size — no Skip cropping escape hatch.
-        controller.set( 'canSkipCrop', false );
+        // Skip cropping is only offered when the crop would be a no-op: the image already matches the target or is smaller.
+        controller.set(
+            'canSkipCrop',
+            realWidth <= xInit && realHeight <= yInit
+        );
 
         return {
             handles: true,
