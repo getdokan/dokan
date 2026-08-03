@@ -155,19 +155,16 @@ export default function StoreSettings() {
     ): Promise< void > => {
         setSaving( true );
         try {
-            const response = await apiFetch< SettingsElement[] >( {
+            await apiFetch< SettingsElement[] >( {
                 path: ENDPOINT,
                 method: 'PUT',
                 data: { values: flatValues },
             } );
 
-            // Apply the refreshed schema so server-derived values (vacation
-            // history rows, cleared composer, dependent force-offs) come back
-            // without a manual reload. No remount here: re-keying the engine
-            // tears down every card and repaints, which reads as a blink.
-            if ( Array.isArray( response ) ) {
-                setSchema( qualifyDependencyKeys( response ) );
-            }
+            // Deliberately no setSchema/remount here — the admin settings page
+            // does the same. Feeding a fresh schema prop back in re-seeds the
+            // engine's baseline, which leaves the form dirty (Save stays
+            // enabled) and repaints every card as a blink.
 
             toast.success( __( 'Store settings saved.', 'dokan-lite' ) );
         } catch ( error ) {
