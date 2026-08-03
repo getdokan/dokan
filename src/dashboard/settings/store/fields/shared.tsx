@@ -8,17 +8,22 @@ import type { SettingsElement } from '@wedevs/plugin-ui';
 export const fieldKeyOf = ( element: SettingsElement ): string =>
     ( element.dependency_key as string ) || element.id;
 
-// The red "(Required)" marker shared by the custom field controls.
+// The red required marker shared by the custom field controls.
 export const RequiredMark = () => (
-    <span className="text-xs font-normal text-red-500">
-        { __( '(Required)', 'dokan-lite' ) }
+    <span
+        className="text-red-500"
+        aria-label={ __( 'Required', 'dokan-lite' ) }
+        title={ __( 'Required', 'dokan-lite' ) }
+    >
+        *
     </span>
 );
 
 // Chrome shared by the DataViews row-action buttons (edit/delete) across the tables.
 export const actionButtonBase =
     'inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50';
-export const editButtonClass = `${ actionButtonBase } hover:border-dokan-btn hover:bg-dokan-btn-secondary-hover hover:text-dokan-btn`;
+// dokan-soft-primary mirrors the delete action's light-tint hover on the brand colour; the tint is mixed in style.scss because the brand token is a CSS var (Tailwind's /alpha modifier can't touch it).
+export const editButtonClass = `${ actionButtonBase } dokan-soft-primary`;
 export const deleteButtonClass = `${ actionButtonBase } hover:border-dokan-btn-danger hover:bg-dokan-danger hover:text-dokan-btn-danger`;
 
 export type CountryState = { code: string; name: string };
