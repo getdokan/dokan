@@ -29,9 +29,43 @@ class Settings implements Hookable {
         $settings['isAnalyticsEnabled'] = ReportUtil::is_analytics_enabled();
         $settings['lastDayOfTheMonth']  = dokan_current_datetime()->format( 'Y-m-d' );
         $settings['firstDayOfTheMonth'] = dokan_current_datetime()->modify( 'first day of this month' )->format( 'Y-m-d' );
+        $settings['preloadOptions']     = $this->get_preload_options();
         $settings = array_merge( $settings, $this->load_data_endpoints() );
 
         return $settings;
+    }
+
+    /**
+     * Get the options hydrated into the client side options data store.
+     *
+     * WooCommerce resolves these options through `/wc-admin/options`, an endpoint
+     * vendors are not permitted to read. Hydrating the store on page load keeps the
+     * values available without the REST round trip.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array Option name => option value.
+     */
+    protected function get_preload_options(): array {
+        /**
+         * Filters the option names hydrated into the vendor analytics options store.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $option_names Option names to preload.
+         */
+        $option_names = apply_filters(
+            'dokan_analytics_reports_preload_options',
+            [ 'woocommerce_admin_install_timestamp' ]
+        );
+
+        $preloaded = [];
+
+        foreach ( $option_names as $option_name ) {
+            $preloaded[ $option_name ] = get_option( $option_name );
+        }
+
+        return $preloaded;
     }
 
     /**

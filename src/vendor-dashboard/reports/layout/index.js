@@ -268,12 +268,12 @@ const _PageLayout = () => {
     );
 };
 
+// Hydrated unconditionally: the vendor dashboard runs on the frontend, where
+// `window.wcSettings.admin` is absent, and vendors cannot read `/wc-admin/options`.
 export const PageLayout = compose(
-    window.wcSettings?.admin
-        ? withOptionsHydration( {
-              ...getAdminSetting( 'preloadOptions', {} ),
-          } )
-        : identity
+    withOptionsHydration( {
+        ...getAdminSetting( 'preloadOptions', {} ),
+    } )
 )( _PageLayout );
 
 const _EmbedLayout = () => (
