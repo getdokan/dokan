@@ -429,8 +429,12 @@ class StoreSettingsSchema {
     }
 
     /**
-     * Store Locations card — omitted entirely when the Pro delivery-time
-     * module owns the address UI (store-pickup renders its own form there).
+     * Store Locations card — the single-address form Lite ships.
+     *
+     * Extensions that own the address UI (Pro's delivery-time store pickup
+     * renders a multi-location table) replace this section through the
+     * `dokan_get_vendor_settings_schema` filter rather than Lite standing
+     * itself down for them.
      *
      * @since DOKAN_SINCE
      *
@@ -439,10 +443,6 @@ class StoreSettingsSchema {
      * @return array
      */
     protected static function address( array $info ): array {
-        if ( function_exists( 'dokan_pro' ) && dokan_pro()->module->is_active( 'delivery_time' ) ) {
-            return [];
-        }
-
         $address = (array) ( $info['address'] ?? [] );
 
         return [
