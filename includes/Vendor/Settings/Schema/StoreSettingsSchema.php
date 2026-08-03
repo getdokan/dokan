@@ -292,6 +292,7 @@ class StoreSettingsSchema {
                 'type'        => 'field',
                 'variant'     => 'text',
                 'section_id'  => 'company_banner',
+                'icon'        => 'Asterisk',
                 'title'       => __( 'Store Title', 'dokan-lite' ),
                 'placeholder' => __( 'ex - Fashion Store', 'dokan-lite' ),
                 'layout'      => 'full-width',
@@ -670,6 +671,7 @@ class StoreSettingsSchema {
                 'variant'           => 'rich_text',
                 'section_id'        => 'terms_conditions',
                 'title'             => __( 'TOC Details', 'dokan-lite' ),
+                'icon'              => 'Asterisk',
                 'description'       => __( 'Spell out your store policies — returns, shipping, and warranties — that customers agree to when they order.', 'dokan-lite' ),
                 // Required when the toggle is on — enforced by the validation_func below, same content check as the legacy form.
                 'required'          => true,
