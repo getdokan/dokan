@@ -188,7 +188,8 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
                             size="icon-sm"
                             aria-label={ __( 'Remove image', 'dokan-lite' ) }
                             onClick={ handleRemove }
-                            className="shrink-0 text-gray-500 hover:text-red-600"
+                            // Neutral at rest like the Change button beside it; the danger tint only appears on hover, matching the row-action Delete.
+                            className="shrink-0 border-gray-300! text-gray-500 hover:border-dokan-btn-danger! hover:bg-dokan-danger! hover:text-dokan-btn-danger!"
                         >
                             <Trash size={ 16 } />
                         </Button>
