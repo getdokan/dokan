@@ -346,7 +346,7 @@ class StoreSettingsSchema {
     }
 
     /**
-     * Crop config for a `vendor_image` field — flex flags follow the admin banner settings.
+     * Crop config for a `vendor_image` field — the picker crops to exactly this size.
      *
      * @since DOKAN_SINCE
      *
@@ -357,10 +357,8 @@ class StoreSettingsSchema {
      */
     protected static function crop_config( int $width, int $height ): array {
         return [
-            'width'      => $width,
-            'height'     => $height,
-            'flexWidth'  => dokan_get_vendor_store_banner_flex_width(),
-            'flexHeight' => dokan_get_vendor_store_banner_flex_height(),
+            'width'  => $width,
+            'height' => $height,
         ];
     }
 
