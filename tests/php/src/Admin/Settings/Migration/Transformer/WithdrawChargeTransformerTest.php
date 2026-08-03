@@ -92,6 +92,15 @@ class WithdrawChargeTransformerTest extends WP_UnitTestCase {
         $legacy = [ 'fixed' => '1.23', 'percentage' => '4.56' ];
         $back   = $transformer->to_legacy( $transformer->to_new( $legacy ) );
 
-        $this->assertSame( $legacy, $back );
+        // Values round-trip losslessly; key ORDER follows to_legacy()'s
+        // locked output contract (percentage first — see
+        // test_to_legacy_flips_keys_and_preserves_values), not the input.
+        $this->assertSame(
+            [
+                'percentage' => '4.56',
+                'fixed'      => '1.23',
+            ],
+            $back
+        );
     }
 }
