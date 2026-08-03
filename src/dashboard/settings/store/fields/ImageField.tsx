@@ -41,9 +41,7 @@ const mustBeCropped = (
     return true;
 };
 
-// Admin uploader parity (UploadImage.vue): the selection box IS the configured
-// dimension — locked to that aspect and capped at it — so the crop preview
-// tracks the admin's banner width/height instead of scaling to fill the image.
+// Admin uploader parity (UploadImage.vue): the selection box IS the configured dimension, aspect-locked and capped there.
 const imageSelectOptions =
     ( crop: CropConfig ) => ( attachment: any, controller: any ) => {
         const realWidth = attachment.get( 'width' );
@@ -118,8 +116,7 @@ const openCropFrame = (
     return frame;
 };
 
-// Store-awning placeholder shown for an empty logo — mirrors the admin
-// vendor-edit StoreImage default so both screens read the same.
+// Store-awning placeholder for an empty logo — mirrors the admin vendor-edit StoreImage default.
 const LogoPlaceholder = () => (
     <svg
         width="48"
@@ -136,15 +133,7 @@ const LogoPlaceholder = () => (
     </svg>
 );
 
-// `vendor_image` variant — wp.media picker that stores the ATTACHMENT ID
-// (legacy banner/gravatar fidelity; plugin-ui's built-in media field stores
-// URL strings, which would break every legacy reader).
-//
-// Figma/admin treatment: the field title + spec sit on one row with the
-// Change/Upload and delete controls; the preview renders full-width below.
-// A banner falls back to `placeholder_url` (the default store banner) and the
-// round logo falls back to the store-awning glyph, so the field never looks
-// empty. Delete only shows once the vendor has set their own image.
+// `vendor_image` variant — wp.media picker storing the ATTACHMENT ID, since plugin-ui's media field stores URLs that every legacy reader would choke on.
 const ImageField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
     const fieldKey = fieldKeyOf( element );
@@ -256,14 +245,12 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
                     ) }
                 </div>
             ) : (
-                // Admin vendor-edit treatment: a full-width, fixed-height banner
-                // frame filled with object-cover (no aspect distortion), so any
-                // banner reads as a consistent store header.
-                <div className="flex h-[300px] w-full items-center justify-center overflow-hidden rounded-md border border-gray-200 bg-gray-50">
+                // Per design: the banner keeps its own aspect at the frame height and sits left-aligned on the card — cover would blow it up to full width and crop it.
+                <div className="flex h-[300px] w-full items-center justify-start overflow-hidden">
                     <img
                         src={ displayUrl }
                         alt={ ( element.title as string ) || '' }
-                        className="h-full w-full object-cover"
+                        className="h-full w-auto max-w-full rounded-md object-contain"
                     />
                 </div>
             ) }
