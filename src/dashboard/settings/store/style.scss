@@ -195,26 +195,31 @@
     color: inherit;
 }
 
-// Quiet the auto-focused search box's heavy focus ring to a plain light border.
+// The popup already draws the frame; the search box's own border stacked a second line inside it (the category popup has none).
+.dokan-location-popover input,
 .dokan-location-popover input:focus,
 .dokan-location-popover input:focus-visible {
+    border: 0 !important;
     outline: none !important;
     box-shadow: none !important;
-    border-color: #e5e7eb !important;
 }
 
 // The modal renders outside plugin-ui's theme provider, so Input/SmartSelect border-input/ring-ring fall back to currentColor (black); pin the light admin look here in real CSS.
 .dokan-location-form {
     input[data-slot='input'],
+    textarea,
     [data-slot='smart-select-trigger'] {
         border-color: #d1d5db !important;
     }
 
+    // Focus matches the page's ordinary inputs — a neutral darker border, not the customizer's brand colour.
     input[data-slot='input']:focus,
     input[data-slot='input']:focus-visible,
+    textarea:focus,
+    textarea:focus-visible,
     [data-slot='smart-select-trigger']:focus,
     [data-slot='smart-select-trigger']:focus-visible {
-        border-color: var(--color-dokan-btn, #34abdb) !important;
+        border-color: #9ca3af !important;
         box-shadow: none !important;
         outline: none !important;
     }
