@@ -17,30 +17,6 @@ type CropConfig = {
     flexHeight?: boolean;
 };
 
-// Custom-header parity: cropping is only mandatory when the target dimension is rigid and the image is larger.
-const mustBeCropped = (
-    flexW: boolean,
-    flexH: boolean,
-    dstW: number,
-    dstH: number,
-    imgW: number,
-    imgH: number
-): boolean => {
-    if ( flexW && flexH ) {
-        return false;
-    }
-    if ( flexW && dstH === imgH ) {
-        return false;
-    }
-    if ( flexH && dstW === imgW ) {
-        return false;
-    }
-    if ( ( dstW === imgW && dstH === imgH ) || imgW <= dstW ) {
-        return false;
-    }
-    return true;
-};
-
 // Admin uploader parity (UploadImage.vue): the selection box IS the configured dimension, aspect-locked and capped there.
 const imageSelectOptions =
     ( crop: CropConfig ) => ( attachment: any, controller: any ) => {
@@ -49,17 +25,8 @@ const imageSelectOptions =
         const xInit = Number( crop.width ) || realWidth;
         const yInit = Number( crop.height ) || realHeight;
 
-        controller.set(
-            'canSkipCrop',
-            ! mustBeCropped(
-                !! crop.flexWidth,
-                !! crop.flexHeight,
-                xInit,
-                yInit,
-                realWidth,
-                realHeight
-            )
-        );
+        // Banner and logo always crop to the configured size — no Skip cropping escape hatch.
+        controller.set( 'canSkipCrop', false );
 
         return {
             handles: true,
@@ -161,17 +128,14 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
         updateValue( fieldKey, 0 );
     };
 
-    // Reuse one frame per field so repeated picks don't stack modal DOM and library queries.
+    // A reopened frame comes back parked on the cropper with an unlabelled toolbar, so build a fresh one each time and dispose the last.
     const openCrop = () => {
-        if ( ! cropFrameRef.current ) {
-            cropFrameRef.current = openCropFrame(
-                crop as CropConfig,
-                title || __( 'Choose Image', 'dokan-lite' ),
-                handleSelect
-            );
-            return;
-        }
-        cropFrameRef.current.open();
+        cropFrameRef.current?.remove?.();
+        cropFrameRef.current = openCropFrame(
+            crop as CropConfig,
+            title || __( 'Choose Image', 'dokan-lite' ),
+            handleSelect
+        );
     };
 
     const triggerClass =
