@@ -163,10 +163,10 @@ export default function StoreSettings() {
 
             // Apply the refreshed schema so server-derived values (vacation
             // history rows, cleared composer, dependent force-offs) come back
-            // without a manual reload; the remount also resets dirty state.
+            // without a manual reload. No remount here: re-keying the engine
+            // tears down every card and repaints, which reads as a blink.
             if ( Array.isArray( response ) ) {
                 setSchema( qualifyDependencyKeys( response ) );
-                setResetKey( ( key ) => key + 1 );
             }
 
             toast.success( __( 'Store settings saved.', 'dokan-lite' ) );
