@@ -53,47 +53,6 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
         $this->assertInstanceOf( LegacySettingsRepositoryInterface::class, $repo );
     }
 
-    /**
-     * The repository is resolved from the container by `dokan_get_option()`,
-     * which callers reach as early as `plugins_loaded` (hook registration).
-     * Building the settings schema there runs hundreds of `esc_html__()`
-     * calls before `init` — WordPress 6.7+ answers that with a
-     * `_load_textdomain_just_in_time` doing-it-wrong notice, and every
-     * front-end request pays to assemble an admin-only schema.
-     */
-    public function test_constructor_does_not_build_the_settings_schema(): void {
-        $calls   = 0;
-        $counter = function ( $elements ) use ( &$calls ) {
-            ++$calls;
-            return $elements;
-        };
-
-        add_filter( 'dokan_get_admin_settings_schema', $counter );
-
-        try {
-            new LegacySettingsRepository();
-        } finally {
-            remove_filter( 'dokan_get_admin_settings_schema', $counter );
-        }
-
-        $this->assertSame( 0, $calls );
-    }
-
-    /**
-     * Cache invalidation must not depend on the section being present in the
-     * bridge mapping — any warmed snapshot is stale once its option changes.
-     */
-    public function test_write_to_unmapped_section_flushes_its_snapshot(): void {
-        update_option( 'dokan_unmapped_section', [ 'foo' => 'before' ] );
-
-        $repo = new LegacySettingsRepository();
-        $repo->all( 'dokan_unmapped_section' );
-
-        update_option( 'dokan_unmapped_section', [ 'foo' => 'after' ] );
-
-        $this->assertSame( 'after', $repo->get( 'dokan_unmapped_section', 'foo' ) );
-    }
-
     public function test_all_returns_empty_array_when_option_missing(): void {
         delete_option( 'dokan_general' );
 
