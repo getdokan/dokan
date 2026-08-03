@@ -30,23 +30,31 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
     ) {
         $this->new_repo = $new_repo ?? new SettingsRepository();
         $this->bridge   = $bridge ?? new LegacySettingsBridge();
-        add_action( 'init', [ $this, 'init' ] );
-    }
-    public function init(): void {
 
-        foreach ( $this->known_sections() as $section ) {
-            add_action( "update_option_{$section}", [ $this, 'on_section_changed' ] );
-            add_action( "add_option_{$section}", [ $this, 'on_section_changed' ] );
-            add_action( "delete_option_{$section}", [ $this, 'on_section_changed' ] );
-        }
-
-        // The new flat option participates in every overlay — its writes invalidate
-        // every snapshot. Use named callbacks so the same listener isn't bound twice
-        // if the repository is instantiated more than once in a request.
-        $new_option = SettingsRepository::OPTION_KEY;
-        add_action( "update_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
-        add_action( "add_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
-        add_action( "delete_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
+        // Section invalidation uses WordPress' generic option hooks, all of
+        // which pass the changed option name as their first argument.
+        //
+        // Binding the per-section `{add,update,delete}_option_{$section}`
+        // variants instead would mean enumerating the bridge mapping here, and
+        // that builds the whole admin settings schema during construction.
+        // `dokan_get_option()` resolves this repository as early as
+        // `plugins_loaded`, so that would (a) run the schema's `esc_html__()`
+        // calls before `init` (WP 6.7+ `_load_textdomain_just_in_time` notice)
+        // and (b) recurse without bound: a schema callback that itself calls
+        // `dokan_get_option()` re-enters the container before the shared
+        // instance is registered, so every nested call builds *another*
+        // repository and bridge — the bridge's own re-entry latch is
+        // per-instance and cannot see the outer build.
+        //
+        // Deferring the binding to `init` is not a way out either: a repository
+        // first constructed after `init` has already fired would never bind at
+        // all and would serve stale snapshots for the rest of the request.
+        //
+        // Snapshots only exist for sections that were read, so `flush_cache()`
+        // is a no-op for every unrelated option.
+        add_action( 'added_option', [ $this, 'on_section_changed' ] );
+        add_action( 'updated_option', [ $this, 'on_section_changed' ] );
+        add_action( 'deleted_option', [ $this, 'on_section_changed' ] );
     }
 
     public function all( string $section ): array {
@@ -161,20 +169,24 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
     }
 
     /**
-     * WP hook listener — receives `($option, …)` from add_option / `($old, $new, $option)` from update_option.
-     * We only need the option name, which we derive from the current filter name.
+     * WP hook listener for `added_option` / `updated_option` / `deleted_option`.
+     * All three pass the changed option name as their first argument.
+     *
+     * @param string $option Option name that changed.
      *
      * @return void
      */
-    public function on_section_changed(): void {
-        $option = current_action();
-        foreach ( [ 'update_option_', 'add_option_' ] as $prefix ) {
-            if ( 0 === strpos( $option, $prefix ) ) {
-                $section = substr( $option, strlen( $prefix ) );
-                $this->flush_cache( $section );
-                return;
-            }
+    public function on_section_changed( $option = '' ): void {
+        $option = (string) $option;
+
+        // The new flat option is the overlay source for *every* section, so its
+        // writes invalidate all snapshots, not just one.
+        if ( SettingsRepository::OPTION_KEY === $option ) {
+            $this->flush_all_snapshots();
+            return;
         }
+
+        $this->flush_cache( $option );
     }
 
     /**
@@ -185,15 +197,6 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
      */
     public function flush_all_snapshots(): void {
         $this->flush_cache( null );
-    }
-
-    /**
-     * Unique legacy wp_option names that the bridge currently knows about.
-     *
-     * @return array<int,string>
-     */
-    private function known_sections(): array {
-        return $this->bridge->known_sections();
     }
 
     /**
