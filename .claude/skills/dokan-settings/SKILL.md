@@ -46,6 +46,15 @@ The new admin settings system has three layers. Knowing which layer owns what sa
 - Field IDs MUST be globally unique. `SchemaValidator::check_unique_field_ids()` enforces this hard.
 - A `fieldgroup` element MAY share an `id` with its inner `field` (existing pattern, e.g., `google_map_api_key`). Only `type === 'field'` enters the uniqueness check.
 
+### Legacy Mirror (downgrade safety)
+
+- `dokan_admin_settings` is canonical, but with the **legacy mirror** enabled (default) the legacy `dokan_*` rows keep a physical copy of every mapped value:
+  - `LegacyMirror` (Hookable, `includes/Admin/Settings/Migration/LegacyMirror.php`) listens on `dokan_admin_settings_changed` and writes changed values through to the legacy rows via `LegacySettingsBridge::write_new_to_legacy()`.
+  - Legacy-section saves (`dokan_save_legacy_settings_section()`) no longer strip mapped keys from the row.
+  - On `admin_init`, `LegacyMirror::maybe_reconcile()` compares the raw rows against a baseline snapshot (`dokan_admin_settings_legacy_snapshot`) and adopts keys an OLD plugin version edited while the bridge was absent (downgrade → edit → re-upgrade). Last write wins.
+- Single-line switch back to the strict single-source model (strip on, mirror + reconcile off): `add_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );`
+- Pitfall: raw-row writes must run inside `BridgeBootstrap::without_overlay()` — with the overlay active, `update_option()`'s internal old-value read is projected from the flat option, so a physically-stale row looks current and the write silently no-ops.
+
 ## Adding a New Setting Field
 
 1. **Declare in `SettingsSchema.php`** under the appropriate page's helper:

@@ -1097,9 +1097,11 @@ function dokan_get_option( $option, $section, $default_value = '' ) {
  * which:
  *   1. Mirrors mapped keys into the new flat `dokan_admin_settings` option
  *      (the canonical source of truth).
- *   2. Strips those mapped keys from the payload.
- *   3. Persists the unmapped remainder under the legacy `$option_name` row.
- *   4. Fires `dokan_legacy_settings_changed` and refreshes the in-request snapshot.
+ *   2. Persists the payload under the legacy `$option_name` row. With the
+ *      legacy mirror enabled (default) mapped keys stay in the row so a
+ *      downgraded plugin still reads current data; with it disabled they
+ *      are stripped and only the unmapped remainder is stored.
+ *   3. Fires `dokan_legacy_settings_changed` and refreshes the in-request snapshot.
  *
  * Callers should NOT also call `update_option( $option_name, ... )` — the
  * repository owns that write. If the DI container is unavailable (early
