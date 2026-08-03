@@ -4,6 +4,24 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.12',
+        'released' => '2026-08-03',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Made the WooCommerce Abilities (MCP) layer vendor-aware, so AI assistants and MCP tools only access a vendor\'s own products and orders, and added Dokan-native abilities for vendor data WooCommerce doesn\'t cover.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.11',
         'released' => '2026-07-27',
         'changes'  => [
