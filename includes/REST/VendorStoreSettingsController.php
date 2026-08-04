@@ -159,19 +159,21 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             }
         }
 
-        // Validate each field against its own rules, handing every validator the full sanitized map for sibling comparisons.
+        // Validate the record the save would produce (submitted values over current ones) so a partial payload can't slip past rules owned by omitted fields.
+        $record = array_merge( array_column( $fields_by_id, 'value', 'id' ), $sanitized );
+
         $validation_errors = [];
 
-        foreach ( $sanitized as $field_id => $value ) {
-            $errors = $this->validate_field_value( $fields_by_id[ $field_id ], $value, $sanitized, $vendor_id );
+        foreach ( $fields_by_id as $field_id => $field ) {
+            $errors = $this->validate_field_value( $field, $record[ $field_id ] ?? null, $record, $vendor_id );
 
             if ( ! empty( $errors ) ) {
                 $validation_errors[ $field_id ] = $errors;
             }
         }
 
-        // Whole-payload seam for section-level rules owned by no single field (e.g. the vacation style/message/date-range trio).
-        $validation_errors = (array) apply_filters( 'dokan_rest_vendor_settings_validate', $validation_errors, $sanitized, $fields_by_id, $vendor_id );
+        // Whole-payload seam for section-level rules owned by no single field (e.g. the vacation style/message/date-range trio); $record supplies the merged view so consumers don't rebuild it.
+        $validation_errors = (array) apply_filters( 'dokan_rest_vendor_settings_validate', $validation_errors, $sanitized, $fields_by_id, $vendor_id, $record );
 
         if ( ! empty( $validation_errors ) ) {
             return new WP_Error(
@@ -232,7 +234,14 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
          * @param array $schema    Flat schema elements with values.
          * @param int   $vendor_id Vendor user ID.
          */
-        return apply_filters( 'dokan_rest_vendor_store_settings_response', $schema, $vendor_id );
+        $schema = apply_filters( 'dokan_rest_vendor_store_settings_response', $schema, $vendor_id );
+
+        // PHP-side hooks stay on the server: closures would JSON-encode as {} and callable arrays leak internal class names.
+        foreach ( array_keys( $schema ) as $index ) {
+            unset( $schema[ $index ]['sanitize_callback'], $schema[ $index ]['validation_func'] );
+        }
+
+        return $schema;
     }
 
     /**
@@ -426,26 +435,20 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
 
         $variant = $field['variant'] ?? 'text';
 
+        // No wp_unslash here (unlike legacy $_POST reads): REST params arrive unslashed, so stripping again would eat backslashes the vendor typed.
         switch ( $variant ) {
             case 'textarea':
-                return sanitize_textarea_field( wp_unslash( (string) $value ) );
+                return sanitize_textarea_field( (string) $value );
 
             case 'rich_text':
-                return wp_kses_post( wp_unslash( (string) $value ) );
+                return wp_kses_post( (string) $value );
 
             case 'switch':
-                $allowed  = [ 'on', 'off' ];
-                $disabled = 'off';
+                // Only the declared states may be stored — a generic 'on' in a field whose readers expect 'yes' would silently read back as disabled.
+                $enabled  = $field['enable_state']['value'] ?? 'on';
+                $disabled = $field['disable_state']['value'] ?? 'off';
 
-                if ( isset( $field['enable_state']['value'] ) ) {
-                    $allowed[] = $field['enable_state']['value'];
-                }
-                if ( isset( $field['disable_state']['value'] ) ) {
-                    $allowed[] = $field['disable_state']['value'];
-                    $disabled  = $field['disable_state']['value'];
-                }
-
-                return in_array( $value, $allowed, true ) ? $value : $disabled;
+                return in_array( $value, [ $enabled, $disabled ], true ) ? $value : $disabled;
 
             case 'number':
                 return is_numeric( $value ) ? $value + 0 : 0;
@@ -453,7 +456,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             case 'text':
             case 'select':
             case 'radio':
-                return sanitize_text_field( wp_unslash( (string) $value ) );
+                return sanitize_text_field( (string) $value );
 
             case 'vendor_image':
                 return absint( $value );
@@ -462,26 +465,30 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 $value = (array) $value;
 
                 return [
-                    'street_1' => sanitize_text_field( wp_unslash( (string) ( $value['street_1'] ?? '' ) ) ),
-                    'street_2' => sanitize_text_field( wp_unslash( (string) ( $value['street_2'] ?? '' ) ) ),
-                    'city'     => sanitize_text_field( wp_unslash( (string) ( $value['city'] ?? '' ) ) ),
-                    'zip'      => sanitize_text_field( wp_unslash( (string) ( $value['zip'] ?? '' ) ) ),
-                    'country'  => sanitize_text_field( wp_unslash( (string) ( $value['country'] ?? '' ) ) ),
-                    'state'    => sanitize_text_field( wp_unslash( (string) ( $value['state'] ?? '' ) ) ),
+                    'street_1' => sanitize_text_field( (string) ( $value['street_1'] ?? '' ) ),
+                    'street_2' => sanitize_text_field( (string) ( $value['street_2'] ?? '' ) ),
+                    'city'     => sanitize_text_field( (string) ( $value['city'] ?? '' ) ),
+                    'zip'      => sanitize_text_field( (string) ( $value['zip'] ?? '' ) ),
+                    'country'  => sanitize_text_field( (string) ( $value['country'] ?? '' ) ),
+                    'state'    => sanitize_text_field( (string) ( $value['state'] ?? '' ) ),
                 ];
 
             case 'vendor_map':
                 $value = (array) $value;
 
                 return [
-                    'location'     => sanitize_text_field( wp_unslash( (string) ( $value['location'] ?? '' ) ) ),
-                    'find_address' => sanitize_text_field( wp_unslash( (string) ( $value['find_address'] ?? '' ) ) ),
+                    'location'     => sanitize_text_field( (string) ( $value['location'] ?? '' ) ),
+                    'find_address' => sanitize_text_field( (string) ( $value['find_address'] ?? '' ) ),
                 ];
 
             default:
-                if ( is_array( $value ) ) {
-                    return map_deep( wp_unslash( $value ), 'sanitize_text_field' );
-                }
+                // Strings only (map_deep reaches bare scalars too) — a blanket sanitize_text_field would stringify the booleans/ints structured Pro values carry.
+                $value = map_deep(
+                    $value,
+                    static function ( $item ) {
+                        return is_string( $item ) ? sanitize_text_field( $item ) : $item;
+                    }
+                );
 
                 /**
                  * Filter to sanitize custom vendor-settings field variants.
@@ -491,11 +498,11 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                  *
                  * @since DOKAN_SINCE
                  *
-                 * @param mixed  $value   The raw value.
+                 * @param mixed  $value   The pre-sanitized value.
                  * @param array  $field   The field schema element.
                  * @param string $variant The field variant string.
                  */
-                return apply_filters( 'dokan_rest_vendor_settings_sanitize_field', sanitize_text_field( wp_unslash( (string) $value ) ), $field, $variant );
+                return apply_filters( 'dokan_rest_vendor_settings_sanitize_field', $value, $field, $variant );
         }
     }
 }

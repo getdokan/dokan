@@ -1640,13 +1640,13 @@ class SettingsSchema {
                 'default'     => 'legacy',
                 'options'     => [
                     [
-						'title' => esc_html__( 'New UI', 'dokan-lite' ),
-						'value' => 'latest',
-					],
+                        'title' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'value' => 'latest',
+                    ],
                     [
-						'title' => esc_html__( 'Legacy UI', 'dokan-lite' ),
-						'value' => 'legacy',
-					],
+                        'title' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                        'value' => 'legacy',
+                    ],
                 ],
                 'legacy_key'  => [
                     'option' => 'dokan_appearance',

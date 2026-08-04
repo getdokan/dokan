@@ -419,9 +419,9 @@ class StoreSettingsSchema {
             'value'             => (string) ( $info['phone'] ?? '' ),
             'default'           => '',
             'legacy_key'        => 'phone',
-            // Phone keeps the legacy dedicated sanitizer.
+            // Phone keeps the legacy dedicated sanitizer; REST params arrive unslashed, so no wp_unslash.
             'sanitize_callback' => static function ( $value ) {
-                return dokan_sanitize_phone_number( wp_unslash( (string) $value ) );
+                return dokan_sanitize_phone_number( (string) $value );
             },
         ];
 
@@ -679,7 +679,7 @@ class StoreSettingsSchema {
                 'legacy_key'        => 'store_tnc',
                 // Effectively-empty markup collapses to '' (legacy semantics), which the validation_func then treats as blank.
                 'sanitize_callback' => static function ( $value ) {
-                    $html = wp_kses_post( wp_unslash( (string) $value ) );
+                    $html = wp_kses_post( (string) $value );
 
                     return '' === RichTextSanitizerUtil::sanitize_richtext_content( $html ) ? '' : $html;
                 },

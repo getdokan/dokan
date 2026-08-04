@@ -205,11 +205,13 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
-     * Whether the given user prefers the legacy vendor store settings page.
+     * Whether the legacy vendor store settings page is preferred.
      *
-     * Mirrors {@see self::is_product_editor_legacy_preferred()} — the stored
-     * default is legacy, and the admin setup wizard flips it to latest, so an
-     * upgraded site keeps the legacy form until an admin opts in.
+     * The preference is the site-wide `dokan_appearance` admin option, not a
+     * per-user setting — `$user_id` only guards anonymous contexts, mirroring
+     * {@see self::is_product_editor_legacy_preferred()}. The stored default is
+     * legacy, and the admin setup wizard flips it to latest, so an upgraded
+     * site keeps the legacy form until an admin opts in.
      *
      * @since DOKAN_SINCE
      *

@@ -1,4 +1,4 @@
-import { useRef, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Pencil, Trash, Upload } from 'lucide-react';
 import { useSettings, Button, type SettingsElement } from '@wedevs/plugin-ui';
@@ -101,6 +101,10 @@ const LogoPlaceholder = () => (
     </svg>
 );
 
+// The engine tracks only the attachment id, so remember the URL each id resolves to — a tab switch
+// remounts this field, and without this the preview would fall back to the schema's original image.
+const imageUrlCache = new Map< number, string >();
+
 // `vendor_image` variant — wp.media picker storing the ATTACHMENT ID, since plugin-ui's media field stores URLs that every legacy reader would choke on.
 const ImageField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
@@ -111,23 +115,69 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
     const crop = element.crop as CropConfig | undefined;
     const title = ( element.title as string ) || undefined;
 
-    // The schema seeds the preview URL; a fresh selection swaps in the attachment's own URL.
+    // The live value is the single source of truth (like Store Category), so an unsaved pick survives a tab switch.
+    const attachmentId = Number( element.value ?? 0 );
+    const schemaUrl = ( element.image_url as string ) || '';
+
+    // The schema's URL describes the id it shipped with; a picked id is already cached from the picker.
+    if ( attachmentId && schemaUrl && ! imageUrlCache.has( attachmentId ) ) {
+        imageUrlCache.set( attachmentId, schemaUrl );
+    }
+
     const [ previewUrl, setPreviewUrl ] = useState< string >(
-        ( element.image_url as string ) || ''
+        () => imageUrlCache.get( attachmentId ) || ''
     );
     const cropFrameRef = useRef< any >( null );
     const hasCustomImage = '' !== previewUrl;
     const displayUrl = previewUrl || placeholderUrl;
 
+    useEffect( () => {
+        if ( ! attachmentId ) {
+            setPreviewUrl( '' );
+            return;
+        }
+
+        const cached = imageUrlCache.get( attachmentId );
+        if ( cached ) {
+            setPreviewUrl( cached );
+            return;
+        }
+
+        // An id we've never rendered (e.g. set by Pro or a stale cache) — ask the media store for its URL.
+        const model = ( window as any ).wp?.media?.attachment?.( attachmentId );
+        if ( ! model ) {
+            return;
+        }
+
+        let active = true;
+        Promise.resolve( model.get( 'url' ) || model.fetch() )
+            .then( () => {
+                const url = model.get( 'url' ) || '';
+                if ( url ) {
+                    imageUrlCache.set( attachmentId, url );
+                }
+                if ( active ) {
+                    setPreviewUrl( url );
+                }
+            } )
+            .catch( () => {} );
+
+        return () => {
+            active = false;
+        };
+    }, [ attachmentId ] );
+
     const handleSelect = ( attachment: Attachment ) => {
-        setPreviewUrl( attachment?.url || '' );
-        updateValue( fieldKey, attachment?.id ? Number( attachment.id ) : 0 );
+        const id = attachment?.id ? Number( attachment.id ) : 0;
+
+        if ( id && attachment?.url ) {
+            imageUrlCache.set( id, attachment.url );
+        }
+
+        updateValue( fieldKey, id );
     };
 
-    const handleRemove = () => {
-        setPreviewUrl( '' );
-        updateValue( fieldKey, 0 );
-    };
+    const handleRemove = () => updateValue( fieldKey, 0 );
 
     // A reopened frame comes back parked on the cropper with an unlabelled toolbar, so build a fresh one each time and dispose the last.
     const openCrop = () => {

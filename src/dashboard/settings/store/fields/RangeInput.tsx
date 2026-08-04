@@ -1,3 +1,4 @@
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { dateI18n, getSettings as getDateSettings } from '@wordpress/date';
 import { DateRangePicker } from '@wedevs/plugin-ui';
@@ -37,9 +38,11 @@ export const formatRangeDate = ( value?: string ): string => {
 export const RangeInput = ( {
     value,
     onChange,
+    disabledRanges = [],
 }: {
     value: RangeValue;
     onChange: ( next: RangeValue ) => void;
+    disabledRanges?: RangeValue[];
 } ) => {
     const label =
         value.from || value.to
@@ -47,6 +50,22 @@ export const RangeInput = ( {
                   value.to
               ) }`
             : '';
+
+    const calendarProps = useMemo( () => {
+        // Days already taken by another schedule are greyed out, so an overlap can't be composed at all; the server still re-validates.
+        const blocked = disabledRanges.flatMap( ( range ) => {
+            const from = parseYmd( range.from );
+
+            return from ? [ { from, to: parseYmd( range.to ) || from } ] : [];
+        } );
+
+        return {
+            // Vacations cannot start in the past (the legacy picker greyed those days out).
+            disabled: [ { before: new Date() }, ...blocked ],
+            // Without this a range could be dragged straight over a blocked stretch, swallowing it.
+            excludeDisabled: true,
+        };
+    }, [ disabledRanges ] );
 
     return (
         // Marker wrapper: style.scss strips the theme's default button chrome off the bare popover-trigger inside.
@@ -66,10 +85,7 @@ export const RangeInput = ( {
                         to: toYmd( range?.to ),
                     } )
                 }
-                // Vacations cannot start in the past (the legacy picker greyed those days out); the server re-validates.
-                calendarProps={ {
-                    disabled: { before: new Date() },
-                } }
+                calendarProps={ calendarProps }
                 // Marker class: z-lifts the portal above the WP modal overlay (shared rule with the location popovers).
                 contentClassName="dokan-location-popover"
                 confirmLabel={ __( 'Apply', 'dokan-lite' ) }

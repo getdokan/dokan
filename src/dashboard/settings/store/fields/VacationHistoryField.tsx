@@ -158,6 +158,15 @@ const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
         draft && draft.from && draft.to && '' !== draft.message.trim()
     );
 
+    // Every other schedule's days are off-limits to the row being edited, so the picker can't produce an overlap.
+    const takenRanges = useMemo(
+        () =>
+            rows
+                .filter( ( row ) => row.id !== draft?.id )
+                .map( ( { from, to } ) => ( { from, to } ) ),
+        [ rows, draft?.id ]
+    );
+
     return (
         // Same anatomy as the store-locations table: padded header block, then the DataViews grid running flush inside the card (pb keeps the card's rounded bottom corners content-free, like locations' trailing Add row).
         <div className="dokan-vendor-vacation-history w-full pb-2">
@@ -249,6 +258,7 @@ const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
                                         from: draft.from,
                                         to: draft.to,
                                     } }
+                                    disabledRanges={ takenRanges }
                                     onChange={ ( next: RangeValue ) =>
                                         setDraft( ( current ) =>
                                             current
