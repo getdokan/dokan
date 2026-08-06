@@ -1,0 +1,38 @@
+/*
+ * Front-end + editor styles for dokan/store-banner.
+ *
+ * Ports only the intent of the classic `.profile-info-img { width:100%; height:auto }`.
+ * The overlay plumbing around it in store.less — the `.dummy-image` CSS background,
+ * the `height:100% !important` of `profile-layout-default`, the absolute positioning —
+ * stays behind: PHP already resolves the default banner, and the block can sit in any
+ * layout. See docs/adr/0005-store-header-blocks-emit-fresh-markup.md.
+ */
+
+.wp-block-dokan-store-banner {
+	margin: 0;
+
+	&__image {
+		display: block;
+		width: 100%;
+		object-fit: cover;
+		border-radius: inherit;
+	}
+
+	&__link {
+		display: block;
+		border-radius: inherit;
+	}
+
+	/* Editor-only frame for a vendor with no banner, so the block stays selectable. */
+	&__placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		min-height: 80px;
+		border: 1px dashed currentColor;
+		border-radius: inherit;
+		opacity: 0.6;
+		font-size: 0.875em;
+	}
+}

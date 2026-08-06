@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-avatar",
+    "version": "1.0.0",
+    "title": "Store Profile Picture",
+    "category": "dokan",
+    "description": "Displays the vendor's store profile picture.",
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "avatar",
+        "profile",
+        "picture",
+        "logo"
+    ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        },
+        "shape": {
+            "type": "string",
+            "default": "circle"
+        },
+        "size": {
+            "type": "number",
+            "default": 150
+        },
+        "isLink": {
+            "type": "boolean",
+            "default": false
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": [ "left", "center", "right" ],
+        "shadow": true,
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
+        "__experimentalBorder": {
+            "color": true,
+            "style": true,
+            "width": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

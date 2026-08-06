@@ -1,0 +1,49 @@
+/*
+ * Front-end + editor styles for dokan/store-avatar.
+ *
+ * Ports only the round-mask idea from the classic `.profile-img-circle img`.
+ * The fixed 80px box, the white background and the square variant's white frame
+ * stay behind: the `size` attribute owns dimensions, the align support owns
+ * centring, and borders are the merchant's through block supports.
+ * See docs/adr/0005-store-header-blocks-emit-fresh-markup.md.
+ */
+
+.wp-block-dokan-store-avatar {
+	line-height: 0;
+
+	&__image {
+		display: block;
+		object-fit: cover;
+		border-radius: inherit;
+	}
+
+	&__link {
+		display: inline-block;
+		border-radius: inherit;
+	}
+
+	&.is-shape-circle {
+		.wp-block-dokan-store-avatar__image {
+			border-radius: 50%;
+		}
+	}
+
+	/* Align support centres the block itself; the image is inline-level inside it. */
+	&.aligncenter {
+		text-align: center;
+
+		.wp-block-dokan-store-avatar__image,
+		.wp-block-dokan-store-avatar__link {
+			margin-inline: auto;
+		}
+	}
+
+	&.alignright {
+		text-align: end;
+
+		.wp-block-dokan-store-avatar__image,
+		.wp-block-dokan-store-avatar__link {
+			margin-inline-start: auto;
+		}
+	}
+}
