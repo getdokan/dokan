@@ -91,9 +91,14 @@ if ( ! empty( $attributes['showEmail'] ) && ! dokan_is_vendor_info_hidden( 'emai
 
 // Rating — the classic header has no server-side gate here, so do not invent one.
 if ( ! empty( $attributes['showRating'] ) ) {
+    /*
+     * Read through the resolved vendor rather than dokan_get_readable_seller_rating(),
+     * which builds a fresh Vendor from the id and would discard the preview stand-in —
+     * making the editor query real ratings for user 0 instead of showing dummy data.
+     */
     $items .= sprintf(
         '<li class="dokan-store-rating"><i class="fas fa-star"></i>%s</li>',
-        wp_kses_post( dokan_get_readable_seller_rating( $store_id ) )
+        wp_kses_post( $vendor->get_readable_rating( false ) )
     );
 }
 
