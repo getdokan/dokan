@@ -67,7 +67,11 @@ export const db = {
 // groups: admin.wooCommerce.settings.{general,payments,updatedSuccessMessage}
 // and vendor.vPaymentSettings).
 // ---------------------------------------------------------------------------
-const selectors = {
+// Exported so a sibling gateway suite can reuse a group instead of re-deriving it. The PayPal
+// Marketplace suite consumes `selectors.admin.payments.paypalMarketPlace`, an already-proven
+// admin selector set for that gateway. One copy means a settings-field rename breaks both suites
+// at once rather than silently passing in one of them.
+export const selectors = {
     admin: {
         // WooCommerce › Settings › General (currency)
         general: {
