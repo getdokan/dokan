@@ -1,5 +1,5 @@
 import { Page, Frame, expect, request } from '@playwright/test';
-import { toPath, closeAnnouncementModal, SERVER_URL } from '@utils/helpers';
+import { toPath, closeAnnouncementModal, SERVER_URL, parseBoolean } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
 import { stripeApi } from '@utils/stripeApi';
 
@@ -563,15 +563,61 @@ export class StripeExpressPage {
         // the retry reuses, so a baseline taken here would equal that order's id and `id > baseline` would
         // never match. Callers of the plain happy path omit it (baseline taken just before the click).
         const baseline = baselineOverride ?? (await this.latestStripeOrderId());
-        await this.page.locator(this.blockSelectors.placeOrder).click();
+
+        // Record what the Blocks checkout actually DID with the click.
+        //
+        // Without this, two very different failures collapse into the same symptom ("no new
+        // order"): the Store API rejected the payment, versus the click was a no-op because the
+        // block was not submittable. The poll below can only ever report "none" for both. Capturing
+        // the POST /wc/store/v1/checkout attempt distinguishes them and puts the reason in the
+        // failure message instead of leaving it to be guessed from a screenshot.
+        const storeApiAttempts: string[] = [];
+        const onResponse = (res: { url(): string; status(): number; request(): { method(): string }; text(): Promise<string> }) => {
+            if (res.request().method() !== 'POST' || !/\/wc\/store\/v1\/checkout/.test(res.url())) {
+                return;
+            }
+            const status = res.status();
+            void res
+                .text()
+                .then(body => storeApiAttempts.push(`HTTP ${status}: ${body.slice(0, 300)}`))
+                .catch(() => storeApiAttempts.push(`HTTP ${status}: <body unavailable>`));
+        };
+        this.page.on('response', onResponse);
+
         try {
-            await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
-            const m = this.page.url().match(/order-received\/(\d+)/);
-            if (m?.[1]) return m[1];
-        } catch {
-            // redirect flaked after a successful payment — fall through to API confirmation
+            await this.page.locator(this.blockSelectors.placeOrder).click();
+            try {
+                /*
+                 * Budget, not preference. The waits after this click used to be 60s (redirect) +
+                 * 120s (settle poll) = 180s MINIMUM, inside specs configured at 150s
+                 * (stripeExpress, stripeExpressXss, …) and before any of the setup cost — cart,
+                 * block hydration, PE mount, card fill. The settle poll, which is the mechanism
+                 * that actually decides pass/fail, could therefore never run to completion on CI:
+                 * the test died mid-poll and reported the poll's placeholder ("none") rather than
+                 * a real verdict.
+                 *
+                 * On CI the SPA redirect is the KNOWN-unreliable path (see this method's docblock),
+                 * so spending 60s of the budget waiting for something we expect to lose is the
+                 * wrong trade — that time belongs to the poll. Keep the full wait locally, where
+                 * the redirect is reliable and is the fast path.
+                 */
+                await this.page.waitForURL('**/order-received/**', { timeout: parseBoolean(process.env.CI) ? 15_000 : 60_000 });
+                const m = this.page.url().match(/order-received\/(\d+)/);
+                if (m?.[1]) return m[1];
+            } catch {
+                // redirect flaked after a successful payment — fall through to API confirmation
+            }
+            try {
+                return await this.confirmNewPaidStripeOrder(baseline);
+            } catch (err) {
+                const detail = storeApiAttempts.length
+                    ? `Store API checkout attempts:\n  ${storeApiAttempts.join('\n  ')}`
+                    : 'The Blocks checkout never issued POST /wc/store/v1/checkout at all — the Place Order click was a NO-OP (block not submittable / validation blocked it), so no payment was ever attempted. This is a checkout-submission failure, not a declined payment.';
+                throw new Error(`${String(err)}\n\n${detail}`);
+            }
+        } finally {
+            this.page.off('response', onResponse);
         }
-        return await this.confirmNewPaidStripeOrder(baseline);
     }
 
     /** Public pre-payment baseline: newest dokan_stripe_express order id BEFORE a checkout attempt. */

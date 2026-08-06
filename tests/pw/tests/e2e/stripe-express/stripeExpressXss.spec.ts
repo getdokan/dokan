@@ -68,7 +68,10 @@ async function setGatewayTitleViaAdmin(browser: Browser, title: string): Promise
 }
 
 test.describe.serial('Stripe Express — SE-XSS (stored XSS / output escaping) @pro', () => {
-    test.describe.configure({ timeout: 150_000 });
+    // 150s could not fit this path: the post-click waits alone were 60s+120s, so the settle poll
+    // never completed and the test reported the poll placeholder instead of a verdict. 240s matches
+    // the sibling money specs (Guest / Settings / SavedCards) that drive the same card-entry flow.
+    test.describe.configure({ timeout: 240_000 });
 
     let productId: string;
     const createdOrderIds: string[] = [];

@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 // ============================================================================
 // Shared @wedevs/plugin-ui DataViews helpers (NEW_UI_HOUSE_STYLE.md §5).
@@ -179,6 +179,23 @@ export async function isEmptyStateVisible(page: Page, empty: string | RegExp = D
 export function parseTabCount(text: string | null | undefined): number {
     const match = (text ?? '').match(TAB_COUNT_RE);
     return match ? Number(match[1]) : 0;
+}
+
+/**
+ * Web-first "this tab reports at least N" assertion.
+ *
+ * `parseTabCount` cannot distinguish a real zero from a not-rendered-yet tab: DataViews paints the
+ * label ("All") before the counted label ("All (3)"), and both a missing `(n)` and a genuine `(0)`
+ * come back as 0. A single `expect(await getTabCount('all')).toBeGreaterThanOrEqual(1)` therefore
+ * races the count in — the shape behind the intermittent CI failure "All tab count >= 1 after
+ * seeding / Received: 0".
+ *
+ * Polling fixes the race without weakening anything: the assertion still fails if the count never
+ * reaches `min`. Use this wherever a count is expected to be non-zero. An expected-zero assertion
+ * (`toBe(0)`) must NOT use this — poll there would just wait out the timeout.
+ */
+export async function expectTabCountAtLeast(getCount: () => Promise<number>, min: number, message: string, timeout = 15000): Promise<void> {
+    await expect.poll(getCount, { message, timeout }).toBeGreaterThanOrEqual(min);
 }
 
 // ---- Interactions -----------------------------------------------------------
