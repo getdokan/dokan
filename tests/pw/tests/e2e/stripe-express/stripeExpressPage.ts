@@ -449,11 +449,28 @@ export class StripeExpressPage {
                 if (await zip.count().catch(() => 0)) {
                     await zip.first().fill(STRIPE_CARDS.zip).catch(() => undefined);
                 }
+                /*
+                 * Verify ALL THREE fields persisted, not just the number.
+                 *
+                 * This method already knows the Payment Element can re-mount mid-entry, but it only
+                 * ever re-read the number. A re-mount after the number was typed leaves the number
+                 * populated while silently dropping expiry/CVC, so an INCOMPLETE card passed this
+                 * check. WooCommerce Blocks then refuses to submit — `elements.submit()` fails
+                 * validation — and the Place Order click becomes a no-op: no
+                 * POST /wc/store/v1/checkout, no order, and the settle poll can only report "none".
+                 * That is the exact signature of the CI failures (36 NO-OP diagnostics, zero Store
+                 * API attempts, while saved-token payments on the same runner succeed).
+                 */
                 const val = (await frame.locator(StripeExpressPage.PE_NUMBER).first().inputValue().catch(() => '')).replace(/\s/g, '');
-                if (val.length >= 12) {
+                const expVal = (await frame.locator(StripeExpressPage.PE_EXPIRY).first().inputValue().catch(() => '')).replace(/\s/g, '');
+                const cvcVal = (await frame.locator(StripeExpressPage.PE_CVC).first().inputValue().catch(() => '')).replace(/\s/g, '');
+                if (val.length >= 12 && expVal.length >= 4 && cvcVal.length >= 3) {
                     return;
                 }
-                lastErr = new Error('card number did not persist — PE re-mounted during entry');
+                lastErr = new Error(
+                    `card did not fully persist — PE re-mounted during entry (number=${val.length} chars, expiry="${expVal}", cvc=${cvcVal.length} chars). ` +
+                        'An incomplete Payment Element makes the Blocks Place Order click a silent no-op.',
+                );
             } catch (err) {
                 lastErr = err;
                 await this.openCardAccordion(); // a re-mount may have reset to a non-card tab
@@ -610,9 +627,24 @@ export class StripeExpressPage {
             try {
                 return await this.confirmNewPaidStripeOrder(baseline);
             } catch (err) {
-                const detail = storeApiAttempts.length
-                    ? `Store API checkout attempts:\n  ${storeApiAttempts.join('\n  ')}`
-                    : 'The Blocks checkout never issued POST /wc/store/v1/checkout at all — the Place Order click was a NO-OP (block not submittable / validation blocked it), so no payment was ever attempted. This is a checkout-submission failure, not a declined payment.';
+                let detail: string;
+                if (storeApiAttempts.length) {
+                    detail = `Store API checkout attempts:\n  ${storeApiAttempts.join('\n  ')}`;
+                } else {
+                    // No POST means the block refused to submit. Read back WHY: the block's own
+                    // notice banner and the Payment Element's inline error name the offending field,
+                    // which is the difference between "card incomplete" and "billing field missing".
+                    const notices = await this.page
+                        .locator('.wc-block-components-notice-banner, .wc-block-components-validation-error')
+                        .allInnerTexts()
+                        .catch(() => [] as string[]);
+                    const peError = await this.page.locator('#dokan-stripe-express-errors').innerText().catch(() => '');
+                    const why = [...notices, peError].map(t => t.trim()).filter(Boolean).join(' | ') || '<no visible validation message>';
+                    detail =
+                        'The Blocks checkout never issued POST /wc/store/v1/checkout at all — the Place Order click was a NO-OP ' +
+                        '(block not submittable / validation blocked it), so no payment was ever attempted. This is a checkout-submission ' +
+                        `failure, not a declined payment.\nBlock validation said: ${why}`;
+                }
                 throw new Error(`${String(err)}\n\n${detail}`);
             }
         } finally {

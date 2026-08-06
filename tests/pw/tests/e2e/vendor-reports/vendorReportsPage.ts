@@ -185,6 +185,22 @@ export class VendorReportsPage {
             }
         });
         await this.page.waitForLoadState('domcontentloaded');
+
+        /*
+         * `waitForLoadState` is not enough after an aborted navigation: the redirect the app just
+         * issued is still in flight, and the document sitting there is the cancelled (blank) one,
+         * whose load event has already fired. Waiting on state alone therefore returns instantly
+         * against an empty page — observed on CI as `assertAnalyticsShell` seeing bodyLen <= 50.
+         *
+         * Wait for real rendered content instead. Web-first, so it rides out however long the
+         * redirected page takes, and it still fails if the page genuinely never renders.
+         */
+        await expect
+            .poll(async () => (await this.page.locator('body').innerText().catch(() => '')).trim().length, {
+                message: `no rendered content at ${url} after the app's client-side redirect settled`,
+                timeout: 30_000,
+            })
+            .toBeGreaterThan(50);
     }
 
     private async gotoReports(): Promise<void> {
