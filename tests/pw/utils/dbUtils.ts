@@ -109,6 +109,20 @@ export const dbUtils = {
         return optionValue;
     },
 
+    // safe option read — returns the option value (unserialized only when it actually is serialized,
+    // like WordPress's maybe_unserialize), or null when the row is ABSENT. getOptionValue() throws on a
+    // missing row (it indexes res[0]) and also throws on a plain-string option value (php-serialize's
+    // unserialize rejects anything unserialized), so use this when an option may legitimately not exist
+    // yet or may hold a scalar. Real driver errors still propagate.
+    async getOptionValueOrNull(optionName: string): Promise<any> {
+        const res = await dbUtils.dbQuery(`Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`, [optionName]);
+        if (!res.length) {
+            return null;
+        }
+        const raw = res[0].option_value as string;
+        return isSerialized(raw) ? unserialize(raw) : raw;
+    },
+
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
