@@ -1,0 +1,103 @@
+/*
+ * Front-end + editor styles for dokan/store-info.
+ *
+ * The weekly-hours popover has to be reproduced here rather than inherited: the
+ * classic rule lives under `.dokan-single-store .profile-frame .profile-info-
+ * box
+ * ...`, a chain this block can never match. It stays CSS-only — `:hover` opens
+ * it,
+ * exactly as on the classic page, which is why this block ships no JavaScript.
+ * Written with logical properties so RTL mirrors without a separate rule.
+ */
+
+.wp-block-dokan-store-info {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+	> li {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		margin: 0 0 0.5em;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		i {
+			flex: 0 0 auto;
+		}
+	}
+
+	a {
+		color: inherit;
+	}
+
+	.store-open-close-notice {
+		display: flex;
+		align-items: center;
+		position: relative;
+		z-index: 1;
+
+		.store-notice {
+			min-width: 96px;
+		}
+
+		#vendor-store-times {
+			display: none;
+			position: absolute;
+			inset-block-start: 110%;
+			inset-inline-start: 0;
+			z-index: 1;
+			width: 310px;
+			max-height: 435px;
+			overflow: auto;
+			padding: 1.5em 2em;
+			color: #3e474f;
+			background: #fff;
+			border-radius: 6px;
+			box-shadow:
+				0 10px 15px -3px #00000040,
+				0 4px 6px -4px #00000010;
+			text-align: start;
+
+			.store-times-heading {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.5em;
+				margin: 10px 0 25px;
+
+				h4 {
+					margin: 0;
+				}
+			}
+
+			.store-time-tags {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1em;
+				margin-block-end: 0.75em;
+
+				.store-days.current_day {
+					font-weight: 700;
+				}
+
+				.store-times {
+					text-align: end;
+				}
+
+				.store-close {
+					opacity: 0.7;
+				}
+			}
+		}
+
+		/* CSS-only disclosure, matching the classic store page. */
+		&:hover #vendor-store-times {
+			display: block;
+		}
+	}
+}

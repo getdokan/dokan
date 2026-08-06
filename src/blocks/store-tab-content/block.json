@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-tab-content",
+    "version": "1.0.0",
+    "title": "Store Tab Content",
+    "category": "dokan",
+    "description": "Displays the body of the store's active tab: the vendor's products, terms and conditions, or an extension's tab.",
+    "keywords": [ "dokan", "store", "vendor", "products", "tab", "content" ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        },
+        "columns": {
+            "type": "number",
+            "default": 0
+        },
+        "showPagination": {
+            "type": "boolean",
+            "default": true
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": [ "wide", "full" ],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

@@ -27,6 +27,14 @@ $attributes = wp_parse_args(
     ]
 );
 
+/*
+ * Store pages already carry these, but a block can sit on any page — and blocks
+ * placed in a block template are not in post_content, so the content sniff in
+ * Blocks\Manager never sees them. Enqueue here rather than relying on it.
+ */
+wp_enqueue_style( 'dokan-style' );
+wp_enqueue_style( 'dokan-fontawesome' );
+
 $resolver = dokan_get_container()->get( VendorResolver::class );
 $vendor   = $resolver->resolve( $block->context ?? [], $attributes );
 
@@ -48,7 +56,7 @@ if ( empty( $banner_url ) ) {
 
     printf(
         '<div %1$s><div class="wp-block-dokan-store-banner__placeholder" style="height:%2$dpx">%3$s</div></div>',
-        wp_kses_data( get_block_wrapper_attributes() ),
+        get_block_wrapper_attributes(),
         (int) $height,
         esc_html__( 'Store banner', 'dokan-lite' )
     );
@@ -95,6 +103,6 @@ if ( ! empty( $attributes['isLink'] ) ) {
 
 printf(
     '<figure %1$s>%2$s</figure>',
-    wp_kses_data( get_block_wrapper_attributes() ),
+    get_block_wrapper_attributes(),
     $image // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
 );

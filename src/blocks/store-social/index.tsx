@@ -11,29 +11,30 @@ registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
         <SSREdit name={ metadata.name } attributes={ attributes }>
             <InspectorControls>
-                <PanelBody
-                    title={ __( 'Store Banner Settings', 'dokan-lite' ) }
-                >
+                <PanelBody title={ __( 'Social Icon Settings', 'dokan-lite' ) }>
                     <RangeControl
-                        label={ __( 'Height (px)', 'dokan-lite' ) }
-                        help={ __(
-                            'Set to 0 to use the marketplace default banner height.',
-                            'dokan-lite'
-                        ) }
-                        value={ attributes.height ?? 0 }
-                        onChange={ ( height ) =>
-                            setAttributes( { height: Number( height ) || 0 } )
+                        label={ __( 'Icon size (px)', 'dokan-lite' ) }
+                        value={ attributes.iconSize ?? 24 }
+                        onChange={ ( iconSize ) =>
+                            setAttributes( {
+                                iconSize: Number( iconSize ) || 24,
+                            } )
                         }
-                        min={ 0 }
-                        max={ 800 }
-                        step={ 10 }
+                        min={ 10 }
+                        max={ 96 }
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                     />
                     <ToggleControl
-                        label={ __( 'Link to store page', 'dokan-lite' ) }
-                        checked={ !! attributes.isLink }
-                        onChange={ ( isLink ) => setAttributes( { isLink } ) }
+                        label={ __( 'Show network names', 'dokan-lite' ) }
+                        help={ __(
+                            'Names are always available to screen readers.',
+                            'dokan-lite'
+                        ) }
+                        checked={ !! attributes.showLabels }
+                        onChange={ ( showLabels ) =>
+                            setAttributes( { showLabels } )
+                        }
                         __nextHasNoMarginBottom
                     />
                 </PanelBody>

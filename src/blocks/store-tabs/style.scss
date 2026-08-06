@@ -1,0 +1,56 @@
+/*
+ * Front-end + editor styles for dokan/store-tabs.
+ *
+ * The `.dokan-modules-button` list is kept as a class name because Pro's share,
+ * support and live-chat buttons render their own markup into it and style
+ * themselves against it. The tab list is fresh — see
+ * docs/adr/0005-store-header-blocks-emit-fresh-markup.md.
+ */
+
+.wp-block-dokan-store-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--wp--style--block-gap, 1em);
+
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--wp--style--block-gap, 1em);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	/*
+	 * Pro's button row. It renders opposite the tabs, matching the classic page
+	 * and the Elementor templates — and stays out of the flow when Pro is absent.
+	 */
+	.dokan-modules-button {
+		order: 1;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	.dokan-store-tab {
+		margin: 0;
+
+		a {
+			display: inline-block;
+			color: inherit;
+			text-decoration: none;
+			padding-block: 0.5em;
+			border-block-end: 2px solid transparent;
+		}
+
+		&.is-active a,
+		a:hover,
+		a:focus {
+			border-block-end-color: currentcolor;
+		}
+	}
+}

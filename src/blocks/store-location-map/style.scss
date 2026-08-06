@@ -1,0 +1,22 @@
+/*
+ * Front-end + editor styles for dokan/store-location-map.
+ *
+ * The widget markup is the classic one, so it keeps the classic
+ * `.widget.dokan-store-widget` classes and whatever styles those already carry.
+ * Only the block wrapper and the editor placeholder are styled here.
+ */
+
+.wp-block-dokan-store-location-map {
+
+	.widget-title {
+		margin-block-start: 0;
+	}
+
+	&.is-editor-placeholder .dokan-info {
+		padding: 1.5em;
+		text-align: center;
+		border: 1px dashed currentcolor;
+		border-radius: 4px;
+		opacity: 0.7;
+	}
+}

@@ -1280,6 +1280,56 @@ function dokan_get_store_tabs( $store_id ) {
 }
 
 /**
+ * Get the store tab the current request is viewing.
+ *
+ * The classic store page has no notion of an active tab — each tab is its own
+ * template takeover — so there is nothing to read. Block themes render every tab
+ * through one template, which means the tab navigation and the tab body both
+ * need to agree on which tab is current, from one source.
+ *
+ * Lite only knows its own tabs. Extensions that add a tab register their query
+ * var through the `dokan_current_store_tab` filter.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param int $store_id Store (vendor) id the tabs belong to.
+ *
+ * @return string A key from `dokan_get_store_tabs()`, or an empty string when the
+ *                request is not viewing that store's page.
+ */
+function dokan_get_current_store_tab( $store_id = 0 ) {
+    $store_id = absint( $store_id );
+    $tab      = '';
+
+    /*
+     * A store page is only "current" for the vendor it belongs to. A block pinned
+     * to another vendor sits on somebody else's store page, and must not adopt
+     * that page's active tab.
+     */
+    $viewed_slug = get_query_var( dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) );
+    $store_user  = $store_id ? get_userdata( $store_id ) : false;
+    $is_viewed   = ! empty( $viewed_slug ) && $store_user && $viewed_slug === $store_user->user_nicename;
+
+    if ( $is_viewed ) {
+        $tab = get_query_var( 'toc' ) ? 'terms_and_conditions' : 'products';
+    }
+
+    /**
+     * Filters the store tab the current request is viewing.
+     *
+     * Pro and third parties resolve their own tabs here — the query vars that
+     * mark them are registered outside Lite, so Lite cannot detect them.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $tab       Tab key, or an empty string outside a store page.
+     * @param int    $store_id  Store (vendor) id.
+     * @param bool   $is_viewed Whether this store's own page is being viewed.
+     */
+    return apply_filters( 'dokan_current_store_tab', $tab, $store_id, $is_viewed );
+}
+
+/**
  * Get withdraw email method based on seller ID and type
  *
  * @param int    $seller_id

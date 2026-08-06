@@ -23,12 +23,14 @@
 	}
 
 	&.is-shape-circle {
+
 		.wp-block-dokan-store-avatar__image {
 			border-radius: 50%;
 		}
 	}
 
-	/* Align support centres the block itself; the image is inline-level inside it. */
+	/* Align support centres the block itself; the image is inline-level inside it.
+	 * */
 	&.aligncenter {
 		text-align: center;
 

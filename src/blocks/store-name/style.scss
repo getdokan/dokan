@@ -2,10 +2,12 @@
  * Front-end + editor styles for dokan/store-name.
  *
  * Deliberately NOT a port of the classic `.store-name` rules: those live seven
- * levels deep under `.dokan-single-store .profile-frame ...` and are `color: #fff`
+ * levels deep under `.dokan-single-store .profile-frame ...` and are `color:
+ * #fff`
  * because the classic header overlays the banner. Three of the four header
  * patterns place the name off the banner, where inheriting that would render
- * white on white. Colour and typography are the merchant's, through block supports.
+ * white on white. Colour and typography are the merchant's, through block
+ * supports.
  */
 
 .wp-block-dokan-store-name {

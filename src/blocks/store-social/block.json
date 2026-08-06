@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-social",
+    "version": "1.0.0",
+    "title": "Store Social Icons",
+    "category": "dokan",
+    "description": "Displays links to the vendor's social profiles.",
+    "keywords": [ "dokan", "store", "vendor", "social", "profile", "links" ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        },
+        "iconSize": {
+            "type": "number",
+            "default": 24
+        },
+        "showLabels": {
+            "type": "boolean",
+            "default": false
+        }
+    },
+    "supports": {
+        "html": false,
+        "color": {
+            "text": true,
+            "background": true,
+            "link": false,
+            "gradients": false
+        },
+        "typography": {
+            "textAlign": true
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

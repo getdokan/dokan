@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-tabs",
+    "version": "1.0.0",
+    "title": "Store Tabs",
+    "category": "dokan",
+    "description": "Navigation between the store's tabs, such as Products and Terms and Conditions.",
+    "keywords": [ "dokan", "store", "vendor", "tabs", "navigation", "menu" ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": [ "wide" ],
+        "color": {
+            "text": true,
+            "background": true,
+            "gradients": true,
+            "link": true,
+            "__experimentalDefaultControls": {
+                "text": true,
+                "background": true
+            }
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true,
+            "__experimentalFontFamily": true,
+            "__experimentalFontWeight": true,
+            "__experimentalTextTransform": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}
