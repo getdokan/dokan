@@ -20,15 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wp-block-group alignwide dokan-single-store-header" style="margin-bottom:var(--wp--preset--spacing--50)">
     <!-- wp:columns {"verticalAlignment":"center"} -->
     <div class="wp-block-columns are-vertically-aligned-center">
-        <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
-            <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
+        <!-- wp:column {"verticalAlignment":"center","width":"65%"} -->
+        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:65%">
+            <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"center"}} -->
             <div class="wp-block-group">
-                <!-- wp:dokan/store-avatar {"shape":"square","size":100} /-->
+                <!-- wp:dokan/store-avatar {"shape":"square","size":90} /-->
 
                 <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|10"}},"layout":{"type":"default"}} -->
                 <div class="wp-block-group">
-                    <!-- wp:dokan/store-name {"level":1} /-->
+                    <!-- wp:dokan/store-name {"level":1,"style":{"typography":{"fontSize":"1.75rem"}}} /-->
 
                     <!-- wp:dokan/store-info /-->
                 </div>
@@ -38,8 +38,8 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
         <!-- /wp:column -->
 
-        <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
+        <!-- wp:column {"verticalAlignment":"center","width":"35%"} -->
+        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:35%">
             <!-- wp:dokan/store-social {"showLabels":false} /-->
         </div>
         <!-- /wp:column -->

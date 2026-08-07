@@ -23,31 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <!-- wp:group {"align":"full","className":"dokan-single-store","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull dokan-single-store">
-    <!-- wp:dokan/store-banner {"align":"full"} /-->
-
-    <!-- wp:columns {"verticalAlignment":"center","align":"wide","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|40"}}}} -->
-    <div class="wp-block-columns alignwide are-vertically-aligned-center" style="margin-bottom:var(--wp--preset--spacing--40)">
-        <!-- wp:column {"verticalAlignment":"center","width":"25%"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:25%">
-            <!-- wp:dokan/store-avatar {"shape":"circle","size":150} /-->
-        </div>
-        <!-- /wp:column -->
-
-        <!-- wp:column {"verticalAlignment":"center","width":"50%"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:50%">
-            <!-- wp:dokan/store-name {"level":1} /-->
-
-            <!-- wp:dokan/store-info /-->
-        </div>
-        <!-- /wp:column -->
-
-        <!-- wp:column {"verticalAlignment":"center","width":"25%"} -->
-        <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:25%">
-            <!-- wp:dokan/store-social /-->
-        </div>
-        <!-- /wp:column -->
-    </div>
-    <!-- /wp:columns -->
+    <?php
+    /*
+     * A single header block rather than the header's blocks loose, so changing
+     * layout is a dropdown in the block's sidebar — and, left on its default,
+     * follows the marketplace's Store Header Template setting. A merchant who
+     * wants to arrange the header themselves replaces this one block with any
+     * of the header patterns, which insert as ordinary editable blocks.
+     */
+    ?>
+    <!-- wp:dokan/store-header /-->
 
     <!-- wp:dokan/store-tabs {"align":"wide"} /-->
 

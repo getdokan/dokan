@@ -15,19 +15,32 @@
 	margin: 0;
 	padding: 0;
 
+	/*
+	 * Deliberately not a flex container. The address and rating rows are built
+	 * by dokan_get_seller_short_address() and get_readable_rating(), which emit
+	 * several sibling spans; flex would make each one its own column and break
+	 * them onto separate lines as soon as the block sits in a narrow column.
+	 * Block-level rows let those spans flow inline, exactly as the classic
+	 * store header does.
+	 */
 	> li {
-		display: flex;
-		align-items: center;
-		gap: 0.5em;
 		margin: 0 0 0.5em;
 
 		&:last-child {
 			margin-bottom: 0;
 		}
 
-		i {
-			flex: 0 0 auto;
+		> i {
+			margin-inline-end: 0.5em;
 		}
+	}
+
+	/* Safe to lay out: every child of this row is markup the
+	   block itself emits. */
+	> li.dokan-store-open-close {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
 	}
 
 	a {
