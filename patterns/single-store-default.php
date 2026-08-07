@@ -51,16 +51,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     <!-- wp:dokan/store-tabs {"align":"wide"} /-->
 
+    <?php
+    /*
+     * Sidebar first, at a third of the width: the arrangement every Elementor
+     * store template uses and the one the classic `store_layout` theme mod
+     * defaults to, so a store keeps the shape it already had. Kept as a PHP
+     * comment so it does not travel into the rendered page.
+     */
+    ?>
     <!-- wp:columns {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
     <div class="wp-block-columns alignwide" style="margin-top:var(--wp--preset--spacing--40)">
-        <!-- wp:column {"width":"70%"} -->
-        <div class="wp-block-column" style="flex-basis:70%">
-            <!-- wp:dokan/store-tab-content /-->
-        </div>
-        <!-- /wp:column -->
-
-        <!-- wp:column {"width":"30%"} -->
-        <div class="wp-block-column" style="flex-basis:30%">
+        <!-- wp:column {"width":"33%"} -->
+        <div class="wp-block-column" style="flex-basis:33%">
             <!-- wp:dokan/store-sidebar -->
             <!-- wp:dokan/store-category-menu /-->
 
@@ -70,6 +72,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <!-- wp:dokan/store-contact-form /-->
             <!-- /wp:dokan/store-sidebar -->
+        </div>
+        <!-- /wp:column -->
+
+        <!-- wp:column {"width":"67%"} -->
+        <div class="wp-block-column" style="flex-basis:67%">
+            <!-- wp:dokan/store-tab-content /-->
         </div>
         <!-- /wp:column -->
     </div>
