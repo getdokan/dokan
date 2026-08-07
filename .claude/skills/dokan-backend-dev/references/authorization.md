@@ -8,26 +8,29 @@ decisions and their rationale in [`docs/adr/`](../../../../docs/adr/).
 
 ## The model in one table
 
-| Capability | Store Admin † | Vendor | Vendor Staff ‡ | Customer | Anonymous |
-|---|---|---|---|---|---|
-| Read published product | All | All | All | All | All |
-| Read unpublished product | All | Own | Vendor's | None | None |
-| Create product | Any ※ | Own (forced) | Vendor's (forced) | None | None |
-| Update / delete product | All | Own | Vendor's | None | None |
-| List / read orders | All | Own | Vendor's | Own purchases | None |
-| Update order | All | Own | Vendor's | None | None |
-| Withdrawals | All | Own | Vendor's | None | None |
-| Store profile settings | All | Own | Vendor's | None | None |
-| Vendor directory — approved | All | All | All | All | All |
-| Vendor directory — pending | All | None | None | None | None |
-| Operating Terms | All | None | None | None | None |
+| Action | Store Admin † | Vendor | Vendor Staff ‡ | Customer | Anonymous | `dokan_*` capability ‡ |
+|---|---|---|---|---|---|---|
+| Read published product | All | All | All | All | All | — (public) |
+| Read unpublished product | All | Own | Vendor's | None | None | `dokan_view_product_menu` |
+| Create product | Any ※ | Own (forced) | Vendor's (forced) | None | None | `dokan_add_product` |
+| Update / delete product | All | Own | Vendor's | None | None | `dokan_edit_product` / `dokan_delete_product` |
+| List / read orders | All | Own | Vendor's | Own purchases | None | `dokan_view_order_menu` (list) / `dokan_view_order` (single) |
+| Update order | All | Own | Vendor's | None | None | `dokan_manage_order` |
+| Withdrawals | All | Own | Vendor's | None | None | `dokan_manage_withdraw` |
+| Store profile settings | All | Own | Vendor's | None | None | `dokan_view_store_settings_menu` |
+| Vendor directory — approved | All | All | All | All | All | — (public) |
+| Vendor directory — pending | All | None | None | None | None | — (Store Admin only) |
+| Operating Terms | All | None | None | None | None | — (Store Admin only) |
 
 † `manage_woocommerce` — the canonical admin capability for vendor
 authorization (ADR-0005). `manage_options` still gates parts of the REST
 surface but draws no boundary in the vendor model.
-‡ Staff additionally need the matching `dokan_*` capability for that row. Scope
-resolves to their Vendor; the capability decides whether the action is
-permitted at all. Both must pass.
+‡ Staff additionally need the capability in the last column. Scope resolves to
+their Vendor; the capability decides whether the action is permitted at all.
+Both must pass. On the Abilities layer `OwnershipGate` enforces this for reads
+and writes alike; a default Vendor holds every `dokan_*` capability, so the
+column bites only where a site has narrowed staff. Order creation has no
+capability on purpose: orders come from checkout, and the gate fails closed.
 ※ Admins must supply a valid `vendor_id`. Vendors and Staff may supply one only
 to narrow scope, never to widen it.
 
