@@ -353,30 +353,41 @@ test.describe('Abuse Reports — Admin DataViews List @pro', () => {
         const adminPage = await context.newPage();
         const flow = new AbuseReportsPage(adminPage);
 
-        await flow.goToAbuseReportsReact();
-        await flow.waitForListReady();
-
-        // Capture every abuse-reports GET the page issues so we can prove no
-        // order_by/order param is ever sent, even after a header interaction.
+        // Attach the listener BEFORE navigating. Previously it was attached
+        // after goToAbuseReportsReact(), so the initial list GET was never seen
+        // and nothing proved the interception pattern still matched the real
+        // request URL — if the route shape changed, the listener would simply
+        // never fire and the "no sort param" assertion would pass vacuously.
+        // listGetsSeen is that positive control.
+        const listGetsSeen: string[] = [];
         const sortParamsSeen: string[] = [];
         adminPage.on('request', req => {
             const url = req.url();
             if (url.includes('/wp-json/dokan/v1/abuse-reports') && req.method() === 'GET') {
+                listGetsSeen.push(url);
                 if (url.includes('order_by=') || url.includes('orderby=') || /[?&]order=/.test(url)) {
                     sortParamsSeen.push(url);
                 }
             }
         });
 
-        // Try clicking a sortable-looking column header if one is exposed.
-        // DataViews renders column headers as buttons; clicking the "Reported At"
-        // header should, in a sort-enabled grid, toggle a sort. Here it is a
-        // no-op for the query.
+        await flow.goToAbuseReportsReact();
+        await flow.waitForListReady();
+
+        expect(
+            listGetsSeen.length,
+            'Positive control: the list must issue at least one abuse-reports GET, otherwise the request interception below proves nothing',
+        ).toBeGreaterThan(0);
+
+        // Click the "Reported At" column header. In a sort-enabled grid this
+        // would toggle a sort; here it must remain a no-op for the query.
+        // Asserted hard — the previous `count() > 0 && isVisible().catch(false)`
+        // guard plus `.click().catch(() => undefined)` meant a missing header or
+        // a failed click silently skipped the only interaction under test.
         const header = adminPage.locator("//th//button[contains(normalize-space(.),'Reported At')] | //th[contains(normalize-space(.),'Reported At')]").first();
-        if (await header.count() > 0 && await header.isVisible().catch(() => false)) {
-            await header.click().catch(() => undefined);
-            await adminPage.waitForTimeout(800);
-        }
+        await expect(header, 'The "Reported At" column header should render in the list').toBeVisible({ timeout: 15000 });
+        await header.click();
+        await adminPage.waitForTimeout(800);
 
         expect(
             sortParamsSeen,

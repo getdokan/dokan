@@ -1,3 +1,18 @@
+### v5.0.12 ( Aug 03, 2026 ) ###
+
+- **new:** Made the WooCommerce Abilities (MCP) layer vendor-aware, so AI assistants and MCP tools only access a vendor's own products and orders, and added Dokan-native abilities for vendor data WooCommerce doesn't cover.
+- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
+
+### v5.0.11 ( Jul 27, 2026 ) ###
+
+- **update:** Vendors can now search for products by SKU as well as by name.
+- **fix:** Store-page buttons now respect the Astra theme's global button styling.
+- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
+- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
+- **fix:** Prevented vendors from granting download access to another vendor's files.
+- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
+- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
+
 ### v5.0.10 ( Jul 21, 2026 ) ###
 
 - **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.

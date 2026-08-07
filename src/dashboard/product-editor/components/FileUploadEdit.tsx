@@ -7,6 +7,8 @@ import { __ } from '@wordpress/i18n';
 import { Plus, Upload, X } from 'lucide-react';
 import CustomField, { getValidationError } from './CustomField';
 
+const DOWNLOADABLE_UPLOADER_PARAMS = { type: 'downloadable_product' };
+
 const FileUploadEdit = ( { field, onChange, validity }: any ) => {
     const [ files, setFiles ] = useState(
         field.value?.length > 0
@@ -35,6 +37,13 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
             field
         )
     );
+
+    // Downloadable files carry the `downloadable_product` upload type so WooCommerce stores them in woocommerce_uploads.
+    const uploaderParams = applyFilters(
+        'dokan_product_editor_file_field_uploader_params',
+        field?.id === 'downloads' ? DOWNLOADABLE_UPLOADER_PARAMS : undefined,
+        field
+    ) as Record< string, string > | undefined;
 
     const onAddRow = () => {
         const newFiles = [
@@ -138,6 +147,7 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                             </div>
                             <div className="flex gap-2 shrink-0 items-center">
                                 <MediaUploader
+                                    uploaderParams={ uploaderParams }
                                     onSelect={ ( val: any ) =>
                                         onSelectFile( val, index )
                                     }

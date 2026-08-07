@@ -125,12 +125,16 @@ test.describe('Auction (React) functionality', () => {
             expect(await auctionProductNames(p.name), 'the product is gone from the auction REST list').not.toContain(p.name);
         });
 
-        test('the row Edit action leaves the SPA toward the legacy auction editor (React→legacy)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+        test('the row Edit action opens the auction product in the React product editor (#/products/:id/edit)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             const p = await seedAuction();
             await auction.gotoList();
             await auction.search(p.name);
             const target = await auction.editActionTarget(p.name);
-            expect(target, 'Edit navigates to the legacy auction editor (not a #/ SPA route)').toMatch(/product_id=|action=edit|\/auction\//i);
+            // Auctions are now editable inside the React product editor: the React product list
+            // deliberately keeps the `auction` type in the listing and the editor accepts
+            // `?type=auction`, so the backend returns a SPA `edit_url` (#/products/<id>/edit) and
+            // the row Edit action stays in the SPA instead of bouncing to the legacy auction editor.
+            expect(target, 'Edit opens the React product editor at #/products/<id>/edit').toMatch(/#\/?products\/\d+\/edit/i);
         });
 
         test('HashRouter survives a reload on /auction (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {

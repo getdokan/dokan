@@ -1,34 +1,17 @@
 name: E2E_API Tests
 
 on:
-    # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
+    # Runs once a day only, to keep Actions cost down. Pull requests and pushes
+    # to develop no longer trigger this suite -- use the "Run workflow" button
+    # (workflow_dispatch) below to test a branch on demand.
+    # Target start time is 9:00 AM BDT. GitHub queues scheduled runs and
+    # releases them once capacity frees up: on this repository that delay has
+    # been roughly 70 minutes every day, so 02:00 UTC (nominally 8:00 AM BDT)
+    # is what actually starts the run near 9:00 AM BDT. Check the real start
+    # times of recent scheduled runs before "correcting" this to 03:00 UTC.
     schedule:
         - cron: 0 2 * * *
-    # workflow will trigger on pull request
-    pull_request:
-        branches: [develop]
-        paths-ignore:
-            - '**.md'
-            - '**.txt'
-            - 'docs/**'
-            - '.github/ISSUE_TEMPLATE/**'
-            - '**/*.po'
-            - '**/*.pot'
-            - '**/*.svg'
-            - 'assets/images/**'
-    # workflow will trigger on push to develop branch
-    push:
-        branches: [develop]
-        paths-ignore:
-            - '**.md'
-            - '**.txt'
-            - 'docs/**'
-            - '.github/ISSUE_TEMPLATE/**'
-            - '**/*.po'
-            - '**/*.pot'
-            - '**/*.svg'
-            - 'assets/images/**'
-   # workflow can be manually triggered
+    # workflow can be manually triggered
     workflow_dispatch:
         inputs:
             testsuite:
