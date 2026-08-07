@@ -35,13 +35,36 @@ $attributes = wp_parse_args(
  * Blocks\Manager never sees them. Enqueue here rather than relying on it.
  */
 wp_enqueue_style( 'dokan-style' );
-wp_enqueue_style( 'dokan-fontawesome' );
+
+// Font Awesome is opt-out in Appearance settings; honour that here too.
+if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+    wp_enqueue_style( 'dokan-fontawesome' );
+}
 
 $resolver = dokan_get_container()->get( VendorResolver::class );
 $vendor   = $resolver->resolve( $block->context ?? [], $attributes );
 
 if ( ! $vendor ) {
     return; // Not a store context and not an editor preview — render nothing.
+}
+
+/*
+ * "Contact Seller" is a marketplace-level switch. The widget itself does not
+ * check it — the classic sidebar gates the widget from outside, in
+ * dokan_store_sidebar_args() — so a block placing the widget directly has to
+ * apply the gate itself, or turning the feature off would leave the form
+ * reachable through any block-built store page.
+ */
+if ( 'on' !== dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) ) {
+    if ( $resolver->is_editor_preview() ) {
+        printf(
+            '<div %1$s><p class="dokan-info">%2$s</p></div>',
+            get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
+            esc_html__( 'Contacting vendors is switched off in Dokan settings, so this block will not appear on the store page.', 'dokan-lite' )
+        );
+    }
+
+    return;
 }
 
 $widget_title = '' !== trim( (string) $attributes['title'] )

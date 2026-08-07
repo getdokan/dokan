@@ -29,7 +29,11 @@ $attributes = wp_parse_args( $attributes, [ 'storeId' => 0 ] );
  * Blocks\Manager never sees them. Enqueue here rather than relying on it.
  */
 wp_enqueue_style( 'dokan-style' );
-wp_enqueue_style( 'dokan-fontawesome' );
+
+// Font Awesome is opt-out in Appearance settings; honour that here too.
+if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+    wp_enqueue_style( 'dokan-fontawesome' );
+}
 
 $resolver = dokan_get_container()->get( VendorResolver::class );
 $vendor   = $resolver->resolve( $block->context ?? [], $attributes );

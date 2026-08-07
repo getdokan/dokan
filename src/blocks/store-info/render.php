@@ -40,7 +40,11 @@ $attributes = wp_parse_args(
  * Blocks\Manager never sees them. Enqueue here rather than relying on it.
  */
 wp_enqueue_style( 'dokan-style' );
-wp_enqueue_style( 'dokan-fontawesome' );
+
+// Font Awesome is opt-out in Appearance settings; honour that here too.
+if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+    wp_enqueue_style( 'dokan-fontawesome' );
+}
 
 $resolver = dokan_get_container()->get( VendorResolver::class );
 $vendor   = $resolver->resolve( $block->context ?? [], $attributes );
@@ -92,16 +96,18 @@ if ( ! empty( $attributes['showEmail'] ) && ! dokan_is_vendor_info_hidden( 'emai
 // Rating — the classic header has no server-side gate here, so do not invent one.
 if ( ! empty( $attributes['showRating'] ) ) {
     /*
-     * Read through the resolved vendor rather than dokan_get_readable_seller_rating(),
-     * which builds a fresh Vendor from the id and would discard the preview stand-in —
-     * making the editor query real ratings for user 0 instead of showing dummy data.
-     */
-    /*
-     * The `woocommerce` class is load-bearing, not decoration: wc_get_rating_html()
-     * renders stars through `.woocommerce .star-rating`, and without that ancestor
-     * the element falls back to showing its own screen-reader text. The classic
+     * Two things here are load-bearing rather than incidental.
+     *
+     * The rating is read through the resolved vendor, not
+     * dokan_get_readable_seller_rating(), which builds a fresh Vendor from the id
+     * and would discard the preview stand-in — making the editor query real
+     * ratings for user 0 instead of showing dummy data.
+     *
+     * The `woocommerce` class is what lets wc_get_rating_html() draw stars:
+     * WooCommerce scopes them as `.woocommerce .star-rating`, and without that
+     * ancestor the element falls back to its own screen-reader text. The classic
      * page inherits the class from store.php's `#dokan-content` wrapper; a block
-     * has to carry it itself. Scoped to this row so no other Woo rule applies.
+     * has to carry it. Scoped to this row so no other Woo rule applies.
      */
     $items .= sprintf(
         '<li class="dokan-store-rating woocommerce"><i class="fas fa-star"></i>%s</li>',
