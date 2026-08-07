@@ -65,6 +65,34 @@ class OrderAbilityScopeTest extends DokanTestCase {
         $this->assertFalse( $this->sut->scope_order_permissions( false, 'edit', $order2, 'shop_order' ) );
     }
 
+    /**
+     * Orders are created by checkout, never by a Vendor — the capability map deliberately has
+     * no `shop_order`/`create` entry, and the gate fails closed rather than falling back to
+     * native capabilities, whose `shop_order` mapping is not a reliable boundary (ADR-0006).
+     */
+    public function test_order_creation_is_denied_below_store_admin() {
+        $this->force_ability_context();
+        wp_set_current_user( $this->seller_id1 );
+
+        $this->assertFalse( $this->sut->scope_order_permissions( true, 'create', 0, 'shop_order' ) );
+    }
+
+    public function test_batch_order_writes_require_the_manage_order_capability() {
+        $order = $this->create_single_vendor_order( $this->seller_id1 );
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+        $this->force_ability_context();
+
+        $this->assertFalse( $this->sut->scope_order_permissions( true, 'batch', $order, 'shop_order' ) );
+
+        // On the live object: wp_set_current_user() short-circuits for an unchanged ID, so a
+        // detached WP_User's add_cap() would leave the current user's capability set stale.
+        wp_get_current_user()->add_cap( 'dokan_manage_order' );
+
+        $this->assertTrue( $this->sut->scope_order_permissions( false, 'batch', $order, 'shop_order' ) );
+    }
+
     public function test_scope_order_permissions_is_noop_for_unrelated_post_type() {
         $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );

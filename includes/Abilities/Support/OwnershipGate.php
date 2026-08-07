@@ -30,6 +30,10 @@ class OwnershipGate {
     /**
      * Dokan capability required per object type and write context.
      *
+     * An absent entry is a write the vendor model never grants below Store Admin — there is
+     * deliberately no `shop_order`/`create`, because orders are created by checkout, never by
+     * a Vendor.
+     *
      * @var array<string, array<string, string>>
      */
     private const CAPABILITIES = [
@@ -37,11 +41,12 @@ class OwnershipGate {
             'create' => 'dokan_add_product',
             'edit'   => 'dokan_edit_product',
             'delete' => 'dokan_delete_product',
+            'batch'  => 'dokan_edit_product',
         ],
         'shop_order' => [
-            'create' => 'dokan_manage_order',
             'edit'   => 'dokan_manage_order',
             'delete' => 'dokan_manage_order',
+            'batch'  => 'dokan_manage_order',
         ],
     ];
 
@@ -90,8 +95,10 @@ class OwnershipGate {
     /**
      * Decide a write permission for a single vendor-owned record.
      *
-     * Store admins and non-vendors are passed through untouched, as are collection-level checks
-     * (`$object_id` of 0), which the list-query scoping governs instead.
+     * Store admins and non-vendors are passed through untouched. Collection-level checks
+     * (`$object_id` of 0) are passed through too — list queries are scoped elsewhere, and a
+     * batch request re-checks each contained operation individually — except creates, which
+     * never name a record: there the Dokan capability alone decides.
      *
      * @since DOKAN_SINCE
      *
@@ -119,7 +126,16 @@ class OwnershipGate {
             return $permission;
         }
 
-        // Collection-level checks are governed by the list-query scoping.
+        // A create names no record yet, so ownership cannot decide and the Dokan capability
+        // alone does. Left to native capabilities, staff product creation would be refused
+        // (`publish_products` is not in the staff baseline) where Dokan's own REST API permits
+        // it — the parity break this gate exists to close.
+        if ( 'create' === $context ) {
+            return self::has_capability( $object_type, 'create' );
+        }
+
+        // Collection-level checks are governed by the list-query scoping; a batch request
+        // re-checks each contained create/edit/delete individually with a real ID.
         if ( $object_id <= 0 ) {
             return $permission;
         }
@@ -146,7 +162,12 @@ class OwnershipGate {
      * @return bool
      */
     private static function has_capability( string $object_type, string $context ): bool {
-        $capability = self::CAPABILITIES[ $object_type ][ $context ] ?? '';
+        $capability = self::CAPABILITIES[ $object_type ][ $context ] ?? null;
+
+        // Fail closed: a write the map does not grant is denied, never waved through.
+        if ( null === $capability ) {
+            return false;
+        }
 
         /**
          * Filters the Dokan capability required to write a vendor-owned record over the

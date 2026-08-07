@@ -159,9 +159,14 @@ Never decide a write from a native capability check. Route it through
 `OwnershipGate::can_write( $object_type, $context, $object_id, $permission )`,
 which denies when the record belongs to another Vendor and grants when it
 belongs to the caller's Vendor Scope *and* they hold the Dokan capability for
-the action (`dokan_edit_product`, `dokan_manage_order`, …). Store admins and
-non-vendors pass through untouched; collection-level checks are left to the
-list-query scoping. The requirement is filterable via
+the action (`dokan_edit_product`, `dokan_manage_order`, …). A create names no
+record, so the capability alone decides it (`dokan_add_product`); a write the
+capability map does not grant is denied outright — there is deliberately no
+`shop_order`/`create`, because orders are created by checkout, never by a
+Vendor. Store admins and non-vendors pass through untouched; other
+collection-level checks are left to the list-query scoping — including the
+top-level `batch` check, which WooCommerce follows with per-item create/edit/
+delete re-checks that the gate does decide. The requirement is filterable via
 `dokan_ability_write_capability`.
 
 The grant half matters as much as the deny half: Vendor Staff hold
@@ -175,12 +180,6 @@ allows. The gate is what keeps the two surfaces in agreement.
   `manage_options` (vs `manage_woocommerce` elsewhere) and matches meta-key
   names against request-parameter names, so it strips nothing. The real
   protection is `Vendor\Manager::update()`'s capability gate.
-- `Manager::update():325-335` resets `dokan_publishing` and
-  `dokan_feature_seller` to `no` when those keys are simply absent, so a
-  partial admin update silently clears them.
-- `StoreController::get_restricted_fields_for_update()` gates on
-  `manage_options` (vs `manage_woocommerce` elsewhere) and matches meta-key
-  names against request-parameter names, so it strips nothing.
 - `Manager::update():325-335` resets `dokan_publishing` and
   `dokan_feature_seller` to `no` when those keys are simply absent, so a
   partial admin update silently clears them.

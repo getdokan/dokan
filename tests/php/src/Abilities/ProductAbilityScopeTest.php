@@ -485,6 +485,55 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertFalse( $this->sut->scope_product_permissions( true, 'edit', $own_product, 'product' ) );
     }
 
+    /**
+     * A create names no record, so the gate decides it on the Dokan capability alone. Left to
+     * native capabilities the parity break of ADR-0007 recurs on creation: staff lack
+     * `publish_products`, so WC abilities would refuse a create Dokan's own REST API permits.
+     */
+    public function test_staff_may_create_with_the_capability_despite_native_caps() {
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        ( new \WP_User( $staff_id ) )->add_cap( 'dokan_add_product' );
+
+        $this->force_ability_context();
+        wp_set_current_user( $staff_id );
+
+        // Native capabilities refuse product creation for staff.
+        $this->assertFalse( current_user_can( 'publish_products' ) );
+
+        // The gate grants it, matching the vendor dashboard.
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'create', 0, 'product' ) );
+    }
+
+    public function test_staff_without_the_capability_may_not_create() {
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+
+        $this->force_ability_context();
+
+        $this->assertFalse( current_user_can( 'dokan_add_product' ) );
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'create', 0, 'product' ) );
+    }
+
+    /**
+     * An ID-carrying batch write must not slip past the capability requirement — `batch` maps
+     * to the edit capability rather than falling through to an empty (always-granted) one.
+     */
+    public function test_batch_writes_require_the_edit_capability() {
+        $own_product = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+        $this->force_ability_context();
+
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'batch', $own_product, 'product' ) );
+
+        // On the live object: wp_set_current_user() short-circuits for an unchanged ID, so a
+        // detached WP_User's add_cap() would leave the current user's capability set stale.
+        wp_get_current_user()->add_cap( 'dokan_edit_product' );
+
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'batch', $own_product, 'product' ) );
+    }
+
     public function test_store_admin_writes_are_left_unscoped() {
         $other_product = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
 
