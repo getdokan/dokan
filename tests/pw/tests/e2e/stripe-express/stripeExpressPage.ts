@@ -171,7 +171,7 @@ export class StripeExpressPage {
         firstName: 'customer1',
         lastName: 'c1',
         email: 'customer1@email.com',
-        phone: '(555) 555-5555',
+        phone: '+14152367890',
         address1: 'abc street',
         city: 'New York',
         postcode: '10003',

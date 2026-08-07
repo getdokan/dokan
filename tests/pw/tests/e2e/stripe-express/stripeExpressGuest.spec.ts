@@ -125,7 +125,7 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
                 firstName: 'Guest',
                 lastName: 'Buyer',
                 email: 'guest.classic.stripeexpress@example.com',
-                phone: '(555) 555-5555',
+                phone: '+14152367890',
                 address1: '123 Test Street',
                 city: 'New York',
                 postcode: '10001',
