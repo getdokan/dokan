@@ -118,10 +118,11 @@ class WithdrawsQuery extends AbstractVendorAbility {
         $vendor_id = self::current_vendor_id();
         $withdraw  = dokan()->withdraw;
 
-        $status   = isset( $input['status'] ) ? sanitize_key( (string) $input['status'] ) : 'pending';
-        $page     = max( 1, (int) ( $input['page'] ?? 1 ) );
-        $per_page = min( 100, max( 1, (int) ( $input['per_page'] ?? 10 ) ) );
-        $offset   = ( $page - 1 ) * $per_page;
+        $status = isset( $input['status'] ) ? sanitize_key( (string) $input['status'] ) : 'pending';
+
+        list( $page, $per_page ) = self::pagination( $input );
+
+        $offset = ( $page - 1 ) * $per_page;
 
         $status_code = (int) $withdraw->get_status_code( $status );
 

@@ -18,17 +18,17 @@ use WP_Error;
 class DokanNativeAbilitiesTest extends DokanTestCase {
 
     /**
-     * Create a pending withdrawal for a seller.
+     * Create a pending withdrawal for a vendor.
      *
-     * @param int   $seller_id Seller user ID.
+     * @param int   $vendor_id Vendor user ID.
      * @param float $amount    Amount.
      *
      * @return void
      */
-    private function create_pending_withdraw( int $seller_id, float $amount = 50 ): void {
+    private function create_pending_withdraw( int $vendor_id, float $amount = 50 ): void {
         dokan()->withdraw->create(
             [
-                'user_id' => $seller_id,
+                'user_id' => $vendor_id,
                 'amount'  => $amount,
                 'status'  => 0, // pending.
                 'method'  => 'paypal',

@@ -105,31 +105,7 @@ class RequestContext {
          */
         $is_ability_context = (bool) apply_filters( 'dokan_is_ability_context', $is_ability_context, $request_uri );
 
-        // Only run the superseded filter when something is actually listening, so sites that never
-        // used it are not warned about a hook they do not have.
-        if ( has_filter( 'dokan_is_mcp_request' ) ) {
-            $is_ability_context = (bool) apply_filters_deprecated(
-                'dokan_is_mcp_request',
-                [ $is_ability_context, $request_uri ],
-                'DOKAN_SINCE',
-                'dokan_is_ability_context'
-            );
-        }
-
         return $is_ability_context;
-    }
-
-    /**
-     * Whether the current request targets an MCP / abilities endpoint.
-     *
-     * @since      DOKAN_SINCE
-     * @deprecated DOKAN_SINCE Renamed: the condition is any ability executing, not an MCP
-     *             request specifically. Use {@see self::is_ability_context()}.
-     *
-     * @return bool
-     */
-    public static function is_mcp_request(): bool {
-        return self::is_ability_context();
     }
 
     /**
@@ -163,18 +139,6 @@ class RequestContext {
         }
 
         return dokan_is_user_seller( dokan_get_current_user_id() );
-    }
-
-    /**
-     * Whether the current request is a vendor acting over an MCP / abilities endpoint.
-     *
-     * @since      DOKAN_SINCE
-     * @deprecated DOKAN_SINCE Use {@see self::is_vendor_ability_context()}.
-     *
-     * @return bool
-     */
-    public static function is_vendor_mcp_context(): bool {
-        return self::is_vendor_ability_context();
     }
 
     /**

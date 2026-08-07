@@ -70,6 +70,22 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     }
 
     /**
+     * Clamp pagination input to the bounds every query ability shares.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $input Ability input.
+     *
+     * @return array{0: int, 1: int} Page (>= 1) and per-page (1–100).
+     */
+    protected static function pagination( array $input ): array {
+        $page     = max( 1, (int) ( $input['page'] ?? 1 ) );
+        $per_page = min( 100, max( 1, (int) ( $input['per_page'] ?? 10 ) ) );
+
+        return [ $page, $per_page ];
+    }
+
+    /**
      * Shared permission callback: store admins pass; everyone else must be a vendor and hold the
      * ability's declared capability.
      *

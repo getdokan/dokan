@@ -50,7 +50,7 @@ class VendorsQuery extends AbstractVendorAbility {
                         'type'        => 'string',
                         'enum'        => [ 'approved', 'pending', 'all' ],
                         'default'     => 'approved',
-                        'description' => __( 'Which vendors to list. Only store managers may list pending vendors; other callers always receive approved vendors.', 'dokan-lite' ),
+                        'description' => __( 'Which vendors to list. Only store admins may list pending vendors; other callers always receive approved vendors.', 'dokan-lite' ),
                     ],
                     'page'     => [
                         'type'    => 'integer',
@@ -75,10 +75,13 @@ class VendorsQuery extends AbstractVendorAbility {
                         'items' => [
                             'type'       => 'object',
                             'properties' => [
-                                'id'         => [ 'type' => 'integer' ],
-                                'store_name' => [ 'type' => 'string' ],
-                                'shop_url'   => [ 'type' => 'string' ],
-                                'enabled'    => [ 'type' => 'boolean' ],
+                                'id'                => [ 'type' => 'integer' ],
+                                'store_name'        => [ 'type' => 'string' ],
+                                'shop_url'          => [ 'type' => 'string' ],
+                                'selling_activated' => [
+                                    'type'        => 'boolean',
+                                    'description' => __( 'Whether the store is live and may transact (Selling Activation).', 'dokan-lite' ),
+                                ],
                             ],
                         ],
                     ],
@@ -100,7 +103,7 @@ class VendorsQuery extends AbstractVendorAbility {
      * Resolve the vendor status a caller is allowed to list.
      *
      * A vendor awaiting approval has not been accepted into the marketplace and is not public
-     * information, so `pending` and `all` are restricted to store managers. Other callers are
+     * information, so `pending` and `all` are restricted to Store Admins. Other callers are
      * coerced to `approved` rather than rejected, keeping the public directory usable.
      *
      * @since DOKAN_SINCE
@@ -133,15 +136,16 @@ class VendorsQuery extends AbstractVendorAbility {
      * @return array|\WP_Error
      */
     public static function execute( array $input ) {
-        $status   = self::resolve_status( $input );
-        $page     = max( 1, (int) ( $input['page'] ?? 1 ) );
-        $per_page = min( 100, max( 1, (int) ( $input['per_page'] ?? 10 ) ) );
+        $status = self::resolve_status( $input );
 
+        list( $page, $per_page ) = self::pagination( $input );
+
+        // No role__in override: the Vendor Manager's default (seller + administrator) is what the
+        // public `dokan/v1/stores` endpoint uses, so admin-owned stores appear here too.
         $args = [
-            'role__in' => [ 'seller' ],
-            'number'   => $per_page,
-            'offset'   => ( $page - 1 ) * $per_page,
-            'status'   => [ $status ],
+            'number' => $per_page,
+            'offset' => ( $page - 1 ) * $per_page,
+            'status' => [ $status ],
         ];
 
         if ( ! empty( $input['search'] ) ) {
@@ -153,10 +157,10 @@ class VendorsQuery extends AbstractVendorAbility {
         $items = array_map(
             static function ( $vendor ) {
                 return [
-                    'id'         => (int) $vendor->get_id(),
-                    'store_name' => (string) $vendor->get_shop_name(),
-                    'shop_url'   => (string) $vendor->get_shop_url(),
-                    'enabled'    => (bool) $vendor->is_enabled(),
+                    'id'                => (int) $vendor->get_id(),
+                    'store_name'        => (string) $vendor->get_shop_name(),
+                    'shop_url'          => (string) $vendor->get_shop_url(),
+                    'selling_activated' => (bool) $vendor->is_enabled(),
                 ];
             },
             $vendors

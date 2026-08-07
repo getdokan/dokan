@@ -28,9 +28,10 @@ hold `dokan_manage_withdraw`, yet `dokan/withdraws-query` returned the parent
 Vendor's withdrawal records and `dokan/vendor-stats-get` exposed revenue, because
 the `Definitions/*` abilities check only `dokan_is_user_seller()` — which
 resolves staff to their parent and passes. Applying the gate uniformly rather
-than only to staff is behaviourally free for a default Vendor, who holds all 67
-`dokan_*` capabilities, and bites only where a site has deliberately narrowed
-them.
+than only to staff is behaviourally free for a default Vendor, who holds every
+`dokan_*` capability (41 defined in Lite's `dokan_get_all_caps()`; 67 measured
+on the live install above, which runs Pro), and bites only where a site has
+deliberately narrowed them.
 
 ## Considered options
 

@@ -55,7 +55,7 @@ Per entity, the expected gates (ownership half + capability half):
 | Vendor directory | — | approved stores public; **pending hidden** below Store Admin | — |
 | Coupon | vendor id | — | `dokan_add_coupon` / `dokan_edit_coupon` / `dokan_delete_coupon` |
 | Reviews | vendor scope | `dokan_view_reviews` | `dokan_manage_reviews` |
-| Reports / stats | vendor scope | `dokan_view_overview_report` (and siblings) — revenue is private data, never public | — |
+| Reports / stats | vendor scope | `dokan_view_sales_overview` (enforced by `VendorStatsGet`); report siblings per `dokan_get_all_caps()` — revenue is private data, never public | — |
 
 **Security:**
 

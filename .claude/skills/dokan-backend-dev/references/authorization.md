@@ -17,7 +17,7 @@ decisions and their rationale in [`docs/adr/`](../../../../docs/adr/).
 | List / read orders | All | Own | Vendor's | Own purchases | None | `dokan_view_order_menu` (list) / `dokan_view_order` (single) |
 | Update order | All | Own | Vendor's | None | None | `dokan_manage_order` |
 | Withdrawals | All | Own | Vendor's | None | None | `dokan_manage_withdraw` |
-| Store profile settings | All | Own | Vendor's | None | None | `dokan_view_store_settings_menu` |
+| Store profile settings | All | Own | Vendor's | None | None | `dokan_view_store_settings_menu` (dashboard only — see Known defects) |
 | Vendor directory — approved | All | All | All | All | All | — (public) |
 | Vendor directory — pending | All | None | None | None | None | — (Store Admin only) |
 | Operating Terms | All | None | None | None | None | — (Store Admin only) |
@@ -27,10 +27,13 @@ authorization (ADR-0005). `manage_options` still gates parts of the REST
 surface but draws no boundary in the vendor model.
 ‡ Staff additionally need the capability in the last column. Scope resolves to
 their Vendor; the capability decides whether the action is permitted at all.
-Both must pass. On the Abilities layer `OwnershipGate` enforces this for reads
-and writes alike; a default Vendor holds every `dokan_*` capability, so the
-column bites only where a site has narrowed staff. Order creation has no
-capability on purpose: orders come from checkout, and the gate fails closed.
+Both must pass. Enforcement points differ per row: `OwnershipGate` decides the
+product and order rows (reads and writes alike), the `Definitions/*` abilities
+declare theirs via `required_capability()`, and the store-settings capability
+is a dashboard gate only — see Known defects for the REST-path gap. A default
+Vendor holds every `dokan_*` capability, so the column bites only where a site
+has narrowed staff. Order creation has no capability on purpose: orders come
+from checkout, and the gate fails closed.
 ※ Admins must supply a valid `vendor_id`. Vendors and Staff may supply one only
 to narrow scope, never to widen it.
 
@@ -189,6 +192,12 @@ denied outright.
 
 ## Known defects (open)
 
+- Store profile updates over `dokan/v1/stores` authorize through
+  `VendorAuthorizable::can_access_vendor_store()`, which checks scope only —
+  no `dokan_*` capability — so the table's "both must pass" holds on the
+  dashboard (`dokan_view_store_settings_menu` in
+  `Dashboard/Templates/Settings.php`) but not on that REST path: staff
+  stripped of the settings capability can still update the store via REST.
 - `StoreController::get_restricted_fields_for_update()` gates on
   `manage_options` (vs `manage_woocommerce` elsewhere) and matches meta-key
   names against request-parameter names, so it strips nothing. The real

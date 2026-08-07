@@ -32,6 +32,11 @@ to WooCommerce's native capabilities." That was never true of the code, and
 acting on it would have opened cross-vendor order writes. The comment goes.
 
 **Amended by [ADR-0007](./0007-staff-actions-gated-by-dokan-capabilities.md).**
-Native capabilities are a second layer for Vendors only. For Vendor Staff the
-Abilities layer deliberately overrides a native denial, because native
-capabilities give the wrong answer for that actor.
+Below Store Admin, the `dokan_*` capability model is the sole authority on the
+gated paths: once ownership resolves, the gate decides from the Dokan
+capability and discards the incoming native answer for every sub-admin actor —
+Vendor and Vendor Staff alike. Native capabilities are not a second layer
+anywhere below Store Admin; for a Vendor acting on their own product they
+happen to agree (pinned by `test_write_context_native_caps_allow_own_product`),
+and for Vendor Staff they are deliberately overridden because they give the
+wrong answer for that actor.

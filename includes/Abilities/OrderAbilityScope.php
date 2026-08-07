@@ -27,12 +27,12 @@ defined( 'ABSPATH' ) || exit;
  *    owning vendor (admins unscoped).
  *  - List scoping: the WC order data-store (legacy CPT + HPOS) and REST query filters constrain
  *    order listings to the current vendor's orders.
- *  - In-place extension: order-list output is annotated with the Dokan parent / sub-order
+ *  - In-place extension: order-list output is annotated with the Dokan parent / Suborder
  *    relationship and owning vendor, so totals can be summed without double-counting a parent and
- *    its sub-orders.
+ *    its Suborders.
  *
- * In Dokan a multi-vendor order is split into a parent (full amount) and one sub-order per vendor
- * (their portion); a single-vendor order is not split. A vendor owns their sub-orders / single
+ * In Dokan a multi-vendor order is split into a parent (full amount) and one Suborder per vendor
+ * (their portion); a single-vendor order is not split. A vendor owns their Suborders / single
  * orders, never the parent.
  *
  * Everything is gated to (Ability Context && vendor) so normal storefront / admin / REST traffic
@@ -97,8 +97,8 @@ class OrderAbilityScope implements Hookable {
         add_filter( 'woocommerce_orders_table_datastore_get_orders_query', [ $this, 'scope_orders_query' ], 99 );
         add_filter( 'woocommerce_rest_orders_prepare_object_query', [ $this, 'scope_rest_orders_query' ], 99 );
 
-        // Annotate order-list output with the Dokan parent / sub-order relationship and owning
-        // vendor, so totals can be summed without double-counting a parent and its sub-orders.
+        // Annotate order-list output with the Dokan parent / Suborder relationship and owning
+        // vendor, so totals can be summed without double-counting a parent and its Suborders.
         add_filter( 'wp_register_ability_args', [ $this, 'extend_order_abilities' ], 10, 2 );
     }
 
@@ -212,9 +212,9 @@ class OrderAbilityScope implements Hookable {
      * Annotate a WooCommerce order-list ability with Dokan order relationships in place.
      *
      * Adds `parent_id`, `order_relation` and the owning `vendor` to each returned order without
-     * touching the ability itself, so an MCP client can list parent and sub-orders together yet
+     * touching the ability itself, so an MCP client can list parents and Suborders together yet
      * still total amounts without double-counting (a parent's total equals the sum of its
-     * sub-orders).
+     * Suborders).
      *
      * @since DOKAN_SINCE
      *
@@ -295,7 +295,7 @@ class OrderAbilityScope implements Hookable {
             'order_relation' => [
                 'type'        => 'string',
                 'enum'        => [ 'parent', 'sub_order', 'single' ],
-                'description' => __( 'Dokan order relationship. "parent": a multi-vendor order whose total equals the combined total of its sub-orders. "sub_order": one vendor\'s portion of a parent order. "single": a one-vendor order. To total order amounts without double-counting, sum only orders where order_relation is "parent" or "single" (marketplace gross), or only "sub_order" or "single" for a single vendor — never a parent together with its sub-orders.', 'dokan-lite' ),
+                'description' => __( 'Dokan order relationship. "parent": a multi-vendor order whose total equals the combined total of its Suborders. "sub_order": one vendor\'s portion of a parent order. "single": a one-vendor order. To total order amounts without double-counting, sum only orders where order_relation is "parent" or "single" (marketplace gross), or only "sub_order" or "single" for a single vendor — never a parent together with its Suborders.', 'dokan-lite' ),
             ],
             'vendor'         => [
                 'type'        => 'object',
@@ -369,12 +369,12 @@ class OrderAbilityScope implements Hookable {
             $relation = 'single';
         }
 
-        // A parent multi-vendor order belongs to no single vendor; sub / single orders do.
-        $seller_id = 'parent' === $relation ? 0 : absint( dokan_get_seller_id_by_order( $order ) );
+        // A parent multi-vendor order belongs to no single vendor; Suborders / single orders do.
+        $vendor_id = 'parent' === $relation ? 0 : absint( dokan_get_seller_id_by_order( $order ) );
 
         $order_data['parent_id']      = $parent_id;
         $order_data['order_relation'] = $relation;
-        $order_data['vendor']         = VendorPayload::for_user( $seller_id );
+        $order_data['vendor']         = VendorPayload::for_user( $vendor_id );
 
         return $order_data;
     }
