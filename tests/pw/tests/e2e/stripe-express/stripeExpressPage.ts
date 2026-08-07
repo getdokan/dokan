@@ -530,7 +530,17 @@ export class StripeExpressPage {
     }
 
     /** Fill the WC block checkout CONTACT + SHIPPING address as a GUEST (no saved address). */
-    async fillBlockGuestDetails(d: { email: string; firstName: string; lastName: string; address: string; city: string; state: string; postcode: string; country: string }): Promise<void> {
+    async fillBlockGuestDetails(d: {
+        email: string;
+        firstName: string;
+        lastName: string;
+        address: string;
+        city: string;
+        state: string;
+        postcode: string;
+        country: string;
+        phone?: string;
+    }): Promise<void> {
         const p = this.page;
         await p.locator('#email').fill(d.email);
         await p.locator('#shipping-country').selectOption(d.country);
@@ -540,6 +550,20 @@ export class StripeExpressPage {
         await p.locator('#shipping-city').fill(d.city);
         await p.locator('#shipping-state').selectOption(d.state).catch(() => undefined);
         await p.locator('#shipping-postcode').fill(d.postcode);
+        /*
+         * A guest has no saved address, so unlike the logged-in flows nothing pre-fills the phone —
+         * it has to be typed. When the field is required and left empty the block refuses to submit
+         * with "Please provide a mobile phone number.", the Place Order click becomes a no-op, and
+         * the settle poll can only report "none" (CI run 31147407922, SE-GUEST-01). Optional here so
+         * existing callers are unaffected, and tolerant of the field being absent when the store has
+         * the phone field switched off.
+         */
+        if (d.phone) {
+            const phoneField = p.locator('#shipping-phone, #billing-phone').first();
+            if (await phoneField.count()) {
+                await phoneField.fill(d.phone).catch(() => undefined);
+            }
+        }
         await p.waitForLoadState('networkidle').catch(() => undefined);
         await p.waitForTimeout(1_500);
     }
@@ -740,7 +764,22 @@ export class StripeExpressPage {
 
     async placeBlockOrderExpectError(): Promise<void> {
         await this.page.locator(this.blockSelectors.placeOrder).click();
-        await expect(this.page.locator(this.blockSelectors.error).first(), 'declined card should surface a block error notice').toBeVisible({ timeout: 40_000 });
+        const notice = this.page.locator(this.blockSelectors.error).first();
+        await expect(notice, 'declined card should surface a block error notice').toBeVisible({ timeout: 40_000 });
+
+        /*
+         * "An error appeared and we never reached order-received" is ALSO what a failed form
+         * validation looks like, so the bare check above could pass without the card ever being
+         * submitted — a missing phone did exactly that (CI run 31147407922). Require the notice to
+         * be about the PAYMENT, so a decline test cannot be satisfied by an address-field problem.
+         */
+        const text = ((await notice.innerText().catch(() => '')) || '').trim();
+        expect(
+            /declin|card|payment|insufficient|cvc|expir/i.test(text),
+            `the block error must be about the payment, but it was "${text}". An address/contact validation ` +
+                'error here means the card was never submitted, so this test would be passing without exercising a decline.',
+        ).toBe(true);
+
         await expect(this.page, 'declined card must not reach order-received').not.toHaveURL(/order-received/);
     }
 

@@ -84,6 +84,7 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
                 state: 'NY',
                 postcode: '10001',
                 country: 'US',
+                phone: '+14152367890',
             });
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
@@ -175,6 +176,11 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
                 state: 'NY',
                 postcode: '10001',
                 country: 'US',
+                // Load-bearing, not copy-paste. Without it the block refuses to submit for a MISSING
+                // PHONE, which is itself an inline error that never reaches order-received — so this
+                // test would pass while proving nothing about a declined card. The phone must be
+                // valid for the decline to be the thing actually under test.
+                phone: '+14152367890',
             });
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.declined);
