@@ -29,6 +29,34 @@ Review code changes against Dokan coding standards and project conventions. Cons
 -   **Wrong text domain** — Must use `dokan-lite` for all translatable strings.
 -   **Missing `dokan` prefix on hooks** — All `apply_filters()` and `do_action()` hook names must start with `dokan_` (e.g., `dokan_order_created`, `dokan_vendor_updated`). Never use unprefixed or generic hook names to avoid conflicts with other plugins.
 
+**Authorization:**
+
+Read `dokan-backend-dev/references/authorization.md` before reviewing any
+permission callback, capability check, or ownership guard — its model table is
+canonical. The invariant: for every actor below Store Admin, an action needs
+**both** the record resolving to the caller's Vendor Scope **and** the matching
+`dokan_*` capability (reads included — ADR-0007). A check that has only one
+half is a CRITICAL finding. Flag:
+
+-   **Admin gated on anything but `manage_woocommerce`** — `manage_options` or role-name checks (`current_user_can( 'administrator' )`, `'shop_manager'`) draw the wrong boundary (ADR-0005). Legacy occurrences exist; new code must not add more.
+-   **Ownership delegated to native capabilities** — `wc_rest_check_post_permissions()` / `current_user_can( 'edit_post', … )` are not a uniform boundary (measured: they permit cross-vendor *order* writes). Ownership must be asserted: `OwnershipGate` on the Abilities layer, `dokan_is_product_author()` / `dokan_get_seller_id_by_order()` plus the capability elsewhere (ADR-0006).
+-   **`get_current_user_id()` used for vendor scope** — must be `dokan_get_current_user_id()`, so Vendor Staff resolve to their parent Vendor. The raw ID silently denies staff (or worse, scopes to the staff user).
+-   **Fail-open defaults** — an action or entity the capability map doesn't grant must be denied, never waved through. Watch for `?? ''` / missing-key fallbacks that grant.
+-   **New ability or MCP-reachable code bypassing the gate** — writes route through `OwnershipGate::can_write()`, vendor-scoped reads through `OwnershipGate::has_read_capability()`; Dokan-native abilities declare `required_capability()`.
+
+Per entity, the expected gates (ownership half + capability half):
+
+| Entity | Ownership resolves via | Read | Write |
+|---|---|---|---|
+| Product | `post_author` / `dokan_is_product_author()` | public if published; else `dokan_view_product_menu` | `dokan_add_product` / `dokan_edit_product` / `dokan_delete_product` (create forces author into vendor scope) |
+| Order / Suborder | `dokan_get_seller_id_by_order()` | `dokan_view_order_menu` (list), `dokan_view_order` (single); customers read own purchases | `dokan_manage_order`; **create denied below Store Admin** (checkout creates orders) |
+| Withdraw | vendor id on the record | `dokan_manage_withdraw` | `dokan_manage_withdraw` |
+| Store profile / settings | store owner, staff → parent (`VendorAuthorizable::can_access_vendor_store()`) | `dokan_view_store_settings_menu` | same; **Operating Terms** (commission, selling activation, direct publishing, featured) are Store Admin-only — a Vendor may never set their own |
+| Vendor directory | — | approved stores public; **pending hidden** below Store Admin | — |
+| Coupon | vendor id | — | `dokan_add_coupon` / `dokan_edit_coupon` / `dokan_delete_coupon` |
+| Reviews | vendor scope | `dokan_view_reviews` | `dokan_manage_reviews` |
+| Reports / stats | vendor scope | `dokan_view_overview_report` (and siblings) — revenue is private data, never public | — |
+
 **Security:**
 
 -   **Missing permission callbacks** — Every REST route must have a `permission_callback` (never omit it).
@@ -161,11 +189,12 @@ When approving:
 ## Review Approach
 
 1.  **Scan for critical violations** listed above
-2.  **Check the PR checklist** items are satisfied
-3.  **Verify REST patterns** — schema, pagination, links, filters, error handling
-4.  **Check security** — permissions, sanitization, escaping, SQL safety
-5.  **Review extensibility** — are appropriate filters/actions in place for pro plugin extension?
-6.  **Assess test coverage** — are new features/fixes covered by tests?
+2.  **Map each touched entity to the authorization table** — verify both halves (vendor scope *and* `dokan_*` capability) for every new read and write path
+3.  **Check the PR checklist** items are satisfied
+4.  **Verify REST patterns** — schema, pagination, links, filters, error handling
+5.  **Check security** — permissions, sanitization, escaping, SQL safety
+6.  **Review extensibility** — are appropriate filters/actions in place for pro plugin extension?
+7.  **Assess test coverage** — are new features/fixes covered by tests?
 
 ## Output Format
 
