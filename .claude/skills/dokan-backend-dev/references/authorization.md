@@ -174,6 +174,16 @@ The grant half matters as much as the deny half: Vendor Staff hold
 by their parent, so native capabilities refuse writes that Dokan's own REST API
 allows. The gate is what keeps the two surfaces in agreement.
 
+Reads below Store Admin are gated the same way (ADR-0007), mirroring the
+dashboard's own gates: a single order needs `dokan_view_order`, the orders list
+`dokan_view_order_menu`, and an unpublished product — single or listed —
+`dokan_view_product_menu`; published products stay public. Ownership is still
+established by the caller; `OwnershipGate::has_read_capability( $object_type,
+$view )` supplies the capability half, filterable via
+`dokan_ability_read_capability`. A vendor/staff caller without the product-list
+capability falls back to the public published-only view rather than being
+denied outright.
+
 ## Known defects (open)
 
 - `StoreController::get_restricted_fields_for_update()` gates on

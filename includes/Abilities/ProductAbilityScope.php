@@ -176,11 +176,13 @@ class ProductAbilityScope implements Hookable {
             return $permission;
         }
 
-        if ( current_user_can( 'manage_woocommerce' ) || dokan_is_product_author( $object_id ) ) {
+        if ( current_user_can( 'manage_woocommerce' ) || 'publish' === get_post_status( $object_id ) ) {
             return true;
         }
 
-        return 'publish' === get_post_status( $object_id );
+        // Unpublished: own scope plus the capability behind the dashboard's product list —
+        // the only surface where unpublished products show (ADR-0007 applies to reads too).
+        return dokan_is_product_author( $object_id ) && OwnershipGate::has_read_capability( 'product', 'item' );
     }
 
     /**
@@ -441,9 +443,11 @@ class ProductAbilityScope implements Hookable {
 
         $this->forced_query_author = $vendor_filter;
 
-        $views_own = $vendor_filter > 0 && $vendor_filter === $caller && dokan_is_user_seller( $caller );
+        $views_own = $vendor_filter > 0 && $vendor_filter === $caller && dokan_is_user_seller( $caller )
+            && OwnershipGate::has_read_capability( 'product', 'list' );
 
-        // Limit to published products unless the caller is a store admin or browsing their own store.
+        // Limit to published products unless the caller is a store admin or browsing their own
+        // store while holding the capability behind the dashboard's product list.
         $this->force_published_only = ! $is_admin && ! $views_own;
     }
 

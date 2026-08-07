@@ -51,6 +51,25 @@ class OwnershipGate {
     ];
 
     /**
+     * Dokan capability required to read vendor-scoped data, mirroring the dashboard's own
+     * gates: the orders list sits behind `dokan_view_order_menu`, a single order behind
+     * `dokan_view_order`, and unpublished products only ever show on the product list, which
+     * sits behind `dokan_view_product_menu`. Published products are public and never gated.
+     *
+     * @var array<string, array<string, string>>
+     */
+    private const READ_CAPABILITIES = [
+        'product'    => [
+            'item' => 'dokan_view_product_menu',
+            'list' => 'dokan_view_product_menu',
+        ],
+        'shop_order' => [
+            'item' => 'dokan_view_order',
+            'list' => 'dokan_view_order_menu',
+        ],
+    ];
+
+    /**
      * Request contexts that mutate a record.
      *
      * @var string[]
@@ -149,6 +168,50 @@ class OwnershipGate {
         // Granted even where a native check would refuse: vendor staff legitimately act on records
         // authored by their parent vendor, which native capabilities alone cannot express.
         return self::has_capability( $object_type, $context );
+    }
+
+    /**
+     * Whether the caller holds the Dokan capability for a vendor-scoped read.
+     *
+     * Ownership is not decided here — callers establish that the record (or list) resolves to
+     * the caller's vendor scope first; this supplies the capability half. Reads below Store
+     * Admin are gated like the dashboard (ADR-0007), which is behaviourally free for a default
+     * Vendor, who holds every `dokan_*` capability, and bites only where a site has
+     * deliberately narrowed staff capabilities.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $object_type Post type: `product` or `shop_order`.
+     * @param string $view        `item` for a single record, `list` for a collection.
+     *
+     * @return bool
+     */
+    public static function has_read_capability( string $object_type, string $view ): bool {
+        $capability = self::READ_CAPABILITIES[ $object_type ][ $view ] ?? null;
+
+        // Fail closed: a read the map does not grant is denied, never waved through.
+        if ( null === $capability ) {
+            return false;
+        }
+
+        /**
+         * Filters the Dokan capability required to read vendor-scoped data over the
+         * Abilities layer.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string $capability  Required capability, or an empty string for none.
+         * @param string $object_type Post type being read.
+         * @param string $view        `item` for a single record, `list` for a collection.
+         */
+        $capability = (string) apply_filters(
+            'dokan_ability_read_capability',
+            $capability,
+            $object_type,
+            $view
+        );
+
+        return '' === $capability || current_user_can( $capability );
     }
 
     /**

@@ -486,6 +486,56 @@ class ProductAbilityScopeTest extends DokanTestCase {
     }
 
     /**
+     * Unpublished-product reads are gated like the dashboard's product list — ownership alone
+     * is not enough below Store Admin (ADR-0007 applies to reads too). Published products stay
+     * public regardless of capabilities.
+     */
+    public function test_staff_unpublished_product_reads_require_the_view_capability() {
+        $draft = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+        wp_update_post(
+            [
+                'ID'          => $draft,
+                'post_status' => 'draft',
+            ]
+        );
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+        $this->force_ability_context();
+
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'read', $draft, 'product' ) );
+
+        wp_get_current_user()->add_cap( 'dokan_view_product_menu' );
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $draft, 'product' ) );
+    }
+
+    public function test_published_product_reads_stay_public_without_any_capability() {
+        $product = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+        $this->force_ability_context();
+
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $product, 'product' ) );
+    }
+
+    public function test_staff_products_query_is_published_only_without_the_view_capability() {
+        $this->sut->register_hooks();
+        $this->force_ability_context();
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+
+        $query = $this->products_query_scope_for( [ 'vendor_id' => $this->seller_id1 ] );
+        $this->assertSame( 'publish', $query['post_status'] );
+
+        wp_get_current_user()->add_cap( 'dokan_view_product_menu' );
+
+        $query = $this->products_query_scope_for( [ 'vendor_id' => $this->seller_id1 ] );
+        $this->assertArrayNotHasKey( 'post_status', $query );
+    }
+
+    /**
      * A create names no record, so the gate decides it on the Dokan capability alone. Left to
      * native capabilities the parity break of ADR-0007 recurs on creation: staff lack
      * `publish_products`, so WC abilities would refuse a create Dokan's own REST API permits.

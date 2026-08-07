@@ -151,12 +151,14 @@ class OrderAbilityScope implements Hookable {
         }
 
         if ( $object_id > 0 ) {
-            return absint( dokan_get_seller_id_by_order( $object_id ) ) === dokan_get_current_user_id();
+            return absint( dokan_get_seller_id_by_order( $object_id ) ) === dokan_get_current_user_id()
+                && OwnershipGate::has_read_capability( 'shop_order', 'item' );
         }
 
-        // Collection level: broaden read so vendors can list; rows are scoped by the order query.
+        // Collection level: vendors may list (rows are scoped by the order query), gated like
+        // the dashboard's orders page — staff without the capability are denied at the door.
         if ( 'read' === $context ) {
-            return true;
+            return OwnershipGate::has_read_capability( 'shop_order', 'list' );
         }
 
         return $permission;

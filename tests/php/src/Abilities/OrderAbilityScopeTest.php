@@ -66,6 +66,29 @@ class OrderAbilityScopeTest extends DokanTestCase {
     }
 
     /**
+     * Reads are gated like the dashboard (ADR-0007): a single order sits behind
+     * `dokan_view_order`, the list behind `dokan_view_order_menu`. Behaviourally free for a
+     * default Vendor, who holds both; bites only where staff capabilities were narrowed.
+     */
+    public function test_staff_order_reads_require_the_dashboard_view_capabilities() {
+        $order = $this->create_single_vendor_order( $this->seller_id1 );
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+        $this->force_ability_context();
+
+        $this->assertFalse( $this->sut->scope_order_permissions( true, 'read', $order, 'shop_order' ) );
+        $this->assertFalse( $this->sut->scope_order_permissions( true, 'read', 0, 'shop_order' ) );
+
+        wp_get_current_user()->add_cap( 'dokan_view_order' );
+        $this->assertTrue( $this->sut->scope_order_permissions( false, 'read', $order, 'shop_order' ) );
+        $this->assertFalse( $this->sut->scope_order_permissions( true, 'read', 0, 'shop_order' ) );
+
+        wp_get_current_user()->add_cap( 'dokan_view_order_menu' );
+        $this->assertTrue( $this->sut->scope_order_permissions( false, 'read', 0, 'shop_order' ) );
+    }
+
+    /**
      * Orders are created by checkout, never by a Vendor — the capability map deliberately has
      * no `shop_order`/`create` entry, and the gate fails closed rather than falling back to
      * native capabilities, whose `shop_order` mapping is not a reliable boundary (ADR-0006).
