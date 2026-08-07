@@ -517,12 +517,29 @@ export async function ensurePayPalConfigured(
     settings?: Record<string, unknown>,
     disbursementMode: 'INSTANT' | 'ON_ORDER_COMPLETE' | 'DELAYED' = 'INSTANT'
 ): Promise<Record<string, unknown>> {
-    if (!hasCredentials) return { ok: true, skipped: 'no_credentials' };
-
+    /*
+     * Activate the module and switch the gateway ON even with NO credentials.
+     *
+     * This used to early-return `{ skipped: 'no_credentials' }` without calling the route at all.
+     * The consequence was not a skip, it was a false failure: with the module inactive
+     * `set_controllers()` never constructs PayPalController, so none of `dokan/v1/paypal-marketplace/*`
+     * is registered, and the 13 of 15 PP-SEC cases that are deliberately credential-free then probe
+     * routes that do not exist. The suite correctly refused to call that a pass and failed them on
+     * `rest_no_route` — eight of them in CI run 31147428124.
+     *
+     * Keys are merged server-side ONLY when non-empty (see the `'' !== $partner_id` guards in
+     * dokan-paypal-marketplace-test-helpers.php), so a keyless call activates the module and enables
+     * the gateway without configuring anything it should not. Money cases stay gated on
+     * `hasCredentials` at the test level, exactly as before.
+     */
     return testRequest('post', '/configure-paypal-marketplace', {
-        partner_id: PAYPAL_KEYS.partnerId,
-        client_id: PAYPAL_KEYS.clientId,
-        client_secret: PAYPAL_KEYS.clientSecret,
+        ...(hasCredentials
+            ? {
+                  partner_id: PAYPAL_KEYS.partnerId,
+                  client_id: PAYPAL_KEYS.clientId,
+                  client_secret: PAYPAL_KEYS.clientSecret,
+              }
+            : {}),
         disbursement_mode: disbursementMode,
         ...(settings ? { settings } : {}),
     });
