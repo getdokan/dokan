@@ -136,7 +136,7 @@ async function assertSessionIsAnonymous(label: string, headers: Headers = {}): P
 const GUEST_BILLING = {
     firstName: 'Guest',
     lastName: 'Buyer',
-    phone: '(555) 555-5555',
+    phone: '+14152367890',
     address1: '123 Test Street',
     city: 'New York',
     postcode: '10001',
