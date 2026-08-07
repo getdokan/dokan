@@ -1421,6 +1421,119 @@ export const data = {
         },
     },
 
+    // Vendor Store Settings migration: new React page (dashboard/new/#settings/store)
+    // <-> legacy vendor dashboard (dashboard/settings/store). Both persist to the same
+    // `dokan_profile_settings` meta, so edits must round-trip either direction. Built-in
+    // plugin-ui variants (text/switch/textarea/rich_text) expose a stable `#<id>` anchor
+    // and get full UI vice-versa coverage here; custom/composite variants (image,
+    // multiselect, radio, number, map, schedule grid, bank, vacation) have no stable
+    // anchor and are covered exhaustively by the REST API spec instead.
+    vendorStoreSettingsMigration: {
+        urls: {
+            newStoreSettings: 'dashboard/new/#settings/store',
+            legacyStoreSettings: 'dashboard/settings/store',
+            schemaEndpoint: 'dokan/v1/vendor-settings/store',
+        },
+
+        selectors: {
+            newUI: {
+                panel: '#settings-tabpanel-store_settings',
+                tabButton: (tab: string) => `#settings-tab-store_settings-tab_${tab}`,
+                // plugin-ui v2 dropped the `#settings-section-content-*` id; the card carries a testid.
+                sectionContent: (section: string) => `[data-testid="settings-section-${section}"]`,
+                // Built-in variants put the schema field id on the field wrapper div.
+                fieldInput: (id: string) => `#${id} input`,
+                fieldSwitch: (id: string) => `#${id} [role="switch"]`,
+                fieldTextarea: (id: string) => `#${id} textarea`,
+                // plugin-ui's rich_text editor is a custom contentEditable div.
+                fieldRichText: (id: string) => `#${id} [contenteditable]`,
+                saveButtonName: /save changes/i,
+            },
+            legacyUI: {
+                saveButton: 'button.dokan-update-setting-top-button',
+                saveSuccessMessage: 'Your information has been saved successfully',
+                // TinyMCE iframe body for a legacy rich-text editor id.
+                tinymceBody: (editorId: string) => `iframe#${editorId}_ifr`,
+            },
+        },
+
+        // Tabs and the section cards each tab must render (asserted by the tab/section
+        // render test). Mirrors the schema for the fully-loaded (Pro-active) vendor.
+        layout: {
+            general: ['company_banner', 'store_information', 'vendor_biography_section'],
+            location: ['store_map_section', 'location_details'],
+            schedule: ['store_schedule', 'store_vacation'],
+            business: ['catalog_mode_section', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'],
+            policies: ['terms_conditions'],
+        },
+
+        // Sections contributed by Pro modules — absent on a Lite-only site, so the
+        // render test asserts them only when the run is Pro-gated.
+        proSections: ['store_vacation', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'],
+
+        // Standalone vice-versa fields (built-in variants). `kind` drives the new-page
+        // read/write; `legacyKind` the legacy one. `requires` names a parent switch that
+        // must be on for the field to be editable. Switches carry no `values` (toggled).
+        syncFields: [
+            // --- General ---
+            { label: 'Store Title', tab: 'general', section: 'company_banner', gate: '@lite', kind: 'text', id: 'store_name', legacy: '#dokan_store_name', legacyKind: 'text', values: { fromNew: 'Store Alpha', fromLegacy: 'Store Legacy', final: 'Store Final' } },
+            { label: 'Phone', tab: 'general', section: 'store_information', gate: '@lite', kind: 'text', id: 'phone', legacy: '#setting_phone', legacyKind: 'text', values: { fromNew: '01711000001', fromLegacy: '01711000002', final: '01711000003' } },
+            { label: 'Show email address', tab: 'general', section: 'store_information', gate: '@lite', kind: 'switch', id: 'show_email', legacy: 'input[type="checkbox"][name="setting_show_email"]', legacyKind: 'checkbox' },
+            { label: 'Store Biography', tab: 'general', section: 'vendor_biography_section', gate: '@pro', kind: 'richtext', id: 'vendor_biography', legacy: '', legacyKind: 'tinymce', legacyEditor: 'vendor_biography', values: { fromNew: 'Biography from the new page', fromLegacy: 'Biography from the legacy page', final: 'Biography final value' } },
+
+            // --- Location ---
+            { label: 'Multiple store locations', tab: 'location', section: 'location_details', gate: '@pro', kind: 'switch', id: 'dokan_store_multiple_location', legacy: '#multiple-store-location', legacyKind: 'checkbox' },
+
+            // --- Schedule ---
+            // Note: the store-schedule toggle + open/close notices are covered by the
+            // API spec, not here. Enabling store-time activates the legacy form's
+            // schedule-grid submit-guard (store-form.php), which blocks saving the whole
+            // legacy form until the grid is valid — an old-form quirk unrelated to the
+            // migration. Keeping store-time off in the UI suite keeps every legacy save
+            // reliable; the vacation flow (below) still exercises the Schedule tab.
+
+            // --- Business ---
+            { label: 'Remove Add to Cart', tab: 'business', section: 'catalog_mode_section', gate: '@lite', kind: 'switch', id: 'catalog_mode_hide_add_to_cart_button', legacy: '#catalog_mode_hide_add_to_cart_button', legacyKind: 'checkbox' },
+            { label: 'Request a Quote', tab: 'business', section: 'catalog_mode_section', gate: '@pro', kind: 'switch', id: 'catalog_mode_request_a_quote_enabled', legacy: '#catalog_mode_request_a_quote_support', legacyKind: 'checkbox', requires: 'catalog_mode_hide_add_to_cart_button' },
+            { label: 'Show support button', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn', legacy: '#support_checkbox', legacyKind: 'checkbox' },
+            { label: 'Support on product page', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn_product', legacy: '#support_checkbox_product', legacyKind: 'checkbox' },
+            { label: 'Support button name', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'text', id: 'support_btn_name', legacy: '#dokan_support_btn_name', legacyKind: 'text', values: { fromNew: 'Ask Alpha', fromLegacy: 'Ask Legacy', final: 'Ask Final' } },
+        ],
+
+        // Cross-field flows tested bespoke (a parent + its required/composite partner).
+        combined: {
+            // Set-cart-amount min/max: two custom vendor_number inputs in one section.
+            minMax: {
+                tab: 'business',
+                section: 'set_cart_amount_min_max',
+                legacyMin: '#min_amount_to_order',
+                legacyMax: '#max_amount_to_order',
+                fromNew: { min: '10', max: '100' },
+                fromLegacy: { min: '20', max: '200' },
+                invalid: { min: '500', max: '50' },
+                invalidMessage: /can't be less than the minimum/i,
+            },
+        },
+
+        // store_name is required — clearing it must block the save with this message.
+        requiredField: {
+            id: 'store_name',
+            tab: 'general',
+            section: 'company_banner',
+            message: /Store title is required/i,
+        },
+
+        // Documented schema defaults, asserted by the defaults check.
+        defaults: {
+            store_name: '',
+            phone: '',
+            show_email: 'no',
+            enable_tnc: 'off',
+            dokan_store_time_enabled: 'no',
+            catalog_mode_hide_add_to_cart_button: 'off',
+        },
+    },
+
     // vendor
     vendor: {
         username: VENDOR,
