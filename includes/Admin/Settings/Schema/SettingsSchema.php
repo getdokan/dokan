@@ -503,20 +503,25 @@ class SettingsSchema {
 				'type'               => 'field',
 				'variant'            => 'multicheck',
 				'section_id'         => 'map_placement',
-				'title'              => esc_html__( 'Map Placement Locations', 'dokan-lite' ),
+				'title'              => esc_html__( 'Map Placement', 'dokan-lite' ),
 				'description'        => esc_html__( 'Choose where the store location map appears', 'dokan-lite' ),
 				'tooltip'            => esc_html__( 'Select the pages where you want to display the store location map.', 'dokan-lite' ),
-				'default'            => [ 'store_listing' ],
+				// Lite's only placement is the single-store-page sidebar map
+				// (dokan_appearance.store_map, module-independent). The Pro
+				// geolocation module extends this field with its Store Listing /
+				// Shop Page / product location-tab placements via the
+				// `dokan_get_admin_settings_schema` filter.
+				'default'            => [ 'store_map' ],
 				'options'            => [
 					[
-						'title' => esc_html__( 'Store Listing', 'dokan-lite' ),
-						'value' => 'store_listing',
+						'title' => esc_html__( 'Show map on Store Page', 'dokan-lite' ),
+						'value' => 'store_map',
 					],
 				],
 				'legacy_key'         => [
-					'store_listing' => 'dokan_appearance.store_map',
+					'store_map' => 'dokan_appearance.store_map',
 				],
-				'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayBooleanTransformer::for_slots( [ 'store_listing' ] ),
+				'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayBooleanTransformer::for_slots( [ 'store_map' ] ),
 			],
 		];
     }
