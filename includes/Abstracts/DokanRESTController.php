@@ -293,14 +293,24 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return array
      */
     protected function prepare_objects_query( $request ) {
-        // Vendors are always scoped to their own objects; only a store admin may target another vendor via the id param.
-        $is_store_admin          = current_user_can( dokan_admin_menu_capability() );
-        $can_target_other_vendor = $is_store_admin && isset( $request['id'] );
+        // Vendors are scoped to their own objects. Another vendor may be targeted via the id param
+        // only when the caller is a store admin, is that vendor, or the listing is limited to
+        // published (already-public) objects — the public stores/<id>/products route relies on the
+        // last case. Non-public statuses stay owner/admin-only, keeping the #3274 IDOR shut.
+        $current_user_id         = dokan_get_current_user_id();
+        $requested_id            = isset( $request['id'] ) ? absint( $request['id'] ) : 0;
+        $status                  = array_filter( (array) ( $request['status'] ?? $request['post_status'] ?? [] ) );
+        $is_public_only          = $status && array_diff( $status, [ 'publish' ] ) === [];
+        $can_target_other_vendor = $requested_id && (
+            current_user_can( dokan_admin_menu_capability() )
+            || $requested_id === $current_user_id
+            || $is_public_only
+        );
 
         $args                        = array();
         $args['fields']              = 'ids';
         $args['post_status']         = ! isset( $request['post_status'] ) ? $this->post_status : $request['post_status'];
-        $args['author']              = $can_target_other_vendor ? (int) $request['id'] : dokan_get_current_user_id();
+        $args['author']              = $can_target_other_vendor ? $requested_id : $current_user_id;
         $args['offset']              = $request['offset'];
         $args['order']               = $request['order'];
         $args['orderby']             = $request['orderby'];
