@@ -96,8 +96,15 @@ if ( ! empty( $attributes['showRating'] ) ) {
      * which builds a fresh Vendor from the id and would discard the preview stand-in —
      * making the editor query real ratings for user 0 instead of showing dummy data.
      */
+    /*
+     * The `woocommerce` class is load-bearing, not decoration: wc_get_rating_html()
+     * renders stars through `.woocommerce .star-rating`, and without that ancestor
+     * the element falls back to showing its own screen-reader text. The classic
+     * page inherits the class from store.php's `#dokan-content` wrapper; a block
+     * has to carry it itself. Scoped to this row so no other Woo rule applies.
+     */
     $items .= sprintf(
-        '<li class="dokan-store-rating"><i class="fas fa-star"></i>%s</li>',
+        '<li class="dokan-store-rating woocommerce"><i class="fas fa-star"></i>%s</li>',
         wp_kses_post( $vendor->get_readable_rating( false ) )
     );
 }
