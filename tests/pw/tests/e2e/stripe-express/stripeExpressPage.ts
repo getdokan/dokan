@@ -559,10 +559,16 @@ export class StripeExpressPage {
          * the phone field switched off.
          */
         if (d.phone) {
-            const phoneField = p.locator('#shipping-phone, #billing-phone').first();
-            if (await phoneField.count()) {
-                await phoneField.fill(d.phone).catch(() => undefined);
-            }
+            // Fail loudly rather than silently skipping. The first version guarded with
+            // `if (count())` and swallowed fill errors, so a renamed field would look identical to
+            // "the store has no phone field" — and the caller would only find out much later, as an
+            // unexplained no-op Place Order click with no visible validation message.
+            const phoneField = p.locator('#shipping-phone, #billing-phone, input[id$="-phone"]').first();
+            await expect(phoneField, 'the block checkout phone field must exist for a guest — the Place Order click is a silent no-op without it').toBeVisible({
+                timeout: 15_000,
+            });
+            await phoneField.fill(d.phone);
+            await expect(phoneField, 'the guest phone must actually persist into the field').toHaveValue(/\d/);
         }
         await p.waitForLoadState('networkidle').catch(() => undefined);
         await p.waitForTimeout(1_500);
@@ -773,12 +779,25 @@ export class StripeExpressPage {
          * submitted — a missing phone did exactly that (CI run 31147407922). Require the notice to
          * be about the PAYMENT, so a decline test cannot be satisfied by an address-field problem.
          */
+        /*
+         * Match by EXCLUSION, not by payment keywords.
+         *
+         * A first attempt required /declin|card|payment|…/ and broke all three decline tests on CI
+         * (run 31162562169): a real Stripe decline surfaces through WooCommerce Blocks as the generic
+         * "Something went wrong. Please contact us to get assistance.", which contains no payment word
+         * at all. Requiring one rejected a genuine decline.
+         *
+         * What must be excluded is the FORM-VALIDATION family, because those mean the card was never
+         * submitted — that is the loophole this guard exists to close ("Please provide a mobile phone
+         * number." satisfied the old bare check). Anything that is not field validation is accepted.
+         */
         const text = ((await notice.innerText().catch(() => '')) || '').trim();
+        const isFieldValidation = /please provide|please enter|is invalid|is required|enter a valid/i.test(text);
         expect(
-            /declin|card|payment|insufficient|cvc|expir/i.test(text),
-            `the block error must be about the payment, but it was "${text}". An address/contact validation ` +
-                'error here means the card was never submitted, so this test would be passing without exercising a decline.',
-        ).toBe(true);
+            isFieldValidation,
+            `the block error was a form-validation message ("${text}"), which means the card was never submitted — ` +
+                'this test would be passing without exercising a decline at all.',
+        ).toBe(false);
 
         await expect(this.page, 'declined card must not reach order-received').not.toHaveURL(/order-received/);
     }
