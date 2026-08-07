@@ -187,20 +187,38 @@ export class VendorReportsPage {
         await this.page.waitForLoadState('domcontentloaded');
 
         /*
-         * `waitForLoadState` is not enough after an aborted navigation: the redirect the app just
-         * issued is still in flight, and the document sitting there is the cancelled (blank) one,
-         * whose load event has already fired. Waiting on state alone therefore returns instantly
-         * against an empty page — observed on CI as `assertAnalyticsShell` seeing bodyLen <= 50.
+         * Wait for the page to STOP MOVING, not merely to have content once.
          *
-         * Wait for real rendered content instead. Web-first, so it rides out however long the
-         * redirected page takes, and it still fails if the page genuinely never renders.
+         * Two earlier attempts failed on CI and each taught something:
+         *   1. Swallowing ERR_ABORTED alone — `waitForLoadState` then returned instantly against the
+         *      cancelled, blank document, whose load event had already fired.
+         *   2. Polling for rendered content — that passed against the PRE-redirect page, and the
+         *      redirect then blanked it, so `assertAnalyticsShell` still saw bodyLen <= 50 a moment
+         *      later. Content alone is not a settled page.
+         *
+         * `shouldBlockNavigation()` can redirect a report path more than once, so the only safe
+         * signal is the URL holding still AND the body having content on the same observation.
+         * Both must be true twice running before this returns.
          */
-        await expect
-            .poll(async () => (await this.page.locator('body').innerText().catch(() => '')).trim().length, {
-                message: `no rendered content at ${url} after the app's client-side redirect settled`,
-                timeout: 30_000,
-            })
-            .toBeGreaterThan(50);
+        const deadline = Date.now() + 45_000;
+        let lastUrl = '';
+        let stable = 0;
+        let bodyLen = 0;
+        while (Date.now() < deadline) {
+            const currentUrl = this.page.url();
+            bodyLen = (await this.page.locator('body').innerText().catch(() => '')).trim().length;
+            stable = currentUrl === lastUrl && bodyLen > 50 ? stable + 1 : 0;
+            lastUrl = currentUrl;
+            if (stable >= 2) {
+                return;
+            }
+            await this.page.waitForTimeout(500);
+        }
+        throw new Error(
+            `${url} never settled: the URL kept changing or the body stayed empty for 45s ` +
+                `(final url ${this.page.url()}, body ${bodyLen} chars). The vendor analytics app redirects ` +
+                'report paths client-side, so a page that never settles means the redirect chain did not finish.',
+        );
     }
 
     private async gotoReports(): Promise<void> {
