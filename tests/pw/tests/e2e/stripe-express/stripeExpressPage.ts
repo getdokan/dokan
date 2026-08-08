@@ -1,6 +1,6 @@
 import { Page, Frame, expect, request } from '@playwright/test';
 import { toPath, closeAnnouncementModal, SERVER_URL, parseBoolean } from '@utils/helpers';
-import { payloads } from '@utils/payloads';
+import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { stripeApi } from '@utils/stripeApi';
 
 // The suite's strict tsconfig doesn't pull in `@types/node`, so `process` would
@@ -171,7 +171,7 @@ export class StripeExpressPage {
         firstName: 'customer1',
         lastName: 'c1',
         email: 'customer1@email.com',
-        phone: '+14152367890',
+        phone: MOBILE_TEST_PHONE,
         address1: 'abc street',
         city: 'New York',
         postcode: '10003',

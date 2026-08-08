@@ -2,7 +2,7 @@ import { test, expect, request } from '@utils/test';
 import type { Page } from '@playwright/test';
 import { SERVER_URL } from '@utils/helpers';
 import { ApiUtils } from '@utils/apiUtils';
-import { payloads } from '@utils/payloads';
+import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { log } from '@utils/logger';
 import { StripeExpressPage, STRIPE_CARDS, STRIPE_EXPRESS_KEYS, STRIPE_EXPRESS_CONNECTED_ACCOUNTS } from './stripeExpressPage';
@@ -236,7 +236,7 @@ test.describe('Stripe Express — edge & resilience @pro', () => {
         const longUnicodeFirst = 'Renée-Ünüçödé-名前-' + 'あ'.repeat(12);
         const longUnicodeLast = 'Tëst-Sürñámé-日本語-' + 'Ω'.repeat(12);
         const longUnicodeAddr = 'Straße Ñoño 日本語 番地 ' + 'Ä'.repeat(48);
-        const billing = { first_name: longUnicodeFirst, last_name: longUnicodeLast, company: '', address_1: longUnicodeAddr, address_2: '', city: 'New York', state: 'NY', postcode: '10003', country: 'US', email: 'customer1@email.com', phone: '+14152367890' };
+        const billing = { first_name: longUnicodeFirst, last_name: longUnicodeLast, company: '', address_1: longUnicodeAddr, address_2: '', city: 'New York', state: 'NY', postcode: '10003', country: 'US', email: 'customer1@email.com', phone: MOBILE_TEST_PHONE };
         const shipping = { first_name: longUnicodeFirst, last_name: longUnicodeLast, company: '', address_1: longUnicodeAddr, address_2: '', city: 'New York', state: 'NY', postcode: '10003', country: 'US' };
         const ctx = await browser.newContext({ storageState: customerAuth });
         const page = await ctx.newPage();
