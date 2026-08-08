@@ -1805,7 +1805,12 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            // A REAL-FORMAT US mobile, deliberately not a 555 number. Stripe Link validates the
+            // billing phone as a MOBILE number and rejects the reserved fictional 555 range with
+            // "Your mobile phone number is invalid.", which blocks the WooCommerce Blocks checkout
+            // from submitting at all — no POST /wc/store/v1/checkout, no order, and every Stripe
+            // block-checkout test then fails on "no new order". Do not swap this back to a 555 number.
+            phone: '+14152367890',
         },
 
         shipping: {
@@ -1855,7 +1860,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            phone: '+14152367890',
         },
 
         shipping: {
@@ -1898,7 +1903,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            phone: '+14152367890',
         },
 
         shipping: {

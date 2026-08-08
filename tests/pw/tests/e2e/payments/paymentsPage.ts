@@ -354,20 +354,29 @@ export class PaymentsPage {
         await this.goto(`${data.subUrls.backend.wc.paymentSettings}&path=%2Foffline%2F${path}&from=WCADMIN_PAYMENT_SETTINGS`);
     }
 
-    // Navigate to an offline payment method and toggle enable/disable
-    async togglePaymentMethod(method: string): Promise<void> {
+    // Navigate to an offline payment method and put its enable switch in the DESIRED state.
+    // Idempotent on purpose: a blind click flips whatever is there, so on an environment where
+    // _env.setup already enabled these gateways this used to DISABLE them and leave them off for
+    // every later spec on the shard (it broke productAdvertising's bacs checkout).
+    async setPaymentMethodEnabled(method: string, enabled: boolean): Promise<void> {
         await this.goToWcPaymentSettings(method);
         // eslint-disable-next-line playwright/no-networkidle
         await this.page.waitForLoadState('networkidle');
+        const toggle = this.page.locator(adminPayments.offlineToggle);
+        await expect(toggle, `the ${method} enable switch must render before it can be set`).toBeVisible();
+        if ((await toggle.isChecked()) === enabled) {
+            return;
+        }
         await this.click(adminPayments.offlineToggle);
         await this.click(adminPayments.offlineSaveChanges);
+        await expect(toggle, `${method} should now be ${enabled ? 'enabled' : 'disabled'}`).toBeChecked({ checked: enabled });
     }
 
     // Admin setup basic payment methods
     async setupBasicPaymentMethods(_payment: payment): Promise<void> {
-        await this.togglePaymentMethod('cheque'); // enable cheque
-        await this.togglePaymentMethod('cod'); // enable cash on delivery
-        await this.togglePaymentMethod('bacs'); // enable bank transfer
+        await this.setPaymentMethodEnabled('cheque', true);
+        await this.setPaymentMethodEnabled('cod', true);
+        await this.setPaymentMethodEnabled('bacs', true);
     }
 
     // ---- admin: enable pro modules (assert setup link appears) ----

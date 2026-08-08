@@ -32,6 +32,7 @@ const WITHDRAW_URL = toPath('dashboard/new/#/withdraw');
 const MAKE_DEFAULT_REST = /dokan\/v[0-9]+\/withdraw\/make-default-method/i;
 
 let apiUtils: ApiUtils;
+let originalWithdraw: any;
 
 async function getWithdrawMethod(): Promise<string> {
     const [, body] = await apiUtils.get(endPoints.getWithdrawSettings, { headers: payloads.vendorAuth }, false);
@@ -54,10 +55,18 @@ test.describe('Withdraw B15 extensions (React) functionality', () => {
             payloads.vendorAuth,
         );
         // Enable the disbursement schedule system (schedule active + non-empty schedule map).
-        await dbUtils.updateOptionValue('dokan_withdraw', { disbursement: { manual: 'manual', schedule: 'schedule' }, disbursement_schedule: { weekly: 'weekly' } });
+        // 'dokan_withdraw' is GLOBAL, so capture the previous value and put it back in afterAll —
+        // otherwise every later spec on this shard inherits the schedule config.
+        const [previousWithdraw] = await dbUtils.updateOptionValue('dokan_withdraw', { disbursement: { manual: 'manual', schedule: 'schedule' }, disbursement_schedule: { weekly: 'weekly' } });
+        originalWithdraw = previousWithdraw;
     });
 
     test.afterAll(async () => {
+        // setOptionValue, not updateOptionValue: the latter deep-MERGES, so it could never remove
+        // the disbursement keys this spec introduced if they were absent to begin with.
+        if (originalWithdraw) {
+            await dbUtils.setOptionValue('dokan_withdraw', originalWithdraw);
+        }
         await apiUtils?.dispose();
     });
 

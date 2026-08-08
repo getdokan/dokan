@@ -137,7 +137,7 @@ const createOrderPayload = {
         postcode: '10003',
         country: 'US',
         email: 'customer1@email.com',
-        phone: '(555) 555-5555',
+        phone: '+14152367890',
     },
     shipping: {
         first_name: 'customer1',
