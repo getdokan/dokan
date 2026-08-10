@@ -435,6 +435,28 @@ export class StripeExpressPage {
      * number stuck — retrying the WHOLE entry if the PE re-mounts (WC re-render detaches
      * the cross-origin frame mid-fill).
      */
+    /**
+     * True when all three Payment Element fields still hold a plausible value. DIAGNOSTIC ONLY —
+     * called on the failure path to say whether the element still held a card when the submit
+     * no-oped. Length-based, so it proves presence, NOT validity: a corrupted value still passes.
+     */
+    private async isCardComplete(): Promise<boolean> {
+        try {
+            const frame = await this.findStripePeFrame();
+            const read = async (sel: string) => (await frame.locator(sel).first().inputValue().catch(() => '')).replace(/\s/g, '');
+            const [num, exp, cvc] = await Promise.all([
+                read(StripeExpressPage.PE_NUMBER),
+                read(StripeExpressPage.PE_EXPIRY),
+                read(StripeExpressPage.PE_CVC),
+            ]);
+            return num.length >= 12 && exp.length >= 4 && cvc.length >= 3;
+        } catch {
+            // The element is not reachable at all — report that rather than throwing from a
+            // diagnostic and masking the real failure.
+            return false;
+        }
+    }
+
     async fillCardDetails(card: string = STRIPE_CARDS.success): Promise<void> {
         await this.openCardAccordion();
         const deadline = Date.now() + 45_000;
@@ -669,11 +691,29 @@ export class StripeExpressPage {
                         .allInnerTexts()
                         .catch(() => [] as string[]);
                     const peError = await this.page.locator('#dokan-stripe-express-errors').innerText().catch(() => '');
-                    const why = [...notices, peError].map(t => t.trim()).filter(Boolean).join(' | ') || '<no visible validation message>';
+                    /*
+                     * Also read INSIDE the Stripe iframe. Both selectors above live in the main
+                     * document, but the Payment Element renders its own field-level validation
+                     * ("Your card number is incomplete", "Your card's expiration date is
+                     * incomplete") inside its iframe. So the message that explains the no-op was
+                     * structurally unreachable, and this diagnostic reported
+                     * "<no visible validation message>" on every CI failure — which reads as "no
+                     * error existed" when it actually meant "we could not see one".
+                     */
+                    const peFrameError = await this.findStripePeFrame()
+                        .then(frame => frame.locator('p[role="alert"], .p-FieldError, [id$="-errorText"]').allInnerTexts())
+                        .then(texts => texts.join(' | '))
+                        .catch(() => '');
+                    const cardState = await this.isCardComplete()
+                        .then(ok => (ok ? 'card fields still complete at failure' : 'CARD FIELDS EMPTY/INCOMPLETE at failure — the Payment Element re-mounted'))
+                        .catch(() => 'card state unreadable');
+                    const why =
+                        [...notices, peError, peFrameError].map(t => t.trim()).filter(Boolean).join(' | ') ||
+                        '<no validation message in the page OR inside the Payment Element iframe>';
                     detail =
                         'The Blocks checkout never issued POST /wc/store/v1/checkout at all — the Place Order click was a NO-OP ' +
                         '(block not submittable / validation blocked it), so no payment was ever attempted. This is a checkout-submission ' +
-                        `failure, not a declined payment.\nBlock validation said: ${why}`;
+                        `failure, not a declined payment.\nBlock validation said: ${why}\nPayment Element state: ${cardState}`;
                 }
                 throw new Error(`${String(err)}\n\n${detail}`);
             }
