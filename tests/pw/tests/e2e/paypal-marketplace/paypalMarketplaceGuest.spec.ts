@@ -4,7 +4,7 @@ import { SERVER_URL, BASE_URL } from '@utils/helpers';
 import { log } from '@utils/logger';
 import { dbUtils } from '@utils/dbUtils';
 import { ApiUtils } from '@utils/apiUtils';
-import { payloads } from '@utils/payloads';
+import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { PAYPAL_IDS, PayPalMarketplacePage } from './paypalMarketplacePage';
 import {
     VENDOR_ID,
@@ -136,7 +136,7 @@ async function assertSessionIsAnonymous(label: string, headers: Headers = {}): P
 const GUEST_BILLING = {
     firstName: 'Guest',
     lastName: 'Buyer',
-    phone: '+14152367890',
+    phone: MOBILE_TEST_PHONE,
     address1: '123 Test Street',
     city: 'New York',
     postcode: '10001',
