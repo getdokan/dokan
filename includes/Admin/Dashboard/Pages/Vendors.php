@@ -8,11 +8,10 @@ class Vendors extends AbstractPage {
     }
 
     public function menu( string $capability, string $position ): array {
-        $status_count  = dokan_get_seller_status_count();
-        $pending_count = absint( $status_count['inactive'] ?? 0 );
+        $pending_count = dokan_get_pending_vendor_count();
 
         $menu_title = $pending_count ? sprintf(
-            /* translators: %s: Inactive vendor count badge */
+            /* translators: %s: Pending vendor count badge */
             __( 'Vendors %s', 'dokan-lite' ),
             '<span class="awaiting-mod count-1"><span class="pending-count">'
             . number_format_i18n( $pending_count )
