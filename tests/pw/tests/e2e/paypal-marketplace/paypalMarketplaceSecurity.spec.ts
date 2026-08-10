@@ -1041,6 +1041,33 @@ test.describe('PayPal Marketplace — security · REST / AJAX / IDOR / secret ex
     // PP-SEC-10 — disconnect action enforces its nonce and capability.
     // ---------------------------------------------------------------------
     test('PP-SEC-10: disconnect refuses a nonce-less call and cannot disconnect a different vendor', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        /*
+         * The vendor PayPal settings surface EXISTS only when the admin supplied API keys.
+         *
+         * RegisterWithdrawMethods::register_methods() returns early on `! Helper::is_ready()`
+         * (is_enabled() && get_partner_id() && is_api_ready()), so without keys the
+         * 'dokan-paypal-marketplace' withdraw method is never registered, its
+         * `paypal_connect_button()` callback never runs, and templates/vendor-settings-payment.php
+         * never renders — there is no Disconnect anchor to harvest, by design and correctly.
+         *
+         * `isVendorConnected()` does NOT see that: its REST flag comes from
+         * add_paypal_marketplace_to_vendor_profile_data(), which is hooked separately and is not
+         * gated on is_ready(). So on a keyless install the baseline reports "connected" while the
+         * page legitimately renders nothing — which is exactly how this case failed on CI, where no
+         * PAYPAL_* secrets are wired into the workflow, while passing on every local run, where the
+         * stored gateway settings carry real keys.
+         *
+         * Declared skip, read from the SERVER's own Helper::is_ready() rather than inferred from
+         * env, because only the server knows what is actually stored. This is the
+         * `test.skip(true, …)` naming the template that the harvest assertion below always called
+         * for. It never hides a defect: with keys present the case runs in full.
+         */
+        const paypalStatus = await getPayPalStatus();
+        test.skip(
+            !paypalStatus?.is_ready,
+            'PayPal gateway is not ready (Helper::is_ready() false — admin API keys absent), so RegisterWithdrawMethods::register_methods() never registers the withdraw method and templates/vendor-settings-payment.php never renders a Disconnect anchor. The disconnect surface this case tests does not exist on a keyless install.'
+        );
+
         expect(await isVendorConnected(VENDOR_ID), 'vendor1 must start this test connected, or "still connected afterwards" proves nothing').toBe(true);
 
         const settingsPath = PayPalMarketplacePage.VENDOR_SETTINGS_URL;
