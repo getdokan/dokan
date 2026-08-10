@@ -358,16 +358,18 @@ test.describe('Abuse Reports Tests @pro', () => {
         // "after === before" against the post-render count, which differs.
         await adminPage.locator(abuseReportsPage.adminReact.dataRow).first().waitFor({ state: 'visible', timeout: 20000 });
 
-        // Capture row count before opening delete
-        const before = await abuseReportsPage.getRowCount();
+        // Capture row count before opening delete. Must be the SETTLED count: DataViews paints an
+        // intermediate row set and re-renders, so a bare read here can bake in a transient number
+        // (CI captured 20, which re-rendered to the real 2) and fail the comparison below for a
+        // reason unrelated to cancelling a delete.
+        const before = await abuseReportsPage.getStableRowCount();
 
         await abuseReportsPage.openRowActionMenu(abuseReportsPage.testData.abuseReports.reportReason);
         await abuseReportsPage.clickDeleteActionFromMenu();
         await abuseReportsPage.cancelDeleteInModal();
 
-        // Row count should be unchanged after cancel
-        const after = await abuseReportsPage.getRowCount();
-        expect(after, 'Row count should not change when delete is cancelled').toBe(before);
+        // Row count should be unchanged after cancel — web-first so a late re-render can't win the race.
+        await abuseReportsPage.expectRowCount(before, 'Row count should not change when delete is cancelled');
 
         await adminPage.close();
         await context.close();

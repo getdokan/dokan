@@ -20,6 +20,17 @@ const categoriesPayload = () => {
     return Number.isFinite(id) && id > 0 ? [{ id }] : [{}];
 };
 
+/**
+ * A billing phone that passes a MOBILE-number check.
+ *
+ * Stripe Link validates the billing phone as a mobile number and rejects the reserved fictional
+ * `(555) 555-5555` range. When it does, WooCommerce Blocks refuses to submit the checkout at all —
+ * no Store API request fires and no order is created — so a checkout test fails with no visible
+ * card error. Keep every checkout seed pointed at this one constant so the value can be changed in
+ * a single place if a validator ever rejects it again.
+ */
+export const MOBILE_TEST_PHONE = '+14152367890';
+
 export const payloads = {
     // wp
     createPost: {
@@ -1805,7 +1816,12 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            // A REAL-FORMAT US mobile, deliberately not a 555 number. Stripe Link validates the
+            // billing phone as a MOBILE number and rejects the reserved fictional 555 range with
+            // "Your mobile phone number is invalid.", which blocks the WooCommerce Blocks checkout
+            // from submitting at all — no POST /wc/store/v1/checkout, no order, and every Stripe
+            // block-checkout test then fails on "no new order". Do not swap this back to a 555 number.
+            phone: MOBILE_TEST_PHONE,
         },
 
         shipping: {
@@ -1855,7 +1871,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            phone: MOBILE_TEST_PHONE,
         },
 
         shipping: {
@@ -1898,7 +1914,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            phone: MOBILE_TEST_PHONE,
         },
 
         shipping: {
