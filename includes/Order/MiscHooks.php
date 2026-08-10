@@ -32,6 +32,8 @@ class MiscHooks {
     /**
      * Remove customer sensitive information while exporting order
      *
+     * Drops every billing and shipping column plus the customer IP when the setting is on.
+     *
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param array $headers
@@ -40,12 +42,20 @@ class MiscHooks {
      */
     public function hide_customer_info_from_vendor_order_export( $headers ) {
         $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
-        if ( 'off' !== $hide_customer_info ) {
-            unset( $headers['billing_email'] );
-            unset( $headers['customer_ip'] );
+        if ( 'off' === $hide_customer_info ) {
+            return $headers;
         }
 
-        return $headers;
+        // Matched by prefix so columns added later, here or by a third party, are covered too. customer_note is a vendor facing note, so it stays.
+        return array_filter(
+            $headers,
+            function ( $column ) {
+                return 'customer_ip' !== $column
+                    && ! str_starts_with( $column, 'billing_' )
+                    && ! str_starts_with( $column, 'shipping_' );
+            },
+            ARRAY_FILTER_USE_KEY
+        );
     }
 
     /**
