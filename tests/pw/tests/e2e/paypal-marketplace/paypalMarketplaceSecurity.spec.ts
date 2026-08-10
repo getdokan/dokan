@@ -1063,6 +1063,7 @@ test.describe('PayPal Marketplace — security · REST / AJAX / IDOR / secret ex
         const ctx = await browser.newContext({ storageState: vendorAuth });
         const page = await ctx.newPage();
         let vendor1DisconnectUrl = '';
+        let harvestContext = '';
         try {
             await page.goto(siteUrl(`${settingsPath}?action=dokan-paypal-marketplace-disconnect&_wpnonce=forgednonce`), { waitUntil: 'domcontentloaded' });
             expect(await isVendorConnected(VENDOR_ID), 'a disconnect URL carrying a forged nonce must leave the vendor connected').toBe(true);
@@ -1079,6 +1080,40 @@ test.describe('PayPal Marketplace — security · REST / AJAX / IDOR / secret ex
                 .getAttribute('href', { timeout: 10_000 })
                 .catch(() => null)
                 .then(href => href ?? '');
+
+            /*
+             * Capture WHY the harvest came back empty, on the page that produced it.
+             *
+             * The `.catch(() => null)` above collapses four different failures into the same empty
+             * string: the vendor session was not applied (so the dashboard 302s to my-account), the
+             * page redirected somewhere else, the locator timed out on a slow render, or the template
+             * genuinely rendered no anchor. Only the last one is the defect the assertion below
+             * describes, and the CI failures have never been able to say which occurred.
+             *
+             * The distinction is not cosmetic here. The template gates the anchor on
+             * `Helper::is_seller_enable_for_receive_payment( get_current_user_id() )`
+             * (RegisterWithdrawMethods::paypal_connect_button), whereas the `isVendorConnected()`
+             * baseline asserted at the top of this test reads the REST flag, which the same module
+             * computes from `is_seller_enable_for_receive_payment( $vendor_id )` — an EXPLICIT id.
+             * Same predicate, different subject: a page rendered for a logged-out or wrong user shows
+             * no anchor while the REST baseline still reports connected, which is precisely the split
+             * this test fails with on CI and never reproduces locally.
+             */
+            if (!vendor1DisconnectUrl) {
+                const currentUrl = page.url();
+                const bodyStart = (await page.locator('body').innerText().catch(() => '')).replace(/\s+/g, ' ').trim().slice(0, 200);
+                // Who does the SITE think is driving this page? Read it from the page's own session
+                // rather than from the storage state we intended to apply.
+                const loggedInAs = await page
+                    .evaluate(() => {
+                        const cls = document.body?.className ?? '';
+                        const uid = cls.match(/dokan-user-(\d+)/)?.[1];
+                        return { loggedIn: /logged-in/.test(cls), uid: uid ?? null, bodyClass: cls.slice(0, 160) };
+                    })
+                    .catch(() => ({ loggedIn: null, uid: null, bodyClass: '<unreadable>' }));
+                harvestContext =
+                    `final url=${currentUrl} | logged-in=${String(loggedInAs.loggedIn)} | body-class="${loggedInAs.bodyClass}" | page text: ${bodyStart || '<empty>'}`;
+            }
         } finally {
             await page.close();
             await ctx.close();
@@ -1094,7 +1129,7 @@ test.describe('PayPal Marketplace — security · REST / AJAX / IDOR / secret ex
         // never a log.skip.
         expect(
             vendor1DisconnectUrl,
-            `no nonce-bearing Disconnect link rendered on ${settingsPath} for a vendor that isVendorConnected() reports as connected (templates/vendor-settings-payment.php:6-8 renders the anchor whenever Helper::is_seller_enable_for_receive_payment() is true) — without vendor1's own working disconnect URL this whole case is satisfied by a disconnect surface that does nothing at all`,
+            `no nonce-bearing Disconnect link rendered on ${settingsPath} for a vendor that isVendorConnected() reports as connected (templates/vendor-settings-payment.php:6-8 renders the anchor whenever Helper::is_seller_enable_for_receive_payment() is true) — without vendor1's own working disconnect URL this whole case is satisfied by a disconnect surface that does nothing at all.\nNOTE: the template resolves that predicate for get_current_user_id(), while the isVendorConnected() baseline resolves it for an explicit vendor id, so a page rendered for the wrong/no user fails here while the baseline still passes.\nHarvest page state: ${harvestContext || '<not captured>'}`,
         ).toContain('dokan-paypal-marketplace-disconnect');
 
         // Replay vendor1's own disconnect URL as VENDOR2. A nonce is bound to the user that
