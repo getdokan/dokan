@@ -280,6 +280,12 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_item( $request ) {
+        $missing_download = $this->validate_required_downloads( $request );
+
+        if ( is_wp_error( $missing_download ) ) {
+            return $missing_download;
+        }
+
         $product = parent::create_item( $request );
 
         if ( is_wp_error( $product ) ) {
@@ -305,6 +311,12 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function update_item( $request ) {
+        $missing_download = $this->validate_required_downloads( $request, (int) $request->get_param( 'id' ) );
+
+        if ( is_wp_error( $missing_download ) ) {
+            return $missing_download;
+        }
+
         $product = parent::update_item( $request );
 
         if ( is_wp_error( $product ) ) {
@@ -318,6 +330,73 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         do_action( 'dokan_product_updated', $product_id, $params );
 
         return $product;
+    }
+
+    /**
+     * Reject a downloadable product saved without a file while the form marks "Downloadable Files" as required.
+     *
+     * The required flag lives in the form schema (Dokan Pro's Product Form Manager writes it there), so it is
+     * resolved from the schema rather than hard-coded. Browser-side validation alone can be bypassed, which is
+     * how incomplete downloadable products reach the review queue. Only requests that carry the downloadable
+     * fields are checked, so partial saves such as quick edit stay untouched.
+     *
+     * @since 5.0.13
+     *
+     * @param WP_REST_Request $request    Full details about the request.
+     * @param int             $product_id Product being saved, 0 while creating.
+     *
+     * @return WP_Error|null Error when the required file is missing, null otherwise.
+     */
+    protected function validate_required_downloads( $request, int $product_id = 0 ) {
+        if ( ! $request->has_param( Elements::DOWNLOADS ) ) {
+            return null;
+        }
+
+        if ( ! filter_var( $request->get_param( Elements::DOWNLOADABLE ), FILTER_VALIDATE_BOOLEAN ) ) {
+            return null;
+        }
+
+        $field = null;
+
+        foreach ( dokan()->product_editor->get_schema( $product_id ) as $item ) {
+            if ( Elements::DOWNLOADS === ( $item['id'] ?? '' ) ) {
+                $field = $item;
+                break;
+            }
+        }
+
+        if ( null === $field ) {
+            return null;
+        }
+
+        $product_type = $request->get_param( Elements::TYPE );
+        $product_type = is_string( $product_type ) && '' !== $product_type ? $product_type : Elements::PRODUCT_TYPE_SIMPLE;
+
+        $is_required = $field['requireds'][ $product_type ] ?? $field['required'] ?? false;
+        $is_visible  = $field['visibilities'][ $product_type ] ?? $field['visibility'] ?? true;
+
+        if ( ! $is_required || ! $is_visible ) {
+            return null;
+        }
+
+        $downloads = $request->get_param( Elements::DOWNLOADS );
+        $downloads = is_array( $downloads ) ? $downloads : [];
+
+        foreach ( $downloads as $download ) {
+            if ( ! empty( $download['file'] ) ) {
+                return null;
+            }
+        }
+
+        return new WP_Error(
+            'dokan_rest_product_download_required',
+            sprintf(
+                /* translators: %s: label of the downloadable files field. */
+                __( '%s is required. Please attach at least one downloadable file.', 'dokan-lite' ),
+                $field['labels'][ $product_type ] ?? $field['label'] ?? __( 'Downloadable Files', 'dokan-lite' )
+            ),
+            [ 'status' => 400 ]
+        );
     }
 
     /**

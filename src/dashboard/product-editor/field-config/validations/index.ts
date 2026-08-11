@@ -2,6 +2,20 @@ import { __ } from '@wordpress/i18n';
 import { FieldValidator, FormItem, ValidationRule, DependencyCondition } from '../../types';
 import { resolveDependency } from '../../utils';
 
+// A repeater row is blank when every value inside it is empty, e.g. a downloadable-file row the vendor added but never filled in.
+const isBlankRow = ( row: any ): boolean => {
+    if ( row === null || row === undefined ) {
+        return true;
+    }
+    if ( typeof row === 'string' ) {
+        return row.trim().length === 0;
+    }
+    if ( typeof row === 'object' && ! Array.isArray( row ) ) {
+        return Object.values( row ).every( isBlankRow );
+    }
+    return false;
+};
+
 export const isEmpty = ( v: any ) => {
     if ( v === null || v === undefined ) {
         return true;
@@ -10,7 +24,8 @@ export const isEmpty = ( v: any ) => {
         return v.trim().length === 0;
     }
     if ( Array.isArray( v ) ) {
-        return v.length === 0;
+        // Blank rows carry no value, so an array made only of them counts as empty.
+        return v.every( isBlankRow );
     }
     return false;
 };
