@@ -32,30 +32,46 @@ class MiscHooks {
     /**
      * Remove customer sensitive information while exporting order
      *
-     * Drops every billing and shipping column plus the customer IP when the setting is on.
+     * Every `billing_*` and `shipping_*` column plus `customer_ip` counts as customer data and is
+     * dropped when the setting is on. `customer_note` stays, matching the vendor order details page.
+     * Matching by prefix covers columns added later without touching this method, but this callback
+     * runs at priority 20, so columns registered on a later priority are not seen. Use the filter
+     * below to adjust the list either way.
      *
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param array $headers
      *
-     * @return mixed
+     * @return array
      */
     public function hide_customer_info_from_vendor_order_export( $headers ) {
         $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
+
+        // Fail closed: the setting is a switcher, so anything other than an explicit off keeps customer data out of the export.
         if ( 'off' === $hide_customer_info ) {
             return $headers;
         }
 
-        // Matched by prefix so columns added later, here or by a third party, are covered too. customer_note is a vendor facing note, so it stays.
-        return array_filter(
-            $headers,
-            function ( $column ) {
-                return 'customer_ip' !== $column
-                    && ! str_starts_with( $column, 'billing_' )
-                    && ! str_starts_with( $column, 'shipping_' );
-            },
-            ARRAY_FILTER_USE_KEY
+        $hidden_columns = array_filter(
+            array_keys( $headers ),
+            function ( $column_key ) {
+                return 'customer_ip' === $column_key
+                    || str_starts_with( $column_key, 'billing_' )
+                    || str_starts_with( $column_key, 'shipping_' );
+            }
         );
+
+        /**
+         * Filters the order export columns treated as customer data.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $hidden_columns Column keys to remove from the export.
+         * @param array $headers        All export column keys mapped to their labels.
+         */
+        $hidden_columns = apply_filters( 'dokan_hidden_customer_info_csv_columns', $hidden_columns, $headers );
+
+        return array_diff_key( $headers, array_flip( $hidden_columns ) );
     }
 
     /**
