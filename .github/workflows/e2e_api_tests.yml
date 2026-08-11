@@ -1,9 +1,7 @@
 name: E2E_API Tests
 
 on:
-    # Runs once a day only, to keep Actions cost down. Pull requests and pushes
-    # to develop no longer trigger this suite -- use the "Run workflow" button
-    # (workflow_dispatch) below to test a branch on demand.
+    # The FULL suite runs once a day only, to keep Actions cost down (#3350).
     # Target start time is 9:00 AM BDT. GitHub queues scheduled runs and
     # releases them once capacity frees up: on this repository that delay has
     # been roughly 70 minutes every day, so 02:00 UTC (nominally 8:00 AM BDT)
@@ -11,6 +9,20 @@ on:
     # times of recent scheduled runs before "correcting" this to 03:00 UTC.
     schedule:
         - cron: 0 2 * * *
+    # Pull requests run ONLY the curated smoke subset (5 shards,
+    # tests/pw/utils/pr-smoke-specs.json, ~1/3 of the full-matrix cost) so PRs
+    # keep a fast e2e signal without the full-suite fan-out #3350 removed.
+    pull_request:
+        branches: [develop]
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
     # workflow can be manually triggered
     workflow_dispatch:
         inputs:
@@ -270,9 +282,16 @@ jobs:
         if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
         strategy:
             fail-fast: false
+            # PRs run the curated smoke subset (tests/pw/utils/pr-smoke-specs.json,
+            # ~79 min serial) across 8 shards; the nightly schedule and manual
+            # dispatch run the full suite across 12. This caps a PR push at
+            # ~12 jobs / ~165 runner-minutes instead of 16 jobs / ~370, so
+            # concurrent PRs stop starving the org's runner pool. 8 is where the
+            # returns flatten: each shard carries ~4.6 min of fixed wp-env setup,
+            # so past ~12 min of tests per shard the setup starts to dominate.
             matrix:
-                shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                shardTotal: [12]
+                shardIndex: ${{ github.event_name == 'pull_request' && fromJSON('[1, 2, 3, 4, 5, 6, 7, 8]') || fromJSON('[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]') }}
+                shardTotal: ${{ github.event_name == 'pull_request' && fromJSON('[8]') || fromJSON('[12]') }}
 
         steps:
             - name: Download dokan-lite build artifact
@@ -480,11 +499,13 @@ jobs:
 
             # Resolve the spec list for this shard from the committed duration baseline.
             # Falls back to alphabetical sharding if the baseline is missing.
+            # PRs pass --smoke to restrict the pack to pr-smoke-specs.json.
             - name: Resolve balanced shard spec list
               id: shard-specs
               working-directory: tests/pw
               run: |
-                  node ./utils/getShardSpecs.js ${{ matrix.shardIndex }} ${{ matrix.shardTotal }} > /tmp/shard-specs.txt
+                  node ./utils/getShardSpecs.js ${{ matrix.shardIndex }} ${{ matrix.shardTotal }} \
+                      ${{ github.event_name == 'pull_request' && '--smoke' || '' }} > /tmp/shard-specs.txt
                   echo "spec count: $(wc -l < /tmp/shard-specs.txt)"
 
             # Emit a per-shard manifest (no GITHUB_STEP_SUMMARY write here — that
@@ -1022,9 +1043,13 @@ jobs:
             # baseline. Uploaded as artifact so maintainers can periodically
             # commit it to tests/pw/utils/shard-durations.json to keep
             # balanced sharding accurate as the suite evolves.
+            # Skipped on PRs: smoke runs only measure the smoke subset, and a
+            # partial baseline committed by mistake would wreck the bin-pack.
             - name: Aggregate spec-duration baseline
               id: aggregate-baseline
-              if: always() && steps.download-test-artifacts.outcome == 'success'
+              if: |
+                always() && steps.download-test-artifacts.outcome == 'success'
+                && github.event_name != 'pull_request'
               working-directory: tests/pw
               run: |
                   node ./utils/aggregateSpecDurations.js \
