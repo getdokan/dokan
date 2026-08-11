@@ -85,6 +85,11 @@ const isPlainObject = ( val: any ): boolean =>
  * those rows is no more a value than an empty list is. Scalars keep their usual
  * meaning, so `0` and `false` are values.
  *
+ * Backs both the `required` validation and the `empty`/`not_empty` dependency
+ * comparisons, so the form only ever holds one definition of "no value".
+ *
+ * @since DOKAN_SINCE
+ *
  * @param val Value to test.
  */
 export function isEmpty( val: any ): boolean {

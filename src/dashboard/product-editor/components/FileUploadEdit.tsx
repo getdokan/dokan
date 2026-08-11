@@ -45,37 +45,43 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
         field
     ) as Record< string, string > | undefined;
 
+    /**
+     * Keep every row on screen, but hand the form only the rows that carry a file.
+     *
+     * A row the vendor has started but not attached a file to is scaffolding, not a value —
+     * naming it must not satisfy a "required" rule, and WooCommerce discards it on save anyway
+     * (`save_downloadable_files()`), so the form data now matches what actually gets stored.
+     *
+     * @param newFiles Rows to render.
+     */
+    const publish = ( newFiles: any[] ) => {
+        setFiles( newFiles );
+        onChange( {
+            [ field.id ]: newFiles.filter( ( file: any ) => file.file ),
+        } );
+    };
+
     const onAddRow = () => {
-        const newFiles = [
+        publish( [
             ...files,
             {
                 id: '',
                 name: '',
                 file: '',
             },
-        ];
-        setFiles( newFiles );
-        onChange( {
-            [ field.id ]: newFiles,
-        } );
+        ] );
     };
 
     const onRemoveRow = ( index: number ) => {
-        const newFiles = files.filter( ( _: any, i: number ) => i !== index );
-        setFiles( newFiles );
-        onChange( {
-            [ field.id ]: newFiles,
-        } );
+        publish( files.filter( ( _: any, i: number ) => i !== index ) );
     };
 
     const updateRow = ( index: number, key: string, value: any ) => {
-        const newFiles = files.map( ( file: any, i: number ) =>
-            i === index ? { ...file, [ key ]: value } : file
+        publish(
+            files.map( ( file: any, i: number ) =>
+                i === index ? { ...file, [ key ]: value } : file
+            )
         );
-        setFiles( newFiles );
-        onChange( {
-            [ field.id ]: newFiles,
-        } );
     };
 
     const onSelectFile = ( value: any, index: number ) => {
@@ -89,10 +95,7 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
             name: selectedValue.title || selectedValue.name,
         };
 
-        setFiles( newFiles );
-        onChange( {
-            [ field.id ]: newFiles,
-        } );
+        publish( newFiles );
     };
 
     return (

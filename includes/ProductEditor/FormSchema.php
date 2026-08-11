@@ -131,7 +131,7 @@ class FormSchema {
      * `resolveLabel`, `resolveRequired` and `resolveVisibility` in
      * `src/dashboard/product-editor/utils.tsx`, so both sides read the schema the same way.
      *
-     * @since 5.0.13
+     * @since DOKAN_SINCE
      *
      * @param array  $field        Schema field.
      * @param string $product_type Product type the field is resolved for.
@@ -145,7 +145,7 @@ class FormSchema {
     /**
      * Whether a field must be filled in for a product type.
      *
-     * @since 5.0.13
+     * @since DOKAN_SINCE
      *
      * @param array  $field        Schema field.
      * @param string $product_type Product type the field is resolved for.
@@ -159,7 +159,7 @@ class FormSchema {
     /**
      * Whether a field is rendered for a product type.
      *
-     * @since 5.0.13
+     * @since DOKAN_SINCE
      *
      * @param array  $field        Schema field.
      * @param string $product_type Product type the field is resolved for.
