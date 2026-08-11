@@ -380,6 +380,9 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         if ( isset( $data['_download_type'] ) ) {
             update_post_meta( $post_id, '_download_type', wc_clean( $data['_download_type'] ) );
         }
+    } else {
+        // the product is no longer downloadable; a staged file set must not apply on approval
+        delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
     }
 
     // Update SKU
@@ -1113,28 +1116,38 @@ add_filter( 'woocommerce_product_review_comment_form_args', 'dokan_vendor_produc
 function dokan_downloadable_files_require_approval( $product_id, $new_files ) {
     global $wpdb;
 
-    if ( 'pending' !== get_post_status( $product_id ) ) {
-        return false;
+    $require_approval = false;
+
+    /**
+     * Filter the product statuses whose downloadable file changes are held back for approval.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string[] $held_statuses Post statuses treated as awaiting review.
+     * @param int      $product_id    Product ID.
+     */
+    $held_statuses = apply_filters( 'dokan_downloadable_files_approval_statuses', [ 'pending' ], $product_id );
+
+    if ( in_array( get_post_status( $product_id ), $held_statuses, true ) ) {
+        $live_files = get_post_meta( $product_id, '_downloadable_files', true );
+        $live_ids   = is_array( $live_files ) ? array_keys( $live_files ) : [];
+        $new_ids    = array_keys( (array) $new_files );
+
+        sort( $live_ids );
+        sort( $new_ids );
+
+        if ( $live_ids !== $new_ids ) {
+            // staging only matters when somebody already holds a download permission for this product
+            $has_permissions = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $wpdb->prepare(
+                    "SELECT permission_id FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d LIMIT 1",
+                    $product_id
+                )
+            );
+
+            $require_approval = ! empty( $has_permissions );
+        }
     }
-
-    $live_files = get_post_meta( $product_id, '_downloadable_files', true );
-    $live_ids   = is_array( $live_files ) ? array_keys( $live_files ) : [];
-    $new_ids    = array_keys( (array) $new_files );
-
-    sort( $live_ids );
-    sort( $new_ids );
-
-    if ( $live_ids === $new_ids ) {
-        return false;
-    }
-
-    // staging only matters when somebody already holds a download permission for this product
-    $has_permissions = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->prepare(
-            "SELECT permission_id FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d LIMIT 1",
-            $product_id
-        )
-    );
 
     /**
      * Filter whether a changed downloadable file set is staged until admin approval.
@@ -1145,7 +1158,7 @@ function dokan_downloadable_files_require_approval( $product_id, $new_files ) {
      * @param int   $product_id       Product ID.
      * @param array $new_files        Submitted downloadable files, keyed by download id.
      */
-    return (bool) apply_filters( 'dokan_downloadable_files_require_approval', ! empty( $has_permissions ), $product_id, $new_files );
+    return (bool) apply_filters( 'dokan_downloadable_files_require_approval', $require_approval, $product_id, $new_files );
 }
 
 /**
@@ -1173,11 +1186,13 @@ function dokan_apply_staged_downloadable_files( $post_id, $post ) {
         return;
     }
 
-    delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
-
-    // move existing customers over to the newly approved files
+    // move existing customers over to the newly approved files; the permission
+    // handler diffs against the still-live approved files, so it must run first
     do_action( 'dokan_process_file_download', $post_id, 0, $staged );
 
     update_post_meta( $post_id, '_downloadable_files', empty( $staged ) ? '' : $staged );
+
+    // cleared last so a fatal in a permission hook does not drop the vendor's submission
+    delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
 }
 add_action( 'save_post', 'dokan_apply_staged_downloadable_files', 999, 2 );
