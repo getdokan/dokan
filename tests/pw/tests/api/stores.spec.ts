@@ -106,6 +106,47 @@ test.describe('stores api test', () => {
         expect(responseBody).toMatchSchema(schemas.storesSchema.storeProductsSchema);
     });
 
+    // The route is public, so these run without an Authorization header on purpose.
+    test('get store products is scoped to the requested store', { tag: ['@lite'] }, async () => {
+        const [, vendorId] = await apiUtils.getCurrentUser(payloads.vendorAuth);
+        await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+
+        const [response, responseBody] = await apiUtils.get(endPoints.getStoreProducts(vendorId));
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody.length).toBeGreaterThan(0);
+        for (const product of responseBody) {
+            expect(String(product.post_author)).toBe(vendorId);
+            expect(product.status).toBe('publish');
+        }
+    });
+
+    test('get store products of an empty store returns nothing', { tag: ['@lite'] }, async () => {
+        const [, emptyStoreId] = await apiUtils.createStore(payloads.createStore());
+
+        const [response, responseBody] = await apiUtils.get(endPoints.getStoreProducts(emptyStoreId));
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toEqual([]);
+        expect(response.headers()['x-wp-total']).toBe('0');
+    });
+
+    test('vendor can not list another vendor products via the id param', { tag: ['@lite'] }, async () => {
+        const [, vendorId] = await apiUtils.getCurrentUser(payloads.vendorAuth);
+        const [, vendor2Id] = await apiUtils.getCurrentUser(payloads.vendor2Auth);
+        await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await apiUtils.createProduct(payloads.createProduct(), payloads.vendor2Auth);
+
+        const bypassAttempts: Record<string, string>[] = [{ id: vendor2Id }, { id: vendor2Id, status: 'publish' }, { id: vendor2Id, post_status: 'publish' }];
+
+        for (const params of bypassAttempts) {
+            const [response, responseBody] = await apiUtils.get(endPoints.getAllProducts, { params, headers: payloads.vendorAuth });
+            expect(response.ok()).toBeTruthy();
+            expect(responseBody.length).toBeGreaterThan(0);
+            for (const product of responseBody) {
+                expect(String(product.post_author)).toBe(vendorId);
+            }
+        }
+    });
+
     test('update a store status', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateStoreStatus(sellerId), { data: payloads.updateStoreStatus });
         expect(response.ok()).toBeTruthy();
