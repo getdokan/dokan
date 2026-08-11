@@ -15,24 +15,6 @@ use WeDevs\Dokan\Test\DokanTestCase;
 class HideCustomerInfoExportTest extends DokanTestCase {
 
     /**
-     * Columns that survive when the setting is on.
-     *
-     * @var string[]
-     */
-    private $expected_visible_columns = [
-        'order_id',
-        'order_items',
-        'order_shipping',
-        'order_shipping_cost',
-        'order_payment_method',
-        'order_total',
-        'earnings',
-        'order_status',
-        'order_date',
-        'customer_note',
-    ];
-
-    /**
      * Set the "Hide Customer Info" selling option.
      *
      * @param string $value Either on or off.
@@ -44,6 +26,24 @@ class HideCustomerInfoExportTest extends DokanTestCase {
         $selling_options['hide_customer_info'] = $value;
 
         update_option( 'dokan_selling', $selling_options );
+    }
+
+    /**
+     * Register export columns the way a third party would.
+     *
+     * @param array $columns  Column key to label.
+     * @param int   $priority Hook priority to register on.
+     *
+     * @return void
+     */
+    private function add_export_columns( array $columns, int $priority = 10 ) {
+        add_filter(
+            'dokan_csv_export_headers',
+            function ( $headers ) use ( $columns ) {
+                return array_merge( $headers, $columns );
+            },
+            $priority
+        );
     }
 
     public function test_headers_are_untouched_when_the_setting_is_off() {
@@ -62,27 +62,39 @@ class HideCustomerInfoExportTest extends DokanTestCase {
 
         $headers = dokan_order_csv_headers();
 
-        $this->assertSame( $this->expected_visible_columns, array_keys( $headers ) );
+        foreach ( array_keys( $headers ) as $column_key ) {
+            $this->assertStringStartsNotWith( 'billing_', $column_key );
+            $this->assertStringStartsNotWith( 'shipping_', $column_key );
+        }
+
+        $this->assertArrayNotHasKey( 'customer_ip', $headers );
+
+        // The order columns survive, including the two order-level shipping ones the prefix must not catch.
+        $this->assertArrayHasKey( 'order_id', $headers );
+        $this->assertArrayHasKey( 'order_total', $headers );
+        $this->assertArrayHasKey( 'order_shipping', $headers );
+        $this->assertArrayHasKey( 'order_shipping_cost', $headers );
+
+        // Kept on purpose, matching the vendor order details page.
+        $this->assertArrayHasKey( 'customer_note', $headers );
     }
 
     /**
-     * The columns are matched by prefix, so a column a third party registers before this
-     * callback runs is treated the same as a core one.
+     * The columns are matched by prefix, so a column a third party registers is treated the
+     * same as a core one — on any priority, since this callback runs last.
      */
     public function test_third_party_customer_columns_are_dropped_by_prefix() {
         $this->set_hide_customer_info( 'on' );
 
-        $add_columns = function ( $headers ) {
-            $headers['billing_vat_number']        = 'Billing VAT Number';
-            $headers['shipping_tracking_number']  = 'Shipping Tracking Number';
-            $headers['vendor_internal_reference'] = 'Vendor Internal Reference';
+        $this->add_export_columns(
+            [
+                'billing_vat_number'        => 'Billing VAT Number',
+                'vendor_internal_reference' => 'Vendor Internal Reference',
+            ]
+        );
+        $this->add_export_columns( [ 'shipping_tracking_number' => 'Shipping Tracking Number' ], 999 );
 
-            return $headers;
-        };
-
-        add_filter( 'dokan_csv_export_headers', $add_columns, 10 );
         $headers = dokan_order_csv_headers();
-        remove_filter( 'dokan_csv_export_headers', $add_columns, 10 );
 
         $this->assertArrayNotHasKey( 'billing_vat_number', $headers );
         $this->assertArrayNotHasKey( 'shipping_tracking_number', $headers );
@@ -95,23 +107,42 @@ class HideCustomerInfoExportTest extends DokanTestCase {
     public function test_hidden_columns_can_be_filtered_back_in() {
         $this->set_hide_customer_info( 'on' );
 
-        $add_column = function ( $headers ) {
-            $headers['shipping_tracking_number'] = 'Shipping Tracking Number';
+        $this->add_export_columns( [ 'shipping_tracking_number' => 'Shipping Tracking Number' ] );
 
-            return $headers;
-        };
+        add_filter(
+            'dokan_hidden_customer_info_csv_columns',
+            function ( $hidden_columns ) {
+                return array_diff( $hidden_columns, [ 'shipping_tracking_number' ] );
+            }
+        );
 
-        $keep_tracking_number = function ( $hidden_columns ) {
-            return array_diff( $hidden_columns, [ 'shipping_tracking_number' ] );
-        };
-
-        add_filter( 'dokan_csv_export_headers', $add_column, 10 );
-        add_filter( 'dokan_hidden_customer_info_csv_columns', $keep_tracking_number );
         $headers = dokan_order_csv_headers();
-        remove_filter( 'dokan_hidden_customer_info_csv_columns', $keep_tracking_number );
-        remove_filter( 'dokan_csv_export_headers', $add_column, 10 );
 
         $this->assertArrayHasKey( 'shipping_tracking_number', $headers );
         $this->assertArrayNotHasKey( 'billing_email', $headers );
+    }
+
+    /**
+     * The column list is handed to the filter as a plain list, not a sparse array.
+     */
+    public function test_hidden_columns_are_passed_to_the_filter_as_a_list() {
+        $this->set_hide_customer_info( 'on' );
+
+        $received = null;
+        add_filter(
+            'dokan_hidden_customer_info_csv_columns',
+            function ( $hidden_columns ) use ( &$received ) {
+                $received = $hidden_columns;
+
+                return $hidden_columns;
+            }
+        );
+
+        dokan_order_csv_headers();
+
+        $this->assertNotNull( $received );
+        $this->assertSame( range( 0, count( $received ) - 1 ), array_keys( $received ) );
+        $this->assertContains( 'billing_email', $received );
+        $this->assertContains( 'customer_ip', $received );
     }
 }

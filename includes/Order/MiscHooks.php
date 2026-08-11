@@ -22,8 +22,8 @@ class MiscHooks {
      * @since 3.8.0
      */
     public function __construct() {
-        // remove customer info from order export based on setting
-        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
+        // Remove customer info from order export based on setting. Runs last so columns any other callback adds are covered too.
+        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], PHP_INT_MAX, 1 );
 
         add_filter( 'woocommerce_rest_prepare_shop_order_object', [ $this, 'add_vendor_info_in_rest_order' ], 10, 1 );
         add_filter( 'wp_count_posts', [ $this, 'modify_vendor_order_counts' ], 10, 1 ); // no need to add hpos support for this filter
@@ -32,11 +32,8 @@ class MiscHooks {
     /**
      * Remove customer sensitive information while exporting order
      *
-     * Every `billing_*` and `shipping_*` column plus `customer_ip` counts as customer data and is
-     * dropped when the setting is on. `customer_note` stays, matching the vendor order details page.
-     * Matching by prefix covers columns added later without touching this method, but this callback
-     * runs at priority 20, so columns registered on a later priority are not seen. Use the filter
-     * below to adjust the list either way.
+     * `customer_note` is kept, matching the vendor order details page. `shipping_*` is not always
+     * customer data, so the columns this drops are filterable.
      *
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
@@ -52,13 +49,16 @@ class MiscHooks {
             return $headers;
         }
 
-        $hidden_columns = array_filter(
-            array_keys( $headers ),
-            function ( $column_key ) {
-                return 'customer_ip' === $column_key
-                    || str_starts_with( $column_key, 'billing_' )
-                    || str_starts_with( $column_key, 'shipping_' );
-            }
+        $hidden_columns = array_keys(
+            array_filter(
+                $headers,
+                function ( $column_key ) {
+                    return 'customer_ip' === $column_key
+                        || str_starts_with( $column_key, 'billing_' )
+                        || str_starts_with( $column_key, 'shipping_' );
+                },
+                ARRAY_FILTER_USE_KEY
+            )
         );
 
         /**
