@@ -21,6 +21,7 @@ The `.claude/skills/` directory contains procedural HOW-TO instructions:
 - **`dokan-git`** — Git and GitHub operations: branching, PR templates, CI checks
 - **`dokan-qa-automation`** — Playwright E2E and REST API test conventions under `tests/pw/`: page objects, tags, ApiUtils, schemas, CI compatibility
 - **`dokan-run-test-suite`** — Run the Playwright suite (local or CI). **Invoke when the team asks to "run the suite", trigger CI, or debug a failed run.**
+- **`dokan-wp-env-worktrees`** — Configure `wp-env` across git worktrees with isolated (default) or shared databases; resolve port conflicts when running two environments at once.
 
 ## Build & Development Commands
 
@@ -44,10 +45,17 @@ npm run phpunit            # Run PHPUnit tests (via wp-env)
 npm run phpunit:coverage   # PHPUnit with coverage
 npm run test:phpunit       # Start env, run tests, stop env
 
-# Environment
+# Environment (first run: create your local wp-env config)
+cp .wp-env.json.example .wp-env.json   # one-time; .wp-env.json is gitignored (per-machine)
 npm run env:start          # Start wp-env
 npm run env:stop           # Stop wp-env
 ```
+
+> `.wp-env.json` is **not** committed — it is per-machine/per-worktree (local
+> ports, plugin mounts, dependency paths). Copy `.wp-env.json.example` to
+> `.wp-env.json` and adjust it locally. See the `dokan-wp-env-worktrees` skill
+> for worktree-specific setup. For overrides that shouldn't touch the base
+> config, use `.wp-env.override.json` (also gitignored).
 
 ## Architecture
 

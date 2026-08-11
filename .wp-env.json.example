@@ -1,0 +1,14 @@
+{
+  "core": null,
+  "phpVersion": "7.4",
+  "plugins": [
+	  ".",
+	  "https://downloads.wordpress.org/plugin/woocommerce.zip",
+    "../dokan-pro"
+  ],
+  "port": 8888,
+  "testsPort": 8889,
+  "lifecycleScripts": {
+    "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive"
+  }
+}
