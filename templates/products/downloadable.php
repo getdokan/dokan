@@ -42,7 +42,9 @@
                     </thead>
                     <tbody>
                         <?php
-                        $downloadable_files = get_post_meta( $post_id, '_downloadable_files', true );
+                        // while an edit awaits admin approval, show the staged files, not the approved ones
+                        $staged_files       = get_post_meta( $post_id, '_dokan_pending_downloadable_files', true );
+                        $downloadable_files = is_array( $staged_files ) ? $staged_files : get_post_meta( $post_id, '_downloadable_files', true );
 
                         if ( $downloadable_files ) {
                             foreach ( $downloadable_files as $key => $file ) {

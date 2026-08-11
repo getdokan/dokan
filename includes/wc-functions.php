@@ -350,12 +350,21 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 }
             }
 
-            // grant permission to any newly added files on any existing orders for this product prior to saving
-            do_action( 'dokan_process_file_download', $post_id, 0, $files );
+            if ( dokan_downloadable_files_require_approval( $post_id, $files ) ) {
+                // existing customers keep the approved files until an admin publishes the product
+                update_post_meta( $post_id, '_dokan_pending_downloadable_files', $files );
+            } else {
+                // grant permission to any newly added files on any existing orders for this product prior to saving
+                do_action( 'dokan_process_file_download', $post_id, 0, $files );
 
-            update_post_meta( $post_id, '_downloadable_files', $files );
+                update_post_meta( $post_id, '_downloadable_files', $files );
+                delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
+            }
+        } elseif ( dokan_downloadable_files_require_approval( $post_id, [] ) ) {
+            update_post_meta( $post_id, '_dokan_pending_downloadable_files', [] );
         } else {
             update_post_meta( $post_id, '_downloadable_files', '' );
+            delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
         }
 
         update_post_meta( $post_id, '_download_limit', $_download_limit );
@@ -1085,3 +1094,90 @@ function dokan_vendor_product_review_restriction( array $data ): array {
     return $data;
 }
 add_filter( 'woocommerce_product_review_comment_form_args', 'dokan_vendor_product_review_restriction' );
+
+/**
+ * Check whether a changed set of downloadable files must be held back for admin approval.
+ *
+ * While a product edit sits in pending review, customers who already purchased must
+ * keep the last approved files. A changed file set is therefore staged in the
+ * `_dokan_pending_downloadable_files` meta instead of being written to
+ * `_downloadable_files`, and applied when an admin publishes the product.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param int   $product_id Product ID.
+ * @param array $new_files  Submitted downloadable files, keyed by download id.
+ *
+ * @return bool
+ */
+function dokan_downloadable_files_require_approval( $product_id, $new_files ) {
+    global $wpdb;
+
+    if ( 'pending' !== get_post_status( $product_id ) ) {
+        return false;
+    }
+
+    $live_files = get_post_meta( $product_id, '_downloadable_files', true );
+    $live_ids   = is_array( $live_files ) ? array_keys( $live_files ) : [];
+    $new_ids    = array_keys( (array) $new_files );
+
+    sort( $live_ids );
+    sort( $new_ids );
+
+    if ( $live_ids === $new_ids ) {
+        return false;
+    }
+
+    // staging only matters when somebody already holds a download permission for this product
+    $has_permissions = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $wpdb->prepare(
+            "SELECT permission_id FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d LIMIT 1",
+            $product_id
+        )
+    );
+
+    /**
+     * Filter whether a changed downloadable file set is staged until admin approval.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool  $require_approval Whether the new file set should be staged.
+     * @param int   $product_id       Product ID.
+     * @param array $new_files        Submitted downloadable files, keyed by download id.
+     */
+    return (bool) apply_filters( 'dokan_downloadable_files_require_approval', ! empty( $has_permissions ), $product_id, $new_files );
+}
+
+/**
+ * Apply staged downloadable files once a product gets published.
+ *
+ * Runs late on `save_post` so it also wins when an admin approves a pending product
+ * from the WooCommerce product edit screen, whose own meta box save (priority 1)
+ * re-saves the previously approved files.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param int     $post_id Post ID.
+ * @param WP_Post $post    Post object.
+ *
+ * @return void
+ */
+function dokan_apply_staged_downloadable_files( $post_id, $post ) {
+    if ( 'product' !== $post->post_type || 'publish' !== $post->post_status ) {
+        return;
+    }
+
+    $staged = get_post_meta( $post_id, '_dokan_pending_downloadable_files', true );
+
+    if ( ! is_array( $staged ) ) {
+        return;
+    }
+
+    delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
+
+    // move existing customers over to the newly approved files
+    do_action( 'dokan_process_file_download', $post_id, 0, $staged );
+
+    update_post_meta( $post_id, '_downloadable_files', empty( $staged ) ? '' : $staged );
+}
+add_action( 'save_post', 'dokan_apply_staged_downloadable_files', 999, 2 );
