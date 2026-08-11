@@ -22,8 +22,8 @@ class MiscHooks {
      * @since 3.8.0
      */
     public function __construct() {
-        // Remove customer info from order export based on setting. Runs last so columns any other callback adds are covered too.
-        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], PHP_INT_MAX, 1 );
+        // Remove customer info from order export based on setting. Runs late so columns other callbacks add are covered too.
+        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 999 );
 
         add_filter( 'woocommerce_rest_prepare_shop_order_object', [ $this, 'add_vendor_info_in_rest_order' ], 10, 1 );
         add_filter( 'wp_count_posts', [ $this, 'modify_vendor_order_counts' ], 10, 1 ); // no need to add hpos support for this filter

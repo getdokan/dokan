@@ -81,7 +81,7 @@ class HideCustomerInfoExportTest extends DokanTestCase {
 
     /**
      * The columns are matched by prefix, so a column a third party registers is treated the
-     * same as a core one — on any priority, since this callback runs last.
+     * same as a core one, on the default priority and on a later one.
      */
     public function test_third_party_customer_columns_are_dropped_by_prefix() {
         $this->set_hide_customer_info( 'on' );
@@ -92,7 +92,7 @@ class HideCustomerInfoExportTest extends DokanTestCase {
                 'vendor_internal_reference' => 'Vendor Internal Reference',
             ]
         );
-        $this->add_export_columns( [ 'shipping_tracking_number' => 'Shipping Tracking Number' ], 999 );
+        $this->add_export_columns( [ 'shipping_tracking_number' => 'Shipping Tracking Number' ], 100 );
 
         $headers = dokan_order_csv_headers();
 
