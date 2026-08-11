@@ -175,6 +175,10 @@ class OrderUtil {
             return admin_url( 'post.php?post=' . absint( $order_id ) ) . '&action=edit';
         }
 
+        if ( empty( $order_id ) ) {
+            return admin_url( 'admin.php?page=wc-orders&action=edit&id=' . absint( $order_id ) );
+        }
+
         return WCOrderUtil::get_order_admin_edit_url( $order_id );
     }
 
