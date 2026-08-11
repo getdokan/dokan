@@ -32,6 +32,7 @@ class ServiceProvider extends BootableServiceProvider {
         'registration'        => \WeDevs\Dokan\Registration::class,
         'order'               => \WeDevs\Dokan\Order\Manager::class,
         'order_controller'    => \WeDevs\Dokan\Order\Controller::class,
+        'order_details_fragment'  => \WeDevs\Dokan\Order\DetailsFragment::class,
         'api'                 => \WeDevs\Dokan\REST\Manager::class,
         'withdraw'            => \WeDevs\Dokan\Withdraw\Manager::class,
         'dashboard'           => \WeDevs\Dokan\Dashboard\Manager::class,

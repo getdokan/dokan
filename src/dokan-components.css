@@ -11,12 +11,24 @@
     border-color: var(--color-border);
 }
 
-/* ========== Resets ========== */
+/* ========== Resets ==========
+ *
+ * These are written for React surfaces. A Legacy fragment — server-rendered PHP
+ * markup injected into the panel, see docs/frontend/order-details-fragment.md — is
+ * styled by the legacy Dokan stylesheet instead, and these resets outrank it
+ * (`table:not(.dataviews-view-table) th` is 0,1,2; `.dokan-table th` is 0,1,1), which
+ * flattens its tables and lists.
+ *
+ * Each reset is therefore excluded from fragment subtrees with a `:where()` guard.
+ * `:where()` contributes ZERO specificity, so every rule below keeps the exact weight
+ * it had before against everything outside a fragment — no existing panel surface can
+ * be affected by this.
+ */
 
 /* Table Reset */
-table:not(.dataviews-view-table),
-table:not(.dataviews-view-table) th,
-table:not(.dataviews-view-table) td {
+table:not(.dataviews-view-table):where(:not(.dokan-legacy-fragment *)),
+table:not(.dataviews-view-table) th:where(:not(.dokan-legacy-fragment *)),
+table:not(.dataviews-view-table) td:where(:not(.dokan-legacy-fragment *)) {
     margin: 0;
     padding: 0;
     border: 0;
@@ -29,40 +41,65 @@ table:not(.dataviews-view-table) td {
     box-sizing: border-box;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1:where(:not(.dokan-legacy-fragment *)),
+h2:where(:not(.dokan-legacy-fragment *)),
+h3:where(:not(.dokan-legacy-fragment *)),
+h4:where(:not(.dokan-legacy-fragment *)),
+h5:where(:not(.dokan-legacy-fragment *)),
+h6:where(:not(.dokan-legacy-fragment *)) {
     font-size: inherit;
     font-weight: inherit;
 }
 /* List Reset */
-ul,
-ol {
+ul:where(:not(.dokan-legacy-fragment *)),
+ol:where(:not(.dokan-legacy-fragment *)) {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-li {
+li:where(:not(.dokan-legacy-fragment *)) {
     margin: 0;
     list-style: none;
     padding: 0;
 }
-p {
+p:where(:not(.dokan-legacy-fragment *)) {
     margin: 0;
 }
 /* Headings Reset */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1:where(:not(.dokan-legacy-fragment *)),
+h2:where(:not(.dokan-legacy-fragment *)),
+h3:where(:not(.dokan-legacy-fragment *)),
+h4:where(:not(.dokan-legacy-fragment *)),
+h5:where(:not(.dokan-legacy-fragment *)),
+h6:where(:not(.dokan-legacy-fragment *)) {
     padding: 0;
     margin: 0;
+}
+
+/* ========== Legacy fragment ==========
+ *
+ * A fragment reproduces the legacy page's content class names so third-party CSS
+ * written against that page keeps matching. Those class names also carry Dokan's own
+ * PAGE-LAYOUT rules, though, and those were written for a page that has a 250px
+ * sidebar next to them — `.dokan-dashboard-content` resolves to `display: none;
+ * width: calc(100% - 250px); overflow: hidden` outside that context, which collapses
+ * the whole fragment to zero height.
+ *
+ * The panel provides its own navigation, so the layout half of those classes is
+ * neutralised here while the selectors themselves keep matching.
+ *
+ * `!important` is required, not lazy: the legacy rule this overrides is itself
+ * `!important`, so no amount of specificity beats it. Verified in a browser — a
+ * (0,3,0) selector still loses to it.
+ */
+.dokan-legacy-fragment,
+.dokan-legacy-fragment .dokan-dashboard-content {
+    display: block !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    overflow: visible !important;
 }
 
 /* ========== Focus States ========== */

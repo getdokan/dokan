@@ -173,6 +173,23 @@ class OrderController extends DokanRESTController {
         );
 
         register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/details-html', array(
+				'args' => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+						'type'        => 'integer',
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_order_details_html' ),
+					'permission_callback' => array( $this, 'get_order_details_html_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_order_details_html_schema' ),
+            )
+        );
+
+        register_rest_route(
             $this->namespace, '/' . $this->base . '/summary', array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
@@ -209,7 +226,7 @@ class OrderController extends DokanRESTController {
         $order = dokan()->order->get( $request->get_param( 'id' ) );
 
         if ( empty( $order ) ) {
-            return new WP_Error( "dokan_rest_invalid_order_id", __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_rest_invalid_order_id', __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $data     = $this->prepare_data_for_response( $order, $request );
@@ -798,6 +815,11 @@ class OrderController extends DokanRESTController {
      * @return boolean
      */
     public function get_single_order_permissions_check( $request ) {
+        // Pre-existing role check on a shipped public route. Swapping it for a
+        // capability would change who can read single orders on v1/v2/v3 — a behaviour
+        // change needing its own release note and coverage, not a drive-by edit inside
+        // a UI migration.
+        // phpcs:ignore WordPress.WP.Capabilities.RoleFound
         if ( current_user_can( 'shop_manager' ) || current_user_can( 'administrator' ) ) {
             return true;
         }
@@ -809,6 +831,260 @@ class OrderController extends DokanRESTController {
         }
 
         return false;
+    }
+
+    /**
+     * Permission rule for the Vendor order details HTML fragment.
+     *
+     * Mirrors exactly what the legacy order details page enforces: the order-viewing
+     * capability plus ownership resolved through Dokan's staff-aware current-user
+     * helper. `get_single_order_permissions_check()` is deliberately NOT reused — it
+     * compares against the raw current user id and so refuses Vendor staff who can
+     * open the legacy page. That is a real bug, but fixing it changes already-shipped
+     * public routes and belongs in its own change.
+     *
+     * The endpoint returns customer PII (billing and shipping addresses, phone, email,
+     * order notes), so this is the highest-risk code in the fragment feature.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return true|WP_Error
+     */
+    public function get_order_details_html_permissions_check( $request ) {
+        if ( ! current_user_can( 'dokan_view_order' ) ) {
+            return new WP_Error(
+                'dokan_rest_cannot_view_order',
+                __( 'Sorry, you are not allowed to view this order.', 'dokan-lite' ),
+                array( 'status' => rest_authorization_required_code() )
+            );
+        }
+
+        $order = $this->get_viewable_order( $request );
+
+        if ( is_wp_error( $order ) ) {
+            return $order;
+        }
+
+        // Marketplace admins support Vendors and investigate disputes, so they reach
+        // any Vendor order — the same as the legacy page. Note that the details
+        // template applies its own vendor-ownership guard, so what an admin is shown
+        // is whatever the legacy page shows them; this endpoint neither grants nor
+        // removes access relative to that page.
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        if ( dokan_is_seller_has_order( dokan_get_current_user_id(), $order->get_id() ) ) {
+            return true;
+        }
+
+        return new WP_Error(
+            'dokan_rest_cannot_view_order',
+            __( 'Sorry, you are not allowed to view this order.', 'dokan-lite' ),
+            array( 'status' => 403 )
+        );
+    }
+
+    /**
+     * Render the Vendor order details template as an HTML fragment.
+     *
+     * Keeps order details server-rendered so every Pro and third-party hook keeps
+     * firing, and hands the markup to the React Vendor panel.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function get_order_details_html( $request ) {
+        $order = $this->get_viewable_order( $request );
+
+        if ( is_wp_error( $order ) ) {
+            return $order;
+        }
+
+        return $this->prepare_order_details_html_for_response( $order, $request );
+    }
+
+    /**
+     * Resolve the order a fragment request is asking for.
+     *
+     * A trashed order is treated as missing so the panel gets a clean error rather
+     * than a blank view.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WC_Order|WP_Error
+     */
+    protected function get_viewable_order( $request ) {
+        $order = wc_get_order( absint( $request['id'] ) );
+
+        if ( ! $order || 'trash' === $order->get_status() ) {
+            return new WP_Error(
+                'dokan_rest_invalid_order_id',
+                __( 'Invalid Order ID.', 'dokan-lite' ),
+                array( 'status' => 404 )
+            );
+        }
+
+        return $order;
+    }
+
+    /**
+     * Shape the order details fragment into a response.
+     *
+     * Named for the fragment rather than overriding `prepare_item_for_response()`,
+     * because this controller's item is an order — a future caller reaching for the
+     * generic name must not be handed a rendered document instead.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order        $order   Order being rendered.
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WP_REST_Response
+     */
+    public function prepare_order_details_html_for_response( $order, $request ) {
+        $fragment     = dokan()->order_details_fragment->render( $order );
+        $date_created = $order->get_date_created();
+
+        $data = array(
+            'html'           => $fragment['html'],
+            'inline_scripts' => $fragment['inline_scripts'],
+            'order'          => array(
+                'id'           => $order->get_id(),
+                'number'       => (string) $order->get_order_number(),
+                'status'       => $order->get_status(),
+                'status_label' => dokan_get_order_status_translated( $order->get_status() ),
+                'date_created' => $date_created ? wc_rest_prepare_date_response( $date_created, false ) : null,
+            ),
+        );
+
+        /**
+         * Filters the Vendor order details fragment payload.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array           $data    Response payload.
+         * @param WC_Order        $order   Order being rendered.
+         * @param WP_REST_Request $request Request object.
+         */
+        $data = apply_filters( 'dokan_rest_prepare_order_details_html_data', $data, $order, $request );
+
+        $response = rest_ensure_response( $data );
+        $response->add_links( $this->prepare_order_details_html_links( $order ) );
+
+        /**
+         * Filters the Vendor order details fragment response.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param WP_REST_Response $response Response object.
+         * @param WC_Order         $order    Order being rendered.
+         * @param WP_REST_Request  $request  Request object.
+         */
+        return apply_filters( 'dokan_rest_prepare_order_details_html_object', $response, $order, $request );
+    }
+
+    /**
+     * Links for the order details fragment.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Order being rendered.
+     *
+     * @return array
+     */
+    protected function prepare_order_details_html_links( $order ) {
+        return array(
+            'self'  => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d/details-html', $this->namespace, $this->base, $order->get_id() ) ),
+            ),
+            'order' => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $order->get_id() ) ),
+            ),
+        );
+    }
+
+    /**
+     * Schema for the order details HTML fragment response.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_order_details_html_schema() {
+        return array(
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'order-details-html',
+            'type'       => 'object',
+            'properties' => array(
+                'html'           => array(
+                    'description' => __( 'Rendered order details markup.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                ),
+                'inline_scripts' => array(
+                    'description' => __( 'Inline script data emitted while rendering the fragment.', 'dokan-lite' ),
+                    'type'        => 'array',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                    'items'       => array(
+                        'type'       => 'object',
+                        'properties' => array(
+                            'handle'   => array(
+                                'description' => __( 'Script handle the data belongs to.', 'dokan-lite' ),
+                                'type'        => 'string',
+                            ),
+                            'position' => array(
+                                'description' => __( 'Whether the data runs before or after its handle.', 'dokan-lite' ),
+                                'type'        => 'string',
+                                'enum'        => array( 'before', 'after' ),
+                            ),
+                            'code'     => array(
+                                'description' => __( 'JavaScript to execute at global scope.', 'dokan-lite' ),
+                                'type'        => 'string',
+                            ),
+                        ),
+                    ),
+                ),
+                'order'          => array(
+                    'description' => __( 'Order metadata for the panel header.', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
+                    'properties'  => array(
+                        'id'           => array(
+                            'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                            'type'        => 'integer',
+                        ),
+                        'number'       => array(
+                            'description' => __( 'Order number.', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ),
+                        'status'       => array(
+                            'description' => __( 'Order status.', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ),
+                        'status_label' => array(
+                            'description' => __( 'Translated order status.', 'dokan-lite' ),
+                            'type'        => 'string',
+                        ),
+                        'date_created' => array(
+                            'description' => __( "The date the order was created, in the site's timezone.", 'dokan-lite' ),
+                            'type'        => array( 'string', 'null' ),
+                            'format'      => 'date-time',
+                        ),
+                    ),
+                ),
+            ),
+        );
     }
 
     /**

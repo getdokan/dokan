@@ -1,20 +1,116 @@
+/**
+ * Re-initialisation registry for the Vendor order details view.
+ *
+ * The order details markup is server-rendered PHP. It is reachable two ways: the legacy
+ * dashboard page (markup present at DOM-ready) and the Vendor panel, which injects the
+ * same markup as an HTML fragment long after DOM-ready. Event handlers are therefore
+ * document-delegated, and anything that genuinely needs to run against elements —
+ * tooltips, date pickers, select2 — registers here so it can be re-run on demand.
+ *
+ * @since DOKAN_SINCE
+ */
+window.dokan = window.dokan || {};
+window.dokan.orderDetails = window.dokan.orderDetails || {
+    initializers: [],
+
+    /**
+     * Register a function to run whenever order details markup appears.
+     *
+     * @param {Function} callback Receives the container element (or `document`).
+     */
+    onInit( callback ) {
+        if ( typeof callback === 'function' ) {
+            window.dokan.orderDetails.initializers.push( callback );
+        }
+    },
+
+    /**
+     * Run every registered initialiser against a container.
+     *
+     * One initialiser throwing must not stop the rest, so each is isolated.
+     *
+     * @param {Object} [container] Element holding the markup. Defaults to `document`.
+     */
+    init( container ) {
+        const scope = container || document;
+
+        window.dokan.orderDetails.initializers.forEach( ( callback ) => {
+            try {
+                callback( scope );
+            } catch ( error ) {
+                if ( window.console && window.console.error ) {
+                    window.console.error( error );
+                }
+            }
+        } );
+    },
+
+    /**
+     * Emit an order-details event on both channels.
+     *
+     * Every event is published through the modern JavaScript hooks system and as a
+     * jQuery event on `document.body`, so extension code from either era can consume
+     * it. See docs/frontend/order-details-fragment.md.
+     *
+     * @param {string} name Event name.
+     * @param {Array}  args Positional payload.
+     */
+    emit( name, args ) {
+        if ( window.wp && window.wp.hooks && window.wp.hooks.doAction ) {
+            window.wp.hooks.doAction.apply( null, [ name ].concat( args ) );
+        }
+
+        if ( window.jQuery ) {
+            window.jQuery( document.body ).trigger( name, args );
+        }
+    },
+};
+
+// Re-initialise whenever the Vendor panel injects the fragment. Third parties bind to
+// the very same event.
+if ( ! window.dokan.orderDetails.isBound ) {
+    window.dokan.orderDetails.isBound = true;
+
+    if ( window.wp && window.wp.hooks && window.wp.hooks.addAction ) {
+        window.wp.hooks.addAction(
+            'dokan-order-details-fragment-rendered',
+            'dokan-lite/order-details',
+            function ( container, orderId ) {
+                // The refund cluster below reads its order id from `dokan_refund`,
+                // which is built once at page load from the request. On the legacy
+                // page that request carries `order_id`; in the Vendor panel it does
+                // not, so the id would be empty and a refund would be submitted
+                // against nothing. The fragment knows which order it just rendered.
+                if ( window.dokan_refund && orderId ) {
+                    window.dokan_refund.post_id = orderId;
+                }
+
+                window.dokan.orderDetails.init( container );
+            }
+        );
+    }
+}
+
 jQuery(function($) {
 
-    $('.tips').tooltip();
+    window.dokan.orderDetails.onInit( function ( scope ) {
+        // Bootstrap-style tooltips are a no-op when re-applied to an initialised element.
+        $( scope ).find( '.tips' ).addBack( '.tips' ).tooltip();
+    } );
 
-    $('ul.order-status').on('click', 'a.dokan-edit-status', function(e) {
+    $(document).on('click', 'ul.order-status a.dokan-edit-status', function(e) {
         $(this).addClass('dokan-hide').closest('li').next('li').removeClass('dokan-hide');
 
         return false;
     });
 
-    $('ul.order-status').on('click', 'a.dokan-cancel-status', function(e) {
+    $(document).on('click', 'ul.order-status a.dokan-cancel-status', function(e) {
         $(this).closest('li').addClass('dokan-hide').prev('li').find('a.dokan-edit-status').removeClass('dokan-hide');
 
         return false;
     });
 
-    $('form#dokan-order-status-form').on('submit', function(e) {
+    $(document).on('submit', 'form#dokan-order-status-form', function(e) {
         e.preventDefault();
 
         var self = $(this),
@@ -31,6 +127,15 @@ jQuery(function($) {
                 li.addClass('dokan-hide');
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
+
+                // Anything showing this order's status elsewhere on the page — the
+                // Vendor panel header, for one — would otherwise contradict what the
+                // Vendor is looking at.
+                window.dokan.orderDetails.emit( 'dokan-order-details-status-changed', [
+                    parseInt( self.find( 'input[name="order_id"]' ).val(), 10 ),
+                    String( self.find( '#order_status' ).val() || '' ).replace( /^wc-/, '' ),
+                    response.data,
+                ] );
             } else {
                 dokan_sweetalert( response.data, {
                     icon: 'success',
@@ -39,7 +144,7 @@ jQuery(function($) {
         });
     });
 
-    $('form#add-order-note').on( 'submit', function(e) {
+    $(document).on( 'submit', 'form#add-order-note', function(e) {
         e.preventDefault();
 
         if (!$('textarea#add-note-content').val()) return;
@@ -56,7 +161,7 @@ jQuery(function($) {
 
     })
 
-    $('#dokan-order-notes').on( 'click', 'a.delete_note', function() {
+    $(document).on( 'click', '#dokan-order-notes a.delete_note', function() {
 
         var note = $(this).closest('li.note');
 
@@ -77,7 +182,7 @@ jQuery(function($) {
 
     });
 
-    $('.order_download_permissions').on('click', 'button.grant_access', function() {
+    $(document).on('click', '.order_download_permissions button.grant_access', function() {
         var self = $(this),
             product = $('select.grant_access_id').val();
 
@@ -114,7 +219,7 @@ jQuery(function($) {
         return false;
     });
 
-    $( '.dokan-btn-action-confirm' ).on( 'click', async function ( e ) {
+    $( document ).on( 'click', '.dokan-btn-action-confirm', async function ( e ) {
         e.preventDefault();
 
         const message = $( this ).data( 'confirm-message' );
@@ -131,7 +236,7 @@ jQuery(function($) {
         }
     } );
 
-    $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
+    $(document).on('click', '.order_download_permissions button.revoke_access', async function(e){
         e.preventDefault();
         const answer = await dokan_sweetalert( dokan.i18n_download_permission, {
             action : 'confirm',
@@ -177,7 +282,7 @@ jQuery(function($) {
         return false;
     });
 
-    $("#grant_access_id").select2({
+    const grantAccessSelect2Args = {
         allowClear: true,
         minimumInputLength: 3,
         ajax: {
@@ -247,7 +352,22 @@ jQuery(function($) {
                 return dokan.i18n_searching;
             }
         },
-    });
+    };
+
+    window.dokan.orderDetails.onInit( function ( scope ) {
+        if ( ! $.fn.select2 ) {
+            return;
+        }
+
+        $( scope )
+            .find( '#grant_access_id' )
+            .addBack( '#grant_access_id' )
+            .filter( ':not(.select2-hidden-accessible)' )
+            .select2( grantAccessSelect2Args );
+    } );
+
+    // Legacy page: the markup is already in the document at DOM-ready.
+    window.dokan.orderDetails.init( document );
 
 });
 
@@ -258,6 +378,55 @@ jQuery(function($) {
      */
     var dokan_seller_meta_boxes_order_items = {
         init: function() {
+
+            window.dokan.orderDetails.onInit( this.initDatePicker );
+
+            //saving note
+            $( 'body' ).on('click','#dokan-add-tracking-number', this.showTrackingForm );
+            $( 'body' ).on('click','#dokan-cancel-tracking-note', this.cancelTrackingForm );
+            $( 'body' ).on('click','#add-tracking-details', this.insertShippingTrackingInfo);
+
+            // Delegated from the document, not from `#woocommerce-order-items`: the
+            // container itself is part of the injected fragment in the Vendor panel, so
+            // it does not exist when this runs.
+            $( document )
+                .on( 'click', '#woocommerce-order-items button.refund-items', this.refund_items )
+                .on( 'click', '#woocommerce-order-items .cancel-action', this.cancel )
+
+                // Refunds
+                .on( 'click', '#woocommerce-order-items button.do-api-refund, #woocommerce-order-items button.do-manual-refund', this.refunds.do_refund )
+                .on( 'change', '#woocommerce-order-items .refund input.refund_line_total, #woocommerce-order-items .refund input.refund_line_tax', this.refunds.input_changed )
+                .on( 'change keyup', '#woocommerce-order-items .wc-order-refund-items #refund_amount', this.refunds.amount_changed )
+                .on( 'change', '#woocommerce-order-items input.refund_order_item_qty', this.refunds.refund_quantity_changed )
+
+                // Subtotal/total
+                .on( 'keyup', '#woocommerce-order-items .woocommerce_order_items .split-input input:eq(0)', function() {
+                    var $subtotal = $( this ).next();
+                    if ( $subtotal.val() === '' || $subtotal.is( '.match-total' ) ) {
+                        $subtotal.val( $( this ).val() ).addClass( 'match-total' );
+                    }
+                })
+
+                .on( 'keyup', '#woocommerce-order-items .woocommerce_order_items .split-input input:eq(1)', function() {
+                    $( this ).removeClass( 'match-total' );
+                })
+        },
+
+        /**
+         * Attach the shipped-date picker.
+         *
+         * Runs at DOM-ready on the legacy page and again whenever the order details
+         * fragment is injected into the Vendor panel.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param {Object} scope Container holding the freshly-rendered markup.
+         */
+        initDatePicker: function( scope ) {
+
+            if ( ! $.fn.datepicker || ! window.dokan || ! window.dokan.i18n_date_format ) {
+                return;
+            }
 
             let formatMap = {
                 // Day
@@ -292,36 +461,15 @@ jQuery(function($) {
                 }
             }
 
-            $( "#shipped-date" ).datepicker({
-                dateFormat: datepickerFormat
-            });
-
-            //saving note
-            $( 'body' ).on('click','#dokan-add-tracking-number', this.showTrackingForm );
-            $( 'body' ).on('click','#dokan-cancel-tracking-note', this.cancelTrackingForm );
-            $( 'body' ).on('click','#add-tracking-details', this.insertShippingTrackingInfo);
-
-            $( '#woocommerce-order-items' )
-                .on( 'click', 'button.refund-items', this.refund_items )
-                .on( 'click', '.cancel-action', this.cancel )
-
-                // Refunds
-                .on( 'click', 'button.do-api-refund, button.do-manual-refund', this.refunds.do_refund )
-                .on( 'change', '.refund input.refund_line_total, .refund input.refund_line_tax', this.refunds.input_changed )
-                .on( 'change keyup', '.wc-order-refund-items #refund_amount', this.refunds.amount_changed )
-                .on( 'change', 'input.refund_order_item_qty', this.refunds.refund_quantity_changed )
-
-                // Subtotal/total
-                .on( 'keyup', '.woocommerce_order_items .split-input input:eq(0)', function() {
-                    var $subtotal = $( this ).next();
-                    if ( $subtotal.val() === '' || $subtotal.is( '.match-total' ) ) {
-                        $subtotal.val( $( this ).val() ).addClass( 'match-total' );
-                    }
-                })
-
-                .on( 'keyup', '.woocommerce_order_items .split-input input:eq(1)', function() {
-                    $( this ).removeClass( 'match-total' );
-                })
+            // `hasDatepicker` is jQuery UI's own marker — filtering on it keeps a
+            // re-init from stacking a second picker on the same input.
+            $( scope || document )
+                .find( '#shipped-date' )
+                .addBack( '#shipped-date' )
+                .filter( ':not(.hasDatepicker)' )
+                .datepicker({
+                    dateFormat: datepickerFormat
+                });
         },
 
         showTrackingForm: function(e) {

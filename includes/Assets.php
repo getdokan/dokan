@@ -1093,7 +1093,10 @@ class Assets {
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
 
         $dokan_frontend = [
-            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            'currency'      => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            'order_details' => [
+                'panel_route_enabled' => dokan_is_vendor_panel_order_details_enabled(),
+            ],
         ];
 
         // localize dokan frontend script
@@ -1162,6 +1165,9 @@ class Assets {
                 isset( $wp->query_vars['orders'] ) ||
                 isset( $wp->query_vars['coupons'] ) ||
                 isset( $wp->query_vars['reports'] ) ||
+                // The Vendor panel renders the same server-rendered order details
+                // markup as the legacy `orders` page, so it needs the same styles.
+                isset( $wp->query_vars['new'] ) ||
                 ( isset( $wp->query_vars['settings'] ) && in_array( $wp->query_vars['settings'], [ 'store', 'shipping' ], true ) )
             ) {
                 wp_enqueue_style( 'dokan-timepicker' );
