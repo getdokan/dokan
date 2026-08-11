@@ -325,8 +325,10 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      *
      * Every save funnels through here - WooCommerce routes create, update and batch alike through
      * save_object() - so form-level validation runs once here instead of per endpoint, and it judges
-     * the product WooCommerce assembled rather than the raw payload. Nothing is persisted until
-     * save_object() calls save() on what this returns.
+     * the product WooCommerce assembled rather than the raw payload. The product itself is not written
+     * until save_object() calls save() on what this returns, though the parent call can already have
+     * created attachment records when a payload sends images by URL; the vendor form only ever sends
+     * attachment ids.
      *
      * @since DOKAN_SINCE
      *
@@ -342,28 +344,26 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return $product;
         }
 
+        $invalid = $this->validate_required_downloads( $request, $product );
+
+        if ( is_wp_error( $invalid ) ) {
+            return $invalid;
+        }
+
         /**
-         * Filters form-level validation of a vendor product save.
+         * Filters a vendor product prepared for the database, before it is saved.
          *
-         * Return a WP_Error to reject the save. Extensions that add required fields to the product
-         * form can enforce them here instead of patching the controller.
+         * Scoped to vendor dashboard saves, unlike WooCommerce's own
+         * `woocommerce_rest_pre_insert_product_object`. Return a WP_Error to reject the save, which
+         * is how extensions enforce required fields they add to the product form.
          *
          * @since DOKAN_SINCE
          *
-         * @param WP_Error|null   $error    Error to reject the save with, null to allow it.
-         * @param WC_Data         $product  Product assembled from the request, not yet saved.
-         * @param WP_REST_Request $request  Full details about the request.
-         * @param bool            $creating Whether a new product is being created.
+         * @param WC_Data|WP_Error $product  Product assembled from the request, not yet saved.
+         * @param WP_REST_Request  $request  Full details about the request.
+         * @param bool             $creating Whether a new product is being created.
          */
-        $error = apply_filters(
-            'dokan_rest_product_validate_save',
-            $this->validate_required_downloads( $request, $product ),
-            $product,
-            $request,
-            $creating
-        );
-
-        return is_wp_error( $error ) ? $error : $product;
+        return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
     }
 
     /**
@@ -381,7 +381,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * Deliberately scoped to this one field: the schema marks several fields required that a partial form
      * never renders yet still submits empty - the quick-create modal omits the required Description - so
      * enforcing every required field here would reject those saves outright. Extensions that need their own
-     * rules can hook `dokan_rest_product_validate_save`.
+     * rules can hook `dokan_rest_pre_insert_product_object`.
      *
      * @since DOKAN_SINCE
      *

@@ -398,13 +398,13 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
     }
 
     /**
-     * Extensions can reject a save through the shared validation filter.
+     * Extensions can reject a save through the prepared-object filter.
      *
      * @return void
      */
     public function test_extensions_can_reject_a_save(): void {
         add_filter(
-            'dokan_rest_product_validate_save',
+            'dokan_rest_pre_insert_product_object',
             static function () {
                 return new \WP_Error( 'dokan_test_rejected', 'Nope.', [ 'status' => 400 ] );
             }
@@ -412,7 +412,33 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
 
         $response = $this->update_request( [ 'regular_price' => '12.50' ] );
 
-        $this->assertSame( 400, $response->get_status(), 'The validation filter must be able to reject a save.' );
+        $this->assertSame( 400, $response->get_status(), 'The filter must be able to reject a save.' );
         $this->assertSame( 'dokan_test_rejected', $response->as_error()->get_error_code() );
+    }
+
+    /**
+     * The prepared-object filter receives the assembled product on an allowed save.
+     *
+     * @return void
+     */
+    public function test_extensions_receive_the_prepared_product(): void {
+        $seen = null;
+
+        add_filter(
+            'dokan_rest_pre_insert_product_object',
+            static function ( $product, $request, $creating ) use ( &$seen ) {
+                $seen = [ $product, $creating ];
+
+                return $product;
+            },
+            10,
+            3
+        );
+
+        $response = $this->update_request( [ 'regular_price' => '12.50' ] );
+
+        $this->assertSame( 200, $response->get_status(), 'Returning the product must let the save through.' );
+        $this->assertInstanceOf( \WC_Product::class, $seen[0] ?? null, 'The filter should receive the assembled product.' );
+        $this->assertFalse( $seen[1] ?? true, 'An update is not a create.' );
     }
 }
