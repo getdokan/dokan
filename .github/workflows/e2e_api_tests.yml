@@ -528,6 +528,31 @@ jobs:
                       npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
                   fi
 
+            # Rescue the first-pass traces/screenshots BEFORE anything else can delete them.
+            #
+            # Playwright CLEARS `outputDir` (playwright/e2e/test-artifacts, playwright.config.ts:15) at
+            # the START of every run, and two more runs follow this one: the isolation re-run below and
+            # the coverage run further down. By the time "Archive test artifacts" uploads
+            # tests/pw/playwright, the trace for the failure that actually mattered is long gone —
+            # verified on run 31362069120, whose shard-8 artifact contains only shard-features.json and
+            # systemInfo.json. Every CI-only failure therefore had to be diagnosed by guesswork from the
+            # error message alone.
+            #
+            # This is the same clobbering the summary-report steps below already work around; traces were
+            # simply never covered. Copy, don't move: the isolation re-run's own artifacts are still
+            # wanted, and a copy cannot break the run if the directory is absent.
+            - name: 🧾 Preserve first-pass traces before the re-run wipes them
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  if [ -d playwright/e2e/test-artifacts ]; then
+                      mkdir -p playwright/e2e/first-pass-artifacts
+                      cp -R playwright/e2e/test-artifacts/. playwright/e2e/first-pass-artifacts/ || true
+                      echo "preserved $(find playwright/e2e/first-pass-artifacts -type f | wc -l) file(s)"
+                  else
+                      echo "no test-artifacts directory — nothing to preserve"
+                  fi
+
             # Re-run ONLY the failed tests, after the whole shard has finished, without
             # their shard-mates. This separates a transient failure from a reproducible one.
             #

@@ -435,6 +435,93 @@ export class StripeExpressPage {
      * number stuck — retrying the WHOLE entry if the PE re-mounts (WC re-render detaches
      * the cross-origin frame mid-fill).
      */
+    /**
+     * True when all three Payment Element fields still hold a plausible value. DIAGNOSTIC ONLY —
+     * called on the failure path to say whether the element still held a card when the submit
+     * no-oped. Length-based, so it proves presence, NOT validity: a corrupted value still passes.
+     */
+    private async isCardComplete(): Promise<boolean> {
+        try {
+            const frame = await this.findStripePeFrame();
+            const read = async (sel: string) => (await frame.locator(sel).first().inputValue().catch(() => '')).replace(/\s/g, '');
+            const [num, exp, cvc] = await Promise.all([
+                read(StripeExpressPage.PE_NUMBER),
+                read(StripeExpressPage.PE_EXPIRY),
+                read(StripeExpressPage.PE_CVC),
+            ]);
+            return num.length >= 12 && exp.length >= 4 && cvc.length >= 3;
+        } catch {
+            // The element is not reachable at all — report that rather than throwing from a
+            // diagnostic and masking the real failure.
+            return false;
+        }
+    }
+
+    /**
+     * WooCommerce Blocks' own checkout status, or null when it cannot be read.
+     * Used to tell "the submit started" from "the click did nothing".
+     */
+    private async blockCheckoutStatus(): Promise<string | null> {
+        return this.page
+            .evaluate(() => {
+                const select = (window as any).wp?.data?.select;
+                const checkout = select?.('wc/store/checkout');
+                try {
+                    return typeof checkout?.getCheckoutStatus === 'function' ? String(checkout.getCheckoutStatus()) : null;
+                } catch {
+                    return null;
+                }
+            })
+            .catch(() => null);
+    }
+
+    /**
+     * Press Place Order and CONFIRM the checkout actually began submitting; re-press if it did not.
+     *
+     * Diagnosed by probing Blocks' own store around the click under emulated CI conditions (250ms
+     * latency, 4x CPU throttle). On a failing run the status sequence after the click was ["idle"] —
+     * it never moved for ten seconds — while a passing run gave ["processing","after_processing"].
+     * At the moment of that click Blocks reported status "idle", isCalculating false, isProcessing
+     * false, hasError false and the button NOT disabled, and Playwright reported the click as
+     * successful. So the submit handler simply never ran: React re-renders the place-order button
+     * (cart totals and payment methods resolve late on a slow link), and the event lands on the node
+     * that was actionable a moment earlier rather than the one now mounted.
+     *
+     * That is the whole SE-GUEST-01 failure. Nothing was ever submitted, which is why there is no
+     * POST /wc/store/v1/checkout, no order, no validation message in the page OR inside the Stripe
+     * iframe, and why the settle poll can only report "none". It also explains why the card, the
+     * network and the cart all turned out to be red herrings.
+     *
+     * Re-pressing is safe precisely BECAUSE it is conditional on the status still being "idle": idle
+     * means no submission started, so there is no attempt in flight and no risk of a second order. The
+     * moment the status leaves idle this returns and lets the existing assertions decide the verdict —
+     * a payment that genuinely fails still fails. If the status cannot be read at all, it returns
+     * after the first press rather than guessing.
+     */
+    private async pressPlaceOrderUntilSubmitting(selector: string): Promise<void> {
+        const ATTEMPTS = 3;
+        const CONFIRM_MS = 4_000;
+        const POLL_MS = 200;
+
+        for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
+            await this.page.locator(selector).click();
+
+            const deadline = Date.now() + CONFIRM_MS;
+            while (Date.now() < deadline) {
+                const status = await this.blockCheckoutStatus();
+                if (status === null) {
+                    // Store unreadable — cannot verify, so do not risk a second press.
+                    return;
+                }
+                if (status !== 'idle') {
+                    return; // submission started
+                }
+                await this.page.waitForTimeout(POLL_MS);
+            }
+            // Still idle: the press did not take. Loop and press again.
+        }
+    }
+
     async fillCardDetails(card: string = STRIPE_CARDS.success): Promise<void> {
         await this.openCardAccordion();
         const deadline = Date.now() + 45_000;
@@ -632,7 +719,7 @@ export class StripeExpressPage {
         this.page.on('response', onResponse);
 
         try {
-            await this.page.locator(this.blockSelectors.placeOrder).click();
+            await this.pressPlaceOrderUntilSubmitting(this.blockSelectors.placeOrder);
             try {
                 /*
                  * Budget, not preference. The waits after this click used to be 60s (redirect) +
@@ -669,11 +756,29 @@ export class StripeExpressPage {
                         .allInnerTexts()
                         .catch(() => [] as string[]);
                     const peError = await this.page.locator('#dokan-stripe-express-errors').innerText().catch(() => '');
-                    const why = [...notices, peError].map(t => t.trim()).filter(Boolean).join(' | ') || '<no visible validation message>';
+                    /*
+                     * Also read INSIDE the Stripe iframe. Both selectors above live in the main
+                     * document, but the Payment Element renders its own field-level validation
+                     * ("Your card number is incomplete", "Your card's expiration date is
+                     * incomplete") inside its iframe. So the message that explains the no-op was
+                     * structurally unreachable, and this diagnostic reported
+                     * "<no visible validation message>" on every CI failure — which reads as "no
+                     * error existed" when it actually meant "we could not see one".
+                     */
+                    const peFrameError = await this.findStripePeFrame()
+                        .then(frame => frame.locator('p[role="alert"], .p-FieldError, [id$="-errorText"]').allInnerTexts())
+                        .then(texts => texts.join(' | '))
+                        .catch(() => '');
+                    const cardState = await this.isCardComplete()
+                        .then(ok => (ok ? 'card fields still complete at failure' : 'CARD FIELDS EMPTY/INCOMPLETE at failure — the Payment Element re-mounted'))
+                        .catch(() => 'card state unreadable');
+                    const why =
+                        [...notices, peError, peFrameError].map(t => t.trim()).filter(Boolean).join(' | ') ||
+                        '<no validation message in the page OR inside the Payment Element iframe>';
                     detail =
                         'The Blocks checkout never issued POST /wc/store/v1/checkout at all — the Place Order click was a NO-OP ' +
                         '(block not submittable / validation blocked it), so no payment was ever attempted. This is a checkout-submission ' +
-                        `failure, not a declined payment.\nBlock validation said: ${why}`;
+                        `failure, not a declined payment.\nBlock validation said: ${why}\nPayment Element state: ${cardState}`;
                 }
                 throw new Error(`${String(err)}\n\n${detail}`);
             }
@@ -769,7 +874,7 @@ export class StripeExpressPage {
     }
 
     async placeBlockOrderExpectError(): Promise<void> {
-        await this.page.locator(this.blockSelectors.placeOrder).click();
+        await this.pressPlaceOrderUntilSubmitting(this.blockSelectors.placeOrder);
         const notice = this.page.locator(this.blockSelectors.error).first();
         await expect(notice, 'declined card should surface a block error notice').toBeVisible({ timeout: 40_000 });
 
