@@ -124,6 +124,53 @@ class FormSchema {
     }
 
     /**
+     * Resolve a field's label for a product type, falling back to its shared label.
+     *
+     * Fields can vary by product type through the `labels`, `requireds` and `visibilities` maps, which
+     * Dokan Pro's Product Form Manager writes into. These three resolvers are the PHP counterpart of
+     * `resolveLabel`, `resolveRequired` and `resolveVisibility` in
+     * `src/dashboard/product-editor/utils.tsx`, so both sides read the schema the same way.
+     *
+     * @since 5.0.13
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return string
+     */
+    public static function get_label( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): string {
+        return (string) ( $field['labels'][ $product_type ] ?? $field['label'] ?? '' );
+    }
+
+    /**
+     * Whether a field must be filled in for a product type.
+     *
+     * @since 5.0.13
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return bool
+     */
+    public static function is_required( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): bool {
+        return (bool) ( $field['requireds'][ $product_type ] ?? $field['required'] ?? false );
+    }
+
+    /**
+     * Whether a field is rendered for a product type.
+     *
+     * @since 5.0.13
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return bool
+     */
+    public static function is_visible( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): bool {
+        return (bool) ( $field['visibilities'][ $product_type ] ?? $field['visibility'] ?? true );
+    }
+
+    /**
      * Get available product types as label/value pairs.
      *
      * @since 5.0.0

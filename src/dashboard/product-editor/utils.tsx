@@ -69,8 +69,25 @@ export function fieldValueForProduct( item: FormItem ): any {
     return v ?? '';
 }
 
-/** True if value is considered empty (null, undefined, '', whitespace-only, or empty array). */
-function isEmptyValue( val: any ): boolean {
+/** True for a plain `{}` object — class instances such as Date own no enumerable values and must not read as empty. */
+const isPlainObject = ( val: any ): boolean =>
+    typeof val === 'object' &&
+    val !== null &&
+    ! Array.isArray( val ) &&
+    [ Object.prototype, null ].includes( Object.getPrototypeOf( val ) );
+
+/**
+ * True if a value carries nothing: null, undefined, whitespace-only text, or a
+ * collection whose entries are all themselves empty.
+ *
+ * Recursing matters for repeater fields — a downloadable-file row the vendor
+ * added but never filled in is `{ id: '', name: '', file: '' }`, and a list of
+ * those rows is no more a value than an empty list is. Scalars keep their usual
+ * meaning, so `0` and `false` are values.
+ *
+ * @param val Value to test.
+ */
+export function isEmpty( val: any ): boolean {
     if ( val === undefined || val === null ) {
         return true;
     }
@@ -78,7 +95,10 @@ function isEmptyValue( val: any ): boolean {
         return val.trim() === '';
     }
     if ( Array.isArray( val ) ) {
-        return val.length === 0;
+        return val.every( isEmpty );
+    }
+    if ( isPlainObject( val ) ) {
+        return Object.values( val ).every( isEmpty );
     }
     return false;
 }
@@ -108,9 +128,9 @@ function resolveCondition(
 
     switch ( comparison ) {
         case 'empty':
-            return isEmptyValue( depValue );
+            return isEmpty( depValue );
         case 'not_empty':
-            return ! isEmptyValue( depValue );
+            return ! isEmpty( depValue );
         case '==':
         case 'equal':
             return (

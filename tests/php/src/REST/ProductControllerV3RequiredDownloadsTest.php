@@ -18,8 +18,16 @@ use WP_REST_Response;
  * @group dokan-product-editor
  *
  * @covers \WeDevs\Dokan\REST\ProductControllerV3::validate_required_downloads
+ * @covers \WeDevs\Dokan\REST\ProductControllerV3::prepare_object_for_database
  */
 class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
+
+    /**
+     * REST namespace for this controller.
+     *
+     * @var string
+     */
+    protected $namespace = 'dokan/v3';
 
     /**
      * Product owned by the acting vendor.
@@ -56,7 +64,7 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
      *
      * @return void
      */
-    protected function require_downloads_field(): void {
+    protected function mark_downloads_required(): void {
         add_filter(
             'dokan_product_editor_prepared_schema',
             function ( $items ) {
@@ -74,16 +82,34 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
     }
 
     /**
-     * Dispatch a product update, mirroring a real REST client.
+     * A downloadable product payload carrying the given file rows.
+     *
+     * @param array $downloads Download rows.
+     *
+     * @return array
+     */
+    protected function downloadable_payload( array $downloads = [] ): array {
+        return [
+            'type'         => 'simple',
+            'downloadable' => true,
+            'downloads'    => $downloads,
+        ];
+    }
+
+    /**
+     * Dispatch a product update as a JSON request, the way the product form does.
+     *
+     * The JSON content type is load bearing: the controller re-encodes the resolved payload onto the
+     * request body during `rest_pre_dispatch`, which WordPress only parses back for JSON requests.
      *
      * @param array $body Product payload.
      *
      * @return WP_REST_Response
      */
     protected function update_request( array $body ): WP_REST_Response {
-        $request = new WP_REST_Request( 'PUT', '/dokan/v3/products/' . $this->product_id );
+        $request = new WP_REST_Request( 'PUT', $this->get_route( '/products/' . $this->product_id ) );
         $request->add_header( 'Content-Type', 'application/json' );
-        $request->set_body( wp_json_encode( $body + [ 'id' => $this->product_id ] ) );
+        $request->set_body( wp_json_encode( $body ) );
 
         return $this->server->dispatch( $request );
     }
@@ -94,15 +120,9 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
      * @return void
      */
     public function test_downloadable_product_without_files_is_rejected(): void {
-        $this->require_downloads_field();
+        $this->mark_downloads_required();
 
-        $response = $this->update_request(
-            [
-				'type'         => 'simple',
-				'downloadable' => true,
-				'downloads'    => [],
-			]
-        );
+        $response = $this->update_request( $this->downloadable_payload() );
 
         $this->assertSame( 400, $response->get_status(), 'A required download must block the save.' );
         $this->assertSame( 'dokan_rest_product_download_required', $response->as_error()->get_error_code() );
@@ -115,20 +135,18 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
      * @return void
      */
     public function test_blank_download_rows_do_not_satisfy_the_requirement(): void {
-        $this->require_downloads_field();
+        $this->mark_downloads_required();
 
         $response = $this->update_request(
-            [
-				'type'         => 'simple',
-				'downloadable' => true,
-				'downloads'    => [
+            $this->downloadable_payload(
+                [
 					[
 						'id'   => '',
 						'name' => 'Untitled',
 						'file' => '',
 					],
-				],
-			]
+				]
+            )
         );
 
         $this->assertSame( 400, $response->get_status(), 'A row without a file must block the save.' );
@@ -141,7 +159,7 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
      * @return void
      */
     public function test_partial_update_without_downloads_is_allowed(): void {
-        $this->require_downloads_field();
+        $this->mark_downloads_required();
 
         $response = $this->update_request( [ 'regular_price' => '12.50' ] );
 
@@ -155,13 +173,7 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
      * @return void
      */
     public function test_optional_downloads_field_is_not_enforced(): void {
-        $response = $this->update_request(
-            [
-				'type'         => 'simple',
-				'downloadable' => true,
-				'downloads'    => [],
-			]
-        );
+        $response = $this->update_request( $this->downloadable_payload() );
 
         $this->assertSame( 200, $response->get_status(), 'An optional field must not block the save.' );
         $this->assertTrue( wc_get_product( $this->product_id )->is_downloadable() );
