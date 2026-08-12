@@ -3496,7 +3496,7 @@ if ( ! function_exists( 'dokan_get_pending_vendor_count' ) ) {
      * Cached in the shared `vendors` group, which VendorCache already invalidates on
      * vendor create/update/delete and on enable/disable.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.13
      *
      * @return int
      */
@@ -3523,7 +3523,7 @@ if ( ! function_exists( 'dokan_get_pending_vendor_count' ) ) {
         /**
          * Filters the number of vendors awaiting approval.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.13
          *
          * @param int $count Number of vendors awaiting approval.
          */

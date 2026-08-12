@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.12\n"
+"Project-Id-Version: Dokan 5.0.13\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-03T11:15:37+00:00\n"
+"POT-Creation-Date: 2026-08-12T06:16:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -94,18 +94,18 @@ msgid "Invalid nonce"
 msgstr ""
 
 #. translators: 1) rest api method name string
-#: includes/Abstracts/DokanRESTController.php:30
-#: includes/Abstracts/DokanRESTController.php:210
-#: includes/Abstracts/DokanRESTController.php:285
+#: includes/Abstracts/DokanRESTController.php:61
+#: includes/Abstracts/DokanRESTController.php:248
+#: includes/Abstracts/DokanRESTController.php:323
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
-#: includes/Abstracts/DokanRESTController.php:71
+#: includes/Abstracts/DokanRESTController.php:109
 #: includes/REST/ProductController.php:1169
 msgid "To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint."
 msgstr ""
 
-#: includes/Abstracts/DokanRESTController.php:73
+#: includes/Abstracts/DokanRESTController.php:111
 #: includes/REST/OrderController.php:238
 #: includes/REST/ProductController.php:430
 #: includes/REST/ProductController.php:455
@@ -113,7 +113,7 @@ msgid "Invalid ID."
 msgstr ""
 
 #. translators: 1) post type name
-#: includes/Abstracts/DokanRESTController.php:193
+#: includes/Abstracts/DokanRESTController.php:231
 msgid "The %s cannot be deleted."
 msgstr ""
 
@@ -161,7 +161,7 @@ msgid "Dashboard"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:65
-#: includes/Admin/Dashboard/Pages/Withdraw.php:24
+#: includes/Admin/Dashboard/Pages/Withdraw.php:31
 #: includes/Admin/Menu.php:40
 #: includes/Admin/Menu.php:62
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:104
@@ -835,15 +835,27 @@ msgstr ""
 msgid "Tools"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Vendors.php:12
-#: includes/Admin/Dashboard/Pages/Vendors.php:13
+#. translators: %s: Pending vendor count badge
+#: includes/Admin/Dashboard/Pages/Vendors.php:15
+msgid "Vendors %s"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Vendors.php:19
+#: includes/Admin/Dashboard/Pages/Vendors.php:22
 #: includes/Admin/Menu.php:67
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Vendors"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Withdraw.php:23
+#. translators: %s: Pending withdraw request count badge
+#. translators: %s: withdraw count
+#: includes/Admin/Dashboard/Pages/Withdraw.php:27
+#: includes/Admin/Menu.php:46
+msgid "Withdraw %s"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Withdraw.php:34
 msgid "Withdraw Management"
 msgstr ""
 
@@ -920,11 +932,6 @@ msgstr ""
 
 #: includes/Admin/Hooks.php:116
 msgid "Unauthorized operation"
-msgstr ""
-
-#. translators: %s: withdraw count
-#: includes/Admin/Menu.php:46
-msgid "Withdraw %s"
 msgstr ""
 
 #: includes/Admin/Menu.php:79
@@ -2873,7 +2880,7 @@ msgid "reCAPTCHA verification failed!"
 msgstr ""
 
 #: includes/Ajax.php:452
-#: includes/REST/StoreController.php:1004
+#: includes/REST/StoreController.php:1018
 msgid "Email sent successfully!"
 msgstr ""
 
@@ -5237,12 +5244,12 @@ msgid "privacy policy"
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3519
+#: includes/functions.php:3570
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3532
+#: includes/functions.php:3583
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -8785,134 +8792,135 @@ msgstr ""
 msgid "You do not have permission to access this store."
 msgstr ""
 
-#: includes/REST/StoreController.php:628
-#: includes/REST/StoreController.php:1107
+#: includes/REST/StoreController.php:606
+#: includes/REST/StoreController.php:642
+#: includes/REST/StoreController.php:1121
 msgid "No store found"
 msgstr ""
 
-#: includes/REST/StoreController.php:646
-#: includes/REST/StoreController.php:665
+#: includes/REST/StoreController.php:660
+#: includes/REST/StoreController.php:679
 msgid "No reviews found"
 msgstr ""
 
-#: includes/REST/StoreController.php:933
+#: includes/REST/StoreController.php:947
 msgid "This email address is not valid"
 msgstr ""
 
-#: includes/REST/StoreController.php:976
+#: includes/REST/StoreController.php:990
 msgid "No vendor is found to be send an email."
 msgstr ""
 
-#: includes/REST/StoreController.php:1023
+#: includes/REST/StoreController.php:1037
 msgid "Status parameter must be active or inactive"
 msgstr ""
 
-#: includes/REST/StoreController.php:1029
+#: includes/REST/StoreController.php:1043
 msgid "No vendor found for updating status"
 msgstr ""
 
-#: includes/REST/StoreController.php:1057
+#: includes/REST/StoreController.php:1071
 msgid "No items found for bulk updating"
 msgstr ""
 
-#: includes/REST/StoreController.php:1141
+#: includes/REST/StoreController.php:1155
 msgid "Status of the store"
 msgstr ""
 
-#: includes/REST/StoreController.php:1148
+#: includes/REST/StoreController.php:1162
 msgid "Store List Order By"
 msgstr ""
 
-#: includes/REST/StoreController.php:1154
-#: includes/REST/StoreController.php:1160
+#: includes/REST/StoreController.php:1168
+#: includes/REST/StoreController.php:1174
 msgid "Store List Order"
 msgstr ""
 
-#: includes/REST/StoreController.php:1180
+#: includes/REST/StoreController.php:1194
 msgid "Unique identifier for the vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1186
+#: includes/REST/StoreController.php:1200
 msgid "Store owner first name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1191
+#: includes/REST/StoreController.php:1205
 msgid "Store owner last name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1196
+#: includes/REST/StoreController.php:1210
 msgid "User nice name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1201
+#: includes/REST/StoreController.php:1215
 msgid "User password."
 msgstr ""
 
-#: includes/REST/StoreController.php:1205
+#: includes/REST/StoreController.php:1219
 msgid "Store email address."
 msgstr ""
 
-#: includes/REST/StoreController.php:1211
+#: includes/REST/StoreController.php:1225
 msgid "Store name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1216
+#: includes/REST/StoreController.php:1230
 msgid "Store phone number."
 msgstr ""
 
-#: includes/REST/StoreController.php:1221
+#: includes/REST/StoreController.php:1235
 msgid "Show email in store."
 msgstr ""
 
-#: includes/REST/StoreController.php:1226
+#: includes/REST/StoreController.php:1240
 msgid "Gravatar ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:1230
+#: includes/REST/StoreController.php:1244
 msgid "Banner ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:1234
+#: includes/REST/StoreController.php:1248
 msgid "Enable terms and conditions."
 msgstr ""
 
-#: includes/REST/StoreController.php:1238
+#: includes/REST/StoreController.php:1252
 msgid "Store terms and conditions."
 msgstr ""
 
-#: includes/REST/StoreController.php:1242
+#: includes/REST/StoreController.php:1256
 msgid "Store icon."
 msgstr ""
 
-#: includes/REST/StoreController.php:1246
+#: includes/REST/StoreController.php:1260
 msgid "Social profiles."
 msgstr ""
 
-#: includes/REST/StoreController.php:1258
+#: includes/REST/StoreController.php:1272
 msgid "Store address."
 msgstr ""
 
-#: includes/REST/StoreController.php:1271
+#: includes/REST/StoreController.php:1285
 msgid "Enable selling."
 msgstr ""
 
-#: includes/REST/StoreController.php:1275
+#: includes/REST/StoreController.php:1289
 msgid "Featured vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1279
+#: includes/REST/StoreController.php:1293
 msgid "Trusted vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1283
+#: includes/REST/StoreController.php:1297
 msgid "Admin commission amount."
 msgstr ""
 
-#: includes/REST/StoreController.php:1287
+#: includes/REST/StoreController.php:1301
 msgid "Admin additional fee."
 msgstr ""
 
-#: includes/REST/StoreController.php:1291
+#: includes/REST/StoreController.php:1305
 msgid "Category wise commission."
 msgstr ""
 

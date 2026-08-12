@@ -1,6 +1,10 @@
+### v5.0.13 ( Aug 12, 2026 ) ###
+
+- **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
+- **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
+
 ### v5.0.12 ( Aug 03, 2026 ) ###
 
-- **new:** Made the WooCommerce Abilities (MCP) layer vendor-aware, so AI assistants and MCP tools only access a vendor's own products and orders, and added Dokan-native abilities for vendor data WooCommerce doesn't cover.
 - **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
 
 ### v5.0.11 ( Jul 27, 2026 ) ###

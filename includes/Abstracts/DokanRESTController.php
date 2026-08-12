@@ -25,7 +25,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * `0` means no pinning, so the regular author gate in
      * `prepare_objects_query()` applies.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.13
      *
      * @var int
      */
@@ -40,7 +40,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * clause. Such routes must decide the scope themselves instead of widening
      * the shared gate for every caller.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.13
      *
      * @param int $author_id Vendor id to scope the listing to.
      *
