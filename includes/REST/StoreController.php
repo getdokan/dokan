@@ -600,10 +600,24 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store_products( $request ) {
+        $store_id = absint( $request['id'] );
+
+        if ( ! $store_id ) {
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
         $product_controller = new ProductController();
 
+        /**
+         * This route is served with a public `permission_callback`, so the author scope is pinned
+         * here instead of being left to the capability based gate in `prepare_objects_query()`.
+         * An anonymous caller resolves to author `0` there, and `WP_Query` drops the clause
+         * altogether — which used to return the whole catalogue for every store id.
+         */
+        $product_controller->set_forced_author( $store_id );
+
         $request->set_param( 'status', [ 'publish' ] );
-        $request->set_param( 'author', $request['id'] );
+        $request->set_param( 'author', $store_id );
         $request->set_param( 'per_page', $request['per_page'] );
         $request->set_param( 'paged', $request['page'] );
 

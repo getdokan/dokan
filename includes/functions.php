@@ -3480,6 +3480,57 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
     }
 }
 
+if ( ! function_exists( 'dokan_get_pending_vendor_count' ) ) {
+    /**
+     * Count the vendors that are waiting for admin approval.
+     *
+     * Delegates to the very query the Vendors list is built from instead of reusing
+     * `dokan_get_seller_status_count()['inactive']`. That figure is derived as
+     * "everything that is not approved", so it also counts users carrying no
+     * `dokan_enable_selling` meta at all — every administrator, for one, since
+     * `dokan_admin_user_register()` only writes that meta for the `seller` role. The
+     * listing matches on `dokan_enable_selling = 'no'` and therefore leaves those users
+     * out, so a count taken from `inactive` is one an admin can never clear: the page it
+     * points at has nothing pending to show.
+     *
+     * Cached in the shared `vendors` group, which VendorCache already invalidates on
+     * vendor create/update/delete and on enable/disable.
+     *
+     * @since 5.0.13
+     *
+     * @return int
+     */
+    function dokan_get_pending_vendor_count() {
+        $cache_group = 'vendors';
+        $cache_key   = 'pending_vendor_count';
+        $count       = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $count ) {
+            // Only the total is needed; `fields` and `number` keep this to a count query.
+            dokan()->vendor->get_vendors(
+                [
+                    'status' => 'pending',
+                    'fields' => 'ID',
+                    'number' => 1,
+                ]
+            );
+
+            $count = absint( dokan()->vendor->get_total() );
+
+            Cache::set( $cache_key, $count, $cache_group );
+        }
+
+        /**
+         * Filters the number of vendors awaiting approval.
+         *
+         * @since 5.0.13
+         *
+         * @param int $count Number of vendors awaiting approval.
+         */
+        return absint( apply_filters( 'dokan_get_pending_vendor_count', $count ) );
+    }
+}
+
 /**
  * Install a plugin from wp.org
  *

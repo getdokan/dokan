@@ -510,8 +510,12 @@ jobs:
                       '
                   fi
 
+            # continue-on-error: the isolation re-run below decides this shard's result.
+            # `outcome` still reports the true first-pass result, so every later step that
+            # keys off steps.e2e-test.outcome keeps working unchanged.
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
+              continue-on-error: true
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 60
               working-directory: tests/pw
@@ -523,6 +527,94 @@ jobs:
                       # No baseline — fall back to Playwright's built-in alphabetical sharding
                       npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
                   fi
+
+            # Rescue the first-pass traces/screenshots BEFORE anything else can delete them.
+            #
+            # Playwright CLEARS `outputDir` (playwright/e2e/test-artifacts, playwright.config.ts:15) at
+            # the START of every run, and two more runs follow this one: the isolation re-run below and
+            # the coverage run further down. By the time "Archive test artifacts" uploads
+            # tests/pw/playwright, the trace for the failure that actually mattered is long gone —
+            # verified on run 31362069120, whose shard-8 artifact contains only shard-features.json and
+            # systemInfo.json. Every CI-only failure therefore had to be diagnosed by guesswork from the
+            # error message alone.
+            #
+            # This is the same clobbering the summary-report steps below already work around; traces were
+            # simply never covered. Copy, don't move: the isolation re-run's own artifacts are still
+            # wanted, and a copy cannot break the run if the directory is absent.
+            - name: 🧾 Preserve first-pass traces before the re-run wipes them
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  if [ -d playwright/e2e/test-artifacts ]; then
+                      mkdir -p playwright/e2e/first-pass-artifacts
+                      cp -R playwright/e2e/test-artifacts/. playwright/e2e/first-pass-artifacts/ || true
+                      echo "preserved $(find playwright/e2e/first-pass-artifacts -type f | wc -l) file(s)"
+                  else
+                      echo "no test-artifacts directory — nothing to preserve"
+                  fi
+
+            # Re-run ONLY the failed tests, after the whole shard has finished, without
+            # their shard-mates. This separates a transient failure from a reproducible one.
+            #
+            # Guard on a non-empty failedTests list: if the first pass died from a crash or a
+            # timeout rather than test failures, `--last-failed` would select zero tests and
+            # "pass", turning an infrastructure failure green. No recorded failures => no re-run,
+            # and the gate step below keeps the shard red.
+            #
+            # --reporter=list overrides the config reporters on purpose: the blob reporter would
+            # otherwise emit a second set of results for these same tests and merge-reports would
+            # double-count them. The merged HTML report therefore keeps showing the FIRST-pass
+            # failures, which is what actually happened in shard context.
+            - name: 🔁 Re-run shard failures in isolation
+              id: e2e-recheck
+              if: always() && steps.e2e-test.outcome == 'failure'
+              timeout-minutes: 30
+              working-directory: tests/pw
+              run: |
+                  LAST_RUN=playwright/e2e/test-artifacts/.last-run.json
+                  if [ ! -f "$LAST_RUN" ] || [ "$(node -e "try{process.stdout.write(String((require('./'+process.argv[1]).failedTests||[]).length))}catch(e){process.stdout.write('0')}" "$LAST_RUN")" = "0" ]; then
+                      echo "::warning::No recorded test failures — the first pass failed for another reason (crash/timeout). Not re-running."
+                      exit 1
+                  fi
+                  set -o pipefail
+                  NO_SETUP=true npx playwright test --project=e2e_tests --last-failed \
+                      --reporter=list 2>&1 | tee /tmp/recheck.log
+
+            # Always say out loud which tests were rescued by the isolation re-run. A test that
+            # fails with its shard-mates but passes alone is the signature of shard-state
+            # pollution (an earlier spec leaving a global option/module/product dirty), NOT a
+            # timing flake — Playwright's in-place `retries` cannot green that class, this can.
+            - name: 📋 Report isolation re-run outcome
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  {
+                      echo "### Shard ${{ matrix.shardIndex }} — failures re-run in isolation"
+                      echo
+                      if [ "${{ steps.e2e-recheck.outcome }}" = "success" ]; then
+                          echo "⚠️ **These tests failed alongside their shard-mates but passed alone.**"
+                          echo "The shard is reported green. Treat this as suspected shard-state pollution"
+                          echo "and investigate the polluter — verify by running the earlier spec and reading"
+                          echo "the global state back, not by re-running the test that failed."
+                      else
+                          echo "❌ **The re-run failed too — reproducible failures, not flakes.**"
+                      fi
+                      echo
+                      echo '```'
+                      if [ -f /tmp/recheck.log ]; then
+                          grep -E '^[[:space:]]+(✓|✘|×)' /tmp/recheck.log | head -50
+                      else
+                          echo "(no re-run log — first pass failed without recorded test failures)"
+                      fi
+                      echo '```'
+                  } >> "$GITHUB_STEP_SUMMARY"
+
+            # The actual gate. The shard is red unless the isolation re-run cleared every failure.
+            - name: Fail the shard when the isolation re-run did not clear
+              if: always() && steps.e2e-test.outcome == 'failure' && steps.e2e-recheck.outcome != 'success'
+              run: |
+                  echo "::error::Shard ${{ matrix.shardIndex }} failed and the isolation re-run did not clear it."
+                  exit 1
 
             # Snapshot the e2e summary before coverage runs — both projects use
             # the same playwright.config.ts and write summaryReporter output to

@@ -2,7 +2,7 @@ import { test, expect, request } from '@utils/test';
 import { SERVER_URL } from '@utils/helpers';
 import { log } from '@utils/logger';
 import { ApiUtils } from '@utils/apiUtils';
-import { payloads } from '@utils/payloads';
+import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { StripeExpressPage, STRIPE_CARDS, STRIPE_EXPRESS_CONNECTED_ACCOUNTS } from './stripeExpressPage';
 import {
     VENDOR_ID,
@@ -84,6 +84,7 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
                 state: 'NY',
                 postcode: '10001',
                 country: 'US',
+                phone: MOBILE_TEST_PHONE,
             });
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
@@ -125,7 +126,7 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
                 firstName: 'Guest',
                 lastName: 'Buyer',
                 email: 'guest.classic.stripeexpress@example.com',
-                phone: '(555) 555-5555',
+                phone: MOBILE_TEST_PHONE,
                 address1: '123 Test Street',
                 city: 'New York',
                 postcode: '10001',
@@ -175,6 +176,11 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
                 state: 'NY',
                 postcode: '10001',
                 country: 'US',
+                // Load-bearing, not copy-paste. Without it the block refuses to submit for a MISSING
+                // PHONE, which is itself an inline error that never reaches order-received — so this
+                // test would pass while proving nothing about a declined card. The phone must be
+                // valid for the decline to be the thing actually under test.
+                phone: MOBILE_TEST_PHONE,
             });
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.declined);
