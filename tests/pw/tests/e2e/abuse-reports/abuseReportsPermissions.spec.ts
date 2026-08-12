@@ -421,53 +421,46 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
 
     // ------------------------------------------------------------------
     // REST permissions (§REST:186, 187, 189). The list controller's
-    // permission_callback is is_dokandar() == current_user_can('dokandar').
+    // permission_callback is is_dokandar() == current_user_can( dokan_admin_menu_capability() ),
+    // i.e. manage_woocommerce — NOT the broad vendor 'dokandar' cap.
     // ------------------------------------------------------------------
 
-    test('Test Case P7 - REST: Vendor Token GET (ACTUAL behavior — documents missing manage_options gate vs §REST:186)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
-        // KNOWN-GAP DOC: TEST_CASES item 186 expects a vendor token to be
-        // rejected (401/403). In reality the controller only checks
-        // `current_user_can('dokandar')`, and the seller (vendor) role HAS the
-        // `dokandar` cap (Installer.php). So a vendor token CAN read EVERY
-        // marketplace abuse report — a real privilege gap. We assert the actual
-        // 200 and flag it, per the "never fake / assert real behavior" rule.
+    test('Test Case P7 - REST: Vendor Token GET Is Rejected (§REST:186)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
+        // Abuse reports are a marketplace-admin resource: the controller's
+        // permission_callback gates on `dokan_admin_menu_capability()`
+        // (manage_woocommerce). The seller (vendor) role does NOT hold that cap
+        // — it only holds `dokandar` — so a vendor token must be rejected and
+        // must never read marketplace-wide reports.
         const ctx = await request.newContext();
         const resp = await ctx.get(REST.list, { headers: payloads.vendorAuth });
 
-        // Document the real outcome explicitly so the gap is visible in reports.
         expect(
-            resp.status(),
-            'GAP: vendor token GET /abuse-reports is NOT rejected — controller gates on dokandar only and vendors HAVE dokandar (expected 200; if this ever flips to 401/403 the gap was fixed)',
-        ).toBe(200);
+            [401, 403],
+            'Vendor token GET /abuse-reports must be rejected — the route requires dokan_admin_menu_capability(), which vendors do not hold',
+        ).toContain(resp.status());
 
-        // The leak is the whole point of the gap — the body is a JSON array of
-        // reports the vendor should not be entitled to see marketplace-wide.
-        const body = await resp.json();
-        expect(Array.isArray(body), 'Vendor-token list response is a JSON array (data exposed)').toBe(true);
+        // No report data may leak: the body must be a WP_Error shape, never a
+        // list of reports.
+        const body = await resp.json().catch(() => null);
+        expect(Array.isArray(body), 'Vendor-token rejection must NOT return a list of reports').toBe(false);
+        expect(body, 'Rejection body should be a WP_Error-shaped object (code present)').toHaveProperty('code');
 
         await ctx.dispose();
     });
 
-    test('Test Case P8 - REST: Vendor Token DELETE (ACTUAL behavior — documents gap vs §REST:187)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
-        // Same gap as P7 for the single-DELETE route (also gated on dokandar).
-        // We DELETE a deliberately non-existent id so we never destroy real
-        // seed data: the permission check runs BEFORE the row lookup, so the
-        // status distinguishes "permission denied" (401/403) from "permitted
-        // but not found" (4xx report_not_found). A vendor with dokandar passes
-        // the permission gate, so we should get a not-found error, NOT a 401/403.
+    test('Test Case P8 - REST: Vendor Token DELETE Is Rejected (§REST:187)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
+        // Same gate as P7 for the single-DELETE route. We target a deliberately
+        // non-existent id so we never destroy real seed data: the permission
+        // check runs BEFORE the row lookup, so a 401/403 proves the vendor was
+        // stopped at the gate rather than reaching the delete handler (which
+        // would answer report_not_found instead).
         const ctx = await request.newContext();
         const resp = await ctx.delete(REST.single(999999999), { headers: payloads.vendorAuth });
-        const status = resp.status();
 
-        // ACTUAL: the vendor is NOT blocked by permission (dokandar passes), so
-        // the response is a not-found error rather than 401/403. Assert it is
-        // NOT a permission rejection — that documents the missing gate.
         expect(
-            [401, 403].includes(status),
-            `GAP: vendor token DELETE is NOT permission-rejected (got ${status}); the dokandar-only gate lets vendors reach the delete handler`,
-        ).toBe(false);
-        // It should still be a client error (the id does not exist).
-        expect(status, 'DELETE of a non-existent id should be a 4xx (report_not_found), proving the handler ran').toBeGreaterThanOrEqual(400);
+            [401, 403],
+            'Vendor token DELETE /abuse-reports/<id> must be permission-rejected before the handler runs',
+        ).toContain(resp.status());
 
         await ctx.dispose();
     });
@@ -495,9 +488,11 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
 
     test('Test Case P10 - REST: shop_manager Token GET (ACTUAL behavior — documents gap vs §REST:186/§List:110)', { tag: ['@pro', '@admin', '@permission', '@security'] }, async ({}) => {
         // KNOWN-GAP DOC: shop_manager has BOTH manage_woocommerce (WC) and
-        // dokandar (Dokan installer). The controller checks dokandar, so a
-        // shop_manager token reads the full list. This is the REST counterpart
-        // to P5 and shows item 110's "no dokandar" premise is false in-stack.
+        // dokandar (Dokan installer). The controller gates on
+        // dokan_admin_menu_capability() == manage_woocommerce, which
+        // shop_manager HAS, so a shop_manager token reads the full list. This is
+        // the REST counterpart to P5 and shows item 110's "no access" premise is
+        // false in-stack.
         const ctx = await request.newContext();
         const resp = await ctx.get(REST.list, { headers: shopManagerAuth() });
         const status = resp.status();
@@ -507,12 +502,12 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
         // test. Treat that as inconclusive rather than a false pass.
         test.skip(
             status === 401,
-            'shop_manager basic-auth did not authenticate (env/credential issue) — cannot assess the dokandar gate',
+            'shop_manager basic-auth did not authenticate (env/credential issue) — cannot assess the capability gate',
         );
 
         expect(
             status,
-            'GAP: shop_manager token GET /abuse-reports is permitted (dokandar held) — documents that shop_manager is NOT blocked',
+            'GAP: shop_manager token GET /abuse-reports is permitted (manage_woocommerce held) — documents that shop_manager is NOT blocked',
         ).toBe(200);
         const body = await resp.json();
         expect(Array.isArray(body), 'shop_manager-token list response is a JSON array (access granted)').toBe(true);
