@@ -1,5 +1,6 @@
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import apiFetch from '@wordpress/api-fetch';
 import { Button, toast, type SettingsElement } from '@wedevs/plugin-ui';
 import { MediaUploader } from '@dokan/components';
@@ -59,8 +60,9 @@ const VerificationMethodsField = ( {
         } ) );
 
     // Admin-authored help text with a generic fallback — shown under the row title.
+    // Arrives tag-stripped from the server, so only its entities need decoding.
     const methodHelp = ( method: VerificationMethod ): string =>
-        method.help ||
+        decodeEntities( method.help || '' ) ||
         sprintf(
             /* translators: %s: verification method title */
             __(

@@ -125,7 +125,7 @@ class VendorOnboardingControllerTest extends DokanTestCase {
         add_filter(
             'wp_redirect',
             function ( $location ) {
-                throw new SetupWizardRedirectInterrupt( $location );
+                throw new SetupWizardRedirectInterrupt( $location ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Control-flow signal, never rendered.
             }
         );
 
@@ -200,7 +200,8 @@ class VendorOnboardingControllerTest extends DokanTestCase {
             function ( $wizard ) use ( &$captured ) {
                 $captured['is_wizard'] = $wizard instanceof SetupWizard;
                 $captured['store_id']  = $wizard->store_id;
-                $captured['bag_value'] = isset( $_POST['dokan_store_categories'] ) ? $_POST['dokan_store_categories'] : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Asserting the compat bag verbatim; sanitizing would defeat the assertion.
+                $captured['bag_value'] = $_POST['dokan_store_categories'] ?? null;
             }
         );
 
@@ -219,7 +220,7 @@ class VendorOnboardingControllerTest extends DokanTestCase {
         $this->assertSame( '42', $captured['bag_value'] );
 
         // The overlay is scoped: the superglobal is restored once the action returns.
-        $this->assertSame( [ 'sentinel' => 'kept' ], $_POST );
+        $this->assertSame( [ 'sentinel' => 'kept' ], $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Asserting the superglobal was restored.
 
         // non_meta keeps the stand-in out of the profile row under both its id and its POST key.
         $row = $this->get_profile_meta( $this->seller_id1 );
@@ -271,12 +272,13 @@ class VendorOnboardingControllerTest extends DokanTestCase {
             'dokan_seller_wizard_payment_field_save',
             function ( $wizard ) use ( &$captured ) {
                 $captured['store_id'] = $wizard->store_id;
-                $captured['bag']      = isset( $_POST['settings'] ) ? $_POST['settings'] : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Asserting the compat bag verbatim; sanitizing would defeat the assertion.
+                $captured['bag'] = $_POST['settings'] ?? null;
             }
         );
 
         $response = $this->put_request(
-        '/dokan/v1/vendor-onboarding/payment',
+            '/dokan/v1/vendor-onboarding/payment',
             [
                 'values' => [
                     'payment_methods' => [
@@ -322,7 +324,7 @@ class VendorOnboardingControllerTest extends DokanTestCase {
         $row_before = $this->get_profile_meta( $this->seller_id1 );
 
         $response = $this->put_request(
-        '/dokan/v1/vendor-onboarding/payment',
+            '/dokan/v1/vendor-onboarding/payment',
             [
                 'values' => [
                     'payment_methods' => [
