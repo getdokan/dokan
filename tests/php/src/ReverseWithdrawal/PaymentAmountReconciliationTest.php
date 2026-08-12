@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test\ReverseWithdrawal;
 
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
+use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager;
 use WeDevs\Dokan\Test\DokanTestCase;
 
@@ -33,6 +34,10 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
 
     public function set_up() {
         parent::set_up();
+
+        // The cart needs the base payment product, which only the installer creates — and only for a user who can manage options.
+        wp_set_current_user( $this->admin_id );
+        InstallerHelper::create_reverse_withdrawal_base_product();
 
         wp_set_current_user( $this->seller_id1 );
 
