@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { AsyncSelect, Select } from '@src/components';
+import { Select } from '@src/components';
 import { TaggableSelect } from '@getdokan/dokan-ui';
 import CustomField, { getValidationError } from './CustomField';
 import { components as rsComponents } from 'react-select';
@@ -9,7 +9,13 @@ import { addQueryArgs } from '@wordpress/url';
 import { debounce } from '@wordpress/compose';
 import { applyFilters } from '@wordpress/hooks';
 import { decodeEntities } from '@wordpress/html-entities';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from '@wordpress/element';
 
 type FieldProps = {
     data: any;
@@ -36,27 +42,112 @@ const decodeLabel = ( option: any ) =>
 const decodeValue = ( value: any ) =>
     Array.isArray( value ) ? value.map( decodeLabel ) : decodeLabel( value );
 
-// Fetch `{ value, label }` options from an endpoint, optionally filtered by `search`.
+const OPTIONS_PER_PAGE = 20;
+
+// Fetch one page of `{ value, label }` options from an endpoint, optionally
+// filtered by `search`. `hasMore` is inferred from a full page rather than the
+// X-WP-TotalPages header so a proxy stripping custom headers can't disable
+// pagination; the only cost is one empty request when the total is an exact
+// multiple of the page size.
 const fetchOptions = async (
     endpoint?: string,
-    search = ''
-): Promise< any[] > => {
+    search = '',
+    page = 1
+): Promise< { options: any[]; hasMore: boolean } > => {
     if ( ! endpoint ) {
-        return [];
+        return { options: [], hasMore: false };
     }
     try {
         const result: any = await apiFetch( {
-            path: addQueryArgs( endpoint, { search, per_page: 20 } ),
+            path: addQueryArgs( endpoint, {
+                search,
+                per_page: OPTIONS_PER_PAGE,
+                page,
+            } ),
         } );
-        return Array.isArray( result )
+        const options = Array.isArray( result )
             ? result.map( ( item: any ) => ( {
                   value: item.id,
                   label: decodeEntities( item.name ),
               } ) )
             : [];
+        return { options, hasMore: options.length === OPTIONS_PER_PAGE };
     } catch {
-        return [];
+        return { options: [], hasMore: false };
     }
+};
+
+// Options state shared by the non-tree async fields: page 1 replaces the list,
+// scrolling the open menu to its end appends the next page for the current
+// search term, and a new search resets back to page 1.
+const usePaginatedOptions = ( endpoint?: string ) => {
+    const [ options, setOptions ] = useState< any[] >( [] );
+    const [ isLoading, setIsLoading ] = useState( false );
+    // Mutable request state: lets the scroll handler read the latest
+    // page/search without re-rendering, and `requestId` discards responses
+    // that arrive after a newer request has been issued.
+    const stateRef = useRef( {
+        search: '',
+        page: 1,
+        hasMore: false,
+        loading: false,
+        requestId: 0,
+    } );
+
+    const load = useCallback(
+        ( search: string, page: number ) => {
+            const requestId = ++stateRef.current.requestId;
+            stateRef.current.loading = true;
+            setIsLoading( true );
+            fetchOptions( endpoint, search, page ).then( ( result ) => {
+                if ( requestId !== stateRef.current.requestId ) {
+                    return; // superseded by a newer search/page request
+                }
+                stateRef.current = {
+                    ...stateRef.current,
+                    search,
+                    page,
+                    hasMore: result.hasMore,
+                    loading: false,
+                };
+                setIsLoading( false );
+                setOptions( ( previous ) => {
+                    const merged =
+                        page === 1
+                            ? result.options
+                            : [ ...previous, ...result.options ];
+                    // Terms can shift between pages while browsing (e.g. a tag
+                    // created mid-session); keep the first occurrence of each.
+                    const seen = new Set();
+                    return merged.filter(
+                        ( option ) =>
+                            ! seen.has( option.value ) &&
+                            seen.add( option.value )
+                    );
+                } );
+            } );
+        },
+        [ endpoint ]
+    );
+
+    const onSearch = useMemo(
+        () => debounced( ( input: string ) => load( input, 1 ) ),
+        [ load ]
+    );
+
+    const onMenuScrollToBottom = () => {
+        const { search, page, hasMore, loading } = stateRef.current;
+        if ( hasMore && ! loading ) {
+            load( search, page + 1 );
+        }
+    };
+
+    useEffect( () => {
+        load( '', 1 );
+        return () => onSearch.cancel();
+    }, [ load, onSearch ] );
+
+    return { options, isLoading, onSearch, onMenuScrollToBottom };
 };
 
 // Flatten a nested tree into ordered options carrying their depth level.
@@ -185,31 +276,15 @@ const CreatableSelectField = ( {
     onChange,
     validity,
 }: FieldProps ) => {
-    const [ options, setOptions ] = useState< any[] >( [] );
-    const search = useMemo(
-        () =>
-            debounced( ( input ) =>
-                fetchOptions( field.api_endpoint, input ).then( setOptions )
-            ),
-        [ field.api_endpoint ]
-    );
-
-    useEffect( () => {
-        let active = true;
-        fetchOptions( field.api_endpoint ).then(
-            ( opts ) => active && setOptions( opts )
-        );
-        return () => {
-            active = false;
-            search.cancel();
-        };
-    }, [ field.api_endpoint, search ] );
+    const { options, isLoading, onSearch, onMenuScrollToBottom } =
+        usePaginatedOptions( field.api_endpoint );
 
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             <TaggableSelect
                 isMulti={ field.multiple }
                 options={ options }
+                isLoading={ isLoading }
                 value={ decodeValue( data[ field.id ] ?? [] ) }
                 placeholder={ field.placeholder }
                 // Server already filters by `search`; keep all returned options.
@@ -217,9 +292,10 @@ const CreatableSelectField = ( {
                 isValidNewOption={ makeIsValidNewOption( field, data ) }
                 onInputChange={ ( input: string, meta: any ) => {
                     if ( meta.action === 'input-change' ) {
-                        search( input );
+                        onSearch( input );
                     }
                 } }
+                onMenuScrollToBottom={ onMenuScrollToBottom }
                 onChange={ ( value: any ) =>
                     onChange( { [ field.id ]: value ?? [] } )
                 }
@@ -228,31 +304,33 @@ const CreatableSelectField = ( {
     );
 };
 
-// Upsells/cross-sells etc.: plain async multi-select with debounced search.
+// Upsells/cross-sells etc.: multi-select with debounced server search. Options
+// are state-driven (rather than AsyncSelect's internal loadOptions cache) so
+// scrolling the menu can append further pages.
 const AsyncMultiSelectField = ( {
     data,
     field,
     onChange,
     validity,
 }: FieldProps ) => {
-    const loadOptions = useMemo(
-        () =>
-            debounced( ( input, callback ) =>
-                fetchOptions( field.api_endpoint, input ).then( callback )
-            ),
-        [ field.api_endpoint ]
-    );
-
-    useEffect( () => () => loadOptions.cancel(), [ loadOptions ] );
+    const { options, isLoading, onSearch, onMenuScrollToBottom } =
+        usePaginatedOptions( field.api_endpoint );
 
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
-            <AsyncSelect
+            <Select
                 isMulti={ field.multiple }
-                cacheOptions
-                defaultOptions
+                options={ options }
+                isLoading={ isLoading }
                 value={ decodeValue( data[ field.id ] ) }
-                loadOptions={ loadOptions }
+                // Server already filters by `search`; keep all returned options.
+                filterOption={ null }
+                onInputChange={ ( input: string, meta: any ) => {
+                    if ( meta.action === 'input-change' ) {
+                        onSearch( input );
+                    }
+                } }
+                onMenuScrollToBottom={ onMenuScrollToBottom }
                 onChange={ ( value: any ) =>
                     onChange( { [ field.id ]: value } )
                 }
