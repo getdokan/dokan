@@ -102,6 +102,10 @@ class Manager {
         $args = wp_parse_args( $args, $default );
 
         $query_args = [
+            // Without this, `wc_get_orders()` falls back to its own default of
+            // `[ 'shop_order', 'shop_order_refund' ]` and the collection comes
+            // back with `WC_Order_Refund` objects mixed in.
+            'type'       => $args['type'],
             'limit'      => $args['limit'],
             'paged'      => $args['paged'],
             'offset'     => $args['offset'],

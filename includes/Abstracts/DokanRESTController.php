@@ -20,6 +20,37 @@ use WP_REST_Response;
 abstract class DokanRESTController extends WP_REST_Controller {
 
     /**
+     * Author id pinned by the route, overriding any caller supplied scope.
+     *
+     * `0` means no pinning, so the regular author gate in
+     * `prepare_objects_query()` applies.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var int
+     */
+    protected $forced_author = 0;
+
+    /**
+     * Pin the listing to a single vendor, regardless of request params.
+     *
+     * Routes served with a public `permission_callback` cannot rely on the
+     * capability based author gate in `prepare_objects_query()`, because an
+     * anonymous caller resolves to author `0` and `WP_Query` silently drops the
+     * clause. Such routes must decide the scope themselves instead of widening
+     * the shared gate for every caller.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $author_id Vendor id to scope the listing to.
+     *
+     * @return void
+     */
+    public function set_forced_author( int $author_id ) {
+        $this->forced_author = absint( $author_id );
+    }
+
+    /**
      * Get object.
      *
      * @param  int $id Object ID.
@@ -37,7 +68,14 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-        $query_args   = $this->prepare_objects_query( $request );
+        $query_args = $this->prepare_objects_query( $request );
+
+        // Applied last so the route pinned scope wins over every request param,
+        // subclass override and `dokan_rest_{post_type}_object_query` callback.
+        if ( $this->forced_author ) {
+            $query_args['author'] = $this->forced_author;
+        }
+
         $query        = new WP_Query();
         $result       = $query->query( $query_args );
 
@@ -423,19 +461,23 @@ abstract class DokanRESTController extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function format_collection_response( $response, $request, $total_items ) {
-        if ( intval( $total_items ) === 0 ) {
-            return $response;
-        }
+        $total_items = (int) $total_items;
 
         // Store pagation values for headers then unset for count query.
         $per_page = (int) ( ! empty( $request['per_page'] ) ? $request['per_page'] : 20 );
         $page     = (int) ( ! empty( $request['page'] ) ? $request['page'] : 1 );
 
-        $response->header( 'X-WP-Total', (int) $total_items );
+        $response->header( 'X-WP-Total', $total_items );
 
         $max_pages = ceil( $total_items / $per_page );
 
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
+
+        // An empty collection still reports its totals, it just has no prev/next link to offer.
+        if ( 0 === $total_items ) {
+            return $response;
+        }
+
         $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ) );
 
         if ( $page > 1 ) {
