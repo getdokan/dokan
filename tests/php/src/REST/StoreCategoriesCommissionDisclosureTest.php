@@ -30,13 +30,49 @@ class StoreCategoriesCommissionDisclosureTest extends DokanTestCase {
      */
     protected const COMMISSION_FIELDS = [ 'admin_commission_type', 'commission' ];
 
+    /**
+     * Rate the vendor falls back to for categories without their own override.
+     *
+     * @var array
+     */
+    protected const DEFAULT_COMMISSION = [
+        'percentage' => '42',
+        'flat'       => '3',
+    ];
+
+    /**
+     * Rate configured against one specific category.
+     *
+     * @var array
+     */
+    protected const OVERRIDE_COMMISSION = [
+        'percentage' => '17',
+        'flat'       => '1',
+    ];
+
+    /**
+     * Category carrying its own rate.
+     *
+     * @var int
+     */
+    protected $override_category_id;
+
+    /**
+     * Category with no rate of its own.
+     *
+     * @var int
+     */
+    protected $default_category_id;
+
     public function set_up() {
         parent::set_up();
 
         ( new StoreController() )->register_routes();
 
-        $category_id = $this->factory()->term->create( [ 'taxonomy' => 'product_cat' ] );
-        $product     = $this->factory()->product->create_simple_product();
+        $this->override_category_id = $this->factory()->term->create( [ 'taxonomy' => 'product_cat' ] );
+        $this->default_category_id  = $this->factory()->term->create( [ 'taxonomy' => 'product_cat' ] );
+
+        $product = $this->factory()->product->create_simple_product();
 
         wp_update_post(
             [
@@ -45,7 +81,18 @@ class StoreCategoriesCommissionDisclosureTest extends DokanTestCase {
                 'post_status' => 'publish',
             ]
         );
-        wp_set_object_terms( $product->get_id(), [ $category_id ], 'product_cat' );
+        wp_set_object_terms( $product->get_id(), [ $this->override_category_id, $this->default_category_id ], 'product_cat' );
+
+        // Give the vendor real rates, so the authorized cases assert the payload the leak exposed rather than bare key presence.
+        update_user_meta( $this->seller_id1, 'dokan_admin_percentage_type', 'category_based' );
+        update_user_meta(
+            $this->seller_id1,
+            'admin_category_commission',
+            [
+                'all'   => self::DEFAULT_COMMISSION,
+                'items' => [ $this->override_category_id => self::OVERRIDE_COMMISSION ],
+            ]
+        );
     }
 
     /**
@@ -114,12 +161,23 @@ class StoreCategoriesCommissionDisclosureTest extends DokanTestCase {
             $data = get_object_vars( $term );
 
             foreach ( self::COMMISSION_FIELDS as $field ) {
-                if ( $expected ) {
-                    $this->assertArrayHasKey( $field, $data, sprintf( '%s should still receive "%s".', $who, $field ) );
-                } else {
+                if ( ! $expected ) {
                     $this->assertArrayNotHasKey( $field, $data, sprintf( '%s must not receive "%s".', $who, $field ) );
+                    continue;
                 }
+
+                $this->assertArrayHasKey( $field, $data, sprintf( '%s should still receive "%s".', $who, $field ) );
             }
+
+            if ( ! $expected ) {
+                continue;
+            }
+
+            $this->assertSame( 'category_based', $data['admin_commission_type'], sprintf( '%s should see the configured commission type.', $who ) );
+
+            $rate = (int) $term->term_id === (int) $this->override_category_id ? self::OVERRIDE_COMMISSION : self::DEFAULT_COMMISSION;
+
+            $this->assertSame( $rate, $data['commission'], sprintf( '%s should see the rate configured for term %d.', $who, $term->term_id ) );
         }
     }
 
@@ -134,7 +192,7 @@ class StoreCategoriesCommissionDisclosureTest extends DokanTestCase {
         $terms = (array) $response->get_data();
 
         // Guard the assertions below against passing vacuously — the terms themselves stay public for everyone.
-        $this->assertNotEmpty( $terms, 'The category terms themselves stay public.' );
+        $this->assertCount( 2, $terms, 'Both the overridden and the fallback category stay public.' );
 
         return $terms;
     }

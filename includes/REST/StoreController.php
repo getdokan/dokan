@@ -1135,7 +1135,7 @@ class StoreController extends WP_REST_Controller {
 
             if ( isset( $category_commissions['items'][ $term->term_id ] ) ) {
                 $term->commission = $category_commissions['items'][ $term->term_id ];
-            } elseif ( $category_commissions['all'] ) {
+            } elseif ( ! empty( $category_commissions['all'] ) ) {
                 $term->commission = $category_commissions['all'];
             } else {
                 $term->commission = [];
