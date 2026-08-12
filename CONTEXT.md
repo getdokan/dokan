@@ -47,6 +47,15 @@ A return of money to the customer, recorded against a Vendor order and mirrored
 up to its Order. A refund created directly on a parent Order is outside the
 model: vendor accounting does not see it.
 
+**Download Permission**:
+A grant of file access to the customer, recorded against an order — created
+automatically when a paid order contains a downloadable product, or granted
+manually by the Vendor or admin. Independent of the order's current items: a
+permission can exist on an order with no downloadable item (granted manually,
+or the product changed since purchase), and a downloadable item confers no
+access until a permission exists.
+_Avoid_: Download access, download link
+
 ### Money
 
 **Commission**:

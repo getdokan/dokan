@@ -192,6 +192,34 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
 
             <div class="clear"></div>
 
+            <?php
+            // Permissions can exist without a downloadable item in the order (granted
+            // manually, or the product was made non-downloadable later) — keep the
+            // section visible in that case so existing grants stay manageable.
+            $show_download_permissions = $order->has_downloadable_item();
+
+            if ( ! $show_download_permissions && 0 !== $order->get_id() ) {
+                $existing_download_permissions = WC_Data_Store::load( 'customer-download' )->get_downloads(
+                    array(
+                        'order_id' => $order->get_id(),
+                        'limit'    => 1,
+                        'return'   => 'ids',
+                    )
+                );
+
+                $show_download_permissions = ! empty( $existing_download_permissions );
+            }
+
+            /**
+             * Filters whether the Downloadable Product Permission section is shown on the order details page.
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param bool      $show_download_permissions Whether to render the section.
+             * @param \WC_Order $order                     Order object.
+             */
+            if ( apply_filters( 'dokan_order_details_show_download_permissions', $show_download_permissions, $order ) ) :
+                ?>
             <div class="" style="width: 100%">
                 <div class="dokan-panel dokan-panel-default">
                     <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Downloadable Product Permission', 'dokan-lite' ); ?></strong></div>
@@ -202,6 +230,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 
