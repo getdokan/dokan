@@ -132,9 +132,9 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                             'description'       => __( 'Payable amount', 'dokan-lite' ),
                             'type'              => 'string',
                             'required'          => true,
+                            // The upper and lower bounds live in Helper::add_payment_to_cart(), so both callers get them.
                             'sanitize_callback' => 'sanitize_text_field',
                             'validate_callback' => 'rest_validate_request_arg',
-                            'minimum'           => 1,
                         ],
                     ],
                 ],

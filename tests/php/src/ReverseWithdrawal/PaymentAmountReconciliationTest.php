@@ -28,9 +28,9 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     /**
      * Debt seeded for the vendor under test.
      *
-     * @var int
+     * @var float
      */
-    protected const DUE = 100;
+    protected const DUE = 100.0;
 
     public function set_up() {
         parent::set_up();
@@ -49,58 +49,44 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
                 'note'      => 'Reverse withdrawal reconciliation test',
                 'debit'     => self::DUE,
                 'credit'    => 0,
-                'trn_date'  => dokan_current_datetime()->format( 'Y-m-d H:i:s' ),
             ]
         );
     }
 
     /**
-     * The reported attack: an amount far beyond the real debt must be refused.
+     * Anything above the outstanding balance is refused, from the reported attack down to the boundary.
+     *
+     * @dataProvider amounts_over_due_balance
      */
-    public function test_amount_far_beyond_due_balance_is_rejected() {
-        $result = Helper::add_payment_to_cart( 999999 );
+    public function test_amount_over_due_balance_is_rejected( float $amount ) {
+        $result = Helper::add_payment_to_cart( $amount );
 
         $this->assertWPError( $result );
         $this->assertSame( 'amount-exceeds-due-balance', $result->get_error_code() );
     }
 
-    /**
-     * Even one unit over the outstanding balance is refused.
-     */
-    public function test_amount_just_over_due_balance_is_rejected() {
-        $result = Helper::add_payment_to_cart( self::DUE + 1 );
-
-        $this->assertWPError( $result );
-        $this->assertSame( 'amount-exceeds-due-balance', $result->get_error_code() );
+    public function amounts_over_due_balance(): array {
+        return [
+            'the reported attack' => [ 999999.0 ],
+            'one unit over due'   => [ self::DUE + 1 ],
+        ];
     }
 
     /**
-     * Paying the exact outstanding balance still works, and the cart carries that amount.
+     * Paying up to the outstanding balance still works, and the cart carries exactly that amount.
+     *
+     * @dataProvider amounts_within_due_balance
      */
-    public function test_exact_due_balance_is_accepted() {
-        $this->assertTrue( Helper::add_payment_to_cart( self::DUE ) );
-        $this->assertSame( (float) self::DUE, $this->cart_payment_amount() );
+    public function test_amount_within_due_balance_is_accepted( float $amount ) {
+        $this->assertTrue( Helper::add_payment_to_cart( $amount ) );
+        $this->assertSame( $amount, $this->cart_payment_amount() );
     }
 
-    /**
-     * Paying part of the outstanding balance still works, and the cart carries that amount.
-     */
-    public function test_partial_payment_is_accepted() {
-        $this->assertTrue( Helper::add_payment_to_cart( self::DUE / 2 ) );
-        $this->assertSame( (float) self::DUE / 2, $this->cart_payment_amount() );
-    }
-
-    /**
-     * Amount the reverse-withdrawal cart item actually carries — this is what reaches the ledger.
-     */
-    protected function cart_payment_amount() {
-        foreach ( WC()->cart->get_cart() as $item ) {
-            if ( isset( $item['dokan_reverse_withdrawal_balance'] ) ) {
-                return (float) $item['dokan_reverse_withdrawal_balance'];
-            }
-        }
-
-        return 0.0;
+    public function amounts_within_due_balance(): array {
+        return [
+            'the exact due balance' => [ self::DUE ],
+            'a partial payment'     => [ self::DUE / 2 ],
+        ];
     }
 
     /**
@@ -117,12 +103,31 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
 
     /**
      * Zero and negative amounts keep their original rejection.
+     *
+     * @dataProvider non_positive_amounts
      */
-    public function test_non_positive_amount_is_still_rejected() {
-        $result = Helper::add_payment_to_cart( 0 );
+    public function test_non_positive_amount_is_still_rejected( float $amount ) {
+        $result = Helper::add_payment_to_cart( $amount );
 
         $this->assertWPError( $result );
         $this->assertSame( 'invalid-amount', $result->get_error_code() );
+    }
+
+    public function non_positive_amounts(): array {
+        return [
+            'zero'     => [ 0.0 ],
+            'negative' => [ -5.0 ],
+        ];
+    }
+
+    /**
+     * Amount the reverse-withdrawal cart item actually carries — this is what reaches the ledger.
+     */
+    protected function cart_payment_amount(): ?float {
+        // add_payment_to_cart() empties the cart before adding, so there is only ever the one item.
+        $item = current( WC()->cart->get_cart() );
+
+        return isset( $item['dokan_reverse_withdrawal_balance'] ) ? (float) $item['dokan_reverse_withdrawal_balance'] : null;
     }
 
     public function tear_down() {
