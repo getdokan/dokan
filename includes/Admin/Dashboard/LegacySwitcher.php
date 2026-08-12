@@ -238,6 +238,39 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
+     * Whether the legacy vendor setup wizard (onboarding) is preferred.
+     *
+     * Same contract as {@see self::is_store_settings_legacy_preferred()}: a
+     * site-wide `dokan_appearance` option whose stored default is legacy, which
+     * the admin setup wizard flips to latest — so a fresh install onboards on
+     * the React wizard while an upgraded site keeps the legacy one until an
+     * admin opts in.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $user_id Optional. Defaults to current user.
+     *
+     * @return bool
+     */
+    public function is_setup_wizard_legacy_preferred( int $user_id = 0 ): bool {
+        if ( ! $user_id ) {
+            $user_id = get_current_user_id();
+        }
+
+        // Anonymous context (cron, emails without a current user) → prefer the new wizard.
+        if ( ! $user_id ) {
+            return false;
+        }
+
+        $appearance = get_option( 'dokan_appearance', [] );
+        if ( isset( $appearance['vendor_setup_wizard'] ) && 'latest' === $appearance['vendor_setup_wizard'] ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Build the new (React) product editor URL.
      *
      * @since 5.0.0

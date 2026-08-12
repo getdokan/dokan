@@ -3,7 +3,9 @@
 namespace WeDevs\Dokan\Vendor;
 
 use WC_Countries;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
+use WeDevs\Dokan\Assets;
 use WeDevs\Dokan\Vendor\Settings\WizardStoreSaver;
 
 /**
@@ -18,6 +20,16 @@ class SetupWizard extends DokanSetupWizard {
      * @var array
      */
     public $store_info;
+
+    /**
+     * Resolved once per request so the chrome, the asset gate and every step
+     * agree on which wizard is rendering.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var bool|null
+     */
+    protected ?bool $use_react = null;
 
     /**
      * Hook in tabs.
@@ -101,6 +113,12 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     public function frontend_enqueue_scripts() {
+        if ( ! $this->use_react_wizard() ) {
+            $this->legacy_enqueue_scripts();
+
+            return;
+        }
+
         $this->register_react_bundle();
 
         // Third-party steps (Pro's verifications) enqueue the registered handle with their own payload.
@@ -120,6 +138,51 @@ class SetupWizard extends DokanSetupWizard {
                 $this->enqueue_react_step( $this->ready_step_payload() );
                 break;
         }
+    }
+
+    /**
+     * The legacy wizard's asset stack: WooCommerce's enhanced select, tiptip
+     * and blockUI, plus the map loader the legacy store step's template needs.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function legacy_enqueue_scripts(): void {
+        $jquery_blockui = Assets::get_wc_handler( 'jquery-blockui' );
+        $jquery_tiptip  = Assets::get_wc_handler( 'jquery-tiptip' );
+
+        wp_enqueue_style( 'jquery-ui' );
+        wp_enqueue_emoji_styles();
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( $jquery_tiptip );
+        wp_enqueue_script( $jquery_blockui );
+        wp_enqueue_script( 'jquery-ui-autocomplete' );
+        wp_enqueue_script( 'wc-enhanced-select' );
+
+        // Load map scripts.
+        dokan()->scripts->load_gmap_script();
+    }
+
+    /**
+     * Whether this render uses the React wizard rather than the legacy one.
+     *
+     * Same contract as the vendor Store Settings switcher — an admin appearance
+     * option, stored default legacy, flipped to latest by the admin setup
+     * wizard on a fresh install. Pro's verification step needs no gate of its
+     * own: it falls back to its legacy template whenever the React bundle
+     * isn't registered, which is exactly what legacy mode does.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function use_react_wizard(): bool {
+        if ( null === $this->use_react ) {
+            $this->use_react = ! dokan_get_container()->get( LegacySwitcher::class )->is_setup_wizard_legacy_preferred();
+        }
+
+        return $this->use_react;
     }
 
     /**
@@ -328,7 +391,23 @@ class SetupWizard extends DokanSetupWizard {
         <?php wp_print_styles(); ?>
         <?php do_action( 'dokan_setup_wizard_styles' ); ?>
     </head>
-    <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard dokan-vsw-step-<?php echo esc_attr( $this->current_step ); ?><?php echo in_array( $this->current_step, [ 'introduction', 'next_steps' ], true ) ? ' dokan-vsw-center' : ' dokan-vsw-form'; ?>">
+		<?php if ( ! $this->use_react_wizard() ) : ?>
+    <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard">
+			<?php if ( ! empty( $this->custom_logo ) ) : ?>
+        <h1 id="wc-logo">
+            <a href="<?php echo esc_url( home_url() ); ?>">
+                <img src="<?php echo esc_url( $this->custom_logo ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"/>
+            </a>
+        </h1>
+        <?php else : ?>
+            <?php echo '<h1 id="wc-logo">' . esc_attr( get_bloginfo( 'name' ) ) . '</h1>'; ?>
+        <?php endif; ?>
+			<?php
+			return;
+    endif;
+		?>
+		<?php // `dokan-vsw` is the marker the React chrome styles hang off — the legacy body deliberately never carries it. ?>
+    <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard dokan-vsw dokan-vsw-step-<?php echo esc_attr( $this->current_step ); ?><?php echo in_array( $this->current_step, [ 'introduction', 'next_steps' ], true ) ? ' dokan-vsw-center' : ' dokan-vsw-form'; ?>">
     <header class="dokan-vsw-topbar">
         <h1 id="wc-logo" class="dokan-vsw-brand">
             <a href="<?php echo esc_url( home_url() ); ?>">
@@ -394,14 +473,23 @@ class SetupWizard extends DokanSetupWizard {
 
     /**
      * The step list renders inside the topbar rail instead of the legacy
-     * `<ol class="wc-setup-steps">` pills.
+     * `<ol class="wc-setup-steps">` pills — legacy keeps the parent's pills.
      */
-    public function setup_wizard_steps() {}
+    public function setup_wizard_steps() {
+        if ( ! $this->use_react_wizard() ) {
+            parent::setup_wizard_steps();
+        }
+    }
 
     /**
      * Setup Wizard Footer.
      */
     public function setup_wizard_footer() {
+        if ( ! $this->use_react_wizard() && 'next_steps' === $this->current_step ) {
+            ?>
+        <a class="wc-return-to-dashboard" href="<?php echo esc_url( site_url() ); ?>"><?php esc_attr_e( 'Return to the Marketplace', 'dokan-lite' ); ?></a>
+            <?php
+        }
 		?>
     </body>
     </html>
@@ -412,9 +500,39 @@ class SetupWizard extends DokanSetupWizard {
      * Introduction step.
      */
     public function dokan_setup_introduction() {
-        echo '<div id="dokan-setup-wizard-step"></div>';
+        if ( $this->use_react_wizard() ) {
+            echo '<div id="dokan-setup-wizard-step"></div>';
+        } else {
+            $this->legacy_setup_introduction();
+        }
+
         // The 'seen' flag consumers (subscription's post-checkout redirect) hang off this action — it must fire on every intro render.
         do_action( 'dokan_seller_wizard_introduction', $this );
+    }
+
+    /**
+     * The legacy introduction step.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function legacy_setup_introduction(): void {
+        $dashboard_url = dokan_get_navigation_url();
+        // translators: %1$s and %2$s are HTML tags for bold text
+        $default_message      = wp_kses_post( sprintf( __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. %1$sIt’s completely optional and shouldn’t take longer than two minutes.%2$s', 'dokan-lite' ), '<strong>', '</strong>' ) );
+        $setup_wizard_message = dokan_get_option( 'setup_wizard_message', 'dokan_general', $default_message );
+        ?>
+        <h1><?php esc_attr_e( 'Welcome to the Marketplace!', 'dokan-lite' ); ?></h1>
+        <?php if ( ! empty( $setup_wizard_message ) ) : ?>
+            <div><?php echo wp_kses_post( $setup_wizard_message ); ?></div>
+        <?php endif; ?>
+        <p><?php esc_attr_e( 'No time right now? If you don’t want to go through the wizard, you can skip and return to the Store!', 'dokan-lite' ); ?></p>
+        <p class="wc-setup-actions step">
+            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button-primary button button-large button-next lets-go-btn dokan-btn-theme"><?php esc_attr_e( 'Let\'s Go!', 'dokan-lite' ); ?></a>
+            <a href="<?php echo esc_url( $dashboard_url ); ?>" class="button button-large not-right-now-btn dokan-btn-theme"><?php esc_attr_e( 'Not right now', 'dokan-lite' ); ?></a>
+        </p>
+        <?php
     }
 
     /**
@@ -431,10 +549,313 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     public function dokan_setup_store() {
-        ?>
-        <div id="dokan-setup-wizard-step"></div>
-        <?php
+        if ( $this->use_react_wizard() ) {
+            ?>
+            <div id="dokan-setup-wizard-step"></div>
+            <?php
+        } else {
+            $this->legacy_setup_store();
+        }
+
         do_action( 'dokan_seller_wizard_after_store_setup_form', $this );
+    }
+
+    /**
+     * The legacy store step — the `<table class="form-table">` form whose
+     * in-form echo hooks Pro's StoreCategory (and third parties) still use.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function legacy_setup_store(): void {
+        $store_info = $this->store_info;
+
+        $show_email      = isset( $store_info['show_email'] ) ? esc_attr( $store_info['show_email'] ) : 'no';
+        $address_street1 = isset( $store_info['address']['street_1'] ) ? $store_info['address']['street_1'] : '';
+        $address_street2 = isset( $store_info['address']['street_2'] ) ? $store_info['address']['street_2'] : '';
+        $address_city    = isset( $store_info['address']['city'] ) ? $store_info['address']['city'] : '';
+        $address_zip     = isset( $store_info['address']['zip'] ) ? $store_info['address']['zip'] : '';
+        $address_country = isset( $store_info['address']['country'] ) ? $store_info['address']['country'] : '';
+        $address_state   = isset( $store_info['address']['state'] ) ? $store_info['address']['state'] : '';
+        $map_location    = isset( $store_info['location'] ) ? $store_info['location'] : '';
+        $map_address     = isset( $store_info['find_address'] ) ? $store_info['find_address'] : '';
+
+        $country_obj = new WC_Countries();
+        $countries   = $country_obj->get_allowed_countries();
+        $states      = $country_obj->states;
+
+        $request_data = wc_clean( wp_unslash( $_POST ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only redisplay of the legacy error channel; the save handler owns the nonce.
+
+        ?>
+        <h1><?php esc_attr_e( 'Store Setup', 'dokan-lite' ); ?></h1>
+        <form method="post" class="dokan-seller-setup-form">
+            <table class="form-table">
+                <tr>
+                    <th scope="row">
+                        <label for="address[street_1]">
+                            <?php esc_html_e( 'Street', 'dokan-lite' ); ?>
+                            <span class='required'>*</span>
+                        </label>
+                    </th>
+                    <td>
+                        <input type="text" id="address[street_1]" name="address[street_1]" value="<?php echo esc_attr( $address_street1 ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $request_data['error_address[street_1]'] ) ) {
+                                echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="address[street_2]">
+                            <?php esc_html_e( 'Street 2', 'dokan-lite' ); ?>
+                        </label>
+                    </th>
+                    <td>
+                        <input type="text" id="address[street_2]" name="address[street_2]" value="<?php echo esc_attr( $address_street2 ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $request_data['error_address[street_2]'] ) ) {
+                                echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="address[city]">
+                            <?php esc_html_e( 'City', 'dokan-lite' ); ?>
+                            <span class='required'>*</span>
+                        </label>
+                    </th>
+                    <td>
+                        <input type="text" id="address[city]" name="address[city]" value="<?php echo esc_attr( $address_city ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $request_data['error_address[city]'] ) ) {
+                                echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="address[zip]">
+                            <?php esc_html_e( 'Post/Zip Code', 'dokan-lite' ); ?>
+                            <span class='required'>*</span>
+                        </label>
+                    </th>
+                    <td>
+                        <input type="text" id="address[zip]" name="address[zip]" value="<?php echo esc_attr( $address_zip ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $request_data['error_address[zip]'] ) ) {
+                                echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="address[country]">
+                            <?php esc_html_e( 'Country', 'dokan-lite' ); ?>
+                            <span class='required'>*</span>
+                        </label>
+                    </th>
+                    <td>
+                        <select name="address[country]" class="wc-enhanced-select country_to_state" id="address[country]" style="width: 100%;">
+                            <?php dokan_country_dropdown( $countries, $address_country, false ); ?>
+                        </select>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $request_data['error_address[country]'] ) ) {
+                                echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <label for="calc_shipping_state">
+                            <?php esc_html_e( 'State', 'dokan-lite' ); ?>
+                            <span class='required'>*</span>
+                        </label>
+                    </th>
+                    <td>
+                        <input type="text" id="calc_shipping_state" name="address[state]" value="<?php echo esc_attr( $address_state ); ?>" placeholder="<?php esc_attr_e( 'State Name', 'dokan-lite' ); ?>">
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $request_data['error_address[state]'] ) ) {
+                                echo '<span class="required">' . esc_html__( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
+                    </td>
+                </tr>
+
+                <?php do_action( 'dokan_seller_wizard_store_setup_after_address_field', $this ); ?>
+
+                <?php do_action( 'dokan_seller_wizard_store_setup_before_map_field', $this ); ?>
+
+                <?php if ( dokan_has_map_api_key() ) : ?>
+                    <tr>
+                        <th><label for="setting_map"><?php esc_html_e( 'Map', 'dokan-lite' ); ?></label></th>
+                        <td>
+                            <?php
+                            dokan_get_template(
+                                'maps/dokan-maps-with-search.php', [
+                                    'map_location' => $map_location,
+                                    'map_address'  => $map_address,
+                                ]
+                            );
+                            ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php do_action( 'dokan_seller_wizard_store_setup_after_map_field', $this ); ?>
+
+                <?php if ( empty( dokan_is_vendor_info_hidden( 'email' ) ) ) : ?>
+                    <tr>
+                        <th scope="row"><label for="show_email"><?php esc_html_e( 'Email', 'dokan-lite' ); ?></label></th>
+                        <td class="checkbox">
+                            <input type="checkbox" name="show_email" id="show_email" class="switch-input" value="1" <?php checked( $show_email, 'yes' ); ?>>
+                            <label for="show_email">
+                                <?php esc_html_e( 'Show email address in store', 'dokan-lite' ); ?>
+                            </label>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php do_action( 'dokan_seller_wizard_store_setup_field', $this ); ?>
+
+            </table>
+            <p class="wc-setup-actions step">
+                <input type="button" class="button-primary button button-large button-next store-step-continue dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>"/>
+                <input type="submit" id="save_step_submit" style='display: none' value="submit" name="save_step"/>
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next store-step-skip-btn dokan-btn-theme"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
+                <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
+            </p>
+        </form>
+        <script>
+            (function ($) {
+                var states = <?php echo wp_json_encode( $states ); ?>;
+                var requiredMsg = <?php echo wp_json_encode( __( 'This is required', 'dokan-lite' ) ); ?>;
+
+                $('body').on('change', 'select.country_to_state, input.country_to_state', function () {
+                    // Grab wrapping element to target only stateboxes in same 'group'
+                    var $wrapper = $(this).closest('form.dokan-seller-setup-form');
+
+                    var country = $(this).val(),
+                        $statebox = $wrapper.find('#calc_shipping_state'),
+                        $parent = $statebox.closest('tr'),
+                        input_name = $statebox.attr('name'),
+                        input_id = $statebox.attr('id'),
+                        value = $statebox.val(),
+                        placeholder = $statebox.attr('placeholder') || $statebox.attr('data-placeholder') || '',
+                        state_option_text = '<?php echo esc_attr__( 'Select an option&hellip;', 'dokan-lite' ); ?>';
+
+                    if (states[country]) {
+                        if ($.isEmptyObject(states[country])) {
+                            $statebox.closest('tr').hide().find('.select2-container').remove();
+                            $statebox.replaceWith('<input type="hidden" class="hidden" name="' + input_name + '" id="' + input_id + '" value="" placeholder="' + placeholder + '" />');
+
+                            $(document.body).trigger('country_to_state_changed', [country, $wrapper]);
+
+                        } else {
+
+                            var options = '',
+                                state = states[country];
+
+                            for (var index in state) {
+                                if (state.hasOwnProperty(index)) {
+                                    options = options + '<option value="' + index + '">' + state[index] + '</option>';
+                                }
+                            }
+
+                            $statebox.closest('tr').show();
+
+                            if ($statebox.is('input')) {
+                                // Change for select
+                                $statebox.replaceWith('<select name="' + input_name + '" id="' + input_id + '" class="wc-enhanced-select state_select" data-placeholder="' + placeholder + '"></select>');
+                                $statebox = $wrapper.find('#calc_shipping_state');
+                            }
+
+                            $statebox.html('<option value="">' + state_option_text + '</option>' + options);
+                            $statebox.val(value).trigger('change');
+
+                            $(document.body).trigger('country_to_state_changed', [country, $wrapper]);
+
+                        }
+                    } else {
+                        if ($statebox.is('select')) {
+
+                            $parent.show().find('.select2-container').remove();
+                            $statebox.replaceWith('<input type="text" class="input-text" name="' + input_name + '" id="' + input_id + '" placeholder="' + placeholder + '" />');
+
+                            $(document.body).trigger('country_to_state_changed', [country, $wrapper]);
+
+                        } else if ($statebox.is('input[type="hidden"]')) {
+
+                            $parent.show().find('.select2-container').remove();
+                            $statebox.replaceWith('<input type="text" class="input-text" name="' + input_name + '" id="' + input_id + '" placeholder="' + placeholder + '" />');
+
+                            $(document.body).trigger('country_to_state_changed', [country, $wrapper]);
+
+                        }
+                    }
+
+                    $(document.body).trigger('country_to_state_changing', [country, $wrapper]);
+                    $('.wc-enhanced-select').select2();
+                });
+
+                $(':input.country_to_state').trigger('change');
+
+                $('.store-step-continue').on('click', function(e) {
+                    let data = $('.dokan-seller-setup-form').serializeArray().reduce(function(obj, item) {
+                        obj[item.name] = item.value;
+                        return obj;
+                    }, {});
+
+                    let requiredFields = [ 'address[street_1]', 'address[city]', 'address[zip]', 'address[country]' ];
+
+                    requiredFields.map( item => {
+                        if ( ! $( `*[name='${item}']` ).val() ) {
+                            $( `*[name='${item}']` ).closest('td').children(`span.error-container`).html(`<span class="required">${requiredMsg}</span>`);
+                        } else {
+                            $( `*[name='${item}']` ).closest('td').children(`span.error-container`).html('');
+                        }
+                    } );
+
+                    if ( ( 'object' === typeof states[ data['address[country]'] ] && Object.keys( states[ data['address[country]'] ] ).length && ! data['address[state]'] ) || ( 'undefined' === typeof states[ data['address[country]'] ] && ! data['address[state]'] ) ) {
+                        if ( ! $( `*[name='address[state]']` ).val() ) {
+                            $( `*[name='address[state]']` ).closest('td').children(`span.error-container`).html(`<span class="required">${requiredMsg}</span>`);
+                        } else {
+                            $( `*[name='address[state]']` ).closest('td').children(`span.error-container`).html('');
+                        }
+
+                        return;
+                    }
+
+                    $('#save_step_submit').trigger("click");
+                });
+            })(jQuery);
+
+        </script>
+        <style>
+            .select2-container--open .select2-dropdown {
+                left: 20px;
+            }
+        </style>
+        <?php
     }
 
     /**
@@ -500,15 +921,145 @@ class SetupWizard extends DokanSetupWizard {
      * Payment step.
      */
     public function dokan_setup_payment() {
-        echo '<div id="dokan-setup-wizard-step"></div>';
+        if ( $this->use_react_wizard() ) {
+            echo '<div id="dokan-setup-wizard-step"></div>';
+
+            return;
+        }
+
+        $methods    = dokan_withdraw_get_active_methods();
+        $store_info = $this->store_info;
+        ?>
+        <h1><?php esc_html_e( 'Payment Setup', 'dokan-lite' ); ?></h1>
+        <form method="post" id='dokan-seller-payment-setup-form' novalidate>
+            <table class="form-table">
+                <?php
+                foreach ( $methods as $method_key ) {
+                    $method = dokan_withdraw_get_method( $method_key );
+                    if ( isset( $method['callback'] ) && is_callable( $method['callback'] ) ) {
+                        ?>
+                        <tr>
+                            <th scope="row"><label><?php echo esc_html( dokan_withdraw_get_method_title( $method_key ) ); ?></label></th>
+                            <td>
+                                <?php call_user_func( $method['callback'], $store_info ); ?>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                }
+
+                do_action( 'dokan_seller_wizard_payment_setup_field', $this );
+                ?>
+            </table>
+            <p class="wc-setup-actions step">
+                <input type="submit" class="button-primary button button-large button-next payment-continue-btn dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step"/>
+
+                <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next payment-step-skip-btn dokan-btn-theme"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
+                <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
+            </p>
+        </form>
+        <?php
+
+        do_action( 'dokan_seller_wizard_after_payment_setup_form', $this );
     }
 
+    /**
+     * Save payment options — the legacy step's handler.
+     *
+     * Only ever reached from the legacy form: the React step saves through
+     * `PUT /dokan/v1/vendor-onboarding/payment` and never posts `save_step`.
+     *
+     * @return void
+     */
+    public function dokan_setup_payment_save() {
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'dokan-seller-setup' ) ) {
+            return;
+        }
+
+        $dokan_settings = $this->store_info;
+
+        if ( isset( $_POST['settings']['bank'] ) ) {
+            $bank = array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['settings']['bank'] ) );
+
+            $dokan_settings['payment']['bank'] = [
+                'ac_name'        => $bank['ac_name'],
+                'ac_type'        => $bank['ac_type'],
+                'ac_number'      => $bank['ac_number'],
+                'bank_name'      => $bank['bank_name'],
+                'bank_addr'      => $bank['bank_addr'],
+                'routing_number' => $bank['routing_number'],
+                'iban'           => $bank['iban'],
+                'swift'          => $bank['swift'],
+            ];
+
+            $user_bank_data = array_filter(
+                $dokan_settings['payment']['bank'], function ( $item ) {
+					return ! empty( $item );
+				}
+            );
+            $require_fields = array_keys( dokan_bank_payment_required_fields() );
+
+            $has_bank_information = true;
+            foreach ( $require_fields as $require_field ) {
+                if ( empty( $user_bank_data[ $require_field ] ) ) {
+                    $_POST[ 'error_' . $require_field ] = 'error';
+                    $has_bank_information = false;
+                }
+            }
+
+            if ( $has_bank_information && ! empty( $dokan_settings['profile_completion']['progress_vals']['payment_method_val'] ) ) {
+                $dokan_settings['profile_completion']['bank'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
+                $dokan_settings['profile_completion']['paypal'] = 0;
+            }
+        }
+
+        if ( ! empty( $_POST['settings']['paypal']['email'] ) && ! empty( $dokan_settings['profile_completion']['progress_vals']['payment_method_val'] ) ) {
+            $dokan_settings['payment']['paypal']            = [
+                'email' => sanitize_email( wp_unslash( $_POST['settings']['paypal']['email'] ) ),
+            ];
+            $dokan_settings['profile_completion']['paypal'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
+            $dokan_settings['profile_completion']['bank'] = 0;
+        }
+
+        // Check any payment methods setups and add manually value on Profile Completion also increase progress value
+        if ( ! empty( $dokan_settings['profile_completion']['paypal'] ) || ! empty( $dokan_settings['profile_completion']['bank'] ) ) {
+            $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
+            if ( ! empty( $profile_settings['profile_completion']['progress'] ) && ! empty( $dokan_settings['profile_completion']['progress_vals']['payment_method_val'] ) ) {
+                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
+            }
+        }
+
+        update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
+
+        do_action( 'dokan_seller_wizard_payment_field_save', $this );
+
+        wp_safe_redirect( apply_filters( 'dokan_ww_payment_redirect', esc_url_raw( $this->get_next_step_link() ) ) );
+        exit;
+    }
 
     /**
      * Final step.
      */
     public function dokan_setup_ready() {
-        echo '<div id="dokan-setup-wizard-step"></div>';
+        if ( $this->use_react_wizard() ) {
+            echo '<div id="dokan-setup-wizard-step"></div>';
+
+            return;
+        }
+
+        $dashboard_url = dokan_get_navigation_url();
+        ?>
+        <div class="dokan-setup-done">
+            <img src="<?php echo esc_url( plugins_url( 'assets/images/dokan-checked.png', DOKAN_FILE ) ); ?>" alt="dokan setup">
+            <h1><?php esc_html_e( 'Your Store is Ready!', 'dokan-lite' ); ?></h1>
+        </div>
+
+        <div class="dokan-setup-done-content">
+            <p class="wc-setup-actions step">
+                <a class="button button-primary dokan-btn-theme" href="<?php echo esc_url( $dashboard_url ); ?>"><?php esc_html_e( 'Go to your Store Dashboard!', 'dokan-lite' ); ?></a>
+            </p>
+        </div>
+        <?php
     }
 
     /**
@@ -569,7 +1120,8 @@ class SetupWizard extends DokanSetupWizard {
             $steps['payment'] = [
                 'name'    => __( 'Payment', 'dokan-lite' ),
                 'view'    => [ $this, 'dokan_setup_payment' ],
-                'handler' => '',
+                // Harmless in React mode — that step saves over REST and never posts `save_step`.
+                'handler' => [ $this, 'dokan_setup_payment_save' ],
             ];
         }
 
