@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { confirmDataViewsAction, dataViewsConfirm, waitForDataViewsSettle, DATA_ROW } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // Admin-only Vendor Support DataViews list. Test data namespaced with "AVS".
 export const adminVendorSupportData = {
@@ -83,7 +84,11 @@ export class AdminVendorSupportPage {
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
-        const fatal = await this.page.locator(adminVendorSupportSelectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
+        const fatal = await this.page
+            .locator(adminVendorSupportSelectors.phpFatal)
+            .first()
+            .isVisible({ timeout: 1000 })
+            .catch(() => false);
         return !fatal;
     }
 
@@ -153,16 +158,21 @@ export class AdminVendorSupportPage {
         await row.locator(adminVendorSupportSelectors.rowActionsBtn).first().click();
     }
     async actionMenuItemVisible(label: RegExp): Promise<boolean> {
-        return await this.page.getByRole('menuitem', { name: label }).first().isVisible({ timeout: 5000 }).catch(() => false);
+        return await actionMenuItemByName(this.page, label)
+            .first()
+            .isVisible({ timeout: 5000 })
+            .catch(() => false);
     }
     async clickActionMenuItem(label: RegExp): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: label }).first();
+        const item = actionMenuItemByName(this.page, label).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
     }
     /** True when the inline confirm (role="alertdialog") is open. */
     async confirmDialogVisible(): Promise<boolean> {
-        return await dataViewsConfirm(this.page).isVisible({ timeout: 8000 }).catch(() => false);
+        return await dataViewsConfirm(this.page)
+            .isVisible({ timeout: 8000 })
+            .catch(() => false);
     }
     /** Confirm the inline action (clicks the primary, non-Cancel button). */
     async confirmAction(): Promise<void> {
