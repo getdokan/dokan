@@ -254,6 +254,10 @@ class SetupWizardSchema {
             foreach ( [ 'ac_name', 'ac_type', 'ac_number', 'routing_number', 'bank_name', 'bank_addr', 'iban', 'swift' ] as $bank_key ) {
                 $bank_value[ $bank_key ] = (string) ( $bank[ $bank_key ] ?? '' );
             }
+
+            // Stored as the legacy 'on' string by the dashboard form; the React checkbox reads a bool.
+            $bank_value['declaration'] = ! empty( $bank['declaration'] );
+
             $values['bank'] = $bank_value;
         }
 

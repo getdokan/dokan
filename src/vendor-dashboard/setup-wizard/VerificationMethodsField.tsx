@@ -30,12 +30,7 @@ const statusLabel: Record< string, string > = {
     rejected: __( 'Rejected', 'dokan-lite' ),
 };
 
-// `verification_methods` variant — rows driven by the schema element Pro
-// builds (methods, endpoints, vendor id). Documents come from the WordPress
-// media library (same picker as the store banner/logo settings); requests go
-// through the vendor-verification module's endpoint. Mirrors the legacy
-// lifecycle: pending can be cancelled for a re-submission, rejected can be
-// re-submitted, approved is final.
+// `verification_methods` variant — pending can be cancelled and re-submitted, rejected can re-submit, approved is final.
 const VerificationMethodsField = ( {
     element,
 }: {
@@ -53,7 +48,7 @@ const VerificationMethodsField = ( {
                 method.id,
                 {
                     open: false,
-                    attachment: null,
+                    attachment: method.document ?? null,
                     submitting: false,
                     status: method.status,
                     requestId: method.requestId ?? 0,
@@ -62,13 +57,28 @@ const VerificationMethodsField = ( {
         )
     );
 
-    const patchRow = ( id: number, patch: Partial< RowState > ) =>
+    const patchRow = ( id: number, patch: Partial< RowState > ) => {
         setRows( ( prev ) => ( {
             ...prev,
             [ id ]: { ...prev[ id ], ...patch },
         } ) );
 
-    // Admin-authored help text with a generic fallback — shown under the row title.
+        // The step is bootstrapped once, so a revisit remounts from it — keep the request state in step with the server.
+        const method = methods.find( ( item ) => item.id === id );
+
+        if ( ! method ) {
+            return;
+        }
+
+        if ( undefined !== patch.status ) {
+            method.status = patch.status;
+        }
+
+        if ( undefined !== patch.requestId ) {
+            method.requestId = patch.requestId;
+        }
+    };
+
     // Arrives tag-stripped from the server, so only its entities need decoding.
     const methodHelp = ( method: VerificationMethod ): string =>
         decodeEntities( method.help || '' ) ||
@@ -111,10 +121,11 @@ const VerificationMethodsField = ( {
                 },
             } );
 
+            method.document = row.attachment;
+
             patchRow( method.id, {
                 submitting: false,
                 open: false,
-                attachment: null,
                 status: 'pending',
                 requestId: Number( created?.id ) || 0,
             } );
@@ -141,8 +152,7 @@ const VerificationMethodsField = ( {
         }
     };
 
-    // Legacy parity: a pending request can be withdrawn, freeing the method
-    // for a fresh submission (the endpoint pins vendor-sent statuses to cancelled).
+    // Legacy parity: withdrawing a pending request frees the method for a fresh submission.
     const cancelRequest = async ( method: VerificationMethod ) => {
         const row = rows[ method.id ];
 
@@ -200,14 +210,12 @@ const VerificationMethodsField = ( {
                                 <span className="flex items-center gap-2 text-sm font-medium text-gray-900">
                                     { method.title }
                                     { method.required && <RequiredBadge /> }
-                                    { /* Status rides beside the label; the right side stays for actions. */ }
                                     { chip && (
                                         <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
                                             { chip }
                                         </span>
                                     ) }
                                 </span>
-                                { /* The method's own guidance doubles as the row's breathing room. */ }
                                 <span className="text-xs leading-5 font-normal text-gray-500">
                                     { methodHelp( method ) }
                                 </span>
@@ -228,7 +236,6 @@ const VerificationMethodsField = ( {
                                         >
                                             { __( 'Cancel', 'dokan-lite' ) }
                                         </Button>
-                                        { /* Carries the row's action, so it takes the filled treatment the panel's Submit and the footer's Next use. */ }
                                         <Button
                                             size="sm"
                                             className={ rowActionPadding }
@@ -254,7 +261,6 @@ const VerificationMethodsField = ( {
                                             } )
                                         }
                                     >
-                                        { /* Same glyph as the settings page's "Set Details" chip. */ }
                                         <Settings
                                             size={ 14 }
                                             aria-hidden="true"
@@ -271,11 +277,7 @@ const VerificationMethodsField = ( {
 
                         { row?.open && (
                             <div className="flex flex-col gap-3 border-t border-gray-100 px-4 py-4">
-                                { /* Same anatomy as the admin settings uploader (WpMediaUpload):
-                                     thumb + destructive remove badge + outline Change button — but
-                                     through MediaUploader, which keeps the attachment ID the
-                                     verification endpoint needs (WpMediaUpload only emits a URL).
-                                     Centered in the drop-zone panel per the step's design. */ }
+                                { /* MediaUploader, not WpMediaUpload: the endpoint needs the attachment ID, which WpMediaUpload doesn't emit. */ }
                                 <div className="flex flex-col items-center gap-2 rounded-md border border-dashed border-gray-300 bg-gray-50 px-4 py-5">
                                     { row.attachment && (
                                         <span className="relative inline-flex">
@@ -388,7 +390,8 @@ const VerificationMethodsField = ( {
                                         onClick={ () =>
                                             patchRow( method.id, {
                                                 open: false,
-                                                attachment: null,
+                                                attachment:
+                                                    method.document ?? null,
                                             } )
                                         }
                                     >

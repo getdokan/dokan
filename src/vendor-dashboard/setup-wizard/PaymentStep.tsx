@@ -13,10 +13,7 @@ addFilter(
     )
 );
 
-// The payment step — gateway accordion driven by the wizard payment schema;
-// saves through the onboarding REST endpoint (the writer fires the
-// store-profile-saved seam, so the vendor cache invalidates — unlike the
-// legacy payment save).
+// Saves through the onboarding endpoint, which fires the store-profile-saved seam the legacy payment save never did.
 export default function PaymentStep( { payload }: { payload: WizardPayload } ) {
     return (
         <SchemaStep

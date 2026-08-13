@@ -20,18 +20,7 @@ type SchemaStepProps = {
     failureMessage: string;
 };
 
-/**
- * Shared shell for the schema-driven wizard steps (store, payment).
- *
- * The schema is bootstrapped inline by PHP (never fetched — the page render is
- * the only context where the wizard's `$_GET` state is faithful). The engine's
- * save bar renders empty; the wizard footer drives the save and navigates once
- * the PUT settles. Server validation errors re-key to the engine's
- * dependency_key contract, same as the Store settings page.
- * @param root0
- * @param root0.payload
- * @param root0.failureMessage
- */
+// Shared shell for the schema-driven steps; server errors re-key to the engine's dependency_key contract.
 export default function SchemaStep( {
     payload,
     failureMessage,
@@ -56,6 +45,20 @@ export default function SchemaStep( {
                 method: 'PUT',
                 data: { values: flatValues },
             } );
+
+            // PHP bootstraps each step once, so a revisit would otherwise remount the page-load snapshot and lose the save.
+            payload.schema?.forEach( ( element ) => {
+                if (
+                    'field' === element.type &&
+                    Object.prototype.hasOwnProperty.call(
+                        flatValues,
+                        element.id
+                    )
+                ) {
+                    element.value = flatValues[ element.id ];
+                }
+            } );
+
             resultRef.current?.( true );
         } catch ( error ) {
             resultRef.current?.( false );
@@ -105,14 +108,7 @@ export default function SchemaStep( {
                     return null;
                 } }
             />
-            <WizardFooter
-                backUrl={ payload.backUrl }
-                skipUrl={ payload.skipUrl }
-                nextUrl={ payload.nextStepUrl ?? '' }
-                onNext={ onNext }
-                busy={ saving }
-                creatingOverlay={ payload.creatingOverlay }
-            />
+            <WizardFooter onNext={ onNext } busy={ saving } />
             <Toaster />
         </div>
     );

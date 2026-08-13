@@ -19,9 +19,7 @@ import type { GatewayConfig, GatewayFieldConfig } from './types';
 
 type GatewayValues = Record< string, Record< string, string | boolean > >;
 
-// `payment_methods` variant — a gateway accordion driven entirely by schema
-// data (`element.gateways`), so Pro can add its methods (Skrill fields,
-// connect-style rows) without shipping React into this bundle.
+// `payment_methods` variant — the accordion is driven entirely by `element.gateways`, so Pro adds methods without shipping React here.
 const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
     const fieldKey = ( element.dependency_key as string ) || element.id;

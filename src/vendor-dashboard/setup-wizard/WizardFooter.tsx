@@ -3,98 +3,86 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '@wedevs/plugin-ui';
 import { ChevronLeft } from 'lucide-react';
 import CreatingOverlay from './CreatingOverlay';
+import { useStepNav } from './step-nav';
 
 type WizardFooterProps = {
-    backUrl?: string;
-    skipUrl?: string;
     nextLabel?: string;
-    // Resolves true to navigate to nextUrl; false/throw keeps the vendor on the step.
+    // Resolves true to advance; false/throw keeps the vendor on the step.
     onNext: () => Promise< boolean >;
-    nextUrl: string;
     busy?: boolean;
-    creatingOverlay?: boolean;
 };
 
-// The shared step footer: Back pinned left, Skip + Next on the right — sticky
-// so long steps keep the actions in the viewport (design review note).
+// Back pinned left, Skip + Next right. Every action moves the SPA — no navigation.
 export default function WizardFooter( {
-    backUrl,
-    skipUrl,
     nextLabel,
     onNext,
-    nextUrl,
     busy = false,
-    creatingOverlay = false,
 }: WizardFooterProps ) {
-    const [ navigating, setNavigating ] = useState( false );
+    const { next, previous, goTo, isNextReady } = useStepNav();
+    const [ advancing, setAdvancing ] = useState( false );
+
+    const advance = () => {
+        if ( next ) {
+            goTo( next );
+        }
+    };
 
     const handleNext = async () => {
-        let proceed = false;
+        setAdvancing( true );
 
         try {
-            proceed = await onNext();
+            if ( await onNext() ) {
+                advance();
+            }
         } catch ( error ) {
-            proceed = false;
+            // The step surfaces its own error; staying put is the correct outcome.
         }
 
-        if ( proceed ) {
-            setNavigating( true );
-            window.location.assign( nextUrl );
-        }
+        setAdvancing( false );
     };
 
     return (
         <>
+            { /* The store really is being finalised while the last save is in flight — no fake delay. */ }
+            { advancing && isNextReady && <CreatingOverlay /> }
+
             <div className="dokan-vsw-step-footer">
-                { backUrl ? (
+                { previous ? (
                     <Button
                         variant="ghost"
-                        className="gap-1"
-                        render={
-                            // Back is a plain navigation, styled as the quiet action (theme link color suppressed).
-                            <a
-                                href={ backUrl }
-                                className="text-gray-500 no-underline hover:text-gray-800"
-                            >
-                                <ChevronLeft
-                                    size={ 16 }
-                                    aria-hidden="true"
-                                    className="fill-none"
-                                />
-                                { __( 'Back', 'dokan-lite' ) }
-                            </a>
-                        }
-                    />
+                        className="gap-1 border border-transparent text-gray-500 hover:border-gray-200 hover:bg-gray-50 hover:text-gray-900"
+                        onClick={ () => goTo( previous ) }
+                    >
+                        <ChevronLeft
+                            size={ 16 }
+                            aria-hidden="true"
+                            className="fill-none"
+                        />
+                        { __( 'Back', 'dokan-lite' ) }
+                    </Button>
                 ) : (
                     <span />
                 ) }
 
                 <span className="inline-flex items-center gap-3">
-                    { skipUrl && (
+                    { next && (
                         <Button
                             variant="ghost"
-                            render={
-                                // Skip is a plain navigation, styled as the quiet action (theme link color suppressed).
-                                <a
-                                    href={ skipUrl }
-                                    className="text-gray-500 no-underline hover:text-gray-800"
-                                >
-                                    { __( 'Skip', 'dokan-lite' ) }
-                                </a>
-                            }
-                        />
+                            className="border border-transparent text-gray-500 hover:border-gray-200 hover:bg-gray-50 hover:text-gray-900"
+                            onClick={ advance }
+                        >
+                            { __( 'Skip', 'dokan-lite' ) }
+                        </Button>
                     ) }
                     <Button
                         onClick={ handleNext }
-                        disabled={ busy || navigating }
+                        disabled={ busy || advancing }
                         className="px-5"
                     >
                         { nextLabel ?? __( 'Next', 'dokan-lite' ) }
                     </Button>
                 </span>
             </div>
-
-            { navigating && creatingOverlay && <CreatingOverlay /> }
         </>
     );
 }

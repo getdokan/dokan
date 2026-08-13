@@ -3,9 +3,7 @@ import { registerVendorSettingsFields } from '@src/dashboard/settings/store/regi
 import SchemaStep from './SchemaStep';
 import type { WizardPayload } from './types';
 
-// The wizard shares the Store settings variant registry under the same
-// hookPrefix — schema-injected Pro fields (e.g. the vendor_multiselect
-// category picker) resolve without wizard-specific registration.
+// Shares the Store settings variant registry, so schema-injected Pro fields resolve without wizard-specific registration.
 registerVendorSettingsFields();
 
 export default function StoreStep( { payload }: { payload: WizardPayload } ) {

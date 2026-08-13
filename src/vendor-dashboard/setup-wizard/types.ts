@@ -30,6 +30,8 @@ export type VerificationMethod = {
     // The vendor's latest request for this method — lets a pending one be cancelled.
     requestId?: number;
     help?: string;
+    // The already-submitted file, so Edit opens on it instead of an empty picker.
+    document?: WizardAttachment | null;
 };
 
 export type WizardPayload = {
@@ -61,7 +63,30 @@ export type WizardAttachment = {
     filename: string;
 };
 
-export const getWizardPayload = (): WizardPayload | undefined =>
+export type WizardStepKey = WizardPayload[ 'step' ];
+
+export type WizardStepOrder = {
+    key: WizardStepKey;
+    // The `?step=` value this step lives at, so the SPA can keep the URL honest.
+    stepArg: string;
+    // The intro is un-numbered, matching the legacy rail.
+    numbered: boolean;
+};
+
+export type WizardShell = {
+    order: WizardStepOrder[];
+    initialStep: WizardStepKey;
+    baseUrl: string;
+    nonce: string;
+};
+
+// PHP bootstraps every step in one page load; the SPA never fetches a step.
+export type WizardBootstrap = {
+    steps: Partial< Record< WizardStepKey, WizardPayload > >;
+    shell?: WizardShell;
+};
+
+export const getWizardBootstrap = (): WizardBootstrap | undefined =>
     ( window as unknown as Record< string, unknown > ).dokanSetupWizard as
-        | WizardPayload
+        | WizardBootstrap
         | undefined;

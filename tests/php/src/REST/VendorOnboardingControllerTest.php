@@ -304,7 +304,8 @@ class VendorOnboardingControllerTest extends DokanTestCase {
 
         $this->assertSame( 'golden.vendor@example.com', $row['payment']['paypal']['email'] );
         $this->assertSame( 'John Doe', $row['payment']['bank']['ac_name'] );
-        $this->assertArrayNotHasKey( 'declaration', $row['payment']['bank'] );
+        // Stored in the legacy 'on' shape the dashboard form, its validation and the withdraw-log export all read.
+        $this->assertSame( 'on', $row['payment']['bank']['declaration'] );
         $this->assertSame( [ 'value' => 'keep-me' ], $row['payment']['dokan_custom'] );
 
         // Bank wins the completion weight; the improvement over legacy: Seam B fired (vendor cache invalidates).
@@ -317,9 +318,39 @@ class VendorOnboardingControllerTest extends DokanTestCase {
     }
 
     /**
+     * Nothing on the payment step is mandatory — it can be finished later from
+     * the dashboard — so a half-filled bank form saves as-is.
+     *
      * @test
      */
-    public function payment_partial_bank_is_rejected() {
+    public function payment_partial_bank_is_accepted() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->put_request(
+            '/dokan/v1/vendor-onboarding/payment',
+            [
+                'values' => [
+                    'payment_methods' => [
+                        'bank' => [ 'ac_name' => 'John Doe' ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+
+        $bank = $this->get_profile_meta( $this->seller_id1 )['payment']['bank'] ?? [];
+        $this->assertSame( 'John Doe', $bank['ac_name'] ?? null );
+        $this->assertEmpty( $bank['ac_number'] ?? null );
+    }
+
+    /**
+     * A malformed value is still rejected — the shape checks survive the
+     * relaxed required-field rules.
+     *
+     * @test
+     */
+    public function payment_malformed_email_is_rejected() {
         wp_set_current_user( $this->seller_id1 );
         $row_before = $this->get_profile_meta( $this->seller_id1 );
 
@@ -328,7 +359,7 @@ class VendorOnboardingControllerTest extends DokanTestCase {
             [
                 'values' => [
                     'payment_methods' => [
-                        'bank' => [ 'ac_name' => 'John Doe' ],
+                        'paypal' => [ 'email' => 'not-an-email' ],
                     ],
                 ],
             ]

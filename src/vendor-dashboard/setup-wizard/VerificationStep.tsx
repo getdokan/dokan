@@ -41,11 +41,7 @@ addFilter(
     )
 );
 
-// The verification step — the same engine + custom-variant anatomy as the
-// payment step: Pro ships the schema (page heading, the methods section, the
-// chrome-less social note), the variants above render them. Nothing saves
-// through the engine — each row talks to the verification endpoint directly —
-// so the footer simply navigates.
+// Pro ships the schema; each row talks to the verification endpoint directly, so nothing saves through the engine.
 export default function VerificationStep( {
     payload,
 }: {
@@ -67,13 +63,7 @@ export default function VerificationStep( {
                 hookPrefix="dokan_vendor"
                 renderSaveButton={ () => null }
             />
-            <WizardFooter
-                backUrl={ payload.backUrl }
-                skipUrl={ payload.skipUrl }
-                nextUrl={ payload.nextStepUrl ?? '' }
-                onNext={ () => Promise.resolve( true ) }
-                creatingOverlay={ payload.creatingOverlay }
-            />
+            <WizardFooter onNext={ () => Promise.resolve( true ) } />
             <Toaster />
         </div>
     );
