@@ -464,11 +464,22 @@ jobs:
             - name: Record resolved WordPress / WooCommerce versions
               working-directory: tests/pw
               run: |
-                  ver() { npm run --silent wp-env run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  # `--` is required: without it npm swallows wp-cli's own flags, so
+                  # `--field=version` never reaches wp-cli, `wp plugin get` prints its
+                  # full field/value table, no line starts with a digit, and the grep
+                  # below yields "unknown" for WooCommerce on every single run.
+                  ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
                   WP=$(ver wp core version)
                   WC=$(ver wp plugin get woocommerce --field=version)
                   echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
                   echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+
+                  # Persist for merge-reports, which runs on a clean runner with no
+                  # wp-env stack and so cannot resolve these itself. Rides along in the
+                  # existing tests/pw/playwright artifact — no new upload needed.
+                  mkdir -p playwright
+                  printf '{"stack":"%s","wordpress":"%s","woocommerce":"%s"}\n' \
+                      "$WP_STACK" "${WP:-unknown}" "${WC:-unknown}" > playwright/resolved-versions.json
 
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
@@ -891,11 +902,22 @@ jobs:
             - name: Record resolved WordPress / WooCommerce versions
               working-directory: tests/pw
               run: |
-                  ver() { npm run --silent wp-env run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  # `--` is required: without it npm swallows wp-cli's own flags, so
+                  # `--field=version` never reaches wp-cli, `wp plugin get` prints its
+                  # full field/value table, no line starts with a digit, and the grep
+                  # below yields "unknown" for WooCommerce on every single run.
+                  ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
                   WP=$(ver wp core version)
                   WC=$(ver wp plugin get woocommerce --field=version)
                   echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
                   echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+
+                  # Persist for merge-reports, which runs on a clean runner with no
+                  # wp-env stack and so cannot resolve these itself. Rides along in the
+                  # existing tests/pw/playwright artifact — no new upload needed.
+                  mkdir -p playwright
+                  printf '{"stack":"%s","wordpress":"%s","woocommerce":"%s"}\n' \
+                      "$WP_STACK" "${WP:-unknown}" "${WC:-unknown}" > playwright/resolved-versions.json
 
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
@@ -1040,6 +1062,30 @@ jobs:
               with:
                   path: tests/pw/all-reports
                   pattern: test-artifact-*
+
+            # Runs before every other summary write in this job so the stack the suite
+            # actually ran on is the first thing on the run page. The shards each record
+            # their own line too; this is the consolidated one. Disagreement between
+            # shards is worth surfacing rather than hiding — on the canary lane it means
+            # WordPress or WooCommerce shipped a release mid-run.
+            - name: Report resolved stack at the top of the summary
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              run: |
+                  FILES=$(find tests/pw/all-reports -name resolved-versions.json 2>/dev/null | sort)
+                  COUNT=$(printf '%s\n' "$FILES" | grep -c . || true)
+                  if [ "${COUNT:-0}" -eq 0 ]; then
+                      printf '> Resolved stack: **unavailable** — no job reported one.\n\n' >> "$GITHUB_STEP_SUMMARY"
+                      exit 0
+                  fi
+                  COMBOS=$(printf '%s\n' "$FILES" | xargs jq -r '"\(.stack)|\(.wordpress)|\(.woocommerce)"' | sort -u)
+                  printf '%s\n' "$COMBOS" | while IFS='|' read -r stack wp wc; do
+                      printf '> **`%s` lane — WordPress %s, WooCommerce %s** _(%s jobs reporting)_\n' \
+                          "$stack" "$wp" "$wc" "$COUNT" >> "$GITHUB_STEP_SUMMARY"
+                  done
+                  if [ "$(printf '%s\n' "$COMBOS" | wc -l)" -gt 1 ]; then
+                      printf '> \n> ⚠️ Jobs did **not** all run the same stack — results are not comparable across shards.\n' >> "$GITHUB_STEP_SUMMARY"
+                  fi
+                  printf '\n' >> "$GITHUB_STEP_SUMMARY"
 
             # download-artifact silently does nothing when no artifacts match
             # (e.g. all upstream test jobs were skipped after a build failure),
