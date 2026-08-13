@@ -10,7 +10,12 @@ on:
     # is what actually starts the run near 9:00 AM BDT. Check the real start
     # times of recent scheduled runs before "correcting" this to 03:00 UTC.
     schedule:
+        # 02:00 UTC -- the gating run, on the pinned WordPress/WooCommerce versions.
         - cron: 0 2 * * *
+        # 14:00 UTC -- the canary run, on whatever WordPress/WooCommerce is current.
+        # It warns and never gates: see WP_STACK below and the continue-on-error on
+        # the test jobs. Change this cron and you must change the WP_STACK expression.
+        - cron: 0 14 * * *
     # workflow can be manually triggered
     workflow_dispatch:
         inputs:
@@ -22,11 +27,20 @@ on:
                     - E2E
                     - API
                     - All
+            wp_stack:
+                description: 'pinned = the versions committed in .wp-env*.json; latest = resolve WordPress and WooCommerce to current (failures do not gate)'
+                default: pinned
+                type: choice
+                options:
+                    - pinned
+                    - latest
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
     # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    # The stack is part of the group so the pinned run and the latest-canary never cancel
+    # each other on the same commit.
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'pinned' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -38,6 +52,12 @@ permissions:
 
 # workflow environment variables
 env:
+    # Which WordPress/WooCommerce versions this run installs.
+    #   pinned -- the versions committed in .wp-env*.json (the gating lane)
+    #   latest -- whatever WordPress and WooCommerce are current (the canary lane)
+    # Sourced from the workflow_dispatch input, else from which cron fired, else pinned.
+    # `inputs.wp_stack` is empty (falsy) on scheduled runs, so the fallbacks apply.
+    WP_STACK: ${{ inputs.wp_stack || (github.event.schedule == '0 14 * * *' && 'latest') || 'pinned' }}
     ADMIN: admin
     ADMIN_PASSWORD: password
     VENDOR: vendor1
@@ -264,6 +284,9 @@ jobs:
         name: e2e tests
         runs-on: ubuntu-latest
         timeout-minutes: 75
+        # The canary lane warns, it never gates. `env` is not readable from a job-level
+        # continue-on-error, so the WP_STACK expression is repeated here.
+        continue-on-error: ${{ inputs.wp_stack == 'latest' || github.event.schedule == '0 14 * * *' }}
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
         # `always() && build_lite succeeded` covers the fork-PR path too.
         needs: [build_lite, build_pro]
@@ -337,6 +360,15 @@ jobs:
                   else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
+                  fi
+                  # Canary lane: drop the version pins so wp-env resolves whatever
+                  # WordPress and WooCommerce are current. Gating lane is untouched.
+                  if [ "$WP_STACK" = "latest" ]; then
+                    jq '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                       .wp-env.override.json > .wp-env.override.json.tmp
+                    mv .wp-env.override.json.tmp .wp-env.override.json
+                    echo "WP_STACK=latest — core and WooCommerce unpinned"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
@@ -426,6 +458,17 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # What actually got installed, not what we asked for. On the canary lane this is
+            # the whole point of the run; on the gating lane it is the proof the pins held.
+            - name: Record resolved WordPress / WooCommerce versions
+              working-directory: tests/pw
+              run: |
+                  ver() { npm run --silent wp-env run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  WP=$(ver wp core version)
+                  WC=$(ver wp plugin get woocommerce --field=version)
+                  echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
+                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
 
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
@@ -672,6 +715,8 @@ jobs:
         name: api tests
         runs-on: ubuntu-latest
         timeout-minutes: 25
+        # See e2e_tests: the canary lane warns, it never gates.
+        continue-on-error: ${{ inputs.wp_stack == 'latest' || github.event.schedule == '0 14 * * *' }}
         needs: [build_lite, build_pro]
         if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
         strategy:
@@ -742,6 +787,15 @@ jobs:
                   else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
+                  fi
+                  # Canary lane: drop the version pins so wp-env resolves whatever
+                  # WordPress and WooCommerce are current. Gating lane is untouched.
+                  if [ "$WP_STACK" = "latest" ]; then
+                    jq '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                       .wp-env.override.json > .wp-env.override.json.tmp
+                    mv .wp-env.override.json.tmp .wp-env.override.json
+                    echo "WP_STACK=latest — core and WooCommerce unpinned"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
@@ -831,6 +885,17 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # What actually got installed, not what we asked for. On the canary lane this is
+            # the whole point of the run; on the gating lane it is the proof the pins held.
+            - name: Record resolved WordPress / WooCommerce versions
+              working-directory: tests/pw
+              run: |
+                  ver() { npm run --silent wp-env run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  WP=$(ver wp core version)
+                  WC=$(ver wp plugin get woocommerce --field=version)
+                  echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
+                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
 
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
