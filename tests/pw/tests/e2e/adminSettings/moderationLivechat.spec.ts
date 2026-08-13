@@ -43,12 +43,14 @@ const newDataset = {
             type: 'switch',
             value: true
         },
-        // {
-        //     There is problem of some fields. Todo: Fix those selectors later.
-        //     selector: '[data-testid="settings-field-livechat_provider"] div[role="radio"][aria-checked="true"]:has-text("Tawk.to")',
-        //     type: 'radio',
-        //     value: true
-        // },
+        {
+            // Card radio: the visible `[role="radio"]` carries no text of its own,
+            // so the option is addressed through the hidden input that holds the
+            // stored provider slug — same widget as the product-page button below.
+            selector: '[data-testid="settings-field-livechat_provider"]',
+            type: 'customize-radio',
+            value: 'tawkto',
+        },
         {
             selector: '[data-testid="settings-field-livechat_vendor_page_button"] [role="switch"]',
             type: 'switch',

@@ -114,14 +114,14 @@ export class AdminSettingsPage extends BasePage {
 
     async getLegacyText(tab: LegacyTab, group: string, key: string): Promise<string> {
         await this.openLegacyTab(tab);
-        const field = this.page.locator(`#${CSS.escape(`${group}[${key}]`)}`);
+        const field = this.page.locator(`[id="${group}[${key}]"]`);
         await expect(field).toBeVisible();
         return await field.inputValue();
     }
 
     async setLegacyText(tab: LegacyTab, group: string, key: string, value: string): Promise<void> {
         await this.openLegacyTab(tab);
-        const field = this.page.locator(`#${CSS.escape(`${group}[${key}]`)}`);
+        const field = this.page.locator(`[id="${group}[${key}]"]`);
         await expect(field).toBeVisible();
         await field.fill(value);
         await this.saveLegacy();
@@ -129,14 +129,14 @@ export class AdminSettingsPage extends BasePage {
 
     async getLegacySelect(tab: LegacyTab, group: string, key: string): Promise<string> {
         await this.openLegacyTab(tab);
-        const field = this.page.locator(`select#${CSS.escape(`${group}[${key}]`)}`);
+        const field = this.page.locator(`select[id="${group}[${key}]"]`);
         await expect(field).toBeVisible();
         return await field.inputValue();
     }
 
     async setLegacySelect(tab: LegacyTab, group: string, key: string, value: string): Promise<void> {
         await this.openLegacyTab(tab);
-        const field = this.page.locator(`select#${CSS.escape(`${group}[${key}]`)}`);
+        const field = this.page.locator(`select[id="${group}[${key}]"]`);
         await expect(field).toBeVisible();
         await field.selectOption(value);
         await this.saveLegacy();

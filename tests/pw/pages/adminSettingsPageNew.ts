@@ -294,25 +294,17 @@ export class AdminSettingsPageNew extends AdminPage {
         for ( const field of fields ) {
             await this.ensureVisibilityFor( field.selector );
             switch (field.type) {
-                case 'text': {
-                    const value = await this.page.inputValue(field.selector);
-                    expect(value, field.selector).toBe(field.value);
-                    break;
-                }
-                case 'number': {
-                    const value = await this.page.inputValue(field.selector);
-                    expect(value, field.selector).toBe(field.value);
-                    break;
-                }
+                // A settings screen paints its inputs empty and fills them once the
+                // schema request resolves, so a one-shot read races the hydration.
+                // Every value assertion below is web-first and retries.
+                case 'text':
+                case 'number':
                 case 'email': {
-                    const value = await this.page.inputValue(field.selector);
-                    expect(value, field.selector).toBe(field.value);
+                    await expect(this.page.locator(field.selector), field.selector).toHaveValue(field.value);
                     break;
                 }
                 case 'switch': {
-                    const ariaChecked = await this.page.locator(field.selector).getAttribute('aria-checked');
-                    const isChecked = ariaChecked === 'true';
-                    expect(isChecked, field.selector).toBe(field.value);
+                    await expect(this.page.locator(field.selector), field.selector).toHaveAttribute('aria-checked', String(field.value));
                     break;
                 }
                 case 'checkbox': {

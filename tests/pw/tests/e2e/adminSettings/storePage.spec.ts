@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 // Old UI dataset (placeholder, update selectors if legacy UI exists)
 const oldDataset = [
@@ -114,6 +115,16 @@ test.describe('Admin Setting: Appearance → Store', () => {
         loginPage = new LoginPage(page);
         adminSettingsPage = new AdminSettingsPage(page);
         await loginPage.adminLogin(data.admin);
+    });
+
+    // The captcha keys these tests type in are fake, so leaving the captcha
+    // enabled makes Dokan print a reCAPTCHA v3 script with an invalid site key on
+    // every login form. Its token never validates and each later spec — the auth
+    // setup included — fails to log a customer or vendor in. Put it back.
+    test.afterAll(async () => {
+        const off = { captcha_enable_status: 'off', recaptcha_site_key: '', recaptcha_secret_key: '' };
+        await dbUtils.updateOptionValue('dokan_appearance', off);
+        await dbUtils.updateOptionValue('dokan_admin_settings', off);
     });
 
     // 🔄 NEW → OLD sync

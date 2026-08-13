@@ -105,12 +105,21 @@ export const dbUtils = {
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
         const res = await dbUtils.dbQuery(query, [optionName]);
+        // An option WordPress has never written has no row at all; get_option()
+        // returns false there, so callers get undefined rather than a crash.
+        if (!res[0]) {
+            return undefined;
+        }
         const optionValue = unserialize(res[0].option_value);
         return optionValue;
     },
 
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
+        // Restoring a snapshot of an option that did not exist must not create it.
+        if (optionValue === undefined) {
+            return;
+        }
         optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
         const query = `
                 INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
