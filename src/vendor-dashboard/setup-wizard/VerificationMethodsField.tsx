@@ -4,6 +4,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import apiFetch from '@wordpress/api-fetch';
 import { Button, toast, type SettingsElement } from '@wedevs/plugin-ui';
 import { MediaUploader } from '@dokan/components';
+import { RequiredBadge } from '@src/dashboard/settings/store/fields/shared';
 import { Settings, Upload, X } from 'lucide-react';
 import type { VerificationMethod, WizardAttachment } from './types';
 
@@ -14,6 +15,14 @@ type RowState = {
     status: VerificationMethod[ 'status' ];
     requestId: number;
 };
+
+// Shared chrome for the outline buttons in this field.
+const outlineButtonClass =
+    'border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900';
+
+// Roomier than the sm default's px-2.5 so the short row labels don't read cramped.
+const rowActionPadding = 'px-4';
+const rowActionClass = `${ rowActionPadding } ${ outlineButtonClass }`;
 
 const statusLabel: Record< string, string > = {
     pending: __( 'Pending review', 'dokan-lite' ),
@@ -72,12 +81,22 @@ const VerificationMethodsField = ( {
             method.title
         );
 
+    // The endpoint pins a vendor-sent status to cancelled, so this is the only request change they can make.
+    const retireRequest = ( requestId: number ) =>
+        apiFetch( {
+            path: `${ endpoints?.createRequest }/${ requestId }`,
+            method: 'PUT',
+            data: { status: 'cancelled' },
+        } );
+
     const submit = async ( method: VerificationMethod ) => {
         const row = rows[ method.id ];
 
         if ( ! row?.attachment || ! endpoints ) {
             return;
         }
+
+        const replacedRequestId = row.requestId;
 
         patchRow( method.id, { submitting: true } );
 
@@ -99,8 +118,16 @@ const VerificationMethodsField = ( {
                 status: 'pending',
                 requestId: Number( created?.id ) || 0,
             } );
+
+            // Retired only once the replacement exists, so a failure here can't cost the vendor their submission — it leaves a stale row the admin sees superseded.
+            if ( replacedRequestId ) {
+                retireRequest( replacedRequestId ).catch( () => {} );
+            }
+
             toast.success(
-                __( 'Verification request submitted.', 'dokan-lite' )
+                replacedRequestId
+                    ? __( 'Verification document updated.', 'dokan-lite' )
+                    : __( 'Verification request submitted.', 'dokan-lite' )
             );
         } catch ( error ) {
             patchRow( method.id, { submitting: false } );
@@ -126,11 +153,7 @@ const VerificationMethodsField = ( {
         patchRow( method.id, { submitting: true } );
 
         try {
-            await apiFetch( {
-                path: `${ endpoints.createRequest }/${ row.requestId }`,
-                method: 'PUT',
-                data: { status: 'cancelled' },
-            } );
+            await retireRequest( row.requestId );
 
             patchRow( method.id, {
                 submitting: false,
@@ -158,6 +181,8 @@ const VerificationMethodsField = ( {
             { methods.map( ( method, index ) => {
                 const row = rows[ method.id ];
                 const chip = statusLabel[ row?.status ?? '' ];
+                // While the panel is open its own Submit/Cancel take over, so the row actions step aside.
+                const isPending = ! row?.open && 'pending' === row?.status;
                 // Rejected (like cancelled) may submit again — only pending/approved lock the row.
                 const canStart =
                     ! row?.open &&
@@ -174,11 +199,7 @@ const VerificationMethodsField = ( {
                             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                                 <span className="flex items-center gap-2 text-sm font-medium text-gray-900">
                                     { method.title }
-                                    { method.required && (
-                                        <span className="text-xs font-normal text-red-500">
-                                            { __( '(Required)', 'dokan-lite' ) }
-                                        </span>
-                                    ) }
+                                    { method.required && <RequiredBadge /> }
                                     { /* Status rides beside the label; the right side stays for actions. */ }
                                     { chip && (
                                         <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
@@ -193,24 +214,40 @@ const VerificationMethodsField = ( {
                             </span>
 
                             <span className="flex shrink-0 items-center gap-2">
-                                { 'pending' === row?.status && (
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="gap-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                                        disabled={ row.submitting }
-                                        onClick={ () =>
-                                            cancelRequest( method )
-                                        }
-                                    >
-                                        { __( 'Cancel', 'dokan-lite' ) }
-                                    </Button>
+                                { isPending && (
+                                    // The filled action sits last, like the footer's Skip/Next pair.
+                                    <>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className={ rowActionClass }
+                                            disabled={ row.submitting }
+                                            onClick={ () =>
+                                                cancelRequest( method )
+                                            }
+                                        >
+                                            { __( 'Cancel', 'dokan-lite' ) }
+                                        </Button>
+                                        { /* Carries the row's action, so it takes the filled treatment the panel's Submit and the footer's Next use. */ }
+                                        <Button
+                                            size="sm"
+                                            className={ rowActionPadding }
+                                            disabled={ row.submitting }
+                                            onClick={ () =>
+                                                patchRow( method.id, {
+                                                    open: true,
+                                                } )
+                                            }
+                                        >
+                                            { __( 'Edit', 'dokan-lite' ) }
+                                        </Button>
+                                    </>
                                 ) }
                                 { canStart && (
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="gap-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                                        className={ `gap-2 ${ outlineButtonClass }` }
                                         onClick={ () =>
                                             patchRow( method.id, {
                                                 open: true,
@@ -347,7 +384,7 @@ const VerificationMethodsField = ( {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                                        className={ outlineButtonClass }
                                         onClick={ () =>
                                             patchRow( method.id, {
                                                 open: false,
