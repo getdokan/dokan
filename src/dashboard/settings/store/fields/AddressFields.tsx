@@ -6,7 +6,7 @@ import {
     SmartSelect,
     type SettingsElement,
 } from '@wedevs/plugin-ui';
-import { fieldKeyOf, useCountries } from './shared';
+import { RequiredBadge, fieldKeyOf, useCountries } from './shared';
 
 type AddressValue = {
     street_1: string;
@@ -76,6 +76,12 @@ const DEFAULT_PART_ORDER: Array< keyof AddressValue > = [
 const AddressFields = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
     const fieldKey = fieldKeyOf( element );
+    // Only the wizard declares these — the settings page marks nothing.
+    const requiredParts: Array< keyof AddressValue > = Array.isArray(
+        element.required_parts
+    )
+        ? ( element.required_parts as Array< keyof AddressValue > )
+        : [];
     const value: AddressValue = {
         ...EMPTY_ADDRESS,
         ...( ( element.value as Partial< AddressValue > ) || {} ),
@@ -116,6 +122,33 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
         [ selectedCountry ]
     );
 
+    // Mirrors validate_address(): a country WooCommerce lists with no states of its own doesn't need one.
+    const stateIsRequired =
+        !! value.country && ( ! selectedCountry || stateOptions.length > 0 );
+
+    const isRequired = ( part: keyof AddressValue ) =>
+        requiredParts.includes( part ) &&
+        ( 'state' !== part || stateIsRequired );
+
+    // The server rejects the address as one field, so pin each message under the subfield it belongs to.
+    const missingParts = requiredParts.filter(
+        ( part ) => isRequired( part ) && ! value[ part ]
+    );
+
+    const partLabel = ( label: string, part: keyof AddressValue ) => (
+        <span className="flex items-center gap-1">
+            { label }
+            { isRequired( part ) && <RequiredBadge /> }
+        </span>
+    );
+
+    const partError = ( part: keyof AddressValue ) =>
+        !! element.validationError && missingParts.includes( part ) ? (
+            <span className="text-xs font-normal text-red-500" role="alert">
+                { __( 'This field is required', 'dokan-lite' ) }
+            </span>
+        ) : null;
+
     // Schema-driven subfield sequence (the wizard leads with the country cascade).
     const declaredOrder = Array.isArray( element.part_order )
         ? ( element.part_order as Array< keyof AddressValue > ).filter(
@@ -137,13 +170,14 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                 htmlFor={ `${ fieldKey }-${ part }` }
                 className="flex flex-col gap-1.5 text-sm font-medium text-gray-700"
             >
-                { config.label }
+                { partLabel( config.label, part ) }
                 <Input
                     id={ `${ fieldKey }-${ part }` }
                     placeholder={ config.placeholder }
                     value={ value[ part ] }
                     onChange={ ( event ) => update( part, event.target.value ) }
                 />
+                { partError( part ) }
             </label>
         );
     };
@@ -166,7 +200,7 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
             data-testid={ `dokan-address-${ part }` }
             className="flex flex-col gap-1.5 text-sm font-medium text-gray-700"
         >
-            { labels.title }
+            { partLabel( labels.title, part ) }
             { options.length ? (
                 <SmartSelect
                     options={ options }
@@ -188,6 +222,7 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                     onChange={ ( event ) => update( part, event.target.value ) }
                 />
             ) }
+            { partError( part ) }
         </div>
     );
 
@@ -229,8 +264,12 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                 } ) }
             </div>
 
-            { element.validationError && (
-                <p className="m-0 text-sm text-red-500" role="alert">
+            { /* Only for anything the per-subfield markers above can't account for. */ }
+            { element.validationError && ! missingParts.length && (
+                <p
+                    className="m-0 text-sm whitespace-pre-line text-red-500"
+                    role="alert"
+                >
                     { element.validationError }
                 </p>
             ) }

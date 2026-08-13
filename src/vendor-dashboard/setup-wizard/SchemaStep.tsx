@@ -41,7 +41,6 @@ export default function SchemaStep( {
     );
     const [ saving, setSaving ] = useState< boolean >( false );
     const saveRef = useRef< ( () => void ) | null >( null );
-    const dirtyRef = useRef< boolean >( false );
     const resultRef = useRef< ( ( ok: boolean ) => void ) | null >( null );
 
     const handleSave = async (
@@ -78,13 +77,9 @@ export default function SchemaStep( {
         }
     };
 
-    // WizardFooter drives the engine save and resolves once the PUT settles.
+    // Every Next saves, touched or not — required fields are enforced server-side, so skipping an untouched step would walk the vendor past validation.
     const onNext = () =>
         new Promise< boolean >( ( resolve ) => {
-            if ( ! dirtyRef.current ) {
-                resolve( true );
-                return;
-            }
             if ( ! saveRef.current ) {
                 resolve( false );
                 return;
@@ -104,10 +99,9 @@ export default function SchemaStep( {
                 onSave={ handleSave }
                 applyFilters={ applyFilters }
                 hookPrefix="dokan_vendor"
-                renderSaveButton={ ( { dirty, onSave } ) => {
+                renderSaveButton={ ( { onSave } ) => {
                     // The wizard footer owns the action; the engine's save bar renders empty.
                     saveRef.current = onSave;
-                    dirtyRef.current = dirty;
                     return null;
                 } }
             />

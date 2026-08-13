@@ -6,6 +6,15 @@
 // the heading pins at the top, the footer at the bottom, and only the
 // middle form region scrolls (the Figma "scroll version" behaviour).
 
+// Scrolling stays intact by wheel, drag and keyboard — only the bar is taken out of the picture.
+@mixin hide-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 // plugin-ui's design tokens ship in its dist stylesheet, which no Dokan page
 // enqueues — without them `bg-input`, `border-input`, `ring-ring` resolve to
 // nothing (invisible switch tracks, unstyled focus rings). Define the canonical
@@ -76,10 +85,15 @@
         flex: 1 1 auto !important;
         overflow-y: auto !important;
         padding: 0 32px !important;
-        scrollbar-width: thin;
-        scrollbar-color: #d1d5db transparent;
+        // The bar cuts into the card's right edge, so take it out.
+        @include hide-scrollbar;
         overscroll-behavior: contain;
         scroll-timeline: --dokan-vsw-scroll block;
+    }
+
+    // plugin-ui paints its own scroll-area thumb, so hiding the native bar above isn't enough to clear the card's right edge.
+    [data-slot='scroll-area-scrollbar'] {
+        display: none !important;
     }
 
     // Let the viewport wrapper grow with its content so the region scrolls
@@ -142,14 +156,28 @@
     }
 }
 
-// The SmartSelect popup portals to a body-level .pui-root — outside the step
-// scope — where wp-admin's forms.css paints a blue glow on its search input.
-// This sheet only loads on the wizard page, so the slot selector is safe.
+// The popup already draws the frame, so the search box's own border stacked a second line inside it (the store-locations popup drops it the same way).
+.pui-root [data-slot='smart-select-content'] input,
 .pui-root [data-slot='smart-select-content'] input:focus,
 .pui-root [data-slot='smart-select-content'] input:focus-visible {
+    border: 0 !important;
     outline: none !important;
     box-shadow: none !important;
-    border-color: #d1d5db !important;
+}
+
+// The bar crowds a popup this narrow; the descendant covers whichever child owns the option list.
+.pui-root [data-slot='smart-select-content'],
+.pui-root [data-slot='smart-select-content'] * {
+    @include hide-scrollbar;
+}
+
+// Only the status icon takes the state colour; the toast body stays neutral.
+[data-sonner-toast][data-type='error'] [data-icon] {
+    color: #dc2626;
+}
+
+[data-sonner-toast][data-type='success'] [data-icon] {
+    color: #16a34a;
 }
 
 // Shared step footer — the card is viewport-bounded, so the footer is simply

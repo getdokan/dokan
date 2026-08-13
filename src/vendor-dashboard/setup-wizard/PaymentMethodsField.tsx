@@ -228,7 +228,7 @@ const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
 
             { element.validationError && (
                 <p
-                    className="m-0 border-t border-gray-200 px-4 py-3 text-sm text-red-500"
+                    className="m-0 border-t border-gray-200 px-4 py-3 text-sm whitespace-pre-line text-red-500"
                     role="alert"
                 >
                     { element.validationError }
