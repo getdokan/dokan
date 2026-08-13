@@ -25,7 +25,13 @@ import {
  * configures the global gateway. Checkout/charge tests self-skip without keys (`!hasCredentials`).
  */
 test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => {
-    test.describe.configure({ timeout: 150_000 });
+    // 240s (not 150s): on CI runner IPs Stripe Link's invisible hCaptcha escalates to a visible
+    // challenge that blocks the in-page card confirm, so the SPA never redirects to /order-received.
+    // The order still settles via the server-side PaymentIntent-confirm fallback (real payment,
+    // verified locally with SIMULATE_CONFIRM_BLOCK=1 ≈ 90s), but the wasted redirect wait + the
+    // fallback poll overran the old 150s budget on the slower shared runner (all 3 attempts hit
+    // exactly 150s). Match the sibling real-card+confirm+fallback specs (savedCards/settings/3ds).
+    test.describe.configure({ timeout: 240_000 });
 
     let productId: string;
 

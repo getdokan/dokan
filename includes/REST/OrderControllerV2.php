@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use WC_Customer_Download;
 use WC_Data_Store;
 use WC_Product;
+use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Error;
 use WP_REST_Server;
 
@@ -281,7 +282,9 @@ class OrderControllerV2 extends OrderController {
 
         foreach ( $product_ids as $product_id ) {
             $product = dokan()->product->get( $product_id );
-            if ( ! $product ) {
+
+            // Only grant downloads for the vendor's own products, never another vendor's files (admins/shop managers exempt).
+            if ( ! $product || ( ! current_user_can( 'manage_woocommerce' ) && ! dokan_is_product_author( $product_id ) ) ) {
                 continue;
             }
 
@@ -390,8 +393,24 @@ class OrderControllerV2 extends OrderController {
     public function revoke_order_downloads( $requests ) {
         $download_id   = $requests->get_param( 'download_id' );
         $product_id    = $requests->get_param( 'product_id' );
-        $order_id      = $requests->get_param( 'id' );
-        $permission_id = $requests->get_param( 'permission_id' );
+        $order_id      = absint( $requests->get_param( 'id' ) );
+        $permission_id = absint( $requests->get_param( 'permission_id' ) );
+
+        // Only this order's own permission may be revoked; a foreign or unknown id is rejected (WC throws on an unknown id, caught here).
+        try {
+            $download         = new WC_Customer_Download( $permission_id );
+            $belongs_to_order = $download->get_id() && $download->get_order_id() === $order_id;
+        } catch ( \Exception $e ) {
+            $belongs_to_order = false;
+        }
+
+        if ( ! $belongs_to_order ) {
+            return new WP_Error(
+                'dokan_rest_download_permission_invalid_order',
+                esc_html__( 'Download permission does not belong to this order.', 'dokan-lite' ),
+                [ 'status' => 400 ]
+            );
+        }
 
         try {
             $data_store = WC_Data_Store::load( 'customer-download' );
@@ -414,18 +433,8 @@ class OrderControllerV2 extends OrderController {
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function process_orders_bulk_action( $requests ) {
-        $order_ids = $requests->get_param( 'order_ids' );
-
-        // A vendor may only bulk-update their own orders; foreign order ids are dropped (admins/shop managers are exempt).
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            $vendor_id = dokan_get_current_user_id();
-            $order_ids = array_filter(
-                $order_ids,
-                function ( $order_id ) use ( $vendor_id ) {
-                    return dokan_is_seller_has_order( $vendor_id, $order_id );
-                }
-            );
-        }
+        // A vendor may only bulk-update their own orders; admins/shop managers are exempt.
+        $order_ids = array_filter( (array) $requests->get_param( 'order_ids' ), [ OrderUtil::class, 'current_user_can_manage_order' ] );
 
         $data = [
             'bulk_orders' => $order_ids,
