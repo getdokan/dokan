@@ -232,6 +232,7 @@ export const dbData = {
         appearanceSettings: {
             vendor_layout_style: 'latest', // 'latest' = New UI, 'legacy' = Legacy UI
             vendor_product_editor: 'latest', // 'latest' = New UI, 'legacy' = Legacy UI
+            vendor_setup_wizard: 'latest', // 'latest' = New UI, 'legacy' = Legacy UI
             appearance_options: '',
             store_map: 'on', // 'on', 'off'
             map_api_source: 'google_maps', // google_maps, mapbox
