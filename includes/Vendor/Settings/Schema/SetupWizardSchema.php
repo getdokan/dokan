@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Vendor\Settings\Schema;
 
-use WC_Countries;
-
 /**
  * Setup wizard store-step flat-array schema.
  *
@@ -59,6 +57,8 @@ class SetupWizardSchema {
                 // The wizard mock leads with the country cascade, one field per row; the Store settings page keeps its street-first two-column default.
                 'part_order'      => [ 'country', 'state', 'city', 'zip', 'street_1', 'street_2' ],
                 'part_columns'    => 1,
+                // Badged in the UI like the verification step's methods; validate_address() enforces the same list.
+                'required_parts'  => array_keys( self::get_required_address_parts() ),
                 'value'           => [
                     'street_1' => (string) ( $address['street_1'] ?? '' ),
                     'street_2' => (string) ( $address['street_2'] ?? '' ),
@@ -184,7 +184,8 @@ class SetupWizardSchema {
         }
 
         if ( in_array( 'bank', $active, true ) ) {
-            $bank          = (array) ( $payment['bank'] ?? [] );
+            $bank = (array) ( $payment['bank'] ?? [] );
+            // Marked, not enforced: a withdrawal needs these, but onboarding lets the vendor come back for them.
             $required_keys = array_keys( dokan_bank_payment_required_fields() );
             $gateways[]    = [
                 'id'          => 'bank',
@@ -200,9 +201,9 @@ class SetupWizardSchema {
                     ],
                     [
                         'key'      => 'ac_type',
+                        'required' => in_array( 'ac_type', $required_keys, true ),
                         'label'    => __( 'Account Type', 'dokan-lite' ),
                         'input'    => 'select',
-                        'required' => true,
                         'options'  => [
                             [
                                 'value' => 'personal',
@@ -257,6 +258,10 @@ class SetupWizardSchema {
             foreach ( [ 'ac_name', 'ac_type', 'ac_number', 'routing_number', 'bank_name', 'bank_addr', 'iban', 'swift' ] as $bank_key ) {
                 $bank_value[ $bank_key ] = (string) ( $bank[ $bank_key ] ?? '' );
             }
+
+            // Stored as the legacy 'on' string by the dashboard form; the React checkbox reads a bool.
+            $bank_value['declaration'] = ! empty( $bank['declaration'] );
+
             $values['bank'] = $bank_value;
         }
 
@@ -266,7 +271,7 @@ class SetupWizardSchema {
                 'type'        => 'page',
                 'title'       => __( 'Payment', 'dokan-lite' ),
                 // On the page (not the section) so the engine renders it under the heading, admin-settings style.
-                'description' => __( 'Payment is crucial in the setup—customers pay through these methods, while vendors withdraw using those.', 'dokan-lite' ),
+                'description' => __( 'Payment is crucial in the setup. Customers pay through these methods, while vendors withdraw using those.', 'dokan-lite' ),
             ],
             [
                 'id'       => 'payment_section',
@@ -290,13 +295,74 @@ class SetupWizardSchema {
         ];
 
         /** This filter is documented in includes/Vendor/Settings/Schema/SetupWizardSchema.php */
-        return apply_filters( 'dokan_setup_wizard_schema', $elements, $vendor_id, 'payment' );
+        $elements = apply_filters( 'dokan_setup_wizard_schema', $elements, $vendor_id, 'payment' );
+
+        return self::append_remaining_gateways( $elements, $active );
     }
 
     /**
-     * Replicates the legacy wizard's bank validation (required fields checked
-     * only when the vendor started filling the bank form) plus email-shape
-     * checks for the email-based gateways.
+     * Give every active withdraw method a row, even the ones no schema describes.
+     *
+     * The legacy step rendered each method's `callback`, so connect-style
+     * gateways (Stripe Express, Paystack, Razorpay, …) had their button here.
+     * Their OAuth screens can't be schema-driven, but dropping them silently
+     * left the vendor thinking the marketplace had no such payout method — and
+     * a marketplace running only those got an empty step. They now appear with
+     * a link to the dashboard payment settings that owns the real flow.
+     *
+     * Runs after the step filter so Pro's own gateway configs win.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array    $elements Flat schema elements.
+     * @param string[] $active   Active withdraw method keys.
+     *
+     * @return array
+     */
+    protected static function append_remaining_gateways( array $elements, array $active ): array {
+        foreach ( $elements as &$element ) {
+            if ( 'payment_methods' !== ( $element['id'] ?? '' ) ) {
+                continue;
+            }
+
+            $described = wp_list_pluck( (array) ( $element['gateways'] ?? [] ), 'id' );
+
+            foreach ( $active as $method_key ) {
+                if ( in_array( $method_key, $described, true ) ) {
+                    continue;
+                }
+
+                // The legacy step's own rule: a method with no callable callback rendered nothing, so neither does this row.
+                $method = dokan_withdraw_get_method( $method_key );
+
+                if ( empty( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
+                    continue;
+                }
+
+                $element['gateways'][] = [
+                    'id'      => $method_key,
+                    'title'   => dokan_withdraw_get_method_title( $method_key ),
+                    'logo'    => dokan_withdraw_get_method_icon( $method_key ),
+                    'connect' => [
+                        'url'         => esc_url_raw( dokan_get_navigation_url( 'settings/payment' ) ),
+                        'label'       => __( 'Open payment settings', 'dokan-lite' ),
+                        'description' => __( 'Connect this method from your dashboard payment settings after you finish the setup. Your progress is saved.', 'dokan-lite' ),
+                        // A new tab: the vendor is mid-onboarding and shouldn't lose the wizard.
+                        'newTab'      => true,
+                    ],
+                ];
+            }
+        }
+
+        return $elements;
+    }
+
+    /**
+     * Shape-checks the email-based gateways.
+     *
+     * Nothing on this step is mandatory — payment can be finished later from the
+     * dashboard — so a half-filled bank form is accepted and only a malformed
+     * value is rejected.
      *
      * @since DOKAN_SINCE
      *
@@ -320,25 +386,46 @@ class SetupWizardSchema {
             }
         }
 
-        $bank       = (array) ( $value['bank'] ?? [] );
-        $bank_input = array_filter(
-            $bank,
-            static function ( $field_value, $field_key ) {
-                return 'declaration' !== $field_key && '' !== trim( (string) $field_value );
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
-
-        if ( ! empty( $bank_input ) ) {
-            // The helper returns ready-made messages keyed by field ("Account holder name is required", …).
-            foreach ( dokan_bank_payment_required_fields() as $required_key => $message ) {
-                if ( '' === trim( (string) ( $bank[ $required_key ] ?? '' ) ) ) {
-                    $errors[] = $message;
-                }
-            }
-        }
-
         return $errors;
+    }
+
+    /**
+     * The address subfields the wizard requires, mapped to the message each reports when empty.
+     *
+     * Single source for both the schema's `required_parts` badges and validate_address() below,
+     * so the marker a vendor sees and the rule the save enforces can't drift apart.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string, string> Subfield key => error message.
+     */
+    protected static function get_required_address_parts(): array {
+        return [
+            'country'  => __( 'Country is required.', 'dokan-lite' ),
+            'state'    => __( 'State is required.', 'dokan-lite' ),
+            'city'     => __( 'City is required.', 'dokan-lite' ),
+            'zip'      => __( 'Post/ZIP code is required.', 'dokan-lite' ),
+            'street_1' => __( 'Street address is required.', 'dokan-lite' ),
+        ];
+    }
+
+    /**
+     * Whether WooCommerce expects a state for a country.
+     *
+     * A country WooCommerce doesn't list at all still needs one; a country it lists
+     * with an empty state set does not.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $country Country code.
+     *
+     * @return bool
+     */
+    protected static function country_requires_state( string $country ): bool {
+        // The request-wide singleton: a fresh WC_Countries re-parses WooCommerce's 96 KB states file.
+        $states = WC()->countries->get_states();
+
+        return ! isset( $states[ $country ] ) || count( (array) $states[ $country ] ) > 0;
     }
 
     /**
@@ -353,36 +440,27 @@ class SetupWizardSchema {
      * @return string[] Error messages (empty when valid).
      */
     public static function validate_address( $value ): array {
-        $value  = (array) $value;
-        $errors = [];
+        $value    = (array) $value;
+        $required = self::get_required_address_parts();
+        $errors   = [];
 
-        if ( empty( $value['street_1'] ) ) {
-            $errors[] = __( 'Street address is required.', 'dokan-lite' );
+        foreach ( [ 'street_1', 'city', 'zip' ] as $part ) {
+            if ( empty( $value[ $part ] ) ) {
+                $errors[] = $required[ $part ];
+            }
         }
 
-        if ( empty( $value['city'] ) ) {
-            $errors[] = __( 'City is required.', 'dokan-lite' );
-        }
+        $country = (string) ( $value['country'] ?? '' );
 
-        if ( empty( $value['zip'] ) ) {
-            $errors[] = __( 'Post/ZIP code is required.', 'dokan-lite' );
-        }
-
-        $country        = (string) ( $value['country'] ?? '' );
-        $state_is_empty = empty( $value['state'] );
-
+        // Without a country the state rule can't be evaluated, so stop here.
         if ( empty( $country ) ) {
-            $errors[] = __( 'Country is required.', 'dokan-lite' );
+            $errors[] = $required['country'];
 
             return $errors;
         }
 
-        $states             = ( new WC_Countries() )->states;
-        $country_has_states = isset( $states[ $country ] );
-
-        if ( ( $country_has_states && count( (array) $states[ $country ] ) > 0 && $state_is_empty )
-            || ( ! $country_has_states && $state_is_empty ) ) {
-            $errors[] = __( 'State is required.', 'dokan-lite' );
+        if ( empty( $value['state'] ) && self::country_requires_state( $country ) ) {
+            $errors[] = $required['state'];
         }
 
         return $errors;

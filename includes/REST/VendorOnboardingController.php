@@ -227,8 +227,11 @@ class VendorOnboardingController extends VendorStoreSettingsController {
 
             foreach ( $methods as $gateway_id => $gateway_values ) {
                 $gateway_values = (array) $gateway_values;
-                // Rendered for consent only — the legacy save never persisted the attestation.
-                unset( $gateway_values['declaration'] );
+
+                // Store the attestation in the legacy 'on' shape the dashboard form, its validation and the withdraw-log export all read.
+                if ( array_key_exists( 'declaration', $gateway_values ) ) {
+                    $gateway_values['declaration'] = empty( $gateway_values['declaration'] ) ? '' : 'on';
+                }
 
                 $existing                = isset( $payment[ $gateway_id ] ) && is_array( $payment[ $gateway_id ] ) ? $payment[ $gateway_id ] : [];
                 $payment[ $gateway_id ] = array_merge( $existing, $gateway_values );

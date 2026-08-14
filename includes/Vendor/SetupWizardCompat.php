@@ -31,11 +31,6 @@ class SetupWizardCompat {
      * @return void
      */
     public function fire_store_save_action( int $vendor_id, array $sanitized, array $fields_by_id ): void {
-        // Hydrate the REAL singleton — consumers may type-check it, and store_id/store_info are only populated during a wizard page load.
-        $wizard             = dokan()->seller_wizard;
-        $wizard->store_id   = $vendor_id;
-        $wizard->store_info = dokan_get_store_info( $vendor_id );
-
         $bag = [];
 
         foreach ( $fields_by_id as $field_id => $field ) {
@@ -44,12 +39,7 @@ class SetupWizardCompat {
             }
         }
 
-        $this->with_legacy_post_context(
-            $bag,
-            static function () use ( $wizard ) {
-                do_action( 'dokan_seller_wizard_store_field_save', $wizard );
-            }
-        );
+        $this->fire( 'dokan_seller_wizard_store_field_save', $vendor_id, $bag );
     }
 
     /**
@@ -67,14 +57,31 @@ class SetupWizardCompat {
      * @return void
      */
     public function fire_payment_save_action( int $vendor_id, array $methods ): void {
+        $this->fire( 'dokan_seller_wizard_payment_field_save', $vendor_id, [ 'settings' => $methods ] );
+    }
+
+    /**
+     * Fire a legacy wizard action the way the POST pipeline did: the real
+     * SetupWizard singleton hydrated, the `$_POST` bag overlaid.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $hook      Legacy action name.
+     * @param int    $vendor_id Vendor user ID.
+     * @param array  $bag       Key-value pairs to overlay onto `$_POST`.
+     *
+     * @return void
+     */
+    protected function fire( string $hook, int $vendor_id, array $bag ): void {
+        // Hydrate the REAL singleton — consumers may type-check it, and store_id/store_info are only populated during a wizard page load.
         $wizard             = dokan()->seller_wizard;
         $wizard->store_id   = $vendor_id;
         $wizard->store_info = dokan_get_store_info( $vendor_id );
 
         $this->with_legacy_post_context(
-            [ 'settings' => $methods ],
-            static function () use ( $wizard ) {
-                do_action( 'dokan_seller_wizard_payment_field_save', $wizard );
+            $bag,
+            static function () use ( $hook, $wizard ) {
+                do_action( $hook, $wizard );
             }
         );
     }

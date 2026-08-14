@@ -61,7 +61,7 @@ class SetupWizardStoreSaveGoldenTest extends DokanTestCase {
         add_filter(
             'wp_redirect',
             function ( $location ) {
-                throw new SetupWizardRedirectInterrupt( $location );
+                throw new SetupWizardRedirectInterrupt( $location ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Control-flow signal, never rendered.
             }
         );
 
@@ -348,6 +348,7 @@ class SetupWizardStoreSaveGoldenTest extends DokanTestCase {
         $location = $this->run_store_save( $wizard );
 
         $this->assertNull( $location );
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Asserting the legacy $_POST error channel verbatim.
         $this->assertSame( 'error', $_POST['error_address[city]'] );
         $this->assertSame( $meta_before, $this->get_profile_meta( $this->seller_id1 ) );
         $this->assertCount( 0, $this->seam_b_calls );
@@ -368,7 +369,7 @@ class SetupWizardStoreSaveGoldenTest extends DokanTestCase {
         $location = $this->run_store_save( $wizard );
 
         $this->assertNull( $location );
-        $this->assertArrayNotHasKey( 'error_address[city]', $_POST );
+        $this->assertArrayNotHasKey( 'error_address[city]', $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Asserting the legacy $_POST error channel stayed untouched.
         $this->assertSame( $meta_before, $this->get_profile_meta( $this->seller_id1 ) );
         $this->assertCount( 0, $this->seam_b_calls );
     }

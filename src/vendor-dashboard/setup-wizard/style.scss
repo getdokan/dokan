@@ -1,16 +1,15 @@
-// Setup wizard React steps — interior styling for the per-step mounts.
-// The wizard chrome (topbar, card shell, page background) lives in
-// assets/src/less/setup.less; this sheet owns everything React renders.
-//
-// Form steps (store/payment/verification) use a viewport-bounded card:
-// the heading pins at the top, the footer at the bottom, and only the
-// middle form region scrolls (the Figma "scroll version" behaviour).
+// Interior styling for the React step mounts; the wizard chrome lives in assets/src/less/setup.less.
 
-// plugin-ui's design tokens ship in its dist stylesheet, which no Dokan page
-// enqueues — without them `bg-input`, `border-input`, `ring-ring` resolve to
-// nothing (invisible switch tracks, unstyled focus rings). Define the canonical
-// set here, scoped like the utilities themselves. `--primary` is deliberately
-// omitted: dokan-tailwind maps it to the brand purple at :root.
+// Keeps wheel/drag/keyboard scrolling, hides only the bar.
+@mixin hide-scrollbar {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+// plugin-ui ships these in a dist stylesheet no Dokan page enqueues; `--primary` is omitted since dokan-tailwind maps it at :root.
 :is(.pui-root, .dokan-layout) {
     --background: oklch(100% 0 0);
     --foreground: oklch(14.5% 0 0);
@@ -38,28 +37,20 @@
     min-height: 0;
     text-align: left;
 
-    // Lets the pinned heading/footer read the form scroller's named timeline
-    // (they sit outside it) for the scroll-edge shadows below.
+    // Exposes the form scroller's timeline to the pinned heading/footer, which sit outside it.
     timeline-scope: --dokan-vsw-scroll;
 
-    // The wizard follows the Figma brand purple even when the marketplace
-    // customizer re-tints dashboard buttons — the onboarding flow is pre-brand.
-    // (--primary itself: the :root token resolves its inner var() at :root,
-    // so re-pointing the customizer var this deep would never reach it.)
+    // Onboarding is pre-brand, so it keeps the Figma purple even when the customizer re-tints the dashboard.
     --primary: #7047eb;
 
-    // wc-setup.css hard-aligns headings/copy left inside the card; let the
-    // step wrappers (centered intro/ready cards) decide instead.
+    // wc-setup.css hard-aligns card copy left; let each step wrapper decide.
     h1,
     h2,
     p {
         text-align: inherit;
     }
 
-    // The engine renders its own card chrome — the wizard's PHP shell already
-    // provides the card, so flatten only the OUTER box; the inner section
-    // cards keep their borders so steps read like the settings pages. The
-    // token utilities are emitted with !important, so these must be too.
+    // The PHP shell already draws the card, so flatten the engine's outer box only. Token utilities are !important.
     [data-testid='settings-root'] {
         flex: 1 1 auto;
         border: 0 !important;
@@ -69,30 +60,29 @@
         overflow: hidden !important;
     }
 
-    // The engine's content region is the step's scroller — bounded by the
-    // card, it owns the side gutters and shows a slim scrollbar. Reaching the
-    // end must not rubber-band the page behind it.
+    // The engine's content region is the step's scroller; it must not rubber-band the page behind it.
     [data-testid='settings-content'] {
         flex: 1 1 auto !important;
         overflow-y: auto !important;
         padding: 0 32px !important;
-        scrollbar-width: thin;
-        scrollbar-color: #d1d5db transparent;
+        @include hide-scrollbar;
         overscroll-behavior: contain;
         scroll-timeline: --dokan-vsw-scroll block;
     }
 
-    // Let the viewport wrapper grow with its content so the region scrolls
-    // naturally instead of clipping at 100% height.
+    // plugin-ui paints its own thumb, so hiding the native bar above isn't enough to clear the card edge.
+    [data-slot='scroll-area-scrollbar'] {
+        display: none !important;
+    }
+
+    // Let the viewport wrapper grow with content instead of clipping at 100% height.
     [data-testid='settings-content'] > div {
         height: auto !important;
         min-height: 100%;
         overflow: visible !important;
     }
 
-    // The heading pins while the form scrolls beneath it ("eye lined"); a warm
-    // shadow fades in as content slides under (scroll-driven, no-op where
-    // unsupported — the timeline stays inactive and the base style holds).
+    // Heading pins while the form scrolls under it; the shadow is scroll-driven and simply stays off where unsupported.
     [data-testid^='settings-heading-'] {
         position: sticky;
         top: 0;
@@ -108,14 +98,12 @@
         padding: 0 0 24px !important;
     }
 
-    // The save bar renders empty (the wizard footer owns the action), but its
-    // container still paints a sticky hairline — drop it.
+    // The wizard footer owns the action, so the engine's save bar only contributes a stray hairline.
     [data-testid^='settings-save-'] {
         display: none !important;
     }
 
-    // The social note rides in a chrome-less section so it scrolls with the
-    // methods list, tucked close under the card.
+    // Chrome-less so the social note scrolls with the methods list.
     [data-testid='settings-section-verification_social'] {
         border: 0 !important;
         border-radius: 0 !important;
@@ -123,9 +111,7 @@
         margin-top: 12px !important;
     }
 
-    // wp-admin/wc-setup/theme paint their own focus chrome (blue glow on bare
-    // inputs, outlined links); plugin-ui's focus-visible ring utilities are
-    // !important and load later, so keyboard focus still shows.
+    // Drop wp-admin/wc-setup/theme focus chrome; plugin-ui's focus-visible ring loads later and is !important.
     a:focus,
     button:focus,
     input:focus,
@@ -135,26 +121,39 @@
         outline: none;
     }
 
-    // The theme/wc-setup can force `fill` onto SVGs — lucide icons are
-    // stroke-drawn and turn into blobs when filled.
+    // lucide icons are stroke-drawn and turn into blobs when the theme forces `fill`.
     svg.lucide {
         fill: none;
     }
 }
 
-// The SmartSelect popup portals to a body-level .pui-root — outside the step
-// scope — where wp-admin's forms.css paints a blue glow on its search input.
-// This sheet only loads on the wizard page, so the slot selector is safe.
-.pui-root [data-slot='smart-select-content'] input:focus,
-.pui-root [data-slot='smart-select-content'] input:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-    border-color: #d1d5db !important;
+// base-ui portals these out of the step, so they can't be scoped to it. Both slots ship: single vs multi select.
+[data-slot='smart-select-content'],
+[data-slot='smart-multi-select-content'] {
+    // The popup already draws the frame; the search box's own border stacked a second line inside it.
+    [data-slot='command-input'] {
+        border: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    // The bar crowds a popup this narrow; the descendant covers whichever child owns the option list.
+    &,
+    * {
+        @include hide-scrollbar;
+    }
 }
 
-// Shared step footer — the card is viewport-bounded, so the footer is simply
-// the last flex row: always visible, buttons centered in their band. Its warm
-// shadow fades out as the vendor reaches the end of the form.
+// Only the status icon takes the state colour; the toast body stays neutral.
+[data-sonner-toast][data-type='error'] [data-icon] {
+    color: #dc2626;
+}
+
+[data-sonner-toast][data-type='success'] [data-icon] {
+    color: #16a34a;
+}
+
+// The card is viewport-bounded, so the footer is just the last flex row.
 .dokan-vsw-step-footer {
     flex: none;
     display: flex;
@@ -191,7 +190,7 @@
     }
 }
 
-// Full-screen transitional state between the last input step and Ready.
+// Transitional state between the last input step and Ready.
 .dokan-vsw-creating-overlay {
     position: fixed;
     inset: 0;

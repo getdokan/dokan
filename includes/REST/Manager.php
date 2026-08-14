@@ -252,8 +252,6 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'       => '\WeDevs\Dokan\REST\AdminOnboardingController',
                 DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php'  => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
                 DOKAN_DIR . '/includes/REST/AdminSettingsController.php'         => '\WeDevs\Dokan\REST\AdminSettingsController',
-                DOKAN_DIR . '/includes/REST/VendorStoreSettingsController.php'   => '\WeDevs\Dokan\REST\VendorStoreSettingsController',
-                DOKAN_DIR . '/includes/REST/VendorOnboardingController.php'      => '\WeDevs\Dokan\REST\VendorOnboardingController',
                 DOKAN_DIR . '/includes/REST/AdminReportController.php'             => 'WeDevs\Dokan\REST\AdminReportController',
                 DOKAN_DIR . '/includes/REST/AdminDashboardController.php'          => 'WeDevs\Dokan\REST\AdminDashboardController',
                 DOKAN_DIR . '/includes/REST/AdminMiscController.php'               => 'WeDevs\Dokan\REST\AdminMiscController',
@@ -287,6 +285,8 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/ExportController.php'                  => '\WeDevs\Dokan\REST\ExportController',
                 DOKAN_DIR . '/includes/REST/AdminExtensionsController.php'         => '\WeDevs\Dokan\REST\AdminExtensionsController',
                 DOKAN_DIR . '/includes/REST/ToolsController.php'                   => '\WeDevs\Dokan\REST\ToolsController',
+                DOKAN_DIR . '/includes/REST/VendorStoreSettingsController.php'     => '\WeDevs\Dokan\REST\VendorStoreSettingsController',
+                DOKAN_DIR . '/includes/REST/VendorOnboardingController.php'        => '\WeDevs\Dokan\REST\VendorOnboardingController',
             )
         );
     }

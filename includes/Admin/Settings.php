@@ -449,7 +449,7 @@ class Settings {
                     'name'    => 'setup_wizard_message',
                     'label'   => __( 'Vendor Setup Wizard Message', 'dokan-lite' ),
                     'type'    => 'wpeditor',
-                    'default' => \WeDevs\Dokan\Vendor\SetupWizard::default_wizard_message(),
+                    'default' => __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ),
                 ],
                 'disable_welcome_wizard' => [
                     'name'    => 'disable_welcome_wizard',
@@ -850,6 +850,17 @@ class Settings {
                     'name'    => 'vendor_store_settings',
                     'label'   => esc_html__( 'Vendor Store Settings', 'dokan-lite' ),
                     'desc'    => esc_html__( 'Select the user interface for the vendor store settings.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'legacy',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
+                'vendor_setup_wizard'        => [
+                    'name'    => 'vendor_setup_wizard',
+                    'label'   => esc_html__( 'Vendor Setup Onboarding', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor setup wizard shown right after registration.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'default' => 'legacy',
                     'options' => [

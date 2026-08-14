@@ -96,7 +96,8 @@ class StoreScheduleValidator {
             return [ sprintf( __( '%s: opening and closing times are required for open days.', 'dokan-lite' ), $day_label ) ];
         }
 
-        $errors = [];
+        $errors    = [];
+        $intervals = [];
 
         foreach ( $opening as $index => $opening_time ) {
             $open  = DateTime::createFromFormat( 'g:i a', strtolower( trim( (string) $opening_time ) ) );
@@ -108,9 +109,36 @@ class StoreScheduleValidator {
                 continue;
             }
 
-            if ( $open->getTimestamp() >= $close->getTimestamp() ) {
+            $open_ts  = $open->getTimestamp();
+            $close_ts = $close->getTimestamp();
+
+            if ( $open_ts >= $close_ts ) {
                 /* translators: %s: day name */
                 $errors[] = sprintf( __( '%s: the opening time must be earlier than the closing time.', 'dokan-lite' ), $day_label );
+                continue;
+            }
+
+            $intervals[] = [ $open_ts, $close_ts ];
+        }
+
+        // The client blocks overlapping multi-slot ranges; keep direct API calls to the same rule.
+        if ( count( $intervals ) > 1 ) {
+            usort(
+                $intervals,
+                static function ( array $a, array $b ) {
+                    return $a[0] <=> $b[0];
+                }
+            );
+
+            $last_close = 0;
+            foreach ( $intervals as $interval ) {
+                if ( $interval[0] < $last_close ) {
+                    // Same string the client validator shows, so one translation covers both layers.
+                    /* translators: %s: day name */
+                    $errors[] = sprintf( __( '%s time ranges can not overlap.', 'dokan-lite' ), $day_label );
+                    break;
+                }
+                $last_close = $interval[1];
             }
         }
 

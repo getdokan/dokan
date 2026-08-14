@@ -35,6 +35,49 @@ const tabControls: { setActiveTab: ( ( tab: string ) => void ) | null } = {
     setActiveTab: null,
 };
 
+// Deep links open a specific tab by naming it in the route's query, e.g.
+// `#settings/store?tab=tab_location` (the profile-completion card's "Add" action).
+const TAB_HINT_PARAM = 'tab';
+
+const readTabHint = (): string => {
+    const hash = window.location.hash;
+    const query = hash.indexOf( '?' );
+
+    if ( query === -1 ) {
+        return '';
+    }
+
+    return (
+        new URLSearchParams( hash.slice( query + 1 ) ).get( TAB_HINT_PARAM ) ||
+        ''
+    );
+};
+
+// Consume the hint once applied: the vendor is then free to switch tabs, and a
+// later click on the same deep link changes the hash again (so it still lands).
+const clearTabHint = () => {
+    const hash = window.location.hash;
+    const query = hash.indexOf( '?' );
+
+    if ( query === -1 ) {
+        return;
+    }
+
+    const params = new URLSearchParams( hash.slice( query + 1 ) );
+    params.delete( TAB_HINT_PARAM );
+
+    const rest = params.toString();
+    const { pathname, search } = window.location;
+
+    window.history.replaceState(
+        null,
+        '',
+        `${ pathname }${ search }${ hash.slice( 0, query ) }${
+            rest ? `?${ rest }` : ''
+        }`
+    );
+};
+
 // Mounted inside the engine provider via renderSaveButton: remembers the active line tab and restores it after a refresh-remount instead of snapping back to the first tab.
 const TabKeeper = () => {
     const { activeTab, setActiveTab, getActiveTabs } = useSettings();
@@ -54,18 +97,51 @@ const TabKeeper = () => {
         }
         if ( ! restored.current ) {
             restored.current = true;
-            const remembered = lastActiveTab.current;
+
+            // A deep link outranks the remembered tab: the vendor followed it to
+            // reach a specific section.
+            const hint = readTabHint();
+            const target = hint || lastActiveTab.current;
+
+            if ( hint ) {
+                clearTabHint();
+            }
+
             if (
-                remembered &&
-                remembered !== activeTab &&
-                getActiveTabs().some( ( tab ) => tab.id === remembered )
+                target &&
+                target !== activeTab &&
+                getActiveTabs().some( ( tab ) => tab.id === target )
             ) {
-                setActiveTab( remembered );
+                setActiveTab( target );
+                lastActiveTab.current = target;
                 return;
             }
         }
         lastActiveTab.current = activeTab;
     }, [ activeTab, setActiveTab, getActiveTabs ] );
+
+    // Already on the page: following the same deep link only changes the hash, so
+    // pick the tab up here instead of waiting for a remount that never comes.
+    useEffect( () => {
+        const applyHint = () => {
+            const hint = readTabHint();
+
+            if (
+                ! hint ||
+                ! getActiveTabs().some( ( tab ) => tab.id === hint )
+            ) {
+                return;
+            }
+
+            clearTabHint();
+            setActiveTab( hint );
+            lastActiveTab.current = hint;
+        };
+
+        window.addEventListener( 'hashchange', applyHint );
+
+        return () => window.removeEventListener( 'hashchange', applyHint );
+    }, [ setActiveTab, getActiveTabs ] );
 
     return null;
 };

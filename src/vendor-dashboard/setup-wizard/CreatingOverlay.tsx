@@ -1,8 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { LoaderCircle } from 'lucide-react';
 
-// The full-screen "Creating your Store" transition shown while the browser
-// navigates from the last input step into the Ready screen.
+// Full-screen transition shown while the final save lands.
 export default function CreatingOverlay() {
     return (
         <div className="dokan-vsw-creating-overlay" role="status">

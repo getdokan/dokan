@@ -1,8 +1,10 @@
 import { useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 import apiFetch from '@wordpress/api-fetch';
 import { Button, toast, type SettingsElement } from '@wedevs/plugin-ui';
 import { MediaUploader } from '@dokan/components';
+import { RequiredBadge } from '@src/dashboard/settings/store/fields/shared';
 import { Settings, Upload, X } from 'lucide-react';
 import type { VerificationMethod, WizardAttachment } from './types';
 
@@ -14,18 +16,26 @@ type RowState = {
     requestId: number;
 };
 
+// Shared chrome for the outline buttons in this field.
+const outlineButtonClass =
+    'border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900';
+
+// Roomier than the sm default's px-2.5 so the short row labels don't read cramped.
+const rowActionPadding = 'px-4';
+const rowActionClass = `${ rowActionPadding } ${ outlineButtonClass }`;
+
 const statusLabel: Record< string, string > = {
     pending: __( 'Pending review', 'dokan-lite' ),
     approved: __( 'Verified', 'dokan-lite' ),
     rejected: __( 'Rejected', 'dokan-lite' ),
 };
 
-// `verification_methods` variant — rows driven by the schema element Pro
-// builds (methods, endpoints, vendor id). Documents come from the WordPress
-// media library (same picker as the store banner/logo settings); requests go
-// through the vendor-verification module's endpoint. Mirrors the legacy
-// lifecycle: pending can be cancelled for a re-submission, rejected can be
-// re-submitted, approved is final.
+// The document belongs to a live submission: Edit opens on it, a fresh
+// submission starts empty rather than resurrecting a withdrawn or rejected file.
+const liveDocument = ( method: VerificationMethod ) =>
+    'pending' === method.status ? method.document ?? null : null;
+
+// `verification_methods` variant — pending can be edited in place or cancelled, rejected can re-submit, approved is final.
 const VerificationMethodsField = ( {
     element,
 }: {
@@ -43,7 +53,7 @@ const VerificationMethodsField = ( {
                 method.id,
                 {
                     open: false,
-                    attachment: null,
+                    attachment: liveDocument( method ),
                     submitting: false,
                     status: method.status,
                     requestId: method.requestId ?? 0,
@@ -52,15 +62,31 @@ const VerificationMethodsField = ( {
         )
     );
 
-    const patchRow = ( id: number, patch: Partial< RowState > ) =>
+    const patchRow = ( id: number, patch: Partial< RowState > ) => {
         setRows( ( prev ) => ( {
             ...prev,
             [ id ]: { ...prev[ id ], ...patch },
         } ) );
 
-    // Admin-authored help text with a generic fallback — shown under the row title.
+        // The step is bootstrapped once, so a revisit remounts from it — keep the request state in step with the server.
+        const method = methods.find( ( item ) => item.id === id );
+
+        if ( ! method ) {
+            return;
+        }
+
+        if ( undefined !== patch.status ) {
+            method.status = patch.status;
+        }
+
+        if ( undefined !== patch.requestId ) {
+            method.requestId = patch.requestId;
+        }
+    };
+
+    // Arrives tag-stripped from the server, so only its entities need decoding.
     const methodHelp = ( method: VerificationMethod ): string =>
-        method.help ||
+        decodeEntities( method.help || '' ) ||
         sprintf(
             /* translators: %s: verification method title */
             __(
@@ -70,12 +96,22 @@ const VerificationMethodsField = ( {
             method.title
         );
 
+    // The endpoint pins a vendor-sent status to cancelled, so this is the only request change they can make.
+    const retireRequest = ( requestId: number ) =>
+        apiFetch( {
+            path: `${ endpoints?.createRequest }/${ requestId }`,
+            method: 'PUT',
+            data: { status: 'cancelled' },
+        } );
+
     const submit = async ( method: VerificationMethod ) => {
         const row = rows[ method.id ];
 
         if ( ! row?.attachment || ! endpoints ) {
             return;
         }
+
+        const replacedRequestId = row.requestId;
 
         patchRow( method.id, { submitting: true } );
 
@@ -90,15 +126,24 @@ const VerificationMethodsField = ( {
                 },
             } );
 
+            method.document = row.attachment;
+
             patchRow( method.id, {
                 submitting: false,
                 open: false,
-                attachment: null,
                 status: 'pending',
                 requestId: Number( created?.id ) || 0,
             } );
+
+            // Retired only once the replacement exists, so a failure here can't cost the vendor their submission — it leaves a stale row the admin sees superseded.
+            if ( replacedRequestId ) {
+                retireRequest( replacedRequestId ).catch( () => {} );
+            }
+
             toast.success(
-                __( 'Verification request submitted.', 'dokan-lite' )
+                replacedRequestId
+                    ? __( 'Verification document updated.', 'dokan-lite' )
+                    : __( 'Verification request submitted.', 'dokan-lite' )
             );
         } catch ( error ) {
             patchRow( method.id, { submitting: false } );
@@ -112,8 +157,7 @@ const VerificationMethodsField = ( {
         }
     };
 
-    // Legacy parity: a pending request can be withdrawn, freeing the method
-    // for a fresh submission (the endpoint pins vendor-sent statuses to cancelled).
+    // Legacy parity: withdrawing a pending request frees the method for a fresh submission.
     const cancelRequest = async ( method: VerificationMethod ) => {
         const row = rows[ method.id ];
 
@@ -124,16 +168,16 @@ const VerificationMethodsField = ( {
         patchRow( method.id, { submitting: true } );
 
         try {
-            await apiFetch( {
-                path: `${ endpoints.createRequest }/${ row.requestId }`,
-                method: 'PUT',
-                data: { status: 'cancelled' },
-            } );
+            await retireRequest( row.requestId );
+
+            method.document = null;
 
             patchRow( method.id, {
                 submitting: false,
                 status: '',
                 requestId: 0,
+                // The withdrawn file isn't under review any more, so the next submission starts clean.
+                attachment: null,
             } );
             toast.success(
                 __( 'Verification request cancelled.', 'dokan-lite' )
@@ -156,6 +200,8 @@ const VerificationMethodsField = ( {
             { methods.map( ( method, index ) => {
                 const row = rows[ method.id ];
                 const chip = statusLabel[ row?.status ?? '' ];
+                // While the panel is open its own Submit/Cancel take over, so the row actions step aside.
+                const isPending = ! row?.open && 'pending' === row?.status;
                 // Rejected (like cancelled) may submit again — only pending/approved lock the row.
                 const canStart =
                     ! row?.open &&
@@ -172,50 +218,58 @@ const VerificationMethodsField = ( {
                             <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                                 <span className="flex items-center gap-2 text-sm font-medium text-gray-900">
                                     { method.title }
-                                    { method.required && (
-                                        <span className="text-xs font-normal text-red-500">
-                                            { __( '(Required)', 'dokan-lite' ) }
-                                        </span>
-                                    ) }
-                                    { /* Status rides beside the label; the right side stays for actions. */ }
+                                    { method.required && <RequiredBadge /> }
                                     { chip && (
                                         <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600">
                                             { chip }
                                         </span>
                                     ) }
                                 </span>
-                                { /* The method's own guidance doubles as the row's breathing room. */ }
                                 <span className="text-xs leading-5 font-normal text-gray-500">
                                     { methodHelp( method ) }
                                 </span>
                             </span>
 
                             <span className="flex shrink-0 items-center gap-2">
-                                { 'pending' === row?.status && (
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="gap-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
-                                        disabled={ row.submitting }
-                                        onClick={ () =>
-                                            cancelRequest( method )
-                                        }
-                                    >
-                                        { __( 'Cancel', 'dokan-lite' ) }
-                                    </Button>
+                                { isPending && (
+                                    // The filled action sits last, like the footer's Skip/Next pair.
+                                    <>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className={ rowActionClass }
+                                            disabled={ row.submitting }
+                                            onClick={ () =>
+                                                cancelRequest( method )
+                                            }
+                                        >
+                                            { __( 'Cancel', 'dokan-lite' ) }
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            className={ rowActionPadding }
+                                            disabled={ row.submitting }
+                                            onClick={ () =>
+                                                patchRow( method.id, {
+                                                    open: true,
+                                                } )
+                                            }
+                                        >
+                                            { __( 'Edit', 'dokan-lite' ) }
+                                        </Button>
+                                    </>
                                 ) }
                                 { canStart && (
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="gap-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                                        className={ `gap-2 ${ outlineButtonClass }` }
                                         onClick={ () =>
                                             patchRow( method.id, {
                                                 open: true,
                                             } )
                                         }
                                     >
-                                        { /* Same glyph as the settings page's "Set Details" chip. */ }
                                         <Settings
                                             size={ 14 }
                                             aria-hidden="true"
@@ -232,11 +286,7 @@ const VerificationMethodsField = ( {
 
                         { row?.open && (
                             <div className="flex flex-col gap-3 border-t border-gray-100 px-4 py-4">
-                                { /* Same anatomy as the admin settings uploader (WpMediaUpload):
-                                     thumb + destructive remove badge + outline Change button — but
-                                     through MediaUploader, which keeps the attachment ID the
-                                     verification endpoint needs (WpMediaUpload only emits a URL).
-                                     Centered in the drop-zone panel per the step's design. */ }
+                                { /* MediaUploader, not WpMediaUpload: the endpoint needs the attachment ID, which WpMediaUpload doesn't emit. */ }
                                 <div className="flex flex-col items-center gap-2 rounded-md border border-dashed border-gray-300 bg-gray-50 px-4 py-5">
                                     { row.attachment && (
                                         <span className="relative inline-flex">
@@ -345,11 +395,12 @@ const VerificationMethodsField = ( {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                                        className={ outlineButtonClass }
                                         onClick={ () =>
                                             patchRow( method.id, {
                                                 open: false,
-                                                attachment: null,
+                                                attachment:
+                                                    liveDocument( method ),
                                             } )
                                         }
                                     >

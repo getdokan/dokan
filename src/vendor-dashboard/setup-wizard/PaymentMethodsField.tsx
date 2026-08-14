@@ -15,16 +15,18 @@ import {
     type SettingsElement,
 } from '@wedevs/plugin-ui';
 import { ChevronDown } from 'lucide-react';
+import {
+    RequiredBadge,
+    fieldKeyOf,
+} from '@src/dashboard/settings/store/fields/shared';
 import type { GatewayConfig, GatewayFieldConfig } from './types';
 
 type GatewayValues = Record< string, Record< string, string | boolean > >;
 
-// `payment_methods` variant — a gateway accordion driven entirely by schema
-// data (`element.gateways`), so Pro can add its methods (Skrill fields,
-// connect-style rows) without shipping React into this bundle.
+// `payment_methods` variant — the accordion is driven entirely by `element.gateways`, so Pro adds methods without shipping React here.
 const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const gateways = ( element.gateways as GatewayConfig[] ) || [];
     const value = ( element.value as GatewayValues ) || {};
 
@@ -122,7 +124,11 @@ const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
                 htmlFor={ id }
                 className="flex flex-col gap-1.5 text-sm font-medium text-gray-700"
             >
-                { field.label }
+                <span className="flex items-center gap-1">
+                    { field.label }
+                    { /* Marked, not enforced: a withdrawal needs it, onboarding lets the vendor come back for it. */ }
+                    { field.required && <RequiredBadge /> }
+                </span>
                 { renderControl( gateway, field, id, current ) }
             </label>
         );
@@ -183,7 +189,19 @@ const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
                                         variant="outline"
                                         className="border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                                         render={
-                                            <a href={ gateway.connect.url }>
+                                            <a
+                                                href={ gateway.connect.url }
+                                                target={
+                                                    gateway.connect.newTab
+                                                        ? '_blank'
+                                                        : undefined
+                                                }
+                                                rel={
+                                                    gateway.connect.newTab
+                                                        ? 'noopener noreferrer'
+                                                        : undefined
+                                                }
+                                            >
                                                 { gateway.connect.label }
                                             </a>
                                         }
@@ -228,7 +246,7 @@ const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
 
             { element.validationError && (
                 <p
-                    className="m-0 border-t border-gray-200 px-4 py-3 text-sm text-red-500"
+                    className="m-0 border-t border-gray-200 px-4 py-3 text-sm whitespace-pre-line text-red-500"
                     role="alert"
                 >
                     { element.validationError }

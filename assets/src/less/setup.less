@@ -329,6 +329,32 @@
         }
     }
 
+    // Legacy store step: the map template inside the form-table layout.
+    .wc-setup-content {
+        .dokan-seller-setup-form {
+            .dokan-map-wrap {
+                .dokan-map-search-bar {
+                    input {
+                        &#dokan-map-add {
+                            width: 100%;
+                        }
+                    }
+
+                    a {
+                        &#dokan-location-find-btn {
+                            display: none;
+                        }
+                    }
+                }
+
+                .dokan-google-map {
+                    width: 100%;
+                    height: 300px;
+                }
+            }
+        }
+    }
+
 }
 
 span {
@@ -344,13 +370,16 @@ span {
 // hairline #e5e7eb; "warm" soft shadows per the design review.
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Everything below hangs off `.dokan-vsw`, which only the React shell adds —
+// the legacy wizard shares `.dokan-vendor-setup-wizard` and must keep wc-setup's layout.
+
 // wc-setup.css puts 20px side margins on <html> — the topbar must bleed edge to edge.
-html:has(body.dokan-vendor-setup-wizard) {
+html:has(body.dokan-vsw) {
     margin: 0 !important;
     padding: 0 !important;
 }
 
-body.dokan-vendor-setup-wizard {
+body.dokan-vendor-setup-wizard.dokan-vsw {
     background: #f1f1f4;
     margin: 0;
     padding: 0;

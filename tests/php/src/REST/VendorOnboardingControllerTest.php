@@ -125,7 +125,7 @@ class VendorOnboardingControllerTest extends DokanTestCase {
         add_filter(
             'wp_redirect',
             function ( $location ) {
-                throw new SetupWizardRedirectInterrupt( $location );
+                throw new SetupWizardRedirectInterrupt( $location ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Control-flow signal, never rendered.
             }
         );
 
@@ -200,7 +200,8 @@ class VendorOnboardingControllerTest extends DokanTestCase {
             function ( $wizard ) use ( &$captured ) {
                 $captured['is_wizard'] = $wizard instanceof SetupWizard;
                 $captured['store_id']  = $wizard->store_id;
-                $captured['bag_value'] = isset( $_POST['dokan_store_categories'] ) ? $_POST['dokan_store_categories'] : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Asserting the compat bag verbatim; sanitizing would defeat the assertion.
+                $captured['bag_value'] = $_POST['dokan_store_categories'] ?? null;
             }
         );
 
@@ -219,7 +220,7 @@ class VendorOnboardingControllerTest extends DokanTestCase {
         $this->assertSame( '42', $captured['bag_value'] );
 
         // The overlay is scoped: the superglobal is restored once the action returns.
-        $this->assertSame( [ 'sentinel' => 'kept' ], $_POST );
+        $this->assertSame( [ 'sentinel' => 'kept' ], $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Asserting the superglobal was restored.
 
         // non_meta keeps the stand-in out of the profile row under both its id and its POST key.
         $row = $this->get_profile_meta( $this->seller_id1 );
@@ -271,12 +272,13 @@ class VendorOnboardingControllerTest extends DokanTestCase {
             'dokan_seller_wizard_payment_field_save',
             function ( $wizard ) use ( &$captured ) {
                 $captured['store_id'] = $wizard->store_id;
-                $captured['bag']      = isset( $_POST['settings'] ) ? $_POST['settings'] : null; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Asserting the compat bag verbatim; sanitizing would defeat the assertion.
+                $captured['bag'] = $_POST['settings'] ?? null;
             }
         );
 
         $response = $this->put_request(
-        '/dokan/v1/vendor-onboarding/payment',
+            '/dokan/v1/vendor-onboarding/payment',
             [
                 'values' => [
                     'payment_methods' => [
@@ -302,7 +304,8 @@ class VendorOnboardingControllerTest extends DokanTestCase {
 
         $this->assertSame( 'golden.vendor@example.com', $row['payment']['paypal']['email'] );
         $this->assertSame( 'John Doe', $row['payment']['bank']['ac_name'] );
-        $this->assertArrayNotHasKey( 'declaration', $row['payment']['bank'] );
+        // Stored in the legacy 'on' shape the dashboard form, its validation and the withdraw-log export all read.
+        $this->assertSame( 'on', $row['payment']['bank']['declaration'] );
         $this->assertSame( [ 'value' => 'keep-me' ], $row['payment']['dokan_custom'] );
 
         // Bank wins the completion weight; the improvement over legacy: Seam B fired (vendor cache invalidates).
@@ -315,18 +318,48 @@ class VendorOnboardingControllerTest extends DokanTestCase {
     }
 
     /**
+     * Nothing on the payment step is mandatory — it can be finished later from
+     * the dashboard — so a half-filled bank form saves as-is.
+     *
      * @test
      */
-    public function payment_partial_bank_is_rejected() {
+    public function payment_partial_bank_is_accepted() {
         wp_set_current_user( $this->seller_id1 );
-        $row_before = $this->get_profile_meta( $this->seller_id1 );
 
         $response = $this->put_request(
-        '/dokan/v1/vendor-onboarding/payment',
+            '/dokan/v1/vendor-onboarding/payment',
             [
                 'values' => [
                     'payment_methods' => [
                         'bank' => [ 'ac_name' => 'John Doe' ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+
+        $bank = $this->get_profile_meta( $this->seller_id1 )['payment']['bank'] ?? [];
+        $this->assertSame( 'John Doe', $bank['ac_name'] ?? null );
+        $this->assertEmpty( $bank['ac_number'] ?? null );
+    }
+
+    /**
+     * A malformed value is still rejected — the shape checks survive the
+     * relaxed required-field rules.
+     *
+     * @test
+     */
+    public function payment_malformed_email_is_rejected() {
+        wp_set_current_user( $this->seller_id1 );
+        $row_before = $this->get_profile_meta( $this->seller_id1 );
+
+        $response = $this->put_request(
+            '/dokan/v1/vendor-onboarding/payment',
+            [
+                'values' => [
+                    'payment_methods' => [
+                        'paypal' => [ 'email' => 'not-an-email' ],
                     ],
                 ],
             ]

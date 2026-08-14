@@ -3,10 +3,7 @@ import { Button } from '@wedevs/plugin-ui';
 import { CircleCheckBig, Eye, LayoutGrid } from 'lucide-react';
 import type { WizardPayload } from './types';
 
-// The completion card — success mark, congratulations copy, View Site /
-// Explore Dashboard. Mirrors the Figma "Congratulations" frame: an 80px
-// alpha-green disc (#16A34A @ 10%) around an outline check, both copy lines
-// at the same 24px bold weight.
+// The completion card — View Site and Explore Dashboard both leave the wizard, so they stay real links.
 export default function ReadyCard( { payload }: { payload: WizardPayload } ) {
     return (
         // Utilities can't sit on the .dokan-layout element itself — the token scope matches descendants only.

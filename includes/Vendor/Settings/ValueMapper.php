@@ -89,8 +89,9 @@ class ValueMapper {
     }
 
     /**
-     * Build the nested `catalog_mode` array, preserving keys other consumers
-     * own (e.g. request-for-quotation's `request_a_quote_enabled`).
+     * Build the nested `catalog_mode` array from the toggles this schema owns,
+     * preserving keys other plugins own — they apply their own rules on the
+     * `dokan_store_profile_settings_args` seam the writer fires.
      *
      * @since DOKAN_SINCE
      *
@@ -120,11 +121,6 @@ class ValueMapper {
         // Hiding the price is meaningless with the cart button visible — same forced-off rule as legacy.
         if ( 'off' === ( $catalog['hide_add_to_cart_button'] ?? 'off' ) ) {
             $catalog['hide_product_price'] = 'off';
-
-            // RFQ's quote button follows the same rule; its own Seam-A handler is nonce-guarded and silent on REST saves.
-            if ( isset( $catalog['request_a_quote_enabled'] ) ) {
-                $catalog['request_a_quote_enabled'] = 'off';
-            }
         }
 
         return $catalog;

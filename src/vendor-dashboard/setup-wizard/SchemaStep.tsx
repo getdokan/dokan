@@ -1,4 +1,5 @@
 import { useRef, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import apiFetch from '@wordpress/api-fetch';
 import {
@@ -14,35 +15,16 @@ import {
 import WizardFooter from './WizardFooter';
 import type { WizardPayload } from './types';
 
-type SchemaStepProps = {
-    payload: WizardPayload;
-    // Toast shown when the step's PUT fails.
-    failureMessage: string;
-};
-
-/**
- * Shared shell for the schema-driven wizard steps (store, payment).
- *
- * The schema is bootstrapped inline by PHP (never fetched — the page render is
- * the only context where the wizard's `$_GET` state is faithful). The engine's
- * save bar renders empty; the wizard footer drives the save and navigates once
- * the PUT settles. Server validation errors re-key to the engine's
- * dependency_key contract, same as the Store settings page.
- * @param root0
- * @param root0.payload
- * @param root0.failureMessage
- */
-export default function SchemaStep( {
-    payload,
-    failureMessage,
-}: SchemaStepProps ) {
+// Renders any schema-driven step. A payload with no endpoint (Pro's
+// verification rows talk to their own API) simply has nothing to save.
+export default function SchemaStep( { payload }: { payload: WizardPayload } ) {
     const [ schema ] = useState< SettingsElement[] >( () =>
         qualifyDependencyKeys( payload.schema ?? [] )
     );
     const [ saving, setSaving ] = useState< boolean >( false );
     const saveRef = useRef< ( () => void ) | null >( null );
-    const dirtyRef = useRef< boolean >( false );
     const resultRef = useRef< ( ( ok: boolean ) => void ) | null >( null );
+    const endpoint = payload.endpoint;
 
     const handleSave = async (
         _scopeId: string,
@@ -53,10 +35,24 @@ export default function SchemaStep( {
 
         try {
             await apiFetch( {
-                path: payload.endpoint ?? '',
+                path: endpoint ?? '',
                 method: 'PUT',
                 data: { values: flatValues },
             } );
+
+            // PHP bootstraps each step once, so a revisit would otherwise remount the page-load snapshot and lose the save.
+            payload.schema?.forEach( ( element ) => {
+                if (
+                    'field' === element.type &&
+                    Object.prototype.hasOwnProperty.call(
+                        flatValues,
+                        element.id
+                    )
+                ) {
+                    element.value = flatValues[ element.id ];
+                }
+            } );
+
             resultRef.current?.( true );
         } catch ( error ) {
             resultRef.current?.( false );
@@ -67,7 +63,10 @@ export default function SchemaStep( {
                 data?: { errors?: Record< string, string[] | string > };
             };
 
-            toast.error( typedError?.message || failureMessage );
+            toast.error(
+                typedError?.message ||
+                    __( 'Failed to save your changes.', 'dokan-lite' )
+            );
 
             const fieldErrors = typedError?.data?.errors;
             if ( fieldErrors && 'object' === typeof fieldErrors ) {
@@ -78,15 +77,11 @@ export default function SchemaStep( {
         }
     };
 
-    // WizardFooter drives the engine save and resolves once the PUT settles.
+    // Every Next saves, touched or not — required fields are enforced server-side, so skipping an untouched step would walk the vendor past validation.
     const onNext = () =>
         new Promise< boolean >( ( resolve ) => {
-            if ( ! dirtyRef.current ) {
+            if ( ! endpoint || ! saveRef.current ) {
                 resolve( true );
-                return;
-            }
-            if ( ! saveRef.current ) {
-                resolve( false );
                 return;
             }
             resultRef.current = resolve;
@@ -104,20 +99,16 @@ export default function SchemaStep( {
                 onSave={ handleSave }
                 applyFilters={ applyFilters }
                 hookPrefix="dokan_vendor"
-                renderSaveButton={ ( { dirty, onSave } ) => {
+                renderSaveButton={ ( { onSave } ) => {
                     // The wizard footer owns the action; the engine's save bar renders empty.
                     saveRef.current = onSave;
-                    dirtyRef.current = dirty;
                     return null;
                 } }
             />
             <WizardFooter
-                backUrl={ payload.backUrl }
-                skipUrl={ payload.skipUrl }
-                nextUrl={ payload.nextStepUrl ?? '' }
                 onNext={ onNext }
                 busy={ saving }
-                creatingOverlay={ payload.creatingOverlay }
+                skippable={ false !== payload.skippable }
             />
             <Toaster />
         </div>

@@ -1,11 +1,12 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wedevs/plugin-ui';
+import { useStepNav } from './step-nav';
 import type { WizardPayload } from './types';
 
-// The welcome card — logo + site name, greeting, admin-configurable message,
-// Skip / Start Journey. Mirrors the Figma intro frame: 24px column rhythm
-// (brand → title block → actions), 8px title→description, 10px between buttons.
+// The welcome card. Skip leaves the wizard, so it stays a real link.
 export default function IntroCard( { payload }: { payload: WizardPayload } ) {
+    const { next, goTo } = useStepNav();
+
     return (
         // Utilities can't sit on the .dokan-layout element itself — the token scope matches descendants only.
         <div className="dokan-setup-wizard-step dokan-layout">
@@ -50,12 +51,10 @@ export default function IntroCard( { payload }: { payload: WizardPayload } ) {
                     />
                     <Button
                         className="h-10 px-5"
-                        render={
-                            <a href={ payload.nextStepUrl }>
-                                { __( 'Start Journey', 'dokan-lite' ) }
-                            </a>
-                        }
-                    />
+                        onClick={ () => next && goTo( next ) }
+                    >
+                        { __( 'Start Journey', 'dokan-lite' ) }
+                    </Button>
                 </div>
             </div>
         </div>
