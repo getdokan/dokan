@@ -70,13 +70,14 @@ Status: build
 
 ### Happy Paths
 - vendor sees the welcome screen: site branding, welcome message, Skip and Start Journey actions
-- vendor completes the wizard end to end: store step (searchable country/state combobox, city, zip, street) saves and advances to Payment; PayPal email saves and advances to Ready; `dokan_profile_settings` holds every submitted field
+- vendor completes the wizard end to end: store step (searchable country/state combobox, city, zip, street) saves and advances to Payment; PayPal email saves and advances to Ready; `dokan_profile_settings` holds every submitted field; the rail tracks the step and the whole walk stays one page load
 - vendor can skip the wizard from the welcome screen and land on the dashboard
 - vendor finishing the wizard reaches the dashboard through Explore Dashboard
 
 ### Edge Cases
 - re-entering the store step after a save shows the previously saved values prefilled
+- a half-filled bank form is accepted and saved: the fields a withdrawal needs are marked required, but payment can be finished from the dashboard
 
 ### Negative Cases
-- a partially filled bank account is rejected on Next with an inline error and the vendor stays on the payment step
+- a malformed payment email is rejected on Next with an inline error and the vendor stays on the payment step
 - a guest hitting the wizard URL never sees the wizard (request falls through to the normal site)
