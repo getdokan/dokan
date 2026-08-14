@@ -6,24 +6,24 @@ import {
     useState,
 } from '@wordpress/element';
 import IntroCard from './IntroCard';
-import StoreStep from './StoreStep';
-import PaymentStep from './PaymentStep';
-import VerificationStep from './VerificationStep';
 import ReadyCard from './ReadyCard';
+import SchemaStep from './SchemaStep';
 import ProgressRail from './ProgressRail';
+import registerWizardFields from './register-fields';
 import { StepNavContext } from './step-nav';
 import type { WizardBootstrap, WizardStepKey, WizardStepOrder } from './types';
 
-const stepComponents = {
-    intro: IntroCard,
-    store: StoreStep,
-    payment: PaymentStep,
-    verification: VerificationStep,
-    ready: ReadyCard,
-} as const;
+registerWizardFields();
 
-// Centred cards get no form chrome; the PHP shell keys the same classes off the landing step.
-const centredSteps: WizardStepKey[] = [ 'intro', 'ready' ];
+// Only the two cards are bespoke; anything carrying a schema renders through
+// the shared engine shell, so a Pro or third-party step needs no Lite release.
+const stepCards: Record<
+    string,
+    ( props: { payload: never } ) => JSX.Element
+> = {
+    intro: IntroCard,
+    ready: ReadyCard,
+};
 
 export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
     const shell = boot.shell;
@@ -52,8 +52,8 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
     // The body classes drive the wizard chrome, so they follow the step like the PHP shell did.
     useEffect( () => {
         const { body } = document;
-        const stepArg =
-            order.find( ( s ) => s.key === current )?.stepArg ?? current;
+        const entry = order.find( ( s ) => s.key === current );
+        const centred = !! entry?.centred;
 
         Array.from( body.classList ).forEach( ( name ) => {
             if ( name.startsWith( 'dokan-vsw-step-' ) ) {
@@ -61,15 +61,9 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
             }
         } );
 
-        body.classList.add( `dokan-vsw-step-${ stepArg }` );
-        body.classList.toggle(
-            'dokan-vsw-center',
-            centredSteps.includes( current )
-        );
-        body.classList.toggle(
-            'dokan-vsw-form',
-            ! centredSteps.includes( current )
-        );
+        body.classList.add( `dokan-vsw-step-${ entry?.stepArg ?? current }` );
+        body.classList.toggle( 'dokan-vsw-center', centred );
+        body.classList.toggle( 'dokan-vsw-form', ! centred );
     }, [ current, order ] );
 
     const go = useCallback(
@@ -83,18 +77,19 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
                 return;
             }
 
-            if ( push && shell ) {
-                const url = `${ shell.baseUrl }&step=${ encodeURIComponent(
-                    entry.stepArg
-                ) }&_admin_sw_nonce=${ encodeURIComponent( shell.nonce ) }`;
-
-                window.history.pushState( { dokanWizardStep: step }, '', url );
+            if ( push ) {
+                // The same server-minted link the fallback navigates to, so the two can't drift.
+                window.history.pushState(
+                    { dokanWizardStep: step },
+                    '',
+                    entry.url
+                );
             }
 
             setCurrent( step );
             window.scrollTo( { top: 0 } );
         },
-        [ boot.steps, shell ]
+        [ boot.steps ]
     );
 
     // The landing entry is browser-made and carries no state, so Back would strand the wizard on the step it reached.
@@ -125,16 +120,14 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
     const neighbour = ( relative: number ): WizardStepOrder | undefined =>
         order[ indexOf( current ) + relative ];
 
-    const nextStep = neighbour( 1 );
     const nav = {
-        next: nextStep,
+        next: neighbour( 1 ),
         previous: neighbour( -1 ),
         goTo: go,
-        isNextReady: 'ready' === nextStep?.key,
     };
 
     const payload = boot.steps[ current ];
-    const Step = stepComponents[ current ];
+    const Step = stepCards[ current ] ?? ( payload?.schema && SchemaStep );
 
     if ( ! payload || ! Step ) {
         return null;
@@ -148,7 +141,8 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
                     railHost
                 ) }
 
-            <Step payload={ payload } />
+            { /* Keyed by step: schema steps share one component, and each needs its own mount to seed from its own payload. */ }
+            <Step key={ current } payload={ payload } />
         </StepNavContext.Provider>
     );
 }

@@ -41,7 +41,8 @@ export type VerificationMethod = {
 };
 
 export type WizardPayload = {
-    step: 'intro' | 'store' | 'payment' | 'verification' | 'ready';
+    // Lite's own keys, plus whatever key a Pro or third-party step bootstraps under.
+    step: 'intro' | 'store' | 'payment' | 'verification' | 'ready' | string;
     // Steps navigate through the shell; the only link a payload still carries is one that leaves the wizard.
     skipUrl?: string;
     // False drops the footer's Skip — Pro does that on the store step when a verification method is required.
@@ -78,15 +79,15 @@ export type WizardStepOrder = {
     stepArg: string;
     // The intro is un-numbered, matching the legacy rail.
     numbered: boolean;
-    // Server-minted step URL (nonce included) — the fallback when there's no payload to mount.
+    // Cards centre themselves; form steps get the sheet chrome. PHP paints the same class first.
+    centred: boolean;
+    // Server-minted step URL (nonce included) — used for pushState and for the no-payload fallback.
     url: string;
 };
 
 export type WizardShell = {
     order: WizardStepOrder[];
     initialStep: WizardStepKey | string;
-    baseUrl: string;
-    nonce: string;
 };
 
 // PHP bootstraps every step in one page load; the SPA never fetches a step.

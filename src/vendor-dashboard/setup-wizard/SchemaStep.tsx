@@ -1,4 +1,5 @@
 import { useRef, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import apiFetch from '@wordpress/api-fetch';
 import {
@@ -14,23 +15,16 @@ import {
 import WizardFooter from './WizardFooter';
 import type { WizardPayload } from './types';
 
-type SchemaStepProps = {
-    payload: WizardPayload;
-    // Toast shown when the step's PUT fails.
-    failureMessage: string;
-};
-
-// Shared shell for the schema-driven steps; server errors re-key to the engine's dependency_key contract.
-export default function SchemaStep( {
-    payload,
-    failureMessage,
-}: SchemaStepProps ) {
+// Renders any schema-driven step. A payload with no endpoint (Pro's
+// verification rows talk to their own API) simply has nothing to save.
+export default function SchemaStep( { payload }: { payload: WizardPayload } ) {
     const [ schema ] = useState< SettingsElement[] >( () =>
         qualifyDependencyKeys( payload.schema ?? [] )
     );
     const [ saving, setSaving ] = useState< boolean >( false );
     const saveRef = useRef< ( () => void ) | null >( null );
     const resultRef = useRef< ( ( ok: boolean ) => void ) | null >( null );
+    const endpoint = payload.endpoint;
 
     const handleSave = async (
         _scopeId: string,
@@ -41,7 +35,7 @@ export default function SchemaStep( {
 
         try {
             await apiFetch( {
-                path: payload.endpoint ?? '',
+                path: endpoint ?? '',
                 method: 'PUT',
                 data: { values: flatValues },
             } );
@@ -69,7 +63,10 @@ export default function SchemaStep( {
                 data?: { errors?: Record< string, string[] | string > };
             };
 
-            toast.error( typedError?.message || failureMessage );
+            toast.error(
+                typedError?.message ||
+                    __( 'Failed to save your changes.', 'dokan-lite' )
+            );
 
             const fieldErrors = typedError?.data?.errors;
             if ( fieldErrors && 'object' === typeof fieldErrors ) {
@@ -83,8 +80,8 @@ export default function SchemaStep( {
     // Every Next saves, touched or not — required fields are enforced server-side, so skipping an untouched step would walk the vendor past validation.
     const onNext = () =>
         new Promise< boolean >( ( resolve ) => {
-            if ( ! saveRef.current ) {
-                resolve( false );
+            if ( ! endpoint || ! saveRef.current ) {
+                resolve( true );
                 return;
             }
             resultRef.current = resolve;

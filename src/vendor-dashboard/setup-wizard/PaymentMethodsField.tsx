@@ -15,7 +15,10 @@ import {
     type SettingsElement,
 } from '@wedevs/plugin-ui';
 import { ChevronDown } from 'lucide-react';
-import { RequiredBadge } from '@src/dashboard/settings/store/fields/shared';
+import {
+    RequiredBadge,
+    fieldKeyOf,
+} from '@src/dashboard/settings/store/fields/shared';
 import type { GatewayConfig, GatewayFieldConfig } from './types';
 
 type GatewayValues = Record< string, Record< string, string | boolean > >;
@@ -23,7 +26,7 @@ type GatewayValues = Record< string, Record< string, string | boolean > >;
 // `payment_methods` variant — the accordion is driven entirely by `element.gateways`, so Pro adds methods without shipping React here.
 const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const gateways = ( element.gateways as GatewayConfig[] ) || [];
     const value = ( element.value as GatewayValues ) || {};
 

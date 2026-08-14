@@ -66,12 +66,33 @@ class SetupWizard extends DokanSetupWizard {
     protected ?array $step_order = null;
 
     /**
+     * Wizard step key => the payload key that step bootstrapped under, filled
+     * in by {@see self::enqueue_react_step()} as each step registers itself.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var array<string, string>
+     */
+    protected array $payload_keys = [];
+
+    /**
+     * The step-link nonce, minted once per request.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string|null
+     */
+    protected ?string $step_nonce = null;
+
+    /**
      * Hook in tabs.
      */
     public function __construct() {
         add_filter( 'woocommerce_registration_redirect', [ $this, 'filter_woocommerce_registration_redirect' ], 10, 1 );
         add_action( 'init', [ $this, 'setup_wizard' ], 9999 );
         add_action( 'dokan_setup_wizard_enqueue_scripts', [ $this, 'frontend_enqueue_scripts' ] );
+        // Last word on the action: by then every step has registered the key it bootstrapped under.
+        add_action( 'dokan_setup_wizard_enqueue_scripts', [ $this, 'bootstrap_wizard_shell' ], PHP_INT_MAX );
     }
 
     // define the woocommerce_registration_redirect callback
@@ -198,7 +219,9 @@ class SetupWizard extends DokanSetupWizard {
         }
 
         $this->register_react_bundle();
+        // Every other step first, then the one being viewed — in its own real context, alongside its Pro assets.
         $this->bootstrap_all_steps();
+        $this->react_enqueue_scripts();
     }
 
     /**
@@ -232,15 +255,10 @@ class SetupWizard extends DokanSetupWizard {
      * @return array Empty when the step belongs to another plugin.
      */
     protected function current_step_payload(): array {
-        switch ( $this->current_step ) {
-            case 'introduction':
-                return $this->intro_step_payload();
-            case 'store':
-                return $this->store_step_payload();
-            case 'payment':
-                return $this->payment_step_payload();
-            case 'next_steps':
-                return $this->ready_step_payload();
+        $builder = $this->steps[ $this->current_step ]['payload'] ?? null;
+
+        if ( is_callable( $builder ) ) {
+            return (array) call_user_func( $builder );
         }
 
         return [];
@@ -287,10 +305,21 @@ class SetupWizard extends DokanSetupWizard {
         if ( null === $this->use_react ) {
             $this->use_react = ! dokan_get_container()->get( LegacySwitcher::class )->is_setup_wizard_legacy_preferred()
                 // A checkout with no built bundle has nothing to mount — onboarding falls back to the legacy wizard rather than an empty step.
-                && file_exists( DOKAN_DIR . '/assets/js/vendor-setup-wizard.asset.php' );
+                && file_exists( self::asset_manifest_path() );
         }
 
         return $this->use_react;
+    }
+
+    /**
+     * Where the built bundle's dependency manifest lives.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected static function asset_manifest_path(): string {
+        return DOKAN_DIR . '/assets/js/vendor-setup-wizard.asset.php';
     }
 
     /**
@@ -302,13 +331,8 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     protected function register_react_bundle(): void {
-        $asset_file = DOKAN_DIR . '/assets/js/vendor-setup-wizard.asset.php';
-
-        if ( ! file_exists( $asset_file ) ) {
-            return;
-        }
-
-        $asset      = require $asset_file;
+        // use_react_wizard() already proved the manifest is there.
+        $asset      = require self::asset_manifest_path();
         $style_file = DOKAN_DIR . '/assets/css/vendor-setup-wizard.css';
 
         // Must load in the head — the wizard's standalone template never calls wp_print_footer_scripts().
@@ -346,9 +370,13 @@ class SetupWizard extends DokanSetupWizard {
     public function enqueue_react_step( array $payload ): void {
         $step = (string) ( $payload['step'] ?? '' );
 
-        if ( '' === $step ) {
+        // A step registers once per request: the enqueue action can reach the same step twice.
+        if ( '' === $step || isset( $this->payload_keys[ $this->current_step ] ) ) {
             return;
         }
+
+        // The step declares its own payload key here, so nothing has to hardcode Pro's.
+        $this->payload_keys[ $this->current_step ] = $step;
 
         /**
          * Filter a wizard step's bootstrapped payload.
@@ -379,43 +407,6 @@ class SetupWizard extends DokanSetupWizard {
     }
 
     /**
-     * The step keys, in wizard order, mapped to the payload key each step
-     * bootstraps under. Pro-owned steps declare their own key via the payload.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array<string, string> Wizard step key => payload step key.
-     */
-    protected function payload_step_map(): array {
-        $map = [
-            'introduction'  => 'intro',
-            'store'         => 'store',
-            'payment'       => 'payment',
-            'verifications' => 'verification',
-            'next_steps'    => 'ready',
-        ];
-
-        // A step nobody mapped keeps its own key: the rail still counts it and the SPA hands it a real page load instead of stepping over it.
-        foreach ( array_keys( $this->steps ) as $step ) {
-            if ( ! isset( $map[ $step ] ) ) {
-                $map[ $step ] = $step;
-            }
-        }
-
-        /**
-         * Filter the wizard step key => React payload key map.
-         *
-         * Third-party steps registered through `dokan_seller_wizard_steps` map
-         * their own payload key here so the SPA can order them.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param array $map Wizard step key => payload step key.
-         */
-        return apply_filters( 'dokan_setup_wizard_payload_step_map', $map );
-    }
-
-    /**
      * Bootstrap every step's payload in one page load.
      *
      * Pro gates its wizard assets on the real `$_GET['step']` (stripe-express,
@@ -434,6 +425,11 @@ class SetupWizard extends DokanSetupWizard {
         $this->bootstrapping_steps = true;
 
         foreach ( array_keys( $this->steps ) as $step ) {
+            // The step being viewed is served by the outer pass, in its own real context.
+            if ( $step === $original_step ) {
+                continue;
+            }
+
             $this->current_step = $step;
             $_GET['step']       = $step;
 
@@ -451,26 +447,26 @@ class SetupWizard extends DokanSetupWizard {
         } else {
             unset( $_GET['step'] );
         }
-
-        $this->bootstrap_wizard_shell();
     }
 
     /**
-     * Emit the SPA shell state: step order, where to start, and the chrome the
-     * rail needs to re-render client-side.
+     * Emit the SPA shell state: the step order and where to start.
+     *
+     * Runs last on the enqueue action, once every step — Lite's, Pro's and any
+     * third party's — has declared the key it bootstrapped under.
      *
      * @since DOKAN_SINCE
      *
      * @return void
      */
-    protected function bootstrap_wizard_shell(): void {
-        $map = $this->payload_step_map();
+    public function bootstrap_wizard_shell(): void {
+        if ( $this->bootstrapping_steps || ! $this->use_react_wizard() ) {
+            return;
+        }
 
         $shell = [
             'order'       => $this->wizard_step_order(),
-            'initialStep' => $map[ $this->current_step ] ?? $this->current_step,
-            'baseUrl'     => esc_url_raw( remove_query_arg( [ 'step', '_admin_sw_nonce' ] ) ),
-            'nonce'       => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
+            'initialStep' => $this->payload_keys[ $this->current_step ] ?? $this->current_step,
         ];
 
         wp_add_inline_script(
@@ -499,14 +495,15 @@ class SetupWizard extends DokanSetupWizard {
             return $this->step_order;
         }
 
-        $map   = $this->payload_step_map();
         $order = [];
 
         foreach ( array_keys( $this->steps ) as $step ) {
             $order[] = [
-                'key'      => $map[ $step ] ?? $step,
+                // A step that bootstrapped no payload keeps its own key, so the rail still counts it.
+                'key'      => $this->payload_keys[ $step ] ?? $step,
                 'stepArg'  => $step,
                 'numbered' => 'introduction' !== $step,
+                'centred'  => $this->step_is_centred( $step ),
                 'url'      => esc_url_raw( $this->get_step_link( $step ) ),
             ];
         }
@@ -514,6 +511,22 @@ class SetupWizard extends DokanSetupWizard {
         $this->step_order = $order;
 
         return $order;
+    }
+
+    /**
+     * Whether a step renders as a centred card rather than a form sheet.
+     *
+     * The PHP shell paints the first frame and React re-applies it on every
+     * step change, so the rule lives in one place.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $step Step key.
+     *
+     * @return bool
+     */
+    protected function step_is_centred( string $step ): bool {
+        return in_array( $step, [ 'introduction', 'next_steps' ], true );
     }
 
     /**
@@ -526,10 +539,15 @@ class SetupWizard extends DokanSetupWizard {
      * @return string
      */
     public function get_step_link( string $step ): string {
+        // One nonce per request: the rail alone asks for a link per step.
+        if ( null === $this->step_nonce ) {
+            $this->step_nonce = wp_create_nonce( 'dokan_admin_setup_wizard_nonce' );
+        }
+
         return add_query_arg(
             [
                 'step'            => $step,
-                '_admin_sw_nonce' => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
+                '_admin_sw_nonce' => $this->step_nonce,
             ]
         );
     }
@@ -660,7 +678,7 @@ class SetupWizard extends DokanSetupWizard {
     endif;
 		?>
 		<?php // `dokan-vsw` is the marker the React chrome styles hang off — the legacy body deliberately never carries it. ?>
-    <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard dokan-vsw dokan-vsw-step-<?php echo esc_attr( $this->current_step ); ?><?php echo in_array( $this->current_step, [ 'introduction', 'next_steps' ], true ) ? ' dokan-vsw-center' : ' dokan-vsw-form'; ?>">
+    <body class="wc-setup wp-core-ui dokan-vendor-setup-wizard dokan-vsw dokan-vsw-step-<?php echo esc_attr( $this->current_step ); ?><?php echo $this->step_is_centred( $this->current_step ) ? ' dokan-vsw-center' : ' dokan-vsw-form'; ?>">
     <header class="dokan-vsw-topbar">
         <h1 id="wc-logo" class="dokan-vsw-brand">
             <a href="<?php echo esc_url( home_url() ); ?>">
@@ -1377,15 +1395,18 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     protected function set_steps() {
+        // `payload` is the React counterpart of `view`: the step's own bootstrap builder.
         $steps = [
             'introduction' => [
                 'name'    => __( 'Introduction', 'dokan-lite' ),
                 'view'    => [ $this, 'dokan_setup_introduction' ],
+                'payload' => [ $this, 'intro_step_payload' ],
                 'handler' => '',
             ],
             'store'        => [
                 'name'    => __( 'Store', 'dokan-lite' ),
                 'view'    => [ $this, 'dokan_setup_store' ],
+                'payload' => [ $this, 'store_step_payload' ],
                 'handler' => [ $this, 'dokan_setup_store_save' ],
             ],
         ];
@@ -1396,6 +1417,7 @@ class SetupWizard extends DokanSetupWizard {
             $steps['payment'] = [
                 'name'    => __( 'Payment', 'dokan-lite' ),
                 'view'    => [ $this, 'dokan_setup_payment' ],
+                'payload' => [ $this, 'payment_step_payload' ],
                 // Harmless in React mode — that step saves over REST and never posts `save_step`.
                 'handler' => [ $this, 'dokan_setup_payment_save' ],
             ];
@@ -1404,6 +1426,7 @@ class SetupWizard extends DokanSetupWizard {
         $steps['next_steps'] = [
             'name'    => __( 'Ready!', 'dokan-lite' ),
             'view'    => [ $this, 'dokan_setup_ready' ],
+            'payload' => [ $this, 'ready_step_payload' ],
             'handler' => '',
         ];
 

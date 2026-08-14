@@ -176,6 +176,36 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
+     * Whether a switchable surface should render its legacy UI.
+     *
+     * The preference is the site-wide `dokan_appearance` admin option, not a
+     * per-user setting — `$user_id` only guards anonymous contexts. Every
+     * surface stores `legacy` by default and the admin setup wizard flips it to
+     * `latest`, so an upgraded site keeps its legacy UI until an admin opts in.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $option_key `dokan_appearance` sub-key holding the choice.
+     * @param int    $user_id    Optional. Defaults to current user.
+     *
+     * @return bool
+     */
+    protected function is_surface_legacy_preferred( string $option_key, int $user_id = 0 ): bool {
+        if ( ! $user_id ) {
+            $user_id = get_current_user_id();
+        }
+
+        // Anonymous context (cron, emails without a current user) → prefer the new UI.
+        if ( ! $user_id ) {
+            return false;
+        }
+
+        $appearance = get_option( 'dokan_appearance', [] );
+
+        return ! isset( $appearance[ $option_key ] ) || 'latest' !== $appearance[ $option_key ];
+    }
+
+    /**
      * Whether the given user prefers the legacy product editor.
      *
      * Defaults to `false` — the new (React) product editor.
@@ -187,21 +217,7 @@ class LegacySwitcher implements Hookable {
      * @return bool
      */
     public function is_product_editor_legacy_preferred( int $user_id = 0 ): bool {
-        if ( ! $user_id ) {
-            $user_id = get_current_user_id();
-        }
-
-        // Anonymous context (cron, emails without a current user) → prefer the new editor.
-        if ( ! $user_id ) {
-            return false;
-        }
-
-        $appearance = get_option( 'dokan_appearance', [] );
-        if ( isset( $appearance['vendor_product_editor'] ) && 'latest' === $appearance['vendor_product_editor'] ) {
-            return false;
-        }
-
-        return true;
+        return $this->is_surface_legacy_preferred( 'vendor_product_editor', $user_id );
     }
 
     /**
@@ -220,21 +236,7 @@ class LegacySwitcher implements Hookable {
      * @return bool
      */
     public function is_store_settings_legacy_preferred( int $user_id = 0 ): bool {
-        if ( ! $user_id ) {
-            $user_id = get_current_user_id();
-        }
-
-        // Anonymous context (cron, emails without a current user) → prefer the new page.
-        if ( ! $user_id ) {
-            return false;
-        }
-
-        $appearance = get_option( 'dokan_appearance', [] );
-        if ( isset( $appearance['vendor_store_settings'] ) && 'latest' === $appearance['vendor_store_settings'] ) {
-            return false;
-        }
-
-        return true;
+        return $this->is_surface_legacy_preferred( 'vendor_store_settings', $user_id );
     }
 
     /**
@@ -253,21 +255,7 @@ class LegacySwitcher implements Hookable {
      * @return bool
      */
     public function is_setup_wizard_legacy_preferred( int $user_id = 0 ): bool {
-        if ( ! $user_id ) {
-            $user_id = get_current_user_id();
-        }
-
-        // Anonymous context (cron, emails without a current user) → prefer the new wizard.
-        if ( ! $user_id ) {
-            return false;
-        }
-
-        $appearance = get_option( 'dokan_appearance', [] );
-        if ( isset( $appearance['vendor_setup_wizard'] ) && 'latest' === $appearance['vendor_setup_wizard'] ) {
-            return false;
-        }
-
-        return true;
+        return $this->is_surface_legacy_preferred( 'vendor_setup_wizard', $user_id );
     }
 
     /**

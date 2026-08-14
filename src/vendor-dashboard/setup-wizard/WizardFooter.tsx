@@ -6,7 +6,6 @@ import CreatingOverlay from './CreatingOverlay';
 import { useStepNav } from './step-nav';
 
 type WizardFooterProps = {
-    nextLabel?: string;
     // Resolves true to advance; false/throw keeps the vendor on the step.
     onNext: () => Promise< boolean >;
     busy?: boolean;
@@ -16,13 +15,13 @@ type WizardFooterProps = {
 
 // Back pinned left, Skip + Next right. Every action moves the SPA — no navigation.
 export default function WizardFooter( {
-    nextLabel,
     onNext,
     busy = false,
     skippable = true,
 }: WizardFooterProps ) {
-    const { next, previous, goTo, isNextReady } = useStepNav();
+    const { next, previous, goTo } = useStepNav();
     const [ advancing, setAdvancing ] = useState( false );
+    const isNextReady = 'ready' === next?.key;
 
     const advance = () => {
         if ( next ) {
@@ -82,7 +81,7 @@ export default function WizardFooter( {
                         disabled={ busy || advancing }
                         className="px-5"
                     >
-                        { nextLabel ?? __( 'Next', 'dokan-lite' ) }
+                        { __( 'Next', 'dokan-lite' ) }
                     </Button>
                 </span>
             </div>

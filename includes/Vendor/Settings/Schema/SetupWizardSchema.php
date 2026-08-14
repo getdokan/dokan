@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Vendor\Settings\Schema;
 
-use WC_Countries;
-
 /**
  * Setup wizard store-step flat-array schema.
  *
@@ -424,7 +422,8 @@ class SetupWizardSchema {
      * @return bool
      */
     protected static function country_requires_state( string $country ): bool {
-        $states = ( new WC_Countries() )->states;
+        // The request-wide singleton: a fresh WC_Countries re-parses WooCommerce's 96 KB states file.
+        $states = WC()->countries->get_states();
 
         return ! isset( $states[ $country ] ) || count( (array) $states[ $country ] ) > 0;
     }

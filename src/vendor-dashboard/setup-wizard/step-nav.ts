@@ -5,7 +5,6 @@ export type StepNav = {
     next?: WizardStepOrder;
     previous?: WizardStepOrder;
     goTo: ( step: WizardStepOrder ) => void;
-    isNextReady: boolean;
 };
 
 // Steps move through this instead of navigating, so the wizard stays a single page load.
