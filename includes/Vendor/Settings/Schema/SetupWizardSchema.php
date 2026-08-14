@@ -186,8 +186,10 @@ class SetupWizardSchema {
         }
 
         if ( in_array( 'bank', $active, true ) ) {
-            $bank       = (array) ( $payment['bank'] ?? [] );
-            $gateways[] = [
+            $bank = (array) ( $payment['bank'] ?? [] );
+            // Marked, not enforced: a withdrawal needs these, but onboarding lets the vendor come back for them.
+            $required_keys = array_keys( dokan_bank_payment_required_fields() );
+            $gateways[]    = [
                 'id'          => 'bank',
                 'title'       => dokan_withdraw_get_method_title( 'bank' ),
                 // The admin Withdraw settings icon set — tinted rounded-square logos per the mock.
@@ -195,14 +197,16 @@ class SetupWizardSchema {
                 'fields'      => [
                     [
                         'key'         => 'ac_name',
+                        'required'    => in_array( 'ac_name', $required_keys, true ),
                         'label'       => __( 'Account Holder Name', 'dokan-lite' ),
                         'placeholder' => __( 'Mr. John Doe', 'dokan-lite' ),
                     ],
                     [
-                        'key'     => 'ac_type',
-                        'label'   => __( 'Account Type', 'dokan-lite' ),
-                        'input'   => 'select',
-                        'options' => [
+                        'key'      => 'ac_type',
+                        'required' => in_array( 'ac_type', $required_keys, true ),
+                        'label'    => __( 'Account Type', 'dokan-lite' ),
+                        'input'    => 'select',
+                        'options'  => [
                             [
                                 'value' => 'personal',
                                 'label' => __( 'Personal', 'dokan-lite' ),
@@ -215,11 +219,13 @@ class SetupWizardSchema {
                     ],
                     [
                         'key'         => 'ac_number',
+                        'required'    => in_array( 'ac_number', $required_keys, true ),
                         'label'       => __( 'Account Number', 'dokan-lite' ),
                         'placeholder' => '12345678',
                     ],
                     [
                         'key'         => 'routing_number',
+                        'required'    => in_array( 'routing_number', $required_keys, true ),
                         'label'       => __( 'Routing Number', 'dokan-lite' ),
                         'placeholder' => 'BANK1234',
                     ],
@@ -267,7 +273,7 @@ class SetupWizardSchema {
                 'type'        => 'page',
                 'title'       => __( 'Payment', 'dokan-lite' ),
                 // On the page (not the section) so the engine renders it under the heading, admin-settings style.
-                'description' => __( 'Payment is crucial in the setup—customers pay through these methods, while vendors withdraw using those.', 'dokan-lite' ),
+                'description' => __( 'Payment is crucial in the setup. Customers pay through these methods, while vendors withdraw using those.', 'dokan-lite' ),
             ],
             [
                 'id'       => 'payment_section',
@@ -291,7 +297,66 @@ class SetupWizardSchema {
         ];
 
         /** This filter is documented in includes/Vendor/Settings/Schema/SetupWizardSchema.php */
-        return apply_filters( 'dokan_setup_wizard_schema', $elements, $vendor_id, 'payment' );
+        $elements = apply_filters( 'dokan_setup_wizard_schema', $elements, $vendor_id, 'payment' );
+
+        return self::append_remaining_gateways( $elements, $active );
+    }
+
+    /**
+     * Give every active withdraw method a row, even the ones no schema describes.
+     *
+     * The legacy step rendered each method's `callback`, so connect-style
+     * gateways (Stripe Express, Paystack, Razorpay, …) had their button here.
+     * Their OAuth screens can't be schema-driven, but dropping them silently
+     * left the vendor thinking the marketplace had no such payout method — and
+     * a marketplace running only those got an empty step. They now appear with
+     * a link to the dashboard payment settings that owns the real flow.
+     *
+     * Runs after the step filter so Pro's own gateway configs win.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array    $elements Flat schema elements.
+     * @param string[] $active   Active withdraw method keys.
+     *
+     * @return array
+     */
+    protected static function append_remaining_gateways( array $elements, array $active ): array {
+        foreach ( $elements as &$element ) {
+            if ( 'payment_methods' !== ( $element['id'] ?? '' ) ) {
+                continue;
+            }
+
+            $described = wp_list_pluck( (array) ( $element['gateways'] ?? [] ), 'id' );
+
+            foreach ( $active as $method_key ) {
+                if ( in_array( $method_key, $described, true ) ) {
+                    continue;
+                }
+
+                // The legacy step's own rule: a method with no callable callback rendered nothing, so neither does this row.
+                $method = dokan_withdraw_get_method( $method_key );
+
+                if ( empty( $method['callback'] ) || ! is_callable( $method['callback'] ) ) {
+                    continue;
+                }
+
+                $element['gateways'][] = [
+                    'id'      => $method_key,
+                    'title'   => dokan_withdraw_get_method_title( $method_key ),
+                    'logo'    => dokan_withdraw_get_method_icon( $method_key ),
+                    'connect' => [
+                        'url'         => esc_url_raw( dokan_get_navigation_url( 'settings/payment' ) ),
+                        'label'       => __( 'Open payment settings', 'dokan-lite' ),
+                        'description' => __( 'Connect this method from your dashboard payment settings after you finish the setup. Your progress is saved.', 'dokan-lite' ),
+                        // A new tab: the vendor is mid-onboarding and shouldn't lose the wizard.
+                        'newTab'      => true,
+                    ],
+                ];
+            }
+        }
+
+        return $elements;
     }
 
     /**

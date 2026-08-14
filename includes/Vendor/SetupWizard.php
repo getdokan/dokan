@@ -42,6 +42,30 @@ class SetupWizard extends DokanSetupWizard {
     protected bool $bootstrapping_steps = false;
 
     /**
+     * Markup other plugins echoed while assets were being enqueued.
+     *
+     * The enqueue action runs before the document opens, so anything printed
+     * from it would precede the doctype and drop the page into quirks mode —
+     * and the SPA fires that action once per step, so an identical blob (Pro's
+     * media templates) arrives several times. Held here, replayed once, inside
+     * the body.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string[]
+     */
+    protected array $deferred_output = [];
+
+    /**
+     * Memoized step order — the rail and the SPA must count the same steps.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var array|null
+     */
+    protected ?array $step_order = null;
+
+    /**
      * Hook in tabs.
      */
     public function __construct() {
@@ -109,10 +133,47 @@ class SetupWizard extends DokanSetupWizard {
             call_user_func( $this->steps[ $this->current_step ]['handler'] );
         }
 
+        // Enqueue callbacks that print (Pro's media templates, a gateway's inline script) would land ahead of the doctype.
+        ob_start();
         $this->enqueue_scripts();
+        $this->defer_output( (string) ob_get_clean() );
+
         ob_start();
         $this->set_setup_wizard_template();
         exit;
+    }
+
+    /**
+     * Hold markup an enqueue callback printed, for replay inside the document.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $html Captured markup.
+     *
+     * @return void
+     */
+    protected function defer_output( string $html ): void {
+        // An identical blob means the same consumer printed on more than one step pass.
+        if ( '' === trim( $html ) || in_array( $html, $this->deferred_output, true ) ) {
+            return;
+        }
+
+        $this->deferred_output[] = $html;
+    }
+
+    /**
+     * Replay what the enqueue callbacks printed, now that the body is open.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function render_deferred_output(): void {
+        foreach ( $this->deferred_output as $html ) {
+            echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Verbatim replay of markup another plugin printed; escaping it would corrupt the templates.
+        }
+
+        $this->deferred_output = [];
     }
 
     /**
@@ -224,7 +285,9 @@ class SetupWizard extends DokanSetupWizard {
      */
     protected function use_react_wizard(): bool {
         if ( null === $this->use_react ) {
-            $this->use_react = ! dokan_get_container()->get( LegacySwitcher::class )->is_setup_wizard_legacy_preferred();
+            $this->use_react = ! dokan_get_container()->get( LegacySwitcher::class )->is_setup_wizard_legacy_preferred()
+                // A checkout with no built bundle has nothing to mount — onboarding falls back to the legacy wizard rather than an empty step.
+                && file_exists( DOKAN_DIR . '/assets/js/vendor-setup-wizard.asset.php' );
         }
 
         return $this->use_react;
@@ -239,7 +302,14 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     protected function register_react_bundle(): void {
-        $asset = require DOKAN_DIR . '/assets/js/vendor-setup-wizard.asset.php';
+        $asset_file = DOKAN_DIR . '/assets/js/vendor-setup-wizard.asset.php';
+
+        if ( ! file_exists( $asset_file ) ) {
+            return;
+        }
+
+        $asset      = require $asset_file;
+        $style_file = DOKAN_DIR . '/assets/css/vendor-setup-wizard.css';
 
         // Must load in the head — the wizard's standalone template never calls wp_print_footer_scripts().
         wp_register_script(
@@ -256,7 +326,7 @@ class SetupWizard extends DokanSetupWizard {
             'dokan-vendor-setup-wizard',
             DOKAN_PLUGIN_ASSEST . '/css/vendor-setup-wizard.css',
             [ 'dokan-react-components' ],
-            (string) filemtime( DOKAN_DIR . '/assets/css/vendor-setup-wizard.css' )
+            file_exists( $style_file ) ? (string) filemtime( $style_file ) : DOKAN_PLUGIN_VERSION
         );
     }
 
@@ -280,6 +350,22 @@ class SetupWizard extends DokanSetupWizard {
             return;
         }
 
+        /**
+         * Filter a wizard step's bootstrapped payload.
+         *
+         * Every step — Lite's and Pro's alike — funnels through here, so this
+         * is where a step's chrome is tuned: `skippable => false` drops the
+         * footer's Skip button (Pro does that on the store step when a
+         * verification method is required).
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array  $payload  Step payload for the React mount.
+         * @param string $step     Payload step key.
+         * @param int    $store_id Vendor user ID.
+         */
+        $payload = (array) apply_filters( 'dokan_setup_wizard_step_payload', $payload, $step, $this->store_id );
+
         // Every step contributes to one registry: the SPA renders them all without another page load.
         wp_add_inline_script(
             'dokan-vendor-setup-wizard',
@@ -302,12 +388,19 @@ class SetupWizard extends DokanSetupWizard {
      */
     protected function payload_step_map(): array {
         $map = [
-            'introduction' => 'intro',
-            'store'        => 'store',
-            'payment'      => 'payment',
+            'introduction'  => 'intro',
+            'store'         => 'store',
+            'payment'       => 'payment',
             'verifications' => 'verification',
-            'next_steps'   => 'ready',
+            'next_steps'    => 'ready',
         ];
+
+        // A step nobody mapped keeps its own key: the rail still counts it and the SPA hands it a real page load instead of stepping over it.
+        foreach ( array_keys( $this->steps ) as $step ) {
+            if ( ! isset( $map[ $step ] ) ) {
+                $map[ $step ] = $step;
+            }
+        }
 
         /**
          * Filter the wizard step key => React payload key map.
@@ -344,7 +437,10 @@ class SetupWizard extends DokanSetupWizard {
             $this->current_step = $step;
             $_GET['step']       = $step;
 
+            // Consumers that print (Pro's media templates) would otherwise repeat their markup once per step.
+            ob_start();
             do_action( 'dokan_setup_wizard_enqueue_scripts' );
+            $this->defer_output( (string) ob_get_clean() );
         }
 
         $this->bootstrapping_steps = false;
@@ -368,22 +464,11 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     protected function bootstrap_wizard_shell(): void {
-        $map   = $this->payload_step_map();
-        $order = [];
-
-        foreach ( array_keys( $this->steps ) as $step ) {
-            if ( isset( $map[ $step ] ) ) {
-                $order[] = [
-                    'key'      => $map[ $step ],
-                    'stepArg'  => $step,
-                    'numbered' => 'introduction' !== $step,
-                ];
-            }
-        }
+        $map = $this->payload_step_map();
 
         $shell = [
-            'order'       => $order,
-            'initialStep' => $map[ $this->current_step ] ?? 'intro',
+            'order'       => $this->wizard_step_order(),
+            'initialStep' => $map[ $this->current_step ] ?? $this->current_step,
             'baseUrl'     => esc_url_raw( remove_query_arg( [ 'step', '_admin_sw_nonce' ] ) ),
             'nonce'       => wp_create_nonce( 'dokan_admin_setup_wizard_nonce' ),
         ];
@@ -394,6 +479,41 @@ class SetupWizard extends DokanSetupWizard {
             . 'window.dokanSetupWizard.shell = ' . wp_json_encode( $shell ) . ';',
             'before'
         );
+    }
+
+    /**
+     * Every registered step, in wizard order.
+     *
+     * The server-rendered rail and the React one both read this, so their
+     * "Step N of M" can't drift. Each entry carries a real step URL: a step
+     * that bootstrapped no React payload (an older Pro's verification view, a
+     * third-party step) gets a page load from the SPA instead of being
+     * stepped over.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    protected function wizard_step_order(): array {
+        if ( null !== $this->step_order ) {
+            return $this->step_order;
+        }
+
+        $map   = $this->payload_step_map();
+        $order = [];
+
+        foreach ( array_keys( $this->steps ) as $step ) {
+            $order[] = [
+                'key'      => $map[ $step ] ?? $step,
+                'stepArg'  => $step,
+                'numbered' => 'introduction' !== $step,
+                'url'      => esc_url_raw( $this->get_step_link( $step ) ),
+            ];
+        }
+
+        $this->step_order = $order;
+
+        return $order;
     }
 
     /**
@@ -415,23 +535,6 @@ class SetupWizard extends DokanSetupWizard {
     }
 
     /**
-     * Whether the given step is the last one before the Ready screen — those
-     * transitions show the "Creating your Store" overlay.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $step Step key.
-     *
-     * @return bool
-     */
-    protected function next_step_is_ready( string $step ): bool {
-        $keys     = array_keys( $this->steps );
-        $position = array_search( $step, $keys, true );
-
-        return false !== $position && 'next_steps' === ( $keys[ $position + 1 ] ?? '' );
-    }
-
-    /**
      * Intro card payload.
      *
      * @since DOKAN_SINCE
@@ -443,12 +546,12 @@ class SetupWizard extends DokanSetupWizard {
         $logo_url = $this->custom_logo ? $this->custom_logo : get_site_icon_url( 96 );
 
         return [
-            'step'        => 'intro',
-            'logoUrl'     => $logo_url ? esc_url_raw( $logo_url ) : '',
-            'siteName'    => get_bloginfo( 'name' ),
-            'message'     => wp_kses_post( dokan_get_option( 'setup_wizard_message', 'dokan_general', self::default_wizard_message() ) ),
-            'nextStepUrl' => esc_url_raw( $this->get_next_step_link() ),
-            'skipUrl'     => esc_url_raw( $this->dashboard_home_url() ),
+            'step'     => 'intro',
+            'logoUrl'  => $logo_url ? esc_url_raw( $logo_url ) : '',
+            'siteName' => get_bloginfo( 'name' ),
+            'message'  => wp_kses_post( dokan_get_option( 'setup_wizard_message', 'dokan_general', self::default_wizard_message() ) ),
+            // The only step link the SPA still needs: Skip leaves the wizard entirely.
+            'skipUrl'  => esc_url_raw( $this->dashboard_home_url() ),
         ];
     }
 
@@ -490,12 +593,9 @@ class SetupWizard extends DokanSetupWizard {
      */
     protected function store_step_payload(): array {
         return [
-            'step'        => 'store',
-            'schema'      => Settings\Schema\SetupWizardSchema::get_schema( $this->store_id ),
-            'endpoint'    => '/dokan/v1/vendor-onboarding/store',
-            'nextStepUrl' => esc_url_raw( $this->get_next_step_link() ),
-            'backUrl'     => esc_url_raw( $this->get_step_link( 'introduction' ) ),
-            'skipUrl'     => esc_url_raw( $this->get_next_step_link() ),
+            'step'     => 'store',
+            'schema'   => Settings\Schema\SetupWizardSchema::get_schema( $this->store_id ),
+            'endpoint' => '/dokan/v1/vendor-onboarding/store',
         ];
     }
 
@@ -508,13 +608,9 @@ class SetupWizard extends DokanSetupWizard {
      */
     protected function payment_step_payload(): array {
         return [
-            'step'            => 'payment',
-            'schema'          => Settings\Schema\SetupWizardSchema::get_payment_schema( $this->store_id ),
-            'endpoint'        => '/dokan/v1/vendor-onboarding/payment',
-            'nextStepUrl'     => esc_url_raw( $this->get_next_step_link() ),
-            'backUrl'         => esc_url_raw( $this->get_step_link( 'store' ) ),
-            'skipUrl'         => esc_url_raw( $this->get_next_step_link() ),
-            'creatingOverlay' => $this->next_step_is_ready( 'payment' ),
+            'step'     => 'payment',
+            'schema'   => Settings\Schema\SetupWizardSchema::get_payment_schema( $this->store_id ),
+            'endpoint' => '/dokan/v1/vendor-onboarding/payment',
         ];
     }
 
@@ -590,6 +686,11 @@ class SetupWizard extends DokanSetupWizard {
     /**
      * The Figma topbar rail: "Step N of M" + a linear progress track.
      *
+     * Deliberately not an overridable template: React owns this node from the
+     * moment it mounts (it empties the host and portals its own rail in), so a
+     * theme override would survive exactly one frame. The markup is kept in
+     * step with `ProgressRail.tsx`, and both count `wizard_step_order()`.
+     *
      * The intro is un-numbered (matching the legacy rail, which shifted it
      * out), so it renders no rail at all.
      *
@@ -598,28 +699,49 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     protected function render_progress_rail() {
-        if ( 'introduction' === $this->current_step ) {
-            return;
-        }
-
-        $numbered = array_values( array_diff( array_keys( $this->steps ), [ 'introduction' ] ) );
-        $total    = count( $numbered );
-        $position = array_search( $this->current_step, $numbered, true );
-
-        if ( false === $position || $total < 1 ) {
-            return;
-        }
-
-        ++$position;
-
-        dokan_get_template(
-            'vendor-setup-wizard/progress-rail.php',
-            [
-                'position' => $position,
-                'total'    => $total,
-                'percent'  => $total > 1 ? (int) round( ( ( $position - 1 ) / ( $total - 1 ) ) * 100 ) : 100,
-            ]
+        $numbered = array_values(
+            array_filter(
+                $this->wizard_step_order(),
+                static function ( $step ) {
+                    return ! empty( $step['numbered'] );
+                }
+            )
         );
+
+        $total    = count( $numbered );
+        $position = 0;
+
+        foreach ( $numbered as $index => $step ) {
+            if ( $step['stepArg'] === $this->current_step ) {
+                $position = $index + 1;
+                break;
+            }
+        }
+
+        if ( $position < 1 || $total < 1 ) {
+            return;
+        }
+
+        $percent = $total > 1 ? (int) round( ( ( $position - 1 ) / ( $total - 1 ) ) * 100 ) : 100;
+        ?>
+        <div class="dokan-vsw-rail">
+            <span class="dokan-vsw-rail-label">
+                <?php
+                /* translators: 1: current step number 2: total step count */
+                printf( esc_html__( 'Step %1$d of %2$d', 'dokan-lite' ), (int) $position, (int) $total );
+                ?>
+            </span>
+            <span class="dokan-vsw-rail-track">
+                <span class="dokan-vsw-rail-fill" style="width: <?php echo (int) $percent; ?>%"></span>
+            </span>
+            <span class="dokan-vsw-rail-percent">
+                <?php
+                /* translators: %d: completion percentage */
+                printf( esc_html__( '%d%% Complete', 'dokan-lite' ), (int) $percent );
+                ?>
+            </span>
+        </div>
+        <?php
     }
 
     /**
@@ -641,6 +763,9 @@ class SetupWizard extends DokanSetupWizard {
         <a class="wc-return-to-dashboard" href="<?php echo esc_url( site_url() ); ?>"><?php esc_attr_e( 'Return to the Marketplace', 'dokan-lite' ); ?></a>
             <?php
         }
+
+        // Whatever the enqueue callbacks printed belongs here — the document is open and each blob lands once.
+        $this->render_deferred_output();
 		?>
     </body>
     </html>

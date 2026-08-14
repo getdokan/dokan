@@ -12,7 +12,7 @@ import VerificationStep from './VerificationStep';
 import ReadyCard from './ReadyCard';
 import ProgressRail from './ProgressRail';
 import { StepNavContext } from './step-nav';
-import type { WizardBootstrap, WizardStepKey } from './types';
+import type { WizardBootstrap, WizardStepKey, WizardStepOrder } from './types';
 
 const stepComponents = {
     intro: IntroCard,
@@ -30,7 +30,7 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
     const order = useMemo( () => shell?.order ?? [], [ shell ] );
 
     const [ current, setCurrent ] = useState< WizardStepKey >(
-        shell?.initialStep ?? 'intro'
+        ( shell?.initialStep as WizardStepKey ) ?? 'intro'
     );
 
     // Claim the rail host once, dropping PHP's first frame so React owns it from here.
@@ -73,15 +73,19 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
     }, [ current, order ] );
 
     const go = useCallback(
-        ( step: WizardStepKey, push = true ) => {
+        ( entry: WizardStepOrder, push = true ) => {
+            const step = entry.key as WizardStepKey;
+
+            // A step this bundle can't mount — an older Pro's verification view,
+            // a third-party step — still belongs in the flow: hand it its page.
             if ( ! boot.steps[ step ] ) {
+                window.location.assign( entry.url );
                 return;
             }
 
             if ( push && shell ) {
-                const entry = order.find( ( s ) => s.key === step );
                 const url = `${ shell.baseUrl }&step=${ encodeURIComponent(
-                    entry?.stepArg ?? step
+                    entry.stepArg
                 ) }&_admin_sw_nonce=${ encodeURIComponent( shell.nonce ) }`;
 
                 window.history.pushState( { dokanWizardStep: step }, '', url );
@@ -90,7 +94,7 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
             setCurrent( step );
             window.scrollTo( { top: 0 } );
         },
-        [ boot.steps, order, shell ]
+        [ boot.steps, shell ]
     );
 
     // The landing entry is browser-made and carries no state, so Back would strand the wizard on the step it reached.
@@ -107,28 +111,26 @@ export default function Wizard( { boot }: { boot: WizardBootstrap } ) {
         const onPop = ( event: PopStateEvent ) => {
             const step = ( event.state as { dokanWizardStep?: WizardStepKey } )
                 ?.dokanWizardStep;
+            const entry = order.find( ( s ) => s.key === step );
 
-            if ( step && boot.steps[ step ] ) {
-                go( step, false );
+            if ( entry && step && boot.steps[ step ] ) {
+                go( entry, false );
             }
         };
 
         window.addEventListener( 'popstate', onPop );
         return () => window.removeEventListener( 'popstate', onPop );
-    }, [ boot.steps, go ] );
+    }, [ boot.steps, go, order ] );
 
-    const neighbour = ( relative: number ): WizardStepKey | undefined => {
-        const found = order[ indexOf( current ) + relative ];
-
-        return found && boot.steps[ found.key ] ? found.key : undefined;
-    };
+    const neighbour = ( relative: number ): WizardStepOrder | undefined =>
+        order[ indexOf( current ) + relative ];
 
     const nextStep = neighbour( 1 );
     const nav = {
         next: nextStep,
         previous: neighbour( -1 ),
         goTo: go,
-        isNextReady: 'ready' === nextStep,
+        isNextReady: 'ready' === nextStep?.key,
     };
 
     const payload = boot.steps[ current ];

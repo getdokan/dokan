@@ -30,7 +30,12 @@ const statusLabel: Record< string, string > = {
     rejected: __( 'Rejected', 'dokan-lite' ),
 };
 
-// `verification_methods` variant — pending can be cancelled and re-submitted, rejected can re-submit, approved is final.
+// The document belongs to a live submission: Edit opens on it, a fresh
+// submission starts empty rather than resurrecting a withdrawn or rejected file.
+const liveDocument = ( method: VerificationMethod ) =>
+    'pending' === method.status ? method.document ?? null : null;
+
+// `verification_methods` variant — pending can be edited in place or cancelled, rejected can re-submit, approved is final.
 const VerificationMethodsField = ( {
     element,
 }: {
@@ -48,7 +53,7 @@ const VerificationMethodsField = ( {
                 method.id,
                 {
                     open: false,
-                    attachment: method.document ?? null,
+                    attachment: liveDocument( method ),
                     submitting: false,
                     status: method.status,
                     requestId: method.requestId ?? 0,
@@ -165,10 +170,14 @@ const VerificationMethodsField = ( {
         try {
             await retireRequest( row.requestId );
 
+            method.document = null;
+
             patchRow( method.id, {
                 submitting: false,
                 status: '',
                 requestId: 0,
+                // The withdrawn file isn't under review any more, so the next submission starts clean.
+                attachment: null,
             } );
             toast.success(
                 __( 'Verification request cancelled.', 'dokan-lite' )
@@ -391,7 +400,7 @@ const VerificationMethodsField = ( {
                                             patchRow( method.id, {
                                                 open: false,
                                                 attachment:
-                                                    method.document ?? null,
+                                                    liveDocument( method ),
                                             } )
                                         }
                                     >

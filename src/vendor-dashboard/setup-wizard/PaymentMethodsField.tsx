@@ -15,6 +15,7 @@ import {
     type SettingsElement,
 } from '@wedevs/plugin-ui';
 import { ChevronDown } from 'lucide-react';
+import { RequiredBadge } from '@src/dashboard/settings/store/fields/shared';
 import type { GatewayConfig, GatewayFieldConfig } from './types';
 
 type GatewayValues = Record< string, Record< string, string | boolean > >;
@@ -120,7 +121,11 @@ const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
                 htmlFor={ id }
                 className="flex flex-col gap-1.5 text-sm font-medium text-gray-700"
             >
-                { field.label }
+                <span className="flex items-center gap-1">
+                    { field.label }
+                    { /* Marked, not enforced: a withdrawal needs it, onboarding lets the vendor come back for it. */ }
+                    { field.required && <RequiredBadge /> }
+                </span>
                 { renderControl( gateway, field, id, current ) }
             </label>
         );
@@ -181,7 +186,19 @@ const PaymentMethodsField = ( { element }: { element: SettingsElement } ) => {
                                         variant="outline"
                                         className="border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                                         render={
-                                            <a href={ gateway.connect.url }>
+                                            <a
+                                                href={ gateway.connect.url }
+                                                target={
+                                                    gateway.connect.newTab
+                                                        ? '_blank'
+                                                        : undefined
+                                                }
+                                                rel={
+                                                    gateway.connect.newTab
+                                                        ? 'noopener noreferrer'
+                                                        : undefined
+                                                }
+                                            >
                                                 { gateway.connect.label }
                                             </a>
                                         }

@@ -10,6 +10,8 @@ type WizardFooterProps = {
     // Resolves true to advance; false/throw keeps the vendor on the step.
     onNext: () => Promise< boolean >;
     busy?: boolean;
+    // False drops Skip — a step the vendor has to complete (Pro's required verification).
+    skippable?: boolean;
 };
 
 // Back pinned left, Skip + Next right. Every action moves the SPA — no navigation.
@@ -17,6 +19,7 @@ export default function WizardFooter( {
     nextLabel,
     onNext,
     busy = false,
+    skippable = true,
 }: WizardFooterProps ) {
     const { next, previous, goTo, isNextReady } = useStepNav();
     const [ advancing, setAdvancing ] = useState( false );
@@ -65,7 +68,7 @@ export default function WizardFooter( {
                 ) }
 
                 <span className="inline-flex items-center gap-3">
-                    { next && (
+                    { next && skippable && (
                         <Button
                             variant="ghost"
                             className="border border-transparent text-gray-500 hover:border-gray-200 hover:bg-gray-50 hover:text-gray-900"

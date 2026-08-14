@@ -63,7 +63,10 @@ export default function VerificationStep( {
                 hookPrefix="dokan_vendor"
                 renderSaveButton={ () => null }
             />
-            <WizardFooter onNext={ () => Promise.resolve( true ) } />
+            <WizardFooter
+                onNext={ () => Promise.resolve( true ) }
+                skippable={ false !== payload.skippable }
+            />
             <Toaster />
         </div>
     );

@@ -1,10 +1,10 @@
 import { createContext, useContext } from '@wordpress/element';
-import type { WizardStepKey } from './types';
+import type { WizardStepOrder } from './types';
 
 export type StepNav = {
-    next?: WizardStepKey;
-    previous?: WizardStepKey;
-    goTo: ( step: WizardStepKey ) => void;
+    next?: WizardStepOrder;
+    previous?: WizardStepOrder;
+    goTo: ( step: WizardStepOrder ) => void;
     isNextReady: boolean;
 };
 

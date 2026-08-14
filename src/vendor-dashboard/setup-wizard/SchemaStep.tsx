@@ -108,7 +108,11 @@ export default function SchemaStep( {
                     return null;
                 } }
             />
-            <WizardFooter onNext={ onNext } busy={ saving } />
+            <WizardFooter
+                onNext={ onNext }
+                busy={ saving }
+                skippable={ false !== payload.skippable }
+            />
             <Toaster />
         </div>
     );
