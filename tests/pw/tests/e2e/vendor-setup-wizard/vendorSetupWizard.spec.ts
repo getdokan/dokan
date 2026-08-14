@@ -6,6 +6,7 @@ import { LoginPage } from '@pages/loginPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 import { VendorSetupWizardPage, wizardData } from './vendorSetupWizardPage';
 
 const { USER_PASSWORD } = process.env;
@@ -15,9 +16,15 @@ test.describe('Vendor setup wizard (React) functionality', () => {
     let wizard: VendorSetupWizardPage;
     let vPage: Page;
     let sellerId: string;
+    let originalSetupWizard: string;
 
     test.beforeAll(async ({ browser }) => {
         apiUtils = new ApiUtils(await request.newContext());
+
+        // The React wizard is gated behind the appearance switch; a partially-seeded
+        // env would otherwise render the legacy wizard and fail every assertion here.
+        const [originalAppearance] = await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_setup_wizard: 'latest' });
+        originalSetupWizard = originalAppearance?.vendor_setup_wizard ?? 'legacy';
 
         // A fresh vendor per worker: the wizard SAVES profile data, and mutating
         // the shared vendor1 fixture would bleed into parallel specs.
@@ -31,6 +38,7 @@ test.describe('Vendor setup wizard (React) functionality', () => {
     });
 
     test.afterAll(async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_setup_wizard: originalSetupWizard });
         await vPage?.close();
         await apiUtils?.dispose();
     });
@@ -43,10 +51,16 @@ test.describe('Vendor setup wizard (React) functionality', () => {
 
         test('vendor can complete the setup wizard end to end', { tag: ['@lite', '@vendor'] }, async () => {
             await wizard.gotoWizard();
+            await wizard.markPage();
             await wizard.startJourney();
+            await wizard.expectStepRail(1);
 
             await wizard.fillStoreStep(wizardData.store);
             await wizard.submitStoreStep();
+            await wizard.expectStepRail(2);
+
+            // Steps swap client-side: the whole wizard is one page load.
+            await wizard.expectSamePageLoad();
 
             const afterStore = await dbUtils.getUserMeta(sellerId, 'dokan_profile_settings');
             expect(afterStore.address).toMatchObject({
@@ -84,15 +98,26 @@ test.describe('Vendor setup wizard (React) functionality', () => {
             await wizard.startJourney();
             await wizard.expectStorePrefilled(wizardData.store);
         });
-    });
 
-    test.describe('negative cases', () => {
-        test('partial bank details are rejected on the payment step', { tag: ['@lite', '@vendor', '@negative'] }, async () => {
+        test('a half-filled bank form is accepted, since payment can be finished later', { tag: ['@lite', '@vendor'] }, async () => {
             await wizard.gotoWizard();
             await wizard.startJourney();
             await wizard.fillStoreStep(wizardData.store);
             await wizard.submitStoreStep();
             await wizard.submitPartialBank(wizardData.partialBankHolder);
+
+            const meta = await dbUtils.getUserMeta(sellerId, 'dokan_profile_settings');
+            expect(meta.payment.bank.ac_name).toBe(wizardData.partialBankHolder);
+        });
+    });
+
+    test.describe('negative cases', () => {
+        test('a malformed payment email is rejected on the payment step', { tag: ['@lite', '@vendor', '@negative'] }, async () => {
+            await wizard.gotoWizard();
+            await wizard.startJourney();
+            await wizard.fillStoreStep(wizardData.store);
+            await wizard.submitStoreStep();
+            await wizard.submitMalformedPaypal(wizardData.malformedEmail);
         });
 
         test('guest cannot access the wizard from its URL', { tag: ['@lite', '@guest', '@negative'] }, async ({ browser }) => {

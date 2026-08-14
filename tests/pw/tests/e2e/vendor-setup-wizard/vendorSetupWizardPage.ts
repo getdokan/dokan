@@ -21,6 +21,7 @@ export const wizardData = {
         street2: `Suite ${faker.number.int({ min: 1, max: 99 })}`,
     },
     paypalEmail: faker.internet.email().toLowerCase(),
+    malformedEmail: 'not-an-email',
     partialBankHolder: 'Only Holder Name',
 };
 
@@ -35,12 +36,13 @@ export class VendorSetupWizardPage {
 
     async expectWelcome(): Promise<void> {
         await expect(this.page.getByRole('heading', { name: 'Welcome to the Marketplace!' })).toBeVisible();
-        await expect(this.page.getByRole('link', { name: 'Start Journey' })).toBeVisible();
+        // Start Journey moves the SPA, so it's a button; Skip leaves the wizard and stays a link.
+        await expect(this.page.getByRole('button', { name: 'Start Journey' })).toBeVisible();
         await expect(this.page.getByRole('link', { name: 'Skip', exact: true })).toBeVisible();
     }
 
     async startJourney(): Promise<void> {
-        await this.page.getByRole('link', { name: 'Start Journey' }).click();
+        await this.page.getByRole('button', { name: 'Start Journey' }).click();
         await expect(this.page).toHaveURL(/step=store/);
         await expect(this.page.getByRole('heading', { name: 'Store', exact: true })).toBeVisible();
     }
@@ -107,10 +109,40 @@ export class VendorSetupWizardPage {
     async submitPartialBank(holderName: string): Promise<void> {
         await this.page.getByRole('button', { name: 'Bank Transfer' }).click();
         await this.page.getByLabel('Account Holder Name').fill(holderName);
+        // The fields a withdrawal needs are marked required, but onboarding can be finished later.
+        await expect(this.page.getByText('(Required)').first()).toBeVisible();
         await this.page.getByRole('button', { name: 'Next' }).click();
-        // The onboarding endpoint rejects a partial bank slice; the engine surfaces it inline.
+        await expect(this.page).not.toHaveURL(/step=payment/);
+    }
+
+    async submitMalformedPaypal(email: string): Promise<void> {
+        await this.page.getByRole('button', { name: 'PayPal', exact: true }).click();
+        await this.page.getByLabel('PayPal Email').fill(email);
+        await this.page.getByRole('button', { name: 'Next' }).click();
+        // Shape checks survive the relaxed required-field rules; the engine surfaces them inline.
         await expect(this.page.getByRole('alert')).toBeVisible();
         await expect(this.page).toHaveURL(/step=payment/);
+    }
+
+    // Total is left open: Pro adds steps (verification), so only the position is pinned.
+    async expectStepRail(position: number): Promise<void> {
+        await expect(this.page.getByText(new RegExp(`Step ${position} of \\d+`))).toBeVisible();
+    }
+
+    async goBack(): Promise<void> {
+        await this.page.getByRole('button', { name: 'Back' }).click();
+    }
+
+    // The SPA keeps the URL honest without a page load: the marker survives a step change.
+    async markPage(): Promise<void> {
+        await this.page.evaluate(() => {
+            ( window as any ).__dokanWizardPageMark = true;
+        });
+    }
+
+    async expectSamePageLoad(): Promise<void> {
+        const survived = await this.page.evaluate(() => Boolean( ( window as any ).__dokanWizardPageMark ));
+        expect(survived).toBe(true);
     }
 
     async expectWizardHiddenFromGuest(): Promise<void> {

@@ -394,15 +394,16 @@ them.
 
 ### Required Dokan options
 
-The 5.0.0+ React UI (vendor dashboard, product editor) is gated behind two
-options. Without them the legacy templates render and React-targeting tests
-fail at mount.
+The 5.0.0+ React UI (vendor dashboard, product editor, setup wizard) is gated
+behind three options. Without them the legacy templates render and
+React-targeting tests fail at mount.
 
 ```bash
 npm run wp-env run tests-cli wp eval '
     $a = get_option("dokan_appearance", []);
     $a["vendor_layout_style"]   = "latest";
     $a["vendor_product_editor"] = "latest";
+    $a["vendor_setup_wizard"]   = "latest";
     update_option("dokan_appearance", $a);
 '
 ```
