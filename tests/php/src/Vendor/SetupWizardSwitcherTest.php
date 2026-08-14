@@ -141,29 +141,14 @@ class SetupWizardSwitcherTest extends DokanTestCase {
     public function a_missing_bundle_falls_back_to_legacy() {
         $this->set_appearance( [ 'vendor_setup_wizard' => 'latest' ] );
 
-        $manifest = DOKAN_DIR . '/assets/js/vendor-setup-wizard.asset.php';
+        $wizard = new class() extends TestableSellerSetupWizard {
+            protected static function asset_manifest_path(): string {
+                return DOKAN_DIR . '/assets/js/there-is-no-such-bundle.asset.php';
+            }
+        };
 
-        if ( ! file_exists( $manifest ) ) {
-            $wizard = new TestableSellerSetupWizard();
-            $wizard->prime( $this->seller_id1 );
+        $wizard->prime( $this->seller_id1 );
 
-            $this->assertFalse( $wizard->uses_react() );
-
-            return;
-        }
-
-        $parked = $manifest . '.parked';
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- Test fixture: WP_Filesystem isn't bootstrapped in the unit suite.
-        rename( $manifest, $parked );
-
-        try {
-            $wizard = new TestableSellerSetupWizard();
-            $wizard->prime( $this->seller_id1 );
-
-            $this->assertFalse( $wizard->uses_react() );
-        } finally {
-            // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- Test fixture: WP_Filesystem isn't bootstrapped in the unit suite.
-            rename( $parked, $manifest );
-        }
+        $this->assertFalse( $wizard->uses_react() );
     }
 }

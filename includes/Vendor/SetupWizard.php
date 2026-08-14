@@ -305,7 +305,7 @@ class SetupWizard extends DokanSetupWizard {
         if ( null === $this->use_react ) {
             $this->use_react = ! dokan_get_container()->get( LegacySwitcher::class )->is_setup_wizard_legacy_preferred()
                 // A checkout with no built bundle has nothing to mount — onboarding falls back to the legacy wizard rather than an empty step.
-                && file_exists( self::asset_manifest_path() );
+                && file_exists( static::asset_manifest_path() );
         }
 
         return $this->use_react;
@@ -313,6 +313,9 @@ class SetupWizard extends DokanSetupWizard {
 
     /**
      * Where the built bundle's dependency manifest lives.
+     *
+     * Late static binding on purpose: a subclass can point the gate at another
+     * path without the caller reaching into the filesystem.
      *
      * @since DOKAN_SINCE
      *
@@ -332,7 +335,7 @@ class SetupWizard extends DokanSetupWizard {
      */
     protected function register_react_bundle(): void {
         // use_react_wizard() already proved the manifest is there.
-        $asset      = require self::asset_manifest_path();
+        $asset      = require static::asset_manifest_path();
         $style_file = DOKAN_DIR . '/assets/css/vendor-setup-wizard.css';
 
         // Must load in the head — the wizard's standalone template never calls wp_print_footer_scripts().
