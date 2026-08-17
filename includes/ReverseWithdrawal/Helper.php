@@ -716,6 +716,52 @@ class Helper {
     }
 
     /**
+     * Get the total of the vendor's reverse withdrawal payments that are not in the ledger yet.
+     *
+     * A payment reaches the ledger only when its order is completed, so orders still waiting on that are
+     * invisible to the balance and have to be accounted for separately before accepting another payment.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id
+     *
+     * @return float
+     */
+    public static function get_awaiting_payment_total( $vendor_id ) {
+        $orders = wc_get_orders(
+            [
+                'type'        => 'shop_order',
+                'customer_id' => $vendor_id,
+                // Only statuses an order can still reach `completed` from — anything else can never credit the ledger.
+                'status'      => [ 'wc-pending', 'wc-processing', 'wc-on-hold' ],
+                'limit'       => -1,
+            ]
+        );
+
+        if ( empty( $orders ) ) {
+            return 0.0;
+        }
+
+        $manager = new Manager();
+        $total   = 0.0;
+
+        foreach ( $orders as $order ) {
+            if ( ! self::has_reverse_withdrawal_payment_in_order( $order ) ) {
+                continue;
+            }
+
+            // A payment already written to the ledger is part of the balance, counting it here would deduct it twice.
+            if ( $manager->is_payment_inserted( $order->get_id() ) ) {
+                continue;
+            }
+
+            $total += (float) self::get_balance_from_order( $order );
+        }
+
+        return $total;
+    }
+
+    /**
      * This method will add reverse payment amount to cart
      *
      * @since 3.7.16
@@ -733,7 +779,8 @@ class Helper {
         }
 
         // The amount is client-supplied and lands in the vendor's ledger verbatim, so it must never exceed what they actually owe.
-        $balance_data = self::get_vendor_balance();
+        $vendor_id    = dokan_get_current_user_id();
+        $balance_data = self::get_vendor_balance( $vendor_id );
 
         if ( is_wp_error( $balance_data ) ) {
             return $balance_data;
@@ -744,6 +791,22 @@ class Helper {
 
         if ( $due <= 0 ) {
             return new WP_Error( 'no-due-balance', __( 'You do not have any due balance to pay.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        /*
+         * The ledger is only credited when the payment order completes, so the balance above still reads full while
+         * earlier payment orders sit unpaid. Without deducting them a vendor can stack several individually valid
+         * payments and over-credit the ledger once they all land.
+         */
+        $awaiting = self::get_awaiting_payment_total( $vendor_id );
+        $due      = (float) wc_format_decimal( $due - $awaiting, wc_get_price_decimals() );
+
+        if ( $due <= 0 ) {
+            return new WP_Error(
+                'payment-already-awaiting',
+                __( 'Your due balance is already covered by a payment awaiting completion. Please complete that payment first.', 'dokan-lite' ),
+                [ 'status' => 400 ]
+            );
         }
 
         // Compare as scaled integers so paying the exact outstanding balance is not rejected by IEEE-754 drift.

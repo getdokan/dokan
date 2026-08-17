@@ -109,11 +109,41 @@ class Order {
             return;
         }
 
+        $vendor_id = $order->get_customer_id();
+
+        /*
+         * The amount was reconciled when the order was placed, but the debt can shrink before it completes — another
+         * payment landing first, or an order created before this reconciliation existed. Clamp again here so the
+         * ledger can never take more credit than the vendor actually owes.
+         */
+        $balance_data = Helper::get_vendor_balance( $vendor_id );
+
+        if ( ! is_wp_error( $balance_data ) ) {
+            $due = (float) wc_format_decimal( $balance_data['balance'], wc_get_price_decimals() );
+
+            if ( $amount > $due ) {
+                $order->add_order_note(
+                    sprintf(
+                        /* translators: 1: amount paid in the order, 2: amount actually credited to the ledger */
+                        __( 'Reverse withdrawal payment of %1$s exceeded the outstanding balance, so %2$s was credited.', 'dokan-lite' ),
+                        wc_price( $amount ),
+                        wc_price( max( 0, $due ) )
+                    )
+                );
+
+                $amount = $due;
+            }
+        }
+
+        if ( $amount <= 0 ) {
+            return;
+        }
+
         // prepare item for database
         $args = [
             'trn_id'    => $order_id,
             'trn_type'  => 'vendor_payment',
-            'vendor_id' => $order->get_customer_id(),
+            'vendor_id' => $vendor_id,
             'credit'    => $amount,
         ];
 

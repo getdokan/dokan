@@ -121,6 +121,84 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     }
 
     /**
+     * A payment already awaiting completion is deducted, so stacked in-flight orders cannot over-credit.
+     *
+     * The ledger is only credited when the order completes, so without this the balance still reads full
+     * and every stacked payment passes the cap — N orders buying N times the real debt in free credit.
+     */
+    public function test_payment_awaiting_completion_blocks_a_second_full_payment() {
+        $this->assertTrue( Helper::add_payment_to_cart( self::DUE ) );
+        $this->create_awaiting_payment_order( self::DUE );
+
+        // Nothing has completed, so the raw balance is untouched — only the awaiting total stands in the way.
+        $this->assertSame( self::DUE, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+
+        $result = Helper::add_payment_to_cart( self::DUE );
+
+        $this->assertWPError( $result );
+        $this->assertSame( 'payment-already-awaiting', $result->get_error_code() );
+    }
+
+    /**
+     * Only the awaiting amount is held back — the rest of the balance stays payable.
+     */
+    public function test_remaining_balance_is_still_payable_while_a_payment_awaits() {
+        $this->create_awaiting_payment_order( self::DUE / 4 );
+
+        $remaining = self::DUE - ( self::DUE / 4 );
+
+        $this->assertTrue( Helper::add_payment_to_cart( $remaining ) );
+        $this->assertSame( $remaining, $this->cart_payment_amount() );
+
+        WC()->cart->empty_cart();
+
+        $result = Helper::add_payment_to_cart( $remaining + 0.01 );
+
+        $this->assertWPError( $result );
+        $this->assertSame( 'amount-exceeds-due-balance', $result->get_error_code() );
+    }
+
+    /**
+     * An order that never went through the cap still cannot push the ledger below zero.
+     *
+     * Orders placed before this reconciliation existed reach the completion sink unchecked, so the sink
+     * clamps the credit to what is actually owed rather than trusting the line item.
+     */
+    public function test_completion_never_credits_more_than_the_outstanding_balance() {
+        $order = $this->create_awaiting_payment_order( self::DUE * 3 );
+
+        $order->update_status( 'completed' );
+
+        $this->assertSame( 0.0, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+    }
+
+    /**
+     * Build a reverse-withdrawal payment order sitting in a status that has not credited the ledger yet.
+     */
+    protected function create_awaiting_payment_order( float $amount ): \WC_Order {
+        $order = wc_create_order( [ 'customer_id' => $this->seller_id1 ] );
+
+        $item = new \WC_Order_Item_Product();
+        $item->set_props(
+            [
+                'product_id' => Helper::get_reverse_withdrawal_base_product(),
+                'quantity'   => 1,
+                'subtotal'   => $amount,
+                'total'      => $amount,
+            ]
+        );
+        $item->add_meta_data( '_dokan_reverse_withdrawal_balance', $amount );
+
+        $order->add_item( $item );
+        $order->set_payment_method( 'cod' );
+        $order->calculate_totals();
+        $order->set_status( 'processing' );
+        $order->save();
+
+        return $order;
+    }
+
+    /**
      * Amount the reverse-withdrawal cart item actually carries — this is what reaches the ledger.
      */
     protected function cart_payment_amount(): ?float {
