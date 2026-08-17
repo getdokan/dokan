@@ -4,6 +4,26 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.14',
+        'released' => '2026-08-17',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevented unauthenticated visitors from reading a vendor\'s commission settings through the public store-categories endpoint.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented Shop Managers from installing or activating arbitrary plugins through Dokan\'s admin endpoints and setup wizard by requiring the proper plugin capabilities.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from clearing their reverse-withdrawal balance with an arbitrary payment amount by reconciling it against their actual outstanding debt.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.13',
         'released' => '2026-08-12',
         'changes'  => [

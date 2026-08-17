@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.13
+Stable tag: 5.0.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.14 ( Aug 17, 2026 ) =
+- **fix:** Prevented unauthenticated visitors from reading a vendor's commission settings through the public store-categories endpoint.
+- **fix:** Prevented Shop Managers from installing or activating arbitrary plugins through Dokan's admin endpoints and setup wizard by requiring the proper plugin capabilities.
+- **fix:** Prevented vendors from clearing their reverse-withdrawal balance with an arbitrary payment amount by reconciling it against their actual outstanding debt.
+
 = v5.0.13 ( Aug 12, 2026 ) =
 - **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
 - **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
@@ -396,14 +401,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
 - **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
 - **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
-
-= v5.0.9 ( Jul 14, 2026 ) =
-- **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
-- **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
-- **fix:** Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.
-- **fix:** Vendors can no longer give their customers download access to another vendor's downloadable files.
-- **fix:** Vendors can no longer change another vendor's product attributes.
-- **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
-- **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
