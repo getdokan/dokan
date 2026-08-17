@@ -2056,6 +2056,7 @@ class SettingsSchema {
                 'section_id' => 'privacy_settings',
                 'title'      => esc_html__( 'Privacy Policy Page', 'dokan-lite' ),
                 'description' => esc_html__( 'Choose which page displays your privacy policy.', 'dokan-lite' ),
+                'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
                 'options'    => self::get_lazy_page_options(),
                 'legacy_key' => [
 					'option' => 'dokan_privacy',
