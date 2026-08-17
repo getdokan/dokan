@@ -1343,7 +1343,7 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Address Fields', 'dokan-lite' ),
                 'description'   => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
-                'default'       => 'on',
+                'default'       => 'off',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
 					'value' => 'on',
@@ -1399,6 +1399,10 @@ class SettingsSchema {
                 'subpage_id'  => 'vendor_onboarding',
                 'title'       => esc_html__( 'Vendor Setup Wizard Message', 'dokan-lite' ),
                 'description' => esc_html__( 'Welcome message shown to vendors during setup.', 'dokan-lite' ),
+                // Carries the legacy default verbatim: with no default the field
+                // rendered empty and the first save of an untouched page replaced
+                // the shipped welcome copy with a blank string.
+                'default'     => __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ),
                 'legacy_key'    => [
                     'option' => 'dokan_general',
                     'field'  => 'setup_wizard_message',
@@ -1449,7 +1453,7 @@ class SettingsSchema {
                 'title'         => esc_html__( 'One Page Product Creation', 'dokan-lite' ),
                 'description'   => esc_html__( 'Add new product in single page view.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ),
-                'default'       => 'off',
+                'default'       => 'on',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
 					'value' => 'on',
@@ -1901,7 +1905,7 @@ class SettingsSchema {
                 'section_id'    => 'dokan_font_section',
                 'title'         => esc_html__( 'Dokan font-awesome Functionality', 'dokan-lite' ),
                 'description'   => esc_html__( "If disabled then Dokan font-awesome library won't be loaded in frontend.", 'dokan-lite' ),
-                'default'       => 'off',
+                'default'       => 'on',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enable', 'dokan-lite' ),
 					'value' => 'on',
@@ -2052,6 +2056,7 @@ class SettingsSchema {
                 'section_id' => 'privacy_settings',
                 'title'      => esc_html__( 'Privacy Policy Page', 'dokan-lite' ),
                 'description' => esc_html__( 'Choose which page displays your privacy policy.', 'dokan-lite' ),
+                'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
                 'options'    => self::get_lazy_page_options(),
                 'legacy_key' => [
 					'option' => 'dokan_privacy',
@@ -2091,6 +2096,10 @@ class SettingsSchema {
                 'section_id' => 'privacy_policy_section',
                 'title'      => esc_html__( 'Privacy Policy Content', 'dokan-lite' ),
                 'description' => esc_html__( 'Create or edit your privacy policy text that will be displayed to users.', 'dokan-lite' ),
+                // Carries the legacy default verbatim: with no default the field
+                // rendered empty and the first save of an untouched page replaced
+                // the shipped policy text with a blank string.
+                'default'    => __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ),
                 'legacy_key' => [
 					'option' => 'dokan_privacy',
 					'field' => 'privacy_policy',
@@ -2126,6 +2135,10 @@ class SettingsSchema {
                 'id'         => 'data_clear_section',
                 'type'       => 'section',
                 'subpage_id' => 'privacy',
+                // Renders the section card itself in destructive tones. The
+                // danger_switch field inside draws no card of its own, so this
+                // is what gives the block its red border and background.
+                'is_danger'  => true,
             ],
             [
                 'id'             => 'data_clear_on_uninstall',
