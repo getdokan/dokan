@@ -120,6 +120,38 @@ Services accessed via `dokan()->service_name` magic getter. Major services:
 ### REST API
 38 controllers under `includes/REST/` with multiple API versions (v1, v2, v3) for backward compatibility. Covers: orders, products, vendors/stores, withdrawals, commissions, customers, product attributes, admin dashboard stats.
 
+## Secrets in Test Fixtures (GitHub Push Protection)
+
+GitHub Push Protection scans every push and **rejects commits containing strings that match real credential patterns** — even in test code, comments, or docs. A blocked push forces a history rewrite to land. Prevent this at write time.
+
+**Never write credential-shaped literals anywhere in the repo.** This includes fake/sample/placeholder values in PHPUnit tests, Playwright fixtures, factories, docblocks, and Markdown. Provider scanners pattern-match on prefix + entropy, not on context — `sk_live_…`, `pk_live_…`, `rk_live_…`, `AKIA…`, `ghp_…`, `xoxb-…`, `AIza…`, `eyJ…` (JWT), bare 32+ hex/base64 blobs, etc. all trip detection regardless of whether they're "real."
+
+**Use neutral, obviously-fake shapes instead:**
+- Generic prefixes: `test_secret_xxx`, `fake_api_key_123`, `EXAMPLE_TOKEN_VALUE`
+- Drop the provider prefix entirely: `fake_app_secret_a1b2c3...` not `sk_live_a1b2c3...`
+- For Stripe-shaped tests specifically: use Stripe's documented test values (`sk_test_…`) — scanners allowlist these — or invent a non-Stripe prefix.
+- For tests that need to verify masking/redaction of a specific format, parametrize the prefix via a constant and pick one that doesn't match any real provider.
+
+**If a push is blocked:** do NOT use the GitHub "allow secret" unblock link for fixture data — rewrite history to remove the literal. The unblock link is only for genuine secrets that were intentionally committed and need rotation tracking.
+
+**Rewrite recipe (filter-branch, works without `git-filter-repo`):**
+
+```bash
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --tree-filter '
+  if [ -f path/to/file.php ]; then
+    sed -i "" "s/OLD_SECRET_STRING/NEUTRAL_REPLACEMENT/g" path/to/file.php
+  fi
+' develop..HEAD
+```
+
+After rewriting, **the old commits stay alive if anything still references them.** Verify with `git log -S "OLD_SECRET_STRING" --all --source --oneline` — the `--source` column tells you which ref is holding it. Common culprits to clear before GC:
+
+- `refs/original/*` — filter-branch's automatic backup: `git for-each-ref --format='%(refname)' refs/original/ | xargs -n1 git update-ref -d`
+- `refs/stash` — any `git stash` made before the rewrite still anchors the pre-rewrite parent commit: `git stash drop` (or `git stash clear`)
+- Other local branches/tags pointing at the old SHA — reset or delete them
+
+Then `git reflog expire --expire=now --all && git gc --prune=now`. Re-run the `git log -S … --all` check; it must return empty before force-pushing. Use `git push --force-with-lease` so a concurrent teammate push doesn't get clobbered silently. Teammates with clones must `git fetch && git reset --hard origin/<branch>` since SHAs changed.
+
 ## Coding Standards
 
 - **PHP**: WordPress Coding Standards (WPCS) via PHPCS

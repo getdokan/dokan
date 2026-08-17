@@ -20,8 +20,8 @@ const fs = require('fs');
 const path = require('path');
 
 const [, , shardIndexArg, shardTotalArg] = process.argv;
-const shardIndex = parseInt(shardIndexArg, 10);
-const shardTotal = parseInt(shardTotalArg, 10);
+const shardIndex = parseInt(shardIndexArg ?? '', 10);
+const shardTotal = parseInt(shardTotalArg ?? '', 10);
 if (!shardIndex || !shardTotal || shardIndex < 1 || shardIndex > shardTotal) {
     console.error(`usage: getShardSpecs.js <shardIndex> <shardTotal>  (got ${shardIndexArg}/${shardTotalArg})`);
     process.exit(2);
@@ -43,7 +43,13 @@ for (const entry of baseline.specs || []) {
 }
 
 // Discover all spec files (so additions are caught even before baseline updates).
+/**
+ * @param {string} dir
+ * @param {string} [base]
+ * @returns {string[]}
+ */
 function walkSpecs(dir, base = 'tests/e2e') {
+    /** @type {string[]} */
     const out = [];
     for (const name of fs.readdirSync(dir)) {
         const full = path.join(dir, name);
@@ -84,17 +90,23 @@ for (const s of allSpecs) {
 allSpecs.sort((a, b) => b.ms - a.ms);
 
 // Greedy bin-pack — assign each spec to the currently-lightest bin.
+/** @type {{ ms: number, files: string[] }[]} */
 const bins = Array.from({ length: shardTotal }, () => ({ ms: 0, files: [] }));
 for (const spec of allSpecs) {
     bins.sort((a, b) => a.ms - b.ms);
-    bins[0].ms += spec.ms;
-    bins[0].files.push(spec.file);
+    const lightest = bins[0];
+    if (!lightest) continue;
+    lightest.ms += spec.ms;
+    lightest.files.push(spec.file);
 }
 // After sorting, bins are no longer in original order. Make assignment stable
 // by re-sorting deterministically (descending by total ms, then by first file).
-bins.sort((a, b) => b.ms - a.ms || a.files[0].localeCompare(b.files[0]));
+bins.sort((a, b) => b.ms - a.ms || (a.files[0] ?? '').localeCompare(b.files[0] ?? ''));
 
 const myBin = bins[shardIndex - 1];
+if (!myBin) {
+    process.exit(0);
+}
 // Sort files within the bin alphabetically for stable test order in CI logs.
 myBin.files.sort();
 

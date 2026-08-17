@@ -8,6 +8,8 @@ import WithdrawPage from '../pages/withdraw';
 import VendorsSingle from '../pages/vendors-single';
 import Create from '../pages/vendor-create-edit/Create';
 import Edit from '../pages/vendor-create-edit/Edit';
+import NotFound from '../../../layout/404';
+import SettingsPage from '../pages/settings';
 import AdminDashboard from '../pages/dashboard';
 import VendorsPage from '../pages/vendors';
 import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
@@ -75,6 +77,11 @@ const getAdminRoutes = () => {
             id: 'reverse-withdrawal-store',
             element: <ReverseWithdrawalTransactionPage />,
             path: '/reverse-withdrawal/store/:id',
+        },
+        {
+            id: 'settings',
+            element: <SettingsPage />,
+            path: '/settings',
         },
         {
             id: 'extensions',

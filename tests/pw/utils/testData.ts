@@ -1358,6 +1358,88 @@ export const data = {
         password: ADMIN_PASSWORD,
     },
 
+    // Admin Settings Migration
+    adminSettingsMigration: {
+        urls: {
+            oldAdminSettings: 'wp-admin/admin.php?page=dokan#/settings',
+            newAdminSettings: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
+        },
+
+        selectors: {
+            oldUI: {
+                generalMenu: '//div[@class="nav-title" and contains(text(),"General")]',
+                sellingOptionsMenu: '//div[@class="nav-title" and contains(text(),"Selling Options")]',
+                vendorStoreUrlField: '#dokan_general\\[custom_store_url\\]',
+                singleSellerModeField: '.enable_single_seller_mode .switch',
+                dublicateProductField: '.vendor_duplicate_product .switch',
+                allowVendorCreateOrderField: '.allow_vendor_create_manual_order .switch',
+                onePageProductCreationField: '.one_step_product_create .switch',
+                productPopupField: '.disable_product_popup .switch',
+                orderStatusChangeField: '.order_status_change .switch',
+                selectAnyCategoryField: '.dokan_any_category_selection .switch',
+                auctionFunctionsField: '.new_seller_enable_auction .switch',
+                saveChanges: '//input[@id="submit" and @value="Save Changes"]',
+                successMessage: 'Setting has been saved successfully.',
+                hideCustomerInfo: '.hide_customer_info .switch',
+                enableGuestUserEnquiry: '.enable_guest_user_enquiry .switch',
+                catalogModeHideAddToCartButton: '.catalog_mode_hide_add_to_cart_button .switch',
+                liveSearchMenu: '//div[@class="nav-title" and contains(text(),"Live Search")]',
+                sellingMenu: '//div[@class="nav-title" and contains(text(),"Selling")]',
+                addressFieldsOptionField: '.enabled_address_on_reg .switch',
+                enableTermsAndConditions: '.enable_tc_on_reg .switch',
+                disableWelcomeWizard: '.disable_welcome_wizard .switch',
+                vendorSetupWizardMessageField: '.setup_wizard_message textarea',
+            },
+
+            // React settings UI (Dokan 5.0.0+). Sidebar entries are role=button
+            // matched by accessible name; fields carry data-testid="settings-field-<id>".
+            newUI: {
+                // Sidebar navigation (accessible names for getByRole)
+                generalNav: 'General',
+                marketplaceNav: 'Marketplace',
+                vendorsNav: 'Vendors',
+                vendorOnboardingNav: 'Vendor Onboarding',
+                socialOnboardingNav: 'Social Onboarding',
+                vendorCapabilitiesNav: 'Vendor Capabilities',
+                vendorSubscriptionNav: 'Vendor Subscription',
+                storeStatsNav: 'Store Stats',
+                saveButtonName: 'Save Changes',
+                // "Content loaded" marker: every field subpage renders at least one
+                // settings-field-* node (the settings-section-content-* wrapper is not
+                // present on all subpages, e.g. Vendor Onboarding).
+                sectionContent: '[data-testid^="settings-field-"]',
+                successMessage: '.notice-success, .updated',
+
+                // Marketplace fields
+                vendorStoreUrlField: '[data-testid="settings-field-vendor_store_url_slug"]',
+                singleSellerModeField: '[data-testid="settings-field-enable_single_seller_mode"]',
+                storeCategoryField: '[data-testid="settings-field-store_category_mode"]',
+                showCustomerDetailsField: '[data-testid="settings-field-show_customer_details_to_vendors"]',
+                guestProductEnquiryField: '[data-testid="settings-field-guest_product_enquiry"]',
+                addToCartVisibilityField: '[data-testid="settings-field-catalog_mode_add_to_cart_button_visibility"]',
+                liveSearchOptionField: '[data-testid="settings-field-live_search_option"]',
+
+                // Vendor onboarding fields
+                enableSellingField: '[data-testid="settings-field-vendor_auto_enable_selling"]',
+                addressFieldsField: '[data-testid="settings-field-vendor_registration_address_fields"]',
+                termsConditionsField: '[data-testid="settings-field-terms_conditions"]',
+                welcomeWizardField: '[data-testid="settings-field-vendor_welcome_wizard_enabled"]',
+                setupWizardMessageField: '[data-testid="settings-field-vendor_setup_wizard_message"]',
+                setupWizardLogoField: '[data-testid="settings-field-vendor_setup_wizard_logo"]',
+            },
+        },
+
+        testData: {
+            initialStoreUrl: 'store-initial',
+            updatedStoreUrlFromNew: 'new-store-updated',
+            updatedStoreUrlFromOld: 'old-store-updated',
+            finalStoreUrl: 'store-final',
+            initialWizardMessage: 'Congratulations! Your marketplace is ready.',
+            updatedWizardMessageFromOld: 'Welcome to the new Dokan dashboard!',
+            finalWizardMessage: 'Get started with your marketplace',
+        },
+    },
+
     // vendor
     vendor: {
         username: VENDOR,
