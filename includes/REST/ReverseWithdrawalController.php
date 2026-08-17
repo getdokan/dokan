@@ -288,7 +288,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @param WP_REST_Request $request Full details about the request.
      *
-     * @return bool
+     * @return bool|WP_Error
      */
     public function add_to_cart_permissions_check( $request ) {
         /*
@@ -296,7 +296,17 @@ class ReverseWithdrawalController extends WP_REST_Controller {
          * so staff would pass while the order lands under their own customer id and credits the wrong ledger. The
          * AJAX caller already gates on `dokandar`, which staff do not have — match it so both callers agree.
          */
-        return is_user_logged_in() && current_user_can( 'dokandar' );
+        if ( ! is_user_logged_in() || ! current_user_can( 'dokandar' ) ) {
+            // Named rather than a bare false: this route deliberately turns away vendor staff, who would otherwise
+            // get a generic forbidden with no clue that it is policy.
+            return new WP_Error(
+                'dokan_rest_cannot_add_to_cart',
+                __( 'Only vendors can make a reverse withdrawal payment.', 'dokan-lite' ),
+                [ 'status' => rest_authorization_required_code() ]
+            );
+        }
+
+        return true;
     }
 
     /**

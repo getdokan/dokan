@@ -21,7 +21,7 @@ class Order {
      *
      * @var string
      */
-    const PAYMENT_SETTLED_META = '_dokan_reverse_withdrawal_payment_processed';
+    const PAYMENT_SETTLED_META = '_dokan_reverse_withdrawal_payment_settled';
 
     /**
      * Order constructor.
