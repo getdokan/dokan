@@ -937,9 +937,14 @@ class SetupWizard {
     }
 
     /**
-     * Should we show the WooCommerce Conversion Tracking install option?
+     * Whether the current user may install plugins through Dokan.
      *
-     * True only if the user can install plugins.
+     * Authorizes the wizard and onboarding install sinks, and gates the visibility of
+     * the 'Recommended' step. Both capabilities are required because the queued
+     * installer activates whatever it downloads.
+     *
+     * @since DOKAN_SINCE Made public for the onboarding controller, and added the
+     *                    `activate_plugins` requirement.
      *
      * @return boolean
      */
