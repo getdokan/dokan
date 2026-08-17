@@ -2761,8 +2761,10 @@ export const data = {
     },
 
     bookings: {
-        startDate: new Date(),
-        endDate: helpers.futureDate(new Date(), 1), // future date must be less than maximum duration
+        // Site time, not runner time: the site is seeded UTC+6, so a UTC runner past 18:00 picks a
+        // day the calendar already renders `not-bookable` and the day cell can never match.
+        startDate: helpers.siteToday(),
+        endDate: helpers.futureDate(helpers.siteToday(), 1), // future date must be less than maximum duration
     },
 
     uniqueId: {

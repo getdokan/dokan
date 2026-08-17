@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.13',
+        'released' => '2026-08-12',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'A store\'s public product listing now returns only that store\'s products instead of the entire catalogue.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.12',
+        'released' => '2026-08-03',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.11',
         'released' => '2026-07-27',
         'changes'  => [

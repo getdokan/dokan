@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.11
+Stable tag: 5.0.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.13 ( Aug 12, 2026 ) =
+- **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
+- **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
+
+= v5.0.12 ( Aug 03, 2026 ) =
+- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
+
 = v5.0.11 ( Jul 27, 2026 ) =
 - **update:** Vendors can now search for products by SKU as well as by name.
 - **fix:** Store-page buttons now respect the Astra theme's global button styling.
@@ -398,12 +405,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Vendors can no longer change another vendor's product attributes.
 - **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
 - **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
-
-= v5.0.8 ( Jul 06, 2026 ) =
-- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
-
-= v5.0.7 ( Jun 29, 2026 ) =
-- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
-- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

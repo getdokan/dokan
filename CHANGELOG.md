@@ -1,3 +1,12 @@
+### v5.0.13 ( Aug 12, 2026 ) ###
+
+- **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
+- **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
+
+### v5.0.12 ( Aug 03, 2026 ) ###
+
+- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
+
 ### v5.0.11 ( Jul 27, 2026 ) ###
 
 - **update:** Vendors can now search for products by SKU as well as by name.
