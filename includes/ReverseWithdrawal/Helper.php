@@ -777,6 +777,15 @@ class Helper {
         $candidates = [];
 
         foreach ( $orders as $order ) {
+            /*
+             * A payment settled with nothing left to credit writes no ledger row, so the lookup below can never
+             * clear it. Left in, it would be deducted from the due forever and lock the vendor out of paying any
+             * newly accrued debt — `Order::insert_payment()` reads the same marker, so it can never credit again.
+             */
+            if ( 'yes' === $order->get_meta( Order::PAYMENT_SETTLED_META ) ) {
+                continue;
+            }
+
             if ( self::has_reverse_withdrawal_payment_in_order( $order ) ) {
                 $candidates[ $order->get_id() ] = $order;
             }

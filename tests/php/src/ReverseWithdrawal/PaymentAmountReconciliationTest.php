@@ -292,6 +292,52 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     }
 
     /**
+     * An order settled with nothing left to credit must not be held back as awaiting either.
+     *
+     * The clamp writes a marker instead of a ledger row, so the credited-order lookup cannot see it. Left in
+     * the awaiting total it would be deducted from the due forever, and the vendor could never pay newly
+     * accrued debt — the order sits in `processing` with `needs_payment()` false, so they cannot even settle
+     * it themselves.
+     */
+    public function test_settled_order_without_a_ledger_row_is_not_awaiting() {
+        $this->register_order_completion_hooks();
+
+        $order = $this->create_awaiting_payment_order( self::DUE );
+
+        // The debt is cleared some other way before the payment lands, e.g. an admin adjustment.
+        ( new Manager() )->insert(
+            [
+                'trn_id'    => 990003,
+                'trn_type'  => 'manual_product',
+                'vendor_id' => $this->seller_id1,
+                'credit'    => self::DUE,
+            ]
+        );
+
+        // A card gateway completes payment while the order stays in `processing`.
+        do_action( 'woocommerce_payment_complete', $order->get_id() );
+
+        $order = wc_get_order( $order->get_id() );
+
+        $this->assertSame( 'yes', $order->get_meta( Order::PAYMENT_SETTLED_META ) );
+        $this->assertFalse( ( new Manager() )->is_payment_inserted( $order->get_id() ) );
+        $this->assertCount( 0, Helper::get_awaiting_payment_orders( $this->seller_id1 ) );
+
+        // Newly accrued debt has to stay payable.
+        ( new Manager() )->insert(
+            [
+                'trn_id'    => 990004,
+                'trn_type'  => 'order_commission',
+                'vendor_id' => $this->seller_id1,
+                'debit'     => 40,
+                'credit'    => 0,
+            ]
+        );
+
+        $this->assertTrue( Helper::add_payment_to_cart( 40 ) );
+    }
+
+    /**
      * One settled order alone is the case where the lookup's page size would otherwise collapse to a single row.
      */
     public function settled_order_counts(): array {
