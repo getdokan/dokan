@@ -5,6 +5,8 @@ namespace WeDevs\Dokan\Test\ReverseWithdrawal;
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager;
+use WeDevs\Dokan\ReverseWithdrawal\Order;
+use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
@@ -165,11 +167,27 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
      * clamps the credit to what is actually owed rather than trusting the line item.
      */
     public function test_completion_never_credits_more_than_the_outstanding_balance() {
+        $this->register_order_completion_hooks();
+
         $order = $this->create_awaiting_payment_order( self::DUE * 3 );
 
         $order->update_status( 'completed' );
 
         $this->assertSame( 0.0, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+    }
+
+    /**
+     * Put the completion hooks in place — they only register when the feature is on, and the container
+     * booted long before this test with reverse withdrawal disabled.
+     */
+    protected function register_order_completion_hooks() {
+        $settings            = (array) get_option( 'dokan_reverse_withdrawal', [] );
+        $settings['enabled'] = 'on';
+        update_option( 'dokan_reverse_withdrawal', $settings );
+
+        $this->assertTrue( SettingsHelper::is_enabled() );
+
+        new Order();
     }
 
     /**
