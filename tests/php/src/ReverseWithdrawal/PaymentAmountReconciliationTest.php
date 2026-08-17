@@ -263,6 +263,74 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     }
 
     /**
+     * An order already credited to the ledger must not be held back as awaiting.
+     *
+     * Card gateways credit at `woocommerce_payment_complete` and leave the order in `processing` — the
+     * reverse-withdrawal product is virtual but not downloadable, so it never auto-completes. Counting
+     * that order again would deduct the same payment twice and lock the vendor out of paying new debt.
+     *
+     * @dataProvider settled_order_counts
+     */
+    public function test_already_credited_order_is_not_awaiting( int $extra_awaiting ) {
+        $settled = $this->create_awaiting_payment_order( self::DUE );
+
+        ( new Manager() )->insert(
+            [
+                'trn_id'    => $settled->get_id(),
+                'trn_type'  => 'vendor_payment',
+                'vendor_id' => $this->seller_id1,
+                'credit'    => self::DUE,
+            ]
+        );
+
+        for ( $i = 0; $i < $extra_awaiting; $i++ ) {
+            $this->create_awaiting_payment_order( 25 );
+        }
+
+        $this->assertCount( $extra_awaiting, Helper::get_awaiting_payment_orders( $this->seller_id1 ) );
+        $this->assertSame( 25.0 * $extra_awaiting, Helper::get_awaiting_payment_total( $this->seller_id1 ) );
+    }
+
+    /**
+     * One settled order alone is the case where the lookup's page size would otherwise collapse to a single row.
+     */
+    public function settled_order_counts(): array {
+        return [
+            'settled order only'            => [ 0 ],
+            'settled plus one still waiting' => [ 1 ],
+        ];
+    }
+
+    /**
+     * A credited-but-unfinished order must not block a payment for genuinely new debt.
+     */
+    public function test_new_debt_is_payable_after_an_earlier_payment_was_credited() {
+        $settled = $this->create_awaiting_payment_order( self::DUE );
+
+        ( new Manager() )->insert(
+            [
+                'trn_id'    => $settled->get_id(),
+                'trn_type'  => 'vendor_payment',
+                'vendor_id' => $this->seller_id1,
+                'credit'    => self::DUE,
+            ]
+        );
+
+        // The seeded debt is now settled, so only this new commission is outstanding.
+        ( new Manager() )->insert(
+            [
+                'trn_id'    => 990003,
+                'trn_type'  => 'order_commission',
+                'vendor_id' => $this->seller_id1,
+                'debit'     => 40,
+                'credit'    => 0,
+            ]
+        );
+
+        $this->assertTrue( Helper::add_payment_to_cart( 40 ) );
+    }
+
+    /**
      * Build a reverse-withdrawal payment order sitting in a status that has not credited the ledger yet.
      */
     protected function create_awaiting_payment_order( float $amount ): \WC_Order {

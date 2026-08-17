@@ -781,13 +781,20 @@ class Helper {
                 'trn_type'  => 'vendor_payment',
                 'vendor_id' => [ $vendor_id ],
                 'return'    => 'vendor_transaction',
-                'per_page'  => count( $candidates ),
+                // Never 1: at that exact value all() collapses the result to a single row instead of a list.
+                'per_page'  => count( $candidates ) + 1,
             ]
         );
 
+        if ( is_wp_error( $settled ) ) {
+            // Without the exclusion list every candidate would look unpaid, so hold them all back rather than guess.
+            return array_values( $candidates );
+        }
+
         foreach ( (array) $settled as $transaction ) {
             // A payment already written to the ledger is part of the balance, counting it again would deduct it twice.
-            unset( $candidates[ (int) $transaction->trn_id ] );
+            // Rows arrive as ARRAY_A from Manager::all(), never as objects.
+            unset( $candidates[ (int) $transaction['trn_id'] ] );
         }
 
         return array_values( $candidates );
