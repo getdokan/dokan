@@ -34,6 +34,13 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
      */
     protected const DUE = 100.0;
 
+    /**
+     * Order hook instance registered for the completion test, unhooked again in tear_down.
+     *
+     * @var Order|null
+     */
+    protected $order_hooks = null;
+
     public function set_up() {
         parent::set_up();
 
@@ -187,7 +194,8 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
 
         $this->assertTrue( SettingsHelper::is_enabled() );
 
-        new Order();
+        // Kept so tear_down can unhook it — hooks are global and would otherwise leak into every later test.
+        $this->order_hooks = new Order();
     }
 
     /**
@@ -229,6 +237,16 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     public function tear_down() {
         if ( WC()->cart ) {
             WC()->cart->empty_cart();
+        }
+
+        if ( $this->order_hooks ) {
+            remove_action( 'woocommerce_checkout_create_order_line_item', [ $this->order_hooks, 'store_line_item_metas' ], 10 );
+            remove_action( 'woocommerce_payment_complete', [ $this->order_hooks, 'process_payment' ], 10 );
+            remove_action( 'woocommerce_order_status_changed', [ $this->order_hooks, 'process_order_status_changed' ], 10 );
+            remove_filter( 'woocommerce_order_item_display_meta_key', [ $this->order_hooks, 'hide_order_item_meta_key' ], 999 );
+            remove_filter( 'woocommerce_order_item_display_meta_value', [ $this->order_hooks, 'hide_order_item_meta_value' ], 999 );
+
+            $this->order_hooks = null;
         }
 
         parent::tear_down();
