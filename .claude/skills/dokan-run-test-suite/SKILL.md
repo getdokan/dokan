@@ -73,6 +73,42 @@ grep -E '^(LICENSE_KEY|GMAP|DOKAN_PRO)=' tests/pw/.env
 
 After writing or amending `.env`, re-read it to confirm the keys are populated before continuing to step 3.
 
+### 2b. Machine pre-flight — capacity and competing work
+
+A local run is only as trustworthy as the machine underneath it. Both failures below produce
+**timeouts and `element(s) not found` across unrelated specs** — they look exactly like selector rot
+or a product regression, and they will waste hours if diagnosed as such.
+
+**Check all three before launching. Never skip because "it worked yesterday".**
+
+```bash
+sysctl -n vm.loadavg                                  # 1-min load; want < ~3 on a 10-core Mac
+memory_pressure | grep -i 'free percentage'           # want > ~30%
+pgrep -fl 'playwright test|chrome-headless-shell'     # MUST be empty
+pgrep -fl 'qemu-system-aarch64|Android Studio'        # emulator eats ~2.5 cores
+curl -s -o /dev/null -w '%{time_total}\n' http://localhost:9999/   # idle baseline, want < ~0.5s
+```
+
+1. **Another Claude session may already be running a suite.** This Mac hosts several project
+   sessions (dokan, cartpilot, erp). They share CPU and RAM but *not* WordPress state, so nothing
+   collides visibly — the only symptom is that both runs slow to a crawl. Observed: a CartPilot
+   `--workers=1` run held `chrome-headless-shell` at **488% CPU**, driving load to 10.02 on a
+   10-core machine and slowing the Dokan site from 0.19 s to 1.38 s while idle.
+   **If `pgrep` finds a foreign `playwright test`, STOP and ask the user** — never kill another
+   session's run, and never start on top of it.
+2. **Heavy local apps.** An Android emulator alone takes ~2.25 cores. Ask the user to close it;
+   do not close it yourself.
+3. **Record the idle site latency first.** It is the control that later separates saturation from a
+   real defect: a REST route answering in 0.19 s idle and >30 s under load is capacity, full stop.
+
+**Free-page counts mislead on macOS.** `vm_stat` "Pages free" can read ~74 MB on a perfectly healthy
+machine because inactive and file-backed pages are reclaimable. Trust
+`memory_pressure`'s free percentage instead. Likewise, `vm.swapusage` "used" is sticky accounting,
+not live pressure.
+
+See also `qa-core` memory `feedback_local_shared_stack_saturation` for why worker count is the wrong
+knob — one wp-env stack cannot feed 12 workers even though CI runs 12 per shard.
+
 ### 3. Environment setup
 
 Default to a clean reset to guarantee a known baseline:
@@ -187,6 +223,25 @@ npm run wp-env run tests-cli wp eval '
 '
 ```
 
+**`wp-env destroy` / `reset:env` wipes `dokan_appearance`, so this step is mandatory after every
+reset — not "once".** Skip it and the whole new-UI suite silently drives the LEGACY dashboard: you get
+either a wall of `element(s) not found` or, worse, green results that prove nothing about React. Treat
+it as part of the reset, never as an optional extra.
+
+The whole reset chain, in the only order that works:
+
+```bash
+echo "y" | npx wp-env destroy        # it PROMPTS; a bare `npx wp-env destroy` hangs unattended
+npm run start:env
+npx playwright test --project=site_setup --project=auth_setup --project=e2e_setup   # ~1.7 min
+# …then the React-UI eval above…
+NO_SETUP=true npx playwright test --project=e2e_tests --grep "@new-ui" --workers=4 --retries=1
+```
+
+Budget ~8 minutes for destroy→start→seed before any test runs. A ready-made script lives at
+`~/.claude/skills/dokan-qa/automation-handoff/tools/reset-and-run.sh` (gates on the seed's exit code
+so it never runs tests against a half-built site).
+
 ### 6. Test execution
 
 ```bash
@@ -201,6 +256,9 @@ npx playwright test --grep @lite       # Lite-compatible tests
 npx playwright test --grep @pro        # Pro-only tests
 npx playwright test --grep @serial     # tests requiring sequential execution
 
+# React vendor-dashboard suite (see the new-UI migration checklist)
+npm run test:e2e:newui                 # = NO_SETUP=true … --grep @new-ui
+
 # Browser-visible run
 npm run test:headed
 
@@ -210,6 +268,57 @@ npm run test:ui
 # API suite only
 npm run test:api
 ```
+
+**Worker count for a local full-suite run: 4–6, never 12.**
+
+`playwright.config.ts` sets the same worker count for CI and local, and `.env` here carries
+`CI=true`, so a local run silently takes every CI branch (workers, `retries: 2`, 180 s timeout).
+That number is tuned for CI's topology, **not** this machine's:
+
+| | CI | Local |
+| --- | --- | --- |
+| WordPress stacks | one dedicated wp-env **per shard** | **one**, shared |
+| Spec files per stack | ~21 | all ~258 |
+
+Twelve workers against a single stack saturates PHP/MySQL, not the CPU. Measured: a 12-worker local
+run finished **518 of 2593 tests (20 %)** before dying on `globalTimeout` at exactly 1 h, with
+109 failures that were almost entirely 30 s REST timeouts — while the same endpoints answered in
+**0.19 s** idle. Override per run; do not edit the config, CI depends on it:
+
+```bash
+npx playwright test --workers=6                     # full local suite
+npx playwright test --workers=6 --global-timeout=14400000   # 4 h ceiling; 1 h is not enough
+```
+
+Two related traps:
+
+- **`retries: 2` multiplies saturation.** Under load retries rescue nothing and triple the cost —
+  one file burned 56 worker-minutes on 2 tests. For a pure capacity probe use `--retries=0`; keep
+  retries only when you want the flaky-vs-broken split.
+- **`npm run test:e2e` forces `NO_SETUP=true`** and skips the setup chain. After an interrupted run
+  that leaves modules toggled mid-flight, invoke `npx playwright test` directly so setup re-runs.
+  Budget for it: `_site.setup.ts` and `_auth.setup.ts` cost ~1.8 worker-hours combined and are a
+  serial dependency — no real test starts until they clear.
+- **`NO_SETUP=true` is safe only while the auth storage states are fresh.** Check
+  `playwright/.auth/*StorageState.json` timestamps and that `.env` still carries the seeded ids
+  (`VENDOR_ID`, `PRODUCT_ID`) before reusing them; after a `reset:env` they must be regenerated.
+
+**Measured baseline — full `@new-ui` run (2026-08-16, clean DB, `--workers=4 --retries=1`):**
+431 tests, **24.3 min**, 415 passed / 7 failed / 2 flaky / 7 skipped. Use this to judge whether a
+run went wrong: a wildly different duration or failure count means the environment, not the code.
+
+### Reading the exit code when you background a run
+
+`cmd > log 2>&1; echo "EXIT=$?"` reports the **echo's** status, so the harness shows exit 0 for a run
+that actually failed. This misreported two runs in one session. Either capture Playwright's own code
+into the log and read it back, or let the run be the last command in the chain:
+
+```bash
+NO_SETUP=true npx playwright test … > run.log 2>&1
+echo "PLAYWRIGHT_EXIT=$?" >> run.log      # separate statement, real code
+```
+
+Always confirm the tally line (`N passed / N failed`) rather than trusting a reported exit status.
 
 ### 7. Tag conventions
 
@@ -303,6 +412,9 @@ The `getShardSpecs.js` splitter assigns the global mean to specs introduced afte
 | `wp-env start` times out. | Ports 9999 or 9998 are in use. | `docker ps` to identify the process; then `npm run wp-env stop` and retry. |
 | Vendor `/dashboard` tests block on a modal. | Dokan Pro 5.0.0 announcement modal appears on first load. | Use the `closeAnnouncementModal` helper in `tests/pw/utils/helpers.ts` (auto-dismisses via `page.addLocatorHandler`). |
 | Tests pass locally but fail in CI. | The Dokan React UI option may not be enabled. | Set `dokan_appearance.vendor_layout_style = "latest"` and `vendor_product_editor = "latest"`. The CI workflow does this automatically. |
+| A whole spec file fails with `element(s) not found` for a **seeded fixture that demonstrably exists** (e.g. `p1_v1 (simple)`). | **Pagination, not absence.** DataViews shows **10 rows/page**, newest-first, and sibling specs create ~20 products for the same vendor during a full run — so a long-lived seed falls off page 1. Verify with `wp post list --post_type=product` before believing the UI. | Narrow the list before asserting: server-side `search()` on the vendor list (`revealSeeded()` in `products/newProductsPage.ts`), and walk `/store/<slug>/page/N/` for storefront checks. Never assert a fixture is on the default page. |
+| A count assertion reports exactly **10** (or the page size) and never changes. | Same root cause: the assertion counts *rows visible on page 1*, which is capped by pagination. Seen in `newWithdraw` "pending count decreases after cancel" (Expected < 10, Received 10). | Assert against REST/db, or filter to the specific record first. Grep for `getRowCount()` used in an equality/threshold assertion — it is a defect class, not one bug. |
+| `expect(await getRowCount()).toBe(0)` fails right after typing a search term. | One-shot count read before the DataViews REST refetch repaints; under load the stale rows persist. | Use the retrying form — `await expect(locator).toHaveCount(0)` — which waits for the list to settle while still requiring zero rows. Do not add a bare `waitForTimeout`. |
 | `site_setup` fails with `cd undefined && wp ...`. | `tests/pw/.env` does not exist. The helpers route wp-cli through `SITE_PATH` when `CI` is unset. | Run the `.env` pre-flight (step 2). Create `.env` from `.env.example`, set `CI=true`, ask the user for `LICENSE_KEY` / `GMAP`. |
 | All ~12 `tests/e2e/geolocation/*` specs fail with `locator('input.dokan-range-slider')` or `.dokan-map-container` timeouts. | `GMAP=` empty in `.env`, so the Google Maps widget never loads. | Ask the user for a Google Maps API key, set `GMAP=<key>` in `.env`, re-run only `geolocation.spec.ts`. |
 | License-related Pro tests fail with "invalid license" or never reach the dashboard. | `LICENSE_KEY=` empty in `.env`. | Ask the user for the Dokan Pro licence key, set `LICENSE_KEY=<key>` in `.env`, re-run the affected spec(s). |
