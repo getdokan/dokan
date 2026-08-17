@@ -182,7 +182,10 @@ const FixedCommissionInput = ( {
                                 numeralDecimalMark: currency?.decimal ?? '.',
                                 numeralDecimalScale: currency?.precision ?? 2,
                             } }
-                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !border-r-0 !rounded-r-none` }
+                            // `!m-0` kills WordPress admin's `input { margin: 0 1px }`,
+                            // which otherwise pushes a 1px gap into the seam with
+                            // the addon and breaks the shared frame.
+                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !border-r-0 !rounded-r-none` }
                         />
 
                         <div className="text-gray-500 text-lg">
@@ -201,7 +204,11 @@ const FixedCommissionInput = ( {
                                 numeralDecimalMark: currency?.decimal ?? '.',
                                 numeralDecimalScale: currency?.precision ?? 2,
                             } }
-                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !border-l-0 !rounded-l-none` }
+                            // Keep the left border — dokan-ui's addOnLeft span ships
+                            // `border-r-0`, so the input has to draw the seam — and
+                            // `!m-0` removes WP admin's 1px input margin that would
+                            // otherwise hold the two halves apart.
+                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !rounded-l-none` }
                         />
                     </>
                 ) }
