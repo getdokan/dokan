@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.12\n"
+"Project-Id-Version: Dokan 5.0.14\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-03T11:15:37+00:00\n"
+"POT-Creation-Date: 2026-08-17T10:21:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -94,18 +94,18 @@ msgid "Invalid nonce"
 msgstr ""
 
 #. translators: 1) rest api method name string
-#: includes/Abstracts/DokanRESTController.php:30
-#: includes/Abstracts/DokanRESTController.php:210
-#: includes/Abstracts/DokanRESTController.php:285
+#: includes/Abstracts/DokanRESTController.php:61
+#: includes/Abstracts/DokanRESTController.php:248
+#: includes/Abstracts/DokanRESTController.php:323
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
-#: includes/Abstracts/DokanRESTController.php:71
+#: includes/Abstracts/DokanRESTController.php:109
 #: includes/REST/ProductController.php:1169
 msgid "To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint."
 msgstr ""
 
-#: includes/Abstracts/DokanRESTController.php:73
+#: includes/Abstracts/DokanRESTController.php:111
 #: includes/REST/OrderController.php:238
 #: includes/REST/ProductController.php:430
 #: includes/REST/ProductController.php:455
@@ -113,7 +113,7 @@ msgid "Invalid ID."
 msgstr ""
 
 #. translators: 1) post type name
-#: includes/Abstracts/DokanRESTController.php:193
+#: includes/Abstracts/DokanRESTController.php:231
 msgid "The %s cannot be deleted."
 msgstr ""
 
@@ -161,7 +161,7 @@ msgid "Dashboard"
 msgstr ""
 
 #: includes/Admin/AdminBar.php:65
-#: includes/Admin/Dashboard/Pages/Withdraw.php:24
+#: includes/Admin/Dashboard/Pages/Withdraw.php:31
 #: includes/Admin/Menu.php:40
 #: includes/Admin/Menu.php:62
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:104
@@ -835,15 +835,27 @@ msgstr ""
 msgid "Tools"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Vendors.php:12
-#: includes/Admin/Dashboard/Pages/Vendors.php:13
+#. translators: %s: Pending vendor count badge
+#: includes/Admin/Dashboard/Pages/Vendors.php:15
+msgid "Vendors %s"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Vendors.php:19
+#: includes/Admin/Dashboard/Pages/Vendors.php:22
 #: includes/Admin/Menu.php:67
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Vendors"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Withdraw.php:23
+#. translators: %s: Pending withdraw request count badge
+#. translators: %s: withdraw count
+#: includes/Admin/Dashboard/Pages/Withdraw.php:27
+#: includes/Admin/Menu.php:46
+msgid "Withdraw %s"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Withdraw.php:34
 msgid "Withdraw Management"
 msgstr ""
 
@@ -920,11 +932,6 @@ msgstr ""
 
 #: includes/Admin/Hooks.php:116
 msgid "Unauthorized operation"
-msgstr ""
-
-#. translators: %s: withdraw count
-#: includes/Admin/Menu.php:46
-msgid "Withdraw %s"
 msgstr ""
 
 #: includes/Admin/Menu.php:79
@@ -2372,7 +2379,7 @@ msgstr ""
 msgid "More Settings"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:999
+#: includes/Admin/SetupWizard.php:1005
 msgid "The following plugins will be installed and activated for you:"
 msgstr ""
 
@@ -2380,18 +2387,23 @@ msgstr ""
 msgid "Welcome to Dokan"
 msgstr ""
 
-#: includes/Admin/SetupWizardNoWC.php:134
+#: includes/Admin/SetupWizardNoWC.php:127
+msgid "You do not have permission to install plugins."
+msgstr ""
+
+#: includes/Admin/SetupWizardNoWC.php:128
+#: includes/Admin/SetupWizardNoWC.php:143
 msgid "Error installing WooCommerce plugin"
 msgstr ""
 
-#: includes/Admin/SetupWizardNoWC.php:178
+#: includes/Admin/SetupWizardNoWC.php:187
 #: includes/functions-dashboard-navigation.php:90
 #: includes/ReverseWithdrawal/Helper.php:70
 #: includes/Vendor/SetupWizard.php:718
 msgid "Payment"
 msgstr ""
 
-#: includes/Admin/SetupWizardNoWC.php:184
+#: includes/Admin/SetupWizardNoWC.php:193
 #: includes/Admin/SetupWizardWCAdmin.php:84
 #: includes/Product/functions.php:233
 #: assets/js/dashboard-charts.js:1
@@ -2550,7 +2562,7 @@ msgid "Upload a banner for your store. Banner size is (%1$sx%2$s) pixels."
 msgstr ""
 
 #: includes/Admin/UserProfile.php:139
-#: includes/REST/ReverseWithdrawalController.php:694
+#: includes/REST/ReverseWithdrawalController.php:722
 msgid "Store name"
 msgstr ""
 
@@ -2873,7 +2885,7 @@ msgid "reCAPTCHA verification failed!"
 msgstr ""
 
 #: includes/Ajax.php:452
-#: includes/REST/StoreController.php:1004
+#: includes/REST/StoreController.php:1030
 msgid "Email sent successfully!"
 msgstr ""
 
@@ -5237,12 +5249,12 @@ msgid "privacy policy"
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3519
+#: includes/functions.php:3578
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3532
+#: includes/functions.php:3591
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -7031,21 +7043,21 @@ msgstr ""
 msgid "Plugin slug from WordPress.org."
 msgstr ""
 
-#: includes/REST/AdminExtensionsController.php:78
+#: includes/REST/AdminExtensionsController.php:97
 msgid "Plugin is already installed."
 msgstr ""
 
 #. translators: %s: plugin slug
-#: includes/REST/AdminExtensionsController.php:99
+#: includes/REST/AdminExtensionsController.php:118
 msgid "Unable to fetch plugin information for %s."
 msgstr ""
 
 #. translators: %s: plugin slug
-#: includes/REST/AdminExtensionsController.php:115
+#: includes/REST/AdminExtensionsController.php:134
 msgid "Unable to install %s."
 msgstr ""
 
-#: includes/REST/AdminExtensionsController.php:123
+#: includes/REST/AdminExtensionsController.php:142
 msgid "Plugin installed successfully."
 msgstr ""
 
@@ -8599,8 +8611,8 @@ msgid "Invalid product ID."
 msgstr ""
 
 #: includes/REST/ReverseWithdrawalController.php:68
-#: includes/REST/ReverseWithdrawalController.php:601
-#: includes/REST/ReverseWithdrawalController.php:645
+#: includes/REST/ReverseWithdrawalController.php:629
+#: includes/REST/ReverseWithdrawalController.php:673
 msgid "Vendor ID to filter form"
 msgstr ""
 
@@ -8608,45 +8620,49 @@ msgstr ""
 msgid "Payable amount"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:610
-#: includes/REST/ReverseWithdrawalController.php:661
+#: includes/REST/ReverseWithdrawalController.php:304
+msgid "Only vendors can make a reverse withdrawal payment."
+msgstr ""
+
+#: includes/REST/ReverseWithdrawalController.php:638
+#: includes/REST/ReverseWithdrawalController.php:689
 msgid "Get transactions via date range"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:654
+#: includes/REST/ReverseWithdrawalController.php:682
 msgid "Transaction type to filter form"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:700
-#: includes/REST/ReverseWithdrawalController.php:781
+#: includes/REST/ReverseWithdrawalController.php:728
+#: includes/REST/ReverseWithdrawalController.php:809
 msgid "ID of the Store"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:706
-#: includes/REST/ReverseWithdrawalController.php:796
+#: includes/REST/ReverseWithdrawalController.php:734
+#: includes/REST/ReverseWithdrawalController.php:824
 msgid "Amount that site admin charged to store owner"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:712
-#: includes/REST/ReverseWithdrawalController.php:802
+#: includes/REST/ReverseWithdrawalController.php:740
+#: includes/REST/ReverseWithdrawalController.php:830
 msgid "Amount that has been paid via store owner to site admin"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:718
-#: includes/REST/ReverseWithdrawalController.php:808
+#: includes/REST/ReverseWithdrawalController.php:746
+#: includes/REST/ReverseWithdrawalController.php:836
 msgid "Amount currently site owners owns from store owner"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:724
-#: includes/REST/ReverseWithdrawalController.php:768
+#: includes/REST/ReverseWithdrawalController.php:752
+#: includes/REST/ReverseWithdrawalController.php:796
 msgid "Localized date of last payment received date."
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:749
+#: includes/REST/ReverseWithdrawalController.php:777
 msgid "ID of the transaction"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:755
+#: includes/REST/ReverseWithdrawalController.php:783
 #: templates/reverse-withdrawal/transaction-listing.php:18
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
@@ -8654,94 +8670,94 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:761
+#: includes/REST/ReverseWithdrawalController.php:789
 msgid "Transaction URL."
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:774
+#: includes/REST/ReverseWithdrawalController.php:802
 msgid "Transaction type"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:789
+#: includes/REST/ReverseWithdrawalController.php:817
 msgid "Added note."
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:833
+#: includes/REST/ReverseWithdrawalController.php:861
 msgid "ID of the transaction type"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:839
+#: includes/REST/ReverseWithdrawalController.php:867
 msgid "Translated title of the transaction type"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:864
+#: includes/REST/ReverseWithdrawalController.php:892
 msgid "ID of the store"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:870
+#: includes/REST/ReverseWithdrawalController.php:898
 msgid "Name of the store"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:895
+#: includes/REST/ReverseWithdrawalController.php:923
 msgid "Due Status, true if vendor needs to pay, otherwise false"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:901
+#: includes/REST/ReverseWithdrawalController.php:929
 msgid "Due Date, immediate or any future date"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:907
+#: includes/REST/ReverseWithdrawalController.php:935
 #: assets/js/vue-admin.js:2
 msgid "Current Balance"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:913
+#: includes/REST/ReverseWithdrawalController.php:941
 msgid "Formatted Current Balance"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:919
+#: includes/REST/ReverseWithdrawalController.php:947
 #: includes/ReverseWithdrawal/Admin/Settings.php:64
 msgid "Billing Type"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:925
+#: includes/REST/ReverseWithdrawalController.php:953
 msgid "Formatted Billing Type"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:931
+#: includes/REST/ReverseWithdrawalController.php:959
 msgid "Billing Day"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:937
+#: includes/REST/ReverseWithdrawalController.php:965
 msgid "Due Period"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:943
+#: includes/REST/ReverseWithdrawalController.php:971
 msgid "Threshold Period"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:949
+#: includes/REST/ReverseWithdrawalController.php:977
 msgid "Formatted Threshold Amount"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:955
+#: includes/REST/ReverseWithdrawalController.php:983
 msgid "Payable Amount"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:961
+#: includes/REST/ReverseWithdrawalController.php:989
 msgid "Formatted Payable Amount"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:967
+#: includes/REST/ReverseWithdrawalController.php:995
 #: includes/ReverseWithdrawal/Admin/Settings.php:125
 msgid "Display notice to pay reverse withdrawal balance during grace period under vendor dashboard."
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:973
+#: includes/REST/ReverseWithdrawalController.php:1001
 msgid "Formatted Failed Actions"
 msgstr ""
 
-#: includes/REST/ReverseWithdrawalController.php:979
+#: includes/REST/ReverseWithdrawalController.php:1007
 msgid "Formatted Action Taken Message"
 msgstr ""
 
@@ -8785,134 +8801,135 @@ msgstr ""
 msgid "You do not have permission to access this store."
 msgstr ""
 
-#: includes/REST/StoreController.php:628
-#: includes/REST/StoreController.php:1107
+#: includes/REST/StoreController.php:606
+#: includes/REST/StoreController.php:642
+#: includes/REST/StoreController.php:1133
 msgid "No store found"
 msgstr ""
 
-#: includes/REST/StoreController.php:646
-#: includes/REST/StoreController.php:665
+#: includes/REST/StoreController.php:660
+#: includes/REST/StoreController.php:679
 msgid "No reviews found"
 msgstr ""
 
-#: includes/REST/StoreController.php:933
+#: includes/REST/StoreController.php:959
 msgid "This email address is not valid"
 msgstr ""
 
-#: includes/REST/StoreController.php:976
+#: includes/REST/StoreController.php:1002
 msgid "No vendor is found to be send an email."
 msgstr ""
 
-#: includes/REST/StoreController.php:1023
+#: includes/REST/StoreController.php:1049
 msgid "Status parameter must be active or inactive"
 msgstr ""
 
-#: includes/REST/StoreController.php:1029
+#: includes/REST/StoreController.php:1055
 msgid "No vendor found for updating status"
 msgstr ""
 
-#: includes/REST/StoreController.php:1057
+#: includes/REST/StoreController.php:1083
 msgid "No items found for bulk updating"
 msgstr ""
 
-#: includes/REST/StoreController.php:1141
+#: includes/REST/StoreController.php:1172
 msgid "Status of the store"
 msgstr ""
 
-#: includes/REST/StoreController.php:1148
+#: includes/REST/StoreController.php:1179
 msgid "Store List Order By"
 msgstr ""
 
-#: includes/REST/StoreController.php:1154
-#: includes/REST/StoreController.php:1160
+#: includes/REST/StoreController.php:1185
+#: includes/REST/StoreController.php:1191
 msgid "Store List Order"
 msgstr ""
 
-#: includes/REST/StoreController.php:1180
+#: includes/REST/StoreController.php:1211
 msgid "Unique identifier for the vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1186
+#: includes/REST/StoreController.php:1217
 msgid "Store owner first name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1191
+#: includes/REST/StoreController.php:1222
 msgid "Store owner last name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1196
+#: includes/REST/StoreController.php:1227
 msgid "User nice name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1201
+#: includes/REST/StoreController.php:1232
 msgid "User password."
 msgstr ""
 
-#: includes/REST/StoreController.php:1205
+#: includes/REST/StoreController.php:1236
 msgid "Store email address."
 msgstr ""
 
-#: includes/REST/StoreController.php:1211
+#: includes/REST/StoreController.php:1242
 msgid "Store name."
 msgstr ""
 
-#: includes/REST/StoreController.php:1216
+#: includes/REST/StoreController.php:1247
 msgid "Store phone number."
 msgstr ""
 
-#: includes/REST/StoreController.php:1221
+#: includes/REST/StoreController.php:1252
 msgid "Show email in store."
 msgstr ""
 
-#: includes/REST/StoreController.php:1226
+#: includes/REST/StoreController.php:1257
 msgid "Gravatar ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:1230
+#: includes/REST/StoreController.php:1261
 msgid "Banner ID."
 msgstr ""
 
-#: includes/REST/StoreController.php:1234
+#: includes/REST/StoreController.php:1265
 msgid "Enable terms and conditions."
 msgstr ""
 
-#: includes/REST/StoreController.php:1238
+#: includes/REST/StoreController.php:1269
 msgid "Store terms and conditions."
 msgstr ""
 
-#: includes/REST/StoreController.php:1242
+#: includes/REST/StoreController.php:1273
 msgid "Store icon."
 msgstr ""
 
-#: includes/REST/StoreController.php:1246
+#: includes/REST/StoreController.php:1277
 msgid "Social profiles."
 msgstr ""
 
-#: includes/REST/StoreController.php:1258
+#: includes/REST/StoreController.php:1289
 msgid "Store address."
 msgstr ""
 
-#: includes/REST/StoreController.php:1271
+#: includes/REST/StoreController.php:1302
 msgid "Enable selling."
 msgstr ""
 
-#: includes/REST/StoreController.php:1275
+#: includes/REST/StoreController.php:1306
 msgid "Featured vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1279
+#: includes/REST/StoreController.php:1310
 msgid "Trusted vendor."
 msgstr ""
 
-#: includes/REST/StoreController.php:1283
+#: includes/REST/StoreController.php:1314
 msgid "Admin commission amount."
 msgstr ""
 
-#: includes/REST/StoreController.php:1287
+#: includes/REST/StoreController.php:1318
 msgid "Admin additional fee."
 msgstr ""
 
-#: includes/REST/StoreController.php:1291
+#: includes/REST/StoreController.php:1322
 msgid "Category wise commission."
 msgstr ""
 
@@ -9401,8 +9418,8 @@ msgid "Other"
 msgstr ""
 
 #: includes/ReverseWithdrawal/Helper.php:362
-#: includes/ReverseWithdrawal/Manager.php:373
-#: includes/ReverseWithdrawal/Manager.php:409
+#: includes/ReverseWithdrawal/Manager.php:376
+#: includes/ReverseWithdrawal/Manager.php:412
 msgid "No vendor id provided"
 msgstr ""
 
@@ -9440,46 +9457,78 @@ msgstr ""
 msgid "Your account has been temporarily disabled for selling. Hence you are no longer able to sell any products."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:732
+#. translators: %s: comma separated list of order numbers awaiting completion
+#: includes/ReverseWithdrawal/Helper.php:858
+msgid "Your due balance is already covered by payment order %s, which has not been completed yet. Please complete or cancel it before paying again."
+msgid_plural "Your due balance is already covered by payment orders %s, which have not been completed yet. Please complete or cancel them before paying again."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: checkout url for the pending payment order
+#: includes/ReverseWithdrawal/Helper.php:870
+msgid "You can pay for it here: %s"
+msgstr ""
+
+#. translators: %s: cancel url for the pending payment order
+#: includes/ReverseWithdrawal/Helper.php:878
+msgid "Or cancel it here: %s"
+msgstr ""
+
+#: includes/ReverseWithdrawal/Helper.php:900
 msgid "Payment can not be less than or equal to zero."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:738
-#: includes/ReverseWithdrawal/Helper.php:743
+#: includes/ReverseWithdrawal/Helper.php:915
+#: includes/ReverseWithdrawal/Helper.php:953
+msgid "You do not have any due balance to pay."
+msgstr ""
+
+#. translators: %s: the vendor's outstanding reverse withdrawal balance
+#: includes/ReverseWithdrawal/Helper.php:964
+msgid "Payment can not be greater than your due balance of %s."
+msgstr ""
+
+#: includes/ReverseWithdrawal/Helper.php:975
+#: includes/ReverseWithdrawal/Helper.php:980
 msgid "Invalid base payment product id. Please contact with site admin."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:747
+#: includes/ReverseWithdrawal/Helper.php:984
 msgid "Base payment product status is not published. Please contact with site admin."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:769
-#: includes/ReverseWithdrawal/Helper.php:776
+#: includes/ReverseWithdrawal/Helper.php:1006
+#: includes/ReverseWithdrawal/Helper.php:1013
 msgid "Something went wrong while adding product to cart. Please contact site admin."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:494
+#: includes/ReverseWithdrawal/Manager.php:497
 msgid "No reverse withdrawal data found with given id."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:526
+#: includes/ReverseWithdrawal/Manager.php:529
 msgid "Transaction id is required."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:530
+#: includes/ReverseWithdrawal/Manager.php:533
 msgid "Invalid transaction type is provide. Please check your input."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:534
-#: includes/ReverseWithdrawal/Manager.php:655
+#: includes/ReverseWithdrawal/Manager.php:537
+#: includes/ReverseWithdrawal/Manager.php:658
 msgid "Invalid vendor id provide. Please provide a valid vendor id."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Manager.php:564
+#: includes/ReverseWithdrawal/Manager.php:567
 msgid "Something went wrong while inserting reverse withdrawal data. Please contact site admin."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Order.php:154
+#. translators: 1: amount paid in the order, 2: amount actually credited to the ledger
+#: includes/ReverseWithdrawal/Order.php:159
+msgid "Reverse withdrawal payment of %1$s exceeded the outstanding balance, so %2$s was credited."
+msgstr ""
+
+#: includes/ReverseWithdrawal/Order.php:220
 msgid "Payment Amount"
 msgstr ""
 

@@ -351,6 +351,11 @@ class AdminOnboardingController extends DokanBaseAdminController {
     protected function install_required_plugins( array $plugins ): void {
         $setup_wizard = new \WeDevs\Dokan\Admin\SetupWizard();
 
+        // install_plugin() enforces this too; bailing here also keeps the install hooks below from firing for a user who may not install.
+        if ( ! $setup_wizard->user_can_install_plugin() ) {
+            return;
+        }
+
         /**
          * Filter the plugins to install during onboarding.
          *

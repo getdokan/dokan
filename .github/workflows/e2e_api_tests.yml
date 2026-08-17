@@ -10,7 +10,12 @@ on:
     # is what actually starts the run near 9:00 AM BDT. Check the real start
     # times of recent scheduled runs before "correcting" this to 03:00 UTC.
     schedule:
+        # 02:00 UTC -- the gating run, on the pinned WordPress/WooCommerce versions.
         - cron: 0 2 * * *
+        # 14:00 UTC -- the canary run, on whatever WordPress/WooCommerce is current.
+        # It warns and never gates: see WP_STACK below and the continue-on-error on
+        # the test jobs. Change this cron and you must change the WP_STACK expression.
+        - cron: 0 14 * * *
     # workflow can be manually triggered
     workflow_dispatch:
         inputs:
@@ -22,11 +27,20 @@ on:
                     - E2E
                     - API
                     - All
+            wp_stack:
+                description: 'pinned = the versions committed in .wp-env*.json; latest = resolve WordPress and WooCommerce to current (failures do not gate)'
+                default: pinned
+                type: choice
+                options:
+                    - pinned
+                    - latest
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
     # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    # The stack is part of the group so the pinned run and the latest-canary never cancel
+    # each other on the same commit.
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'pinned' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -38,6 +52,12 @@ permissions:
 
 # workflow environment variables
 env:
+    # Which WordPress/WooCommerce versions this run installs.
+    #   pinned -- the versions committed in .wp-env*.json (the gating lane)
+    #   latest -- whatever WordPress and WooCommerce are current (the canary lane)
+    # Sourced from the workflow_dispatch input, else from which cron fired, else pinned.
+    # `inputs.wp_stack` is empty (falsy) on scheduled runs, so the fallbacks apply.
+    WP_STACK: ${{ inputs.wp_stack || (github.event.schedule == '0 14 * * *' && 'latest') || 'pinned' }}
     ADMIN: admin
     ADMIN_PASSWORD: password
     VENDOR: vendor1
@@ -264,6 +284,9 @@ jobs:
         name: e2e tests
         runs-on: ubuntu-latest
         timeout-minutes: 75
+        # The canary lane warns, it never gates. `env` is not readable from a job-level
+        # continue-on-error, so the WP_STACK expression is repeated here.
+        continue-on-error: ${{ inputs.wp_stack == 'latest' || github.event.schedule == '0 14 * * *' }}
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
         # `always() && build_lite succeeded` covers the fork-PR path too.
         needs: [build_lite, build_pro]
@@ -337,6 +360,15 @@ jobs:
                   else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
+                  fi
+                  # Canary lane: drop the version pins so wp-env resolves whatever
+                  # WordPress and WooCommerce are current. Gating lane is untouched.
+                  if [ "$WP_STACK" = "latest" ]; then
+                    jq '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                       .wp-env.override.json > .wp-env.override.json.tmp
+                    mv .wp-env.override.json.tmp .wp-env.override.json
+                    echo "WP_STACK=latest — core and WooCommerce unpinned"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
@@ -426,6 +458,28 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # What actually got installed, not what we asked for. On the canary lane this is
+            # the whole point of the run; on the gating lane it is the proof the pins held.
+            - name: Record resolved WordPress / WooCommerce versions
+              working-directory: tests/pw
+              run: |
+                  # `--` is required: without it npm swallows wp-cli's own flags, so
+                  # `--field=version` never reaches wp-cli, `wp plugin get` prints its
+                  # full field/value table, no line starts with a digit, and the grep
+                  # below yields "unknown" for WooCommerce on every single run.
+                  ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  WP=$(ver wp core version)
+                  WC=$(ver wp plugin get woocommerce --field=version)
+                  echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
+                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+
+                  # Persist for merge-reports, which runs on a clean runner with no
+                  # wp-env stack and so cannot resolve these itself. Rides along in the
+                  # existing tests/pw/playwright artifact — no new upload needed.
+                  mkdir -p playwright
+                  printf '{"stack":"%s","wordpress":"%s","woocommerce":"%s"}\n' \
+                      "$WP_STACK" "${WP:-unknown}" "${WC:-unknown}" > playwright/resolved-versions.json
 
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
@@ -510,8 +564,12 @@ jobs:
                       '
                   fi
 
+            # continue-on-error: the isolation re-run below decides this shard's result.
+            # `outcome` still reports the true first-pass result, so every later step that
+            # keys off steps.e2e-test.outcome keeps working unchanged.
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
+              continue-on-error: true
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 60
               working-directory: tests/pw
@@ -523,6 +581,94 @@ jobs:
                       # No baseline — fall back to Playwright's built-in alphabetical sharding
                       npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
                   fi
+
+            # Rescue the first-pass traces/screenshots BEFORE anything else can delete them.
+            #
+            # Playwright CLEARS `outputDir` (playwright/e2e/test-artifacts, playwright.config.ts:15) at
+            # the START of every run, and two more runs follow this one: the isolation re-run below and
+            # the coverage run further down. By the time "Archive test artifacts" uploads
+            # tests/pw/playwright, the trace for the failure that actually mattered is long gone —
+            # verified on run 31362069120, whose shard-8 artifact contains only shard-features.json and
+            # systemInfo.json. Every CI-only failure therefore had to be diagnosed by guesswork from the
+            # error message alone.
+            #
+            # This is the same clobbering the summary-report steps below already work around; traces were
+            # simply never covered. Copy, don't move: the isolation re-run's own artifacts are still
+            # wanted, and a copy cannot break the run if the directory is absent.
+            - name: 🧾 Preserve first-pass traces before the re-run wipes them
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  if [ -d playwright/e2e/test-artifacts ]; then
+                      mkdir -p playwright/e2e/first-pass-artifacts
+                      cp -R playwright/e2e/test-artifacts/. playwright/e2e/first-pass-artifacts/ || true
+                      echo "preserved $(find playwright/e2e/first-pass-artifacts -type f | wc -l) file(s)"
+                  else
+                      echo "no test-artifacts directory — nothing to preserve"
+                  fi
+
+            # Re-run ONLY the failed tests, after the whole shard has finished, without
+            # their shard-mates. This separates a transient failure from a reproducible one.
+            #
+            # Guard on a non-empty failedTests list: if the first pass died from a crash or a
+            # timeout rather than test failures, `--last-failed` would select zero tests and
+            # "pass", turning an infrastructure failure green. No recorded failures => no re-run,
+            # and the gate step below keeps the shard red.
+            #
+            # --reporter=list overrides the config reporters on purpose: the blob reporter would
+            # otherwise emit a second set of results for these same tests and merge-reports would
+            # double-count them. The merged HTML report therefore keeps showing the FIRST-pass
+            # failures, which is what actually happened in shard context.
+            - name: 🔁 Re-run shard failures in isolation
+              id: e2e-recheck
+              if: always() && steps.e2e-test.outcome == 'failure'
+              timeout-minutes: 30
+              working-directory: tests/pw
+              run: |
+                  LAST_RUN=playwright/e2e/test-artifacts/.last-run.json
+                  if [ ! -f "$LAST_RUN" ] || [ "$(node -e "try{process.stdout.write(String((require('./'+process.argv[1]).failedTests||[]).length))}catch(e){process.stdout.write('0')}" "$LAST_RUN")" = "0" ]; then
+                      echo "::warning::No recorded test failures — the first pass failed for another reason (crash/timeout). Not re-running."
+                      exit 1
+                  fi
+                  set -o pipefail
+                  NO_SETUP=true npx playwright test --project=e2e_tests --last-failed \
+                      --reporter=list 2>&1 | tee /tmp/recheck.log
+
+            # Always say out loud which tests were rescued by the isolation re-run. A test that
+            # fails with its shard-mates but passes alone is the signature of shard-state
+            # pollution (an earlier spec leaving a global option/module/product dirty), NOT a
+            # timing flake — Playwright's in-place `retries` cannot green that class, this can.
+            - name: 📋 Report isolation re-run outcome
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  {
+                      echo "### Shard ${{ matrix.shardIndex }} — failures re-run in isolation"
+                      echo
+                      if [ "${{ steps.e2e-recheck.outcome }}" = "success" ]; then
+                          echo "⚠️ **These tests failed alongside their shard-mates but passed alone.**"
+                          echo "The shard is reported green. Treat this as suspected shard-state pollution"
+                          echo "and investigate the polluter — verify by running the earlier spec and reading"
+                          echo "the global state back, not by re-running the test that failed."
+                      else
+                          echo "❌ **The re-run failed too — reproducible failures, not flakes.**"
+                      fi
+                      echo
+                      echo '```'
+                      if [ -f /tmp/recheck.log ]; then
+                          grep -E '^[[:space:]]+(✓|✘|×)' /tmp/recheck.log | head -50
+                      else
+                          echo "(no re-run log — first pass failed without recorded test failures)"
+                      fi
+                      echo '```'
+                  } >> "$GITHUB_STEP_SUMMARY"
+
+            # The actual gate. The shard is red unless the isolation re-run cleared every failure.
+            - name: Fail the shard when the isolation re-run did not clear
+              if: always() && steps.e2e-test.outcome == 'failure' && steps.e2e-recheck.outcome != 'success'
+              run: |
+                  echo "::error::Shard ${{ matrix.shardIndex }} failed and the isolation re-run did not clear it."
+                  exit 1
 
             # Snapshot the e2e summary before coverage runs — both projects use
             # the same playwright.config.ts and write summaryReporter output to
@@ -580,6 +726,8 @@ jobs:
         name: api tests
         runs-on: ubuntu-latest
         timeout-minutes: 25
+        # See e2e_tests: the canary lane warns, it never gates.
+        continue-on-error: ${{ inputs.wp_stack == 'latest' || github.event.schedule == '0 14 * * *' }}
         needs: [build_lite, build_pro]
         if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
         strategy:
@@ -650,6 +798,15 @@ jobs:
                   else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
+                  fi
+                  # Canary lane: drop the version pins so wp-env resolves whatever
+                  # WordPress and WooCommerce are current. Gating lane is untouched.
+                  if [ "$WP_STACK" = "latest" ]; then
+                    jq '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                       .wp-env.override.json > .wp-env.override.json.tmp
+                    mv .wp-env.override.json.tmp .wp-env.override.json
+                    echo "WP_STACK=latest — core and WooCommerce unpinned"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
@@ -739,6 +896,28 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # What actually got installed, not what we asked for. On the canary lane this is
+            # the whole point of the run; on the gating lane it is the proof the pins held.
+            - name: Record resolved WordPress / WooCommerce versions
+              working-directory: tests/pw
+              run: |
+                  # `--` is required: without it npm swallows wp-cli's own flags, so
+                  # `--field=version` never reaches wp-cli, `wp plugin get` prints its
+                  # full field/value table, no line starts with a digit, and the grep
+                  # below yields "unknown" for WooCommerce on every single run.
+                  ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  WP=$(ver wp core version)
+                  WC=$(ver wp plugin get woocommerce --field=version)
+                  echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
+                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+
+                  # Persist for merge-reports, which runs on a clean runner with no
+                  # wp-env stack and so cannot resolve these itself. Rides along in the
+                  # existing tests/pw/playwright artifact — no new upload needed.
+                  mkdir -p playwright
+                  printf '{"stack":"%s","wordpress":"%s","woocommerce":"%s"}\n' \
+                      "$WP_STACK" "${WP:-unknown}" "${WC:-unknown}" > playwright/resolved-versions.json
 
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
@@ -883,6 +1062,30 @@ jobs:
               with:
                   path: tests/pw/all-reports
                   pattern: test-artifact-*
+
+            # Runs before every other summary write in this job so the stack the suite
+            # actually ran on is the first thing on the run page. The shards each record
+            # their own line too; this is the consolidated one. Disagreement between
+            # shards is worth surfacing rather than hiding — on the canary lane it means
+            # WordPress or WooCommerce shipped a release mid-run.
+            - name: Report resolved stack at the top of the summary
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              run: |
+                  FILES=$(find tests/pw/all-reports -name resolved-versions.json 2>/dev/null | sort)
+                  COUNT=$(printf '%s\n' "$FILES" | grep -c . || true)
+                  if [ "${COUNT:-0}" -eq 0 ]; then
+                      printf '> Resolved stack: **unavailable** — no job reported one.\n\n' >> "$GITHUB_STEP_SUMMARY"
+                      exit 0
+                  fi
+                  COMBOS=$(printf '%s\n' "$FILES" | xargs jq -r '"\(.stack)|\(.wordpress)|\(.woocommerce)"' | sort -u)
+                  printf '%s\n' "$COMBOS" | while IFS='|' read -r stack wp wc; do
+                      printf '> **`%s` lane — WordPress %s, WooCommerce %s** _(%s jobs reporting)_\n' \
+                          "$stack" "$wp" "$wc" "$COUNT" >> "$GITHUB_STEP_SUMMARY"
+                  done
+                  if [ "$(printf '%s\n' "$COMBOS" | wc -l)" -gt 1 ]; then
+                      printf '> \n> ⚠️ Jobs did **not** all run the same stack — results are not comparable across shards.\n' >> "$GITHUB_STEP_SUMMARY"
+                  fi
+                  printf '\n' >> "$GITHUB_STEP_SUMMARY"
 
             # download-artifact silently does nothing when no artifacts match
             # (e.g. all upstream test jobs were skipped after a build failure),

@@ -1,6 +1,6 @@
 import { Page, Frame, expect, request } from '@playwright/test';
-import { toPath, closeAnnouncementModal, SERVER_URL } from '@utils/helpers';
-import { payloads } from '@utils/payloads';
+import { toPath, closeAnnouncementModal, SERVER_URL, parseBoolean } from '@utils/helpers';
+import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { stripeApi } from '@utils/stripeApi';
 
 // The suite's strict tsconfig doesn't pull in `@types/node`, so `process` would
@@ -171,7 +171,7 @@ export class StripeExpressPage {
         firstName: 'customer1',
         lastName: 'c1',
         email: 'customer1@email.com',
-        phone: '(555) 555-5555',
+        phone: MOBILE_TEST_PHONE,
         address1: 'abc street',
         city: 'New York',
         postcode: '10003',
@@ -435,6 +435,93 @@ export class StripeExpressPage {
      * number stuck — retrying the WHOLE entry if the PE re-mounts (WC re-render detaches
      * the cross-origin frame mid-fill).
      */
+    /**
+     * True when all three Payment Element fields still hold a plausible value. DIAGNOSTIC ONLY —
+     * called on the failure path to say whether the element still held a card when the submit
+     * no-oped. Length-based, so it proves presence, NOT validity: a corrupted value still passes.
+     */
+    private async isCardComplete(): Promise<boolean> {
+        try {
+            const frame = await this.findStripePeFrame();
+            const read = async (sel: string) => (await frame.locator(sel).first().inputValue().catch(() => '')).replace(/\s/g, '');
+            const [num, exp, cvc] = await Promise.all([
+                read(StripeExpressPage.PE_NUMBER),
+                read(StripeExpressPage.PE_EXPIRY),
+                read(StripeExpressPage.PE_CVC),
+            ]);
+            return num.length >= 12 && exp.length >= 4 && cvc.length >= 3;
+        } catch {
+            // The element is not reachable at all — report that rather than throwing from a
+            // diagnostic and masking the real failure.
+            return false;
+        }
+    }
+
+    /**
+     * WooCommerce Blocks' own checkout status, or null when it cannot be read.
+     * Used to tell "the submit started" from "the click did nothing".
+     */
+    private async blockCheckoutStatus(): Promise<string | null> {
+        return this.page
+            .evaluate(() => {
+                const select = (window as any).wp?.data?.select;
+                const checkout = select?.('wc/store/checkout');
+                try {
+                    return typeof checkout?.getCheckoutStatus === 'function' ? String(checkout.getCheckoutStatus()) : null;
+                } catch {
+                    return null;
+                }
+            })
+            .catch(() => null);
+    }
+
+    /**
+     * Press Place Order and CONFIRM the checkout actually began submitting; re-press if it did not.
+     *
+     * Diagnosed by probing Blocks' own store around the click under emulated CI conditions (250ms
+     * latency, 4x CPU throttle). On a failing run the status sequence after the click was ["idle"] —
+     * it never moved for ten seconds — while a passing run gave ["processing","after_processing"].
+     * At the moment of that click Blocks reported status "idle", isCalculating false, isProcessing
+     * false, hasError false and the button NOT disabled, and Playwright reported the click as
+     * successful. So the submit handler simply never ran: React re-renders the place-order button
+     * (cart totals and payment methods resolve late on a slow link), and the event lands on the node
+     * that was actionable a moment earlier rather than the one now mounted.
+     *
+     * That is the whole SE-GUEST-01 failure. Nothing was ever submitted, which is why there is no
+     * POST /wc/store/v1/checkout, no order, no validation message in the page OR inside the Stripe
+     * iframe, and why the settle poll can only report "none". It also explains why the card, the
+     * network and the cart all turned out to be red herrings.
+     *
+     * Re-pressing is safe precisely BECAUSE it is conditional on the status still being "idle": idle
+     * means no submission started, so there is no attempt in flight and no risk of a second order. The
+     * moment the status leaves idle this returns and lets the existing assertions decide the verdict —
+     * a payment that genuinely fails still fails. If the status cannot be read at all, it returns
+     * after the first press rather than guessing.
+     */
+    private async pressPlaceOrderUntilSubmitting(selector: string): Promise<void> {
+        const ATTEMPTS = 3;
+        const CONFIRM_MS = 4_000;
+        const POLL_MS = 200;
+
+        for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
+            await this.page.locator(selector).click();
+
+            const deadline = Date.now() + CONFIRM_MS;
+            while (Date.now() < deadline) {
+                const status = await this.blockCheckoutStatus();
+                if (status === null) {
+                    // Store unreadable — cannot verify, so do not risk a second press.
+                    return;
+                }
+                if (status !== 'idle') {
+                    return; // submission started
+                }
+                await this.page.waitForTimeout(POLL_MS);
+            }
+            // Still idle: the press did not take. Loop and press again.
+        }
+    }
+
     async fillCardDetails(card: string = STRIPE_CARDS.success): Promise<void> {
         await this.openCardAccordion();
         const deadline = Date.now() + 45_000;
@@ -449,11 +536,28 @@ export class StripeExpressPage {
                 if (await zip.count().catch(() => 0)) {
                     await zip.first().fill(STRIPE_CARDS.zip).catch(() => undefined);
                 }
+                /*
+                 * Verify ALL THREE fields persisted, not just the number.
+                 *
+                 * This method already knows the Payment Element can re-mount mid-entry, but it only
+                 * ever re-read the number. A re-mount after the number was typed leaves the number
+                 * populated while silently dropping expiry/CVC, so an INCOMPLETE card passed this
+                 * check. WooCommerce Blocks then refuses to submit — `elements.submit()` fails
+                 * validation — and the Place Order click becomes a no-op: no
+                 * POST /wc/store/v1/checkout, no order, and the settle poll can only report "none".
+                 * That is the exact signature of the CI failures (36 NO-OP diagnostics, zero Store
+                 * API attempts, while saved-token payments on the same runner succeed).
+                 */
                 const val = (await frame.locator(StripeExpressPage.PE_NUMBER).first().inputValue().catch(() => '')).replace(/\s/g, '');
-                if (val.length >= 12) {
+                const expVal = (await frame.locator(StripeExpressPage.PE_EXPIRY).first().inputValue().catch(() => '')).replace(/\s/g, '');
+                const cvcVal = (await frame.locator(StripeExpressPage.PE_CVC).first().inputValue().catch(() => '')).replace(/\s/g, '');
+                if (val.length >= 12 && expVal.length >= 4 && cvcVal.length >= 3) {
                     return;
                 }
-                lastErr = new Error('card number did not persist — PE re-mounted during entry');
+                lastErr = new Error(
+                    `card did not fully persist — PE re-mounted during entry (number=${val.length} chars, expiry="${expVal}", cvc=${cvcVal.length} chars). ` +
+                        'An incomplete Payment Element makes the Blocks Place Order click a silent no-op.',
+                );
             } catch (err) {
                 lastErr = err;
                 await this.openCardAccordion(); // a re-mount may have reset to a non-card tab
@@ -513,7 +617,17 @@ export class StripeExpressPage {
     }
 
     /** Fill the WC block checkout CONTACT + SHIPPING address as a GUEST (no saved address). */
-    async fillBlockGuestDetails(d: { email: string; firstName: string; lastName: string; address: string; city: string; state: string; postcode: string; country: string }): Promise<void> {
+    async fillBlockGuestDetails(d: {
+        email: string;
+        firstName: string;
+        lastName: string;
+        address: string;
+        city: string;
+        state: string;
+        postcode: string;
+        country: string;
+        phone?: string;
+    }): Promise<void> {
         const p = this.page;
         await p.locator('#email').fill(d.email);
         await p.locator('#shipping-country').selectOption(d.country);
@@ -523,6 +637,26 @@ export class StripeExpressPage {
         await p.locator('#shipping-city').fill(d.city);
         await p.locator('#shipping-state').selectOption(d.state).catch(() => undefined);
         await p.locator('#shipping-postcode').fill(d.postcode);
+        /*
+         * A guest has no saved address, so unlike the logged-in flows nothing pre-fills the phone —
+         * it has to be typed. When the field is required and left empty the block refuses to submit
+         * with "Please provide a mobile phone number.", the Place Order click becomes a no-op, and
+         * the settle poll can only report "none" (CI run 31147407922, SE-GUEST-01). Optional here so
+         * existing callers are unaffected, and tolerant of the field being absent when the store has
+         * the phone field switched off.
+         */
+        if (d.phone) {
+            // Fail loudly rather than silently skipping. The first version guarded with
+            // `if (count())` and swallowed fill errors, so a renamed field would look identical to
+            // "the store has no phone field" — and the caller would only find out much later, as an
+            // unexplained no-op Place Order click with no visible validation message.
+            const phoneField = p.locator('#shipping-phone, #billing-phone, input[id$="-phone"]').first();
+            await expect(phoneField, 'the block checkout phone field must exist for a guest — the Place Order click is a silent no-op without it').toBeVisible({
+                timeout: 15_000,
+            });
+            await phoneField.fill(d.phone);
+            await expect(phoneField, 'the guest phone must actually persist into the field').toHaveValue(/\d/);
+        }
         await p.waitForLoadState('networkidle').catch(() => undefined);
         await p.waitForTimeout(1_500);
     }
@@ -563,15 +697,94 @@ export class StripeExpressPage {
         // the retry reuses, so a baseline taken here would equal that order's id and `id > baseline` would
         // never match. Callers of the plain happy path omit it (baseline taken just before the click).
         const baseline = baselineOverride ?? (await this.latestStripeOrderId());
-        await this.page.locator(this.blockSelectors.placeOrder).click();
+
+        // Record what the Blocks checkout actually DID with the click.
+        //
+        // Without this, two very different failures collapse into the same symptom ("no new
+        // order"): the Store API rejected the payment, versus the click was a no-op because the
+        // block was not submittable. The poll below can only ever report "none" for both. Capturing
+        // the POST /wc/store/v1/checkout attempt distinguishes them and puts the reason in the
+        // failure message instead of leaving it to be guessed from a screenshot.
+        const storeApiAttempts: string[] = [];
+        const onResponse = (res: { url(): string; status(): number; request(): { method(): string }; text(): Promise<string> }) => {
+            if (res.request().method() !== 'POST' || !/\/wc\/store\/v1\/checkout/.test(res.url())) {
+                return;
+            }
+            const status = res.status();
+            void res
+                .text()
+                .then(body => storeApiAttempts.push(`HTTP ${status}: ${body.slice(0, 300)}`))
+                .catch(() => storeApiAttempts.push(`HTTP ${status}: <body unavailable>`));
+        };
+        this.page.on('response', onResponse);
+
         try {
-            await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
-            const m = this.page.url().match(/order-received\/(\d+)/);
-            if (m?.[1]) return m[1];
-        } catch {
-            // redirect flaked after a successful payment — fall through to API confirmation
+            await this.pressPlaceOrderUntilSubmitting(this.blockSelectors.placeOrder);
+            try {
+                /*
+                 * Budget, not preference. The waits after this click used to be 60s (redirect) +
+                 * 120s (settle poll) = 180s MINIMUM, inside specs configured at 150s
+                 * (stripeExpress, stripeExpressXss, …) and before any of the setup cost — cart,
+                 * block hydration, PE mount, card fill. The settle poll, which is the mechanism
+                 * that actually decides pass/fail, could therefore never run to completion on CI:
+                 * the test died mid-poll and reported the poll's placeholder ("none") rather than
+                 * a real verdict.
+                 *
+                 * On CI the SPA redirect is the KNOWN-unreliable path (see this method's docblock),
+                 * so spending 60s of the budget waiting for something we expect to lose is the
+                 * wrong trade — that time belongs to the poll. Keep the full wait locally, where
+                 * the redirect is reliable and is the fast path.
+                 */
+                await this.page.waitForURL('**/order-received/**', { timeout: parseBoolean(process.env.CI) ? 15_000 : 60_000 });
+                const m = this.page.url().match(/order-received\/(\d+)/);
+                if (m?.[1]) return m[1];
+            } catch {
+                // redirect flaked after a successful payment — fall through to API confirmation
+            }
+            try {
+                return await this.confirmNewPaidStripeOrder(baseline);
+            } catch (err) {
+                let detail: string;
+                if (storeApiAttempts.length) {
+                    detail = `Store API checkout attempts:\n  ${storeApiAttempts.join('\n  ')}`;
+                } else {
+                    // No POST means the block refused to submit. Read back WHY: the block's own
+                    // notice banner and the Payment Element's inline error name the offending field,
+                    // which is the difference between "card incomplete" and "billing field missing".
+                    const notices = await this.page
+                        .locator('.wc-block-components-notice-banner, .wc-block-components-validation-error')
+                        .allInnerTexts()
+                        .catch(() => [] as string[]);
+                    const peError = await this.page.locator('#dokan-stripe-express-errors').innerText().catch(() => '');
+                    /*
+                     * Also read INSIDE the Stripe iframe. Both selectors above live in the main
+                     * document, but the Payment Element renders its own field-level validation
+                     * ("Your card number is incomplete", "Your card's expiration date is
+                     * incomplete") inside its iframe. So the message that explains the no-op was
+                     * structurally unreachable, and this diagnostic reported
+                     * "<no visible validation message>" on every CI failure — which reads as "no
+                     * error existed" when it actually meant "we could not see one".
+                     */
+                    const peFrameError = await this.findStripePeFrame()
+                        .then(frame => frame.locator('p[role="alert"], .p-FieldError, [id$="-errorText"]').allInnerTexts())
+                        .then(texts => texts.join(' | '))
+                        .catch(() => '');
+                    const cardState = await this.isCardComplete()
+                        .then(ok => (ok ? 'card fields still complete at failure' : 'CARD FIELDS EMPTY/INCOMPLETE at failure — the Payment Element re-mounted'))
+                        .catch(() => 'card state unreadable');
+                    const why =
+                        [...notices, peError, peFrameError].map(t => t.trim()).filter(Boolean).join(' | ') ||
+                        '<no validation message in the page OR inside the Payment Element iframe>';
+                    detail =
+                        'The Blocks checkout never issued POST /wc/store/v1/checkout at all — the Place Order click was a NO-OP ' +
+                        '(block not submittable / validation blocked it), so no payment was ever attempted. This is a checkout-submission ' +
+                        `failure, not a declined payment.\nBlock validation said: ${why}\nPayment Element state: ${cardState}`;
+                }
+                throw new Error(`${String(err)}\n\n${detail}`);
+            }
+        } finally {
+            this.page.off('response', onResponse);
         }
-        return await this.confirmNewPaidStripeOrder(baseline);
     }
 
     /** Public pre-payment baseline: newest dokan_stripe_express order id BEFORE a checkout attempt. */
@@ -661,8 +874,36 @@ export class StripeExpressPage {
     }
 
     async placeBlockOrderExpectError(): Promise<void> {
-        await this.page.locator(this.blockSelectors.placeOrder).click();
-        await expect(this.page.locator(this.blockSelectors.error).first(), 'declined card should surface a block error notice').toBeVisible({ timeout: 40_000 });
+        await this.pressPlaceOrderUntilSubmitting(this.blockSelectors.placeOrder);
+        const notice = this.page.locator(this.blockSelectors.error).first();
+        await expect(notice, 'declined card should surface a block error notice').toBeVisible({ timeout: 40_000 });
+
+        /*
+         * "An error appeared and we never reached order-received" is ALSO what a failed form
+         * validation looks like, so the bare check above could pass without the card ever being
+         * submitted — a missing phone did exactly that (CI run 31147407922). Require the notice to
+         * be about the PAYMENT, so a decline test cannot be satisfied by an address-field problem.
+         */
+        /*
+         * Match by EXCLUSION, not by payment keywords.
+         *
+         * A first attempt required /declin|card|payment|…/ and broke all three decline tests on CI
+         * (run 31162562169): a real Stripe decline surfaces through WooCommerce Blocks as the generic
+         * "Something went wrong. Please contact us to get assistance.", which contains no payment word
+         * at all. Requiring one rejected a genuine decline.
+         *
+         * What must be excluded is the FORM-VALIDATION family, because those mean the card was never
+         * submitted — that is the loophole this guard exists to close ("Please provide a mobile phone
+         * number." satisfied the old bare check). Anything that is not field validation is accepted.
+         */
+        const text = ((await notice.innerText().catch(() => '')) || '').trim();
+        const isFieldValidation = /please provide|please enter|is invalid|is required|enter a valid/i.test(text);
+        expect(
+            isFieldValidation,
+            `the block error was a form-validation message ("${text}"), which means the card was never submitted — ` +
+                'this test would be passing without exercising a decline at all.',
+        ).toBe(false);
+
         await expect(this.page, 'declined card must not reach order-received').not.toHaveURL(/order-received/);
     }
 
