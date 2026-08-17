@@ -716,6 +716,174 @@ class Helper {
     }
 
     /**
+     * Get the total of the vendor's reverse withdrawal payments that are not in the ledger yet.
+     *
+     * A payment reaches the ledger only when its order is completed, so orders still waiting on that are
+     * invisible to the balance and have to be accounted for separately before accepting another payment.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id
+     *
+     * @return float
+     */
+    public static function get_awaiting_payment_total( $vendor_id ) {
+        return self::sum_payment_amounts( self::get_awaiting_payment_orders( $vendor_id ) );
+    }
+
+    /**
+     * Total the reverse withdrawal payment amounts carried by a set of orders.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order[] $orders
+     *
+     * @return float
+     */
+    protected static function sum_payment_amounts( array $orders ) {
+        $total = 0.0;
+
+        foreach ( $orders as $order ) {
+            $total += (float) self::get_balance_from_order( $order );
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get the vendor's reverse withdrawal payment orders that are still waiting to reach the ledger.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id
+     *
+     * @return \WC_Order[]
+     */
+    public static function get_awaiting_payment_orders( $vendor_id ) {
+        $orders = wc_get_orders(
+            [
+                'type'        => 'shop_order',
+                'customer_id' => $vendor_id,
+                /*
+                 * Only statuses an order can still reach `completed` from. `failed` belongs here because the customer
+                 * can retry payment on it; `cancelled` and `refunded` do not, and holding them back would strand the
+                 * vendor behind an order they can no longer act on.
+                 */
+                'status'      => [ 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-failed' ],
+                'limit'       => -1,
+            ]
+        );
+
+        $candidates = [];
+
+        foreach ( $orders as $order ) {
+            /*
+             * A payment settled with nothing left to credit writes no ledger row, so the lookup below can never
+             * clear it. Left in, it would be deducted from the due forever and lock the vendor out of paying any
+             * newly accrued debt — `Order::insert_payment()` reads the same marker, so it can never credit again.
+             */
+            if ( 'yes' === $order->get_meta( Order::PAYMENT_SETTLED_META ) ) {
+                continue;
+            }
+
+            if ( self::has_reverse_withdrawal_payment_in_order( $order ) ) {
+                $candidates[ $order->get_id() ] = $order;
+            }
+        }
+
+        if ( empty( $candidates ) ) {
+            return [];
+        }
+
+        // Resolve every already-credited order in one query rather than asking per order.
+        $settled = ( new Manager() )->all(
+            [
+                'trn_id'    => array_keys( $candidates ),
+                // Manager::all() validates this against the transaction type map, so it has to stay a plain string.
+                'trn_type'  => 'vendor_payment',
+                'vendor_id' => [ $vendor_id ],
+                'return'    => 'vendor_transaction',
+                'per_page'  => count( $candidates ),
+            ]
+        );
+
+        if ( is_wp_error( $settled ) ) {
+            // Without the exclusion list every candidate would look unpaid, so hold them all back rather than guess.
+            return array_values( $candidates );
+        }
+
+        foreach ( (array) $settled as $transaction ) {
+            // A payment already written to the ledger is part of the balance, counting it again would deduct it twice.
+            // Rows arrive as ARRAY_A from Manager::all(), never as objects.
+            unset( $candidates[ (int) $transaction['trn_id'] ] );
+        }
+
+        return array_values( $candidates );
+    }
+
+    /**
+     * Build the message shown when an unfinished payment order is holding the balance.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order[] $orders
+     *
+     * @return string
+     */
+    protected static function get_awaiting_payment_message( array $orders ) {
+        $numbers    = [];
+        $pay_url    = '';
+        $cancel_url = '';
+
+        foreach ( $orders as $order ) {
+            $numbers[] = '#' . $order->get_order_number();
+
+            // Unpaid orders can be settled by the vendor themselves, so point them at the first one they can act on.
+            if ( ! $pay_url && $order->needs_payment() ) {
+                $pay_url = $order->get_checkout_payment_url();
+            }
+
+            // Same statuses WooCommerce lets a customer cancel from — anything else needs the admin.
+            $cancellable = apply_filters( 'woocommerce_valid_order_statuses_for_cancel', [ 'pending', 'failed' ], $order );
+
+            // An abandoned order would otherwise hold the balance until an admin noticed, so offer the way out.
+            if ( ! $cancel_url && in_array( $order->get_status(), (array) $cancellable, true ) ) {
+                // The raw variant: the message is plain text, and the escaped one would hand WooCommerce `amp;order_id`.
+                $cancel_url = $order->get_cancel_order_url_raw( wc_get_page_permalink( 'myaccount' ) );
+            }
+        }
+
+        $message = sprintf(
+            /* translators: %s: comma separated list of order numbers awaiting completion */
+            _n(
+                'Your due balance is already covered by payment order %s, which has not been completed yet. Please complete or cancel it before paying again.',
+                'Your due balance is already covered by payment orders %s, which have not been completed yet. Please complete or cancel them before paying again.',
+                count( $numbers ),
+                'dokan-lite'
+            ),
+            implode( ', ', $numbers )
+        );
+
+        if ( $pay_url ) {
+            $message .= ' ' . sprintf(
+                /* translators: %s: checkout url for the pending payment order */
+                __( 'You can pay for it here: %s', 'dokan-lite' ),
+                $pay_url
+            );
+        }
+
+        if ( $cancel_url ) {
+            $message .= ' ' . sprintf(
+                /* translators: %s: cancel url for the pending payment order */
+                __( 'Or cancel it here: %s', 'dokan-lite' ),
+                $cancel_url
+            );
+        }
+
+        return $message;
+    }
+
+    /**
      * This method will add reverse payment amount to cart
      *
      * @since 3.7.16
@@ -729,7 +897,76 @@ class Helper {
 
         // now check for data validation
         if ( $amount <= 0 ) {
-            return new WP_Error( 'invalid-amount', __( 'Payment can not be less than or equal to zero.', 'dokan-lite' ) );
+            return new WP_Error( 'invalid-amount', __( 'Payment can not be less than or equal to zero.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        // The amount is client-supplied and lands in the vendor's ledger verbatim, so it must never exceed what they actually owe.
+        $vendor_id    = dokan_get_current_user_id();
+        $balance_data = self::get_vendor_balance( $vendor_id );
+
+        if ( is_wp_error( $balance_data ) ) {
+            return $balance_data;
+        }
+
+        // Cap against total `balance`, not `payable_amount`, so paying a not-yet-due balance early still works under by_month billing.
+        $due = (float) wc_format_decimal( $balance_data['balance'], wc_get_price_decimals() );
+
+        if ( $due <= 0 ) {
+            return new WP_Error( 'no-due-balance', __( 'You do not have any due balance to pay.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        /*
+         * The ledger is only credited when the payment order completes, so the balance above still reads full while
+         * earlier payment orders sit unpaid. Without deducting them a vendor can stack several individually valid
+         * payments and over-credit the ledger once they all land.
+         */
+        // Fetched as orders rather than a bare total so the rejection can name them.
+        $awaiting_orders = self::get_awaiting_payment_orders( $vendor_id );
+        $due             = (float) wc_format_decimal( $due - self::sum_payment_amounts( $awaiting_orders ), wc_get_price_decimals() );
+
+        if ( $due <= 0 ) {
+            return new WP_Error(
+                'payment-already-awaiting',
+                // Naming the order matters: without it a vendor blocked by a stale order has no way to work out why.
+                self::get_awaiting_payment_message( $awaiting_orders ),
+                [ 'status' => 400 ]
+            );
+        }
+
+        /**
+         * Filters the largest reverse withdrawal payment a vendor may make in one go.
+         *
+         * `Order::insert_payment()` applies this filter again when the payment lands, so whatever ceiling is
+         * returned here is honoured by the ledger too. Raising it on only one side would take the vendor's money
+         * and then withhold the credit.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param float  $due       Ceiling for the payment: the outstanding balance, less anything already awaiting
+         *                          completion when capping a new payment.
+         * @param int    $vendor_id Vendor the payment belongs to.
+         * @param string $context   `cart` when capping a new payment, `completion` when crediting the ledger.
+         */
+        $due = (float) apply_filters( 'dokan_reverse_withdrawal_payable_amount', $due, $vendor_id, 'cart' );
+
+        if ( $due <= 0 ) {
+            return new WP_Error( 'no-due-balance', __( 'You do not have any due balance to pay.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        // Compare as scaled integers so paying the exact outstanding balance is not rejected by IEEE-754 drift.
+        $scale = 10 ** wc_get_price_decimals();
+
+        if ( (int) round( $amount * $scale ) > (int) round( $due * $scale ) ) {
+            return new WP_Error(
+                'amount-exceeds-due-balance',
+                sprintf(
+                    /* translators: %s: the vendor's outstanding reverse withdrawal balance */
+                    __( 'Payment can not be greater than your due balance of %s.', 'dokan-lite' ),
+                    // The AJAX caller renders this message as plain text, so the price must not carry markup.
+                    wp_strip_all_tags( html_entity_decode( wc_price( $due ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) )
+                ),
+                [ 'status' => 400 ]
+            );
         }
 
         // get reverse withdrawal product id
