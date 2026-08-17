@@ -1343,7 +1343,7 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Address Fields', 'dokan-lite' ),
                 'description'   => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
-                'default'       => 'on',
+                'default'       => 'off',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
 					'value' => 'on',
@@ -1449,7 +1449,7 @@ class SettingsSchema {
                 'title'         => esc_html__( 'One Page Product Creation', 'dokan-lite' ),
                 'description'   => esc_html__( 'Add new product in single page view.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ),
-                'default'       => 'off',
+                'default'       => 'on',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
 					'value' => 'on',
