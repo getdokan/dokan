@@ -2126,6 +2126,10 @@ class SettingsSchema {
                 'id'         => 'data_clear_section',
                 'type'       => 'section',
                 'subpage_id' => 'privacy',
+                // Renders the section card itself in destructive tones. The
+                // danger_switch field inside draws no card of its own, so this
+                // is what gives the block its red border and background.
+                'is_danger'  => true,
             ],
             [
                 'id'             => 'data_clear_on_uninstall',
