@@ -162,7 +162,8 @@ class Order {
 
         if ( $amount <= 0 ) {
             $order->update_meta_data( self::PAYMENT_SETTLED_META, 'yes' );
-            $order->save();
+            // Only the meta needs persisting, and a full save() here runs inside the status-change hook.
+            $order->save_meta_data();
 
             return;
         }

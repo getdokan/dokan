@@ -728,9 +728,22 @@ class Helper {
      * @return float
      */
     public static function get_awaiting_payment_total( $vendor_id ) {
+        return self::sum_payment_amounts( self::get_awaiting_payment_orders( $vendor_id ) );
+    }
+
+    /**
+     * Total the reverse withdrawal payment amounts carried by a set of orders.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order[] $orders
+     *
+     * @return float
+     */
+    protected static function sum_payment_amounts( array $orders ) {
         $total = 0.0;
 
-        foreach ( self::get_awaiting_payment_orders( $vendor_id ) as $order ) {
+        foreach ( $orders as $order ) {
             $total += (float) self::get_balance_from_order( $order );
         }
 
@@ -881,14 +894,9 @@ class Helper {
          * earlier payment orders sit unpaid. Without deducting them a vendor can stack several individually valid
          * payments and over-credit the ledger once they all land.
          */
+        // Fetched as orders rather than a bare total so the rejection can name them.
         $awaiting_orders = self::get_awaiting_payment_orders( $vendor_id );
-        $awaiting        = 0.0;
-
-        foreach ( $awaiting_orders as $awaiting_order ) {
-            $awaiting += (float) self::get_balance_from_order( $awaiting_order );
-        }
-
-        $due = (float) wc_format_decimal( $due - $awaiting, wc_get_price_decimals() );
+        $due             = (float) wc_format_decimal( $due - self::sum_payment_amounts( $awaiting_orders ), wc_get_price_decimals() );
 
         if ( $due <= 0 ) {
             return new WP_Error(
