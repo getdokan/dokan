@@ -59,17 +59,20 @@ test.describe('Product subscriptions test', () => {
 });
 
 // ============================================
-// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// LEGACY-URL SMOKES (mislabelled "React" — see NEW-UI-MIGRATION-CHECKLIST.md)
 // ============================================
-// Added during the 5.0.0 React rewrite. These tests target the new React
-// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
-// the legacy tests above for parity coverage during rollout.
+// These navigate the LEGACY product-subscription page
+// (`dashboard/user-subscription/`), not the React SPA, so they carry no
+// `@new-ui` tag. Real React coverage of `#/user-subscription` lives in
+// `vendor-product-subscription/newUserSubscription.spec.ts`. Until 2026-08-14
+// this block pointed at `dashboard/subscription/` — the vendor-PACK surface,
+// i.e. the other spec's page (handoff item D5).
 
 test.describe('Vendor Product Subscription (React) Tests @pro', () => {
     test('Test Case 1 - Vendor subscription page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/subscription/`));
+        await page.goto(toPath(`dashboard/user-subscription/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
