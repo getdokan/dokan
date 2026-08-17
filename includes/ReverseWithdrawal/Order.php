@@ -139,7 +139,15 @@ class Order {
 
         if ( ! is_wp_error( $balance_data ) ) {
             // Clamp against the unrounded balance, otherwise half-up rounding lets the credit overshoot the real debt.
-            $due   = (float) $balance_data['balance'];
+            $due = (float) $balance_data['balance'];
+
+            /*
+             * Same ceiling the cart guard applies, so a marketplace that raises it there is not handed a payment
+             * the ledger then refuses to honour. Filtering only one end would take the vendor's money and withhold
+             * the credit — see `Helper::add_payment_to_cart()`.
+             */
+            $due = (float) apply_filters( 'dokan_reverse_withdrawal_payable_amount', $due, $vendor_id, 'completion' );
+
             $scale = 10 ** wc_get_price_decimals();
 
             if ( $amount > $due ) {

@@ -413,6 +413,60 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     }
 
     /**
+     * The cap is filterable, and the ledger honours whatever the filter returns.
+     *
+     * Filtering only the cart side would let a marketplace accept a payment the completion clamp then trims,
+     * taking the vendor's money and withholding the credit — so both ends read the same filter.
+     */
+    public function test_payable_amount_filter_applies_to_the_cart_and_the_ledger() {
+        $this->register_order_completion_hooks();
+
+        $raise = static function ( $due ) {
+            return $due + 50;
+        };
+
+        add_filter( 'dokan_reverse_withdrawal_payable_amount', $raise );
+
+        $this->assertTrue( Helper::add_payment_to_cart( self::DUE + 50 ) );
+
+        $order = $this->create_awaiting_payment_order( self::DUE + 50 );
+        $order->update_status( 'completed' );
+
+        // The raised ceiling is honoured end to end, so the vendor is credited what they actually paid.
+        $this->assertSame( -50.0, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+
+        remove_filter( 'dokan_reverse_withdrawal_payable_amount', $raise );
+
+        // And with the filter gone the original ceiling is back.
+        WC()->cart->empty_cart();
+        $result = Helper::add_payment_to_cart( 10 );
+
+        $this->assertWPError( $result );
+        $this->assertSame( 'no-due-balance', $result->get_error_code() );
+    }
+
+    /**
+     * The filter cannot be used to sneak credit past the ledger from one side only.
+     */
+    public function test_payable_amount_filter_lowered_at_completion_still_clamps() {
+        $this->register_order_completion_hooks();
+
+        $lower = static function ( $due, $vendor_id, $context ) {
+            return 'completion' === $context ? 40.0 : $due;
+        };
+
+        add_filter( 'dokan_reverse_withdrawal_payable_amount', $lower, 10, 3 );
+
+        $order = $this->create_awaiting_payment_order( self::DUE );
+        $order->update_status( 'completed' );
+
+        remove_filter( 'dokan_reverse_withdrawal_payable_amount', $lower, 10 );
+
+        // Credited 40 of the 100 owed, so 60 of debt remains rather than the ledger taking the full amount.
+        $this->assertSame( 60.0, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+    }
+
+    /**
      * Build a reverse-withdrawal payment order sitting in a status that has not credited the ledger yet.
      */
     protected function create_awaiting_payment_order( float $amount ): \WC_Order {

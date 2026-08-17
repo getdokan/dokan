@@ -915,6 +915,26 @@ class Helper {
             );
         }
 
+        /**
+         * Filters the largest reverse withdrawal payment a vendor may make in one go.
+         *
+         * `Order::insert_payment()` applies this filter again when the payment lands, so whatever ceiling is
+         * returned here is honoured by the ledger too. Raising it on only one side would take the vendor's money
+         * and then withhold the credit.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param float  $due       Ceiling for the payment: the outstanding balance, less anything already awaiting
+         *                          completion when capping a new payment.
+         * @param int    $vendor_id Vendor the payment belongs to.
+         * @param string $context   `cart` when capping a new payment, `completion` when crediting the ledger.
+         */
+        $due = (float) apply_filters( 'dokan_reverse_withdrawal_payable_amount', $due, $vendor_id, 'cart' );
+
+        if ( $due <= 0 ) {
+            return new WP_Error( 'no-due-balance', __( 'You do not have any due balance to pay.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
         // Compare as scaled integers so paying the exact outstanding balance is not rejected by IEEE-754 drift.
         $scale = 10 ** wc_get_price_decimals();
 
