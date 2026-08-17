@@ -448,8 +448,11 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
 
         $this->assertStringContainsString( '#' . $stale->get_order_number(), $message );
         $this->assertStringContainsString( $stale->get_checkout_payment_url(), $message );
-        $this->assertStringContainsString( 'cancel_order=true', $message );
-        $this->assertStringContainsString( 'order_id=' . $stale->get_id(), $message );
+        $this->assertStringContainsString( $stale->get_cancel_order_url_raw( wc_get_page_permalink( 'myaccount' ) ), $message );
+
+        // The message is shown as plain text, so an HTML-escaped `&amp;` would reach WooCommerce as `amp;order_id`
+        // and the cancel handler would ignore it.
+        $this->assertStringNotContainsString( '&amp;', $message );
     }
 
     /**

@@ -848,7 +848,8 @@ class Helper {
 
             // An abandoned order would otherwise hold the balance until an admin noticed, so offer the way out.
             if ( ! $cancel_url && in_array( $order->get_status(), (array) $cancellable, true ) ) {
-                $cancel_url = $order->get_cancel_order_url( wc_get_page_permalink( 'myaccount' ) );
+                // The raw variant: the message is plain text, and the escaped one would hand WooCommerce `amp;order_id`.
+                $cancel_url = $order->get_cancel_order_url_raw( wc_get_page_permalink( 'myaccount' ) );
             }
         }
 
