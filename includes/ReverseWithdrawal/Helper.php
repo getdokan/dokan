@@ -831,8 +831,9 @@ class Helper {
      * @return string
      */
     protected static function get_awaiting_payment_message( array $orders ) {
-        $numbers = [];
-        $pay_url = '';
+        $numbers    = [];
+        $pay_url    = '';
+        $cancel_url = '';
 
         foreach ( $orders as $order ) {
             $numbers[] = '#' . $order->get_order_number();
@@ -840,6 +841,14 @@ class Helper {
             // Unpaid orders can be settled by the vendor themselves, so point them at the first one they can act on.
             if ( ! $pay_url && $order->needs_payment() ) {
                 $pay_url = $order->get_checkout_payment_url();
+            }
+
+            // Same statuses WooCommerce lets a customer cancel from — anything else needs the admin.
+            $cancellable = apply_filters( 'woocommerce_valid_order_statuses_for_cancel', [ 'pending', 'failed' ], $order );
+
+            // An abandoned order would otherwise hold the balance until an admin noticed, so offer the way out.
+            if ( ! $cancel_url && in_array( $order->get_status(), (array) $cancellable, true ) ) {
+                $cancel_url = $order->get_cancel_order_url( wc_get_page_permalink( 'myaccount' ) );
             }
         }
 
@@ -859,6 +868,14 @@ class Helper {
                 /* translators: %s: checkout url for the pending payment order */
                 __( 'You can pay for it here: %s', 'dokan-lite' ),
                 $pay_url
+            );
+        }
+
+        if ( $cancel_url ) {
+            $message .= ' ' . sprintf(
+                /* translators: %s: cancel url for the pending payment order */
+                __( 'Or cancel it here: %s', 'dokan-lite' ),
+                $cancel_url
             );
         }
 
