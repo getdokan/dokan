@@ -1,3 +1,9 @@
+### v5.0.14 ( Aug 17, 2026 ) ###
+
+- **fix:** Prevented unauthenticated visitors from reading a vendor's commission settings through the public store-categories endpoint.
+- **fix:** Prevented Shop Managers from installing or activating arbitrary plugins through Dokan's admin endpoints and setup wizard by requiring the proper plugin capabilities.
+- **fix:** Prevented vendors from clearing their reverse-withdrawal balance with an arbitrary payment amount by reconciling it against their actual outstanding debt.
+
 ### v5.0.13 ( Aug 12, 2026 ) ###
 
 - **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.

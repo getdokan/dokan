@@ -831,7 +831,7 @@ class StoreController extends WP_REST_Controller {
      * Callers must additionally confirm the user is authorized for the store in question,
      * since this only answers the role question — vendor staff are excluded deliberately.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @return bool
      */

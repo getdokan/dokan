@@ -61,7 +61,7 @@ class AdminExtensionsController extends DokanBaseAdminController {
      *
      * `activate_plugins` is not required: this route only writes the plugin to disk.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @return bool
      */

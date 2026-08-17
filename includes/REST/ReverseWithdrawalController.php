@@ -284,7 +284,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Checks if a given request can put a reverse withdrawal payment into the cart.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @param WP_REST_Request $request Full details about the request.
      *

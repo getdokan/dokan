@@ -721,7 +721,7 @@ class Helper {
      * A payment reaches the ledger only when its order is completed, so orders still waiting on that are
      * invisible to the balance and have to be accounted for separately before accepting another payment.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @param int $vendor_id
      *
@@ -734,7 +734,7 @@ class Helper {
     /**
      * Total the reverse withdrawal payment amounts carried by a set of orders.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @param \WC_Order[] $orders
      *
@@ -753,7 +753,7 @@ class Helper {
     /**
      * Get the vendor's reverse withdrawal payment orders that are still waiting to reach the ledger.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @param int $vendor_id
      *
@@ -824,7 +824,7 @@ class Helper {
     /**
      * Build the message shown when an unfinished payment order is holding the balance.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @param \WC_Order[] $orders
      *
@@ -940,7 +940,7 @@ class Helper {
          * returned here is honoured by the ledger too. Raising it on only one side would take the vendor's money
          * and then withhold the credit.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.14
          *
          * @param float  $due       Ceiling for the payment: the outstanding balance, less anything already awaiting
          *                          completion when capping a new payment.

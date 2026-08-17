@@ -17,7 +17,7 @@ class Order {
     /**
      * Marks an order whose payment was resolved without writing a ledger row.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.14
      *
      * @var string
      */
