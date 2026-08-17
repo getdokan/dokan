@@ -652,7 +652,7 @@ class SetupWizard {
         $options['admin_percentage']                          = $dokan_commission_percentage;
         $options['additional_fee']                            = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
         $options['commission_category_based_values']          = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
-        $options['reset_sub_category_when_edit_all_category'] = isset( $_POST['reset_sub_category'] ) && false === dokan_string_to_bool( $_POST['reset_sub_category'] ) ? 'off' : 'on';
+        $options['reset_sub_category_when_edit_all_category'] = isset( $_POST['reset_sub_category'] ) && false === dokan_string_to_bool( sanitize_text_field( wp_unslash( $_POST['reset_sub_category'] ) ) ) ? 'off' : 'on';
 
         update_option( 'dokan_selling', $options );
 
@@ -937,14 +937,20 @@ class SetupWizard {
     }
 
     /**
-     * Should we show the WooCommerce Conversion Tracking install option?
+     * Whether the current user may install plugins through Dokan.
      *
-     * True only if the user can install plugins.
+     * Authorizes the wizard and onboarding install sinks, and gates the visibility of
+     * the 'Recommended' step. Both capabilities are required because the queued
+     * installer activates whatever it downloads.
+     *
+     * @since DOKAN_SINCE Made public for the onboarding controller, and added the
+     *                    `activate_plugins` requirement.
      *
      * @return boolean
      */
-    protected function user_can_install_plugin() {
-        return current_user_can( 'install_plugins' );
+    public function user_can_install_plugin() {
+        // The background installer activates what it installs, so both caps are required.
+        return current_user_can( 'install_plugins' ) && current_user_can( 'activate_plugins' );
     }
 
     protected function display_recommended_item( $item_info ) {
@@ -1009,7 +1015,8 @@ class SetupWizard {
      * @param array  $plugin_info Plugin info array containing name and repo-slug, and optionally file if different from [repo-slug].php.
      */
     public function install_plugin( $plugin_id, $plugin_info ) {
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        // Installing and activating arbitrary code is a full-trust action, so require the caps WordPress requires for it — not `manage_woocommerce`, which Shop Managers hold.
+        if ( ! $this->user_can_install_plugin() ) {
             return;
         }
 

@@ -3534,6 +3534,14 @@ if ( ! function_exists( 'dokan_get_pending_vendor_count' ) ) {
 /**
  * Install a plugin from wp.org
  *
+ * Installs *and activates* the plugin, despite the name.
+ *
+ * Performs no capability check by design, so that non-request callers such as WP-CLI and
+ * cron keep working. Installing and activating arbitrary code is a full-trust action, so
+ * any caller reachable from a request MUST gate itself on `install_plugins` and
+ * `activate_plugins` first — `manage_woocommerce` is not sufficient, since a Shop Manager
+ * holds it without holding either plugin capability.
+ *
  * Example:
  * To download WooCommerce `dokan_install_wp_org_plugin( 'woocommerce' )`
  * To download plugin like dokan-lite that has different slug and main plugin file,

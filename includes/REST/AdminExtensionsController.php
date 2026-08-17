@@ -44,10 +44,29 @@ class AdminExtensionsController extends DokanBaseAdminController {
                             'sanitize_callback' => 'sanitize_text_field',
                         ],
                     ],
-                    'permission_callback' => [ $this, 'check_permission' ],
+                    'permission_callback' => [ $this, 'check_install_permission' ],
                 ],
             ]
         );
+    }
+
+    /**
+     * Check whether the current user may install plugins through this controller.
+     *
+     * Deliberately stricter than the admin base check: this route downloads code from
+     * wordpress.org, and `manage_woocommerce` is a capability a Shop Manager holds
+     * without holding `install_plugins`. Scoped to the install route rather than
+     * overriding `check_permission()`, so any read route added here later keeps the
+     * ordinary admin capability.
+     *
+     * `activate_plugins` is not required: this route only writes the plugin to disk.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function check_install_permission() {
+        return current_user_can( 'install_plugins' );
     }
 
     /**
