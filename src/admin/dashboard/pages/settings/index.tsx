@@ -180,16 +180,25 @@ export default function SettingsPage() {
 
     return (
         <>
+            { /* Page heading, matching the other admin screens (Vendors,
+                 Withdraw…). Plugin UI's own `title` prop is left unset so the
+                 name is not repeated inside the sidebar. */ }
+            <div className="mb-6 flex items-center justify-between">
+                <h2 className="text-2xl leading-3 text-gray-900 font-bold">
+                    { __( 'Settings', 'dokan-lite' ) }
+                </h2>
+            </div>
+
             <Settings
                 schema={ schema }
                 loading={ loading }
-                title={ __( 'Dokan Settings', 'dokan-lite' ) }
                 hookPrefix="dokan"
                 applyFilters={ applyFilters }
                 onSave={ handleSave }
                 initialPage={ initialPage }
                 onNavigate={ handleNavigate }
                 onDirtyChange={ setHasUnsavedChanges }
+                className="rounded-md"
                 unsavedChangesDialog={ {
                     title: __( 'Unsaved changes', 'dokan-lite' ),
                     description: __(
