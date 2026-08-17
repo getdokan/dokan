@@ -1,17 +1,25 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useCallback, useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import apiFetch from '@wordpress/api-fetch';
 import {
     Settings,
     useSettings,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
     Button,
     Spinner,
     Toaster,
     toast,
     type SettingsElement,
 } from '@wedevs/plugin-ui';
-import { useSearchParams } from 'react-router-dom';
+import { useBlocker, useSearchParams } from 'react-router-dom';
 import { registerSettingsFields } from './register-fields';
 
 // Side effect: register custom field renderers exactly once when this module
@@ -99,6 +107,21 @@ export default function SettingsPage() {
     const [ schema, setSchema ] = useState< SettingsElement[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ saving, setSaving ] = useState< boolean >( false );
+    const [ hasUnsavedChanges, setHasUnsavedChanges ] =
+        useState< boolean >( false );
+
+    // Plugin-ui guards its own sidebar navigation and the browser unload, but it
+    // can't see this app's router. Block route changes here while settings are
+    // dirty. Compare pathnames only — UrlSync rewrites the query string on every
+    // subpage switch, and those must not trip the guard.
+    const blocker = useBlocker(
+        useCallback(
+            ( { currentLocation, nextLocation } ) =>
+                hasUnsavedChanges &&
+                currentLocation.pathname !== nextLocation.pathname,
+            [ hasUnsavedChanges ]
+        )
+    );
 
     useEffect( () => {
         apiFetch< SettingsElement[] >( { path: '/dokan/v1/admin/settings' } )
@@ -166,6 +189,16 @@ export default function SettingsPage() {
                 onSave={ handleSave }
                 initialPage={ initialPage }
                 onNavigate={ handleNavigate }
+                onDirtyChange={ setHasUnsavedChanges }
+                unsavedChangesDialog={ {
+                    title: __( 'Unsaved changes', 'dokan-lite' ),
+                    description: __(
+                        'You have unsaved changes on this page. Leaving now discards them.',
+                        'dokan-lite'
+                    ),
+                    confirmText: __( 'Discard and leave', 'dokan-lite' ),
+                    cancelText: __( 'Stay on this page', 'dokan-lite' ),
+                } }
                 renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
                     <>
                         <UrlSync />
@@ -181,6 +214,42 @@ export default function SettingsPage() {
                     </>
                 ) }
             />
+
+            { /* Route-change guard: leaving the settings screen entirely. */ }
+            <AlertDialog
+                open={ blocker.state === 'blocked' }
+                onOpenChange={ ( open: boolean ) => {
+                    if ( ! open ) {
+                        blocker.reset?.();
+                    }
+                } }
+            >
+                <AlertDialogContent data-testid="settings-route-guard-dialog">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            { __( 'Unsaved changes', 'dokan-lite' ) }
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            { __(
+                                'You have unsaved settings changes. Leaving this page discards them.',
+                                'dokan-lite'
+                            ) }
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={ () => blocker.reset?.() }>
+                            { __( 'Stay on this page', 'dokan-lite' ) }
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            variant="destructive"
+                            onClick={ () => blocker.proceed?.() }
+                        >
+                            { __( 'Discard and leave', 'dokan-lite' ) }
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             <Toaster richColors />
         </>
     );
