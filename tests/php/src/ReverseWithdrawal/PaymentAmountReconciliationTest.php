@@ -24,6 +24,9 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * @group security
  *
  * @covers \WeDevs\Dokan\ReverseWithdrawal\Helper::add_payment_to_cart
+ * @covers \WeDevs\Dokan\ReverseWithdrawal\Helper::get_awaiting_payment_total
+ * @covers \WeDevs\Dokan\ReverseWithdrawal\Helper::get_awaiting_payment_orders
+ * @covers \WeDevs\Dokan\ReverseWithdrawal\Order::insert_payment
  */
 class PaymentAmountReconciliationTest extends DokanTestCase {
 
@@ -196,6 +199,67 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
 
         // Kept so tear_down can unhook it — hooks are global and would otherwise leak into every later test.
         $this->order_hooks = new Order();
+    }
+
+    /**
+     * The literal repro from the BUG-001 report: two separate full-due orders, both completed.
+     *
+     * This is the case the bug report will be re-checked against, so it is asserted end to end rather
+     * than through the single oversized order the clamp test uses.
+     */
+    public function test_two_in_flight_payments_cannot_over_credit() {
+        $this->register_order_completion_hooks();
+
+        $first  = $this->create_awaiting_payment_order( self::DUE );
+        $second = $this->create_awaiting_payment_order( self::DUE );
+
+        $first->update_status( 'completed' );
+        $second->update_status( 'completed' );
+
+        $this->assertGreaterThanOrEqual(
+            0.0,
+            (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'],
+            'A vendor owing the due amount must never end below zero.'
+        );
+        $this->assertSame( 0.0, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+    }
+
+    /**
+     * A payment clamped to nothing must not be reconsidered when the order is completed again.
+     *
+     * Without a marker the skipped credit leaves no ledger row, so a completed → refunded → completed
+     * cycle would hand the vendor that credit for free against whatever debt exists by then.
+     */
+    public function test_clamped_payment_is_not_credited_on_a_later_completion() {
+        $this->register_order_completion_hooks();
+
+        $paid = $this->create_awaiting_payment_order( self::DUE );
+        $paid->update_status( 'completed' );
+
+        $clamped = $this->create_awaiting_payment_order( self::DUE );
+        $clamped->update_status( 'completed' );
+
+        $this->assertSame( 0.0, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+
+        // New debt, then the admin cycles the clamped order back through completion.
+        ( new Manager() )->insert(
+            [
+                'trn_id'    => 990002,
+                'trn_type'  => 'order_commission',
+                'vendor_id' => $this->seller_id1,
+                'debit'     => 40,
+                'credit'    => 0,
+            ]
+        );
+
+        $clamped->update_status( 'refunded' );
+        $clamped->update_status( 'completed' );
+
+        $this->assertSame(
+            40.0,
+            (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'],
+            'Re-completing a clamped order must not wipe newly accrued debt.'
+        );
     }
 
     /**

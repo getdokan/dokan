@@ -13,6 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package WeDevs\Dokan\ReverseWithdrawal
  */
 class Order {
+
+    /**
+     * Marks an order whose payment was resolved without writing a ledger row.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    const PAYMENT_SETTLED_META = '_dokan_reverse_withdrawal_payment_processed';
+
     /**
      * Order constructor.
      *
@@ -103,6 +113,15 @@ class Order {
             return;
         }
 
+        /*
+         * An order settled with nothing left to credit writes no ledger row, so `is_payment_inserted()` can never
+         * recognise it. Without this marker a completed → refunded → completed cycle would reconsider it against a
+         * fresh debt and hand out that credit for free.
+         */
+        if ( 'yes' === $order->get_meta( self::PAYMENT_SETTLED_META ) ) {
+            return;
+        }
+
         // get payment data from order
         $amount = Helper::get_balance_from_order( $order );
         if ( empty( $amount ) || $amount <= 0 ) {
@@ -119,23 +138,32 @@ class Order {
         $balance_data = Helper::get_vendor_balance( $vendor_id );
 
         if ( ! is_wp_error( $balance_data ) ) {
-            $due = (float) wc_format_decimal( $balance_data['balance'], wc_get_price_decimals() );
+            // Clamp against the unrounded balance, otherwise half-up rounding lets the credit overshoot the real debt.
+            $due   = (float) $balance_data['balance'];
+            $scale = 10 ** wc_get_price_decimals();
 
             if ( $amount > $due ) {
-                $order->add_order_note(
-                    sprintf(
-                        /* translators: 1: amount paid in the order, 2: amount actually credited to the ledger */
-                        __( 'Reverse withdrawal payment of %1$s exceeded the outstanding balance, so %2$s was credited.', 'dokan-lite' ),
-                        wc_price( $amount ),
-                        wc_price( max( 0, $due ) )
-                    )
-                );
+                // Only a shortfall the vendor can actually see is worth a note — anything smaller is display rounding.
+                if ( (int) round( $amount * $scale ) > (int) round( $due * $scale ) ) {
+                    $order->add_order_note(
+                        sprintf(
+                            /* translators: 1: amount paid in the order, 2: amount actually credited to the ledger */
+                            __( 'Reverse withdrawal payment of %1$s exceeded the outstanding balance, so %2$s was credited.', 'dokan-lite' ),
+                            // Notes are read as plain text in exports and emails, so keep the prices free of markup.
+                            wp_strip_all_tags( html_entity_decode( wc_price( $amount ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ),
+                            wp_strip_all_tags( html_entity_decode( wc_price( max( 0, $due ) ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) )
+                        )
+                    );
+                }
 
-                $amount = $due;
+                $amount = max( 0, $due );
             }
         }
 
         if ( $amount <= 0 ) {
+            $order->update_meta_data( self::PAYMENT_SETTLED_META, 'yes' );
+            $order->save();
+
             return;
         }
 
@@ -148,8 +176,7 @@ class Order {
         ];
 
         // finally insert payment data into database
-        $manager = new Manager();
-        $inserted = $manager->insert( $args ); // debug log is added in insert method
+        $manager->insert( $args ); // debug log is added in insert method
     }
 
     /**

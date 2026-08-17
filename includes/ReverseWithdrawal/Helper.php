@@ -728,37 +728,113 @@ class Helper {
      * @return float
      */
     public static function get_awaiting_payment_total( $vendor_id ) {
-        $orders = wc_get_orders(
-            [
-                'type'        => 'shop_order',
-                'customer_id' => $vendor_id,
-                // Only statuses an order can still reach `completed` from — anything else can never credit the ledger.
-                'status'      => [ 'wc-pending', 'wc-processing', 'wc-on-hold' ],
-                'limit'       => -1,
-            ]
-        );
+        $total = 0.0;
 
-        if ( empty( $orders ) ) {
-            return 0.0;
-        }
-
-        $manager = new Manager();
-        $total   = 0.0;
-
-        foreach ( $orders as $order ) {
-            if ( ! self::has_reverse_withdrawal_payment_in_order( $order ) ) {
-                continue;
-            }
-
-            // A payment already written to the ledger is part of the balance, counting it here would deduct it twice.
-            if ( $manager->is_payment_inserted( $order->get_id() ) ) {
-                continue;
-            }
-
+        foreach ( self::get_awaiting_payment_orders( $vendor_id ) as $order ) {
             $total += (float) self::get_balance_from_order( $order );
         }
 
         return $total;
+    }
+
+    /**
+     * Get the vendor's reverse withdrawal payment orders that are still waiting to reach the ledger.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id
+     *
+     * @return \WC_Order[]
+     */
+    public static function get_awaiting_payment_orders( $vendor_id ) {
+        $orders = wc_get_orders(
+            [
+                'type'        => 'shop_order',
+                'customer_id' => $vendor_id,
+                /*
+                 * Only statuses an order can still reach `completed` from. `failed` belongs here because the customer
+                 * can retry payment on it; `cancelled` and `refunded` do not, and holding them back would strand the
+                 * vendor behind an order they can no longer act on.
+                 */
+                'status'      => [ 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-failed' ],
+                'limit'       => -1,
+            ]
+        );
+
+        $candidates = [];
+
+        foreach ( $orders as $order ) {
+            if ( self::has_reverse_withdrawal_payment_in_order( $order ) ) {
+                $candidates[ $order->get_id() ] = $order;
+            }
+        }
+
+        if ( empty( $candidates ) ) {
+            return [];
+        }
+
+        // Resolve every already-credited order in one query rather than asking per order.
+        $settled = ( new Manager() )->all(
+            [
+                'trn_id'    => array_keys( $candidates ),
+                // Manager::all() validates this against the transaction type map, so it has to stay a plain string.
+                'trn_type'  => 'vendor_payment',
+                'vendor_id' => [ $vendor_id ],
+                'return'    => 'vendor_transaction',
+                'per_page'  => count( $candidates ),
+            ]
+        );
+
+        foreach ( (array) $settled as $transaction ) {
+            // A payment already written to the ledger is part of the balance, counting it again would deduct it twice.
+            unset( $candidates[ (int) $transaction->trn_id ] );
+        }
+
+        return array_values( $candidates );
+    }
+
+    /**
+     * Build the message shown when an unfinished payment order is holding the balance.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order[] $orders
+     *
+     * @return string
+     */
+    protected static function get_awaiting_payment_message( array $orders ) {
+        $numbers = [];
+        $pay_url = '';
+
+        foreach ( $orders as $order ) {
+            $numbers[] = '#' . $order->get_order_number();
+
+            // Unpaid orders can be settled by the vendor themselves, so point them at the first one they can act on.
+            if ( ! $pay_url && $order->needs_payment() ) {
+                $pay_url = $order->get_checkout_payment_url();
+            }
+        }
+
+        $message = sprintf(
+            /* translators: %s: comma separated list of order numbers awaiting completion */
+            _n(
+                'Your due balance is already covered by payment order %s, which has not been completed yet. Please complete or cancel it before paying again.',
+                'Your due balance is already covered by payment orders %s, which have not been completed yet. Please complete or cancel them before paying again.',
+                count( $numbers ),
+                'dokan-lite'
+            ),
+            implode( ', ', $numbers )
+        );
+
+        if ( $pay_url ) {
+            $message .= ' ' . sprintf(
+                /* translators: %s: checkout url for the pending payment order */
+                __( 'You can pay for it here: %s', 'dokan-lite' ),
+                $pay_url
+            );
+        }
+
+        return $message;
     }
 
     /**
@@ -798,13 +874,20 @@ class Helper {
          * earlier payment orders sit unpaid. Without deducting them a vendor can stack several individually valid
          * payments and over-credit the ledger once they all land.
          */
-        $awaiting = self::get_awaiting_payment_total( $vendor_id );
-        $due      = (float) wc_format_decimal( $due - $awaiting, wc_get_price_decimals() );
+        $awaiting_orders = self::get_awaiting_payment_orders( $vendor_id );
+        $awaiting        = 0.0;
+
+        foreach ( $awaiting_orders as $awaiting_order ) {
+            $awaiting += (float) self::get_balance_from_order( $awaiting_order );
+        }
+
+        $due = (float) wc_format_decimal( $due - $awaiting, wc_get_price_decimals() );
 
         if ( $due <= 0 ) {
             return new WP_Error(
                 'payment-already-awaiting',
-                __( 'Your due balance is already covered by a payment awaiting completion. Please complete that payment first.', 'dokan-lite' ),
+                // Naming the order matters: without it a vendor blocked by a stale order has no way to work out why.
+                self::get_awaiting_payment_message( $awaiting_orders ),
                 [ 'status' => 400 ]
             );
         }
