@@ -803,8 +803,7 @@ class Helper {
                 'trn_type'  => 'vendor_payment',
                 'vendor_id' => [ $vendor_id ],
                 'return'    => 'vendor_transaction',
-                // Never 1: at that exact value all() collapses the result to a single row instead of a list.
-                'per_page'  => count( $candidates ) + 1,
+                'per_page'  => count( $candidates ),
             ]
         );
 

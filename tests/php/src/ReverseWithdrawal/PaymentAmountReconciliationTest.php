@@ -377,6 +377,42 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     }
 
     /**
+     * A transaction list is a list whatever its page size.
+     *
+     * `Manager::all()` used to hand back a bare row at `per_page` 1, silently changing the return shape — the
+     * settled-order lookup here was bitten by it, and so is any REST client asking for one transaction per page.
+     */
+    public function test_transaction_list_keeps_its_shape_at_one_per_page() {
+        $order = $this->create_awaiting_payment_order( self::DUE );
+
+        ( new Manager() )->insert(
+            [
+                'trn_id'    => $order->get_id(),
+                'trn_type'  => 'vendor_payment',
+                'vendor_id' => $this->seller_id1,
+                'credit'    => self::DUE,
+            ]
+        );
+
+        $rows = ( new Manager() )->all(
+            [
+                'trn_id'    => [ $order->get_id() ],
+                'trn_type'  => 'vendor_payment',
+                'vendor_id' => [ $this->seller_id1 ],
+                'return'    => 'vendor_transaction',
+                'per_page'  => 1,
+            ]
+        );
+
+        $this->assertIsArray( $rows );
+        $this->assertCount( 1, $rows );
+        $this->assertSame( $order->get_id(), (int) $rows[0]['trn_id'] );
+
+        // And the lookup built on it excludes the credited order, exactly as it does at any other page size.
+        $this->assertCount( 0, Helper::get_awaiting_payment_orders( $this->seller_id1 ) );
+    }
+
+    /**
      * Build a reverse-withdrawal payment order sitting in a status that has not credited the ledger yet.
      */
     protected function create_awaiting_payment_order( float $amount ): \WC_Order {
