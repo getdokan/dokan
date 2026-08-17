@@ -205,6 +205,39 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
+     * Whether the legacy vendor store settings page is preferred.
+     *
+     * The preference is the site-wide `dokan_appearance` admin option, not a
+     * per-user setting — `$user_id` only guards anonymous contexts, mirroring
+     * {@see self::is_product_editor_legacy_preferred()}. The stored default is
+     * legacy, and the admin setup wizard flips it to latest, so an upgraded
+     * site keeps the legacy form until an admin opts in.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $user_id Optional. Defaults to current user.
+     *
+     * @return bool
+     */
+    public function is_store_settings_legacy_preferred( int $user_id = 0 ): bool {
+        if ( ! $user_id ) {
+            $user_id = get_current_user_id();
+        }
+
+        // Anonymous context (cron, emails without a current user) → prefer the new page.
+        if ( ! $user_id ) {
+            return false;
+        }
+
+        $appearance = get_option( 'dokan_appearance', [] );
+        if ( isset( $appearance['vendor_store_settings'] ) && 'latest' === $appearance['vendor_store_settings'] ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Build the new (React) product editor URL.
      *
      * @since 5.0.0

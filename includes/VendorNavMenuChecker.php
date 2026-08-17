@@ -15,6 +15,12 @@ class VendorNavMenuChecker {
      * [ 'route' => [ ['slug' => 'template-slug', 'name' => 'template-name' (Optional), 'args' = [] (Optional)  ] ] ]
      */
     protected array $template_dependencies = [
+        'settings/store' => [
+            [ 'slug' => 'settings/store-form' ],
+            [ 'slug' => 'settings/store-time' ],
+            [ 'slug' => 'settings/address-form' ],
+            [ 'slug' => 'maps/dokan-maps-with-search' ],
+        ],
         'withdraw' => [
             [ 'slug' => 'withdraw/withdraw-dashboard' ],
             [ 'slug' => 'withdraw/withdraw' ],
