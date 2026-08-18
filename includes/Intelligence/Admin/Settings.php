@@ -7,12 +7,53 @@ use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\ChatgptResponseService;
 use WeDevs\Dokan\Intelligence\Services\GeminiResponseService;
 use WeDevs\Dokan\Intelligence\Services\Model;
+use WeDevs\Dokan\Intelligence\Services\Provider;
 
 class Settings implements Hookable {
     public function register_hooks(): void {
         add_filter( 'dokan_settings_sections', [ $this, 'render_appearance_section' ] );
         add_filter( 'dokan_settings_fields', [ $this, 'render_ai_settings' ] );
         add_filter( 'dokan_rest_api_class_map', [ $this, 'rest_api_class_map' ] );
+        add_filter( 'dokan_get_settings_values', [ $this, 'remap_retired_model_values' ], 10, 2 );
+    }
+
+    /**
+     * Replace saved model ids that a provider has since retired.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $values     Section setting values.
+     * @param string $section_id Section id.
+     *
+     * @return mixed Untouched when the section is not the AI section.
+     */
+    public function remap_retired_model_values( $values, $section_id ) {
+        if ( 'dokan_ai' !== $section_id || ! is_array( $values ) ) {
+            return $values;
+        }
+
+        $manager = dokan_get_container()->get( Manager::class );
+
+        foreach ( [ Model::SUPPORTS_TEXT, Model::SUPPORTS_IMAGE ] as $type ) {
+            $prefix = $manager->get_type_prefix( $type );
+
+            foreach ( $manager->get_engines( $type ) as $provider_id => $provider ) {
+                $key = 'dokan_ai_' . $prefix . $provider_id . '_model';
+
+                if ( ! $provider instanceof Provider || empty( $values[ $key ] ) || ! is_scalar( $values[ $key ] ) ) {
+                    continue;
+                }
+
+                $models = $provider->get_models_by_type( $type );
+
+                // A retired model id is not among the select options, so it would render blank.
+                if ( ! isset( $models[ $values[ $key ] ] ) ) {
+                    $values[ $key ] = $provider->get_default_model_id_by_type( $type );
+                }
+            }
+        }
+
+        return $values;
     }
 
     /**
@@ -90,7 +131,7 @@ class Settings implements Hookable {
                 'type'    => 'select',
                 'options' => array_map( fn( $model ) => $model->get_title(), $provider->get_models_by_type( Model::SUPPORTS_TEXT ) ),
                 'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default' => $provider->get_default_model_id(),
+                'default' => $provider instanceof Provider ? $provider->get_default_model_id_by_type( Model::SUPPORTS_TEXT ) : '',
                 'is_lite' => true,
                 'show_if' => [
                     'dokan_ai_engine' => [
