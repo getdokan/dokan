@@ -8,6 +8,7 @@ import {
     emitOrderDetailsEvent,
 } from './events';
 import type { OrderDetailsFragment, OrderDetailsInlineScript } from './types';
+import './order-details-fragment.scss';
 
 /**
  * Inline script elements this route currently has live in the document.
@@ -259,10 +260,21 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
     return (
         <div className="dokan-order-details-wrapper dokan-react-order-details">
             { isLoading && (
+                // Mirrors the rendered layout — two columns, 24px gaps, 320px sidebar —
+                // so the page does not visibly reflow once the fragment lands.
                 <div
-                    className="h-64 animate-pulse rounded-md bg-muted"
+                    className="flex flex-col gap-6 lg:flex-row"
                     aria-label={ __( 'Loading order details', 'dokan-lite' ) }
-                />
+                >
+                    <div className="flex flex-1 flex-col gap-6">
+                        <div className="h-72 animate-pulse rounded-md bg-gray-200" />
+                        <div className="h-40 animate-pulse rounded-md bg-gray-200" />
+                    </div>
+                    <div className="flex w-full flex-col gap-6 lg:w-80">
+                        <div className="h-52 animate-pulse rounded-md bg-gray-200" />
+                        <div className="h-64 animate-pulse rounded-md bg-gray-200" />
+                    </div>
+                </div>
             ) }
             <div ref={ containerRef } />
         </div>

@@ -343,7 +343,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                 <h4><?php esc_html_e( 'Add note', 'dokan-lite' ); ?></h4>
                                 <form class="dokan-form-inline" id="add-order-note" role="form" method="post">
                                     <p>
-                                        <textarea type="text" id="add-note-content" name="note" class="form-control" cols="19" rows="3"></textarea>
+                                        <textarea type="text" id="add-note-content" name="note" class="form-control" cols="19" rows="3" placeholder="<?php esc_attr_e( 'Write here', 'dokan-lite' ); ?>"></textarea>
                                     </p>
                                     <div class="clearfix">
                                         <div class="order_note_type dokan-form-group">

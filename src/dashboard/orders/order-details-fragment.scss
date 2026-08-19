@@ -1,0 +1,573 @@
+// Vendor panel look and feel for the server-rendered order details fragment.
+//
+// Scoped to `.dokan-order-details-fragment`, a wrapper only the panel adds (see
+// DetailsFragment::wrap()). The legacy order details page never carries it and never
+// loads this bundle, so its appearance is untouched.
+//
+// Tokens follow the panel's own React screens rather than the legacy stylesheet — the
+// RFQ edit-quote screen is the reference: 8px radius, shadow instead of a border,
+// gray-200 dividers, 20px section padding, a 320px sidebar and a 24px column gap.
+//
+// Plain CSS on purpose: module SCSS compiles outside the `dokan-tailwind` bundle, so
+// `@apply` has no theme to resolve against here.
+
+$od-text: #25252d;
+$od-muted: #828282;
+$od-border: #e5e7eb;
+$od-radius: 6px;
+$od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+
+// The grey ground white cards sit on, matching the product editor canvas.
+.dokan-dashboard-content:has(.dokan-order-details-fragment) {
+    background-color: #f0f0f1;
+
+    // The page-header status badge already shares the sidebar badge's colours through
+    // its `dokan-badge-*` class; `currentcolor` gives it the matching outline for free,
+    // whatever the status.
+    .dokan-header-title [class*="dokan-badge-"] {
+        border: 1px solid currentcolor;
+    }
+}
+
+.dokan-order-details-fragment {
+    // The legacy page insets its content by 48px because it sits beside a sidebar nav.
+    // In the panel that pushes the cards out of line with the page header on both edges.
+    //
+    // `!important` is required, not lazy: the legacy rule is
+    // `.dokan-dashboard #dokan-dashboard-fullwidth-wrapper .dokan-dashboard-wrap
+    // .dokan-dashboard-content`, whose ID no class selector can outrank.
+    .dokan-dashboard-content {
+        // The panel already leaves 16px under the header actions; 8px here makes it 24px.
+        padding: 8px 0 0 !important;
+        background: transparent !important;
+    }
+
+    .dokan-orders-area {
+        background: transparent;
+    }
+
+    // Legacy floats leave slack and a percentage gutter, so the row neither fills the
+    // width nor honours a fixed gap. Flex does both without moving either column.
+    .dokan-order-details-wrap {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+
+        // The clearfix pseudo-elements would otherwise become stray flex items.
+        &::before,
+        &::after {
+            content: none;
+        }
+    }
+
+    // Same story for the gutter: `.dokan-orders-content .dokan-orders-area
+    // .dokan-order-left-content { margin: 3% }` outranks a two-class selector.
+    .dokan-order-left-content,
+    .dokan-order-right-content {
+        float: none;
+        margin: 0 !important;
+        width: auto;
+    }
+
+    .dokan-order-left-content {
+        flex: 1 1 auto;
+        // Lets the items table shrink inside the column instead of overflowing it.
+        min-width: 0;
+    }
+
+    .dokan-order-right-content {
+        flex: 0 0 320px;
+        max-width: 320px;
+    }
+
+    // The legacy grid stacks these columns on narrow screens; keep that behaviour.
+    @media (max-width: 991px) {
+        .dokan-order-details-wrap {
+            flex-direction: column;
+        }
+
+        .dokan-order-right-content {
+            flex-basis: auto;
+            max-width: none;
+            width: 100%;
+        }
+    }
+
+    // Card shell — shared by both columns so the grey canvas reads consistently.
+    .dokan-panel {
+        // Cards sit on the same 24px rhythm as the header and the column gap.
+        margin-bottom: 24px;
+        overflow: hidden;
+        background: #fff;
+        border: 0;
+        border-radius: $od-radius;
+        box-shadow: $od-shadow;
+    }
+
+    // Qualified with `.dokan-panel-default >`: the legacy grey-heading rule has the
+    // same specificity as a two-class selector and wins on source order.
+    .dokan-panel-default > .dokan-panel-heading,
+    .dokan-panel-heading {
+        padding: 16px 20px;
+        background: #fff;
+        border-bottom: 1px solid $od-border;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: $od-text;
+
+        strong {
+            font-weight: 600;
+        }
+    }
+
+    .dokan-panel-body {
+        padding: 20px;
+    }
+}
+
+// Address cards carry plain body copy rather than the legacy dense block.
+.dokan-order-details-fragment {
+    .dokan-order-billing-address .dokan-panel-body,
+    .dokan-order-shipping-address .dokan-panel-body {
+        font-size: 14px;
+        line-height: 22px;
+        color: #6b6b6b;
+
+        address,
+        p {
+            margin: 0;
+            font-style: normal;
+        }
+    }
+
+    // Nested panels — one per downloadable file — are rows inside a card, not cards of
+    // their own. Flattened so their content keeps the card's single 20px inset.
+    .dokan-panel .dokan-panel {
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+
+        > .dokan-panel-heading {
+            padding: 12px 0;
+            border-bottom: 0;
+            font-weight: 500;
+        }
+
+        > .dokan-panel-body {
+            padding: 0 0 12px;
+        }
+
+        + .dokan-panel {
+            border-top: 1px solid $od-border;
+        }
+    }
+}
+
+// ── Sidebar ────────────────────────────────────────────────────────────────────
+
+.dokan-order-details-fragment .dokan-order-right-content {
+    // Detail rows: muted label, dark value. Notes carry `list-unstyled` too, and this
+    // selector would outrank the notes block below, so they are excluded here.
+    ul.list-unstyled:not(.order_notes) {
+        margin: 0;
+
+        li {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            line-height: 22px;
+            color: #6b6b6b;
+            list-style: none;
+
+            // Figma labels the value, not the other way round: dark semibold label,
+            // grey value.
+            > span:first-child {
+                margin-right: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                color: $od-text;
+            }
+        }
+
+        li + li {
+            margin-top: 12px;
+        }
+    }
+
+    // The earning is the headline figure in this card, so it takes the accent colour.
+    li.earning-from-order .woocommerce-Price-amount,
+    li.earning-from-order bdi {
+        font-weight: 600;
+        color: var(--color-dokan-btn, #7047eb);
+    }
+
+    // Legacy hangs the divider off the order block, so with "Hide Customer Info" on it
+    // trails under the last row with nothing beneath it. The divider belongs to whatever
+    // follows instead, so it only exists when there is something to separate.
+    // Qualified to outrank `.dokan-orders-content .dokan-orders-area .general-details
+    // ul.order-status`, which draws the divider.
+    .dokan-panel-body.general-details ul.order-status {
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    .dokan-panel-body.general-details .alert.customer-note {
+        margin: 16px -20px 0;
+        padding: 16px 20px 0;
+        background: transparent;
+        border: 0;
+        border-top: 1px solid $od-border;
+        border-radius: 0;
+        color: #6b6b6b;
+    }
+
+    // Status change form: full-width select, actions right-aligned beneath it.
+    #dokan-order-status-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0 0;
+
+        input[type="hidden"] {
+            display: none;
+        }
+
+        select {
+            flex: 0 0 100%;
+        }
+
+        // Update is the primary action, Cancel the secondary one. `!important` answers
+        // the vendor colour-scheme module, which emits its button fill inline.
+        input[type="submit"] {
+            background: var(--color-dokan-btn, #7047eb) !important;
+            border: 1px solid var(--color-dokan-btn, #7047eb) !important;
+            color: #fff !important;
+        }
+
+        .dokan-cancel-status {
+            background: #fff !important;
+            border: 1px solid var(--color-dokan-btn, #7047eb) !important;
+            color: var(--color-dokan-btn, #7047eb) !important;
+        }
+
+        input[type="submit"],
+        .dokan-cancel-status {
+            height: 34px;
+            padding: 0 14px;
+        }
+    }
+
+    // The design separates the customer block from the order block with a divider.
+    // Pulled out to the card edges so the rule reads full-bleed, matching the notes card.
+    // Qualified to outrank `.dokan-orders-content .dokan-orders-area .general-details
+    // ul.customer-details`, which zeroes margin and padding.
+    .dokan-panel-body.general-details ul.customer-details {
+        margin: 16px -20px 0;
+        padding: 16px 20px 0;
+        border-top: 1px solid $od-border;
+    }
+
+    // Status reads as a pill rather than a legacy square badge.
+    .dokan-label {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 10px;
+        border: 1px solid currentcolor;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 18px;
+        text-shadow: none;
+        box-shadow: none;
+    }
+
+    .dokan-label-success { background: #daf8e6; color: #04724d; }
+    .dokan-label-warning { background: #fff3cd; color: #8a6100; }
+    .dokan-label-danger  { background: #ffe5e5; color: #b42318; }
+    .dokan-label-info    { background: #e9f9ff; color: #0b76b7; }
+    .dokan-label-default { background: #f2f2f2; color: #5c5c5c; }
+
+    // Notes card: each row owns its padding so the dividers run edge to edge, the way
+    // the RFQ sidebar sections do. The card body therefore carries none.
+    #dokan-order-notes {
+        padding: 0;
+
+        // Qualified with `ul` to outrank `.dokan-orders-content .dokan-orders-area
+        // ul.order_notes .note_content`, which paints the legacy grey bubble.
+        ul.order_notes {
+            margin: 0;
+
+            li {
+                margin: 0;
+                padding: 20px;
+                border-bottom: 1px solid $od-border;
+                background: transparent;
+                list-style: none;
+
+                // The add-note block below draws the closing divider.
+                &:last-child {
+                    border-bottom: 0;
+                }
+            }
+
+            // Customer-visible notes keep a marker: the design tells them apart by a
+            // text label, which CSS cannot add without hardcoding an untranslatable
+            // string.
+            li.customer-note {
+                border-left: 2px solid var(--color-dokan-btn, #7047eb);
+            }
+
+            .note_content {
+                padding: 0;
+                background: transparent;
+                border: 0;
+                border-radius: 0;
+                font-size: 14px;
+                line-height: 22px;
+                color: $od-text;
+
+                // Legacy draws the bubble tail here.
+                &::after {
+                    content: none;
+                }
+
+                p {
+                    margin: 0;
+                }
+            }
+
+            .meta {
+                margin: 8px 0 0;
+                font-size: 12px;
+                line-height: 18px;
+                color: $od-muted;
+            }
+
+            // "Delete note" is an action, so it reads in the action colour.
+            .delete_note {
+                margin-left: 10px;
+                font-weight: 500;
+                color: var(--color-dokan-btn, #7047eb);
+
+                &:hover {
+                    color: var(--color-dokan-btn-hover, #502bbf);
+                }
+            }
+        }
+
+        // `div.add_note` is qualified: the delivery-time Update button carries the same
+        // class, and would otherwise pick up this block's spacing.
+        > div.add_note {
+            margin: 0;
+            padding: 20px;
+            border-top: 1px solid $od-border;
+
+            // Capped at the card title's size so it never outweighs the section heading.
+            h4 {
+                margin: 0 0 12px;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 18px;
+                color: $od-text;
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            // Hidden inputs would otherwise take part in the flex gap.
+            input[type="hidden"] {
+                display: none;
+            }
+
+            p {
+                margin: 0;
+            }
+
+            // The note-type select and submit share a floated row; flex lets the select
+            // take the free space and pins the button to the right edge.
+            .clearfix {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+
+                &::before,
+                &::after {
+                    content: none;
+                }
+
+                .order_note_type {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    margin: 0;
+                    float: none;
+                }
+            }
+        }
+
+        input[type="submit"] {
+            flex: 0 0 auto;
+            margin-left: auto;
+            width: auto;
+        }
+    }
+
+    // Shared control styling across the sidebar (notes, delivery time).
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    select,
+    textarea,
+    .dokan-form-control,
+    .form-control {
+        width: 100%;
+        padding: 8px 12px;
+        background: #fff;
+        border: 1px solid $od-border;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 20px;
+        color: $od-text;
+        box-shadow: none;
+
+        &::placeholder {
+            color: $od-muted;
+        }
+    }
+
+    // Legacy pins selects to 35px while the button sits at 43px, leaving the note row
+    // visibly uneven. One height for both settles it.
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    select {
+        height: 38px;
+    }
+
+    // Delivery / Store Pickup choice row.
+    #vendor-delivery-type {
+        // Flex rather than inline flow: the markup puts a newline between each input and
+        // its label, and that whitespace text node renders as an extra ~4px gap.
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        // The date field below carries its own 16px, which is the card's rhythm; adding
+        // more here stacked to 36px and broke the run of fields.
+        margin-bottom: 0;
+
+        // The module's `.delivery-type-*` classes sit on the label as well as the input,
+        // so the label picks up its padding too and widens the gap to its own control.
+        .delivery-type-delivery,
+        .delivery-type-pickup {
+            padding: 0;
+        }
+
+        // The module styles these radios as a custom pill via
+        // `.vendor-delivery-time-box form #vendor-delivery-type .delivery-type-delivery`
+        // (padding `0 30px 0 8px`), which under `border-box` inflates a 16px radio into a
+        // 40px lozenge. Scoped through the same id to outrank it.
+        input[type="radio"],
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            min-height: 0;
+            padding: 0;
+            margin: 0 8px 0 0;
+            vertical-align: middle;
+            background-position: center;
+            background-size: 100% 100%;
+            // A hairline grey reads as a control; the token border is too faint to.
+            border: 1px solid #c4c4c4;
+            // Tailwind's form styles paint the checked state with `currentcolor`.
+            color: var(--color-dokan-btn, #7047eb);
+
+            &:checked {
+                border-color: var(--color-dokan-btn, #7047eb);
+            }
+
+            // The module also draws its own radio as a 19px pseudo-element over the real
+            // control, which is what rendered as a grey blob. Drop it and let the
+            // standard control show, matching the radios on the other panel screens.
+            &::before,
+            &::after,
+            &:checked::before,
+            &:checked::after {
+                content: none;
+            }
+        }
+
+        label {
+            margin: 0 24px 0 0;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 400;
+            color: $od-text;
+            vertical-align: middle;
+            cursor: pointer;
+
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
+    }
+
+    // The current delivery window, styled like the other label/value rows.
+    .delivery-type-date-info {
+        margin-bottom: 16px;
+        font-size: 14px;
+        line-height: 22px;
+        color: #6b6b6b;
+
+        > span:first-child {
+            margin-right: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            color: $od-text;
+        }
+    }
+
+    // Legacy strips the native arrow with `appearance: none` and puts nothing back, so
+    // the control reads as a plain text box. This restores the affordance.
+    // Also matched as `select.dokan-form-control`: the shared control rule above hits
+    // this element through its class (0,3,0), which outranks a bare element selector.
+    select,
+    select.dokan-form-control,
+    select.form-control {
+        padding-right: 34px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px 16px;
+    }
+
+    form {
+        margin-bottom: 0;
+    }
+
+    textarea {
+        min-height: 90px;
+        resize: vertical;
+    }
+
+    a.dokan-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dokan-btn,
+    input[type="submit"] {
+        height: 38px;
+        padding: 0 16px;
+        line-height: 20px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        text-shadow: none;
+        box-shadow: none;
+    }
+}
