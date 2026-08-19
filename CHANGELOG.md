@@ -1,3 +1,9 @@
+### v5.0.15 ( Aug 19, 2026 ) ###
+
+- **new:** Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor's own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn't provide on its own.
+- **fix:** The product editor's Attributes field now honors the placeholder text configured in the Product Form Manager.
+- **fix:** Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.
+
 ### v5.0.14 ( Aug 17, 2026 ) ###
 
 - **fix:** Prevented unauthenticated visitors from reading a vendor's commission settings through the public store-categories endpoint.

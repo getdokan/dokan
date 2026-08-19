@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  * When the caller is a vendor or staff, the catalog/order abilities are already scoped to that
  * store automatically.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class CurrentVendor extends AbstractVendorAbility {
 
     /**
      * Ability name.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string
      */
@@ -32,7 +32,7 @@ class CurrentVendor extends AbstractVendorAbility {
     /**
      * Ability registration arguments.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return array
      */
@@ -75,7 +75,7 @@ class CurrentVendor extends AbstractVendorAbility {
     /**
      * Execute the ability.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *

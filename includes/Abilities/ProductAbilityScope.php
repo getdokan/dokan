@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
  * Everything is gated to (Ability Context && vendor) so normal storefront / admin / REST traffic
  * is untouched, and store admins (manage_woocommerce) stay unscoped.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class ProductAbilityScope implements Hookable {
 
@@ -102,7 +102,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Register hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -138,7 +138,7 @@ class ProductAbilityScope implements Hookable {
      * rather than delegated, and the gate additionally grants vendor staff the writes their
      * `dokan_*` capabilities allow but `edit_others_products` refuses. See ADR-0006 and ADR-0007.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param bool   $permission Whether the action is currently permitted.
      * @param string $context    Request context: read, create, edit, delete, batch.
@@ -158,7 +158,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Permission for a single product: published is public; otherwise owner or admin only.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param bool   $permission Incoming permission.
      * @param string $context    Request context.
@@ -191,7 +191,7 @@ class ProductAbilityScope implements Hookable {
      * Both the data-store and REST product query filters route through here. The scope is only
      * set while a `products-query` ability runs, so other product queries are untouched.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param mixed $query Query args.
      *
@@ -216,7 +216,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Scope a Layer 2 (CRUD) product query.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $query WP_Query args built by the product data store.
      *
@@ -229,7 +229,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Scope a Layer 1 (REST proxy) product query.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $args WP_Query args for the products REST controller.
      *
@@ -248,7 +248,7 @@ class ProductAbilityScope implements Hookable {
      * runs) takes precedence; otherwise vendor/staff get their own store. Only writes when the
      * author differs, so the common case is a no-op.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param int $product_id Newly created product ID.
      *
@@ -283,7 +283,7 @@ class ProductAbilityScope implements Hookable {
      * and the output carries the owning vendor. The ability id and registration are left intact,
      * so other consumers keep working; only behavior is augmented.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array  $args Ability registration arguments.
      * @param string $name Ability name.
@@ -328,7 +328,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Add the optional `vendor_id` filter property to a product-list input schema.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $args Ability registration arguments.
      *
@@ -354,7 +354,7 @@ class ProductAbilityScope implements Hookable {
      * Handles both a flat object schema (Layer 1) and a `oneOf` branch schema (Layer 2), where
      * each branch declares `additionalProperties: false` and so must list the field itself.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $args Ability registration arguments.
      *
@@ -388,7 +388,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Run a wrapped product ability: assign the vendor on create, enrich the vendor on output.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param callable $original   Original ability execute callback.
      * @param array    $input      Ability input.
@@ -430,7 +430,7 @@ class ProductAbilityScope implements Hookable {
      * Published products are public; a caller only sees unpublished products for their own store
      * (vendors/staff) or when they are a store admin.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *
@@ -454,7 +454,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Add the `vendor` property to a product ability's output schema.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $args Ability registration arguments.
      *
@@ -502,7 +502,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Enrich a product ability result with the owning vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param mixed $result Ability result.
      *
@@ -540,7 +540,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Attach the owning vendor to a single product payload.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param mixed $product Product payload.
      *
@@ -557,7 +557,7 @@ class ProductAbilityScope implements Hookable {
     /**
      * Build the vendor payload for a product.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param int $product_id Product ID.
      *
@@ -576,7 +576,7 @@ class ProductAbilityScope implements Hookable {
      * WooCommerce's default otherwise to stay backward compatible). Vendors and staff are forced
      * to their own store. Returns `0` to apply WooCommerce's default authorship.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *
