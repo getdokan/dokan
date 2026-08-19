@@ -7,14 +7,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Ability: list the current vendor's withdrawal requests.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class WithdrawsQuery extends AbstractVendorAbility {
 
     /**
      * Ability name.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string
      */
@@ -25,7 +25,7 @@ class WithdrawsQuery extends AbstractVendorAbility {
     /**
      * Ability registration arguments.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return array
      */
@@ -91,7 +91,7 @@ class WithdrawsQuery extends AbstractVendorAbility {
     /**
      * Withdrawal records are gated on the withdraw capability.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string
      */
@@ -102,7 +102,7 @@ class WithdrawsQuery extends AbstractVendorAbility {
     /**
      * Execute the ability.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *

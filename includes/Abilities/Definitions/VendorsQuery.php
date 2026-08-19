@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Listing approved vendors is public; listing pending ones is restricted to store managers.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class VendorsQuery extends AbstractVendorAbility {
 
     /**
      * Ability name.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string
      */
@@ -30,7 +30,7 @@ class VendorsQuery extends AbstractVendorAbility {
     /**
      * Ability registration arguments.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return array
      */
@@ -106,7 +106,7 @@ class VendorsQuery extends AbstractVendorAbility {
      * information, so `pending` and `all` are restricted to Store Admins. Other callers are
      * coerced to `approved` rather than rejected, keeping the public directory usable.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *
@@ -129,7 +129,7 @@ class VendorsQuery extends AbstractVendorAbility {
     /**
      * Execute the ability.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *

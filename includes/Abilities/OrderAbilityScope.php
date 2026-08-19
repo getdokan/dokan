@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
  * Everything is gated to (Ability Context && vendor) so normal storefront / admin / REST traffic
  * is untouched, and store admins (manage_woocommerce) stay unscoped.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class OrderAbilityScope implements Hookable {
 
@@ -81,7 +81,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * Register hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -113,7 +113,7 @@ class OrderAbilityScope implements Hookable {
      * filter removed, `wc_rest_check_post_permissions( 'shop_order', 'edit', $foreign )` returns
      * `true`. This class is load-bearing — see ADR-0006.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param bool   $permission Whether the action is currently permitted.
      * @param string $context    Request context: read, create, edit, delete, batch.
@@ -133,7 +133,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * Permission for a single order: private to the owning vendor (admins unscoped).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param bool   $permission Incoming permission.
      * @param string $context    Request context.
@@ -167,7 +167,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * Scope an order query (Layer 2, legacy CPT or HPOS) to the current vendor's orders.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $query Query args passed to the order data store.
      *
@@ -198,7 +198,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * Scope a Layer 1 (REST proxy) order query to the current vendor's orders.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $args Query args for the orders REST controller.
      *
@@ -216,7 +216,7 @@ class OrderAbilityScope implements Hookable {
      * still total amounts without double-counting (a parent's total equals the sum of its
      * Suborders).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array  $args Ability registration arguments.
      * @param string $name Ability name.
@@ -243,7 +243,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * Add the Dokan order-relationship properties to an order-list output schema.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $args Ability registration arguments.
      *
@@ -282,7 +282,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * The Dokan order-relationship properties added to an order output schema.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return array
      */
@@ -311,7 +311,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * Enrich an order-list ability result with Dokan order relationships.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param mixed $result Ability result.
      *
@@ -342,7 +342,7 @@ class OrderAbilityScope implements Hookable {
     /**
      * Attach the Dokan relationship and owning vendor to a single order payload.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param mixed $order_data Order payload.
      *
@@ -384,7 +384,7 @@ class OrderAbilityScope implements Hookable {
      *
      * Returns `[ 0 ]` when the vendor has no orders so callers force an empty result set.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return int[]
      */

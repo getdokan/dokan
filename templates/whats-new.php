@@ -4,6 +4,28 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.15',
+        'released' => '2026-08-19',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor\'s own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn\'t provide on its own.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'The product editor\'s Attributes field now honors the placeholder text configured in the Product Form Manager.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.14',
         'released' => '2026-08-17',
         'changes'  => [

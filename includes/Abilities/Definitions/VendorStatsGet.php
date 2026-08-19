@@ -7,14 +7,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Ability: get the current vendor's high-level stats (balance + withdraw summary).
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class VendorStatsGet extends AbstractVendorAbility {
 
     /**
      * Ability name.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string
      */
@@ -25,7 +25,7 @@ class VendorStatsGet extends AbstractVendorAbility {
     /**
      * Ability registration arguments.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return array
      */
@@ -71,7 +71,7 @@ class VendorStatsGet extends AbstractVendorAbility {
     /**
      * Balance and earnings are gated on the sales-overview capability.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string
      */
@@ -82,7 +82,7 @@ class VendorStatsGet extends AbstractVendorAbility {
     /**
      * Execute the ability.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *

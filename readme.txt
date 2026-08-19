@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.14
+Stable tag: 5.0.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.15 ( Aug 19, 2026 ) =
+- **new:** Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor's own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn't provide on its own.
+- **fix:** The product editor's Attributes field now honors the placeholder text configured in the Product Form Manager.
+- **fix:** Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.
+
 = v5.0.14 ( Aug 17, 2026 ) =
 - **fix:** Prevented unauthenticated visitors from reading a vendor's commission settings through the public store-categories endpoint.
 - **fix:** Prevented Shop Managers from installing or activating arbitrary plugins through Dokan's admin endpoints and setup wizard by requiring the proper plugin capabilities.
@@ -396,10 +401,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Prevented vendors from granting download access to another vendor's files.
 - **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
 - **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
-
-= v5.0.10 ( Jul 21, 2026 ) =
-- **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
-- **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
-- **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

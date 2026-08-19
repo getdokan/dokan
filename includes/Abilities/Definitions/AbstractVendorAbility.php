@@ -18,14 +18,14 @@ defined( 'ABSPATH' ) || exit;
  * Dokan abilities are inherently vendor-scoped: their callbacks resolve the current vendor via
  * dokan_get_current_user_id() and delegate to Dokan services that filter by that vendor.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 abstract class AbstractVendorAbility implements AbilityDefinition {
 
     /**
      * Resolve the current vendor ID (vendor staff resolve to their parent vendor).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return int
      */
@@ -36,7 +36,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     /**
      * Whether the current user is a vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return bool
      */
@@ -47,7 +47,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     /**
      * Whether the current user is a store admin (administrator or shop manager).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return bool
      */
@@ -61,7 +61,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
      * An empty string means the ability needs no capability beyond being a vendor. Subclasses
      * override this to declare their own gate.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string
      */
@@ -72,7 +72,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     /**
      * Clamp pagination input to the bounds every query ability shares.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $input Ability input.
      *
@@ -93,7 +93,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
      * of `dokan_*` capabilities — so scope alone is not authorization. Without this check a staff
      * member reaches vendor data their assigned permissions exclude.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return bool
      */
@@ -111,7 +111,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
         /**
          * Filters the capability required to use a Dokan ability.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.15
          *
          * @param string $capability   Required capability, or an empty string for none.
          * @param string $ability_name The ability being checked.
@@ -128,7 +128,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     /**
      * A standard "not a vendor" error.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return WP_Error
      */
@@ -147,7 +147,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
      * permission callback alone, because an ability's callbacks are public and reachable without
      * the Abilities API running its own permission pre-flight.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return WP_Error|null Error when the caller is not permitted, null otherwise.
      */
@@ -158,7 +158,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     /**
      * Base ability metadata shared by Dokan abilities.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param bool $is_readonly Whether the ability only reads data.
      *
