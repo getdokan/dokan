@@ -912,8 +912,9 @@ class OrderController extends DokanRESTController {
     /**
      * Resolve the order a fragment request is asking for.
      *
-     * A trashed order is treated as missing so the panel gets a clean error rather
-     * than a blank view.
+     * Trashed orders are resolved like any other: the legacy order details page renders
+     * them, and the panel is the same view, so refusing them here would lose access to an
+     * order the Vendor can still open elsewhere.
      *
      * @since DOKAN_SINCE
      *
@@ -924,7 +925,7 @@ class OrderController extends DokanRESTController {
     protected function get_viewable_order( $request ) {
         $order = wc_get_order( absint( $request['id'] ) );
 
-        if ( ! $order || 'trash' === $order->get_status() ) {
+        if ( ! $order ) {
             return new WP_Error(
                 'dokan_rest_invalid_order_id',
                 __( 'Invalid Order ID.', 'dokan-lite' ),

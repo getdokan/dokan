@@ -126,13 +126,65 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 }
 
+// The main column mixes full-width cards with a two-up address row. Legacy floats them,
+// which cannot equalise the pair's height, so the shorter card stopped short of its
+// neighbour. Flex does, and keeps the same order and widths.
+.dokan-order-details-fragment .dokan-order-left-content > .dokan-clearfix {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+
+    &::before,
+    &::after {
+        content: none;
+    }
+
+    // `gap` owns the spacing; the legacy percentage margins would push the address pair
+    // past 100% of the row and wrap it.
+    > * {
+        flex: 0 0 100%;
+        min-width: 0;
+        margin: 0 !important;
+    }
+
+    // The address pair shares the row, splitting it around the 24px gap.
+    > .dokan-left {
+        flex: 1 1 calc(50% - 12px);
+    }
+
+    // Its card fills the equalised height rather than sitting short inside it.
+    > .dokan-left > .dokan-panel {
+        height: 100%;
+    }
+
+    // A float clearer has no job in a flex row.
+    > .clear {
+        display: none;
+    }
+
+    // The row gap owns the rhythm now.
+    .dokan-panel {
+        margin-bottom: 0;
+    }
+}
+
 // Address cards carry plain body copy rather than the legacy dense block.
 .dokan-order-details-fragment {
     .dokan-order-billing-address .dokan-panel-body,
     .dokan-order-shipping-address .dokan-panel-body {
+        // A 28px line box around 14px text carries ~7px of half-leading above the first
+        // line and below the last, so a flat 20px pad reads as ~27px vertically against
+        // a true 20px on the sides. Trimming the vertical pad evens the optical inset.
+        padding: 13px 20px;
         font-size: 14px;
-        line-height: 22px;
+        // Addresses run to many short lines with no separators between fields, so they
+        // need noticeably more leading than the single-line rows elsewhere to stay
+        // readable as distinct lines.
+        line-height: 28px;
         color: #6b6b6b;
+        // Addresses are free text and can carry long unbroken tokens; wrap rather than
+        // push the card wider than its column.
+        overflow-wrap: anywhere;
 
         address,
         p {
@@ -141,22 +193,317 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
+    // The download permission details live in a Bootstrap `.panel-collapse.collapse`,
+    // and the panel's own Tailwind bundle defines `.dokan-layout .collapse` as the
+    // `visibility: collapse` utility — same class name, opposite meaning. That collision
+    // hid Downloads Remaining, Access Expires and the download count, which the legacy
+    // page shows because it never loads Tailwind. The design has them always visible.
+    // `!important` is required: the utility is emitted important, so no specificity wins.
+    .panel-collapse.collapse {
+        visibility: visible !important;
+        height: auto;
+    }
+
+    // Title and Revoke share one row, pushed apart — the design's justify-between.
+    // The legacy markup floats the button, which the flex row makes redundant.
+    .order_download_permissions .dokan-panel-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    // Headings/H4 in the design: 14px semibold at the body text colour. The markup makes
+    // it an `<a>` (it toggles the collapse), so it arrives as a brand-coloured link.
+    // Two of the three parts are links — the product, and the file the permission grants
+    // access to — so those keep the link colour while the connective text stays body
+    // coloured. That contrast is what makes it readable as "these bits are clickable".
+    .order_download_permissions .dokan-panel-heading .title {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 18px;
+        color: $od-text;
+
+        a:hover,
+        a:focus {
+            text-decoration: underline;
+        }
+    }
+
+    // Revoke is a quiet action, not a danger button.
+    .order_download_permissions .revoke_access {
+        flex: 0 0 auto;
+        float: none;
+        height: auto;
+        // `!important`: legacy's `.btn-sm` keeps 10px of side padding, which stopped the
+        // label 10px short of the counter beneath it on the same right edge.
+        padding: 0 !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 18px;
+        color: var(--color-dokan-btn, #7047eb) !important;
+    }
+
+    // Product search: the design's bordered field with a magnifier, and a real gap
+    // before Grant Access. The legacy toolbar relies on a grid that collapses here.
+    .order_download_permissions .toolbar {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        // `!important` because legacy sets `margin-top: 15px` from a four-class selector,
+        // which stacked on the last row's 30px and left a wider gap above the rule here
+        // than between the file rows.
+        margin: 0 -20px !important;
+        padding: 0 20px;
+
+        &::before,
+        &::after {
+            content: none;
+        }
+
+        > * {
+            width: 100%;
+            margin: 0 !important;
+            padding: 0;
+            float: none;
+        }
+
+        // select2 mounts its dropdown as a sibling of the field inside this flex column,
+        // so without this it becomes a flex item and pushes Grant Access down.
+        > .select2-container--open .select2-dropdown {
+            width: 100% !important;
+        }
+
+        .dokan-w4 {
+            width: auto;
+        }
+    }
+
+    // A rule above the add-product toolbar, on the same full-bleed line as the dividers
+    // between files, so the list reads as separate from the control that adds to it —
+    // including when there is a single permission and no between-file rules at all.
+    // Conditional on the list actually having rows: with none, a lone rule hanging under
+    // the card header separates nothing.
+    .order_download_permissions .panel-group {
+        margin-bottom: 0;
+    }
+
+    .order_download_permissions .panel-group:has(> .dokan-panel) + .toolbar {
+        padding-top: 22px;
+        border-top: 1px solid $od-border;
+    }
+
+    // select2 renders its own box, so the field styling has to land on that.
+    .order_download_permissions .select2-container {
+        width: 100% !important;
+    }
+
+    .order_download_permissions .select2-container .select2-selection {
+        // Height, not min-height: the inner search input is what grows the box, and it
+        // pushed this to 46px next to the two 40px fields above it.
+        height: 40px;
+        min-height: 40px;
+        padding: 3px 12px 3px 36px;
+        background-color: #fff;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: left 12px center;
+        background-size: 16px 16px;
+        border: 1px solid $od-border;
+        border-radius: 6px;
+        box-shadow: none;
+    }
+
+    // Typed text inherited the placeholder's grey and read as invisible.
+    .order_download_permissions .select2-container .select2-search__field {
+        height: 32px;
+        margin: 0;
+        color: $od-text !important;
+        font-size: 14px;
+        line-height: 30px;
+
+        &::placeholder {
+            color: $od-muted;
+        }
+    }
+
+    // The permission fields are a fixed-layout table whose first row has one cell and
+    // second has two, so the meta line only ever filled the left 60%. Laid out as blocks
+    // they stack full width, the way the design shows them.
+    .wc-metabox-content {
+        display: block;
+        width: 100%;
+        margin: 0;
+
+        tbody,
+        tr {
+            display: block;
+        }
+
+        td {
+            display: block;
+            // Beats the inline `width: 60%` on the first cell.
+            width: auto !important;
+            // 20px from a field to the label under it, per the design's row rhythm.
+            padding: 0 0 20px;
+            // The theme zebra-stripes tables — `table:not(.has-background) tbody td` plus a
+            // `tr:nth-child(2n) td` override — which, once the table is laid out as blocks,
+            // reads as grey bands running the width of the card behind the labels. The
+            // striping selector is four element-selectors deep, so it cannot be outranked
+            // from here on specificity alone.
+            background-color: transparent !important;
+            border: 0;
+            font-size: 14px;
+            line-height: 22px;
+            color: #6b6b6b;
+        }
+
+        tr:last-child td:last-child {
+            padding-bottom: 0;
+        }
+
+        // Headings/H6: 12px semibold, 130%. 27px from the top of the label to the top of
+        // its field is the design's measured gap.
+        label {
+            display: block;
+            margin-bottom: 11px;
+            font-size: 12px;
+            // Legacy resets these labels to `normal` from a three-class selector.
+            font-weight: 600 !important;
+            line-height: 16px;
+            color: $od-text;
+        }
+
+        // The design pairs each field label with its counter on one row — label left,
+        // counter right. The counter lives in its own leading row in this markup, so it
+        // is lifted by exactly its own height onto the following row's line, which lands
+        // the two on a shared baseline without either one moving the fields below.
+        // Paragraphs/Small: 12px regular, 140%.
+        tr:first-child td {
+            display: flex;
+            justify-content: flex-end;
+            height: 16px;
+            margin-bottom: -16px;
+            padding: 0;
+            font-size: 12px;
+            line-height: 16px;
+            color: $od-muted;
+
+            label {
+                display: inline;
+                margin: 0 4px 0 0;
+                font-size: 12px;
+                font-weight: 400 !important;
+                line-height: 16px;
+                color: $od-muted;
+            }
+        }
+
+        // Beats the inline `width: 150px` on both fields. The `!important` run is for the
+        // number field only in practice: it carries Tailwind's `.form-input`, which this
+        // build emits with `!important`, so specificity alone left it square-cornered,
+        // 16px and grey-bordered next to an identically-sized sibling.
+        input[type="number"],
+        input[type="text"] {
+            width: 100% !important;
+            height: 40px !important;
+            padding: 8px 12px !important;
+            background-color: #fff !important;
+            border: 1px solid $od-border !important;
+            border-radius: 6px !important;
+            font-size: 14px !important;
+            line-height: 22px;
+            color: $od-text !important;
+            box-shadow: none !important;
+
+            &::placeholder {
+                color: $od-muted;
+            }
+        }
+
+        input[type="number"] {
+            appearance: textfield;
+
+            &::-webkit-inner-spin-button,
+            &::-webkit-outer-spin-button {
+                appearance: none;
+                margin: 0;
+            }
+        }
+
+        // Calendar affordance on the expiry field, matching the design. `!important` to
+        // match the shared padding above, which needs it to beat Tailwind's `.form-input`
+        // and would otherwise pull the text back under the icon.
+        input.datepicker {
+            padding-left: 38px !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 16px 16px;
+        }
+    }
+
+    // Pro's shipment card uses bare `h4`/`h5` tags, so they inherit the theme's heading
+    // scale — "Shipment #1" rendered at 22.6px weight 300 inside a card whose own titles
+    // are 14px semibold.
+    .shippments-tracking-title {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 22px;
+        color: $od-text;
+    }
+
+    .shippments-tracking-via {
+        margin: 2px 0 0;
+        font-size: 13px;
+        line-height: 20px;
+        color: $od-muted;
+    }
+
+    .shipping-status-track-info-heading,
+    .dokan-customer-shipment-notes-list-area h5 {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 22px;
+        color: $od-text;
+    }
+
     // Nested panels — one per downloadable file — are rows inside a card, not cards of
     // their own. Flattened so their content keeps the card's single 20px inset.
     .dokan-panel .dokan-panel {
-        margin: 0;
+        // 22px either side of every rule in this section — a touch more air than the
+        // 20px used inside a row, so the rules read as separators rather than as part of
+        // the field rhythm. The design measures 60px
+        // here, but its rows lead with a 40px thumbnail block where ours has a single line
+        // of text, so the same figure reads as far more air. Pulled out to the card edges
+        // so the rule is full-bleed like the notes and general-details dividers, with the
+        // inset put back as padding so the content does not move.
+        margin: 0 -20px;
+        padding: 22px 20px;
         border: 0;
         border-radius: 0;
         box-shadow: none;
 
-        > .dokan-panel-heading {
-            padding: 12px 0;
-            border-bottom: 0;
-            font-weight: 500;
+        &:first-child {
+            padding-top: 0;
         }
 
-        > .dokan-panel-body {
-            padding: 0 0 12px;
+        > .dokan-panel-heading {
+            padding: 0;
+            background: transparent;
+            border-bottom: 0;
+        }
+
+        // Same 20px that separates a field from the label beneath it, so the product line
+        // sits on the section's own rhythm rather than a wider one of its own.
+        > .panel-collapse > .panel-body {
+            padding: 20px 0 0;
         }
 
         + .dokan-panel {
@@ -569,5 +916,185 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         font-weight: 500;
         text-shadow: none;
         box-shadow: none;
+    }
+}
+
+// ── Focus ──────────────────────────────────────────────────────────────────────
+//
+// One treatment for every control in the fragment. Left alone they disagree: the theme
+// paints a 2px orange outline on plain inputs, while anything carrying Tailwind's
+// `.form-input` takes a blue ring — the two downloadable-permission fields sat side by
+// side with different answers. `!important` because both of those origins are themselves
+// `!important` in this build, and last in the file because the section rules above match
+// at the same specificity and would otherwise win on source order.
+.dokan-order-details-fragment {
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus,
+    .select2-container--focus .select2-selection,
+    .select2-container--open .select2-selection {
+        border-color: var(--color-dokan-btn, #7047eb) !important;
+        outline: none !important;
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-dokan-btn, #7047eb) 18%, transparent) !important;
+    }
+}
+
+// ── jQuery UI date picker ───────────────────────────────────────────────────────
+//
+// The picker is appended to `<body>`, outside the fragment, so it is reached through
+// the page rather than the wrapper. `:has()` keeps that to pages actually showing the
+// fragment, which is the same guard the grey canvas above uses.
+body:has(.dokan-order-details-fragment) {
+    #ui-datepicker-div {
+        // jQuery UI writes `z-index: 1` inline from the input's own stacking context, so
+        // the calendar opened *underneath* select2's product search (z-index 1050) and
+        // the search box painted straight through it.
+        z-index: 1100 !important;
+        width: 260px;
+        padding: 8px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
+        font-family: inherit;
+        font-size: 13px;
+    }
+
+    .ui-datepicker .ui-datepicker-header {
+        margin: 0 0 4px;
+        padding: 4px 0;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .ui-datepicker .ui-datepicker-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #25252d;
+    }
+
+    // The stock arrows are sprite-backed and read as grey blobs against a white header.
+    .ui-datepicker .ui-datepicker-prev,
+    .ui-datepicker .ui-datepicker-next {
+        top: 4px;
+        height: 26px;
+        width: 26px;
+        background: transparent;
+        border: 0;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+            background: #f3f4f6;
+            border: 0;
+        }
+
+        .ui-icon {
+            background-image: none;
+            text-indent: 0;
+            overflow: visible;
+            font-size: 0;
+
+            &::before {
+                display: block;
+                width: 8px;
+                height: 8px;
+                margin: 5px auto;
+                border-top: 2px solid #6b6b6b;
+                border-right: 2px solid #6b6b6b;
+                content: "";
+            }
+        }
+    }
+
+    .ui-datepicker .ui-datepicker-prev .ui-icon::before {
+        transform: rotate(-135deg);
+    }
+
+    .ui-datepicker .ui-datepicker-next .ui-icon::before {
+        transform: rotate(45deg);
+    }
+
+    .ui-datepicker th {
+        padding: 6px 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: #828282;
+    }
+
+    .ui-datepicker td {
+        padding: 1px;
+    }
+
+    .ui-datepicker td .ui-state-default {
+        padding: 6px 0;
+        background: transparent;
+        border: 0;
+        border-radius: 4px;
+        font-weight: 400;
+        color: #25252d;
+        text-align: center;
+
+        &:hover {
+            background: #f3f4f6;
+        }
+    }
+
+    .ui-datepicker td .ui-state-active,
+    .ui-datepicker td .ui-state-highlight {
+        background: var(--color-dokan-btn, #7047eb);
+        color: #fff;
+        font-weight: 600;
+    }
+}
+
+// ── select2 product search dropdown ────────────────────────────────────────────
+//
+// The dropdown is a sibling of the field, not a descendant of the fragment wrapper in
+// every select2 configuration, so it is matched on its own classes and kept to pages
+// showing the fragment — the same guard the grey canvas and the date picker use.
+body:has(.dokan-order-details-fragment) {
+    .select2-container--default .select2-dropdown {
+        // Stock select2 draws a mid-grey #7f868d hairline with 4px corners, which reads
+        // as a black box against the card's #e5e7eb fields.
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        background: #fff;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
+        overflow: hidden;
+    }
+
+    // Opening upward is select2 reacting to the viewport edge, not a bug — but the shared
+    // corner should be square so the panel reads as attached to the field it belongs to.
+    .select2-container--default .select2-dropdown--above {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: 0 -10px 15px -3px rgb(0 0 0 / 10%), 0 -4px 6px -4px rgb(0 0 0 / 10%);
+    }
+
+    .select2-container--default .select2-dropdown--below {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .select2-container--default .select2-results__option {
+        padding: 9px 12px;
+        font-size: 14px;
+        line-height: 20px;
+        color: #25252d;
+    }
+
+    // The "type 3 more characters" hint is guidance, not a choice.
+    .select2-container--default .select2-results__message {
+        color: #828282;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #f3f4f6;
+        color: #25252d;
     }
 }

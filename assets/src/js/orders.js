@@ -470,6 +470,16 @@ jQuery(function($) {
                 .datepicker({
                     dateFormat: datepickerFormat
                 });
+
+            // Download access-expiry fields, on the same site date format as above so a
+            // picked date reads the way every other date on the page does.
+            $( scope || document )
+                .find( 'input.datepicker' )
+                .addBack( 'input.datepicker' )
+                .filter( ':not(.hasDatepicker)' )
+                .datepicker({
+                    dateFormat: datepickerFormat
+                });
         },
 
         showTrackingForm: function(e) {

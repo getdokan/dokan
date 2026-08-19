@@ -238,6 +238,49 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
         };
     }, [ orderId ] );
 
+    // Legacy links parts of the details view to in-page targets — the downloadable
+    // permission titles carry `href="#collapse-<id>"`, which on the legacy page simply
+    // jumps to that block. In the panel the hash *is* the route, so letting the browser
+    // follow one would navigate off the order entirely. The markup keeps its href, and
+    // the same jump happens here; only who performs it changes.
+    useEffect( () => {
+        const container = containerRef.current;
+
+        if ( ! container ) {
+            return;
+        }
+
+        const jumpWithoutLeavingTheRoute = ( event: MouseEvent ) => {
+            const anchor = ( event.target as Element )?.closest?.( 'a' );
+
+            if ( ! anchor || event.defaultPrevented ) {
+                return;
+            }
+
+            const href = anchor.getAttribute( 'href' ) ?? '';
+
+            // `#/…` is a panel route, which the router is entitled to handle.
+            if ( ! href.startsWith( '#' ) || href.startsWith( '#/' ) ) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const targetId = href.slice( 1 );
+            const target = targetId
+                ? container.querySelector( `#${ CSS.escape( targetId ) }` )
+                : null;
+
+            target?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+        };
+
+        container.addEventListener( 'click', jumpWithoutLeavingTheRoute );
+
+        return () => {
+            container.removeEventListener( 'click', jumpWithoutLeavingTheRoute );
+        };
+    }, [] );
+
     // Leaving the route entirely takes the render's inline data with it, so a later
     // visit cannot read a global belonging to an order the Vendor is no longer on.
     useEffect( () => {
