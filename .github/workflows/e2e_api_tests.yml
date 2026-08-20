@@ -645,6 +645,26 @@ jobs:
                   NO_SETUP=true npx playwright test --project=e2e_tests --last-failed \
                       --reporter=list 2>&1 | tee /tmp/recheck.log
 
+                  # A SKIPPED test is not a passing test. Playwright exits 0 for a skip, so the exit
+                  # code alone cannot distinguish "passed alone" from "never ran" -- and this step's
+                  # outcome is what the gate below reads. Every test in this re-run was failing
+                  # moments ago; if one skips it is because a `test.skip(!x)` guard depends on state
+                  # an earlier test in its describe.serial block sets, and `--last-failed` runs it
+                  # alone. Running it alone verified nothing, so the shard must NOT be cleared.
+                  #
+                  # Measured: run 32359050741 shard 8. SE-NCS-10/11 failed 3/3, the re-run reported
+                  # "1 skipped", and the shard was reported GREEN with the summary claiming the test
+                  # "passed alone". A real defect shipped past the gate.
+                  # Matched loosely on purpose: playwright prints the tally as "1 skipped" on its
+                  # own line for a single test, but as "2 passed  1 skipped" when several re-run
+                  # together, so an anchored pattern misses the multi-test case. Erring toward NOT
+                  # clearing is the right bias here -- a false red costs one investigation, a false
+                  # green costs a shipped defect.
+                  if grep -qE '[0-9]+ skipped' /tmp/recheck.log; then
+                      echo "::error::The isolation re-run SKIPPED a previously-failing test instead of running it. A skip verifies nothing, so this shard is NOT cleared. The test almost certainly depends on state set by an earlier test in its describe.serial block, which --last-failed does not run."
+                      exit 1
+                  fi
+
             # Always say out loud which tests were rescued by the isolation re-run. A test that
             # fails with its shard-mates but passes alone is the signature of shard-state
             # pollution (an earlier spec leaving a global option/module/product dirty), NOT a
@@ -667,7 +687,9 @@ jobs:
                       echo
                       echo '```'
                       if [ -f /tmp/recheck.log ]; then
-                          grep -E '^[[:space:]]+(✓|✘|×)' /tmp/recheck.log | head -50
+                          # `-` is included so a SKIPPED re-run is visible here rather than
+                          # rendering an empty block that reads like nothing went wrong.
+                          grep -E '^[[:space:]]+(✓|✘|×|-)' /tmp/recheck.log | head -50
                       else
                           echo "(no re-run log — first pass failed without recorded test failures)"
                       fi
