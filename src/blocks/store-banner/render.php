@@ -24,6 +24,8 @@ $attributes = wp_parse_args(
         'storeId' => 0,
         'height'  => 0,
         'isLink'  => false,
+        'focalX'  => 50,
+        'focalY'  => 50,
     ]
 );
 
@@ -70,7 +72,15 @@ if ( empty( $banner_url ) ) {
 
 $banner_id = absint( $vendor->get_banner_id() );
 $alt       = $vendor->get_shop_name();
-$img_style = sprintf( 'height:%dpx;', $height );
+
+// The banner crops through object-fit: cover; the focal point decides which
+// part of the image survives the crop, exactly as on the core Cover block.
+$img_style = sprintf(
+    'height:%1$dpx;object-position:%2$d%% %3$d%%;',
+    $height,
+    min( 100, max( 0, absint( $attributes['focalX'] ) ) ),
+    min( 100, max( 0, absint( $attributes['focalY'] ) ) )
+);
 
 if ( $banner_id ) {
     $image = wp_get_attachment_image(

@@ -186,6 +186,21 @@ ob_start();
 if ( $dokan_query->have_posts() ) {
     echo '<div class="seller-items">';
 
+    /*
+     * Columns is declared in block.json, so it must do something. Zero means
+     * "theme default", matching how WooCommerce itself resolves the loop. The
+     * loop prop is request-global, so everything here stays inside the guard:
+     * reading it outside would make WooCommerce materialise the whole loop
+     * state (a potential option write) even for blocks left on the default.
+     */
+    $dokan_columns      = min( 6, absint( $attributes['columns'] ) );
+    $dokan_prev_columns = null;
+
+    if ( $dokan_columns > 0 ) {
+        $dokan_prev_columns = wc_get_loop_prop( 'columns' );
+        wc_set_loop_prop( 'columns', $dokan_columns );
+    }
+
     woocommerce_product_loop_start();
 
     while ( $dokan_query->have_posts() ) {
@@ -194,6 +209,10 @@ if ( $dokan_query->have_posts() ) {
     }
 
     woocommerce_product_loop_end();
+
+    if ( null !== $dokan_prev_columns ) {
+        wc_set_loop_prop( 'columns', $dokan_prev_columns );
+    }
 
     echo '</div>';
 
@@ -215,8 +234,15 @@ if ( $dokan_query->have_posts() ) {
 
     // Only the block's own query needs resetting; doing it for the main query
     // would leave the global $post pointing at the last product in the loop.
+    // The WooCommerce loop state our loop seeded is reset for the same reason:
+    // left behind, a later [products] loop on the page would inherit this
+    // block's totals and print "Showing 0 results" with no pagination.
     if ( ! $dokan_own_page ) {
         wp_reset_postdata();
+
+        if ( function_exists( 'wc_reset_loop' ) ) {
+            wc_reset_loop();
+        }
     }
 } else {
     printf(

@@ -6,7 +6,11 @@ import './style.scss';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
-        <SSREdit name={ metadata.name } attributes={ attributes }>
+        <SSREdit
+            name={ metadata.name }
+            attributes={ attributes }
+            setAttributes={ setAttributes }
+        >
             { /* The tab list itself comes from dokan_get_store_tabs(), which
                  extensions filter — there is nothing here for a merchant to
                  configure beyond which store the block follows. */ }

@@ -113,4 +113,18 @@
 			display: block;
 		}
 	}
+
+	/* Inline layout: fields flow in one row, wrapping as needed. Flex sits on
+	   the list itself — the rows are the flex items, so the multi-span fields
+	   inside each row still flow as text. */
+	&.is-inline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5em 1.5em;
+
+		> li {
+			margin: 0;
+		}
+	}
 }

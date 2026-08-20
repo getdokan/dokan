@@ -6,7 +6,7 @@
     "title": "Store Contact Form",
     "category": "dokan",
     "description": "A form letting customers message the vendor.",
-    "keywords": ["dokan", "store", "vendor", "contact", "form", "message"],
+    "keywords": [ "dokan", "store", "vendor", "contact", "form", "message" ],
     "textdomain": "dokan-lite",
     "usesContext": [ "dokan/storeId" ],
     "attributes": {
@@ -17,6 +17,10 @@
         "title": {
             "type": "string",
             "default": ""
+        },
+        "showTitle": {
+            "type": "boolean",
+            "default": true
         }
     },
     "supports": {
@@ -28,7 +32,9 @@
         },
         "typography": {
             "fontSize": true,
-            "__experimentalDefaultControls": { "fontSize": true }
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
         },
         "spacing": {
             "margin": true,

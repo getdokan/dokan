@@ -41,6 +41,14 @@
         "showOpenClose": {
             "type": "boolean",
             "default": true
+        },
+        "showIcons": {
+            "type": "boolean",
+            "default": true
+        },
+        "infoLayout": {
+            "type": "string",
+            "default": "list"
         }
     },
     "supports": {

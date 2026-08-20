@@ -31,6 +31,8 @@ $attributes = wp_parse_args(
         'showEmail'     => true,
         'showRating'    => true,
         'showOpenClose' => true,
+        'showIcons'     => true,
+        'infoLayout'    => 'list',
     ]
 );
 
@@ -56,13 +58,19 @@ if ( ! $vendor ) {
 $store_id = $vendor->get_id();
 $items    = '';
 
+// Icons are markup this block emits itself, so hiding them is a plain subtraction.
+$dokan_info_icon = static function ( $classes ) use ( $attributes ) {
+    return empty( $attributes['showIcons'] ) ? '' : '<i class="' . esc_attr( $classes ) . '"></i>';
+};
+
 // Address — admin privacy gate.
 if ( ! empty( $attributes['showAddress'] ) && ! dokan_is_vendor_info_hidden( 'address' ) ) {
     $store_address = dokan_get_seller_short_address( $store_id, false );
 
     if ( ! empty( $store_address ) ) {
         $items .= sprintf(
-            '<li class="dokan-store-address"><i class="fas fa-map-marker-alt"></i>%s</li>',
+            '<li class="dokan-store-address">%1$s%2$s</li>',
+            $dokan_info_icon( 'fas fa-map-marker-alt' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
             wp_kses_post( $store_address )
         );
     }
@@ -74,7 +82,8 @@ if ( ! empty( $attributes['showPhone'] ) && ! dokan_is_vendor_info_hidden( 'phon
 
     if ( ! empty( $phone ) ) {
         $items .= sprintf(
-            '<li class="dokan-store-phone"><i class="fas fa-mobile-alt"></i><a href="tel:%1$s">%2$s</a></li>',
+            '<li class="dokan-store-phone">%1$s<a href="tel:%2$s">%3$s</a></li>',
+            $dokan_info_icon( 'fas fa-mobile-alt' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
             esc_attr( $phone ),
             esc_html( $phone )
         );
@@ -87,7 +96,8 @@ if ( ! empty( $attributes['showEmail'] ) && ! dokan_is_vendor_info_hidden( 'emai
 
     if ( ! empty( $email ) ) {
         $items .= sprintf(
-            '<li class="dokan-store-email"><i class="far fa-envelope"></i><a href="mailto:%1$s">%1$s</a></li>',
+            '<li class="dokan-store-email">%1$s<a href="mailto:%2$s">%2$s</a></li>',
+            $dokan_info_icon( 'far fa-envelope' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
             esc_attr( antispambot( $email ) )
         );
     }
@@ -110,7 +120,8 @@ if ( ! empty( $attributes['showRating'] ) ) {
      * has to carry it. Scoped to this row so no other Woo rule applies.
      */
     $items .= sprintf(
-        '<li class="dokan-store-rating woocommerce"><i class="fas fa-star"></i>%s</li>',
+        '<li class="dokan-store-rating woocommerce">%1$s%2$s</li>',
+        $dokan_info_icon( 'fas fa-star' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
         wp_kses_post( $vendor->get_readable_rating( false ) )
     );
 }
@@ -147,8 +158,10 @@ if (
     $times = ob_get_clean();
 
     $items .= sprintf(
-        '<li class="dokan-store-open-close"><i class="fas fa-shopping-cart"></i><div class="store-open-close-notice"><span class="store-notice">%1$s</span><span class="fas fa-angle-down"></span>%2$s</div></li>',
+        '<li class="dokan-store-open-close">%1$s<div class="store-open-close-notice"><span class="store-notice">%2$s</span>%3$s%4$s</div></li>',
+        $dokan_info_icon( 'fas fa-shopping-cart' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
         esc_html( $notice ),
+        empty( $attributes['showIcons'] ) ? '' : '<span class="fas fa-angle-down"></span>',
         $times // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the template part.
     );
 }
@@ -171,6 +184,8 @@ if ( '' === trim( $items ) ) {
 
 printf(
     '<ul %1$s>%2$s</ul>',
-    get_block_wrapper_attributes( [ 'class' => 'dokan-store-info' ] ),
+    get_block_wrapper_attributes(
+        [ 'class' => 'inline' === $attributes['infoLayout'] ? 'dokan-store-info is-inline' : 'dokan-store-info' ]
+    ),
     $items // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each item is escaped as it is built.
 );

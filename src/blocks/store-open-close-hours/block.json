@@ -6,7 +6,15 @@
     "title": "Store Opening Hours",
     "category": "dokan",
     "description": "The vendor's weekly opening hours.",
-    "keywords": ["dokan", "store", "vendor", "hours", "opening", "time", "schedule"],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "hours",
+        "opening",
+        "time",
+        "schedule"
+    ],
     "textdomain": "dokan-lite",
     "usesContext": [ "dokan/storeId" ],
     "attributes": {
@@ -17,6 +25,10 @@
         "title": {
             "type": "string",
             "default": ""
+        },
+        "showTitle": {
+            "type": "boolean",
+            "default": true
         }
     },
     "supports": {
@@ -28,7 +40,9 @@
         },
         "typography": {
             "fontSize": true,
-            "__experimentalDefaultControls": { "fontSize": true }
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
         },
         "spacing": {
             "margin": true,

@@ -14,7 +14,11 @@ const LEVELS = [ 1, 2, 3, 4, 5, 6 ].map( ( level ) => ( {
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
-        <SSREdit name={ metadata.name } attributes={ attributes }>
+        <SSREdit
+            name={ metadata.name }
+            attributes={ attributes }
+            setAttributes={ setAttributes }
+        >
             <InspectorControls>
                 <PanelBody title={ __( 'Store Name Settings', 'dokan-lite' ) }>
                     <SelectControl

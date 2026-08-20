@@ -14,7 +14,11 @@ import './style.scss';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
-        <SSREdit name={ metadata.name } attributes={ attributes }>
+        <SSREdit
+            name={ metadata.name }
+            attributes={ attributes }
+            setAttributes={ setAttributes }
+        >
             <InspectorControls>
                 <PanelBody
                     title={ __( 'Profile Picture Settings', 'dokan-lite' ) }

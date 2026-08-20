@@ -24,7 +24,11 @@ const SECTIONS = [
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
-        <SSREdit name={ metadata.name } attributes={ attributes }>
+        <SSREdit
+            name={ metadata.name }
+            attributes={ attributes }
+            setAttributes={ setAttributes }
+        >
             <InspectorControls>
                 <PanelBody
                     title={ __( 'Product Section Settings', 'dokan-lite' ) }

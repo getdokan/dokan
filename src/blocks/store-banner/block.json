@@ -21,6 +21,14 @@
         "isLink": {
             "type": "boolean",
             "default": false
+        },
+        "focalX": {
+            "type": "number",
+            "default": 50
+        },
+        "focalY": {
+            "type": "number",
+            "default": 50
         }
     },
     "supports": {

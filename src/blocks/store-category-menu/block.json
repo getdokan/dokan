@@ -6,7 +6,14 @@
     "title": "Store Categories",
     "category": "dokan",
     "description": "The product categories this vendor sells in.",
-    "keywords": ["dokan", "store", "vendor", "categories", "menu", "navigation"],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "categories",
+        "menu",
+        "navigation"
+    ],
     "textdomain": "dokan-lite",
     "usesContext": [ "dokan/storeId" ],
     "attributes": {
@@ -17,6 +24,10 @@
         "title": {
             "type": "string",
             "default": ""
+        },
+        "showTitle": {
+            "type": "boolean",
+            "default": true
         }
     },
     "supports": {
@@ -28,7 +39,9 @@
         },
         "typography": {
             "fontSize": true,
-            "__experimentalDefaultControls": { "fontSize": true }
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
         },
         "spacing": {
             "margin": true,

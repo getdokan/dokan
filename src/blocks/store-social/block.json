@@ -21,6 +21,10 @@
         "showLabels": {
             "type": "boolean",
             "default": false
+        },
+        "openInNewTab": {
+            "type": "boolean",
+            "default": true
         }
     },
     "supports": {

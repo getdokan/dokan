@@ -26,8 +26,9 @@ $attributes = wp_parse_args(
     $attributes,
     [
         'storeId'    => 0,
-        'iconSize'   => 24,
-        'showLabels' => false,
+        'iconSize'     => 24,
+        'showLabels'   => false,
+        'openInNewTab' => true,
     ]
 );
 
@@ -60,6 +61,9 @@ if ( empty( $social_fields ) || empty( $social_info ) ) {
 $icon_size = min( 96, max( 10, absint( $attributes['iconSize'] ) ) );
 $items     = '';
 
+// The classic template always opened a new tab; the block makes it a choice.
+$dokan_link_target = empty( $attributes['openInNewTab'] ) ? '' : ' target="_blank" rel="noopener noreferrer"';
+
 foreach ( $social_fields as $key => $field ) {
     if ( empty( $social_info[ $key ] ) ) {
         continue;
@@ -76,11 +80,12 @@ foreach ( $social_fields as $key => $field ) {
     $label      = isset( $field['title'] ) ? $field['title'] : $key;
 
     $items .= sprintf(
-        '<li class="dokan-store-social-item dokan-store-social-item--%1$s"><a class="dokan-store-social-link" href="%2$s" target="_blank" rel="noopener noreferrer"><i class="%3$s" aria-hidden="true"></i><span class="dokan-store-social-label">%4$s</span></a></li>',
+        '<li class="dokan-store-social-item dokan-store-social-item--%1$s"><a class="dokan-store-social-link" href="%2$s"%5$s><i class="%3$s" aria-hidden="true"></i><span class="dokan-store-social-label">%4$s</span></a></li>',
         esc_attr( $key ),
         esc_url( $social_info[ $key ] ),
         esc_attr( $icon_class ),
-        esc_html( $label )
+        esc_html( $label ),
+        $dokan_link_target // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static attribute string.
     );
 }
 

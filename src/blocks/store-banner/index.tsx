@@ -9,7 +9,11 @@ import './style.scss';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
-        <SSREdit name={ metadata.name } attributes={ attributes }>
+        <SSREdit
+            name={ metadata.name }
+            attributes={ attributes }
+            setAttributes={ setAttributes }
+        >
             <InspectorControls>
                 <PanelBody
                     title={ __( 'Store Banner Settings', 'dokan-lite' ) }
@@ -27,6 +31,38 @@ registerBlockType( metadata.name, {
                         min={ 0 }
                         max={ 800 }
                         step={ 10 }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                    <RangeControl
+                        label={ __( 'Focal point — horizontal', 'dokan-lite' ) }
+                        help={ __(
+                            'Which part of the banner stays visible when it is cropped.',
+                            'dokan-lite'
+                        ) }
+                        value={ attributes.focalX ?? 50 }
+                        onChange={ ( focalX ) => {
+                            const value = Number( focalX );
+                            setAttributes( {
+                                focalX: Number.isFinite( value ) ? value : 50,
+                            } );
+                        } }
+                        min={ 0 }
+                        max={ 100 }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                    <RangeControl
+                        label={ __( 'Focal point — vertical', 'dokan-lite' ) }
+                        value={ attributes.focalY ?? 50 }
+                        onChange={ ( focalY ) => {
+                            const value = Number( focalY );
+                            setAttributes( {
+                                focalY: Number.isFinite( value ) ? value : 50,
+                            } );
+                        } }
+                        min={ 0 }
+                        max={ 100 }
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                     />

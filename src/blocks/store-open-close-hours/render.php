@@ -24,8 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId' => 0,
-        'title'   => '',
+        'storeId'   => 0,
+        'title'     => '',
+        'showTitle' => true,
     ]
 );
 
@@ -48,9 +49,18 @@ if ( ! $vendor ) {
     return; // Not a store context and not an editor preview — render nothing.
 }
 
-$widget_title = '' !== trim( (string) $attributes['title'] )
-    ? $attributes['title']
-    : __( 'Store Time', 'dokan-lite' );
+/*
+ * An empty title is a one-way door without this toggle: the widget falls back
+ * to its default heading, so there would be no way to render it heading-less.
+ * The widgets themselves already suppress the heading for an empty title.
+ */
+$widget_title = '';
+
+if ( ! empty( $attributes['showTitle'] ) ) {
+    $widget_title = '' !== trim( (string) $attributes['title'] )
+        ? $attributes['title']
+        : __( 'Store Time', 'dokan-lite' );
+}
 
 // The preview vendor has no id, so the widget would bail — show why instead.
 if ( ! $vendor->get_id() ) {

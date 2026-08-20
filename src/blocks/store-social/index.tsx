@@ -9,7 +9,11 @@ import './style.scss';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
-        <SSREdit name={ metadata.name } attributes={ attributes }>
+        <SSREdit
+            name={ metadata.name }
+            attributes={ attributes }
+            setAttributes={ setAttributes }
+        >
             <InspectorControls>
                 <PanelBody title={ __( 'Social Icon Settings', 'dokan-lite' ) }>
                     <RangeControl
@@ -23,6 +27,14 @@ registerBlockType( metadata.name, {
                         min={ 10 }
                         max={ 96 }
                         __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                    <ToggleControl
+                        label={ __( 'Open in new tab', 'dokan-lite' ) }
+                        checked={ !! attributes.openInNewTab }
+                        onChange={ ( openInNewTab ) =>
+                            setAttributes( { openInNewTab } )
+                        }
                         __nextHasNoMarginBottom
                     />
                     <ToggleControl
