@@ -605,6 +605,22 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         border-bottom: 0;
     }
 
+    // Shipping, fee and refund rows carry a Font Awesome glyph where a product has its
+    // picture. Left alone it renders at 14px against the text baseline; given the same
+    // 44px slot it lines up with the thumbnails above it.
+    .woocommerce_order_items td.thumb > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+
+        i {
+            font-size: 20px;
+            color: #6b6b6b;
+        }
+    }
+
     // 44px at a 3px radius with a hairline, and 16px of air before the name.
     .woocommerce_order_items td.thumb {
         // Border-box, so this has to carry the card inset and the gap as well as the
@@ -616,9 +632,15 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             display: block;
             width: 44px;
             height: 44px;
+            // A product with no image falls back to WooCommerce's placeholder, which is
+            // not present on every install. When it 404s the element collapses to its alt
+            // text and spills across the row, so the box holds its size and clips.
+            overflow: hidden;
+            background-color: #f3f4f6;
             border: 1px solid #e9e9e9;
             border-radius: 3px;
             object-fit: cover;
+            font-size: 0;
         }
     }
 
@@ -641,25 +663,39 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Money and counts get fixed columns so they stop bunching against the right edge,
-    // and the heading sits over its own values.
+    // The design gives the item column roughly 46% and leaves the money columns wide and
+    // left-aligned — headings sit directly over their values rather than everything
+    // crowding the right edge. Fixed widths rather than percentages because refund mode
+    // puts a field in each of these columns and they need guaranteed room.
     .woocommerce_order_items th.item_cost,
-    .woocommerce_order_items td.item_cost,
-    .woocommerce_order_items th.line_cost,
-    .woocommerce_order_items td.line_cost,
-    .woocommerce_order_items th.line_tax,
-    .woocommerce_order_items td.line_tax {
-        width: 110px;
-        padding-right: 0;
-        text-align: right;
-        white-space: nowrap;
+    .woocommerce_order_items td.item_cost {
+        width: 150px;
     }
 
     .woocommerce_order_items th.quantity,
     .woocommerce_order_items td.quantity {
-        width: 70px;
-        padding-right: 0;
-        text-align: right;
+        width: 140px;
+    }
+
+    .woocommerce_order_items th.line_cost,
+    .woocommerce_order_items td.line_cost {
+        width: 190px;
+    }
+
+    .woocommerce_order_items th.line_tax,
+    .woocommerce_order_items td.line_tax {
+        width: 150px;
+    }
+
+    .woocommerce_order_items th.item_cost,
+    .woocommerce_order_items td.item_cost,
+    .woocommerce_order_items th.quantity,
+    .woocommerce_order_items td.quantity,
+    .woocommerce_order_items th.line_cost,
+    .woocommerce_order_items td.line_cost,
+    .woocommerce_order_items th.line_tax,
+    .woocommerce_order_items td.line_tax {
+        text-align: left;
         white-space: nowrap;
     }
 
@@ -717,7 +753,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     // Coupon codes are chips in the design, not a bulleted list.
     .wc-used-coupons {
-        margin-bottom: 12px;
+        margin: 20px 0 12px;
 
         .wc_coupon_list {
             display: flex;
@@ -755,6 +791,202 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
         .add-items {
             margin: 0;
+        }
+    }
+
+    // ── Refund mode ────────────────────────────────────────────────────────────
+    //
+    // Asking for a refund puts an input into each money column of every line item and
+    // opens the panel below. None of it was styled, so the fields arrived as borderless
+    // grey slabs at a different height from every other control in the view.
+
+    .woocommerce_order_items .refund {
+        margin-top: 8px;
+    }
+
+    .woocommerce_order_items input.refund_order_item_qty,
+    .woocommerce_order_items input.refund_line_total,
+    .woocommerce_order_items input.refund_line_tax,
+    .woocommerce_order_items input.refund_line_subtotal {
+        // Beats the inline width the template sets, which left the last column's field
+        // hanging over the card edge.
+        width: 76px !important;
+        height: 34px;
+        padding: 6px 8px;
+        background: #fff;
+        border: 1px solid $od-border;
+        border-radius: 6px;
+        font-size: 13px;
+        line-height: 20px;
+        color: $od-text;
+        box-shadow: none;
+    }
+
+    // The design puts the currency on the amount fields as an attached affix, so a bare
+    // number is never mistaken for one. The templates that render these inputs are not
+    // ours to change, so the symbol comes from a custom property the plugin publishes
+    // with the rest of its styles, and the affix is drawn rather than inserted.
+    .woocommerce_order_items td.line_cost .refund,
+    .woocommerce_order_items td.line_tax .refund {
+        display: inline-flex;
+        align-items: stretch;
+
+        &::before {
+            display: flex;
+            align-items: center;
+            padding: 0 9px;
+            background: #f3f4f6;
+            border: 1px solid $od-border;
+            border-right: 0;
+            border-radius: 6px 0 0 6px;
+            font-size: 13px;
+            line-height: 20px;
+            color: #6b6b6b;
+            white-space: nowrap;
+            content: var(--dokan-currency-symbol, "");
+        }
+
+        input {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+
+    .wc-order-data-row.wc-order-refund-items {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding: 20px 0 0;
+        // No rule of its own: the item table's last row already draws one directly above,
+        // and the two sat 1px apart and read as a single thick stripe.
+        border-top: 0;
+    }
+
+    // Label and field belong on the same line. Left alone the label sat at the top of a
+    // 56px row while its 38px field centred below it.
+    .wc-order-refund-items .wc-order-totals td {
+        padding: 8px 0 8px 20px;
+        vertical-align: middle;
+    }
+
+    // The value side is laid out rather than merely right-aligned, so the currency affix
+    // can sit against its field the way it does on the line items.
+    .wc-order-refund-items .wc-order-totals td.total {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0;
+
+        // A float clearer has no job inside a flex row.
+        > .clear {
+            display: none;
+        }
+
+        > input[type="text"],
+        > input.wc_input_price {
+            flex: 1 1 auto;
+            min-width: 0;
+            width: auto;
+        }
+    }
+
+    .wc-order-refund-items .wc-order-totals td.total:has(> input.wc_input_price)::before {
+        flex: 0 0 auto;
+        align-self: stretch;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        background: #f3f4f6;
+        border: 1px solid $od-border;
+        border-right: 0;
+        border-radius: 6px 0 0 6px;
+        font-size: 14px;
+        color: #6b6b6b;
+        white-space: nowrap;
+        content: var(--dokan-currency-symbol, "");
+    }
+
+    .wc-order-refund-items .wc-order-totals td.total:has(> input.wc_input_price) > input {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    // The amount field stays disabled until a quantity or line amount is entered, so it
+    // should read that way rather than inviting a value it will not accept.
+    .wc-order-refund-items input:disabled {
+        background: #f3f4f6;
+        color: $od-muted;
+        cursor: not-allowed;
+    }
+
+    .wc-order-refund-items input[type="text"],
+    .wc-order-refund-items input.wc_input_price {
+        width: 100%;
+        height: 38px;
+        padding: 8px 12px;
+        background: #fff;
+        border: 1px solid $od-border;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 20px;
+        color: $od-text;
+        box-shadow: none;
+    }
+
+    // The restock checkbox defaults to the browser accent, which is blue here and the
+    // only blue on the page. Tailwind's form reset paints the checked state with
+    // `background-color` rather than the accent, so both have to be set.
+    .wc-order-refund-items input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--color-dokan-btn, #7047eb);
+
+        &:checked {
+            background-color: var(--color-dokan-btn, #7047eb);
+            border-color: var(--color-dokan-btn, #7047eb);
+        }
+    }
+
+    // While a refund is being composed each money cell grows by an input, but the cost
+    // column has none — centred vertically, its figure dropped ~17px below the ones it
+    // should line up with. Top alignment holds the row's first line together, and applies
+    // only in refund mode: jQuery clears the panel's inline `display: none` to open it,
+    // so the closed state still centres against the 44px thumbnail.
+    .dokan-panel-body:has(> .wc-order-refund-items:not([style*="none"]))
+        .woocommerce_order_items tbody td {
+        vertical-align: top;
+    }
+
+    .wc-order-refund-items .refund-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 0 20px 4px;
+
+        // Legacy button margins pushed the pair 8px off the right edge the fields above
+        // them sit on.
+        button {
+            margin: 0 !important;
+        }
+
+        // Backing out reads first, committing reads last.
+        .cancel-action {
+            order: -1;
+        }
+    }
+
+    // Cancel backs out of the flow; it should not carry the same weight as the action
+    // that submits money.
+    .wc-order-refund-items .cancel-action {
+        background: #fff !important;
+        border: 1px solid $od-border !important;
+        color: $od-text !important;
+        text-shadow: none;
+
+        &:hover,
+        &:focus {
+            background: #f9fafb !important;
         }
     }
 }
@@ -814,7 +1046,29 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         border: 0;
         border-top: 1px solid $od-border;
         border-radius: 0;
+        font-size: 14px;
+        line-height: 22px;
         color: #6b6b6b;
+
+        // The note arrived unstyled: a 12px label above a 16px body, so the caption read
+        // smaller than the thing it captions. It now matches the detail rows above it —
+        // dark semibold label, grey value — the only difference being that the note gets
+        // its own line, which suits a sentence rather than a field.
+        strong {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 22px;
+            color: $od-text;
+        }
+
+        // The markup separates label from note with a `<br>`. Once the label is a block
+        // that break contributes a whole empty line of its own — 28px between the two
+        // instead of the 2px the label's own margin sets.
+        br {
+            display: none;
+        }
     }
 
     // Status change form: full-width select, actions right-aligned beneath it.
