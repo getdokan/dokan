@@ -73,15 +73,9 @@ async function purgeSavedCards(stripe: StripeExpressPage): Promise<void> {
  */
 async function addCardInlineWithSca(stripe: StripeExpressPage, card: string): Promise<void> {
     const page = stripe.page;
-    await page.route(/hcaptcha/i, route => route.abort());
-    await page.goto(stripe.addPaymentMethod.url);
-    await page.waitForLoadState('domcontentloaded');
-    await page.locator(stripe.addPaymentMethod.form).waitFor({ state: 'visible', timeout: 30_000 });
-    const radio = page.locator(stripe.addPaymentMethod.gatewayRadio);
-    if ((await radio.count().catch(() => 0)) && !(await radio.isChecked().catch(() => false))) {
-        await page.locator(stripe.addPaymentMethod.gatewayLabel).click().catch(() => undefined);
-    }
-    await page.locator(stripe.addPaymentMethod.mount).waitFor({ state: 'visible', timeout: 30_000 });
+    // Link must stay reachable here: with it blocked, the SCA challenge never completes and the
+    // page never redirects to /payment-methods/. See gotoAddPaymentMethod's note.
+    await stripe.gotoAddPaymentMethod(false);
     await stripe.fillCardDetails(card);
     await page.locator(stripe.addPaymentMethod.submit).click();
     // An SCA-required card prompts a 3DS modal during SetupIntent confirmation; complete it if shown.
@@ -391,15 +385,7 @@ test.describe.serial('Stripe Express — saved cards (my-account payment methods
             const stripe = new StripeExpressPage(page);
             const before = await stripe.getSavedCardRowCount();
 
-            await page.route(/hcaptcha/i, route => route.abort());
-            await page.goto(stripe.addPaymentMethod.url);
-            await page.waitForLoadState('domcontentloaded');
-            await page.locator(stripe.addPaymentMethod.form).waitFor({ state: 'visible', timeout: 30_000 });
-            const radio = page.locator(stripe.addPaymentMethod.gatewayRadio);
-            if ((await radio.count().catch(() => 0)) && !(await radio.isChecked().catch(() => false))) {
-                await page.locator(stripe.addPaymentMethod.gatewayLabel).click().catch(() => undefined);
-            }
-            await page.locator(stripe.addPaymentMethod.mount).waitFor({ state: 'visible', timeout: 30_000 });
+            await stripe.gotoAddPaymentMethod();
             await stripe.fillCardDetails(STRIPE_CARDS.declined);
             await page.locator(stripe.addPaymentMethod.submit).click();
 

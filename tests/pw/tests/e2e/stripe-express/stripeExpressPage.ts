@@ -1083,11 +1083,63 @@ export class StripeExpressPage {
     }
 
     /**
-     * Save a card via My Account → Add payment method (SetupIntent → pm ATTACHED on Stripe).
-     * Fills the PE (accordion-aware), submits form#add_payment_method, waits for the redirect
-     * back to /payment-methods/.
+     * Navigate to My Account → Add payment method with the card form mounted and ready.
+     *
+     * Blocks the Stripe LINK backend for the same reason gotoBlockCheckout does, and the failure
+     * mode here is worse: with Link reachable, submitting the form opens Link's enrolment panel
+     * ("Save my information for faster checkout") INSTEAD of confirming the SetupIntent. The
+     * intent is created but never confirmed, so Stripe reports `requires_payment_method` with
+     * `last_setup_error: null` — no decline, no error text, nothing for a test to assert on.
+     * That silently broke SE-SAVE-08 outright and made SE-SAVE-01 slow and flaky.
+     *
+     * A plain card save needs no Link enrolment, so cutting merchant-ui-api removes the
+     * interference.
+     *
+     * `blockLink = false` is REQUIRED for the SCA/3DS variants. Measured, not assumed: with Link
+     * blocked, an SCA SetupIntent never completes its challenge and the page never redirects to
+     * /payment-methods/ (SE-SAVE-07 times out at 60s, 3/3 attempts). Blocking Link therefore does
+     * NOT leave 3DS untouched — the callers that drive an SCA challenge must opt out.
      */
-    async addCardViaMyAccount(card: string = STRIPE_CARDS.success): Promise<void> {
+    /**
+     * Dismiss Stripe's Link panel if the Payment Element renders one, so the raw card fields are
+     * reachable. Two different panels can appear and BOTH swallow the submit:
+     *   - enrolment ("Save my information for faster checkout") on a fresh email;
+     *   - login/OTP ("Use your saved information", 6-digit code) once that email is a Link
+     *     consumer — which any earlier test that ran with Link reachable will have made it.
+     * The second is why blocking merchant-ui-api alone is not enough: SE-SAVE-07 must keep Link
+     * reachable for its SCA challenge, and it enrols the shared customer as a side effect, so
+     * SE-SAVE-08 met the OTP panel and its SetupIntent was never confirmed
+     * (`requires_payment_method`, `last_setup_error: null`).
+     * No-op when no panel is present.
+     */
+    async dismissLinkPanel(): Promise<void> {
+        const deadline = Date.now() + 6_000;
+        while (Date.now() < deadline) {
+            for (const frame of this.page.frames()) {
+                if (!frame.url().includes('js.stripe.com') && !frame.name().includes('__privateStripeFrame')) {
+                    continue;
+                }
+                const close = frame.getByTestId('link-branded-widget-header-close').first();
+                if (await close.count().catch(() => 0)) {
+                    await close.click({ timeout: 3_000 }).catch(() => undefined);
+                    await this.page.waitForTimeout(500);
+                    return;
+                }
+            }
+            // The card field being present already means no panel is covering it.
+            for (const frame of this.page.frames()) {
+                if (await frame.locator(StripeExpressPage.PE_NUMBER).count().catch(() => 0)) {
+                    return;
+                }
+            }
+            await this.page.waitForTimeout(400);
+        }
+    }
+
+    async gotoAddPaymentMethod(blockLink = true): Promise<void> {
+        if (blockLink) {
+            await this.page.route(/merchant-ui-api\.stripe\.com/i, route => route.abort());
+        }
         await this.page.route(/hcaptcha/i, route => route.abort());
         await this.page.goto(this.addPaymentMethod.url);
         await this.page.waitForLoadState('domcontentloaded');
@@ -1097,8 +1149,28 @@ export class StripeExpressPage {
             await this.page.locator(this.addPaymentMethod.gatewayLabel).click().catch(() => undefined);
         }
         await this.page.locator(this.addPaymentMethod.mount).waitFor({ state: 'visible', timeout: 30_000 });
+        // Only for the card-only flows. A caller that opted OUT of the Link block did so because it
+        // needs Link (the SCA variants), so tearing its panel down here works against it.
+        if (blockLink) {
+            await this.dismissLinkPanel();
+        }
+    }
+
+    /**
+     * Save a card via My Account → Add payment method (SetupIntent → pm ATTACHED on Stripe).
+     * Fills the PE (accordion-aware), submits form#add_payment_method, waits for the redirect
+     * back to /payment-methods/.
+     */
+    async addCardViaMyAccount(card: string = STRIPE_CARDS.success): Promise<void> {
+        await this.gotoAddPaymentMethod();
         await this.fillCardDetails(card);
         await this.page.locator(this.addPaymentMethod.submit).click();
+        // Link can raise its enrolment panel ON SUBMIT, not just on mount — verified live: the
+        // "Save my information / Email / Mobile" fields appear only after the button is pressed.
+        // Dismissing before the fill therefore cannot catch it, and while it is up the SetupIntent
+        // is never confirmed (Stripe reports requires_payment_method with last_setup_error null),
+        // so the redirect below never comes and the test burns its full timeout.
+        await this.dismissLinkPanel();
         // The SetupIntent confirms in-page (a Stripe round-trip) and WC then redirects to the saved-methods
         // list (…/payment-methods/?redirect_status=succeeded — verified live). That round-trip can exceed
         // 60s when the suite is hammering the Stripe test API, so wait generously rather than fail a slow-
