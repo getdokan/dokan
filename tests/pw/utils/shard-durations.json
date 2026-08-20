@@ -572,15 +572,23 @@
     },
     {
       "file": "stripe-express/stripeExpress.spec.ts",
-      "ms": 231000
+      "ms": 52000
     },
     {
       "file": "stripe-express/stripeExpressNonConnectedSellers.spec.ts",
-      "ms": 600000
+      "ms": 426000
+    },
+    {
+      "file": "stripe-express/stripeExpressCoupon.spec.ts",
+      "ms": 49000
+    },
+    {
+      "file": "stripe-express/stripeExpressGuest.spec.ts",
+      "ms": 84000
     },
     {
       "file": "stripe-express/stripeExpressPayouts.spec.ts",
-      "ms": 697000
+      "ms": 686000
     },
     {
       "file": "stripe-express/stripeExpressPreflight.spec.ts",

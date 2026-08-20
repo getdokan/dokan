@@ -18,6 +18,10 @@ import {
     getStripeChargeIdForOrder,
     setOrderStatus,
     expressApiRefund,
+    CREDENTIALS_SKIP as CREDS_SKIP,
+    NCS_TIMEOUT,
+    PRODUCT_V1,
+    PRODUCT_V3,
     getVendorBalance,
     getVendorEarningForOrder,
     getBalanceRowForOrder,
@@ -53,13 +57,7 @@ import { log } from '@utils/logger';
  *     AFTER completion and mapped via the Dokan orders table, never cached from before.
  */
 
-const CREDS_SKIP = 'Stripe Express keys missing — the gateway cannot be driven';
-const NCS_TIMEOUT = 240_000;
 
-/** vendor3 owns p1_v3 and is NEVER seeded with a Stripe account anywhere in the suite. */
-const PRODUCT_V3 = process.env.PRODUCT_ID_V3 ?? '';
-/** vendor1 owns p1_v1 and is seeded CONNECTED for the multi-vendor cases. */
-const PRODUCT_V1 = process.env.PRODUCT_ID ?? '';
 
 // NOT `.serial` at this level: the inner blocks are serial where order genuinely matters, but a
 // failure in one independent case must not abort the others (a P2 failure previously stopped the

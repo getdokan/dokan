@@ -1,19 +1,22 @@
-import { test, expect, request, Browser } from '@utils/test';
+import { test, expect, request } from '@utils/test';
 import { SERVER_URL } from '@utils/helpers';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
-import { dbUtils } from '@utils/dbUtils';
-import { stripeApi } from '@utils/stripeApi';
 import { log } from '@utils/logger';
-import { StripeExpressPage, STRIPE_CARDS } from './stripeExpressPage';
+import { StripeExpressPage } from './stripeExpressPage';
 import {
+    REAL_ACCOUNTS_SKIP as REAL_SKIP,
+    TRANSFER_META,
+    completeOrderFully,
+    firstVendorTransfer,
+    capturedAmount,
+    countExpressWithdraws,
     getVendorEarningForOrder,
     getSubOrdersByVendor,
     customerAuth,
     VENDOR_ID,
     VENDOR2_ID,
     CUSTOMER_ID,
-    hasCredentials,
     HAS_REAL_CONNECTED_ACCOUNTS,
     STRIPE_EXPRESS_CONNECTED_ACCOUNTS,
     ensureStripeExpressConfigured,
@@ -22,9 +25,7 @@ import {
     removeStripeExpressConnectedVendor,
     setExpressGatewaySettings,
     getStripeChargeIdForOrder,
-    getStripeIntentIdForOrder,
     getOrderMetaValue,
-    setOrderStatus,
 } from './helpers';
 
 /**
@@ -46,104 +47,6 @@ import {
  * need credentials (they prove the ABSENCE of a payout + the audit note, which holds with placeholders).
  */
 
-const REAL_SKIP =
-    'needs REAL Stripe test connected accounts (STRIPE_EXPRESS_VENDOR1_ACCT/STRIPE_EXPRESS_VENDOR2_ACCT) — placeholder accounts cannot receive a Transfer';
-const TRANSFER_META = '_dokan_stripe_express_transfer_id';
-
-/* ------------------------------------------------------------------ */
-/* Local helpers (inline — not exposed by the page object / helpers)   */
-/* ------------------------------------------------------------------ */
-
-/** Place a block-checkout order as the customer for the given product ids; return the order id. */
-async function placeExpressOrder(browser: Browser, productIds: string[], card: string = STRIPE_CARDS.success): Promise<string> {
-    const ctx = await browser.newContext({ storageState: customerAuth });
-    const page = await ctx.newPage();
-    try {
-        const stripe = new StripeExpressPage(page);
-        await dbUtils.clearCustomerCart(CUSTOMER_ID);
-        for (const pid of productIds) {
-            await stripe.addProductToCart(pid);
-        }
-        await stripe.gotoBlockCheckout();
-        await stripe.selectBlockGateway();
-        await stripe.fillCardDetails(card);
-        const orderId = await stripe.placeBlockOrderExpectReceived();
-        if (!orderId) {
-            throw new Error('could not parse the order id from the order-received URL');
-        }
-        return orderId;
-    } finally {
-        await page.close();
-        await ctx.close();
-    }
-}
-
-/** All WC sub-order ids of a (multi-vendor) parent order. */
-async function getSubOrderIds(parentId: string | number): Promise<number[]> {
-    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
-    try {
-        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?parent=${parentId}&per_page=20&_fields=id`);
-        const subs = (await res.json().catch(() => [])) as Array<{ id: number }>;
-        return Array.isArray(subs) ? subs.map(s => s.id) : [];
-    } finally {
-        await ctx.dispose();
-    }
-}
-
-/** Drive a parent order AND each per-vendor sub-order to `completed` (fires ON_ORDER_COMPLETED disbursement). */
-async function completeOrderFully(parentId: string): Promise<void> {
-    await setOrderStatus(parentId, 'completed');
-    for (const subId of await getSubOrderIds(parentId)) {
-        await setOrderStatus(subId, 'completed');
-    }
-}
-
-
-/** Poll until exactly one transfer (funded by chargeId) landed on `acct`, then return it. */
-async function firstVendorTransfer(chargeId: string, acct: string): Promise<{ id: string; amount: number; destination: string; source_transaction: string }> {
-    await expect
-        .poll(async () => (await stripeApi.transfersForChargeToVendor(chargeId, acct)).length, {
-            message: `exactly one transfer to ${acct} for this charge`,
-            timeout: 60_000, // disbursement on completion can lag under back-to-back money runs
-        })
-        .toBe(1);
-    return (await stripeApi.transfersForChargeToVendor(chargeId, acct))[0];
-}
-
-/** Captured charge amount (amount_received, falling back to amount) for an order's PaymentIntent. */
-async function capturedAmount(orderId: string): Promise<number> {
-    const pi = await stripeApi.getPaymentIntent(await getStripeIntentIdForOrder(orderId));
-    return pi.amount_received ?? pi.amount;
-}
-
-
-
-
-/** Seed an admin/marketplace percentage coupon (cart-wide; admin absorbs the discount). */
-async function seedMarketplaceCoupon(amount: string): Promise<[number, string]> {
-    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
-    try {
-        const code = `SE_MKT_${Date.now().toString(36)}`;
-        const res = await ctx.post(`${SERVER_URL}/wc/v3/coupons`, {
-            data: { code, discount_type: 'percent', amount, individual_use: false, meta_data: [{ key: 'admin_coupons_enabled_for_vendor', value: 'yes' }] },
-        });
-        const body = (await res.json().catch(() => ({}))) as { id?: number; code?: string };
-        if (!res.ok() || !body.id) {
-            throw new Error(`seedMarketplaceCoupon failed (${res.status()}): ${JSON.stringify(body)}`);
-        }
-        return [body.id, body.code ?? code];
-    } finally {
-        await ctx.dispose();
-    }
-}
-
-
-/** Count Dokan withdraw entries created by the Stripe Express method, regardless of status. */
-function countExpressWithdraws(rows: unknown): number {
-    const list = Array.isArray(rows) ? rows : [];
-    return list.filter(w => (w as { method?: string })?.method === StripeExpressPage.WITHDRAW_METHOD).length;
-}
-
 /* ------------------------------------------------------------------ */
 /* Suite                                                               */
 /* ------------------------------------------------------------------ */
@@ -154,7 +57,6 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
     let product1: string; // vendor1
     let product2: string; // vendor2
     let product3: string;
-    let couponId: number | undefined;
 
     test.beforeAll(async () => {
         await ensureStripeExpressConfigured();
@@ -174,10 +76,6 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
         } finally {
             await api.dispose();
         }
-        if (hasCredentials) {
-            // 50% admin coupon — exceeds a typical marketplace commission, stressing the over-transfer guard.
-        [couponId] = await seedMarketplaceCoupon('50');
-        }
     });
 
     test.afterEach(async () => {
@@ -192,9 +90,6 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
         await removeStripeExpressConnectedVendor(VENDOR2_ID);
         const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
         try {
-            if (couponId) {
-                await ctx.delete(`${SERVER_URL}/wc/v3/coupons/${couponId}?force=true`).catch(() => undefined);
-            }
             await ctx.delete(`${SERVER_URL}/wc/v3/products/${product1}?force=true`).catch(() => undefined);
             await ctx.delete(`${SERVER_URL}/wc/v3/products/${product3}?force=true`).catch(() => undefined);
             await ctx.delete(`${SERVER_URL}/wc/v3/products/${product2}?force=true`).catch(() => undefined);
@@ -208,7 +103,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
     test('SE-PAY-01: single connected-vendor order → exactly ONE transfer to the vendor; admin commission stays on platform', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
 
-        const orderId = await placeExpressOrder(browser, [product1]);
+        const orderId = await StripeExpressPage.placeOrderAsCustomer(browser, customerAuth, CUSTOMER_ID, [product1]);
         await completeOrderFully(orderId);
 
         const chargeId = await getStripeChargeIdForOrder(orderId);
@@ -235,7 +130,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
 
         await seedStripeExpressConnectedVendor(VENDOR2_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2);
         try {
-            const orderId = await placeExpressOrder(browser, [product1, product2]);
+            const orderId = await StripeExpressPage.placeOrderAsCustomer(browser, customerAuth, CUSTOMER_ID, [product1, product2]);
             await completeOrderFully(orderId);
 
             const chargeId = await getStripeChargeIdForOrder(orderId);
@@ -272,7 +167,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
         const api = new ApiUtils(await request.newContext());
         try {
             const baseline = countExpressWithdraws(await api.getAllWithdraws(payloads.adminAuth));
-            const orderId = await placeExpressOrder(browser, [product1]);
+            const orderId = await StripeExpressPage.placeOrderAsCustomer(browser, customerAuth, CUSTOMER_ID, [product1]);
             await completeOrderFully(orderId);
 
             // Prove the transfer happened first (money truth), then the withdraw entry is recorded.
@@ -334,7 +229,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
     test('SE-PAY-12: single vendor — the transfer equals the recorded earning, the rest is admin commission', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
 
-        const orderId = await placeExpressOrder(browser, [product1]);
+        const orderId = await StripeExpressPage.placeOrderAsCustomer(browser, customerAuth, CUSTOMER_ID, [product1]);
         await completeOrderFully(orderId);
 
         const chargeId = await getStripeChargeIdForOrder(orderId);
@@ -353,7 +248,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
 
         await seedStripeExpressConnectedVendor(VENDOR2_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2);
         try {
-            const parentId = await placeExpressOrder(browser, [product1, product2]);
+            const parentId = await StripeExpressPage.placeOrderAsCustomer(browser, customerAuth, CUSTOMER_ID, [product1, product2]);
             await completeOrderFully(parentId);
 
             const parentCharge = await getStripeChargeIdForOrder(parentId);

@@ -553,3 +553,130 @@ export async function getSubOrdersByVendor(parentId: string | number): Promise<M
     )) as Array<{ order_id: number; seller_id: number }>;
     return new Map((rows ?? []).map(r => [Number(r.order_id), Number(r.seller_id)]));
 }
+
+/* ------------------------------------------------------------------ */
+/* Payout / order reconciliation (shared by the payout + guest specs)  */
+/* ------------------------------------------------------------------ */
+
+/** Skip reason for cases that need REAL Stripe test connected accounts. */
+export const REAL_ACCOUNTS_SKIP =
+    'needs REAL Stripe test connected accounts (STRIPE_EXPRESS_VENDOR1_ACCT/STRIPE_EXPRESS_VENDOR2_ACCT) — placeholder accounts cannot receive a Transfer';
+
+/** Skip reason for cases that cannot run without the gateway keys. */
+export const CREDENTIALS_SKIP = 'Stripe Express keys missing — the gateway cannot be driven';
+
+/** Order meta holding the Stripe Transfer id written on a successful disbursement. */
+export const TRANSFER_META = '_dokan_stripe_express_transfer_id';
+
+/** All WC sub-order ids of a (multi-vendor) parent order. */
+export async function getSubOrderIds(parentId: string | number): Promise<number[]> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?parent=${parentId}&per_page=20&_fields=id`);
+        const subs = (await res.json().catch(() => [])) as Array<{ id: number }>;
+        return Array.isArray(subs) ? subs.map(s => s.id) : [];
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/**
+ * Drive a parent order AND each per-vendor sub-order to `completed`, which is what fires the
+ * ON_ORDER_COMPLETED disbursement. Sub-orders are fetched after the parent is completed because
+ * completing the parent regenerates them.
+ */
+export async function completeOrderFully(parentId: string | number): Promise<void> {
+    await setOrderStatus(parentId, 'completed');
+    for (const subId of await getSubOrderIds(parentId)) {
+        await setOrderStatus(subId, 'completed');
+    }
+}
+
+/** Poll until exactly one transfer funded by `chargeId` has landed on `acct`, then return it. */
+export async function firstVendorTransfer(
+    chargeId: string,
+    acct: string,
+): Promise<{ id: string; amount: number; destination: string; source_transaction: string }> {
+    await expect
+        .poll(async () => (await stripeApi.transfersForChargeToVendor(chargeId, acct)).length, {
+            message: `exactly one transfer to ${acct} for this charge`,
+            timeout: 60_000, // disbursement on completion lags under back-to-back money runs
+        })
+        .toBe(1);
+    return (await stripeApi.transfersForChargeToVendor(chargeId, acct))[0];
+}
+
+/** Captured charge amount (amount_received, falling back to amount) for an order's PaymentIntent. */
+export async function capturedAmount(orderId: string | number): Promise<number> {
+    const pi = await stripeApi.getPaymentIntent(await getStripeIntentIdForOrder(orderId));
+    return pi.amount_received ?? pi.amount;
+}
+
+/** Count Dokan withdraw entries created by the Stripe Express method, regardless of status. */
+export function countExpressWithdraws(rows: unknown): number {
+    const list = Array.isArray(rows) ? rows : [];
+    return list.filter(w => (w as { method?: string })?.method === StripeExpressPage.WITHDRAW_METHOD).length;
+}
+
+/**
+ * Seed an admin/marketplace percentage coupon (cart-wide; the admin absorbs the discount).
+ * Returns [id, code] so a caller can apply it and delete it afterwards.
+ */
+export async function seedMarketplaceCoupon(amount: string): Promise<[number, string]> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const code = `SE_MKT_${Date.now().toString(36)}`;
+        const res = await ctx.post(`${SERVER_URL}/wc/v3/coupons`, {
+            data: { code, discount_type: 'percent', amount, individual_use: false, meta_data: [{ key: 'admin_coupons_enabled_for_vendor', value: 'yes' }] },
+        });
+        const body = (await res.json().catch(() => ({}))) as { id?: number; code?: string };
+        if (!res.ok() || !body.id) {
+            throw new Error(`seedMarketplaceCoupon failed (${res.status()}): ${JSON.stringify(body)}`);
+        }
+        return [body.id, body.code ?? code];
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** Delete a coupon by id (teardown; ignores a missing coupon). */
+export async function deleteCoupon(couponId: number | undefined): Promise<void> {
+    if (!couponId) return;
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        await ctx.delete(`${SERVER_URL}/wc/v3/coupons/${couponId}?force=true`).catch(() => undefined);
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** An order's monetary fields, read back through the REST API (never the DB). */
+export async function getOrderTotals(orderId: string | number): Promise<{ total: number; discount_total: number }> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${orderId}?_fields=total,discount_total`);
+        const b = (await res.json().catch(() => ({}))) as { total?: string; discount_total?: string };
+        return { total: Number(b.total ?? 0), discount_total: Number(b.discount_total ?? 0) };
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** vendor3's fixture product — owned by the permanent NEVER-connected vendor. */
+export const PRODUCT_V3 = process.env.PRODUCT_ID_V3 ?? '';
+/** vendor1's fixture product — owned by the vendor seeded CONNECTED for money cases. */
+export const PRODUCT_V1 = process.env.PRODUCT_ID ?? '';
+/** Timeout for the non-connected-seller block: each case can drive a full checkout. */
+export const NCS_TIMEOUT = 240_000;
+
+/** An order's identity fields, read back through the REST API (never the DB). */
+export async function getOrderSummary(orderId: string | number): Promise<{ status: string; payment_method: string; customer_id: number; billing_email: string }> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${orderId}?_fields=status,payment_method,customer_id,billing`);
+        const b = (await res.json().catch(() => ({}))) as { status?: string; payment_method?: string; customer_id?: number; billing?: { email?: string } };
+        return { status: b.status ?? '', payment_method: b.payment_method ?? '', customer_id: Number(b.customer_id ?? -1), billing_email: b.billing?.email ?? '' };
+    } finally {
+        await ctx.dispose();
+    }
+}

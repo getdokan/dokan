@@ -1,4 +1,4 @@
-import { Page, Frame, expect, request } from '@playwright/test';
+import { Page, Frame, Browser, expect, request } from '@playwright/test';
 import { toPath, closeAnnouncementModal, SERVER_URL, parseBoolean } from '@utils/helpers';
 import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { stripeApi } from '@utils/stripeApi';
@@ -1208,6 +1208,145 @@ export class StripeExpressPage {
         await this.selectBlockGateway();
         await this.fillCardDetails();
         return await this.placeBlockOrderExpectReceived();
+    }
+
+
+    /* ================================================================== *
+     * Whole-journey drivers.
+     *
+     * These own the browser context so a spec never has to. A spec calls one,
+     * gets an order id back, and spends its own body on assertions only.
+     * ================================================================== */
+
+    /**
+     * Buy as the logged-in customer on block checkout. Returns the paid order id.
+     * `storageState` is the customer auth file; the caller supplies it so this stays
+     * usable for any actor without the page object reaching into helpers.
+     */
+    static async placeOrderAsCustomer(
+        browser: Browser,
+        storageState: string,
+        customerId: string | number,
+        productIds: Array<string | number>,
+        card: string = STRIPE_CARDS.success,
+    ): Promise<string> {
+        const ctx = await browser.newContext({ storageState });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await dbUtils.clearCustomerCart(customerId);
+            for (const pid of productIds) {
+                await stripe.addProductToCart(pid);
+            }
+            await stripe.gotoBlockCheckout();
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails(card);
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('could not parse the order id from the order-received URL');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    }
+
+    /** Buy as a GUEST (no storage state) on block checkout. Returns the paid order id. */
+    static async placeGuestBlockOrder(browser: Browser, productId: string | number, email: string): Promise<string> {
+        const ctx = await browser.newContext();
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await stripe.addProductToCart(productId);
+            await stripe.gotoBlockCheckout();
+            // BILLING names the street `address1`; the block form helper expects `address`.
+            const b = StripeExpressPage.BILLING;
+            await stripe.fillBlockGuestDetails({ ...b, address: b.address1, email });
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.success);
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('guest block checkout did not reach order-received');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    }
+
+    /** Buy as a GUEST (no storage state) on classic checkout. Returns the paid order id. */
+    static async placeGuestClassicOrder(browser: Browser, productId: string | number, email: string): Promise<string> {
+        const ctx = await browser.newContext();
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await stripe.addProductToCart(productId);
+            await stripe.gotoClassicCheckout();
+            await stripe.fillBillingClassic({ ...StripeExpressPage.BILLING, email });
+            await stripe.selectClassicGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.success);
+            const orderId = await stripe.placeClassicOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('guest classic checkout did not reach order-received');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    }
+
+
+    /**
+     * Apply a coupon on block checkout. The coupon UI is a collapsible panel toggled by
+     * `.wc-block-components-panel__button` labelled "Add coupons" (MCP-verified); the input id is
+     * `…__input-coupon`. Expand, fill, Apply, then wait for the cart to recalculate — the totals
+     * must be settled before the Payment Element reads the amount.
+     */
+    async applyBlockCoupon(code: string): Promise<void> {
+        const toggle = this.page.locator('.wc-block-components-panel__button').filter({ hasText: /coupon/i }).first();
+        if (await toggle.isVisible().catch(() => false)) {
+            await toggle.click().catch(() => undefined);
+        }
+        const input = this.page.locator('#wc-block-components-totals-coupon__input-coupon, input[id^="wc-block-components-totals-coupon"]').first();
+        await input.waitFor({ state: 'visible', timeout: 15_000 });
+        await input.fill(code);
+        await this.page.locator('.wc-block-components-totals-coupon__button:has-text("Apply"), button:has-text("Apply")').first().click();
+        await this.page.waitForResponse(r => /apply-coupon|batch|\/cart/i.test(r.url()) && r.request().method() === 'POST', { timeout: 20_000 }).catch(() => undefined);
+        await this.page.waitForTimeout(2_000);
+    }
+
+    /** Buy as the logged-in customer with a coupon applied at block checkout. Returns the paid order id. */
+    static async placeOrderWithCoupon(
+        browser: Browser,
+        storageState: string,
+        customerId: string | number,
+        productIds: Array<string | number>,
+        couponCode: string,
+    ): Promise<string> {
+        const ctx = await browser.newContext({ storageState });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await dbUtils.clearCustomerCart(customerId);
+            for (const pid of productIds) {
+                await stripe.addProductToCart(pid);
+            }
+            await stripe.gotoBlockCheckout();
+            await stripe.applyBlockCoupon(couponCode);
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails();
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('coupon checkout did not reach order-received');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
     }
 
 }
