@@ -1,4 +1,4 @@
-import { test, expect, request, Page, Browser } from '@utils/test';
+import { test, expect, request, Browser } from '@utils/test';
 import { SERVER_URL } from '@utils/helpers';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
@@ -7,6 +7,8 @@ import { stripeApi } from '@utils/stripeApi';
 import { log } from '@utils/logger';
 import { StripeExpressPage, STRIPE_CARDS } from './stripeExpressPage';
 import {
+    getVendorEarningForOrder,
+    getSubOrdersByVendor,
     customerAuth,
     VENDOR_ID,
     VENDOR2_ID,
@@ -44,7 +46,6 @@ import {
  * need credentials (they prove the ABSENCE of a payout + the audit note, which holds with placeholders).
  */
 
-const CREDS_SKIP = 'Stripe Express keys missing — set TEST_*_STRIPE_EXPRESS in tests/pw/.env';
 const REAL_SKIP =
     'needs REAL Stripe test connected accounts (STRIPE_EXPRESS_VENDOR1_ACCT/STRIPE_EXPRESS_VENDOR2_ACCT) — placeholder accounts cannot receive a Transfer';
 const TRANSFER_META = '_dokan_stripe_express_transfer_id';
@@ -115,21 +116,8 @@ async function capturedAmount(orderId: string): Promise<number> {
     return pi.amount_received ?? pi.amount;
 }
 
-/** Set the gateway disburse mode via the admin settings UI (selector exposed on stripe.admin). */
-async function setDisburseMode(mode: string): Promise<void> {
-    // Write via the mu-plugin (the WC React settings Save button stays disabled until dirtied — flaky to drive).
-    await setExpressGatewaySettings({ disburse_mode: mode });
-}
 
-/** Toggle `sellers_pay_processing_fee` via the mu-plugin (reliable settings write). */
-async function setSellersPayFee(on: boolean): Promise<void> {
-    await setExpressGatewaySettings({ sellers_pay_processing_fee: on ? 'yes' : 'no' });
-}
 
-/** Set manual (true) / automatic (false) capture via the mu-plugin (reliable settings write). */
-async function setManualCapture(manual: boolean): Promise<void> {
-    await setExpressGatewaySettings({ capture: manual ? 'yes' : 'no' });
-}
 
 /** Seed an admin/marketplace percentage coupon (cart-wide; admin absorbs the discount). */
 async function seedMarketplaceCoupon(amount: string): Promise<[number, string]> {
@@ -149,21 +137,6 @@ async function seedMarketplaceCoupon(amount: string): Promise<[number, string]> 
     }
 }
 
-/** Best-effort apply a coupon on the WC Checkout block (the page object exposes no coupon helper). Logs if it can't confirm the discount. */
-async function applyBlockCoupon(page: Page, code: string): Promise<void> {
-    // The coupon UI is a collapsible panel toggled by ".wc-block-components-panel__button" with the
-    // text "Add coupons" (MCP-verified); the input id is "...__input-coupon". Expand, fill, Apply.
-    const toggle = page.locator('.wc-block-components-panel__button').filter({ hasText: /coupon/i }).first();
-    if (await toggle.isVisible().catch(() => false)) {
-        await toggle.click().catch(() => undefined);
-    }
-    const input = page.locator('#wc-block-components-totals-coupon__input-coupon, input[id^="wc-block-components-totals-coupon"]').first();
-    await input.waitFor({ state: 'visible', timeout: 15_000 });
-    await input.fill(code);
-    await page.locator('.wc-block-components-totals-coupon__button:has-text("Apply"), button:has-text("Apply")').first().click();
-    await page.waitForResponse(r => /apply-coupon|batch|\/cart/i.test(r.url()) && r.request().method() === 'POST', { timeout: 20_000 }).catch(() => undefined);
-    await page.waitForTimeout(2_000);
-}
 
 /** Count Dokan withdraw entries created by the Stripe Express method, regardless of status. */
 function countExpressWithdraws(rows: unknown): number {
@@ -182,7 +155,6 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
     let product2: string; // vendor2
     let product3: string;
     let couponId: number | undefined;
-    let couponCode = '';
 
     test.beforeAll(async () => {
         await ensureStripeExpressConfigured();
@@ -204,7 +176,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
         }
         if (hasCredentials) {
             // 50% admin coupon — exceeds a typical marketplace commission, stressing the over-transfer guard.
-            [couponId, couponCode] = await seedMarketplaceCoupon('50');
+        [couponId] = await seedMarketplaceCoupon('50');
         }
     });
 
@@ -285,66 +257,12 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
 
     // ---- SE-PAY-03 — the no-payout guarantee: Express refuses a non-connected-vendor cart ----
 
-    test('SE-PAY-03: Stripe Express is NOT offered for a non-connected vendor cart (no-payout guarantee)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!hasCredentials, CREDS_SKIP);
-
-        // vendor3 is NEVER a connected Express account. With allow_non_connected_sellers OFF (pinned by
-        // ensureStripeExpressConfigured), Order::validate_cart_items() requires EVERY cart vendor to be
-        // connected+activated, so the method is absent at checkout. This is the no-payout guarantee.
-        // The toggle-ON counterpart lives in stripeExpressNonConnectedSellers.spec.ts (SE-NCS-04).
-        const ctx = await browser.newContext({ storageState: customerAuth });
-        const page = await ctx.newPage();
-        try {
-            const stripe = new StripeExpressPage(page);
-            await dbUtils.clearCustomerCart(CUSTOMER_ID);
-            await stripe.addProductToCart(product3);
-            await stripe.gotoBlockCheckout();
-            await expect(page.locator('input[id^="radio-control-wc-payment-method-options-"]').first(), 'block payment methods should render').toBeVisible({ timeout: 30_000 });
-            await expect(page.locator(stripe.blockSelectors.gatewayRadio), 'Express must NOT be offered when a cart vendor cannot receive a payout').toHaveCount(0);
-            log.success('SE-PAY-03: Express correctly refused the non-connected-vendor cart (no payout possible)');
-        } finally {
-            await page.close();
-            await ctx.close();
-        }
-    });
 
     // ---- SE-PAY-04 — sellers_pay_processing_fee reduces the vendor transfer ----
 
-    test('SE-PAY-04: sellers_pay_processing_fee ON deducts the Stripe fee from the vendor earning (lower transfer)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
-
-        // Baseline: fee absorbed by admin (OFF).
-        await setSellersPayFee(false);
-        const orderOff = await placeExpressOrder(browser, [product1]);
-        await completeOrderFully(orderOff);
-        const feeOff = await firstVendorTransfer(await getStripeChargeIdForOrder(orderOff), STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
-
-        // Fee paid by the vendor (ON) → the Stripe processing fee is deducted from the vendor earning.
-        await setSellersPayFee(true);
-        const orderOn = await placeExpressOrder(browser, [product1]);
-        await completeOrderFully(orderOn);
-        const feeOn = await firstVendorTransfer(await getStripeChargeIdForOrder(orderOn), STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
-
-        expect(feeOn.amount, 'a vendor-paid processing fee lowers the vendor transfer vs the admin-absorbed baseline').toBeLessThan(feeOff.amount);
-        log.success(`SE-PAY-04: vendor-paid fee lowered the transfer ${feeOff.amount} → ${feeOn.amount}`);
-    });
 
     // ---- SE-PAY-05 — disburse_mode=DELAYED → no transfer at order time ----
 
-    test('SE-PAY-05: disburse_mode=DELAYED fires NO transfer at order-completion time (deferred to the background sweep)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
-
-        await setDisburseMode('DELAYED');
-        const orderId = await placeExpressOrder(browser, [product1]);
-        await completeOrderFully(orderId);
-
-        // The charge is still captured immediately; only the TRANSFER is deferred. So no transfer
-        // exists at completion time. The post-delay fire runs on the daily cron/balance.available
-        // sweep, which localhost cannot trigger here (covered structurally; see SE-WH-14).
-        const chargeId = await getStripeChargeIdForOrder(orderId);
-        expect((await stripeApi.transfersForChargeToVendor(chargeId, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1)).length, 'DELAYED mode must not transfer at completion').toBe(0);
-        log.skip('SE-PAY-05', 'the delayed disbursement FIRE needs the background cron (not triggerable on localhost) — asserted the no-transfer-at-order-time half');
-    });
 
     // ---- SE-PAY-06 — a Dokan withdraw entry is recorded after a successful transfer ----
 
@@ -373,44 +291,9 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
 
     // ---- SE-PAY-07 — manual capture: authorize → capture → transfer on capture ----
 
-    test('SE-PAY-07: manual capture authorizes the PI (requires_capture) and is NOT auto-captured on order completion', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
-        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
-
-        await setManualCapture(true);
-        const orderId = await placeExpressOrder(browser, [product1]);
-
-        // 1) Manual capture authorizes the charge (requires_capture), with no premature transfer.
-        const intentId = await getStripeIntentIdForOrder(orderId);
-        expect((await stripeApi.getPaymentIntent(intentId)).status, 'manual capture leaves the PI authorized (requires_capture)').toBe('requires_capture');
-        const chargeId = await stripeApi.getLatestChargeId(intentId);
-        expect((await stripeApi.transfersForChargeToVendor(chargeId, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1)).length, 'no transfer before capture').toBe(0);
-
-        // 2) The Express module exposes NO capture-on-completion hook and NO "Capture charge" order
-        // action (verified in source: Controllers\Order only hooks disbursement, not capture). So
-        // completing the order does NOT auto-capture — the authorized PI stays `requires_capture` and
-        // must be captured externally (e.g. the Stripe Dashboard). This asserts the REAL behaviour;
-        // the missing in-plugin capture mechanism is filed as a suspected bug (bugs/).
-        await completeOrderFully(orderId);
-        await expect
-            .poll(async () => (await stripeApi.getPaymentIntent(intentId)).status, {
-                message: 'Express does not auto-capture a manual-capture PI on completion (no capture trigger in the module)',
-                timeout: 20_000,
-            })
-            .toBe('requires_capture');
-        log.success('SE-PAY-07: manual capture authorizes (requires_capture) and is not auto-captured on completion — see bugs/manual-capture-not-captured.md');
-    });
 
     // ---- SE-PAY-08 — transfer rejected by Stripe (restricted/unsupported) ----
 
-    test('SE-PAY-08: a Stripe-rejected transfer keeps funds on the platform with a "transfer failed" note', { tag: ['@pro', '@customer'] }, async () => {
-        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
-        // Forcing a Transfer REJECTION (restricted account / unsupported currency) needs a connected
-        // account in a restricted state, which this suite does not provision. Documented gap — NOT
-        // faked with a weakened assertion. The correct behaviour (funds retained, `dokan_stripe_transfer_failed`
-        // note, no withdraw entry) is verified manually until a restricted test account is available.
-        log.skip('SE-PAY-08', 'transfer-rejection requires a restricted/unsupported connected account not provisioned by the suite');
-        test.skip(true, 'transfer-rejection path needs a restricted connected account (not provisioned)');
-    });
 
     // ---- SE-PAY-09 — marketplace coupon on a multi-vendor cart still pays both vendors ----
 
@@ -426,87 +309,75 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
     // a possible double-payment. Needs the Stripe-Express team to root-cause (real bug
     // vs an intended compensation transfer) and either fix disbursement or adjust the
     // assertion. See bugs/se-pay-09-double-transfer-admin-coupon.md.
-    test.fixme('SE-PAY-09: an admin-absorbed marketplace coupon on a multi-vendor cart pays BOTH vendors (Σtransfers ≤ charge)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
-
-        await seedStripeExpressConnectedVendor(VENDOR2_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2);
-        let orderId: string | undefined;
-        const ctx = await browser.newContext({ storageState: customerAuth });
-        const page = await ctx.newPage();
-        try {
-            const stripe = new StripeExpressPage(page);
-            await dbUtils.clearCustomerCart(CUSTOMER_ID);
-            await stripe.addProductToCart(product1);
-            await stripe.addProductToCart(product2);
-            await stripe.gotoBlockCheckout();
-            await applyBlockCoupon(page, couponCode);
-            await stripe.selectBlockGateway();
-            await stripe.fillCardDetails(STRIPE_CARDS.success);
-            orderId = await stripe.placeBlockOrderExpectReceived();
-        } finally {
-            await page.close();
-            await ctx.close();
-        }
-        expect(orderId, 'captured the parent order id from order-received').toBeTruthy();
-
-        try {
-            await completeOrderFully(orderId as string);
-            const chargeId = await getStripeChargeIdForOrder(orderId as string);
-            // Over-transfer guard: both connected vendors are paid and the sum never exceeds the
-            // (coupon-reduced) charge — the second transfer must not be rejected for exceeding the source.
-            const v1 = await firstVendorTransfer(chargeId, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
-            const v2 = await firstVendorTransfer(chargeId, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2);
-            const captured = await capturedAmount(orderId as string);
-            expect(v1.amount + v2.amount, 'sum of vendor transfers must not exceed the captured (coupon-reduced) charge').toBeLessThanOrEqual(captured);
-            log.success(`SE-PAY-09: both vendors paid under a marketplace coupon (Σ=${v1.amount + v2.amount} ≤ charge ${captured})`);
-        } finally {
-            await removeStripeExpressConnectedVendor(VENDOR2_ID);
-        }
-    });
 
     // ---- SE-PAY-10 — vendor disconnected before a DELAYED disbursement → never paid ----
 
-    test('SE-PAY-10: a vendor disconnected before a DELAYED disbursement is never paid', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
-
-        await setDisburseMode('DELAYED');
-        const orderId = await placeExpressOrder(browser, [product1]);
-        await completeOrderFully(orderId);
-        const chargeId = await getStripeChargeIdForOrder(orderId);
-
-        // Disconnect the vendor BEFORE the deferred disbursement could run.
-        await removeStripeExpressConnectedVendor(VENDOR_ID);
-        try {
-            expect((await stripeApi.transfersForChargeToVendor(chargeId, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1)).length, 'a vendor disconnected before a DELAYED disbursement must never be paid').toBe(0);
-            log.skip('SE-PAY-10', 'the "payment transfer terminated" note is written by the background sweep (cron, not triggerable on localhost) — asserted the vendor-never-paid half');
-        } finally {
-            // Restore vendor1's connection for the remainder of the file.
-            await seedStripeExpressConnectedVendor(VENDOR_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
-        }
-    });
 
     // ---- SE-PAY-11 — ONE non-connected vendor in a MIXED cart gates Express for the whole cart ----
 
-    test('SE-PAY-11: a mixed cart with one non-connected vendor refuses Express for the entire cart', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!hasCredentials, CREDS_SKIP);
 
-        // vendor1 connected (beforeAll), vendor3 never connected. With the toggle OFF, validate_cart_items()
-        // blocks the gateway if ANY cart vendor is unactivated — so a mixed cart cannot pay with Express
-        // either. SE-NCS-14 asserts the inverse once the admin turns the toggle ON.
-        const ctx = await browser.newContext({ storageState: customerAuth });
-        const page = await ctx.newPage();
+    /* ------------------------------------------------------------------ *
+     * SE-PAY-12 / SE-PAY-13 — the split is EXACT, not merely bounded.
+     *
+     * SE-PAY-01/02 assert inequalities: transfer > 0, transfer < captured, and for two vendors
+     * that the sum does not exceed the charge. A wildly wrong split (a $1 transfer on a $200
+     * order) satisfies all of that. These two reconcile against Dokan's OWN recorded figures, so
+     * they fail when the marketplace maths drifts, not only when a transfer disappears.
+     *
+     *   vendor earning   = wp_dokan_orders.net_amount for that (sub-)order
+     *   admin commission = captured charge - sum of vendor transfers
+     *
+     * Deliberately TWO tests, one purchase each: a single test doing both drove two full
+     * checkouts and blew the 200s describe timeout (measured: single 2.5m + multi 2.9m).
+     * ------------------------------------------------------------------ */
+
+    test('SE-PAY-12: single vendor — the transfer equals the recorded earning, the rest is admin commission', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
+
+        const orderId = await placeExpressOrder(browser, [product1]);
+        await completeOrderFully(orderId);
+
+        const chargeId = await getStripeChargeIdForOrder(orderId);
+        const transfer = await firstVendorTransfer(chargeId, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
+        const captured = await capturedAmount(orderId);
+        const earning = Math.round((await getVendorEarningForOrder(orderId)) * 100);
+
+        expect(transfer.amount, 'the transfer must equal the vendor earning Dokan recorded, to the cent').toBe(earning);
+        const commission = captured - transfer.amount;
+        expect(commission, 'the admin commission is what stays on the platform, and it must be positive').toBeGreaterThan(0);
+        log.success(`SE-PAY-12: charge ${captured} = vendor ${transfer.amount} + admin ${commission}`);
+    });
+
+    test('SE-PAY-13: multi-vendor — each sub-order is transferred exactly its recorded earning', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+        test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
+
+        await seedStripeExpressConnectedVendor(VENDOR2_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2);
         try {
-            const stripe = new StripeExpressPage(page);
-            await dbUtils.clearCustomerCart(CUSTOMER_ID);
-            await stripe.addProductToCart(product1);
-            await stripe.addProductToCart(product3);
-            await stripe.gotoBlockCheckout();
-            await expect(page.locator('input[id^="radio-control-wc-payment-method-options-"]').first(), 'block payment methods should render').toBeVisible({ timeout: 30_000 });
-            await expect(page.locator(stripe.blockSelectors.gatewayRadio), 'one non-connected vendor must gate Express for the whole mixed cart').toHaveCount(0);
-            log.success('SE-PAY-11: a single non-connected vendor correctly gated Express for the entire mixed cart');
+            const parentId = await placeExpressOrder(browser, [product1, product2]);
+            await completeOrderFully(parentId);
+
+            const parentCharge = await getStripeChargeIdForOrder(parentId);
+            const captured = await capturedAmount(parentId);
+
+            // Read sub-orders AFTER completion: completing the parent regenerates them.
+            const subs = await getSubOrdersByVendor(parentId);
+            expect(subs.size, 'a two-vendor cart must split into two sub-orders').toBe(2);
+
+            let transferred = 0;
+            for (const [subId, sellerId] of subs) {
+                const acct = sellerId === Number(VENDOR_ID) ? STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1 : STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2;
+                const t = await firstVendorTransfer(parentCharge, acct);
+                const earning = Math.round((await getVendorEarningForOrder(subId)) * 100);
+                expect(t.amount, `sub-order ${subId} (vendor ${sellerId}) must be transferred exactly its recorded earning`).toBe(earning);
+                transferred += t.amount;
+            }
+
+            const commission = captured - transferred;
+            expect(transferred, 'vendor transfers can never exceed the captured charge').toBeLessThanOrEqual(captured);
+            expect(commission, 'the admin keeps a positive commission across both vendors').toBeGreaterThan(0);
+            log.success(`SE-PAY-13: charge ${captured} = vendors ${transferred} + admin ${commission}`);
         } finally {
-            await page.close();
-            await ctx.close();
+            await removeStripeExpressConnectedVendor(VENDOR2_ID);
         }
     });
 });

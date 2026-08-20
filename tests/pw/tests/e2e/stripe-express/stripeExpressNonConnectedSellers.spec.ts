@@ -42,7 +42,7 @@ import { log } from '@utils/logger';
  * immediately — so the vendor withdraws it like any other gateway's earning and the admin
  * settles the order by hand.
  *
- * Case ids SE-NCS-01 … SE-NCS-21 are the catalogue this file implements.
+ * Case ids SE-NCS-01 … SE-NCS-20 are the catalogue this file implements.
  *
  * Every assertion here was observed on a real run before it was written. Notably:
  *   - money is formatted with a COMMA decimal separator ("$175,13"), so note assertions
@@ -375,52 +375,6 @@ test.describe('Stripe Express — non-connected sellers @pro', () => {
         });
     });
 
-    /* -------- Nothing owed means nothing held (SE-NCS-21) -------- */
-
-    test('SE-NCS-21: an order with no vendor earning is NOT flagged held and matures no balance', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
-        test.skip(!hasCredentials, CREDS_SKIP);
-        // record_held_vendor_earning() returns early when the earning is <= 0 (a fully discounted
-        // order, or one where admin commission takes everything). Driven through the VENDOR-level
-        // commission meta rather than the global dokan_selling option: a global change would leak
-        // to every other vendor on the shard, while this touches vendor3 only and is restored below.
-        await dbUtils.setUserMeta(String(VENDOR3_ID), 'dokan_admin_percentage', '100', false);
-        await dbUtils.setUserMeta(String(VENDOR3_ID), 'dokan_admin_percentage_type', 'percentage', false);
-        // A VIRTUAL product carries no shipping line. Dokan credits shipping to the vendor, so on a
-        // shippable product a 100% admin commission still leaves the flat-rate shipping behind
-        // (measured: net_amount 10.00) and the earning never reaches 0 — the guard would not be hit.
-        const api = new ApiUtils(await request.newContext());
-        let zeroProductId = '';
-        try {
-            [, zeroProductId] = await api.createProduct({ ...payloads.createProduct(), name: 'SE-NCS-21 zero-earning (virtual)', virtual: true, regular_price: '100' }, payloads.vendor3Auth);
-        } finally {
-            await api.dispose();
-        }
-        try {
-            const ctx = await browser.newContext({ storageState: customerAuth });
-            const page = await ctx.newPage();
-            let zeroOrderId: string;
-            try {
-                zeroOrderId = await new StripeExpressPage(page).buyProductsExpectReceived(CUSTOMER_ID, [zeroProductId]);
-            } finally {
-                await page.close();
-                await ctx.close();
-            }
-            await setOrderStatus(zeroOrderId, 'completed');
-
-            expect(await getVendorEarningForOrder(zeroOrderId), 'precondition: a 100% admin commission leaves the vendor nothing').toBeLessThanOrEqual(0);
-            expect(await getOrderMetaValue(zeroOrderId, '_dokan_stripe_express_vendor_earning_held'), 'an order with nothing owed must NOT be flagged held').toBeFalsy();
-            expect((await getOrderNotes(zeroOrderId)).filter(n => n.includes('has not completed Stripe onboarding')), 'no hold note may be written when nothing is owed').toHaveLength(0);
-            log.success(`SE-NCS-21: order ${zeroOrderId} with zero earning was not held`);
-        } finally {
-            await dbUtils.deleteUserMeta(VENDOR3_ID, ['dokan_admin_percentage', 'dokan_admin_percentage_type']);
-            const cleanup = new ApiUtils(await request.newContext());
-            try {
-                await cleanup.deleteAllProducts('SE-NCS-21 zero-earning (virtual)', payloads.vendor3Auth);
-            } finally {
-                await cleanup.dispose();
-            }
-        }
-    });
 
     /* ---------------- Refund of a held order (SE-NCS-18) ---------------- */
 

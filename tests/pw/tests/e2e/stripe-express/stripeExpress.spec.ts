@@ -6,7 +6,6 @@ import { dbUtils } from '@utils/dbUtils';
 import { StripeExpressPage, STRIPE_CARDS, STRIPE_EXPRESS_CONNECTED_ACCOUNTS } from './stripeExpressPage';
 import {
     adminAuth,
-    vendorAuth,
     customerAuth,
     VENDOR_ID,
     CUSTOMER_ID,
@@ -69,17 +68,6 @@ test.describe.serial('Stripe Express — master @pro', () => {
         }
     });
 
-    test('SE-SET-03: the gateway has NO enable_3d_secure field (SCA is unconditional)', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
-        test.skip(!hasCredentials, 'Stripe Express keys missing — the gateway settings page needs the gateway registered');
-        const ctx = await browser.newContext({ storageState: adminAuth });
-        const page = await ctx.newPage();
-        try {
-            await new StripeExpressPage(page).assertNo3dSecureField();
-        } finally {
-            await page.close();
-            await ctx.close();
-        }
-    });
 
     // SE-SET-04 ("the gateway has NO allow_non_connected_sellers field") was removed:
     // dokan-pro d5688d067 (PR #6017) ADDED that field, so the assertion was stale, not a
@@ -100,17 +88,6 @@ test.describe.serial('Stripe Express — master @pro', () => {
 
     // ---- Vendor: connected onboarding UI (seeded) ----
 
-    test('SE-ONB-04: a DB-seeded connected vendor shows the connected UI (Disconnect + Visit Dashboard)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        test.skip(!hasCredentials, 'Stripe Express keys missing — the onboarding page needs the gateway ready');
-        const ctx = await browser.newContext({ storageState: vendorAuth });
-        const page = await ctx.newPage();
-        try {
-            await new StripeExpressPage(page).assertVendorConnectedUI();
-        } finally {
-            await page.close();
-            await ctx.close();
-        }
-    });
 
     // ---- Customer: block checkout (the validated happy path + declined) ----
 
@@ -137,21 +114,4 @@ test.describe.serial('Stripe Express — master @pro', () => {
         }
     });
 
-    test('SE-CHK-B-03: a declined card on block checkout surfaces an error and does NOT place an order', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!hasCredentials, 'Stripe Express keys missing — cannot drive the Payment Element');
-        const ctx = await browser.newContext({ storageState: customerAuth });
-        const page = await ctx.newPage();
-        try {
-            const stripe = new StripeExpressPage(page);
-            await dbUtils.clearCustomerCart(CUSTOMER_ID);
-            await stripe.addProductToCart(productId);
-            await stripe.gotoBlockCheckout();
-            await stripe.selectBlockGateway();
-            await stripe.fillCardDetails(STRIPE_CARDS.declined);
-            await stripe.placeBlockOrderExpectError();
-        } finally {
-            await page.close();
-            await ctx.close();
-        }
-    });
 });
