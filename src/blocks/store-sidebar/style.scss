@@ -1,0 +1,26 @@
+/*
+ * Front-end + editor styles for dokan/store-sidebar.
+ *
+ * Keeps the classic `.dokan-widget-area` / `.widget-collapse` wrapper classes
+ * so
+ * widgets rendered into it by Pro — the vendor verification widget arrives
+ * through
+ * dokan_sidebar_store_after — style themselves exactly as on the classic page.
+ * The classic `id="dokan-secondary"` is deliberately not emitted: a block can
+ * be
+ * inserted more than once, and duplicate ids are invalid.
+ */
+
+.wp-block-dokan-store-sidebar {
+
+	.dokan-widget-area {
+		display: flex;
+		flex-direction: column;
+		gap: var(--wp--style--block-gap, 1.5em);
+	}
+
+	.widget,
+	.dokan-store-widget {
+		margin: 0;
+	}
+}

@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-location-map",
+    "version": "1.0.0",
+    "title": "Store Location",
+    "category": "dokan",
+    "description": "A map of the vendor's store location.",
+    "keywords": [ "dokan", "store", "vendor", "location", "map", "address" ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        },
+        "title": {
+            "type": "string",
+            "default": ""
+        },
+        "showTitle": {
+            "type": "boolean",
+            "default": true
+        }
+    },
+    "supports": {
+        "html": false,
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true
+        },
+        "typography": {
+            "fontSize": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

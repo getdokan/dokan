@@ -21,6 +21,13 @@ settings, the REST `/stores` resource. Exactly one Store per Vendor — a facet 
 the Vendor, not a separate entity.
 _Avoid_: Shop, storefront
 
+**Store tab**:
+A named section of a Store's public page — Products and Terms and Conditions in
+Lite, plus Reviews and Biography with Pro. Extensions add tabs to a Store rather
+than pages beside it: every tab resolves to the same Store, distinguished by a
+query var.
+_Avoid_: Store page, vendor tab, store section
+
 ### Orders
 
 **Order**:

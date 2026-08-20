@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-sidebar",
+    "version": "1.0.0",
+    "title": "Store Sidebar",
+    "category": "dokan",
+    "description": "A container for store widgets, replacing the classic store sidebar on block themes.",
+    "keywords": [ "dokan", "store", "vendor", "sidebar", "widgets", "aside" ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "providesContext": {
+        "dokan/storeId": "storeId"
+    },
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        }
+    },
+    "supports": {
+        "html": false,
+        "color": {
+            "text": true,
+            "background": true
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

@@ -1,0 +1,79 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-info",
+    "version": "1.0.0",
+    "title": "Store Info",
+    "category": "dokan",
+    "description": "Displays the vendor's address, phone, email, rating and opening hours.",
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "address",
+        "phone",
+        "rating",
+        "hours"
+    ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        },
+        "showAddress": {
+            "type": "boolean",
+            "default": true
+        },
+        "showPhone": {
+            "type": "boolean",
+            "default": true
+        },
+        "showEmail": {
+            "type": "boolean",
+            "default": true
+        },
+        "showRating": {
+            "type": "boolean",
+            "default": true
+        },
+        "showOpenClose": {
+            "type": "boolean",
+            "default": true
+        },
+        "showIcons": {
+            "type": "boolean",
+            "default": true
+        },
+        "infoLayout": {
+            "type": "string",
+            "default": "list"
+        }
+    },
+    "supports": {
+        "html": false,
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true,
+            "__experimentalFontFamily": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true,
+            "blockGap": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

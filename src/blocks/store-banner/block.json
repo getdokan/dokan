@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-banner",
+    "version": "1.0.0",
+    "title": "Store Banner",
+    "category": "dokan",
+    "description": "Displays the vendor's store banner image.",
+    "keywords": [ "dokan", "store", "vendor", "banner", "cover" ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        },
+        "height": {
+            "type": "number",
+            "default": 0
+        },
+        "isLink": {
+            "type": "boolean",
+            "default": false
+        },
+        "focalX": {
+            "type": "number",
+            "default": 50
+        },
+        "focalY": {
+            "type": "number",
+            "default": 50
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": [ "wide", "full" ],
+        "shadow": true,
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
+        "__experimentalBorder": {
+            "color": true,
+            "radius": true,
+            "style": true,
+            "width": true,
+            "__experimentalDefaultControls": {
+                "radius": true
+            }
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

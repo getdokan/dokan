@@ -1,0 +1,34 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-header",
+    "version": "1.0.0",
+    "title": "Store Header",
+    "category": "dokan",
+    "description": "The store header, in any of the layouts a marketplace can choose from.",
+    "keywords": [ "dokan", "store", "vendor", "header", "layout", "banner" ],
+    "textdomain": "dokan-lite",
+    "usesContext": [ "dokan/storeId" ],
+    "attributes": {
+        "storeId": {
+            "type": "number",
+            "default": 0
+        },
+        "layout": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": [ "wide", "full" ],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}
