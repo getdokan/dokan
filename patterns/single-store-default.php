@@ -11,10 +11,16 @@
  * @package dokan
  * @since   DOKAN_SINCE
  *
- * The registered `dokan//single-store` block template renders this pattern, so
- * this file is the single source of truth for the default store layout. A
- * merchant swapping layouts replaces the header group above with one of the
- * other three header patterns; everything below it stays put.
+ * templates/block-templates/single-store.html deliberately does NOT reference
+ * this pattern, and its header differs by design: the template ships the panel
+ * header fully exploded so every block is selectable on first open (a
+ * `wp:pattern` reference gets stamped with `metadata.patternName` and
+ * content-locked, and the single `dokan/store-header` block seals its pieces).
+ * The cost, accepted knowingly: on the shipped template the Appearance ->
+ * Store Header Template setting has no effect until the site owner swaps the
+ * loose header for the `dokan/store-header` block. Keep the template's tabs +
+ * sidebar body in step with this pattern when the default layout changes; this
+ * pattern remains what gets inserted on ordinary pages.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
