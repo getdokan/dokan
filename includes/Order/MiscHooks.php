@@ -22,8 +22,8 @@ class MiscHooks {
      * @since 3.8.0
      */
     public function __construct() {
-        // Remove customer info from order export based on setting. Runs late so columns other callbacks add are covered too.
-        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 999 );
+        // Runs past the conventional 999 so columns registered there are covered too.
+        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 9999 );
 
         add_filter( 'woocommerce_rest_prepare_shop_order_object', [ $this, 'add_vendor_info_in_rest_order' ], 10, 1 );
         add_filter( 'wp_count_posts', [ $this, 'modify_vendor_order_counts' ], 10, 1 ); // no need to add hpos support for this filter
@@ -32,8 +32,7 @@ class MiscHooks {
     /**
      * Remove customer sensitive information while exporting order
      *
-     * `customer_note` is kept, matching the vendor order details page. `shipping_*` is not always
-     * customer data, so the columns this drops are filterable.
+     * `customer_note` is kept, matching the vendor order details page.
      *
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
@@ -44,7 +43,7 @@ class MiscHooks {
     public function hide_customer_info_from_vendor_order_export( $headers ) {
         $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
 
-        // Fail closed: the setting is a switcher, so anything other than an explicit off keeps customer data out of the export.
+        // Fail closed: only an explicit off lets customer data into the export.
         if ( 'off' === $hide_customer_info ) {
             return $headers;
         }
@@ -69,7 +68,10 @@ class MiscHooks {
          * @param array $hidden_columns Column keys to remove from the export.
          * @param array $headers        All export column keys mapped to their labels.
          */
-        $hidden_columns = apply_filters( 'dokan_hidden_customer_info_csv_columns', $hidden_columns, $headers );
+        $filtered_columns = apply_filters( 'dokan_hidden_customer_info_csv_columns', $hidden_columns, $headers );
+
+        // A malformed return falls back to the computed list rather than exporting the data it was meant to hide.
+        $hidden_columns = is_array( $filtered_columns ) ? array_filter( $filtered_columns, 'is_string' ) : $hidden_columns;
 
         return array_diff_key( $headers, array_flip( $hidden_columns ) );
     }
