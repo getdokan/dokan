@@ -310,7 +310,11 @@ test.describe('Stripe Express — non-connected sellers @pro', () => {
             // without proving anything.
             const withdrawOption = (await dbUtils.getOptionValue(dbData.dokan.optionName.withdraw)) as { withdraw_date_limit?: string };
             expect(Number(withdrawOption.withdraw_date_limit), 'the 7-day threshold must be in effect, or this case proves nothing').toBe(7);
-            expect(row!.maturesAt, 'a held earning must be matured to now, not parked at the withdraw threshold').toBeLessThanOrEqual(Date.now() + 60_000);
+            // With the threshold at 7 days an ordinary earning is parked 7 days out; a HELD earning
+            // is matured immediately, so its balance_date equals its trn_date. Asserted as the gap
+            // between those two columns, which needs no clock and so cannot drift with the runner's
+            // timezone -- see getBalanceRowForOrder.
+            expect(row!.daysParked, 'a held earning must be matured to its transaction date, not parked at the 7-day withdraw threshold').toBe(0);
 
             const balanceAfter = await getVendorBalance(payloads.vendor3Auth as Record<string, string>);
             expect(balanceAfter - balanceBefore, 'the spendable balance must rise by the credited earning').toBeCloseTo(earning, 2);

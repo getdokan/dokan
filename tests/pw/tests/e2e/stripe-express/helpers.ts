@@ -532,14 +532,25 @@ export async function getVendorEarningForOrder(orderId: string | number): Promis
  * The mysql driver returns a Date for DATETIME columns but a string under `dateStrings`, so both
  * are handled — a held earning is matured to "now" instead of the withdraw threshold.
  */
-export async function getBalanceRowForOrder(vendorId: string | number, orderId: string | number): Promise<{ debit: number; maturesAt: number } | undefined> {
-    const rows = (await dbUtils.dbQuery(`SELECT debit, balance_date FROM ${DB}_dokan_vendor_balance WHERE vendor_id = ? AND trn_id = ? AND trn_type = 'dokan_orders';`, [Number(vendorId), Number(orderId)])) as Array<{ debit: string; balance_date: string | Date }>;
+export async function getBalanceRowForOrder(vendorId: string | number, orderId: string | number): Promise<{ debit: number; daysParked: number } | undefined> {
+    const rows = (await dbUtils.dbQuery(
+        // `daysParked` is computed BY MySQL from two columns of the SAME row, written by the same
+        // code on the same clock: 0 when the earning was matured immediately, or the withdraw
+        // threshold (e.g. 7) when it was parked. No timezone is involved, which is the point.
+        //
+        // Earlier versions compared balance_date against a wall clock and were wrong twice.
+        // `Date.now()` is the RUNNER's clock; WordPress writes balance_date in SITE-local time
+        // (Asia/Dhaka, +6), so it agreed only on a machine sharing the site's timezone and failed
+        // 3/3 on the UTC CI runner (run 32359050741). Substituting MySQL `NOW()` did not fix it
+        // either -- that is the DATABASE's clock (UTC), still not WordPress's. The invariant never
+        // needed a clock: it is a relationship between two columns.
+        `SELECT debit, TIMESTAMPDIFF(DAY, trn_date, balance_date) AS days_parked
+           FROM ${DB}_dokan_vendor_balance
+          WHERE vendor_id = ? AND trn_id = ? AND trn_type = 'dokan_orders';`,
+        [Number(vendorId), Number(orderId)],
+    )) as Array<{ debit: string; days_parked: number | string }>;
     const row = rows?.[0];
-    if (!row) {
-        return undefined;
-    }
-    const raw = row.balance_date;
-    return { debit: Number(row.debit), maturesAt: raw instanceof Date ? raw.getTime() : new Date(String(raw).replace(' ', 'T')).getTime() };
+    return row ? { debit: Number(row.debit), daysParked: Number(row.days_parked) } : undefined;
 }
 
 /**
