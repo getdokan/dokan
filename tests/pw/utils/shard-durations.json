@@ -572,27 +572,27 @@
     },
     {
       "file": "stripe-express/stripeExpress.spec.ts",
-      "ms": 52000
+      "ms": 67000
     },
     {
       "file": "stripe-express/stripeExpressNonConnectedSellers.spec.ts",
-      "ms": 426000
+      "ms": 211000
     },
     {
       "file": "stripe-express/stripeExpressCoupon.spec.ts",
-      "ms": 49000
+      "ms": 82000
     },
     {
       "file": "stripe-express/stripeExpressGuest.spec.ts",
-      "ms": 84000
+      "ms": 112000
     },
     {
       "file": "stripe-express/stripeExpressPayouts.spec.ts",
-      "ms": 686000
+      "ms": 271000
     },
     {
       "file": "stripe-express/stripeExpressPreflight.spec.ts",
-      "ms": 9
+      "ms": 0
     },
     {
       "file": "table-rate-shipping/newShippingRate.spec.ts",
