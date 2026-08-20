@@ -1,7 +1,7 @@
 import { test, expect } from '@utils/test';
 import { log } from '@utils/logger';
 import { StripeExpressPage } from './stripeExpressPage';
-import { hasCredentials, CREDENTIALS_SKIP, PRODUCT_V1, ensureStripeExpressConfigured, seedStripeExpressConnectedVendor, removeStripeExpressConnectedVendor, getOrderSummary, VENDOR_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS } from './helpers';
+import { hasCredentials, CREDENTIALS_SKIP, PRODUCT_V1, ensureStripeExpressConfigured, ensureClassicCheckoutPage, seedStripeExpressConnectedVendor, removeStripeExpressConnectedVendor, getOrderSummary, VENDOR_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS } from './helpers';
 
 /**
  * Stripe Express — guest checkout (DOK-TC-SE-69 / -70).
@@ -16,6 +16,10 @@ test.describe.serial('Stripe Express — guest checkout @pro', () => {
 
     test.beforeAll(async () => {
         await ensureStripeExpressConfigured();
+        // A fresh environment has no classic-checkout page, and gotoClassicCheckout then lands on the
+        // 404 with #place_order never rendering. Local runs hide this because an earlier run already
+        // created the page; CI does not. Dropping this call is what broke SE-GUEST-02 on run 32354048263.
+        await ensureClassicCheckoutPage();
         await seedStripeExpressConnectedVendor(VENDOR_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
     });
 

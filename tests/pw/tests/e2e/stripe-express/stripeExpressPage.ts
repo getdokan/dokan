@@ -616,7 +616,12 @@ export class StripeExpressPage {
         // live: button present, 0 console errors), it just occasionally hydrates slowly.
         for (let attempt = 1; attempt <= 2; attempt++) {
             await this.page.goto(this.checkout.blockUrl, { waitUntil: 'domcontentloaded' });
-            await this.page.waitForLoadState('networkidle').catch(() => undefined);
+            // Bounded on purpose. An unbounded networkidle NEVER rejects when the page keeps a socket
+            // open -- Stripe, TalkJS and hCaptcha all long-poll -- so `.catch()` is dead code and the
+            // wait silently consumes the whole test budget. Measured on CI run 32354048263:
+            // SE-GUEST-01 hung the full 240s on its first attempt, then passed in 31.5s on retry once
+            // the caches were warm. Idle is a nice-to-have here, not a precondition.
+            await this.page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
             try {
                 await this.page.locator(this.blockSelectors.placeOrder).waitFor({ state: 'visible', timeout: 45_000 });
                 return;
@@ -669,7 +674,9 @@ export class StripeExpressPage {
             await phoneField.fill(d.phone);
             await expect(phoneField, 'the guest phone must actually persist into the field').toHaveValue(/\d/);
         }
-        await p.waitForLoadState('networkidle').catch(() => undefined);
+        // Bounded -- see the note on the other networkidle wait: unbounded, it never rejects and
+        // burns the entire test timeout when a long-polling script keeps the network busy.
+        await p.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
         await p.waitForTimeout(1_500);
     }
 
