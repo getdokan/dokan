@@ -595,6 +595,10 @@
       "ms": 558579
     },
     {
+      "file": "stripe-express/stripeExpressNonConnectedSellers.spec.ts",
+      "ms": 170000
+    },
+    {
       "file": "stripe-express/stripeExpressPayouts.spec.ts",
       "ms": 219634
     },

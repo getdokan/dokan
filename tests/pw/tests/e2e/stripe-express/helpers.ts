@@ -12,10 +12,13 @@ declare const process: { env: Record<string, string | undefined> };
 export const adminAuth = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 export const vendorAuth = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 export const vendor2Auth = path.join(__dirname, '../../../playwright/.auth/vendor2StorageState.json');
+export const vendor3Auth = path.join(__dirname, '../../../playwright/.auth/vendor3StorageState.json');
 export const customerAuth = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
 export const VENDOR_ID = process.env.VENDOR_ID ?? '3';
 export const VENDOR2_ID = process.env.VENDOR2_ID ?? '5';
+/** vendor3 is NEVER seeded with an Express account — the permanent non-connected vendor. */
+export const VENDOR3_ID = process.env.VENDOR3_ID ?? '6';
 export const CUSTOMER_ID = process.env.CUSTOMER_ID ?? '2';
 
 // Test-support mu-plugin namespace (dokan-stripe-express-test-helpers.php).
@@ -61,7 +64,11 @@ export async function ensureStripeExpressConfigured(): Promise<void> {
             data: {
                 publishable: STRIPE_EXPRESS_KEYS.publishable,
                 secret: STRIPE_EXPRESS_KEYS.secret,
-                settings: { disburse_mode: 'ON_ORDER_COMPLETED' },
+                // `allow_non_connected_sellers` is pinned to 'no' rather than left to the
+                // gateway default: SE-PAY-03/-11, SE-REF-06 and SE-EDGE-05 assert that Express
+                // REFUSES a non-connected vendor's cart, which is only true while the toggle is
+                // off. Without the pin, a prior spec that turned it on would silently invert them.
+                settings: { disburse_mode: 'ON_ORDER_COMPLETED', allow_non_connected_sellers: 'no' },
             },
         });
         if (!res.ok()) {
@@ -493,4 +500,56 @@ export async function cleanupSubscription(packId: string | undefined, subIds: st
             await ctx.dispose();
         }
     }
+}
+
+/* ------------------------------------------------------------------ */
+/* Vendor balance / earnings reads (non-connected-seller assertions)   */
+/* ------------------------------------------------------------------ */
+
+/** dbUtils keeps its table prefix module-private, so the direct reads below resolve it the same way. */
+const DB = process.env.DB_PREFIX ?? 'wp';
+
+/** A vendor's spendable balance, from the same endpoint the dashboard widget uses. */
+export async function getVendorBalance(auth: Record<string, string>): Promise<number> {
+    const ctx = await request.newContext({ extraHTTPHeaders: auth });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/dokan/v1/withdraw/balance`);
+        const body = (await res.json().catch(() => ({}))) as { current_balance?: number };
+        return Number(body.current_balance ?? 0);
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** The vendor earning Dokan credited for an order — what the admin owes when settling by hand. */
+export async function getVendorEarningForOrder(orderId: string | number): Promise<number> {
+    const rows = (await dbUtils.dbQuery(`SELECT net_amount FROM ${DB}_dokan_orders WHERE order_id = ?;`, [Number(orderId)])) as Array<{ net_amount: string }>;
+    return Number(rows?.[0]?.net_amount ?? 0);
+}
+
+/**
+ * The vendor-balance ledger row for an order, with `balance_date` normalised to epoch millis.
+ * The mysql driver returns a Date for DATETIME columns but a string under `dateStrings`, so both
+ * are handled — a held earning is matured to "now" instead of the withdraw threshold.
+ */
+export async function getBalanceRowForOrder(vendorId: string | number, orderId: string | number): Promise<{ debit: number; maturesAt: number } | undefined> {
+    const rows = (await dbUtils.dbQuery(`SELECT debit, balance_date FROM ${DB}_dokan_vendor_balance WHERE vendor_id = ? AND trn_id = ? AND trn_type = 'dokan_orders';`, [Number(vendorId), Number(orderId)])) as Array<{ debit: string; balance_date: string | Date }>;
+    const row = rows?.[0];
+    if (!row) {
+        return undefined;
+    }
+    const raw = row.balance_date;
+    return { debit: Number(row.debit), maturesAt: raw instanceof Date ? raw.getTime() : new Date(String(raw).replace(' ', 'T')).getTime() };
+}
+
+/**
+ * Sub-order id → vendor id for a multi-vendor parent. MUST be called AFTER the parent is
+ * completed: completion regenerates the sub-orders, so ids captured before it are stale.
+ */
+export async function getSubOrdersByVendor(parentId: string | number): Promise<Map<number, number>> {
+    const rows = (await dbUtils.dbQuery(
+        `SELECT o.order_id, o.seller_id FROM ${DB}_dokan_orders o WHERE o.order_id IN (SELECT id FROM ${DB}_wc_orders WHERE parent_order_id = ?);`,
+        [Number(parentId)],
+    )) as Array<{ order_id: number; seller_id: number }>;
+    return new Map((rows ?? []).map(r => [Number(r.order_id), Number(r.seller_id)]));
 }

@@ -7,6 +7,7 @@ const {
     ADMIN_PASSWORD,
     VENDOR,
     VENDOR2,
+    VENDOR3,
     CUSTOMER,
     CUSTOMER2,
     USER_PASSWORD,
@@ -49,6 +50,7 @@ const {
     ADMIN_PASSWORD: string;
     VENDOR: string;
     VENDOR2: string;
+    VENDOR3: string;
     CUSTOMER: string;
     CUSTOMER2: string;
     USER_PASSWORD: string;
@@ -113,6 +115,7 @@ export const data = {
         adminAuth: { extraHTTPHeaders: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) } },
         vendorAuth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR, ADMIN_PASSWORD) } },
         vendor2Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR2, ADMIN_PASSWORD) } },
+        vendor3Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR3, ADMIN_PASSWORD) } },
         customerAuth: { extraHTTPHeaders: { Authorization: basicAuth(CUSTOMER, ADMIN_PASSWORD) } },
     },
 
@@ -120,6 +123,7 @@ export const data = {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
         vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
+        vendor3AuthFile: 'playwright/.auth/vendor3StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
         customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
@@ -133,6 +137,10 @@ export const data = {
 
         vendor2Auth: {
             storageState: 'playwright/.auth/vendor2StorageState.json',
+        },
+
+        vendor3Auth: {
+            storageState: 'playwright/.auth/vendor3StorageState.json',
         },
 
         customerAuth: {
@@ -1367,6 +1375,14 @@ export const data = {
 
         vendor2: {
             username: VENDOR2,
+            password: USER_PASSWORD,
+        },
+
+        // The permanent NON-CONNECTED Stripe Express vendor: never seeded with an
+        // Express account, so "not connected" is a stable property of this vendor
+        // instead of a per-spec mutation of vendor2.
+        vendor3: {
+            username: VENDOR3,
             password: USER_PASSWORD,
         },
 
@@ -2784,6 +2800,15 @@ export const data = {
             },
         },
 
+        vendor3: {
+            simpleProduct: {
+                product1: {
+                    name: 'p1_v3 (simple)',
+                    productName: () => 'p1_v3 (simple)',
+                },
+            },
+        },
+
         simpleProduct: {
             product1: {
                 name: 'p1_v1 (simple)',
@@ -2847,6 +2872,7 @@ export const data = {
             followFromSingleStore: 'singleStore',
             vendor1: `${VENDOR}store`,
             vendor2: `${VENDOR2}store`,
+            vendor3: `${VENDOR3}store`,
             vendor1FullName: `${VENDOR} v1`,
             shopUrl: `${VENDOR}store`,
         },

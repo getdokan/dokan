@@ -81,17 +81,10 @@ test.describe.serial('Stripe Express — master @pro', () => {
         }
     });
 
-    test('SE-SET-04: the gateway has NO allow_non_connected_sellers field', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
-        test.skip(!hasCredentials, 'Stripe Express keys missing — the gateway settings page needs the gateway registered');
-        const ctx = await browser.newContext({ storageState: adminAuth });
-        const page = await ctx.newPage();
-        try {
-            await new StripeExpressPage(page).assertNoAllowNonConnectedField();
-        } finally {
-            await page.close();
-            await ctx.close();
-        }
-    });
+    // SE-SET-04 ("the gateway has NO allow_non_connected_sellers field") was removed:
+    // dokan-pro d5688d067 (PR #6017) ADDED that field, so the assertion was stale, not a
+    // bug. The field is now covered positively by SE-NCS-01/02 in
+    // stripeExpressNonConnectedSellers.spec.ts.
 
     test('SE-SET-01: the gateway settings persisted (enabled + testmode + keys)', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Express keys missing');

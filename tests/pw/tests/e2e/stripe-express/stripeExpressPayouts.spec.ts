@@ -180,6 +180,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
 
     let product1: string; // vendor1
     let product2: string; // vendor2
+    let product3: string;
     let couponId: number | undefined;
     let couponCode = '';
 
@@ -189,12 +190,15 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
         // so completeOrderFully() reliably triggers the vendor transfer the assertions poll for.
         await setExpressGatewaySettings({ disburse_mode: 'ON_ORDER_COMPLETED', capture: 'no', sellers_pay_processing_fee: 'no' });
         await ensureCustomerAddress();
-        // vendor1 stays connected for the whole file; vendor2 is seeded/removed per multi-vendor test.
+        // vendor1 stays connected for the whole file; vendor2 is seeded/removed per multi-vendor test;
+        // vendor3 is never connected at all and is the non-connected fixture.
         await seedStripeExpressConnectedVendor(VENDOR_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
         const api = new ApiUtils(await request.newContext());
         try {
             [, product1] = await api.createProduct({ ...payloads.createProduct(), name: 'SE-PAY vendor1 product', regular_price: '50' }, payloads.vendorAuth);
             [, product2] = await api.createProduct({ ...payloads.createProduct(), name: 'SE-PAY vendor2 product', regular_price: '40' }, payloads.vendor2Auth);
+            // vendor3 is NEVER connected, so SE-PAY-03/-11 need no connect/disconnect churn.
+            [, product3] = await api.createProduct({ ...payloads.createProduct(), name: 'SE-PAY vendor3 product', regular_price: '40' }, payloads.vendor3Auth);
         } finally {
             await api.dispose();
         }
@@ -220,6 +224,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
                 await ctx.delete(`${SERVER_URL}/wc/v3/coupons/${couponId}?force=true`).catch(() => undefined);
             }
             await ctx.delete(`${SERVER_URL}/wc/v3/products/${product1}?force=true`).catch(() => undefined);
+            await ctx.delete(`${SERVER_URL}/wc/v3/products/${product3}?force=true`).catch(() => undefined);
             await ctx.delete(`${SERVER_URL}/wc/v3/products/${product2}?force=true`).catch(() => undefined);
         } finally {
             await ctx.dispose();
@@ -283,17 +288,16 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
     test('SE-PAY-03: Stripe Express is NOT offered for a non-connected vendor cart (no-payout guarantee)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, CREDS_SKIP);
 
-        // vendor2 is NOT a connected Express account. Express must NOT accept a payment it cannot pay out:
-        // Order::validate_cart_items() requires EVERY cart vendor to be connected+activated, so the method
-        // is absent at checkout (verified against the module source). This is the real no-payout guarantee —
-        // it corrects the catalog premise of "charge on platform, zero transfer" (that path is unreachable).
-        await removeStripeExpressConnectedVendor(VENDOR2_ID);
+        // vendor3 is NEVER a connected Express account. With allow_non_connected_sellers OFF (pinned by
+        // ensureStripeExpressConfigured), Order::validate_cart_items() requires EVERY cart vendor to be
+        // connected+activated, so the method is absent at checkout. This is the no-payout guarantee.
+        // The toggle-ON counterpart lives in stripeExpressNonConnectedSellers.spec.ts (SE-NCS-04).
         const ctx = await browser.newContext({ storageState: customerAuth });
         const page = await ctx.newPage();
         try {
             const stripe = new StripeExpressPage(page);
             await dbUtils.clearCustomerCart(CUSTOMER_ID);
-            await stripe.addProductToCart(product2);
+            await stripe.addProductToCart(product3);
             await stripe.gotoBlockCheckout();
             await expect(page.locator('input[id^="radio-control-wc-payment-method-options-"]').first(), 'block payment methods should render').toBeVisible({ timeout: 30_000 });
             await expect(page.locator(stripe.blockSelectors.gatewayRadio), 'Express must NOT be offered when a cart vendor cannot receive a payout').toHaveCount(0);
@@ -486,18 +490,16 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
     test('SE-PAY-11: a mixed cart with one non-connected vendor refuses Express for the entire cart', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, CREDS_SKIP);
 
-        // vendor1 connected (beforeAll), vendor2 NOT connected. validate_cart_items() blocks the gateway
-        // if ANY cart vendor is unactivated — so a mixed cart cannot pay with Express either (protecting the
-        // non-connected vendor's portion). Corrects the catalog premise of a "skipped sub-order audit note":
-        // the order is never created via Express because the method is absent for the whole cart.
-        await removeStripeExpressConnectedVendor(VENDOR2_ID);
+        // vendor1 connected (beforeAll), vendor3 never connected. With the toggle OFF, validate_cart_items()
+        // blocks the gateway if ANY cart vendor is unactivated — so a mixed cart cannot pay with Express
+        // either. SE-NCS-14 asserts the inverse once the admin turns the toggle ON.
         const ctx = await browser.newContext({ storageState: customerAuth });
         const page = await ctx.newPage();
         try {
             const stripe = new StripeExpressPage(page);
             await dbUtils.clearCustomerCart(CUSTOMER_ID);
             await stripe.addProductToCart(product1);
-            await stripe.addProductToCart(product2);
+            await stripe.addProductToCart(product3);
             await stripe.gotoBlockCheckout();
             await expect(page.locator('input[id^="radio-control-wc-payment-method-options-"]').first(), 'block payment methods should render').toBeVisible({ timeout: 30_000 });
             await expect(page.locator(stripe.blockSelectors.gatewayRadio), 'one non-connected vendor must gate Express for the whole mixed cart').toHaveCount(0);
@@ -506,7 +508,5 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
             await page.close();
             await ctx.close();
         }
-        // Restore vendor2 for any later spec on the same worker.
-        await seedStripeExpressConnectedVendor(VENDOR2_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2);
     });
 });

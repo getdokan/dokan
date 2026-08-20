@@ -62,6 +62,7 @@ env:
     ADMIN_PASSWORD: password
     VENDOR: vendor1
     VENDOR2: vendor2
+    VENDOR3: vendor3
     CUSTOMER: customer1
     CUSTOMER2: customer2
     USER_PASSWORD: 01dokan01
@@ -471,8 +472,12 @@ jobs:
                   ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
                   WP=$(ver wp core version)
                   WC=$(ver wp plugin get woocommerce --field=version)
+                  # Job log only — deliberately NOT $GITHUB_STEP_SUMMARY. Any job that writes a
+                  # step summary gets its own collapsible block on the run page, so writing here
+                  # produced 13 near-empty "… summary" panels burying the one that matters.
+                  # merge-reports prints the consolidated stack line from resolved-versions.json.
                   echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
-                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+                  echo "- $WP_STACK lane — WordPress ${WP:-unknown}, WooCommerce ${WC:-unknown}"
 
                   # Persist for merge-reports, which runs on a clean runner with no
                   # wp-env stack and so cannot resolve these itself. Rides along in the
@@ -661,7 +666,7 @@ jobs:
                           echo "(no re-run log — first pass failed without recorded test failures)"
                       fi
                       echo '```'
-                  } >> "$GITHUB_STEP_SUMMARY"
+                  } # job log only — see the note on the version line above
 
             # The actual gate. The shard is red unless the isolation re-run cleared every failure.
             - name: Fail the shard when the isolation re-run did not clear
@@ -909,8 +914,12 @@ jobs:
                   ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
                   WP=$(ver wp core version)
                   WC=$(ver wp plugin get woocommerce --field=version)
+                  # Job log only — deliberately NOT $GITHUB_STEP_SUMMARY. Any job that writes a
+                  # step summary gets its own collapsible block on the run page, so writing here
+                  # produced 13 near-empty "… summary" panels burying the one that matters.
+                  # merge-reports prints the consolidated stack line from resolved-versions.json.
                   echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
-                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+                  echo "- $WP_STACK lane — WordPress ${WP:-unknown}, WooCommerce ${WC:-unknown}"
 
                   # Persist for merge-reports, which runs on a clean runner with no
                   # wp-env stack and so cannot resolve these itself. Rides along in the

@@ -409,16 +409,16 @@ test.describe.serial('Stripe Express — refunds & transfer reversal @pro', () =
 test.describe.serial('Stripe Express — refund of a non-connected seller @pro', () => {
     test.describe.configure({ timeout: 200_000 });
 
-    let productNC: string; // vendor2, deliberately NOT connected
+    let productNC: string; // vendor3 — the permanent never-connected vendor
 
     test.beforeAll(async () => {
         await ensureStripeExpressConfigured();
         await ensureCustomerAddress();
-        // Guarantee vendor2 is NOT connected so the suborder seller has no Stripe account.
-        await removeStripeExpressConnectedVendor(VENDOR2_ID);
+        // vendor3 is never seeded with a Stripe account anywhere in the suite, so the suborder
+        // seller has no Stripe account without disconnecting a vendor other specs rely on.
         const api = new ApiUtils(await request.newContext());
         try {
-            [, productNC] = await api.createProduct({ ...payloads.createProduct(), name: 'SE Refund Product NonConnected', regular_price: '30' }, payloads.vendor2Auth);
+            [, productNC] = await api.createProduct({ ...payloads.createProduct(), name: 'SE Refund Product NonConnected', regular_price: '30' }, payloads.vendor3Auth);
         } finally {
             await api.dispose();
         }
@@ -431,10 +431,10 @@ test.describe.serial('Stripe Express — refund of a non-connected seller @pro',
     test('SE-REF-06: Express refuses a non-connected seller cart, so no charge/refund can occur via Express', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Express keys missing — the gateway must be live to evaluate availability');
 
-        // A non-connected seller cannot receive a payout, so Order::validate_cart_items() hides Express
-        // for their cart — the "refund a non-connected seller" path is UNREACHABLE via Express (you can
-        // never create such a charge). Assert the real guarantee: the method is absent. (Corrects the
-        // catalog premise that the platform charge still succeeds for a non-connected seller.)
+        // With allow_non_connected_sellers OFF (pinned by ensureStripeExpressConfigured), a non-connected
+        // seller cannot receive a payout, so Order::validate_cart_items() hides Express for their cart —
+        // the "refund a non-connected seller" path is UNREACHABLE via Express. Assert the real guarantee:
+        // the method is absent. With the toggle ON that charge IS possible and IS refundable — SE-NCS-18.
         const ctx = await browser.newContext({ storageState: customerAuth });
         const page = await ctx.newPage();
         try {

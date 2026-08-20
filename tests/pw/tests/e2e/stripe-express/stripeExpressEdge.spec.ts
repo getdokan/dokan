@@ -10,7 +10,6 @@ import {
     adminAuth,
     customerAuth,
     VENDOR_ID,
-    VENDOR2_ID,
     CUSTOMER_ID,
     hasCredentials,
     ensureStripeExpressConfigured,
@@ -27,7 +26,8 @@ import {
  *   02 empty cart → Express method not offered on block checkout
  *   03 switch gateway away + back → the Payment Element re-mounts cleanly
  *   04 declined payment can be retried in the same block session and then succeeds (update_failed_order path)
- *   05 order with ONLY a non-connected vendor still completes (charge on platform)
+ *   05 Express is NOT offered for a non-connected-vendor cart while the toggle is OFF
+ *      (the toggle-ON behaviour — charge held on the platform — is SE-NCS-*)
  *   06 very long / unicode billing details pass through to Stripe without breaking the PE
  *   07 gateway keys removed mid-flow → in-flight checkout submit errors (serial · restore in afterAll)
  *
@@ -93,13 +93,13 @@ async function selectAnotherBlockGateway(page: Page): Promise<string | null> {
 test.beforeAll(async () => {
     await ensureStripeExpressConfigured();
     await ensureCustomerAddress();
-    // vendor1 = connected; vendor2 = explicitly NOT connected (SE-EDGE-05 buys a vendor2 product).
+    // vendor1 = connected; vendor3 = the permanent never-connected vendor (SE-EDGE-05 buys its product).
+    // vendor2 is left untouched — disconnecting it here leaked into specs sharing the shard.
     await seedStripeExpressConnectedVendor(VENDOR_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
-    await removeStripeExpressConnectedVendor(VENDOR2_ID);
     await ensureBacsEnabled();
     const api = new ApiUtils(await request.newContext());
     const [, v1] = await api.createProduct({ ...payloads.createProduct(), name: 'Stripe Express Edge Connected Product' }, payloads.vendorAuth);
-    const [, v2] = await api.createProduct({ ...payloads.createProduct(), name: 'Stripe Express Edge NonConnected Product' }, payloads.vendor2Auth);
+    const [, v2] = await api.createProduct({ ...payloads.createProduct(), name: 'Stripe Express Edge NonConnected Product' }, payloads.vendor3Auth);
     connectedProductId = v1;
     nonConnectedProductId = v2;
     await api.dispose();

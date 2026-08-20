@@ -2,6 +2,7 @@ import { Page, Frame, expect, request } from '@playwright/test';
 import { toPath, closeAnnouncementModal, SERVER_URL, parseBoolean } from '@utils/helpers';
 import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { stripeApi } from '@utils/stripeApi';
+import { dbUtils } from '@utils/dbUtils';
 
 // The suite's strict tsconfig doesn't pull in `@types/node`, so `process` would
 // otherwise be flagged as undefined. Declare it locally (same pattern as the
@@ -102,7 +103,8 @@ export class StripeExpressPage {
         statementDescriptor: '#woocommerce_dokan_stripe_express_statement_descriptor',
         disburseMode: '#woocommerce_dokan_stripe_express_disburse_mode',
         paymentRequest: '#woocommerce_dokan_stripe_express_payment_request',
-        // Express has NO `enable_3d_secure` field (SCA always on) and NO `allow_non_connected_sellers`.
+        // Express has NO `enable_3d_secure` field (SCA always on). `allow_non_connected_sellers`
+        // DOES exist since dokan-pro PR #6017 — see assertAllowNonConnectedField().
         enable3dSecure: '#woocommerce_dokan_stripe_express_enable_3d_secure',
         allowNonConnected: '#woocommerce_dokan_stripe_express_allow_non_connected_sellers',
         saveButton: 'button.woocommerce-save-button[name="save"], button[name="save"]',
@@ -275,10 +277,20 @@ export class StripeExpressPage {
         await expect(this.page.locator(this.admin.enable3dSecure), 'Express must have no enable_3d_secure field').toHaveCount(0);
     }
 
-    /** Express has NO `allow_non_connected_sellers` field (gateway available regardless of connection). */
-    async assertNoAllowNonConnectedField(): Promise<void> {
+    /**
+     * The `allow_non_connected_sellers` checkbox (dokan-pro PR #6017). Asserts it exists
+     * and matches the expected checked state — the setting is written through the
+     * mu-plugin, so this only ever READS the rendered form.
+     */
+    async assertAllowNonConnectedField(checked: boolean): Promise<void> {
         await this.gotoGatewaySettings();
-        await expect(this.page.locator(this.admin.allowNonConnected), 'Express must have no allow_non_connected_sellers field').toHaveCount(0);
+        const field = this.page.locator(this.admin.allowNonConnected);
+        await expect(field, 'the allow_non_connected_sellers field must exist').toHaveCount(1);
+        if (checked) {
+            await expect(field, 'allow_non_connected_sellers must be checked').toBeChecked();
+        } else {
+            await expect(field, 'allow_non_connected_sellers must be unchecked').not.toBeChecked();
+        }
     }
 
     // ============================================
@@ -1108,4 +1120,22 @@ export class StripeExpressPage {
         await this.page.waitForLoadState('domcontentloaded');
         await closeAnnouncementModal(this.page);
     }
+
+    /**
+     * Buy the given products as the CURRENT context's customer through block checkout and return
+     * the paid order id. Wraps the cart-clear → add → checkout → card → place sequence the
+     * non-connected-seller cases repeat, so the flow lives with the other page interactions
+     * rather than being re-implemented per spec.
+     */
+    async buyProductsExpectReceived(customerId: string | number, productIds: Array<string | number>): Promise<string> {
+        await dbUtils.clearCustomerCart(customerId);
+        for (const id of productIds) {
+            await this.addProductToCart(id);
+        }
+        await this.gotoBlockCheckout();
+        await this.selectBlockGateway();
+        await this.fillCardDetails();
+        return await this.placeBlockOrderExpectReceived();
+    }
+
 }
