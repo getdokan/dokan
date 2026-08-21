@@ -321,6 +321,120 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
+     * Prepare a single product for create or update.
+     *
+     * Every save funnels through here - WooCommerce routes create, update and batch alike through
+     * save_object() - so form-level validation runs once here instead of per endpoint, and it judges
+     * the product WooCommerce assembled rather than the raw payload. The product itself is not written
+     * until save_object() calls save() on what this returns, though the parent call can already have
+     * created attachment records when a payload sends images by URL; the vendor form only ever sends
+     * attachment ids.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request  Full details about the request.
+     * @param bool            $creating Whether a new product is being created.
+     *
+     * @return WC_Data|WP_Error
+     */
+    protected function prepare_object_for_database( $request, $creating = false ) {
+        $product = parent::prepare_object_for_database( $request, $creating );
+
+        if ( is_wp_error( $product ) ) {
+            return $product;
+        }
+
+        $invalid = $this->validate_required_downloads( $request, $product );
+
+        if ( is_wp_error( $invalid ) ) {
+            return $invalid;
+        }
+
+        /**
+         * Filters a vendor product prepared for the database, before it is saved.
+         *
+         * Scoped to vendor dashboard saves, unlike WooCommerce's own
+         * `woocommerce_rest_pre_insert_product_object`. Return a WP_Error to reject the save, which
+         * is how extensions enforce required fields they add to the product form.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param WC_Data         $product  Product assembled from the request, not yet saved.
+         * @param WP_REST_Request $request  Full details about the request.
+         * @param bool            $creating Whether a new product is being created.
+         */
+        return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
+    }
+
+    /**
+     * Reject a downloadable product saved without a file while the form marks "Downloadable Files" as required.
+     *
+     * The required flag lives in the form schema, where Dokan Pro's Product Form Manager writes it, so it is
+     * read back from the schema rather than hard-coded. Browser-side validation alone can be bypassed, which
+     * is how incomplete downloadable products reach the review queue.
+     *
+     * Judged on the assembled product rather than on the payload, because the payload can be shaped to dodge
+     * the rule: WooCommerce turns a product downloadable from `downloadable` alone and only reads `downloads`
+     * when that key is sent, and it drops file-less rows in save_downloadable_files(). A save that leaves
+     * both fields alone, such as quick edit, stays out of scope.
+     *
+     * Deliberately scoped to this one field: the schema marks several fields required that a partial form
+     * never renders yet still submits empty - the quick-create modal omits the required Description - so
+     * enforcing every required field here would reject those saves outright. Extensions that need their own
+     * rules can hook `dokan_rest_pre_insert_product_object`.
+     *
+     * Product variations are out of reach here: WooCommerce saves them through WC_REST_Product_Variations_Controller,
+     * which never enters this controller, so a downloadable variation is guarded in the browser only.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     * @param WC_Data         $product Product assembled from the request, not yet saved.
+     *
+     * @return WP_Error|null Error when the required file is missing, null otherwise.
+     */
+    protected function validate_required_downloads( $request, $product ) {
+        $touches_downloads = null !== $request->get_param( Elements::DOWNLOADS )
+            || null !== $request->get_param( Elements::DOWNLOADABLE );
+
+        if ( ! $touches_downloads || ! $product instanceof WC_Product ) {
+            return null;
+        }
+
+        if ( ! $product->is_downloadable() ) {
+            return null;
+        }
+
+        // WooCommerce drops rows on empty() alone, so a whitespace-only file still arrives here - and still saves when the field is optional.
+        foreach ( $product->get_downloads() as $download ) {
+            if ( '' !== trim( (string) $download->get_file() ) ) {
+                return null;
+            }
+        }
+
+        // Only a save with nothing attached needs the schema, which is expensive to build - and never its resolved values.
+        $product_type = $product->get_type();
+        $field        = FormSchema::get_field( dokan()->product_editor->get_schema(), Elements::DOWNLOADS );
+
+        if ( ! $field || ! FormSchema::is_required( $field, $product_type ) || ! FormSchema::is_visible( $field, $product_type ) ) {
+            return null;
+        }
+
+        $label = FormSchema::get_label( $field, $product_type );
+        $label = '' !== $label ? $label : __( 'Downloadable Files', 'dokan-lite' );
+
+        return new WP_Error(
+            'dokan_rest_product_download_required',
+            sprintf(
+                /* translators: %s: label of the downloadable files field. */
+                __( '%s is required. Please attach at least one downloadable file.', 'dokan-lite' ),
+                $label
+            ),
+            [ 'status' => 400 ]
+        );
+    }
+
+    /**
      * Replace WooCommerce's admin-oriented "approved download directory" rejection with vendor-friendly guidance.
      *
      * WooCommerce raises product_invalid_download whenever a downloadable file can't be used — most often because

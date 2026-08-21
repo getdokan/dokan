@@ -124,6 +124,79 @@ class FormSchema {
     }
 
     /**
+     * Find a field in a flat schema by id.
+     *
+     * Sections and fields share one id namespace, so the type is part of the match: a section - or an item an
+     * extension adds through `dokan_product_editor_prepared_schema` - carrying the same id must not answer for
+     * the field, since it has no `requireds` map and would silently switch a rule off.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $schema Flat schema items.
+     * @param string $id     Field id to find.
+     *
+     * @return array|null
+     */
+    public static function get_field( array $schema, string $id ): ?array {
+        $matches = wp_list_filter(
+            $schema,
+            [
+				'id'   => $id,
+				'type' => 'field',
+			]
+        );
+
+        return $matches ? reset( $matches ) : null;
+    }
+
+    /**
+     * Resolve a field's label for a product type, falling back to its shared label.
+     *
+     * Fields can vary by product type through the `labels`, `requireds` and `visibilities` maps, which
+     * Dokan Pro's Product Form Manager writes into. These three resolvers are the PHP counterpart of
+     * `resolveLabel`, `resolveRequired` and `resolveVisibility` in
+     * `src/dashboard/product-editor/utils.tsx`, so both sides read the schema the same way.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return string
+     */
+    public static function get_label( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): string {
+        return (string) ( $field['labels'][ $product_type ] ?? $field['label'] ?? '' );
+    }
+
+    /**
+     * Whether a field must be filled in for a product type.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return bool
+     */
+    public static function is_required( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): bool {
+        return (bool) ( $field['requireds'][ $product_type ] ?? $field['required'] ?? false );
+    }
+
+    /**
+     * Whether a field is rendered for a product type.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return bool
+     */
+    public static function is_visible( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): bool {
+        return (bool) ( $field['visibilities'][ $product_type ] ?? $field['visibility'] ?? true );
+    }
+
+    /**
      * Get available product types as label/value pairs.
      *
      * @since 5.0.0
@@ -805,6 +878,7 @@ class FormSchema {
                 'visibility'   => true,
             ],
         ];
+        // Track the Downloadable checkbox per product type: where a vendor cannot tick it, they must not be asked to fill the section it reveals.
         $downloadable_fields = [
             [
                 'id'           => Elements::SECTION_DOWNLOADABLE,
@@ -813,6 +887,7 @@ class FormSchema {
                 'label'        => __( 'Downloadable Options', 'dokan-lite' ),
                 'description'  => __( 'Configure your downloadable product settings', 'dokan-lite' ),
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
                 'dependencies' => $dep_downloadable,
             ],
             [
@@ -826,6 +901,7 @@ class FormSchema {
                 'description'  => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
             ],
             [
                 'id'           => Elements::DOWNLOAD_LIMIT,
@@ -837,6 +913,7 @@ class FormSchema {
                 'description'  => __( 'Leave blank for unlimited re-downloads.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
             ],
             [
                 'id'           => Elements::DOWNLOAD_EXPIRY,
@@ -848,6 +925,7 @@ class FormSchema {
                 'description'  => __( 'Enter the number of days before a download link expires, or leave blank.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
             ],
         ];
         $others_fields = [
