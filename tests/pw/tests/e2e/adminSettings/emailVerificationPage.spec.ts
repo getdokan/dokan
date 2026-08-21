@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 // --- Dataset Definitions ---
 
@@ -71,6 +72,14 @@ test.describe('Admin Setting: Email Verification Settings Synchronization', () =
 
         // Login as admin
         await loginPage.adminLogin(data.admin);
+    });
+
+    // With verification enabled, Dokan logs an unverified account straight back
+    // out on login. The seeded customers are unverified, so leaving the switch on
+    // breaks every later spec that signs a customer in — the auth setup included.
+    test.afterAll(async () => {
+        await dbUtils.updateOptionValue('dokan_email_verification', { enabled: 'off' });
+        await dbUtils.updateOptionValue('dokan_admin_settings', { email_verification_enabled: 'off' });
     });
 
     test('New to Old Email Verification Settings synchronization', { tag: ['@lite', '@admin', '@migration', '@email-verification'] }, async () => {
