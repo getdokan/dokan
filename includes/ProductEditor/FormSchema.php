@@ -130,7 +130,7 @@ class FormSchema {
      * extension adds through `dokan_product_editor_prepared_schema` - carrying the same id must not answer for
      * the field, since it has no `requireds` map and would silently switch a rule off.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.16
      *
      * @param array  $schema Flat schema items.
      * @param string $id     Field id to find.
@@ -157,7 +157,7 @@ class FormSchema {
      * `resolveLabel`, `resolveRequired` and `resolveVisibility` in
      * `src/dashboard/product-editor/utils.tsx`, so both sides read the schema the same way.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.16
      *
      * @param array  $field        Schema field.
      * @param string $product_type Product type the field is resolved for.
@@ -171,7 +171,7 @@ class FormSchema {
     /**
      * Whether a field must be filled in for a product type.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.16
      *
      * @param array  $field        Schema field.
      * @param string $product_type Product type the field is resolved for.
@@ -185,7 +185,7 @@ class FormSchema {
     /**
      * Whether a field is rendered for a product type.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.16
      *
      * @param array  $field        Schema field.
      * @param string $product_type Product type the field is resolved for.

@@ -330,7 +330,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * created attachment records when a payload sends images by URL; the vendor form only ever sends
      * attachment ids.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.16
      *
      * @param WP_REST_Request $request  Full details about the request.
      * @param bool            $creating Whether a new product is being created.
@@ -357,7 +357,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
          * `woocommerce_rest_pre_insert_product_object`. Return a WP_Error to reject the save, which
          * is how extensions enforce required fields they add to the product form.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.16
          *
          * @param WC_Data         $product  Product assembled from the request, not yet saved.
          * @param WP_REST_Request $request  Full details about the request.
@@ -386,7 +386,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * Product variations are out of reach here: WooCommerce saves them through WC_REST_Product_Variations_Controller,
      * which never enters this controller, so a downloadable variation is guarded in the browser only.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.16
      *
      * @param WP_REST_Request $request Full details about the request.
      * @param WC_Data         $product Product assembled from the request, not yet saved.

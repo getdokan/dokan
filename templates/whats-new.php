@@ -4,6 +4,30 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.16',
+        'released' => '2026-08-21',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer\'s name, phone, and billing and shipping address instead of only the email and IP address.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard list labels such as "No data found" are now translatable through Dokan\'s language files.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.15',
         'released' => '2026-08-19',
         'changes'  => [

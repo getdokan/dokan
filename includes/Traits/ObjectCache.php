@@ -155,7 +155,7 @@ trait ObjectCache {
      * ```
      *
      * @since 3.3.2
-     * @since DOKAN_SINCE Removed the redundant `wp_cache_flush_group()` call. It targeted a group
+     * @since 5.0.16 Removed the redundant `wp_cache_flush_group()` call. It targeted a group
      *                    no key is ever written to, while forcing persistent backends such as
      *                    Redis into a full keyspace scan on every call.
      *
