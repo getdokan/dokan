@@ -63,7 +63,7 @@ class MiscHooks {
         /**
          * Filters the order export columns treated as customer data.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.16
          *
          * @param array $hidden_columns Column keys to remove from the export.
          * @param array $headers        All export column keys mapped to their labels.

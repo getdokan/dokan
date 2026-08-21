@@ -120,7 +120,7 @@ function isEmptyDeep( val: any, seen?: WeakSet< object > ): boolean {
  * Backs both the `required` validation and the `empty`/`not_empty` dependency
  * comparisons, so the form only ever holds one definition of "no value".
  *
- * @since DOKAN_SINCE
+ * @since 5.0.16
  *
  * @param val Value to test.
  */
