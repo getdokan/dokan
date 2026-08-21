@@ -77,6 +77,36 @@ const isPlainObject = ( val: any ): boolean =>
     [ Object.prototype, null ].includes( Object.getPrototypeOf( val ) );
 
 /**
+ * Walk a value for emptiness, remembering collections already visited.
+ *
+ * @param val  Value to test.
+ * @param seen Collections visited on this walk, allocated only once one is reached.
+ */
+function isEmptyDeep( val: any, seen?: WeakSet< object > ): boolean {
+    if ( val === undefined || val === null ) {
+        return true;
+    }
+    if ( typeof val === 'string' ) {
+        return val.trim() === '';
+    }
+    if ( ! Array.isArray( val ) && ! isPlainObject( val ) ) {
+        return false;
+    }
+
+    // A branch that loops back on itself adds no value, and this backs a public helper an extension can hand any object.
+    const visited = seen ?? new WeakSet();
+
+    if ( visited.has( val ) ) {
+        return true;
+    }
+    visited.add( val );
+
+    return Object.values( val ).every( ( entry ) =>
+        isEmptyDeep( entry, visited )
+    );
+}
+
+/**
  * True if a value carries nothing: null, undefined, whitespace-only text, or a
  * collection whose entries are all themselves empty.
  *
@@ -84,6 +114,8 @@ const isPlainObject = ( val: any ): boolean =>
  * added but never filled in is `{ id: '', name: '', file: '' }`, and a list of
  * those rows is no more a value than an empty list is. Scalars keep their usual
  * meaning, so `0` and `false` are values.
+ *
+ * An extension whose blank value is meaningful should send a scalar — `{}` and `[ '' ]` read as empty.
  *
  * Backs both the `required` validation and the `empty`/`not_empty` dependency
  * comparisons, so the form only ever holds one definition of "no value".
@@ -93,19 +125,7 @@ const isPlainObject = ( val: any ): boolean =>
  * @param val Value to test.
  */
 export function isEmpty( val: any ): boolean {
-    if ( val === undefined || val === null ) {
-        return true;
-    }
-    if ( typeof val === 'string' ) {
-        return val.trim() === '';
-    }
-    if ( Array.isArray( val ) ) {
-        return val.every( isEmpty );
-    }
-    if ( isPlainObject( val ) ) {
-        return Object.values( val ).every( isEmpty );
-    }
-    return false;
+    return isEmptyDeep( val );
 }
 
 /** Normalize checkbox-like values to boolean for comparison. */

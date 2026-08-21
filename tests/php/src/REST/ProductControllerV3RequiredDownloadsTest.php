@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Test\REST;
 
+use WeDevs\Dokan\ProductEditor\Elements;
+use WeDevs\Dokan\ProductEditor\FormSchema;
 use WeDevs\Dokan\REST\ProductControllerV3;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WP_REST_Request;
@@ -107,9 +109,9 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
      *
      * @return array
      */
-    protected function downloadable_payload( array $downloads = [] ): array {
+    protected function downloadable_payload( array $downloads = [], string $type = 'simple' ): array {
         return [
-            'type'         => 'simple',
+            'type'         => $type,
             'downloadable' => true,
             'downloads'    => $downloads,
         ];
@@ -189,11 +191,16 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
     }
 
     /**
-     * Blank rows carry no file, so they do not satisfy the requirement.
+     * A row carries no file, so it does not satisfy the requirement.
+     *
+     * @dataProvider unusable_file_values
+     *
+     * @param string $file      File value the row carries.
+     * @param string $describes What that value makes the row.
      *
      * @return void
      */
-    public function test_blank_download_rows_do_not_satisfy_the_requirement(): void {
+    public function test_rows_without_a_usable_file_do_not_satisfy_the_requirement( string $file, string $describes ): void {
         $this->mark_downloads_required();
 
         $this->assertRejectedForMissingDownload(
@@ -201,15 +208,27 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
                 $this->downloadable_payload(
                     [
 						[
-							'id' => '',
+							'id'   => '',
 							'name' => 'Untitled',
-							'file' => '',
+							'file' => $file,
 						],
 					]
                 )
             ),
-            'A row without a file must block the save.'
+            sprintf( 'A row %s must block the save.', $describes )
         );
+    }
+
+    /**
+     * File values that leave a row carrying no attachment.
+     *
+     * @return array<string, array{string, string}>
+     */
+    public function unusable_file_values(): array {
+        return [
+            'missing'         => [ '', 'without a file' ],
+            'whitespace only' => [ '   ', 'whose file is only whitespace' ],
+        ];
     }
 
     /**
@@ -347,10 +366,12 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
      * @return void
      */
     public function test_hidden_downloads_field_is_not_enforced(): void {
+        // Hiding a field for every product type clears the per-type map, which is what the Product Form Manager writes.
         $this->override_downloads_field(
             [
-				'required'   => true,
-				'visibility' => false,
+				'required'     => true,
+				'visibility'   => false,
+				'visibilities' => [],
 			]
         );
 
@@ -395,6 +416,50 @@ class ProductControllerV3RequiredDownloadsTest extends DokanTestCase {
             $this->update_request( $this->downloadable_payload() ),
             'The simple-product override must win over the shared visibility flag.'
         );
+    }
+
+    /**
+     * A product type that offers no Downloadable checkbox is not held to the rule.
+     *
+     * Ticking Downloadable on a simple product and then switching type leaves the flag set while the
+     * checkbox that clears it is gone, so enforcing the file here would strand the vendor on a form
+     * they cannot satisfy or undo.
+     *
+     * @return void
+     */
+    public function test_type_without_a_downloadable_option_is_not_enforced(): void {
+        $this->mark_downloads_required();
+
+        $response = $this->update_request( $this->downloadable_payload( [], Elements::PRODUCT_TYPE_GROUPED ) );
+
+        $this->assertSame( 200, $response->get_status(), 'A type that cannot offer downloads must stay saveable.' );
+    }
+
+    /**
+     * The file field is offered exactly where the checkbox that reveals it is offered.
+     *
+     * @return void
+     */
+    public function test_downloads_field_tracks_the_downloadable_checkbox_visibility(): void {
+        $schema = dokan()->product_editor->get_schema();
+
+        $downloads = FormSchema::get_field( $schema, Elements::DOWNLOADS );
+        $checkbox  = FormSchema::get_field( $schema, Elements::DOWNLOADABLE );
+
+        $types = [
+            Elements::PRODUCT_TYPE_SIMPLE,
+            Elements::PRODUCT_TYPE_VARIABLE,
+            Elements::PRODUCT_TYPE_VARIATION,
+            Elements::PRODUCT_TYPE_GROUPED,
+        ];
+
+        foreach ( $types as $type ) {
+            $this->assertSame(
+                FormSchema::is_visible( $checkbox, $type ),
+                FormSchema::is_visible( $downloads, $type ),
+                sprintf( 'The %s form must offer the file field only where it offers the Downloadable checkbox.', $type )
+            );
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 import { DokanButton } from '@dokan/components';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { MediaUploader } from '@src/components';
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useRef } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import { Plus, Upload, X } from 'lucide-react';
@@ -9,21 +9,26 @@ import CustomField, { getValidationError } from './CustomField';
 
 const DOWNLOADABLE_UPLOADER_PARAMS = { type: 'downloadable_product' };
 
-const FileUploadEdit = ( { field, onChange, validity }: any ) => {
-    const [ files, setFiles ] = useState(
-        field.value?.length > 0
-            ? field.value
-            : [
-                  {
-                      id: '',
-                      name: '',
-                      file: '',
-                  },
-              ]
-    );
+const blankRow = () => ( { id: '', name: '', file: '' } );
+
+const FileUploadEdit = ( { data, field, onChange, validity }: any ) => {
+    // Seed from what the form holds now, not the schema snapshot: unticking Downloadable unmounts these rows
+    // while the form keeps them, so showing the field again must not read as "no files".
+    const [ files, setFiles ] = useState( () => {
+        const current = data?.[ field.id ] ?? field.value;
+
+        return current?.length > 0 ? current : [ blankRow() ];
+    } );
 
     // Re-sync rows when field.value loads/changes after mount (e.g. the create → edit SPA transition); the initial useState alone misses the late-arriving value.
+    const synced = useRef( field.value );
     useEffect( () => {
+        // Only a genuinely new schema value wins; replaying the one already seeded would drop unsaved edits.
+        if ( field.value === synced.current ) {
+            return;
+        }
+        synced.current = field.value;
+
         if ( field.value?.length > 0 ) {
             setFiles( field.value );
         }
@@ -57,19 +62,14 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
     const publish = ( newFiles: any[] ) => {
         setFiles( newFiles );
         onChange( {
-            [ field.id ]: newFiles.filter( ( file: any ) => file.file ),
+            [ field.id ]: newFiles.filter(
+                ( file: any ) => String( file.file ?? '' ).trim() !== ''
+            ),
         } );
     };
 
     const onAddRow = () => {
-        publish( [
-            ...files,
-            {
-                id: '',
-                name: '',
-                file: '',
-            },
-        ] );
+        publish( [ ...files, blankRow() ] );
     };
 
     const onRemoveRow = ( index: number ) => {

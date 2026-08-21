@@ -359,9 +359,9 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
          *
          * @since DOKAN_SINCE
          *
-         * @param WC_Data|WP_Error $product  Product assembled from the request, not yet saved.
-         * @param WP_REST_Request  $request  Full details about the request.
-         * @param bool             $creating Whether a new product is being created.
+         * @param WC_Data         $product  Product assembled from the request, not yet saved.
+         * @param WP_REST_Request $request  Full details about the request.
+         * @param bool            $creating Whether a new product is being created.
          */
         return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
     }
@@ -383,6 +383,9 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * enforcing every required field here would reject those saves outright. Extensions that need their own
      * rules can hook `dokan_rest_pre_insert_product_object`.
      *
+     * Product variations are out of reach here: WooCommerce saves them through WC_REST_Product_Variations_Controller,
+     * which never enters this controller, so a downloadable variation is guarded in the browser only.
+     *
      * @since DOKAN_SINCE
      *
      * @param WP_REST_Request $request Full details about the request.
@@ -398,15 +401,20 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return null;
         }
 
-        if ( ! $product->is_downloadable() || $product->get_downloads() ) {
+        if ( ! $product->is_downloadable() ) {
             return null;
         }
 
-        // Only a save with nothing attached needs the schema, which is expensive to build.
+        // WooCommerce drops rows on empty() alone, so a whitespace-only file still arrives here - and still saves when the field is optional.
+        foreach ( $product->get_downloads() as $download ) {
+            if ( '' !== trim( (string) $download->get_file() ) ) {
+                return null;
+            }
+        }
+
+        // Only a save with nothing attached needs the schema, which is expensive to build - and never its resolved values.
         $product_type = $product->get_type();
-        $schema       = dokan()->product_editor->get_schema( $product->get_id() );
-        $matches      = wp_list_filter( $schema, [ 'id' => Elements::DOWNLOADS ] );
-        $field        = reset( $matches );
+        $field        = FormSchema::get_field( dokan()->product_editor->get_schema(), Elements::DOWNLOADS );
 
         if ( ! $field || ! FormSchema::is_required( $field, $product_type ) || ! FormSchema::is_visible( $field, $product_type ) ) {
             return null;
