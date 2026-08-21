@@ -39,6 +39,10 @@ class Hooks {
 
         add_action( 'woocommerce_product_bulk_edit_end', [ $this, 'add_product_commission_bulk_edit_field' ] );
         add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'save_custom_bulk_edit_field' ], 10, 1 );
+
+        // Downloadable files a vendor submitted for approval
+        add_action( 'woocommerce_product_options_downloads', [ $this, 'render_pending_downloadable_files' ] );
+        add_action( 'admin_notices', [ $this, 'pending_downloadable_files_notice' ] );
     }
 
     /**
@@ -268,5 +272,78 @@ class Hooks {
         }
 
         ProductHooks::save_per_product_commission_options( $product->get_id(), $_REQUEST ); // phpcs:ignore
+    }
+    /**
+     * Show the downloadable files a vendor submitted for approval below the live files.
+     *
+     * The WooCommerce product data panel lists the approved files that customers
+     * currently hold; the pending replacement is rendered read-only underneath so the
+     * admin can review what publishing will deliver.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function render_pending_downloadable_files() {
+        $post = get_post();
+
+        if ( ! $post instanceof WP_Post || 'product' !== $post->post_type ) {
+            return;
+        }
+
+        $staged = dokan_get_staged_downloadable_files( $post->ID );
+
+        if ( null === $staged ) {
+            return;
+        }
+        ?>
+        <div class="options_group dokan-pending-downloadable-files">
+            <p class="form-field">
+                <strong><?php esc_html_e( 'Replacement files awaiting your approval', 'dokan-lite' ); ?></strong><br>
+                <?php esc_html_e( 'The vendor submitted these files with the pending update. Customers who already purchased keep the files listed above until you publish this product; publishing delivers the files below to them.', 'dokan-lite' ); ?>
+            </p>
+            <?php if ( empty( $staged ) ) : ?>
+                <p class="form-field"><?php esc_html_e( 'The vendor removed all downloadable files. Publishing will revoke the downloads of existing customers.', 'dokan-lite' ); ?></p>
+            <?php else : ?>
+                <ul class="form-field">
+                    <?php foreach ( $staged as $file ) : ?>
+                        <?php
+                        $file_url  = isset( $file['file'] ) ? $file['file'] : '';
+                        $file_name = ! empty( $file['name'] ) ? $file['name'] : wc_get_filename_from_url( $file_url );
+                        ?>
+                        <li>
+                            <strong><?php echo esc_html( $file_name ); ?></strong>
+                            &mdash; <a href="<?php echo esc_url( $file_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $file_url ); ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+        <?php
+    }
+
+    /**
+     * Warn the admin on the product edit screen when replacement files await approval.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function pending_downloadable_files_notice() {
+        $screen = get_current_screen();
+        $post   = get_post();
+
+        if ( ! $screen || 'product' !== $screen->id || ! $post instanceof WP_Post || 'product' !== $post->post_type ) {
+            return;
+        }
+
+        if ( null === dokan_get_staged_downloadable_files( $post->ID ) ) {
+            return;
+        }
+        ?>
+        <div class="notice notice-warning">
+            <p><?php esc_html_e( 'This product has replacement downloadable files awaiting your approval. Existing customers keep the currently approved files until you publish; review the pending files under General → Downloadable files before publishing.', 'dokan-lite' ); ?></p>
+        </div>
+        <?php
     }
 }

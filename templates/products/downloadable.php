@@ -55,6 +55,12 @@
                     </tbody>
                 </table>
 
+                <?php if ( is_array( $staged_files ) ) : ?>
+                    <p class="dokan-alert dokan-alert-warning">
+                        <?php esc_html_e( 'These files are awaiting admin approval. Customers who already purchased keep the currently approved files until the product is published.', 'dokan-lite' ); ?>
+                    </p>
+                <?php endif; ?>
+
                 <div class="dokan-clearfix">
                     <div class="content-half-part">
                         <label for="_download_limit" class="form-label"><?php esc_html_e( 'Download Limit', 'dokan-lite' ); ?></label>
