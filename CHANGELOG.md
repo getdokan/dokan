@@ -1,3 +1,10 @@
+### v5.0.16 ( Aug 21, 2026 ) ###
+
+- **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.
+- **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
+- **fix:** The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.
+- **fix:** Vendor dashboard list labels such as "No data found" are now translatable through Dokan's language files.
+
 ### v5.0.15 ( Aug 19, 2026 ) ###
 
 - **new:** Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor's own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn't provide on its own.

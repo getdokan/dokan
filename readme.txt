@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.15
+Stable tag: 5.0.16
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.16 ( Aug 21, 2026 ) =
+- **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.
+- **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
+- **fix:** The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.
+- **fix:** Vendor dashboard list labels such as "No data found" are now translatable through Dokan's language files.
+
 = v5.0.15 ( Aug 19, 2026 ) =
 - **new:** Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor's own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn't provide on its own.
 - **fix:** The product editor's Attributes field now honors the placeholder text configured in the Product Form Manager.
@@ -392,14 +398,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 = v5.0.12 ( Aug 03, 2026 ) =
 - **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
-
-= v5.0.11 ( Jul 27, 2026 ) =
-- **update:** Vendors can now search for products by SKU as well as by name.
-- **fix:** Store-page buttons now respect the Astra theme's global button styling.
-- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
-- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
-- **fix:** Prevented vendors from granting download access to another vendor's files.
-- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
-- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
