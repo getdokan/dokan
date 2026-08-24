@@ -33,8 +33,8 @@ const selectors = {
             verifiedIconByIcon: (iconName: string) => `//i[@class='${iconName}']//../..`,
             verificationMethodRow: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..`,
             enableVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//label[@class="switch tips"]`,
-            editVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-violet')]`,
-            deleteVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-red')]`,
+            editVerificationMethod: (methodName: string) => `button[aria-label="Edit ${methodName} verification method"]`,
+            deleteVerificationMethod: (methodName: string) => `button[aria-label="Delete ${methodName} verification method"]`,
             confirmDelete: '.swal2-confirm',
             methodCreateSuccessMessage: '//div[text()="Created Successfully."]',
             methodUpdateSuccessMessage: '//div[text()="Updated Successfully."]',
@@ -284,7 +284,10 @@ export class VendorVerificationsPage {
     }
 
     private async getBackgroundColor(selector: string): Promise<string> {
-        return await this.page.locator(selector).first().evaluate(el => window.getComputedStyle(el).getPropertyValue('background-color'));
+        return await this.page
+            .locator(selector)
+            .first()
+            .evaluate(el => window.getComputedStyle(el).getPropertyValue('background-color'));
     }
 
     private async forceLinkToSameTab(selector: string): Promise<void> {
@@ -423,11 +426,16 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
-        // The edit button is CSS hover-revealed (visibility:hidden until the row
-        // is hovered via `group-hover/item:visible`), which Playwright cannot
-        // reliably surface in headless; dispatch the click to fire the Vue handler.
-        await this.page.locator(settingsAdmin.vendorVerification.verificationMethodRow(methodName)).hover();
-        await this.page.locator(settingsAdmin.vendorVerification.editVerificationMethod(methodName)).dispatchEvent('click');
+        /*
+         * The action buttons are no longer hover-revealed. dokan-pro #5861
+         * ("make method actions discoverable") replaced the hover-only icons with
+         * permanently visible buttons carrying an aria-label, and dropped the
+         * `rounded-full bg-violet` classes the old selector matched. That selector
+         * therefore never resolved and every attempt died on a 30s dispatchEvent
+         * timeout. Target the aria-label, which is semantic and survives restyling,
+         * and click normally now that the button is actually visible.
+         */
+        await this.page.locator(settingsAdmin.vendorVerification.editVerificationMethod(methodName)).click();
         await this.updateVerificationMethod(verificationMethod);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.addNewVerification.update);
         await expect(this.page.locator(settingsAdmin.vendorVerification.methodUpdateSuccessMessage)).toBeVisible();
@@ -443,10 +451,11 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
-        // The delete button is CSS hover-revealed (visibility:hidden until the row
-        // is hovered); dispatch the click to fire the Vue handler in headless.
-        await this.page.locator(settingsAdmin.vendorVerification.verificationMethodRow(methodName)).hover();
-        await this.page.locator(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName)).dispatchEvent('click');
+        // Same change as the edit path: dokan-pro #5861 made these buttons
+        // permanently visible and aria-labelled, so no hover dance is needed.
+        // Note the built-in Address method renders no delete button at all
+        // (`v-if="'address' !== doc.kind"`), matching the API's 403 guard.
+        await this.page.locator(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName)).click();
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.confirmDelete, 204);
         await expect(this.page.locator(settingsAdmin.vendorVerification.methodDeleteSuccessMessage)).toBeVisible();
 
