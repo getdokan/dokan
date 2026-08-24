@@ -279,6 +279,35 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         background-position: right 12px center;
     }
 
+    // select2 renders this list as `inline-block`, so it sits on a text baseline and the line box's descender added ~6px under the chips — the field measured 46px beside 40px siblings. Flex removes the baseline and lets a second row of chips wrap instead of clipping.
+    .order_download_permissions .select2-container .select2-selection__rendered {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 0;
+    }
+
+    // The search input takes the rest of the row so clicking anywhere in the field still focuses it.
+    .order_download_permissions .select2-container .select2-search--inline {
+        order: 2;
+        flex: 1 1 80px;
+    }
+
+    // The clear-all control is stock select2 — 16px at weight 700 in its own grey — sitting in the same field as a chip remove this file already set to 15px in the muted grey. Two different crosses in one control.
+    .order_download_permissions .select2-container .select2-selection__clear {
+        order: 3;
+        margin: 0;
+        margin-inline-start: auto;
+        color: $od-muted;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1;
+
+        &:hover {
+            color: $od-text;
+        }
+    }
+
     // Each chosen product arrives as a stock select2 chip — #e4e4e4 on a #aaa border at 16px — which is the only control in the view still wearing the plugin's own colours. Sized and coloured like the rest of the card instead.
     .order_download_permissions .select2-container .select2-selection__choice {
         display: inline-flex;
