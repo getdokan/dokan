@@ -350,21 +350,12 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 }
             }
 
-            if ( dokan_downloadable_files_require_approval( $post_id, $files ) ) {
-                // existing customers keep the approved files until an admin publishes the product
-                update_post_meta( $post_id, '_dokan_pending_downloadable_files', $files );
-            } else {
-                // grant permission to any newly added files on any existing orders for this product prior to saving
-                do_action( 'dokan_process_file_download', $post_id, 0, $files );
+            // grant permission to any newly added files on any existing orders for this product prior to saving
+            do_action( 'dokan_process_file_download', $post_id, 0, $files );
 
-                update_post_meta( $post_id, '_downloadable_files', $files );
-                delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
-            }
-        } elseif ( dokan_downloadable_files_require_approval( $post_id, [] ) ) {
-            update_post_meta( $post_id, '_dokan_pending_downloadable_files', [] );
+            update_post_meta( $post_id, '_downloadable_files', $files );
         } else {
             update_post_meta( $post_id, '_downloadable_files', '' );
-            delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
         }
 
         update_post_meta( $post_id, '_download_limit', $_download_limit );
@@ -381,7 +372,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             update_post_meta( $post_id, '_download_type', wc_clean( $data['_download_type'] ) );
         }
     } else {
-        // the product is no longer downloadable; a staged file set must not apply on approval
+        // the product is no longer downloadable; a staged replacement must not apply on approval
         delete_post_meta( $post_id, '_dokan_pending_downloadable_files' );
     }
 
@@ -1105,7 +1096,8 @@ add_filter( 'woocommerce_product_review_comment_form_args', 'dokan_vendor_produc
  *
  * @param int $product_id Product or variation ID.
  *
- * @return array|null Staged files keyed by download id (may be empty when the vendor removed all files), null when nothing is staged.
+ * @return array|null Staged files keyed by download id (may be empty when the vendor
+ *                    removed every file), null when nothing is staged.
  */
 function dokan_get_staged_downloadable_files( $product_id ) {
     $staged = get_post_meta( $product_id, '_dokan_pending_downloadable_files', true );
@@ -1131,10 +1123,10 @@ function dokan_get_downloadable_files_released_statuses( $product_id = 0 ) {
      *
      * @since DOKAN_SINCE
      *
-     * @param string[] $released_statuses Post statuses that release staged files. Default `publish`.
+     * @param string[] $released_statuses Post statuses that release staged files.
      * @param int      $product_id        Product ID.
      */
-    return (array) apply_filters( 'dokan_downloadable_files_released_statuses', [ 'publish' ], $product_id );
+    return (array) apply_filters( 'dokan_downloadable_files_released_statuses', [ 'publish', 'private' ], $product_id );
 }
 
 /**
@@ -1171,32 +1163,34 @@ function dokan_downloadable_file_sets_differ( $files_a, $files_b ) {
 }
 
 /**
- * Check whether a changed set of downloadable files must be held back for admin approval.
+ * Check whether downloadable file changes on this product are held for admin approval.
  *
- * While a product edit awaits review, customers who already purchased must keep the
- * last approved files. A changed file set is therefore staged in the
- * `_dokan_pending_downloadable_files` meta instead of being written to
- * `_downloadable_files`, and applied when the product is published.
+ * Three things must hold: the product is not in a released status, the save is genuinely
+ * subject to review (a vendor whose products need approval — not a trusted vendor, a
+ * marketplace with approval switched off, or a shop manager's own product), and at least
+ * one customer already holds a download permission, since the hold exists to protect them.
  *
  * @since DOKAN_SINCE
  *
- * @param int         $product_id Product or variation ID (the ID download permissions are stored under).
- * @param array       $new_files  Submitted downloadable files, keyed by download id.
- * @param string|null $status     Status the product is being saved with. Defaults to the stored status.
+ * @param int $product_id Product or variation ID (the ID permissions are stored under).
  *
  * @return bool
  */
-function dokan_downloadable_files_require_approval( $product_id, $new_files, $status = null ) {
+function dokan_downloadable_hold_applies( $product_id ) {
     global $wpdb;
 
-    $status           = null === $status ? get_post_status( $product_id ) : $status;
-    $require_approval = false;
+    $product  = wc_get_product( $product_id );
+    $owner_id = $product && $product->is_type( 'variation' ) ? $product->get_parent_id() : $product_id;
+    $applies  = false;
 
-    if ( $product_id && ! in_array( $status, dokan_get_downloadable_files_released_statuses( $product_id ), true ) ) {
-        $live_files = get_post_meta( $product_id, '_downloadable_files', true );
+    if ( $owner_id && ! in_array( get_post_status( $owner_id ), dokan_get_downloadable_files_released_statuses( $owner_id ), true ) ) {
+        $author = (int) get_post_field( 'post_author', $owner_id );
 
-        if ( dokan_downloadable_file_sets_differ( is_array( $live_files ) ? $live_files : [], $new_files ) ) {
-            // staging only matters when somebody already holds a download permission for this product
+        // only a vendor whose saves actually pass through review is held: someone who
+        // can manage WooCommerce is the reviewer, not the reviewed, and a trusted vendor
+        // or a marketplace with approval switched off has no review step at all
+        if ( $author && ! user_can( $author, 'manage_woocommerce' ) && 'publish' !== dokan_get_default_product_status( $author ) ) {
+            // the hold only matters when somebody already holds a download permission
             $has_permissions = $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->prepare(
                     "SELECT permission_id FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d LIMIT 1",
@@ -1204,308 +1198,242 @@ function dokan_downloadable_files_require_approval( $product_id, $new_files, $st
                 )
             );
 
-            $require_approval = ! empty( $has_permissions );
+            $applies = ! empty( $has_permissions );
         }
     }
 
     /**
-     * Filter whether a changed downloadable file set is staged until admin approval.
+     * Filter whether downloadable file changes on a product are held until admin approval.
      *
      * @since DOKAN_SINCE
      *
-     * @param bool   $require_approval Whether the new file set should be staged.
-     * @param int    $product_id       Product or variation ID.
-     * @param array  $new_files        Submitted downloadable files, keyed by download id.
-     * @param string $status           Status the product is being saved with.
+     * @param bool $applies    Whether the hold applies.
+     * @param int  $product_id Product or variation ID.
      */
-    return (bool) apply_filters( 'dokan_downloadable_files_require_approval', $require_approval, $product_id, $new_files, $status );
+    return (bool) apply_filters( 'dokan_downloadable_hold_applies', $applies, $product_id );
 }
 
 /**
- * Convert WC_Product_Download objects to the array format stored in `_downloadable_files`.
+ * Track products whose staged files were released during this request.
+ *
+ * WooCommerce writes `_downloadable_files` *after* the `save_post` that triggers the
+ * release, so a save that both approves the product and sets the files lands its own set
+ * last. Remembering the release lets that later write re-point existing permissions at
+ * what actually ended up live, instead of leaving them on the released set.
  *
  * @since DOKAN_SINCE
  *
- * @param WC_Product_Download[]|array $downloads Download objects.
- *
- * @return array Files keyed by download id.
- */
-function dokan_downloads_to_files_array( $downloads ) {
-    $files = [];
-
-    foreach ( (array) $downloads as $key => $download ) {
-        if ( $download instanceof WC_Product_Download ) {
-            $files[ $download->get_id() ] = [
-                'name' => $download->get_name(),
-                'file' => $download->get_file(),
-            ];
-        } elseif ( is_array( $download ) && ! empty( $download['file'] ) ) {
-            $files[ $key ] = [
-                'name' => isset( $download['name'] ) ? $download['name'] : '',
-                'file' => $download['file'],
-            ];
-        }
-    }
-
-    return $files;
-}
-
-/**
- * Convert a `_downloadable_files` style array to WC_Product_Download objects.
- *
- * @since DOKAN_SINCE
- *
- * @param array $files Files keyed by download id.
- *
- * @return WC_Product_Download[]
- */
-function dokan_files_array_to_downloads( $files ) {
-    $downloads = [];
-
-    foreach ( (array) $files as $key => $file ) {
-        if ( ! is_array( $file ) || empty( $file['file'] ) ) {
-            continue;
-        }
-
-        $download = new WC_Product_Download();
-        $download->set_id( (string) $key );
-        $download->set_name( ! empty( $file['name'] ) ? $file['name'] : wc_get_filename_from_url( $file['file'] ) );
-        $download->set_file( $file['file'] );
-        $download->set_enabled( isset( $file['enabled'] ) ? (bool) $file['enabled'] : true );
-
-        $downloads[] = $download;
-    }
-
-    return $downloads;
-}
-
-/**
- * Track products whose download permissions must be re-synced with their live files.
- *
- * When a save both publishes and changes the files, the pre-save hook drops any staged
- * replacement and flags the product here. Syncing is idempotent (it reconciles
- * permissions to the current live files), so the post-save hook may run it on every
- * save of the request without clearing the flag; a `shutdown` pass runs it once more
- * against the final files and clears the flags. This survives WooCommerce nesting a
- * second save inside the first, whose early `after` fires before the new files are written.
- *
- * @since DOKAN_SINCE
- *
- * @param int|null $product_id Product or variation ID, or null for the `flush` action.
- * @param string   $action     'flag', 'peek' (default) or 'flush'.
+ * @param int  $product_id Product or variation ID.
+ * @param bool $set        True to record a release, null to read.
  *
  * @return bool
  */
-function dokan_downloadable_files_permission_sync( $product_id = null, $action = 'peek' ) {
-    static $flags      = [];
-    static $registered = false;
+function dokan_downloadable_files_released_this_request( $product_id, $set = null ) {
+    static $released = [];
 
-    if ( 'flag' === $action ) {
-        $flags[ $product_id ] = true;
+    if ( is_array( $set ) ) {
+        $released[ $product_id ] = [
+            'files' => $set,
+            'token' => did_action( 'save_post' ),
+        ];
 
-        if ( ! $registered ) {
-            $registered = true;
-            add_action( 'shutdown', 'dokan_flush_downloadable_permission_syncs', 20 );
-        }
-
-        return true;
+        return $set;
     }
 
-    if ( 'flush' === $action ) {
-        foreach ( array_keys( $flags ) as $pid ) {
-            dokan_sync_download_permissions_with_product_files( $pid );
-        }
-
-        $flags = [];
-
-        return true;
+    if ( ! isset( $released[ $product_id ] ) ) {
+        return null;
     }
 
-    return ! empty( $flags[ $product_id ] );
+    // only the save that performed the release may claim it: WooCommerce writes the meta
+    // straight after that save's `save_post`, so the counter has not moved on yet
+    if ( $released[ $product_id ]['token'] !== did_action( 'save_post' ) ) {
+        unset( $released[ $product_id ] );
+
+        return null;
+    }
+
+    return $released[ $product_id ]['files'];
 }
 
 /**
- * Flush pending download-permission syncs at the end of the request.
+ * Hold a changed downloadable file set until an admin approves it.
+ *
+ * Every save path writes `_downloadable_files` through `update_post_meta()` — the classic
+ * vendor form writes it directly, and WooCommerce CRUD (the REST endpoints, the product
+ * editor, the wp-admin screen and WP-CLI) writes it from `update_downloads()`. Filtering
+ * the meta write itself therefore covers all of them from one place: while the product
+ * awaits review the submitted set is stored in `_dokan_pending_downloadable_files` and the
+ * live value is left untouched, so existing customers keep the files they already have.
  *
  * @since DOKAN_SINCE
  *
- * @return void
+ * @param mixed  $check      Short-circuit value; null lets the write continue.
+ * @param int    $object_id  Product or variation ID.
+ * @param string $meta_key   Meta key being written.
+ * @param mixed  $meta_value Value being written.
+ *
+ * @return mixed True to swallow the write, otherwise the unchanged short-circuit value.
  */
-function dokan_flush_downloadable_permission_syncs() {
-    dokan_downloadable_files_permission_sync( null, 'flush' );
+function dokan_hold_downloadable_files_meta_write( $check, $object_id, $meta_key, $meta_value = null ) {
+    if ( null !== $check || '_downloadable_files' !== $meta_key ) {
+        return $check;
+    }
+
+    if ( ! in_array( get_post_type( $object_id ), [ 'product', 'product_variation' ], true ) ) {
+        return $check;
+    }
+
+    if ( dokan_releasing_staged_downloadable_files() ) {
+        // the release step is writing the approved files; never intercept that
+        return $check;
+    }
+
+    // WooCommerce slashes its own writes and `update_post_meta()` unslashes once, so the
+    // real value is the unslashed one; it is re-slashed when stored so it round-trips
+    $new_files = is_array( $meta_value ) ? wp_unslash( $meta_value ) : [];
+
+    if ( ! dokan_downloadable_hold_applies( $object_id ) ) {
+        $staged_here  = dokan_get_staged_downloadable_files( $object_id );
+        $pre_release  = dokan_downloadable_files_released_this_request( $object_id );
+
+        if ( null === $staged_here && null === $pre_release ) {
+            return $check;
+        }
+
+        // Work out whether this save is really setting the files or just echoing back
+        // what it was given. A REST client that reads a product, flips its status and
+        // PUTs it back sends the files it was handed — that is an approval, not an edit.
+        $baseline = null !== $pre_release ? $pre_release : (array) get_post_meta( $object_id, '_downloadable_files', true );
+
+        if ( ! dokan_downloadable_file_sets_differ( $baseline, $new_files ) ) {
+            // an echo: leave the released files in place
+            return null !== $pre_release ? true : $check;
+        }
+
+        // a genuine edit by the approver: their set wins over the staged submission, and
+        // `_downloadable_files` still holds the previous value so the permission handler
+        // can move existing customers onto the incoming one
+        delete_post_meta( $object_id, '_dokan_pending_downloadable_files' );
+
+        $variation_id = 'product_variation' === get_post_type( $object_id ) ? $object_id : 0;
+        $owner_id     = $variation_id ? wp_get_post_parent_id( $object_id ) : $object_id;
+
+        dokan_releasing_staged_downloadable_files( true );
+        do_action( 'dokan_process_file_download', $owner_id, $variation_id, $new_files );
+        dokan_releasing_staged_downloadable_files( false );
+
+        return $check;
+    }
+
+    $live_files = get_post_meta( $object_id, '_downloadable_files', true );
+
+    if ( ! dokan_downloadable_file_sets_differ( is_array( $live_files ) ? $live_files : [], $new_files ) ) {
+        // The submitted set matches what is already live. Only the vendor putting their
+        // own files back counts as withdrawing the submission: anyone else saving the
+        // product — an admin opening it to review the pending files, for instance — is
+        // re-submitting the rendered approved set and must not discard it.
+        $owner_id = 'product_variation' === get_post_type( $object_id ) ? wp_get_post_parent_id( $object_id ) : $object_id;
+
+        if ( dokan_is_product_author( $owner_id ) ) {
+            delete_post_meta( $object_id, '_dokan_pending_downloadable_files' );
+        }
+
+        return $check;
+    }
+
+    update_post_meta( $object_id, '_dokan_pending_downloadable_files', wp_slash( $new_files ) );
+
+    // swallow the write: the approved files stay live for existing customers
+    return true;
 }
+add_filter( 'update_post_metadata', 'dokan_hold_downloadable_files_meta_write', 10, 5 );
 
 /**
- * Hold changed downloadable files on WooCommerce CRUD saves while the product awaits approval.
+ * Hold the removal of every downloadable file until an admin approves it.
  *
- * Covers every path that saves through `WC_Product::save()`: the Dokan REST product
- * endpoints, the new product editor, `Product\Manager::update()`, the wp-admin product
- * screen and WP-CLI. For a held (unpublished) status the submitted files are staged and
- * the approved files are kept on the object, so WooCommerce persists those unchanged.
- * The actual release happens later, on `save_post`, once every write in the request is done.
+ * WooCommerce deletes `_downloadable_files` rather than writing an empty value when a
+ * product ends up with no files, so the deletion needs the same hold as a replacement.
  *
  * @since DOKAN_SINCE
  *
- * @param WC_Product $product Product being saved.
+ * @param mixed  $check     Short-circuit value; null lets the delete continue.
+ * @param int    $object_id Product or variation ID.
+ * @param string $meta_key  Meta key being deleted.
  *
- * @return void
+ * @return mixed True to swallow the delete, otherwise the unchanged short-circuit value.
  */
-function dokan_hold_downloadable_files_before_product_save( $product ) {
-    if ( ! $product instanceof WC_Product || ! $product->get_id() ) {
-        return;
-    }
-
-    $product_id   = $product->get_id();
-    $is_variation = $product->is_type( 'variation' );
-    $status       = $is_variation ? get_post_status( $product->get_parent_id() ) : $product->get_status();
-
-    if ( ! $product->get_downloadable() ) {
-        // no longer downloadable: a pending replacement must not apply on approval
-        delete_post_meta( $product_id, '_dokan_pending_downloadable_files' );
-
-        return;
-    }
-
-    if ( ! array_key_exists( 'downloads', $product->get_changes() ) ) {
-        return;
-    }
-
-    $live_files       = get_post_meta( $product_id, '_downloadable_files', true );
-    $approved         = is_array( $live_files ) ? $live_files : [];
-    $new_files        = dokan_downloads_to_files_array( $product->get_downloads() );
-    $changed          = dokan_downloadable_file_sets_differ( $approved, $new_files );
-    $owner_product_id = $is_variation ? $product->get_parent_id() : $product_id;
-    $released         = in_array( $status, dokan_get_downloadable_files_released_statuses( $product_id ), true );
-
-    if ( $released ) {
-        // publishing while also changing the files: the submitted files win. Drop any
-        // staged replacement and re-sync permissions once the new files are written.
-        if ( $changed && null !== dokan_get_staged_downloadable_files( $product_id ) ) {
-            delete_post_meta( $product_id, '_dokan_pending_downloadable_files' );
-            dokan_downloadable_files_permission_sync( $product_id, 'flag' );
-        }
-
-        return;
-    }
-
-    if ( ! $changed ) {
-        // the vendor resubmitting the approved files cancels their pending replacement
-        if ( dokan_is_product_author( $owner_product_id ) ) {
-            delete_post_meta( $product_id, '_dokan_pending_downloadable_files' );
-        }
-
-        return;
-    }
-
-    if ( ! dokan_downloadable_files_require_approval( $product_id, $new_files, $status ) ) {
-        return;
-    }
-
-    update_post_meta( $product_id, '_dokan_pending_downloadable_files', $new_files );
-
-    try {
-        // keep the approved files on the object so WooCommerce persists them unchanged
-        $product->set_downloads( dokan_files_array_to_downloads( $approved ) );
-    } catch ( Exception $e ) {
-        // the approved files can no longer be re-set; fall back to the regular save
-        delete_post_meta( $product_id, '_dokan_pending_downloadable_files' );
-    }
+function dokan_hold_downloadable_files_meta_delete( $check, $object_id, $meta_key ) {
+    return dokan_hold_downloadable_files_meta_write( $check, $object_id, $meta_key, [] );
 }
-add_action( 'woocommerce_before_product_object_save', 'dokan_hold_downloadable_files_before_product_save' );
+add_filter( 'delete_post_metadata', 'dokan_hold_downloadable_files_meta_delete', 10, 3 );
 
 /**
- * Re-sync download permissions after a publish-time file change on a CRUD save.
- *
- * When a save both publishes and changes the files, `before` drops the staged
- * replacement and flags the product; this runs after WooCommerce writes the new
- * files so existing customers are moved onto them (WooCommerce core no longer
- * syncs permissions on file changes).
+ * Track whether the release step is currently writing a product's approved files.
  *
  * @since DOKAN_SINCE
  *
- * @param WC_Product $product Saved product.
+ * @param bool|null $set True to enter the release, false to leave it, null to read.
  *
- * @return void
+ * @return bool
  */
-function dokan_sync_downloadable_permissions_after_product_save( $product ) {
-    if ( ! $product instanceof WC_Product || ! $product->get_id() ) {
-        return;
+function dokan_releasing_staged_downloadable_files( $set = null ) {
+    static $releasing = false;
+
+    if ( null !== $set ) {
+        $releasing = (bool) $set;
     }
 
-    $product_id = $product->get_id();
-
-    if ( ! dokan_downloadable_files_permission_sync( $product_id, 'peek' ) ) {
-        return;
-    }
-
-    dokan_sync_download_permissions_with_product_files( $product_id );
+    return $releasing;
 }
-add_action( 'woocommerce_after_product_object_save', 'dokan_sync_downloadable_permissions_after_product_save', PHP_INT_MAX );
 
 /**
- * Sync existing download permissions with the files currently live on a product.
+ * Block download permission changes while a product's files are held.
  *
- * Permissions pointing at files no longer on the product are revoked and files not yet
- * granted are granted on every order that holds a permission for the product.
+ * The permission handler runs before the file meta is written, so the hold has to stop it
+ * separately: without this the vendor's save would move existing customers onto files that
+ * are not live yet.
  *
  * @since DOKAN_SINCE
  *
- * @param int $product_id Product or variation ID.
+ * @param bool   $allowed     Whether the permission change may go ahead.
+ * @param string $download_id Download id.
+ * @param int    $product_id  Product or variation ID.
  *
- * @return void
+ * @return bool
  */
-function dokan_sync_download_permissions_with_product_files( $product_id ) {
-    global $wpdb;
+function dokan_block_held_download_permission_change( $allowed, $download_id, $product_id ) {
+    static $held = [];
 
-    $product = wc_get_product( $product_id );
+    if ( dokan_releasing_staged_downloadable_files() ) {
+        // a release re-evaluates from scratch, and it is the only thing that changes the
+        // answer mid-request, so the cache below cannot go stale behind it
+        $held = [];
 
-    if ( ! $product ) {
-        return;
+        return $allowed;
     }
 
-    $live_ids = array_map( 'strval', array_keys( (array) $product->get_downloads() ) );
-    $table    = "{$wpdb->prefix}woocommerce_downloadable_product_permissions";
-    $rows     = $wpdb->get_results( $wpdb->prepare( "SELECT permission_id, order_id, download_id FROM {$table} WHERE product_id = %d", $product_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    // The permission handler asks once per download id per order; without this the hold
+    // check would repeat a product load, a capability check and a query for each one.
+    // Keyed by status as well as id, since the status is what the answer turns on.
+    $key = $product_id . '|' . get_post_status( $product_id );
 
-    if ( empty( $rows ) ) {
-        return;
+    if ( ! isset( $held[ $key ] ) ) {
+        $held[ $key ] = dokan_downloadable_hold_applies( $product_id );
     }
 
-    $granted = [];
-
-    foreach ( $rows as $row ) {
-        if ( ! in_array( (string) $row->download_id, $live_ids, true ) ) {
-            $wpdb->delete( $table, [ 'permission_id' => $row->permission_id ], [ '%d' ] ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            continue;
-        }
-
-        $granted[ $row->order_id ][] = (string) $row->download_id;
-    }
-
-    foreach ( array_unique( wp_list_pluck( $rows, 'order_id' ) ) as $order_id ) {
-        $order = wc_get_order( $order_id );
-
-        if ( ! $order ) {
-            continue;
-        }
-
-        $missing = array_diff( $live_ids, isset( $granted[ $order_id ] ) ? $granted[ $order_id ] : [] );
-
-        foreach ( $missing as $download_id ) {
-            wc_downloadable_file_permission( $download_id, $product_id, $order );
-        }
-    }
+    return $held[ $key ] ? false : $allowed;
 }
+add_filter( 'woocommerce_process_product_file_download_paths_remove_access_to_old_file', 'dokan_block_held_download_permission_change', 10, 3 );
+add_filter( 'woocommerce_process_product_file_download_paths_grant_access_to_new_file', 'dokan_block_held_download_permission_change', 10, 3 );
 
 /**
- * Release staged downloadable files once a product is published.
+ * Release staged downloadable files once a product is approved.
  *
- * Runs late on `save_post` (priority 999) so it is the final word on every publish
- * route — the Dokan admin dashboard, WP quick edit, the WooCommerce product edit
- * screen, REST and WP-CLI. WooCommerce's own meta box save (priority 1) re-writes the
- * previously approved files from the submitted form; this runs afterwards. If the live
- * files were changed directly this request (an admin editing the rows while publishing),
- * those win and permissions are synced to them; otherwise the staged files are applied.
+ * Runs late on `save_post` (priority 999) so it is the final word on every approval route
+ * — the Dokan admin dashboard, WP quick edit, the WooCommerce product edit screen, REST
+ * and WP-CLI. WooCommerce's own meta box save (priority 1) re-writes the previously
+ * approved files from the submitted form; this runs afterwards. If the approving save set
+ * the files itself, that set wins and the staged submission is discarded.
  *
  * @since DOKAN_SINCE
  *
@@ -1533,7 +1461,6 @@ function dokan_apply_staged_downloadable_files( $post_id, $post ) {
         [
             'product_id'   => $post_id,
             'variation_id' => 0,
-            'meta_id'      => $post_id,
         ],
     ];
 
@@ -1542,26 +1469,172 @@ function dokan_apply_staged_downloadable_files( $post_id, $post ) {
             $targets[] = [
                 'product_id'   => $post_id,
                 'variation_id' => (int) $child,
-                'meta_id'      => (int) $child,
             ];
         }
     }
 
     foreach ( $targets as $target ) {
-        $staged = dokan_get_staged_downloadable_files( $target['meta_id'] );
+        $meta_id = $target['variation_id'] ? $target['variation_id'] : $target['product_id'];
+        $staged  = dokan_get_staged_downloadable_files( $meta_id );
 
         if ( null === $staged ) {
             continue;
         }
 
+        if ( 'yes' !== get_post_meta( $meta_id, '_downloadable', true ) ) {
+            // the product no longer serves downloads; the submission is moot
+            delete_post_meta( $meta_id, '_dokan_pending_downloadable_files' );
+
+            continue;
+        }
+
+        $pre_release = get_post_meta( $meta_id, '_downloadable_files', true );
+        dokan_downloadable_files_released_this_request( $meta_id, is_array( $pre_release ) ? $pre_release : [] );
+        dokan_releasing_staged_downloadable_files( true );
+
         // move existing customers over to the newly approved files; the permission
         // handler diffs against the still-live approved files, so it must run first
         do_action( 'dokan_process_file_download', $target['product_id'], $target['variation_id'], $staged );
 
-        update_post_meta( $target['meta_id'], '_downloadable_files', empty( $staged ) ? '' : $staged );
+        if ( empty( $staged ) ) {
+            delete_post_meta( $meta_id, '_downloadable_files' );
+        } else {
+            // slashed to match how WooCommerce writes this meta, since it is unslashed once on the way in
+            update_post_meta( $meta_id, '_downloadable_files', wp_slash( $staged ) );
+        }
+
+        dokan_releasing_staged_downloadable_files( false );
 
         // cleared last so a fatal in a permission hook does not drop the vendor's submission
-        delete_post_meta( $target['meta_id'], '_dokan_pending_downloadable_files' );
+        delete_post_meta( $meta_id, '_dokan_pending_downloadable_files' );
     }
 }
 add_action( 'save_post', 'dokan_apply_staged_downloadable_files', 999, 2 );
+
+/**
+ * Discard staged downloadable files when a product is trashed.
+ *
+ * Trashing a pending product is a plausible "reject" gesture, so an untrashed and later
+ * published product must not silently deliver a replacement submitted before the trash.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param int $post_id Post ID.
+ *
+ * @return void
+ */
+function dokan_discard_staged_downloadable_files_on_trash( $post_id ) {
+    if ( 'product' !== get_post_type( $post_id ) ) {
+        return;
+    }
+
+    $ids     = [ $post_id ];
+    $product = wc_get_product( $post_id );
+
+    if ( $product && $product->is_type( 'variable' ) ) {
+        $ids = array_merge( $ids, array_map( 'absint', $product->get_children() ) );
+    }
+
+    foreach ( $ids as $id ) {
+        delete_post_meta( $id, '_dokan_pending_downloadable_files' );
+    }
+}
+add_action( 'trashed_post', 'dokan_discard_staged_downloadable_files_on_trash' );
+
+/**
+ * Build the REST `downloads` shape from a staged file set.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array $staged Staged files keyed by download id.
+ *
+ * @return array
+ */
+function dokan_staged_downloads_for_rest( $staged, $as_attachment_ids = false ) {
+    $downloads = [];
+
+    foreach ( (array) $staged as $key => $file ) {
+        $url = isset( $file['file'] ) ? $file['file'] : '';
+
+        $downloads[] = [
+            // the product editor keys rows by attachment id, the REST product schema by download id
+            'id'   => $as_attachment_ids ? (string) attachment_url_to_postid( $url ) : (string) $key,
+            'name' => isset( $file['name'] ) ? $file['name'] : '',
+            'file' => $url,
+        ];
+    }
+
+    return $downloads;
+}
+
+/**
+ * Show a vendor their own pending downloadable files in REST product responses.
+ *
+ * While an update awaits approval the live files are deliberately the approved ones, so
+ * without this the vendor would be handed back files they did not submit and would have
+ * no way to tell that their upload is being held.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param WP_REST_Response $response Response object.
+ * @param WC_Product       $product  Product object.
+ *
+ * @return WP_REST_Response
+ */
+function dokan_rest_show_staged_downloadable_files( $response, $product ) {
+    if ( ! $response instanceof WP_REST_Response || ! $product instanceof WC_Product ) {
+        return $response;
+    }
+
+    $product_id = $product->get_id();
+    $staged     = dokan_get_staged_downloadable_files( $product_id );
+    $data       = $response->get_data();
+
+    $data['dokan_downloads_awaiting_approval'] = null !== $staged;
+
+    if ( null !== $staged && dokan_is_product_author( $product->is_type( 'variation' ) ? $product->get_parent_id() : $product_id ) ) {
+        $data['downloads'] = dokan_staged_downloads_for_rest( $staged );
+    }
+
+    $response->set_data( $data );
+
+    return $response;
+}
+add_filter( 'woocommerce_rest_prepare_product_object', 'dokan_rest_show_staged_downloadable_files', 20, 2 );
+add_filter( 'woocommerce_rest_prepare_product_variation_object', 'dokan_rest_show_staged_downloadable_files', 20, 2 );
+
+/**
+ * Show a vendor their own pending downloadable files in the product editor schema.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array $data       Editor payload.
+ * @param int   $product_id  Product ID.
+ *
+ * @return array
+ */
+function dokan_editor_show_staged_downloadable_files( $data, $product_id = 0 ) {
+    if ( empty( $data['form_items'] ) || ! is_array( $data['form_items'] ) ) {
+        return $data;
+    }
+
+    $product_id = $product_id ? (int) $product_id : (int) ( $data['product_id'] ?? 0 );
+    $staged     = $product_id ? dokan_get_staged_downloadable_files( $product_id ) : null;
+
+    if ( null === $staged || ! dokan_is_product_author( $product_id ) ) {
+        return $data;
+    }
+
+    foreach ( $data['form_items'] as &$item ) {
+        if ( isset( $item['id'] ) && 'downloads' === $item['id'] ) {
+            $item['value'] = dokan_staged_downloads_for_rest( $staged, true );
+        }
+    }
+
+    unset( $item );
+
+    $data['dokan_downloads_awaiting_approval'] = true;
+
+    return $data;
+}
+add_filter( 'dokan_product_editor_args', 'dokan_editor_show_staged_downloadable_files', 10, 2 );

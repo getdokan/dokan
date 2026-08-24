@@ -41,7 +41,7 @@ class Hooks {
         add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'save_custom_bulk_edit_field' ], 10, 1 );
 
         // Downloadable files a vendor submitted for approval
-        add_action( 'woocommerce_product_options_downloads', [ $this, 'render_pending_downloadable_files' ] );
+        add_action( 'woocommerce_product_options_general_product_data', [ $this, 'render_pending_downloadable_files' ], 99 );
         add_action( 'admin_notices', [ $this, 'pending_downloadable_files_notice' ] );
     }
 
@@ -291,33 +291,39 @@ class Hooks {
             return;
         }
 
-        $staged = dokan_get_staged_downloadable_files( $post->ID );
+        $staged = $this->collect_staged_downloadable_files( $post->ID );
 
-        if ( null === $staged ) {
+        if ( ! $staged ) {
             return;
         }
         ?>
         <div class="options_group dokan-pending-downloadable-files">
             <p class="form-field">
-                <strong><?php esc_html_e( 'Replacement files awaiting your approval', 'dokan-lite' ); ?></strong><br>
-                <?php esc_html_e( 'The vendor submitted these files with the pending update. Customers who already purchased keep the files listed above until you publish this product; publishing delivers the files below to them.', 'dokan-lite' ); ?>
+                <label><?php esc_html_e( 'Awaiting approval', 'dokan-lite' ); ?></label>
+                <span class="description">
+                    <strong><?php esc_html_e( 'The vendor submitted replacement files with this pending update.', 'dokan-lite' ); ?></strong><br>
+                    <?php esc_html_e( 'Customers who already purchased keep the files listed above until you publish this product; publishing delivers the files below to them.', 'dokan-lite' ); ?>
+                </span>
             </p>
-            <?php if ( empty( $staged ) ) : ?>
-                <p class="form-field"><?php esc_html_e( 'The vendor removed all downloadable files. Publishing will revoke the downloads of existing customers.', 'dokan-lite' ); ?></p>
-            <?php else : ?>
-                <ul class="form-field">
-                    <?php foreach ( $staged as $file ) : ?>
-                        <?php
-                        $file_url  = isset( $file['file'] ) ? $file['file'] : '';
-                        $file_name = ! empty( $file['name'] ) ? $file['name'] : wc_get_filename_from_url( $file_url );
-                        ?>
-                        <li>
-                            <strong><?php echo esc_html( $file_name ); ?></strong>
-                            &mdash; <a href="<?php echo esc_url( $file_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $file_url ); ?></a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
+            <?php foreach ( $staged as $entry ) : ?>
+                <p class="form-field">
+                    <label><?php echo esc_html( $entry['label'] ); ?></label>
+                    <span class="description">
+                        <?php if ( empty( $entry['files'] ) ) : ?>
+                            <?php esc_html_e( 'The vendor removed all downloadable files. Publishing will revoke the downloads of existing customers.', 'dokan-lite' ); ?>
+                        <?php else : ?>
+                            <?php foreach ( $entry['files'] as $file ) : ?>
+                                <?php
+                                $file_url  = isset( $file['file'] ) ? $file['file'] : '';
+                                $file_name = ! empty( $file['name'] ) ? $file['name'] : wc_get_filename_from_url( $file_url );
+                                ?>
+                                <strong><?php echo esc_html( $file_name ); ?></strong> &mdash;
+                                <a href="<?php echo esc_url( $file_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $file_url ); ?></a><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </span>
+                </p>
+            <?php endforeach; ?>
         </div>
         <?php
     }
@@ -337,7 +343,7 @@ class Hooks {
             return;
         }
 
-        if ( null === dokan_get_staged_downloadable_files( $post->ID ) ) {
+        if ( ! $this->collect_staged_downloadable_files( $post->ID ) ) {
             return;
         }
         ?>
@@ -345,5 +351,49 @@ class Hooks {
             <p><?php esc_html_e( 'This product has replacement downloadable files awaiting your approval. Existing customers keep the currently approved files until you publish; review the pending files under General → Downloadable files before publishing.', 'dokan-lite' ); ?></p>
         </div>
         <?php
+    }
+
+    /**
+     * Collect the staged downloadable file sets of a product and its variations.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id Product ID.
+     *
+     * @return array<int, array{id:int, label:string, files:array}>
+     */
+    protected function collect_staged_downloadable_files( $product_id ) {
+        $product = wc_get_product( $product_id );
+
+        if ( ! $product ) {
+            return [];
+        }
+
+        $ids = [ $product_id ];
+
+        if ( $product->is_type( 'variable' ) ) {
+            $ids = array_merge( $ids, array_map( 'absint', $product->get_children() ) );
+        }
+
+        $entries = [];
+
+        foreach ( $ids as $id ) {
+            $files = dokan_get_staged_downloadable_files( $id );
+
+            if ( null === $files ) {
+                continue;
+            }
+
+            $entries[] = [
+                'id'    => $id,
+                'files' => $files,
+                'label' => $id === $product_id
+                    ? __( 'Pending files', 'dokan-lite' )
+                    /* translators: %s: variation name. */
+                    : sprintf( __( 'Pending files — %s', 'dokan-lite' ), wc_get_product( $id ) ? wc_get_product( $id )->get_name() : $id ),
+            ];
+        }
+
+        return $entries;
     }
 }

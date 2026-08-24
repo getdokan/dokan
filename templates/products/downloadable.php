@@ -43,8 +43,8 @@
                     <tbody>
                         <?php
                         // while an edit awaits admin approval, show the staged files, not the approved ones
-                        $staged_files       = get_post_meta( $post_id, '_dokan_pending_downloadable_files', true );
-                        $downloadable_files = is_array( $staged_files ) ? $staged_files : get_post_meta( $post_id, '_downloadable_files', true );
+                        $staged_files       = dokan_get_staged_downloadable_files( $post_id );
+                        $downloadable_files = null !== $staged_files ? $staged_files : get_post_meta( $post_id, '_downloadable_files', true );
 
                         if ( $downloadable_files ) {
                             foreach ( $downloadable_files as $key => $file ) {
@@ -55,7 +55,7 @@
                     </tbody>
                 </table>
 
-                <?php if ( is_array( $staged_files ) ) : ?>
+                <?php if ( null !== $staged_files ) : ?>
                     <p class="dokan-alert dokan-alert-warning">
                         <?php esc_html_e( 'These files are awaiting admin approval. Customers who already purchased keep the currently approved files until the product is published.', 'dokan-lite' ); ?>
                     </p>
