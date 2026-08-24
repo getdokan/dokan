@@ -77,6 +77,18 @@ env:
     STRIPE_EXPRESS_VENDOR1_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR1_ACCT}}
     STRIPE_EXPRESS_VENDOR2_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR2_ACCT}}
     STRIPE_EXPRESS_REQUIRED: true
+    # Stripe Connect test keys + the real CONNECT connected accounts. A DIFFERENT Stripe platform
+    # from the Express set above, so the account ids are not interchangeable. Connect additionally
+    # needs an OAuth client id: Helper::is_ready() returns false without one and the gateway never
+    # reaches the checkout, so a key pair alone would leave every Connect spec skipping to green.
+    TEST_PUBLISH_KEY_STRIPE_CONNECT: ${{secrets.TEST_PUBLISH_KEY_STRIPE_CONNECT}}
+    TEST_SECRET_KEY_STRIPE_CONNECT: ${{secrets.TEST_SECRET_KEY_STRIPE_CONNECT}}
+    TEST_CLIENT_ID_STRIPE_CONNECT: ${{secrets.TEST_CLIENT_ID_STRIPE_CONNECT}}
+    STRIPE_VENDOR1_ACCT: ${{secrets.STRIPE_VENDOR1_ACCT}}
+    STRIPE_VENDOR2_ACCT: ${{secrets.STRIPE_VENDOR2_ACCT}}
+    # Fail loud when the secrets are expected but absent, and stay soft on fork PRs, where GitHub
+    # withholds them. Without this a fork PR would go green with near-zero Connect coverage.
+    STRIPE_CONNECT_REQUIRED: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true
