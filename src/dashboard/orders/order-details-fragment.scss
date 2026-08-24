@@ -259,8 +259,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     .order_download_permissions .select2-container .select2-selection {
-        // Height, not min-height: the inner search input grows the box, and pushed this to 46px next to the two 40px fields above it.
-        height: 40px;
+        // `min-height` with `height: auto`: this is a multi-select, so the box has to grow once a second product is chosen rather than clip the row of chips.
+        height: auto;
         min-height: 40px;
         padding-block: 3px 3px;
         padding-inline: 36px 12px;
@@ -272,6 +272,41 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         border: 1px solid $od-border;
         border-radius: 6px;
         box-shadow: none;
+    }
+
+    // `background-position` has no logical keyword, so the search glyph is the one thing here that has to be told which way round it goes. `dir` sits on `<html>`, so the attribute has to lead the selector rather than be nested under the wrapper.
+    [dir="rtl"] & .order_download_permissions .select2-container .select2-selection {
+        background-position: right 12px center;
+    }
+
+    // Each chosen product arrives as a stock select2 chip — #e4e4e4 on a #aaa border at 16px — which is the only control in the view still wearing the plugin's own colours. Sized and coloured like the rest of the card instead.
+    .order_download_permissions .select2-container .select2-selection__choice {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 26px;
+        margin: 3px 6px 3px 0;
+        padding: 0 8px;
+        background-color: #f3f4f6;
+        border: 1px solid $od-border;
+        border-radius: 4px;
+        font-size: 13px;
+        line-height: 24px;
+        color: $od-text;
+    }
+
+    // select2 4.0 puts the remove control before the label as a bare `×` glyph, so it needs its own hit area rather than the text's.
+    .order_download_permissions .select2-container .select2-selection__choice__remove {
+        order: 2;
+        margin: 0;
+        color: $od-muted;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 1;
+
+        &:hover {
+            color: $od-text;
+        }
     }
 
     // Typed text inherited the placeholder's grey and read as invisible.
