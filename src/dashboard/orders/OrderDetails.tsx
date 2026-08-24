@@ -238,11 +238,7 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
         };
     }, [ orderId ] );
 
-    // Legacy links parts of the details view to in-page targets — the downloadable
-    // permission titles carry `href="#collapse-<id>"`, which on the legacy page simply
-    // jumps to that block. In the panel the hash *is* the route, so letting the browser
-    // follow one would navigate off the order entirely. The markup keeps its href, and
-    // the same jump happens here; only who performs it changes.
+    // Legacy in-page `#` links jump to a block, but here the hash *is* the route — letting the browser follow one would navigate off the order, so we do the jump instead.
     useEffect( () => {
         const container = containerRef.current;
 
@@ -303,8 +299,7 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
     return (
         <div className="dokan-order-details-wrapper dokan-react-order-details">
             { isLoading && (
-                // Mirrors the rendered layout — two columns, 24px gaps, 320px sidebar —
-                // so the page does not visibly reflow once the fragment lands.
+                // Mirrors the rendered layout — two columns, 24px gaps, 320px sidebar — so the page does not visibly reflow once the fragment lands.
                 <div
                     className="flex flex-col gap-6 lg:flex-row"
                     aria-label={ __( 'Loading order details', 'dokan-lite' ) }

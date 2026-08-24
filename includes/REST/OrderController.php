@@ -912,9 +912,7 @@ class OrderController extends DokanRESTController {
     /**
      * Resolve the order a fragment request is asking for.
      *
-     * Trashed orders are resolved like any other: the legacy order details page renders
-     * them, and the panel is the same view, so refusing them here would lose access to an
-     * order the Vendor can still open elsewhere.
+     * Trashed orders resolve like any other — the legacy page renders them, and refusing them here would lose access to an order the Vendor can still open elsewhere.
      *
      * @since DOKAN_SINCE
      *

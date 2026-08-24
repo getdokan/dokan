@@ -6,24 +6,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="dokan-panel dokan-panel-default">
     <div class="dokan-panel-heading" style="overflow: hidden;">
         <?php
-        // This used to toggle a Bootstrap collapse, but Bootstrap's plugin is loaded on
-        // neither the panel nor the legacy page, so the accordion never worked and the
-        // href only pushed `#collapse-…` into the address bar. The product the title
-        // names is the useful destination, the way the order items table above links its
-        // products.
+        // Was a Bootstrap collapse toggle, but the plugin loads on neither surface, so the accordion never worked and the href only pushed `#collapse-…` into the address bar.
         $permission_product_name = apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id );
 
-        // Pending, draft and private products have no address a customer could open —
-        // `get_permalink()` still returns one and it 404s — so those titles stay plain
-        // text rather than becoming a link that leads nowhere.
+        // Pending, draft and private products 404 on `get_permalink()`, so those titles stay plain text rather than linking nowhere.
         $permission_product_url  = is_post_publicly_viewable( $product->get_id() ) ? get_permalink( $product->get_id() ) : '';
         $permission_product_html = $permission_product_url
             ? '<a href="' . esc_url( $permission_product_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $permission_product_name ) . '</a>'
             : esc_html( $permission_product_name );
 
-        // The file the permission is actually about. This is the Vendor's own asset, so it
-        // links straight to it; WooCommerce's "customer download link" is deliberately not
-        // used here because that URL carries the buyer's email address in its query string.
+        // Links straight to the Vendor's own asset — WooCommerce's "customer download link" is avoided because that URL carries the buyer's email in its query string.
         $permission_file_url  = $product->get_file_download_path( $download->download_id );
         $permission_file_name = wc_get_filename_from_url( $permission_file_url );
         $permission_file_html = $permission_file_url && $permission_file_name

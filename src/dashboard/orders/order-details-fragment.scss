@@ -1,15 +1,4 @@
-// Vendor panel look and feel for the server-rendered order details fragment.
-//
-// Scoped to `.dokan-order-details-fragment`, a wrapper only the panel adds (see
-// DetailsFragment::wrap()). The legacy order details page never carries it and never
-// loads this bundle, so its appearance is untouched.
-//
-// Tokens follow the panel's own React screens rather than the legacy stylesheet — the
-// RFQ edit-quote screen is the reference: 8px radius, shadow instead of a border,
-// gray-200 dividers, 20px section padding, a 320px sidebar and a 24px column gap.
-//
-// Plain CSS on purpose: module SCSS compiles outside the `dokan-tailwind` bundle, so
-// `@apply` has no theme to resolve against here.
+// Vendor panel look and feel for the server-rendered order details fragment: scoped to `.dokan-order-details-fragment`, a wrapper only the panel adds, so the legacy page is untouched; tokens follow the panel's own React screens (the RFQ edit-quote screen) rather than the legacy stylesheet, and it stays plain CSS because module SCSS compiles outside the `dokan-tailwind` bundle, where `@apply` has no theme to resolve against.
 
 $od-text: #25252d;
 $od-muted: #828282;
@@ -21,21 +10,14 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 .dokan-dashboard-content:has(.dokan-order-details-fragment) {
     background-color: #f0f0f1;
 
-    // The page-header status badge already shares the sidebar badge's colours through
-    // its `dokan-badge-*` class; `currentcolor` gives it the matching outline for free,
-    // whatever the status.
+    // The header badge already carries the status colours through its `dokan-badge-*` class, so `currentcolor` gives it a matching outline whatever the status.
     .dokan-header-title [class*="dokan-badge-"] {
         border: 1px solid currentcolor;
     }
 }
 
 .dokan-order-details-fragment {
-    // The legacy page insets its content by 48px because it sits beside a sidebar nav.
-    // In the panel that pushes the cards out of line with the page header on both edges.
-    //
-    // `!important` is required, not lazy: the legacy rule is
-    // `.dokan-dashboard #dokan-dashboard-fullwidth-wrapper .dokan-dashboard-wrap
-    // .dokan-dashboard-content`, whose ID no class selector can outrank.
+    // Legacy insets its content by 48px for a sidebar nav the panel does not have, which pushes the cards out of line with the page header; `!important` is required because that rule is ID-qualified and no class selector can outrank it.
     .dokan-dashboard-content {
         // The panel already leaves 16px under the header actions; 8px here makes it 24px.
         padding: 8px 0 0 !important;
@@ -46,8 +28,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         background: transparent;
     }
 
-    // Legacy floats leave slack and a percentage gutter, so the row neither fills the
-    // width nor honours a fixed gap. Flex does both without moving either column.
+    // Legacy floats with a percentage gutter neither fill the width nor honour a fixed gap; flex does both without moving either column.
     .dokan-order-details-wrap {
         display: flex;
         align-items: flex-start;
@@ -60,8 +41,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Same story for the gutter: `.dokan-orders-content .dokan-orders-area
-    // .dokan-order-left-content { margin: 3% }` outranks a two-class selector.
+    // Same story for the gutter: legacy's three-class `.dokan-order-left-content { margin: 3% }` outranks a two-class selector.
     .dokan-order-left-content,
     .dokan-order-right-content {
         float: none;
@@ -104,8 +84,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         box-shadow: $od-shadow;
     }
 
-    // Qualified with `.dokan-panel-default >`: the legacy grey-heading rule has the
-    // same specificity as a two-class selector and wins on source order.
+    // Qualified with `.dokan-panel-default >` because the legacy grey-heading rule ties a two-class selector and wins on source order.
     .dokan-panel-default > .dokan-panel-heading,
     .dokan-panel-heading {
         padding: 16px 20px;
@@ -127,9 +106,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 }
 
-// The main column mixes full-width cards with a two-up address row. Legacy floats them,
-// which cannot equalise the pair's height, so the shorter card stopped short of its
-// neighbour. Flex does, and keeps the same order and widths.
+// Flex rather than legacy's floats, which cannot equalise the address pair's height, so the shorter card stopped short of its neighbour.
 .dokan-order-details-fragment .dokan-order-left-content > .dokan-clearfix {
     display: flex;
     flex-wrap: wrap;
@@ -140,23 +117,14 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         content: none;
     }
 
-    // `gap` owns the spacing; the legacy percentage margins would push the address pair
-    // past 100% of the row and wrap it.
-    //
-    // `min-width` needs `!important` for the same reason, from a rule one class deeper:
-    // legacy pins the address columns to `min-width: 49%`, which only leaves room for the
-    // pair plus the 24px gap while the row is at least 1200px wide. Below that the minimum
-    // outgrows the basis and the second address drops to its own line — so the layout
-    // silently changed with the window rather than staying a two-column pair.
+    // `gap` owns the spacing, and `min-width` needs `!important` to beat legacy's `min-width: 49%` — which outgrows the basis below ~1200px and silently drops the second address onto its own line.
     > * {
         flex: 0 0 100%;
         min-width: 0 !important;
         margin: 0 !important;
     }
 
-    // The address pair shares the row, splitting it around the 24px gap. Sized from a
-    // width rather than a percentage so the pair stacks when there is genuinely no room
-    // for two columns — a 50% basis would hold two 150px columns on a phone.
+    // Sized from a width rather than a 50% basis so the pair stacks when there is genuinely no room for two columns, instead of holding two 150px columns on a phone.
     > .dokan-left {
         flex: 1 1 320px;
     }
@@ -181,18 +149,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 .dokan-order-details-fragment {
     .dokan-order-billing-address .dokan-panel-body,
     .dokan-order-shipping-address .dokan-panel-body {
-        // A 28px line box around 14px text carries ~7px of half-leading above the first
-        // line and below the last, so a flat 20px pad reads as ~27px vertically against
-        // a true 20px on the sides. Trimming the vertical pad evens the optical inset.
+        // Trimmed vertically because a 28px line box around 14px text adds half-leading above the first line and below the last, so a flat 20px pad reads wider than the true 20px on the sides.
         padding: 13px 20px;
         font-size: 14px;
-        // Addresses run to many short lines with no separators between fields, so they
-        // need noticeably more leading than the single-line rows elsewhere to stay
-        // readable as distinct lines.
+        // Addresses run to many short lines with no separators between fields, so they need more leading than the single-line rows elsewhere to read as distinct lines.
         line-height: 28px;
         color: #6b6b6b;
-        // Addresses are free text and can carry long unbroken tokens; wrap rather than
-        // push the card wider than its column.
+        // Addresses are free text and can carry long unbroken tokens; wrap rather than push the card wider than its column.
         overflow-wrap: anywhere;
 
         address,
@@ -202,19 +165,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // The download permission details live in a Bootstrap `.panel-collapse.collapse`,
-    // and the panel's own Tailwind bundle defines `.dokan-layout .collapse` as the
-    // `visibility: collapse` utility — same class name, opposite meaning. That collision
-    // hid Downloads Remaining, Access Expires and the download count, which the legacy
-    // page shows because it never loads Tailwind. The design has them always visible.
-    // `!important` is required: the utility is emitted important, so no specificity wins.
+    // Bootstrap's `.panel-collapse.collapse` collides with the panel's Tailwind `visibility: collapse` utility and hid the permission details the legacy page shows; the utility is emitted `!important`, so no specificity wins.
     .panel-collapse.collapse {
         visibility: visible !important;
         height: auto;
     }
 
-    // Title and Revoke share one row, pushed apart — the design's justify-between.
-    // The legacy markup floats the button, which the flex row makes redundant.
+    // Title and Revoke share one justified row, which makes legacy's float on the button redundant.
     .order_download_permissions .dokan-panel-heading {
         display: flex;
         align-items: center;
@@ -222,11 +179,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         gap: 16px;
     }
 
-    // Headings/H4 in the design: 14px semibold at the body text colour. The markup makes
-    // it an `<a>` (it toggles the collapse), so it arrives as a brand-coloured link.
-    // Two of the three parts are links — the product, and the file the permission grants
-    // access to — so those keep the link colour while the connective text stays body
-    // coloured. That contrast is what makes it readable as "these bits are clickable".
+    // The heading is an `<a>` because it toggles the collapse, so it arrives brand-coloured; keeping the link colour on the product and the file while the connective text stays body-coloured is what shows which bits are clickable.
     .order_download_permissions .dokan-panel-heading .title {
         flex: 1 1 auto;
         min-width: 0;
@@ -246,8 +199,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         flex: 0 0 auto;
         float: none;
         height: auto;
-        // `!important`: legacy's `.btn-sm` keeps 10px of side padding, which stopped the
-        // label 10px short of the counter beneath it on the same right edge.
+        // `!important` because legacy's `.btn-sm` side padding stopped the label 10px short of the counter beneath it on the same right edge.
         padding: 0 !important;
         background: transparent !important;
         border: 0 !important;
@@ -258,16 +210,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         color: var(--color-dokan-btn, #7047eb) !important;
     }
 
-    // Product search: the design's bordered field with a magnifier, and a real gap
-    // before Grant Access. The legacy toolbar relies on a grid that collapses here.
+    // The design's bordered field with a magnifier and a real gap before Grant Access; the legacy toolbar relies on a grid that collapses here.
     .order_download_permissions .toolbar {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
-        // `!important` because legacy sets `margin-top: 15px` from a four-class selector,
-        // which stacked on the last row's 30px and left a wider gap above the rule here
-        // than between the file rows.
+        // `!important` because legacy's four-class `margin-top: 15px` stacked on the last row's spacing and left a wider gap above this rule than between the file rows.
         margin: 0 -20px !important;
         padding: 0 20px;
 
@@ -283,8 +232,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             float: none;
         }
 
-        // select2 mounts its dropdown as a sibling of the field inside this flex column,
-        // so without this it becomes a flex item and pushes Grant Access down.
+        // select2 mounts its dropdown as a sibling of the field inside this flex column, where it would otherwise become a flex item and push Grant Access down.
         > .select2-container--open .select2-dropdown {
             width: 100% !important;
         }
@@ -294,11 +242,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // A rule above the add-product toolbar, on the same full-bleed line as the dividers
-    // between files, so the list reads as separate from the control that adds to it —
-    // including when there is a single permission and no between-file rules at all.
-    // Conditional on the list actually having rows: with none, a lone rule hanging under
-    // the card header separates nothing.
+    // A full-bleed rule above the add-product toolbar so the list reads as separate from the control that adds to it, conditional on the list having rows — under an empty list a lone rule separates nothing.
     .order_download_permissions .panel-group {
         margin-bottom: 0;
     }
@@ -314,8 +258,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     .order_download_permissions .select2-container .select2-selection {
-        // Height, not min-height: the inner search input is what grows the box, and it
-        // pushed this to 46px next to the two 40px fields above it.
+        // Height, not min-height: the inner search input grows the box, and pushed this to 46px next to the two 40px fields above it.
         height: 40px;
         min-height: 40px;
         padding: 3px 12px 3px 36px;
@@ -342,9 +285,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // The permission fields are a fixed-layout table whose first row has one cell and
-    // second has two, so the meta line only ever filled the left 60%. Laid out as blocks
-    // they stack full width, the way the design shows them.
+    // The permission fields are a fixed-layout table whose meta line only ever filled the left 60%, so the cells are laid out as blocks to stack full width.
     .wc-metabox-content {
         display: block;
         width: 100%;
@@ -361,11 +302,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             width: auto !important;
             // 20px from a field to the label under it, per the design's row rhythm.
             padding: 0 0 20px;
-            // The theme zebra-stripes tables — `table:not(.has-background) tbody td` plus a
-            // `tr:nth-child(2n) td` override — which, once the table is laid out as blocks,
-            // reads as grey bands running the width of the card behind the labels. The
-            // striping selector is four element-selectors deep, so it cannot be outranked
-            // from here on specificity alone.
+            // The theme's zebra striping is four element-selectors deep and cannot be outranked on specificity, and once the table is laid out as blocks it read as grey bands running behind the labels.
             background-color: transparent !important;
             border: 0;
             font-size: 14px;
@@ -377,8 +314,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             padding-bottom: 0;
         }
 
-        // Headings/H6: 12px semibold, 130%. 27px from the top of the label to the top of
-        // its field is the design's measured gap.
+        // Headings/H6 at the design's measured 27px from the top of the label to the top of its field.
         label {
             display: block;
             margin-bottom: 11px;
@@ -389,11 +325,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             color: $od-text;
         }
 
-        // The design pairs each field label with its counter on one row — label left,
-        // counter right. The counter lives in its own leading row in this markup, so it
-        // is lifted by exactly its own height onto the following row's line, which lands
-        // the two on a shared baseline without either one moving the fields below.
-        // Paragraphs/Small: 12px regular, 140%.
+        // The design pairs each label with its counter on one row, but the counter has a leading row of its own here, so it is lifted by exactly its own height onto the following row's line without moving the fields below.
         tr:first-child td {
             display: flex;
             justify-content: flex-end;
@@ -414,10 +346,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             }
         }
 
-        // Beats the inline `width: 150px` on both fields. The `!important` run is for the
-        // number field only in practice: it carries Tailwind's `.form-input`, which this
-        // build emits with `!important`, so specificity alone left it square-cornered,
-        // 16px and grey-bordered next to an identically-sized sibling.
+        // Beats the inline `width: 150px`; the `!important` run is for the number field, which carries Tailwind's `.form-input` — emitted `!important` in this build, so specificity alone left it square-cornered and grey-bordered beside an identical sibling.
         input[type="number"],
         input[type="text"] {
             width: 100% !important;
@@ -446,9 +375,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             }
         }
 
-        // Calendar affordance on the expiry field, matching the design. `!important` to
-        // match the shared padding above, which needs it to beat Tailwind's `.form-input`
-        // and would otherwise pull the text back under the icon.
+        // Calendar affordance on the expiry field; `!important` to match the shared padding, which needs it to beat Tailwind's `.form-input` and would otherwise pull the text back under the icon.
         input.datepicker {
             padding-left: 38px !important;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
@@ -459,10 +386,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     // ── Shipments ──────────────────────────────────────────────────────────────
-    //
-    // Pro's shipment card uses bare `h4`/`h5` tags, so they inherit the theme's heading
-    // scale — "Shipment #1" rendered at 22.6px weight 300 inside a card whose own titles
-    // are 14px semibold.
+    // Pro's shipment card uses bare `h4`/`h5` tags, so they inherit the theme's heading scale — "Shipment #1" rendered at 22.6px weight 300 inside a card whose own titles are 14px semibold.
     .shippments-tracking-title {
         margin: 0;
         font-size: 14px;
@@ -471,13 +395,11 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         color: $od-text;
     }
 
-    // The design puts the item count and the tracking link on one quiet line under the
-    // title, separated by a hairline tick.
+    // The item count and the tracking link share one quiet line under the title, separated by a hairline tick.
     .shippments-tracking-via {
         display: flex;
         align-items: center;
-        // Word-sized, not 10px: "via" and the provider are one phrase, and the flex gap
-        // sits between them too, which read as a stray double space.
+        // Word-sized, not 10px: the flex gap also falls inside the "via <provider>" phrase, where a wider gap read as a stray double space.
         gap: 4px;
         margin: 4px 0 0;
         font-size: 14px;
@@ -496,8 +418,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             font-weight: 500;
         }
 
-        // The tick between the provider phrase and the tracking link, drawn rather than
-        // typed so it cannot inherit the link colour or stretch to the line height.
+        // The tick is drawn rather than typed so it cannot inherit the link colour or stretch to the line height.
         a:first-of-type::before {
             content: "";
             align-self: center;
@@ -517,107 +438,65 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         color: $od-text;
     }
 
-    // "Tracking Information" heads a group of fields, but it lands 14px/600 against
-    // labels that are 13px/600 in the same colour — one pixel apart, so it read as one
-    // more label rather than the heading over them. Size cannot carry the difference:
-    // the card's own heading is 14px too, and an inner heading has no business being
-    // larger than the card it sits in. Air does it instead — 20px below, the same step
-    // the card leaves under its heading, against the 8px each label leaves under itself.
+    // Air, not size, separates this heading from the 13px/600 labels under it — the card's own heading is 14px too, and an inner heading has no business being larger — so it takes the same 20px step the card leaves under its heading.
     .shipping-status-track-info-heading {
         margin-bottom: 20px;
     }
 
-    // The strip holding Create New Shipment. Named through the card body because Pro
-    // styles it from a two-class selector too, and a tie there goes to `orders.less` on
-    // source order — the strip kept Pro's 20px padding either side of a button that
-    // already carried its own 20px margin, so the action sat in ~76px of air.
-    //
-    // The padding is dropped to nothing while the button is hidden (the create form
-    // replaces it, and jQuery hides it with an inline `display`), so the strip cannot
-    // leave a sliver behind under the form.
+    // The strip holding Create New Shipment, named through the card body because Pro's two-class rule ties and `orders.less` wins on source order; the padding drops to nothing while the button is hidden so the strip cannot leave a sliver under the create form.
     .dokan-panel-body .shipping-status-tracking-top-info {
         padding: 0 20px;
 
-        // 16px either side of the action, so the strip closes on the same step the rest of
-        // the card uses. `!important` is the only lever here: Pro sets the bottom margin
-        // from `#dokan-order-shipping-status-tracking-panel … #create-tracking-status-action`,
-        // which carries two ids — no selector built from classes can outrank that.
+        // `!important` is the only lever here: Pro sets the bottom margin from a selector carrying two ids, which nothing built from classes can outrank.
         #create-tracking-status-action {
             margin: 16px 0 !important;
         }
 
-        // The empty state is centred, and Pro's paragraph margin left the button adrift
-        // below the message.
+        // Pro's paragraph margin left the button adrift below the centred empty-state message.
         .no-shipment-found-desc {
             margin: 16px 0 0;
         }
 
-        // With the message present the button follows it, so its own top margin would
-        // double the gap between the two.
+        // With the message present the button follows it, so its own top margin would double the gap between the two.
         .no-shipment-found-desc + #create-tracking-status-action {
             margin-top: 12px;
         }
     }
 
-    // Same voice as the other empty states in this view — "No shipping address set." and
-    // its billing twin — which run 14px on a 28px line in the body grey. Legacy had this
-    // one a shade lighter at #999 on a tighter line, so the two read as different kinds of
-    // message when they are the same kind.
+    // Legacy runs this empty state lighter and tighter than the view's others, so the same kind of message read as a different kind.
     .no-shipment-found-desc {
         font-size: 14px;
         line-height: 28px;
-        // Legacy sets #999 from a deeper selector; the other empty states in this view run
-        // the body grey, and a lighter one here made this message read as less important
-        // than "No shipping address set." beside it.
+        // Legacy sets #999 from a deeper selector, which made this message read as less important than the empty state beside it.
         color: #6b6b6b !important;
     }
 
-    // Empty state left as legacy renders it: centred, with the action as a filled button.
-    // The design has it left-aligned with the action as a `+` link, and that was built —
-    // but two theme rules repaint `.dokan-btn` on hover (`.dokan-btn-theme:hover` with a
-    // hard-coded fill, and a variable-driven `:is(…)` rule), and although the override
-    // ranked above both, it could not be demonstrated working. Reverted on request rather
-    // than shipped unverified.
+    // Empty state left as legacy renders it: the design's left-aligned `+` link was built, but two theme rules repaint `.dokan-btn` on hover and the override could not be demonstrated working, so it was reverted on request rather than shipped unverified.
 
-    // Each shipment is a row in the card, on the same full-bleed rules the item table and
-    // the downloadable list use.
+    // Each shipment is a row in the card, on the same full-bleed rules the item table and the downloadable list use.
     .shipping-status-tracking-shippments-inner {
-        // Unlike the other cards, this one's body has no padding — Pro's markup supplies
-        // its own — so the row already spans the card and the inset belongs here. Pulling
-        // it out with a negative margin as the other sections do overhung the card by 20px
-        // on each side.
+        // Pro's markup supplies this card body's padding, so the inset belongs on the row itself — the negative-margin trick the other sections use overhung the card by 20px a side.
         margin: 0;
         padding: 20px;
-        // Legacy dresses each row as a little card of its own — a bottom border, a shadow
-        // and a 4px radius. Inside a card that already has all three it read as a second
-        // edge under the last shipment.
+        // Legacy dresses each row as a little card of its own, which inside a card that already has border, shadow and radius read as a second edge under the last shipment.
         border: 0;
         border-radius: 0;
         box-shadow: none;
 
-        // Every shipment rules off from the one above it. This was written as
-        // `+ .shipping-status-tracking-shippments-inner` and drew nothing, because the
-        // template closes each shipment with a `<div class="clear">` — so no two
-        // shipments are ever adjacent siblings and the combinator never matched. Drawn on
-        // all of them and lifted from the first instead, which does not care what sits
-        // between.
+        // Drawn on every row and lifted from the first rather than with `+`, because the template closes each shipment with a `<div class="clear">` so no two shipments are ever adjacent siblings.
         border-top: 1px solid $od-border;
 
         &:first-child {
             border-top: 0;
         }
 
-        // Legacy insets the header, the item list and the tracking form by a further 20px
-        // inside a row that is already inset, so the shipment title and its fields sat
-        // 40px in while the card heading above them sat at 20. Naming the row as well
-        // outranks it — a two-class selector alone ties and loses on source order.
+        // Legacy insets these a further 20px inside an already-inset row; naming the row as well outranks it, since a two-class selector ties and loses on source order.
         > .shippments-tracking-header,
         > .shippments-tracking-footer {
             padding: 0;
         }
 
-        // Same tie, and the reason the rules around the item list stayed at legacy's 2px
-        // #ddd while every other divider in the view is a 1px hairline.
+        // Same tie, and the reason the rules around the item list stayed at legacy's 2px #ddd while every other divider in the view is a 1px hairline.
         > .shippments-tracking-items {
             padding: 8px 20px;
             border-top: 1px solid $od-border;
@@ -625,15 +504,12 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // With every item shipped this holds nothing at all, and its own padding left an 8px
-    // sliver under the last shipment that read as one more edge.
+    // With every item shipped this holds nothing at all, and its own padding left an 8px sliver that read as one more edge.
     .shipping-status-tracking-top-info:not(:has(*)) {
         display: none;
     }
 
-    // Grid rather than a wrapped flex row: the badge and its toggle centre against the
-    // full two-line title block (title over the via line), which flex cannot do once
-    // the via line wraps onto a row of its own.
+    // Grid rather than a wrapped flex row: the badge and its toggle must centre against the whole two-line title block, which flex cannot do once the via line wraps.
     .shippments-tracking-header {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
@@ -646,9 +522,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Pro lays this row out with floats and percentage widths — the status block is
-    // `width: 63%; float: right` from a two-class selector. Naming the header as well
-    // outranks it so the grid can take over.
+    // Pro floats this row's status block at 63% from a two-class selector, so naming the header as well outranks it and lets the grid take over.
     .shippments-tracking-header .shippments-tracking-title {
         grid-column: 1;
         grid-row: 1;
@@ -657,8 +531,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         margin: 0;
     }
 
-    // Status is a pill, matching the badges the page header and sidebar already use.
-    // Spanning both title rows so the pill and the toggle sit on the block's midline.
+    // A pill matching the badges the page header and sidebar use, spanning both title rows so it and the toggle sit on the block's midline.
     .shippments-tracking-header .shippments-statuses {
         display: inline-flex;
         align-items: center;
@@ -670,11 +543,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         float: none;
         margin: 0;
 
-        // Flex rather than `font-size: 0`, which is what closed the whitespace gap
-        // between the badge and the toggle before. The toggle is an empty icon span, so
-        // zeroing the row's font size collapsed it to 0x0 — the chevron was in the DOM
-        // the whole time, unclickable, which is why the shipment could not be opened and
-        // its items, tracking form and update timeline all stayed hidden.
+        // Flex, not `font-size: 0` — that collapsed the empty icon span to 0x0 and made the chevron unclickable, so the shipment could not be opened at all.
         .shippments-tracking-status {
             display: inline-flex;
             align-items: center;
@@ -695,10 +564,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // The two expand controls — one on the shipment header, one on the update timeline.
-    // Legacy sizes them 20px with a text indent and leaves the glyph to whichever Font
-    // Awesome the site happens to load; drawn here instead, so the control does not
-    // depend on a font that a theme or another plugin can replace out from under it.
+    // The chevron is drawn here rather than left to whichever Font Awesome the site happens to load, so the control cannot depend on a font a theme or another plugin replaces.
     .shipment-item-details-tab-toggle,
     .shipment-notes-details-tab-toggle {
         display: inline-flex;
@@ -728,25 +594,18 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             transition: transform 0.15s ease;
         }
 
-        // Pro's handler flips `dashicons-arrow-up-alt2` on and off in step with the panel
-        // it opens, so the class is a reliable "expanded" flag. The dashicon it names
-        // never renders — the markup ships a Font Awesome chevron — which is why the arrow
-        // never turned round.
+        // Pro's handler flips `dashicons-arrow-up-alt2` in step with the panel it opens, so it is a reliable expanded flag — the dashicon it names never renders, which is why the arrow never turned round.
         &:has(.dashicons-arrow-up-alt2)::after {
             transform: rotate(180deg);
         }
 
-        // The glyph the markup ships. Hidden rather than restyled so only one chevron can
-        // ever appear, whichever icon font is present.
+        // The glyph the markup ships, hidden rather than restyled so only one chevron can ever appear whichever icon font is present.
         > span {
             display: none;
         }
     }
 
-    // Pro pins this one to the corner of the block. Kept there rather than turned into a
-    // flex row: the block is opened by toggling an inline `display`, and any `display` of
-    // ours on the container would either outrank `.dokan-hide` while it is closed or be
-    // outranked by the inline value once it opens. Centred in the 52px header band.
+    // Kept pinned to the corner rather than made a flex row: the block opens by toggling an inline `display`, so any `display` of ours would either outrank `.dokan-hide` while closed or lose to the inline value once open.
     .dokan-customer-shipment-notes-list-area .shipment-notes-details-tab-toggle {
         top: 12px;
         right: 16px;
@@ -760,21 +619,12 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         margin: 0;
     }
 
-    // The shipment's own item list follows the order table's shape rather than the
-    // theme's default table styling.
+    // The shipment's own item list follows the order table's shape rather than the theme's default table styling.
     .shippments-tracking-items {
-        // Pulled out over the row's 20px inset so the rules above and below it run to the
-        // card edges, and the inset put back as padding so the content does not move.
-        // Legacy rules this block off with 2px of #ddd, twice the weight of every other
-        // divider in the view.
+        // Only the margin lands here — Pro ties on the padding and borders and wins on source order, so those are set on the row-qualified rule above.
         margin: 20px -20px;
-        padding: 8px 20px;
-        border-top: 1px solid $od-border;
-        border-bottom: 1px solid $od-border;
 
-        // The table hangs over the block's inset and the edge cells put it back, the
-        // same trick as the order items table — otherwise every row separator stops
-        // 20px short of the card edge at both ends.
+        // The table hangs over the block's inset and the edge cells put it back, the same trick as the order items table — otherwise every row separator stops 20px short of the card edge.
         table {
             width: calc(100% + 40px);
             margin: 0 -20px;
@@ -797,8 +647,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             white-space: nowrap;
         }
 
-        // The name column absorbs the leftover, so the quantity sits against the right
-        // edge instead of drifting to wherever auto layout leaves it.
+        // The name column absorbs the leftover so the quantity sits against the right edge instead of wherever auto layout leaves it.
         td:nth-child(2) {
             width: 100%;
         }
@@ -807,12 +656,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             border-top: 1px solid $od-border;
         }
 
-        // `.shippments-tracking-items td.thumb img { width: 100% }` ships with Pro and is
-        // one element deeper than a plain descendant selector, so the cell has to be named
-        // or the thumbnail fills its column at 163px. `min-width`, because the name
-        // column's `width: 100%` squeezes this one to its min-content — and Tailwind's
-        // `img { max-width: 100% }` makes the image's min-content zero, so the plain
-        // `width` hint was crushed to a 6px sliver.
+        // Pro's `td.thumb img { width: 100% }` is one element deeper than a plain descendant selector, so the cell has to be named; `min-width`, because the name column's `width: 100%` and Tailwind's `img { max-width: 100% }` crushed the plain width hint to a 6px sliver.
         td.thumb {
             width: 68px;
             min-width: 68px;
@@ -830,8 +674,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             object-fit: cover;
         }
 
-        // The product names the row, so it takes the body colour rather than the theme's
-        // link colour, like the order items table above.
+        // The product names the row, so it takes the body colour rather than the theme's link colour, like the order items table above.
         a {
             color: $od-text !important;
 
@@ -841,9 +684,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             }
         }
 
-        // The quantity is metadata, not a second name — one step down from the row and
-        // muted, like the counters in the downloadable section, but weighted so the
-        // number still registers at a glance.
+        // The quantity is metadata, not a second name — muted like the counters in the downloadable section, but weighted so the number still registers at a glance.
         strong {
             font-size: 13px;
             font-weight: 500;
@@ -860,8 +701,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Full-bleed like the rules above and below the item list, rather than a rule floating
-    // inside the row's inset.
+    // Full-bleed like the rules above and below the item list, rather than a rule floating inside the row's inset.
     .shippments-tracking-footer hr,
     #add-shipping-tracking-status-form > hr {
         margin: 20px -20px;
@@ -878,9 +718,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             margin-bottom: 0;
         }
 
-        // The floated tracking row gives its trailing margin up — see the float rule
-        // below for why. Declared here rather than there because this selector is one
-        // class deeper and would otherwise win the point back.
+        // Declared here rather than on the float rule below, because this selector is one class deeper and would otherwise win the point back.
         &.shipping-status-provider,
         &.shipped-status-date,
         &.shipped-tracking-number {
@@ -888,15 +726,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Pro floats the three tracking fields at 33% with a 2% gutter, which leaves the last
-    // one 35px short of the other two. Equal thirds on a real gap instead.
-    //
-    // `margin-bottom: 0` is the important part: because these are floats, the 16px every
-    // field row carries extends the row box and pushes whatever clears it down by that
-    // much *on top of* that element's own top spacing. It read as 36px before the
-    // timeline where this card steps by 20, and would be 40px before the Update button
-    // where it should step by 24. The row gives up its trailing margin; the blocks that
-    // clear it own the gap.
+    // Equal thirds on a real gap instead of Pro's 33% with a 2% gutter, which left the last field 35px short; `margin-bottom: 0` is the important part, because a float's trailing margin extends the row box and pushes whatever clears it down on top of that element's own spacing.
     .shipping-status-provider,
     .shipped-status-date,
     .shipped-tracking-number {
@@ -907,25 +737,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         overflow: visible;
     }
 
-    // Whichever of those blocks lands under the row needs its own step down from it — the
-    // other-provider pair when the provider is "Other", the comment field either way.
-    //
-    // `padding`, not `margin`: these carry `clear: both`, and when clearance is introduced
-    // the top margin is absorbed into it rather than drawn. A `margin-top: 16px` here
-    // computed correctly and rendered as nothing.
-    //
-    // Stated unconditionally, not behind `:not(.dokan-hide)`: jQuery reveals the pair with
-    // `.show()`, which writes an inline `display` and leaves `dokan-hide` sitting on the
-    // element — so that test never matched and the block got no spacing at all. While it
-    // is genuinely hidden the padding cannot be seen anyway.
+    // `padding`, not `margin`, because these blocks carry `clear: both` and a top margin is absorbed into the clearance and rendered as nothing; stated unconditionally rather than behind `:not(.dokan-hide)`, since jQuery's `.show()` leaves `dokan-hide` sitting on the element and that test never matched.
     .tracking-status-other-url,
     .shipping-tracking-comments {
         padding-top: 16px;
     }
 
-    // Pro floats the two fields inside this block and nothing contained them, so it
-    // measured no height of its own and the comment field below landed ~95px adrift.
-    // `overflow` contains them without touching `display`, which jQuery owns here.
+    // Pro floats the two fields inside this block and nothing contained them, so it measured no height and the comment field landed adrift; `overflow` contains them without touching `display`, which jQuery owns here.
     .tracking-status-other-url {
         overflow: hidden;
     }
@@ -934,8 +752,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         margin-right: 0;
     }
 
-    // Pro pins this field to 98% from an id selector, so it came out a hair narrower than
-    // the two beside it even once the columns matched.
+    // Pro pins this field to 98% from an id selector, so it stayed a hair narrower than the two beside it even once the columns matched.
     input#tracking_status_number {
         width: 100%;
     }
@@ -950,8 +767,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         clear: both;
     }
 
-    // Update sits where Submit Refund and Add Note sit: on the right, clearing the last
-    // field by the same 24px step.
+    // Update sits where Submit Refund and Add Note sit: on the right, clearing the last field by the same 24px step.
     .shippments-tracking-footer-button {
         display: flex;
         flex-direction: column;
@@ -976,10 +792,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // A delivered or cancelled shipment keeps its form on screen but locked — Pro marks
-    // the selects `disabled` and the inputs `readonly`, yet legacy leaves both looking
-    // live. Painted inert, and mouse-blocked so the date picker cannot open a calendar
-    // over a field the handler will refuse to save anyway.
+    // A delivered or cancelled shipment keeps a locked form that legacy still paints as live, so it is painted inert and mouse-blocked, or the date picker opens a calendar over a field the handler will refuse to save.
     .shippments-tracking-footer select:disabled,
     .shippments-tracking-footer input[readonly] {
         background-color: #f9fafb !important;
@@ -988,11 +801,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         pointer-events: none;
     }
 
-    // The update timeline is a full-width section closing the shipment row: a header band
-    // on the section grey, flush to the card edges, with its entries below on white. A
-    // nested-card and a painted-gap variant were both tried; this full-width section read
-    // cleanest. Full-bleed over the row's 20px inset, with the bottom margin cancelling
-    // the row's bottom padding so the section reaches the card edge.
+    // Full-bleed over the row's 20px inset, with the bottom margin cancelling the row's bottom padding so the section reaches the card edge.
     .shipping-status-tracking-shippments-inner .dokan-customer-shipment-notes-list-area {
         margin: 20px -20px -20px;
         padding: 0;
@@ -1001,17 +810,14 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     .dokan-customer-shipment-notes-list-area {
-        // The heading is the section's header band, full width on the same grey as the
-        // card headings. The right padding keeps a long title clear of the toggle.
+        // The heading is the section's header band, on the same grey as the card headings, with right padding keeping a long title clear of the toggle.
         h5 {
             margin: 0;
             padding: 16px 56px 16px 20px;
             background-color: #f9fafb;
         }
 
-        // Toggled by jQuery, so no `display` here — padding and the rule above are safe.
-        // The bottom rule closes the section once it is open: the band above it is the
-        // header, and without this the entries ran straight into whatever followed.
+        // No `display` here because jQuery toggles it; the bottom rule closes the section, without which the entries ran straight into whatever followed.
         .customer-shipment-list-notes-inner-area {
             margin: 0;
             padding: 20px;
@@ -1019,27 +825,16 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             border-bottom: 1px solid $od-border;
         }
 
-        // Pro sets `margin: 15px` on this list from a three-class selector nested inside
-        // `.customer-shipment-list-notes-inner-area`. A three-class rule here only ties,
-        // and Pro's `orders.less` is emitted after this bundle, so it won on source order
-        // and pushed every entry 15px right of the 20px inset the rest of the card sits
-        // on — the marker column never lined up with anything above it. Naming the
-        // element as well outranks it.
+        // Pro's three-class `margin: 15px` ties a three-class rule here and wins on source order, pushing every entry 15px off the 20px inset the rest of the card sits on — naming the element as well outranks it.
         ol.dokan-order-updates {
             margin: 0;
             padding: 0;
         }
 
-        // Every value below is derived from one number — the 28px marker — so the column
-        // stays true if it ever changes: inset = marker + 16px gutter, the line sits on
-        // the marker's centre (28 / 2), and the marker is lifted half its height above the
-        // date's 20px line box so the two share a midline. The design's proportion is a
-        // glyph with clear air inside the ring; at 20px in a 32px circle it crowded the
-        // border, so both are back to the 28 / 15 pairing.
+        // Every value below derives from the 28px marker so the column stays true if it changes: inset = marker + 16px gutter, the line sits on the marker's centre, and the marker is lifted half its height to share the date's midline.
         li {
             margin: 0;
-            // The left inset is what clears the marker column. A `padding` shorthand here
-            // zeroed it and dropped the bullet on top of the date.
+            // The left inset is what clears the marker column; a `padding` shorthand zeroed it and dropped the bullet on top of the date.
             padding: 0 0 24px 44px;
             font-size: 14px;
             line-height: 22px;
@@ -1049,16 +844,12 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
                 padding-bottom: 0;
             }
 
-            // The line joining one entry to the next, hanging just below the marker rather
-            // than running the full height of the entry. The marker bottoms out at 24px
-            // (-4 + 28), so 26px leaves the 2px breath that reads as connected rather than
-            // welded to it.
+            // The line joining one entry to the next hangs just below the marker rather than running the entry's full height, with 2px of breath so it reads as connected rather than welded to it.
             &::before {
                 top: 26px;
                 left: 14px;
                 width: 1px;
-                // A shade darker than the card's dividers: at 1px the divider grey read as
-                // nothing at all and the entries lost the thread joining them.
+                // A shade darker than the card's dividers, which at 1px read as nothing at all and lost the thread joining the entries.
                 background-color: #d9d9d9;
             }
 
@@ -1066,9 +857,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
                 content: none;
             }
 
-            // The marker is the design's delivery badge — a bordered circle with the truck
-            // glyph — drawn entirely here so the markup keeps its bare `li`. `-4px` is
-            // `(20px date line ÷ 2) − (28px marker ÷ 2)`, which puts the two on one midline.
+            // The design's delivery badge, drawn entirely here so the markup keeps its bare `li`; `-4px` puts the 28px marker on the 20px date line's midline.
             &::after {
                 top: -4px;
                 left: 0;
@@ -1084,8 +873,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             }
         }
 
-        // The date leads each entry, so it carries the entry's weight; the detail lines
-        // below stay quiet.
+        // The date leads each entry, so it carries the entry's weight; the detail lines below stay quiet.
         .dokan-order-update-meta {
             margin: 0;
             font-size: 14px;
@@ -1094,10 +882,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             color: $od-text;
         }
 
-        // `wpautop` splits the note on its blank line, so the detail lines arrive as one
-        // paragraph and the comment as another. 8px sets the detail block under the date;
-        // 12px between blocks is what makes the comment read as a separate remark rather
-        // than a fifth detail line — at the 6px both shared, the two blocks ran together.
+        // `wpautop` splits the note on its blank line into a details paragraph and a comment, and 12px between them is what makes the comment read as a separate remark rather than a fifth detail line.
         .dokan-order-update-description p {
             margin: 12px 0 0;
             font-size: 13px;
@@ -1115,14 +900,9 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     // ── Create shipment ────────────────────────────────────────────────────────
-    //
-    // The form Pro reveals under "Create New Shipment". It borrows the order items table's
-    // class names so it inherits that table's shape, but its own chrome came straight from
-    // legacy: a 15px inset pinned inline, a rule that stopped short of the card, and two
-    // native buttons.
+    // The form Pro reveals under "Create New Shipment" borrows the order items table's class names for its shape, but its own chrome came straight from legacy: a 15px inset pinned inline, a rule that stopped short of the card, and two native buttons.
 
-    // Only when shipments are already listed above it — otherwise this doubles up with the
-    // card heading's own rule.
+    // Only when shipments are already listed above it — otherwise this doubles up with the card heading's own rule.
     #dokan-order-shipping-status-tracking-shippments:has(.shipping-status-tracking-shippments-inner)
         + #dokan-order-shipping-status-tracking {
         border-top: 1px solid $od-border;
@@ -1132,9 +912,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         // The template pins 15px inline, which no selector can outrank.
         padding: 20px !important;
 
-        // The theme gives every `form` a rem-based bottom margin — 25.9px here — which
-        // stacked under this form's own 20px padding and left the action row sitting 46px
-        // off the card edge where the rest of the view closes at 20.
+        // The theme's rem-based `form` margin stacked under this form's own padding and left the action row 46px off the card edge where the rest of the view closes at 20.
         margin-bottom: 0;
 
         // The item picker leads the form, so it closes on the same step the fields use.
@@ -1142,13 +920,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             margin-bottom: 20px;
         }
 
-        // Four columns, one per cell the rows render. The checkbox and the quantity are
-        // fixed; the thumbnail matches the order items table above — 44px on a 16px gap.
-        //
-        // One gutter for the whole row: 20px in to the checkbox, then 16px between each
-        // of checkbox, thumbnail and name. The thumbnail cell was leaving 36px on its
-        // right against 16px on its left, so the name sat visibly further from its image
-        // here than the same pairing does in the table above.
+        // One gutter for the whole row — 20px in to the checkbox, then 16px between checkbox, thumbnail and name — because the thumbnail cell was leaving 36px on its right and the name sat further from its image than the same pairing does in the table above.
         th.order_item_select,
         td.order_item_select {
             width: 52px;
@@ -1160,20 +932,11 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             margin: 0;
         }
 
+        // Narrower than the order items table's 80px because a checkbox column leads the thumbnail here; the image itself is left to the shared `td.thumb img` rule, since restating it hid that rule's placeholder-404 guard.
         th.thumb,
         td.thumb {
             width: 60px;
             padding-right: 16px;
-        }
-
-        td.thumb img {
-            display: block;
-            width: 44px;
-            height: 44px;
-            background-color: #f3f4f6;
-            border: 1px solid #e9e9e9;
-            border-radius: 3px;
-            object-fit: cover;
         }
 
         th.name,
@@ -1186,16 +949,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             width: 96px;
         }
 
-        // The template pins 60px inline, which leaves ~34px for the number once the
-        // control's own padding is taken out.
+        // The template pins 60px inline, which leaves ~34px for the number once the control's own padding is taken out.
         td.quantity input {
             width: 72px !important;
             text-align: center;
         }
 
-        // The quantity is on screen from the start now, greyed until its row is ticked,
-        // so the column reads as "this row has a quantity" rather than as empty space.
-        // Pro marks the wrapper and disables the field together.
+        // The quantity is on screen from the start, greyed until its row is ticked, so the column reads as "this row has a quantity" rather than as empty space.
         .shipping-tracking.is-disabled input {
             background-color: #f9fafb;
             border-color: #e9e9e9;
@@ -1203,8 +963,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             cursor: not-allowed;
         }
 
-        // Backing out reads first, committing reads last — the same order as the refund
-        // row, and the same 24px clearance from the last field.
+        // Backing out reads first, committing reads last — the same order as the refund row, and the same 24px clearance from the last field.
         > .dokan-form-group:has(#add-tracking-status-details) {
             display: flex;
             justify-content: flex-end;
@@ -1217,18 +976,14 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // One step from a caption to the control it names, everywhere in both shipment forms.
-    // The tracking fields were sitting at 6px against the 8px the rest of the view uses.
-    // `:not(:has(input))` keeps the checkbox rows out of it — those wrap their own control
-    // and are handled as a row below.
+    // One step from a caption to the control it names in both shipment forms; `:not(:has(input))` keeps out the checkbox rows, which wrap their own control and are handled as a row below.
     .shippments-tracking-footer .dokan-control-label:not(:has(input)),
     #add-shipping-tracking-status-form .dokan-control-label:not(:has(input)) {
         display: block;
         margin-bottom: 8px;
     }
 
-    // `rows="4"` sets the height, but the theme's own row calculation lands short of the
-    // design's box — a floor keeps it a comment field rather than a two-line slot.
+    // `rows="4"` sets the height, but the theme's own row calculation lands short of the design's box, so a floor keeps this a comment field rather than a two-line slot.
     #tracking_status_comments,
     .shipping-tracking-comments textarea {
         min-height: 96px;
@@ -1236,10 +991,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         resize: vertical;
     }
 
-    // Chrome paints its own beige over an autofilled field, which is what turned the
-    // tracking number grey the moment it was focused — the rule below is the only way to
-    // repaint it, since the real background is untouchable. The inset shadow covers the
-    // control, and `text-fill` keeps the value legible on it.
+    // Chrome paints its own beige over an autofilled field and the real background is untouchable, so an inset shadow covers the control and `text-fill` keeps the value legible on it.
     input:-webkit-autofill,
     input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
@@ -1251,14 +1003,11 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         -webkit-text-fill-color: $od-text;
         box-shadow: 0 0 0 1000px #fff inset !important;
         -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
-        // Chrome repaints its own ground on focus and after any value change, and the
-        // only way to outlast that is to make the transition to it effectively never
-        // arrive. This is the documented workaround, not a hack of ours.
+        // Chrome repaints its ground on focus and after any value change, and the documented workaround is a transition to it that effectively never arrives.
         transition: background-color 5000s ease-in-out 0s;
     }
 
-    // And the plain case, stated outright rather than left to whatever the theme happens
-    // to leave behind: a focused control in this view is white, whatever put it otherwise.
+    // The plain case stated outright rather than left to the theme: a focused control in this view is white, whatever put it otherwise.
     .dokan-form-control:focus,
     input[type="text"]:focus,
     input[type="number"]:focus,
@@ -1269,8 +1018,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         background-color: #fff;
     }
 
-    // A label wrapping its own checkbox is a row, not a field caption: the caption rule
-    // stacks the text under the box and bolds it.
+    // A label wrapping its own checkbox is a row, not a field caption, which the caption rule would stack under the box and bold.
     .dokan-form-group > label:has(input[type="checkbox"]) {
         display: inline-flex;
         align-items: center;
@@ -1283,9 +1031,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         cursor: pointer;
     }
 
-    // The browser accent is blue here, and blue appears nowhere else on the page.
-    // Tailwind's form reset paints the checked state with `background-color` rather than
-    // the accent, so both have to be set.
+    // The browser accent is blue and blue appears nowhere else on the page, and Tailwind's form reset paints the checked state with `background-color` rather than the accent, so both have to be set.
     input[type="checkbox"] {
         width: 16px;
         height: 16px;
@@ -1298,37 +1044,24 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Only where something else owns the gap — the label's own `gap` above, and the
-    // table cell's padding. Left global, this would close up the theme's spacing around
-    // checkboxes that sit loose in their row, such as the refund restock box.
+    // Only where something else owns the gap — the label's own `gap`, the cell's padding — since left global this would close up the theme's spacing around checkboxes sitting loose in their row, such as the refund restock box.
     .dokan-form-group > label > input[type="checkbox"],
     td.order_item_select input[type="checkbox"] {
         margin: 0;
     }
 
-    // With shipments already listed, this holds the "Create New Shipment" action alone and
-    // reads as the card's closing row. Legacy nudges it with stray margins from an id
-    // selector, so `!important` is the only way to sit it on the card's own inset.
+    // Legacy nudges this closing row with stray margins from an id selector, so `!important` is the only way to sit it on the card's own inset.
     .shipping-status-tracking-top-info.info-not-shipment-yet {
         margin: 0 !important;
-        // No vertical padding of its own: the button's 16px margins are the whole gap.
-        // With 20px here as well the single action sat in ~76px of air, and the padding
-        // stayed behind as a sliver once the create form hid the button.
+        // No vertical padding of its own: the button's 16px margins are the whole gap, and 20px here left the single action in ~76px of air and a leftover sliver once the create form hid the button.
         padding: 0 20px !important;
         border-top: 1px solid $od-border;
         text-align: left;
     }
 
-    // Nested panels — one per downloadable file — are rows inside a card, not cards of
-    // their own. Flattened so their content keeps the card's single 20px inset.
+    // Nested panels — one per downloadable file — are rows inside a card, not cards of their own, so they are flattened onto the card's single 20px inset.
     .dokan-panel .dokan-panel {
-        // 22px either side of every rule in this section — a touch more air than the
-        // 20px used inside a row, so the rules read as separators rather than as part of
-        // the field rhythm. The design measures 60px
-        // here, but its rows lead with a 40px thumbnail block where ours has a single line
-        // of text, so the same figure reads as far more air. Pulled out to the card edges
-        // so the rule is full-bleed like the notes and general-details dividers, with the
-        // inset put back as padding so the content does not move.
+        // 22px so the rules read as separators rather than part of the field rhythm — the design's 60px assumes rows led by a 40px thumbnail where ours carry one line of text — pulled out to the card edges to be full-bleed like the other dividers, with the inset put back as padding so the content does not move.
         margin: 0 -20px;
         padding: 22px 20px;
         border: 0;
@@ -1345,8 +1078,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             border-bottom: 0;
         }
 
-        // Same 20px that separates a field from the label beneath it, so the product line
-        // sits on the section's own rhythm rather than a wider one of its own.
+        // The same 20px that separates a field from the label beneath it, so the product line sits on the section's own rhythm rather than a wider one.
         > .panel-collapse > .panel-body {
             padding: 20px 0 0;
         }
@@ -1358,13 +1090,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 }
 
 // ── Order items ────────────────────────────────────────────────────────────────
-//
-// The line-item table and the totals beneath it, restyled to the design: a quiet
-// uppercase header rather than a ruled one, white rows separated by hairlines, a 44px
-// product thumbnail, and money right-aligned to the card edge.
-//
-// The markup is Pro's `orders/views/html-order-items` (with Lite's fallback carrying the
-// same class names), so the selectors here name those classes rather than the DOM shape.
+// The line-item table and totals restyled to the design — a quiet uppercase header, white rows on hairlines, a 44px thumbnail and money right-aligned to the card edge — selected through Pro's `html-order-items` class names, which Lite's fallback shares, rather than the DOM shape.
 
 .dokan-order-details-fragment {
     .woocommerce_order_items,
@@ -1376,8 +1102,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         background: transparent;
     }
 
-    // The theme zebra-stripes tables and Dokan opts in with `dokan-table-strip`; the
-    // design has plain white rows carrying hairline separators instead.
+    // The theme zebra-stripes tables and Dokan opts in with `dokan-table-strip`; the design has plain white rows carrying hairline separators instead.
     .woocommerce_order_items td,
     .woocommerce_order_items th,
     .wc-order-totals td,
@@ -1385,9 +1110,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         background-color: transparent !important;
     }
 
-    // The rules between rows run to the card edges, like every other divider in this
-    // view. The table is pulled out over the body's 20px inset and the edge cells put it
-    // back, so the content stays aligned with the card heading above it.
+    // The table is pulled out over the body's 20px inset and the edge cells put it back, so the rules between rows run to the card edges while the content stays aligned with the heading above.
     .woocommerce_order_items_wrapper,
     .wc-order-data-row.wc-order-totals-items {
         margin-left: -20px;
@@ -1406,12 +1129,9 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         padding-right: 20px;
     }
 
-    // Column headings are labels, not a ruled header band: Inter 12/16 uppercase in the
-    // muted grey, with a single rule under the row.
+    // Column headings are labels, not a ruled header band: 12/16 uppercase in the muted grey, with a single rule under the row.
     .woocommerce_order_items thead th {
-        // 19px, not 20: the line box adds a pixel below the cap height, so this is what
-        // puts the same 20px of visible air under the labels as the card's inset puts
-        // above them.
+        // 19px, not 20: the line box adds a pixel below the cap height, so this puts the same 20px of visible air under the labels as the card's inset puts above them.
         padding: 0 12px 19px 0;
         border: 0;
         font-size: 12px;
@@ -1432,34 +1152,20 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         vertical-align: middle;
     }
 
-    // Shipping, fee and refund rows render a trailing actions cell that line items do not,
-    // and whose contents Pro has commented out — 34px of nothing. It made the table seven
-    // columns wide with only some rows reaching the last one, so an item row's cells ended
-    // at 1494 while the others reached 1528. A row background paints only under its cells,
-    // so that is where the rule stopped too. Dropping the empty column makes every row the
-    // same six cells. The `:has` guard keeps it if Pro ever puts real actions back.
+    // Pro renders a trailing actions cell on shipping, fee and refund rows with its contents commented out, so item rows ended 34px short of the others and the row rule — which paints only under cells — stopped there too; the `:has` guard keeps the column if Pro ever puts real actions back.
     .woocommerce_order_items th.wc-order-edit-line-item,
     .woocommerce_order_items td.wc-order-edit-line-item:not(:has(a, button, input, select)) {
         display: none;
     }
 
-    // Line items render six cells while shipping, fee and refund rows render seven, so
-    // the separator has to be independent of how many cells a row happens to have.
-    //
-    // A `border` cannot do that here. Under `border-collapse: collapse` the edge is
-    // resolved and painted per cell, so a border declared on the row still stops with its
-    // last cell: item rows ended at 1494 and the rest reached 1528, a 34px stub down the
-    // table. Painting the rule as a background instead follows the row box, which spans
-    // the full width whatever the cell count.
+    // Painted as a background rather than a border because under `border-collapse: collapse` the edge is resolved per cell, so a row border stopped with the six-cell item rows and left a 34px stub beside the seven-cell ones.
     .woocommerce_order_items thead tr,
     .woocommerce_order_items tbody tr {
         border-bottom: 0;
         background: linear-gradient($od-border, $od-border) bottom left / 100% 1px no-repeat;
     }
 
-    // Shipping, fee and refund rows carry a Font Awesome glyph where a product has its
-    // picture. Left alone it renders at 14px against the text baseline; given the same
-    // 44px slot it lines up with the thumbnails above it.
+    // Shipping, fee and refund rows carry a Font Awesome glyph where a product has its picture, and the same 44px slot lines it up with the thumbnails above.
     .woocommerce_order_items td.thumb > div {
         display: flex;
         align-items: center;
@@ -1475,8 +1181,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     // 44px at a 3px radius with a hairline, and 16px of air before the name.
     .woocommerce_order_items td.thumb {
-        // Border-box, so this has to carry the card inset and the gap as well as the
-        // image: 20 + 44 + 16. At 60 the padding ate it and the image rendered 24px wide.
+        // Border-box, so this carries the card inset and the gap as well as the image (20 + 44 + 16); at 60 the padding ate it and the image rendered 24px wide.
         width: 80px;
         padding-right: 16px;
 
@@ -1484,9 +1189,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             display: block;
             width: 44px;
             height: 44px;
-            // A product with no image falls back to WooCommerce's placeholder, which is
-            // not present on every install. When it 404s the element collapses to its alt
-            // text and spills across the row, so the box holds its size and clips.
+            // A product with no image falls back to WooCommerce's placeholder, which is not on every install — when it 404s the element collapses to its alt text and spills across the row, so the box holds its size and clips.
             overflow: hidden;
             background-color: #f3f4f6;
             border: 1px solid #e9e9e9;
@@ -1496,8 +1199,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // The product reads as the row's subject, so it takes the body colour rather than the
-    // link colour it inherits from the theme.
+    // The product reads as the row's subject, so it takes the body colour rather than the link colour it inherits from the theme.
     .woocommerce_order_items td.name {
         a {
             color: $od-text !important;
@@ -1517,10 +1219,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // The design gives the item column roughly 46% and leaves the money columns wide and
-    // left-aligned — headings sit directly over their values rather than everything
-    // crowding the right edge. Fixed widths rather than percentages because refund mode
-    // puts a field in each of these columns and they need guaranteed room.
+    // Fixed widths rather than percentages because refund mode puts a field in each of these columns and they need guaranteed room.
     .woocommerce_order_items th.item_cost,
     .woocommerce_order_items td.item_cost {
         width: 150px;
@@ -1563,8 +1262,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     // Totals: label left, amount right, on the same 14px body scale as the rows above.
     .wc-order-data-row.wc-order-totals-items {
-        // 16px of box puts the first line's ink 20px clear of the rule above it — the
-        // difference is the half-leading the line box adds over the cap height.
+        // 16px of box puts the first line's ink 20px clear of the rule above it, the difference being the half-leading the line box adds over the cap height.
         margin-top: 16px;
         overflow: hidden;
 
@@ -1575,9 +1273,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     .wc-order-totals td {
-        // 12px gives the list a 44px pitch. The design measures 38, but its rows are a
-        // plain label and figure; ours carry the tips icon and longer localised labels,
-        // which need the extra air to keep from reading as a solid block.
+        // 12px gives the list a 44px pitch: the design measures 38, but its rows are a plain label and figure where ours carry the tips icon and longer localised labels.
         padding: 12px 0;
         border: 0;
         font-size: 14px;
@@ -1591,22 +1287,19 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         white-space: nowrap;
     }
 
-    // Order Total is the figure the row exists for. It has no class of its own, but it is
-    // always the row directly above the refunded one, which does.
+    // Order Total has no class of its own, but it is always the row directly above the refunded one, which does.
     .wc-order-totals tr:has(+ tr .refunded-total) td {
         padding-top: 18px;
         border-top: 1px solid $od-border;
         font-weight: 600;
     }
 
-    // Matching air on the other side of that rule — it had the rows' default 9px above
-    // and 16px below, which read as the total leaning away from the list.
+    // Matching air on the other side of that rule, which otherwise read as the total leaning away from the list.
     .wc-order-totals tr:has(+ tr + tr .refunded-total) td {
         padding-bottom: 18px;
     }
 
-    // The card body already provides the 20px floor every other section closes on, so the
-    // last row adds nothing of its own.
+    // The card body already provides the 20px floor every other section closes on, so the last row adds nothing of its own.
     .wc-order-totals tr:last-child td {
         padding-bottom: 0;
     }
@@ -1624,10 +1317,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     // Coupon codes are chips in the design, not a bulleted list.
     .wc-used-coupons {
-        // The block is a sibling of the totals table inside a full-bleed row, so it needs
-        // the inset the table gets from its own cells or it starts 20px to their left.
-        // No top margin: the row it sits in already carries one, and the two stacked to
-        // 40px below the item table.
+        // The block is a sibling of the totals table inside a full-bleed row, so it needs the inset the table gets from its own cells; no top margin, because the row already carries one and the two stacked to 40px.
         padding: 0 20px;
         margin: 0 0 12px;
 
@@ -1676,10 +1366,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     // ── Refund mode ────────────────────────────────────────────────────────────
-    //
-    // Asking for a refund puts an input into each money column of every line item and
-    // opens the panel below. None of it was styled, so the fields arrived as borderless
-    // grey slabs at a different height from every other control in the view.
+    // Asking for a refund puts an input into each money column of every line item and opens the panel below, none of which was styled — the fields arrived as borderless grey slabs at a different height from every other control in the view.
 
     .woocommerce_order_items .refund {
         margin-top: 8px;
@@ -1687,10 +1374,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     .woocommerce_order_items input.refund_order_item_qty,
     .woocommerce_order_items input.refund_line_total,
-    .woocommerce_order_items input.refund_line_tax,
-    .woocommerce_order_items input.refund_line_subtotal {
-        // Beats the inline width the template sets, which left the last column's field
-        // hanging over the card edge.
+    .woocommerce_order_items input.refund_line_tax {
+        // Beats the inline width the template sets, which left the last column's field hanging over the card edge.
         width: 76px !important;
         height: 34px;
         padding: 6px 8px;
@@ -1703,36 +1388,23 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         box-shadow: none;
     }
 
-    // No drawn currency affix on these. A grey chip butted against a field reads as a
-    // detached box rather than part of the control, at every width it was tried at. The
-    // currency states itself in the placeholder, which cannot come apart.
+    // No drawn currency affix on these: a grey chip butted against a field read as a detached box at every width it was tried at, and the placeholder states the currency without coming apart.
 
     .wc-order-data-row.wc-order-refund-items {
         margin-left: -20px;
         margin-right: -20px;
         padding: 20px 0 0;
-        // No rule of its own: the item table's last row already draws one directly above,
-        // and the two sat 1px apart and read as a single thick stripe.
+        // No rule of its own: the item table's last row already draws one directly above, and the two sat 1px apart and read as a single thick stripe.
         border-top: 0;
     }
 
-    // Label and field belong on the same line. Left alone the label sat at the top of a
-    // 56px row while its 38px field centred below it.
-    //
-    // 12px vertical matches the totals list this panel sits under, so the two read as one
-    // rhythm rather than the panel being noticeably tighter. The 20px right is not
-    // optional: this rule is a class deeper than the general `td:last-child` inset, so
-    // without it the values and the restock checkbox sat flush on the card edge.
+    // Label and field on one line, on the 12px rhythm of the totals list this panel sits under; the 20px right is not optional, since this rule is a class deeper than the general `td:last-child` inset and the values sat flush on the card edge without it.
     .wc-order-refund-items .wc-order-totals td {
         padding: 12px 20px;
         vertical-align: middle;
     }
 
-    // No currency affix on these two. The chip works on the line items, where the field is
-    // 76px and it reads as part of the control, but this field is 411px wide and the chip
-    // just floated at the far end of an empty box. The panel reads as the totals list it
-    // sits under — plain label, plain value — and the field states its currency in the
-    // placeholder instead.
+    // No currency affix on these two: the chip reads as part of a 76px line-item field but just floats at the end of this 411px one, so the panel keeps the totals list's plain label and value and the field states its currency in the placeholder.
     .wc-order-refund-items .wc-order-totals td.total {
         // A float clearer has no job here.
         > .clear {
@@ -1740,49 +1412,16 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // The amount field stays disabled until a quantity or line amount is entered, so it
-    // should read that way rather than inviting a value it will not accept. Fading it
-    // rather than filling it grey keeps the field looking like the one it becomes when it
-    // is enabled — the change is in weight, not in kind.
+    // The amount field stays disabled until a quantity or line amount is entered, and fading it rather than filling it grey keeps it the same field it becomes when enabled.
     .wc-order-refund-items input:disabled {
         background: #fff;
         opacity: 0.5;
         cursor: not-allowed;
     }
 
-    .wc-order-refund-items input[type="text"],
-    .wc-order-refund-items input.wc_input_price {
-        width: 100%;
-        height: 38px;
-        padding: 8px 12px;
-        background: #fff;
-        border: 1px solid $od-border;
-        border-radius: 6px;
-        font-size: 14px;
-        line-height: 20px;
-        color: $od-text;
-        box-shadow: none;
-    }
+    // The refund panel's text inputs and its restock checkbox are deliberately not restated here — the view-wide control and checkbox standards below already reach them, and repeating them only created a second place to keep in step.
 
-    // The restock checkbox defaults to the browser accent, which is blue here and the
-    // only blue on the page. Tailwind's form reset paints the checked state with
-    // `background-color` rather than the accent, so both have to be set.
-    .wc-order-refund-items input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        accent-color: var(--color-dokan-btn, #7047eb);
-
-        &:checked {
-            background-color: var(--color-dokan-btn, #7047eb);
-            border-color: var(--color-dokan-btn, #7047eb);
-        }
-    }
-
-    // While a refund is being composed each money cell grows by an input, but the cost
-    // column has none — centred vertically, its figure dropped ~17px below the ones it
-    // should line up with. Top alignment holds the row's first line together, and applies
-    // only in refund mode: jQuery clears the panel's inline `display: none` to open it,
-    // so the closed state still centres against the 44px thumbnail.
+    // In refund mode each money cell grows by an input but the cost column has none, so centring dropped its figure below the row's first line; scoped to the open panel, since jQuery clears the inline `display: none` and the closed state still centres against the 44px thumbnail.
     .dokan-panel-body:has(> .wc-order-refund-items:not([style*="none"]))
         .woocommerce_order_items tbody td {
         vertical-align: top;
@@ -1793,21 +1432,16 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         align-items: center;
         justify-content: flex-end;
         gap: 8px;
-        // 24px clears the last field by the same step the fields clear each other. Nothing
-        // below: the card body already provides the 20px floor, and adding to it closed
-        // this section on 40px where every other one closes on 20.
+        // 24px clears the last field by the same step the fields clear each other, and nothing below, because the card body already provides the 20px floor every other section closes on.
         margin-top: 24px;
         padding: 0 20px;
 
-        // Legacy button margins pushed the pair off the right edge the fields above them
-        // sit on.
+        // Legacy button margins pushed the pair off the right edge the fields above them sit on.
         button {
             margin: 0 !important;
         }
 
-        // The template closes this row with a float clearer. As a flex item it takes a
-        // slot of its own after Submit, and the row's 8px gap with it — which is exactly
-        // how far short of the fields the buttons were landing.
+        // The template's float clearer would take a flex slot of its own after Submit, plus the row's gap — which is exactly how far short of the fields the buttons were landing.
         > .clear {
             display: none;
         }
@@ -1818,24 +1452,10 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Two button weights in this view, and both need stating because the theme paints
-    // `.dokan-btn` and `.dokan-btn:hover` the same regardless of role.
-    //
-    // Secondary — the two Cancels — take the treatment the panel's own Back button sets:
-    // white ground, brand border, brand label, tinting rather than filling on hover. Left
-    // to the theme they turn into a second primary the moment the pointer touches them.
+    // Both button weights need stating because the theme paints `.dokan-btn` and its hover the same regardless of role, and the Cancels turn into a second primary the moment the pointer touches them unless given the panel's Back-button treatment.
     .cancel-action,
     .dokan-cancel-status {
-        // The hover state is handed over rather than fought for. The colour module paints
-        // `.dokan-btn:hover` from three custom properties, as `!important` and from a
-        // selector no rule reachable from here can outrank — competing with it on
-        // specificity failed, and an inline `!important` was the only thing that ever won.
-        // Redefining the properties on the button lets the module's own rule paint the
-        // secondary treatment: a tint rather than a fill, with the brand kept for the
-        // border and the label.
-        //
-        // `--color-dokan-btn` itself is deliberately not shadowed here — the values below
-        // read it, and the resting rule underneath needs it to still mean the brand.
+        // The hover state is handed over rather than fought for: the colour module paints `.dokan-btn:hover` `!important` from three custom properties and from a selector nothing reachable here can outrank, so redefining those properties lets its own rule paint the secondary tint — `--color-dokan-btn` itself stays unshadowed because the values below and the resting rule need it to still mean the brand.
         --color-dokan-btn-hover: #{"color-mix(in srgb, var(--color-dokan-btn, #7047eb) 10%, #fff)"};
         --color-dokan-btn-border-hover: var(--color-dokan-btn, #7047eb);
         --color-dokan-btn-text-hover: var(--color-dokan-btn, #7047eb);
@@ -1846,10 +1466,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         text-shadow: none;
     }
 
-    // Primary — everything else — darkens. The theme's hover reached the `<button>`s
-    // carrying `.dokan-btn-default` but not Update, which is an `<input>` on
-    // `.dokan-btn-success`, so identical-looking buttons behaved differently under the
-    // pointer.
+    // The theme's hover reached the `<button>`s carrying `.dokan-btn-default` but not Update, an `<input>` on `.dokan-btn-success`, so identical-looking buttons behaved differently under the pointer.
     .dokan-btn:not(.cancel-action):not(.dokan-cancel-status),
     input[type="submit"].dokan-btn {
         &:hover,
@@ -1864,8 +1481,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 // ── Sidebar ────────────────────────────────────────────────────────────────────
 
 .dokan-order-details-fragment .dokan-order-right-content {
-    // Detail rows: muted label, dark value. Notes carry `list-unstyled` too, and this
-    // selector would outrank the notes block below, so they are excluded here.
+    // Detail rows: muted label, dark value. Notes carry `list-unstyled` too and this selector would outrank the notes block below, so they are excluded here.
     ul.list-unstyled:not(.order_notes) {
         margin: 0;
 
@@ -1877,8 +1493,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             color: #6b6b6b;
             list-style: none;
 
-            // Figma labels the value, not the other way round: dark semibold label,
-            // grey value.
+            // Figma labels the value, not the other way round: dark semibold label, grey value.
             > span:first-child {
                 margin-right: 6px;
                 font-size: 14px;
@@ -1899,11 +1514,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         color: var(--color-dokan-btn, #7047eb);
     }
 
-    // Legacy hangs the divider off the order block, so with "Hide Customer Info" on it
-    // trails under the last row with nothing beneath it. The divider belongs to whatever
-    // follows instead, so it only exists when there is something to separate.
-    // Qualified to outrank `.dokan-orders-content .dokan-orders-area .general-details
-    // ul.order-status`, which draws the divider.
+    // Legacy hangs the divider off the order block, so with "Hide Customer Info" on it trails under the last row with nothing beneath it; it belongs to whatever follows instead, qualified to outrank the legacy three-class rule that draws it.
     .dokan-panel-body.general-details ul.order-status {
         padding-bottom: 0;
         border-bottom: 0;
@@ -1920,10 +1531,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         line-height: 22px;
         color: #6b6b6b;
 
-        // The note arrived unstyled: a 12px label above a 16px body, so the caption read
-        // smaller than the thing it captions. It now matches the detail rows above it —
-        // dark semibold label, grey value — the only difference being that the note gets
-        // its own line, which suits a sentence rather than a field.
+        // The note arrived unstyled as a 12px label above a 16px body, so the caption read smaller than the thing it captions; it now matches the detail rows above, except that the note gets its own line as a sentence should.
         strong {
             display: block;
             margin-bottom: 2px;
@@ -1933,9 +1541,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             color: $od-text;
         }
 
-        // The markup separates label from note with a `<br>`. Once the label is a block
-        // that break contributes a whole empty line of its own — 28px between the two
-        // instead of the 2px the label's own margin sets.
+        // The markup separates label from note with a `<br>`, which once the label is a block contributes a whole empty line instead of the 2px the label's own margin sets.
         br {
             display: none;
         }
@@ -1956,20 +1562,14 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             flex: 0 0 100%;
         }
 
-        // Update is the primary action, Cancel the secondary one. `!important` answers
-        // the vendor colour-scheme module, which emits its button fill inline.
+        // Update is the primary action; `!important` answers the vendor colour-scheme module, which emits its button fill inline.
         input[type="submit"] {
             background: var(--color-dokan-btn, #7047eb) !important;
             border: 1px solid var(--color-dokan-btn, #7047eb) !important;
             color: #fff !important;
         }
 
-        .dokan-cancel-status {
-            background: #fff !important;
-            border: 1px solid var(--color-dokan-btn, #7047eb) !important;
-            color: var(--color-dokan-btn, #7047eb) !important;
-        }
-
+        // Only the size differs here — the secondary colours come from the shared `.dokan-cancel-status` rule above.
         input[type="submit"],
         .dokan-cancel-status {
             height: 34px;
@@ -1977,19 +1577,14 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // The design separates the customer block from the order block with a divider.
-    // Pulled out to the card edges so the rule reads full-bleed, matching the notes card.
-    // Qualified to outrank `.dokan-orders-content .dokan-orders-area .general-details
-    // ul.customer-details`, which zeroes margin and padding.
+    // Pulled out to the card edges so the divider reads full-bleed like the notes card, and qualified to outrank the legacy three-class rule that zeroes margin and padding.
     .dokan-panel-body.general-details ul.customer-details {
         margin: 16px -20px 0;
         padding: 16px 20px 0;
         border-top: 1px solid $od-border;
     }
 
-    // Store pickup is the one row in this list Pro wraps in a `div` around its `li`, so
-    // the `li + li` step that spaces every other row skips it entirely and it sat flush
-    // against Customer IP above. The wrapper takes the step instead.
+    // Pro wraps this one row's `li` in a `div`, so the `li + li` step that spaces every other row skips it and it sat flush against Customer IP; the wrapper takes the step instead.
     .dokan-panel-body.general-details .vendor-store-pickup-location {
         margin-top: 12px;
 
@@ -1997,13 +1592,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             margin: 0;
         }
 
-        // Treated as the customer note is, not as a field row: a pickup address carries a
-        // date, a time window, a hub name and a street address, and at three lines it
-        // wrapped raggedly around its own label. Block label, value beneath, so both read
-        // straight down the column.
+        // Treated as the customer note is rather than as a field row: a pickup address carries a date, a time window, a hub name and a street, and at three lines it wrapped raggedly around its own label.
         > li > span {
             display: block;
             margin: 0 0 2px;
+            // Both sides stated outright: a longhand elsewhere leaves 6px on this label's inline end, which reads as nothing in LTR but pushes the label off the rail the rest of the list sits on once the column is mirrored.
+            margin-right: 0;
+            margin-left: 0;
             font-size: 14px;
             font-weight: 600;
             line-height: 22px;
@@ -2015,6 +1610,12 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             font-size: 14px;
             line-height: 22px;
             color: #6b6b6b;
+        }
+
+        // A pickup address is store data, so on an RTL store it is routinely still Latin; `plaintext` takes the direction from each line's own first strong character, or the browser reorders the time window and throws the label's colon to the wrong end.
+        > li > span,
+        > li > div {
+            unicode-bidi: plaintext;
         }
     }
 
@@ -2043,13 +1644,11 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     .dokan-label-info    { background: #e9f9ff; color: #0b76b7; }
     .dokan-label-default { background: #f2f2f2; color: #5c5c5c; }
 
-    // Notes card: each row owns its padding so the dividers run edge to edge, the way
-    // the RFQ sidebar sections do. The card body therefore carries none.
+    // Each note row owns its padding so the dividers run edge to edge, the way the RFQ sidebar sections do, which is why the card body carries none.
     #dokan-order-notes {
         padding: 0;
 
-        // Qualified with `ul` to outrank `.dokan-orders-content .dokan-orders-area
-        // ul.order_notes .note_content`, which paints the legacy grey bubble.
+        // Qualified with `ul` to outrank the legacy three-class `.note_content` rule, which paints the grey bubble.
         ul.order_notes {
             margin: 0;
 
@@ -2104,8 +1703,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             }
         }
 
-        // `div.add_note` is qualified: the delivery-time Update button carries the same
-        // class, and would otherwise pick up this block's spacing.
+        // Qualified as `div.add_note` because the delivery-time Update button carries the same class and would otherwise pick up this block's spacing.
         > div.add_note {
             margin: 0;
             padding: 20px;
@@ -2135,8 +1733,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
                 margin: 0;
             }
 
-            // The note-type select and submit share a floated row; flex lets the select
-            // take the free space and pins the button to the right edge.
+            // The note-type select and submit share a floated row; flex lets the select take the free space and pins the button to the right edge.
             .clearfix {
                 display: flex;
                 align-items: center;
@@ -2166,26 +1763,20 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     // Delivery / Store Pickup choice row.
     #vendor-delivery-type {
-        // Flex rather than inline flow: the markup puts a newline between each input and
-        // its label, and that whitespace text node renders as an extra ~4px gap.
+        // Flex rather than inline flow: the newline the markup puts between each input and its label renders as an extra ~4px whitespace gap.
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        // The date field below carries its own 16px, which is the card's rhythm; adding
-        // more here stacked to 36px and broke the run of fields.
+        // The date field below carries its own 16px, which is the card's rhythm; more here stacked to 36px and broke the run of fields.
         margin-bottom: 0;
 
-        // The module's `.delivery-type-*` classes sit on the label as well as the input,
-        // so the label picks up its padding too and widens the gap to its own control.
+        // The module's `.delivery-type-*` classes sit on the label as well as the input, so the label picks up its padding and widens the gap to its own control.
         .delivery-type-delivery,
         .delivery-type-pickup {
             padding: 0;
         }
 
-        // The module styles these radios as a custom pill via
-        // `.vendor-delivery-time-box form #vendor-delivery-type .delivery-type-delivery`
-        // (padding `0 30px 0 8px`), which under `border-box` inflates a 16px radio into a
-        // 40px lozenge. Scoped through the same id to outrank it.
+        // The module styles these radios as a custom pill whose padding inflates a 16px radio into a 40px lozenge under `border-box`, so this is scoped through the same id to outrank it.
         input[type="radio"],
         input[type="checkbox"] {
             width: 16px;
@@ -2205,9 +1796,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
                 border-color: var(--color-dokan-btn, #7047eb);
             }
 
-            // The module also draws its own radio as a 19px pseudo-element over the real
-            // control, which is what rendered as a grey blob. Drop it and let the
-            // standard control show, matching the radios on the other panel screens.
+            // The module also draws its own radio as a 19px pseudo-element over the real control, which is what rendered as a grey blob.
             &::before,
             &::after,
             &:checked::before,
@@ -2246,10 +1835,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Legacy strips the native arrow with `appearance: none` and puts nothing back, so
-    // the control reads as a plain text box. This restores the affordance.
-    // Also matched as `select.dokan-form-control`: the shared control rule above hits
-    // this element through its class (0,3,0), which outranks a bare element selector.
+    // Legacy strips the native arrow with `appearance: none` and puts nothing back; also matched as `select.dokan-form-control`, because the shared control rule reaches this element through its class and outranks a bare element selector.
     select,
     select.dokan-form-control,
     select.form-control {
@@ -2272,11 +1858,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 }
 
 // ── Buttons ────────────────────────────────────────────────────────────────────
-//
-// One button standard for the whole view, for the same reason as the controls below: this
-// lived under `.dokan-order-right-content` and reached only the sidebar, so the sidebar's
-// buttons sat at 38px on a 6px radius while Request Refund and Create New Shipment in the
-// main column kept legacy's 3px.
+// One button standard for the whole view: this lived under `.dokan-order-right-content` and reached only the sidebar, so Request Refund and Create New Shipment in the main column kept legacy's 3px radius against the sidebar's 6px.
 
 .dokan-order-details-fragment {
     a.dokan-btn {
@@ -2297,9 +1879,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         box-shadow: none;
     }
 
-    // `.dokan-dashboard-wrap .dokan-btn.dokan-btn-theme` pins 3px as `!important`, which
-    // left Create New Shipment and the delivery-time Update on a different corner from
-    // every other button in the view. Naming the modifier as well outranks it.
+    // `.dokan-dashboard-wrap .dokan-btn.dokan-btn-theme` pins 3px as `!important`, so naming the modifier as well is what outranks it.
     &#{&} {
         .dokan-btn,
         .dokan-btn.dokan-btn-theme,
@@ -2311,11 +1891,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 }
 
 // ── Form controls ──────────────────────────────────────────────────────────────
-//
-// One control standard for the whole view. This lived under `.dokan-order-right-content`
-// and so only ever reached the sidebar, which is why the Shipments card's selects came
-// out 35px with square corners and its inputs 37px while the notes and delivery-time
-// fields beside them were 38px on a 6px radius.
+// One control standard for the whole view: this lived under `.dokan-order-right-content` and so only reached the sidebar, which is why the Shipments card's selects came out 35px with square corners beside 38px fields on a 6px radius.
 
 .dokan-order-details-fragment {
     input[type="text"],
@@ -2342,8 +1918,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
     }
 
-    // Legacy pins selects to 35px while the button beside them sits at 43px, leaving a
-    // row visibly uneven. One height for all of them settles it.
+    // Legacy pins selects to 35px while the button beside them sits at 43px, so one height for all of them settles the row.
     input[type="text"],
     input[type="number"],
     input[type="email"],
@@ -2352,9 +1927,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     select,
     select.dokan-form-control,
     select.form-control {
-        // `select.dokan-form-control` pins 35px at the same specificity as a bare `select`
-        // here and wins on source order, so the class has to be named explicitly or the
-        // selects sit 3px shorter than the inputs beside them.
+        // `select.dokan-form-control` pins 35px at the same specificity as a bare `select` here and wins on source order, so the class has to be named explicitly.
         height: 38px;
     }
 
@@ -2371,13 +1944,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 }
 
 // ── Focus ──────────────────────────────────────────────────────────────────────
-//
-// One treatment for every control in the fragment. Left alone they disagree: the theme
-// paints a 2px orange outline on plain inputs, while anything carrying Tailwind's
-// `.form-input` takes a blue ring — the two downloadable-permission fields sat side by
-// side with different answers. `!important` because both of those origins are themselves
-// `!important` in this build, and last in the file because the section rules above match
-// at the same specificity and would otherwise win on source order.
+// One focus treatment for every control in the fragment: left alone the theme paints a 2px orange outline while anything carrying Tailwind's `.form-input` takes a blue ring, `!important` because both origins are themselves `!important` in this build, and last in the file because the section rules above match at the same specificity.
 .dokan-order-details-fragment {
     input[type="text"]:focus,
     input[type="number"]:focus,
@@ -2394,12 +1961,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 }
 
 // ── Panel header ───────────────────────────────────────────────────────────────
-//
-// The header is React, outside the fragment, so it is reached through the page — the
-// same `:has()` guard the grey canvas and the date picker use. Its buttons come from the
-// shared component library at Tailwind's 4px `rounded`, while every control and button
-// inside the view sits at 6px, which put the two buttons closest to the card on a
-// different corner radius from everything they sit above.
+// The header is React, outside the fragment, so it is reached through the page with the same `:has()` guard the grey canvas and the date picker use; its shared-library buttons come at Tailwind's 4px while every control inside the view sits at 6px.
 body:has(.dokan-order-details-fragment) {
     .dokan-header-actions button,
     .dokan-header-actions a {
@@ -2409,15 +1971,10 @@ body:has(.dokan-order-details-fragment) {
 }
 
 // ── jQuery UI date picker ───────────────────────────────────────────────────────
-//
-// The picker is appended to `<body>`, outside the fragment, so it is reached through
-// the page rather than the wrapper. `:has()` keeps that to pages actually showing the
-// fragment, which is the same guard the grey canvas above uses.
+// The picker is appended to `<body>`, outside the fragment, so it is reached through the page, with `:has()` keeping that to pages actually showing the fragment.
 body:has(.dokan-order-details-fragment) {
     #ui-datepicker-div {
-        // jQuery UI writes `z-index: 1` inline from the input's own stacking context, so
-        // the calendar opened *underneath* select2's product search (z-index 1050) and
-        // the search box painted straight through it.
+        // jQuery UI writes `z-index: 1` inline from the input's own stacking context, so the calendar opened underneath select2's product search and the search box painted straight through it.
         z-index: 1100 !important;
         width: 260px;
         padding: 8px;
@@ -2519,14 +2076,10 @@ body:has(.dokan-order-details-fragment) {
 }
 
 // ── select2 product search dropdown ────────────────────────────────────────────
-//
-// The dropdown is a sibling of the field, not a descendant of the fragment wrapper in
-// every select2 configuration, so it is matched on its own classes and kept to pages
-// showing the fragment — the same guard the grey canvas and the date picker use.
+// The dropdown is a sibling of the field rather than a descendant of the fragment wrapper in every select2 configuration, so it is matched on its own classes and kept to pages showing the fragment by the same `:has()` guard.
 body:has(.dokan-order-details-fragment) {
     .select2-container--default .select2-dropdown {
-        // Stock select2 draws a mid-grey #7f868d hairline with 4px corners, which reads
-        // as a black box against the card's #e5e7eb fields.
+        // Stock select2 draws a mid-grey #7f868d hairline with 4px corners, which reads as a black box against the card's #e5e7eb fields.
         border: 1px solid #e5e7eb;
         border-radius: 6px;
         background: #fff;
@@ -2534,8 +2087,7 @@ body:has(.dokan-order-details-fragment) {
         overflow: hidden;
     }
 
-    // Opening upward is select2 reacting to the viewport edge, not a bug — but the shared
-    // corner should be square so the panel reads as attached to the field it belongs to.
+    // Opening upward is select2 reacting to the viewport edge, not a bug, but the shared corner should be square so the panel reads as attached to the field it belongs to.
     .select2-container--default .select2-dropdown--above {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;

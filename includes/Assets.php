@@ -830,7 +830,6 @@ class Assets {
         // load dokan style on every pages. requires for shortcodes in other pages
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
-            wp_add_inline_style( 'dokan-style', $this->get_currency_symbol_custom_property() );
             wp_enqueue_style( 'dokan-modal' );
             if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
                 wp_enqueue_style( 'dokan-fontawesome' );
