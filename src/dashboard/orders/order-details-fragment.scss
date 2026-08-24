@@ -20,7 +20,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     // Legacy insets its content by 48px for a sidebar nav the panel does not have, which pushes the cards out of line with the page header; `!important` is required because that rule is ID-qualified and no class selector can outrank it.
     .dokan-dashboard-content {
         // The panel already leaves 16px under the header actions; 8px here makes it 24px.
-        padding: 8px 0 0 !important;
+        padding-block: 8px 0;
+        padding-inline: !important 0;
         background: transparent !important;
     }
 
@@ -261,7 +262,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         // Height, not min-height: the inner search input grows the box, and pushed this to 46px next to the two 40px fields above it.
         height: 40px;
         min-height: 40px;
-        padding: 3px 12px 3px 36px;
+        padding-block: 3px 3px;
+        padding-inline: 36px 12px;
         background-color: #fff;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
@@ -377,7 +379,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
         // Calendar affordance on the expiry field; `!important` to match the shared padding, which needs it to beat Tailwind's `.form-input` and would otherwise pull the text back under the icon.
         input.datepicker {
-            padding-left: 38px !important;
+            padding-inline-start: 38px !important;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: left 12px center;
@@ -608,7 +610,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     // Kept pinned to the corner rather than made a flex row: the block opens by toggling an inline `display`, so any `display` of ours would either outrank `.dokan-hide` while closed or lose to the inline value once open.
     .dokan-customer-shipment-notes-list-area .shipment-notes-details-tab-toggle {
         top: 12px;
-        right: 16px;
+        inset-inline-end: 16px;
     }
 
     .shippments-tracking-header .shippments-tracking-via {
@@ -632,7 +634,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
 
         td {
-            padding: 12px 12px 12px 0;
+            padding-block: 12px 12px;
+            padding-inline: 0 12px;
             background-color: transparent !important;
             border: 0;
             font-size: 14px;
@@ -642,8 +645,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
 
         td:last-child {
-            padding-right: 20px;
-            text-align: right;
+            padding-inline-end: 20px;
+            text-align: end;
             white-space: nowrap;
         }
 
@@ -660,7 +663,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         td.thumb {
             width: 68px;
             min-width: 68px;
-            padding-left: 20px;
+            padding-inline-start: 20px;
         }
 
         td.thumb img {
@@ -732,7 +735,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     .shipped-tracking-number {
         float: left;
         width: calc((100% - 32px) / 3);
-        margin-right: 16px;
+        margin-inline-end: 16px;
         margin-bottom: 0;
         overflow: visible;
     }
@@ -749,7 +752,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     .shipped-tracking-number {
-        margin-right: 0;
+        margin-inline-end: 0;
     }
 
     // Pro pins this field to 98% from an id selector, so it stayed a hair narrower than the two beside it even once the columns matched.
@@ -773,7 +776,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         flex-direction: column;
         align-items: flex-end;
         margin-top: 24px;
-        text-align: right;
+        text-align: end;
 
         input {
             margin: 0;
@@ -813,7 +816,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         // The heading is the section's header band, on the same grey as the card headings, with right padding keeping a long title clear of the toggle.
         h5 {
             margin: 0;
-            padding: 16px 56px 16px 20px;
+            padding-block: 16px 16px;
+            padding-inline: 20px 56px;
             background-color: #f9fafb;
         }
 
@@ -835,7 +839,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         li {
             margin: 0;
             // The left inset is what clears the marker column; a `padding` shorthand zeroed it and dropped the bullet on top of the date.
-            padding: 0 0 24px 44px;
+            padding-block: 0 24px;
+            padding-inline: 44px 0;
             font-size: 14px;
             line-height: 22px;
             color: #6b6b6b;
@@ -847,7 +852,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             // The line joining one entry to the next hangs just below the marker rather than running the entry's full height, with 2px of breath so it reads as connected rather than welded to it.
             &::before {
                 top: 26px;
-                left: 14px;
+                inset-inline-start: 14px;
                 width: 1px;
                 // A shade darker than the card's dividers, which at 1px read as nothing at all and lost the thread joining the entries.
                 background-color: #d9d9d9;
@@ -860,7 +865,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             // The design's delivery badge, drawn entirely here so the markup keeps its bare `li`; `-4px` puts the 28px marker on the 20px date line's midline.
             &::after {
                 top: -4px;
-                left: 0;
+                inset-inline-start: 0;
                 width: 28px;
                 height: 28px;
                 box-sizing: border-box;
@@ -924,7 +929,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         th.order_item_select,
         td.order_item_select {
             width: 52px;
-            padding-right: 0;
+            padding-inline-end: 0;
         }
 
         td.order_item_select label {
@@ -936,12 +941,12 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         th.thumb,
         td.thumb {
             width: 60px;
-            padding-right: 16px;
+            padding-inline-end: 16px;
         }
 
         th.name,
         td.name {
-            padding-left: 0;
+            padding-inline-start: 0;
         }
 
         th.quantity,
@@ -1056,7 +1061,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         // No vertical padding of its own: the button's 16px margins are the whole gap, and 20px here left the single action in ~76px of air and a leftover sliver once the create form hid the button.
         padding: 0 20px !important;
         border-top: 1px solid $od-border;
-        text-align: left;
+        text-align: start;
     }
 
     // Nested panels — one per downloadable file — are rows inside a card, not cards of their own, so they are flattened onto the card's single 20px inset.
@@ -1113,26 +1118,27 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     // The table is pulled out over the body's 20px inset and the edge cells put it back, so the rules between rows run to the card edges while the content stays aligned with the heading above.
     .woocommerce_order_items_wrapper,
     .wc-order-data-row.wc-order-totals-items {
-        margin-left: -20px;
-        margin-right: -20px;
+        margin-inline-start: -20px;
+        margin-inline-end: -20px;
     }
 
     .woocommerce_order_items th:first-child,
     .woocommerce_order_items td:first-child,
     .wc-order-totals td:first-child {
-        padding-left: 20px;
+        padding-inline-start: 20px;
     }
 
     .woocommerce_order_items th:last-child,
     .woocommerce_order_items td:last-child,
     .wc-order-totals td:last-child {
-        padding-right: 20px;
+        padding-inline-end: 20px;
     }
 
     // Column headings are labels, not a ruled header band: 12/16 uppercase in the muted grey, with a single rule under the row.
     .woocommerce_order_items thead th {
         // 19px, not 20: the line box adds a pixel below the cap height, so this puts the same 20px of visible air under the labels as the card's inset puts above them.
-        padding: 0 12px 19px 0;
+        padding-block: 0 19px;
+        padding-inline: 0 12px;
         border: 0;
         font-size: 12px;
         font-weight: 400;
@@ -1144,7 +1150,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     .woocommerce_order_items tbody td {
-        padding: 16px 12px 16px 0;
+        padding-block: 16px 16px;
+        padding-inline: 0 12px;
         border: 0;
         font-size: 14px;
         line-height: 20px;
@@ -1183,7 +1190,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     .woocommerce_order_items td.thumb {
         // Border-box, so this carries the card inset and the gap as well as the image (20 + 44 + 16); at 60 the padding ate it and the image rendered 24px wide.
         width: 80px;
-        padding-right: 16px;
+        padding-inline-end: 16px;
 
         img {
             display: block;
@@ -1248,7 +1255,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     .woocommerce_order_items td.line_cost,
     .woocommerce_order_items th.line_tax,
     .woocommerce_order_items td.line_tax {
-        text-align: left;
+        text-align: start;
         white-space: nowrap;
     }
 
@@ -1283,7 +1290,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     .wc-order-totals td.total {
         width: 35%;
-        text-align: right;
+        text-align: end;
         white-space: nowrap;
     }
 
@@ -1391,8 +1398,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     // No drawn currency affix on these: a grey chip butted against a field read as a detached box at every width it was tried at, and the placeholder states the currency without coming apart.
 
     .wc-order-data-row.wc-order-refund-items {
-        margin-left: -20px;
-        margin-right: -20px;
+        margin-inline-start: -20px;
+        margin-inline-end: -20px;
         padding: 20px 0 0;
         // No rule of its own: the item table's last row already draws one directly above, and the two sat 1px apart and read as a single thick stripe.
         border-top: 0;
@@ -1495,7 +1502,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
             // Figma labels the value, not the other way round: dark semibold label, grey value.
             > span:first-child {
-                margin-right: 6px;
+                margin-inline-end: 6px;
                 font-size: 14px;
                 font-weight: 600;
                 color: $od-text;
@@ -1597,8 +1604,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             display: block;
             margin: 0 0 2px;
             // Both sides stated outright: a longhand elsewhere leaves 6px on this label's inline end, which reads as nothing in LTR but pushes the label off the rail the rest of the list sits on once the column is mirrored.
-            margin-right: 0;
-            margin-left: 0;
+            margin-inline-end: 0;
+            margin-inline-start: 0;
             font-size: 14px;
             font-weight: 600;
             line-height: 22px;
@@ -1693,7 +1700,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
             // "Delete note" is an action, so it reads in the action colour.
             .delete_note {
-                margin-left: 10px;
+                margin-inline-start: 10px;
                 font-weight: 500;
                 color: var(--color-dokan-btn, #7047eb);
 
@@ -1755,7 +1762,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
         input[type="submit"] {
             flex: 0 0 auto;
-            margin-left: auto;
+            margin-inline-start: auto;
             width: auto;
         }
     }
@@ -1815,7 +1822,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             cursor: pointer;
 
             &:last-of-type {
-                margin-right: 0;
+                margin-inline-end: 0;
             }
         }
     }
@@ -1828,7 +1835,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         color: #6b6b6b;
 
         > span:first-child {
-            margin-right: 4px;
+            margin-inline-end: 4px;
             font-size: 14px;
             font-weight: 600;
             color: $od-text;
@@ -1839,7 +1846,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     select,
     select.dokan-form-control,
     select.form-control {
-        padding-right: 34px;
+        padding-inline-end: 34px;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 12px center;
