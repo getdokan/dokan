@@ -20,8 +20,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     // Legacy insets its content by 48px for a sidebar nav the panel does not have, which pushes the cards out of line with the page header; `!important` is required because that rule is ID-qualified and no class selector can outrank it.
     .dokan-dashboard-content {
         // The panel already leaves 16px under the header actions; 8px here makes it 24px.
-        padding-block: 8px 0;
-        padding-inline: !important 0;
+        padding-block: 8px 0 !important;
+        padding-inline: 0 !important;
         background: transparent !important;
     }
 
@@ -1619,11 +1619,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             color: #6b6b6b;
         }
 
-        // A pickup address is store data, so on an RTL store it is routinely still Latin; `plaintext` takes the direction from each line's own first strong character, or the browser reorders the time window and throws the label's colon to the wrong end.
-        > li > span,
-        > li > div {
-            unicode-bidi: plaintext;
-        }
+        // Deliberately no `unicode-bidi: plaintext`: it takes direction from the first strong character, so a Latin pickup address turned this row LTR and aligned it against the opposite edge from every other row in the list. Latin content reordering under RTL is how every label on this page already behaves, and an RTL store has these strings translated anyway.
     }
 
     // Inline actions carry a touch more weight than body text so they read as actions.
