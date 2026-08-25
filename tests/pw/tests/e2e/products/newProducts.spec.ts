@@ -62,6 +62,7 @@ test.describe('Products (React) functionality', () => {
             await expect(products.reactRoot).toBeVisible();
             await expect(products.tab(/^All/)).toBeVisible();
             expect(await products.getRowCount(), 'seeded product row renders').toBeGreaterThan(0);
+            await products.revealSeeded();
             await expect(products.seededProductLink).toBeVisible();
             expect(await products.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
@@ -75,6 +76,7 @@ test.describe('Products (React) functionality', () => {
         });
 
         test('vendor sees the seeded product row with SKU + status (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await products.revealSeeded();
             const row = products.rowByName(newProductsData.seededProductName);
             await expect(row).toBeVisible();
             const rowText = await products.rowStatusText(newProductsData.seededProductName);
@@ -87,6 +89,7 @@ test.describe('Products (React) functionality', () => {
         // so they auto-retry until the DataViews REST refetch repaints.
         test('vendor can filter by Published status tab (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await products.clickTab(/^Published/);
+            await products.revealSeeded();
             await expect(products.rowByName(newProductsData.seededProductName)).toBeVisible();
         });
 
@@ -104,6 +107,7 @@ test.describe('Products (React) functionality', () => {
 
         test('vendor can filter by In stock status tab (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await products.clickTab(/^In stock/);
+            await products.revealSeeded();
             await expect(products.rowByName(newProductsData.seededProductName)).toBeVisible();
         });
 
@@ -189,12 +193,14 @@ test.describe('Products (React) functionality', () => {
         });
 
         test('vendor can open the seeded product editor from the list (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await products.revealSeeded();
             await products.openSeededProduct();
             // Post ids drift per environment — assert the route shape, not a literal id.
             expect(page.url(), 'product name link opens the edit route').toMatch(/#\/?products\/\d+\/edit/);
         });
 
         test('vendor sees the core row actions in the 3-dot menu (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await products.revealSeeded();
             const labels = (await products.rowMenuItemLabels(newProductsData.seededProductName)).map((l) => l.toLowerCase());
             for (const action of ['edit details', 'quick view', 'view in site', 'delete permanently']) {
                 expect(labels.join(' | '), `row action "${action}" present`).toContain(action);
@@ -202,6 +208,7 @@ test.describe('Products (React) functionality', () => {
         });
 
         test('vendor can open and close the Quick view modal (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await products.revealSeeded();
             await products.openQuickView(newProductsData.seededProductName);
             expect(await products.isQuickViewOpen(), 'quick view modal opens').toBe(true);
             const text = await products.quickViewText();
@@ -215,6 +222,7 @@ test.describe('Products (React) functionality', () => {
         });
 
         test('vendor can open a product on the storefront via "View in site" (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await products.revealSeeded();
             const popup = await products.viewInSite(newProductsData.seededProductName);
             expect(popup, 'a storefront tab opened').not.toBeNull();
             if (popup) {
@@ -234,9 +242,12 @@ test.describe('Products (React) functionality', () => {
         });
 
         test('vendor product list survives a reload (HashRouter) (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await products.revealSeeded();
             await expect(products.seededProductLink).toBeVisible();
             await products.reload();
             expect(page.url(), 'HashRouter keeps the products route after reload').toContain('#/products');
+            // The reload clears the search box, so narrow again before re-asserting.
+            await products.revealSeeded();
             await expect(products.seededProductLink).toBeVisible();
             expect(await products.hasNoPhpFatal(), 'no PHP fatal after reload').toBe(true);
         });

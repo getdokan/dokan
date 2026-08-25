@@ -106,6 +106,22 @@
       vendor:
           vendor can view vendor dashboard [lite]: true
           vendor can view vendor dashboard menus [lite]: true
+      vendor (new UI):
+          # tests/e2e/dashboard/dashboard.spec.ts — the /dashboard/new/ React shell.
+          # Test Cases 1-9 in that file drive the LEGACY analytics shell (?path=/analytics/...),
+          # not the SPA, so they stay under the `vendor` group above.
+          Test Case 10 - New full-width dashboard root mounts [lite]: true
+          Test Case 11 - New dashboard /products route mounts [lite]: true
+          Test Case 12 - New dashboard /products/create route mounts (product editor) [lite]: true
+          Test Case 13 - New dashboard /orders route mounts [lite]: true
+          Test Case 14 - New dashboard /withdraw route mounts [lite]: true
+          Test Case 15 - New dashboard /withdraw-requests route mounts [lite]: true
+          Test Case 16 - New dashboard /reverse-withdrawal route mounts: true
+          Test Case 17 - HashRouter survives full reload [lite]: true
+          Test Case 18 - Vendor announcement modal does not block dashboard mount: true
+          Test Case 20 - Unknown HashRouter route does not crash the shell [lite]: true
+      customer (new UI):
+          Test Case 19 - Customer cannot reach the new vendor dashboard: true
 
 - page: 'Products'
   features:
@@ -267,7 +283,9 @@
           vendor can filter products by Product Type via the funnel (React) [lite]: true
           vendor can filter products by Category via the funnel (React) [lite]: true
           vendor can combine two filters and reset clears them (React) [lite]: true
-          vendor can open the Add new product editor (React) [lite]: true
+          # Superseded by the two quick-create cases below (both test.fixme after develop #3296).
+          vendor can open the quick-create product modal (React) [lite]: false
+          vendor navigates to the full create editor when quick-create is off (React) [lite]: false
           vendor can open the seeded product editor from the list (React) [lite]: true
           vendor sees the core row actions in the 3-dot menu (React) [lite]: true
           vendor can open and close the Quick view modal (React) [lite]: true
@@ -314,6 +332,25 @@
           vendor can enable wholesale: true
           vendor can override the default RMA settings: true
           vendor can enable bulk discount: true
+          # tests/e2e/vendor-products/addProduct.spec.ts — React product list (#/products)
+          Test Case 1 - React product list mounts at /dashboard/new/#/products [lite]: true
+          Test Case 2 - Add new product CTA is reachable [lite]: true
+          Test Case 3 - Product list renders rows or empty state [lite]: true
+          Test Case 4 - Search filter narrows the list to zero rows for a non-existent product [lite]: true
+          Test Case 5 - Row actions menu exposes Edit, Quick view, and Delete [lite]: true
+          Test Case 6 - Quick view action opens the QuickViewModal [lite]: true
+          Test Case 7 - Cancel delete keeps the row visible [lite]: true
+          Test Case 8 - Page renders without PHP fatal [lite]: true
+          Test Case 9 - Vendor announcement modal does not block list mount: true
+          Test Case 10 - Direct deep link to /products works (HashRouter survives reload) [lite]: true
+          # tests/e2e/vendor-products/addProduct.spec.ts — React product editor (#/products/create)
+          Test Case 1 - Editor mounts at /products/create [lite]: true
+          Test Case 2 - Editor renders without PHP fatal [lite]: true
+          Test Case 3 - Editor exposes a Save / Update affordance [lite]: true
+          Test Case 4 - Editor shows a name / title field [lite]: true
+          Test Case 5 - Edit non-existent product shows an error / empty state [lite]: true
+          Test Case 6 - Vendor announcement modal does not block editor mount: true
+          Test Case 7 - Reload preserves /products/create route [lite]: true
       customer (new UI):
           customer can view the seeded product on the vendor storefront (React) [lite]: true
       guest (new UI):
@@ -369,12 +406,25 @@
           vendor order list renders without a PHP fatal (React) [lite]: true
           vendor can bulk-change status of selected orders (React) [lite]: true
           customer order appears in vendor React /orders, vendor completes it, change persists (React) [lite]: true
+          vendor cannot change an order status when the capability is disabled (React) [lite]: true
+          # tests/e2e/orders/orders.spec.ts — React smokes still living in the legacy spec (D1: fold into newOrders).
+          Test Case 1 - React order list mounts at /dashboard/new/#/orders [lite]: true
+          Test Case 2 - Order list renders rows or an empty-state banner [lite]: true
+          Test Case 3 - Search filter narrows the list to zero rows for nonsense query [lite]: true
+          Test Case 4 - Row actions menu exposes View and at least one status-change action [lite]: true
+          Test Case 5 - Page renders without a PHP fatal [lite]: true
+          Test Case 6 - Vendor announcement modal does not block list mount: true
+          Test Case 7 - Direct deep link to /orders works (HashRouter survives reload) [lite]: true
       customer (new UI):
           customer can view my orders page and sees the seeded order (React parity) [lite]: true
           customer can view order details (React parity) [lite]: true
 
 - page: 'Manual Orders'
   features:
+      # The legacy `manual-order/manualOrder.spec.ts` was retired 2026-08-14 (all-stub
+      # page object — its cases asserted nothing). The behaviours below stay `true`
+      # because they are genuinely covered by the React spec mapped under the
+      # `(new UI)` groups in this same page entry, not by the retired legacy file.
       admin:
           admin can enable vendor order creation: true
           admin can enable vendor order creation in global settings: true
@@ -581,6 +631,15 @@
           vendor balance summary exposes View Payments + Request Withdraw (React) [lite]: true
           HashRouter survives reload on /withdraw (React) [lite]: true
           HashRouter survives reload on /withdraw-requests (React) [lite]: true
+          # tests/e2e/withdraws/newWithdrawB15.spec.ts — withdraw extensions
+          vendor can set a configured method as the default withdraw method (React) [lite]: true
+          vendor sees the auto-withdraw disbursement schedule widget (React): true
+          # tests/e2e/withdraws/withdraws.spec.ts — React route smokes (tagged @new-ui 2026-08-14)
+          Test Case 1 - /withdraw route mounts [lite]: true
+          Test Case 2 - /withdraw-requests route mounts [lite]: true
+          Test Case 3 - Withdraw page shows balance widget [lite]: true
+          Test Case 4 - HashRouter survives reload on /withdraw [lite]: true
+          Test Case 5 - Reverse-withdrawal route mounts: true
           vendor requests a withdraw -> admin approves (REST) -> vendor Approved tab reflects it (React) [lite]: true
 
 - page: 'Reverse Withdrawal'
@@ -603,9 +662,9 @@
           vendor products in catalog mode when reverse withdrawal rule applied: true
       admin (new UI):
           admin can read reverse-withdrawal stores via REST (React parity): true
-          admin can add reverse withdrawal (React) — no React surface: false
-          admin can filter reverse withdrawal by store (React) — no React surface: false
-          admin can clear reverse withdrawal filters (React) — no React surface: false
+          # No React admin surface for add / filter-by-store / clear-filters — the legacy
+          # admin cases stay under the `admin` group above. (These were leaf rows with an
+          # annotation appended to the title; they matched no test, so they are comments now.)
           vendor reverse-withdrawal widget is consistent with REST state (React): true
       vendor (new UI):
           vendor can view reverse withdrawal menu page (React): true
@@ -615,6 +674,11 @@
           vendor reverse-withdrawal filter controls are present (React): true
           vendor reverse-withdrawal reset leaves the table populated (React): true
           vendor reverse-withdrawal HashRouter survives a reload (React): true
+          # tests/e2e/reverse-withdraws/reverseWithdraws.spec.ts — React route smokes
+          # (tagged @new-ui 2026-08-14). Test Cases 1-2 in that file drive the ADMIN
+          # SPA, so they stay under the `admin` group.
+          Test Case 3 - Vendor /reverse-withdrawal route mounts in new dashboard: true
+          Test Case 4 - Vendor reverse-withdrawal page shows balance widget: true
       customer (new UI):
           customer does not get a vendor reverse-withdrawal surface (React): true
 
@@ -904,6 +968,21 @@
           vendor can restore trashed product review: true
           vendor can permanently-delete product review: true
           vendor can perform bulk action on product reviews: true
+      # React coverage of the vendor `#/reviews` route. Moved here 2026-08-14 from the
+      # 'Store Reviews' page: the spec was named for store reviews but seeds and asserts
+      # PRODUCT reviews. See tests/e2e/product-reviews/newProductReviews.spec.ts.
+      vendor (new UI):
+          vendor reviews page renders with the four status tabs (React): true
+          vendor sees the seeded product review in the list (React): true
+          vendor can switch status tabs to filter reviews (React): true
+          vendor empty status tab shows the empty state (React): true
+          vendor reviews list survives a reload (React): true
+      admin (new UI):
+          admin can trash a product review (REST — no React vendor surface): true
+      customer (new UI):
+          customer review of a vendor product is listed (React parity): true
+          customer can submit a review with the configured rating (React parity): true
+          customer reviews a product then vendor sees it in the React reviews list (React): true
 
 - page: 'MenuManager'
   features:
@@ -1046,12 +1125,27 @@
           searching by product name narrows the list (React): true
           searching a non-existent product shows the empty state (React): true
           vendor can permanently delete an auction product after confirming (React): true
-          the row Edit action leaves the SPA toward the legacy auction editor (React→legacy): true
+          'the row Edit action opens the auction product in the React product editor (#/products/:id/edit)': true
           HashRouter survives a reload on /auction (React): true
           'vendor can open the Auctions Activity list at #/auction-activity (React)': true
           the activity list renders its columns when bids exist, else the empty state (React): true
           'the Auctions back button returns to #/auction (React)': true
           a logged-in customer cannot mount the vendor Auctions route (React): true
+          # tests/e2e/product-form-manager/newProductFormAuction.spec.ts — the Auction
+          # product type in the React product form. Tagged @new-ui on 2026-08-14.
+          offers Simple, Variable, External/Affiliate and Group types [lite]: true
+          offers the Auction type when the auction module is active: true
+          selecting Simple keeps the native price field [lite]: true
+          selecting Auction swaps the native price for the Auction Options card: true
+          renders every Auction Options field when the auction type is chosen: true
+          vendor can create an auction with the required fields: true
+          vendor can create an auction with every option filled: true
+          hides unrelated fields for the auction type: true
+          keeps the allow-listed fields for the auction type: true
+          reloads saved auction values when the product is re-opened: true
+          blocks save when the start price is missing: true
+          blocks save when the bid increment is missing: true
+          rejects an end date that is not after the start date: true
 
 - page: 'Color Scheme Customizer'
   features:
@@ -1316,6 +1410,11 @@
       vendor (new UI):
           creating a product with wholesale enabled persists _dokan_wholesale_meta (React): true
           a REST-seeded wholesale product hydrates its enabled state in the React editor (React): true
+          # tests/e2e/product-variations/productVariations.spec.ts — variations on #/products/create
+          Test Case 1 - Page renders without fatal: true
+          Test Case 2 - Page renders content: true
+          # tests/e2e/intelligence/intelligence.spec.ts — AI assistant mounts in the React editor
+          Test Case 1 - Vendor product editor loads (AI mounts via Fill slot): true
 
 - page: 'Product Addon'
   features:
@@ -1476,14 +1575,17 @@
           admin can store the current editable post id: true
           admin can read the rank math editor data: true
       vendor:
-          vendor can view rank math seo options on product edit page: true
-          vendor sees the Rank Math SEO card on the product editor: true
-          vendor sees the Rank Math SEO fields rendered in the panel: true
           vendor can store the current editable post id: true
           vendor can read the rank math editor data for own product: true
-          Rank Math SEO section is absent when the module is disabled: true
           vendor cannot store the editable post id for another vendor product: true
           vendor cannot read editor data for another vendor product: true
+      # These four open the React product editor (#/products/:id/edit) and were
+      # tagged @new-ui on 2026-08-14; the remaining vendor cases above are REST-only.
+      vendor (new UI):
+          vendor product editor renders without fatal error: true
+          vendor sees the Rank Math SEO card on the product editor: true
+          vendor sees the Rank Math SEO fields rendered in the panel: true
+          Rank Math SEO section is absent when the module is disabled: true
       customer:
           customer cannot store the current editable post id: true
       guest:
@@ -1731,18 +1833,10 @@
           customer can review store: true
           customer can edit store review: true
           customer can view own review: true
-      admin (new UI):
-          admin can trash a store review (REST — no React vendor surface): true
-      vendor (new UI):
-          vendor reviews page renders with the four status tabs (React): true
-          vendor sees the seeded store review in the list (React): true
-          vendor can switch status tabs to filter reviews (React): true
-          vendor empty status tab shows the empty state (React): true
-          vendor reviews list survives a reload (React): true
-      customer (new UI):
-          customer can review store (React parity): true
-          customer can submit a review with the configured rating (React parity): true
-          customer reviews store then vendor sees it in React reviews list (React): true
+      # NOTE: store reviews (the `dokan_store_reviews` post type) have an ADMIN React
+      # route only — there is no vendor React store-review surface. The `(new UI)` rows
+      # that used to sit here actually covered PRODUCT reviews (`#/reviews`); they moved
+      # to the 'Product Reviews' page on 2026-08-14 along with the spec itself.
 
 - page: 'Store Support'
   features:
