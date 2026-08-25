@@ -9,7 +9,7 @@
  * Text Domain: dokan-lite
  * Requires Plugins: woocommerce
  * WC requires at least: 8.5.0
- * WC tested up to: 10.4.3
+ * WC tested up to: 11.0.1
  * Domain Path: /languages/
  * License: GPL2
  */

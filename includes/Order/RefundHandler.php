@@ -14,7 +14,6 @@ class RefundHandler implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        // @todo Enable the bellow action after refactoring the Pro Refund class.
         add_action( 'woocommerce_order_refunded', [ $this, 'handle_refund' ], 10, 2 );
         add_filter( 'dokan_refund_should_insert_into_vendor_balance', [ $this, 'exclude_cod_payment' ], 10, 3 );
         add_filter( 'dokan_vendor_earning_in_refund', [ $this, 'get_vendor_earning_in_refund' ], 10, 2 );
@@ -35,8 +34,10 @@ class RefundHandler implements Hookable {
      * @return void
      */
     public function handle_refund( int $order_id, int $refund_id ): void {
-        // Refund will be handle by the pro if exists.
-        if ( dokan()->is_pro_exists() ) {
+        // Refunds created by Pro's own flow are adjusted there. Anything else that
+        // reaches this hook -- REST API, WP-CLI, third-party plugins -- never passed
+        // through Pro and still needs the vendor balance adjusting here.
+        if ( dokan()->is_pro_exists() && ! $this->should_handle_while_pro_active( $refund_id ) ) {
             return;
         }
 
@@ -55,10 +56,55 @@ class RefundHandler implements Hookable {
 
         $vendor_refund = apply_filters( 'dokan_vendor_earning_in_refund', $refund_order, $order );
 
-        // Without Pro, no gateway integration adjusts the payout amount, so both amounts are the same.
+        // Both amounts are the same here. Pro splits the payout from the earning when a
+        // gateway integration charges a fee, but that only happens inside its own refund
+        // flow — refunds reaching this handler never went through it, so there is no
+        // gateway-adjusted payout figure to use.
         do_action( 'dokan_refund_adjust_vendor_balance', $vendor_refund, $refund_order, $order, $vendor_refund );
 
         do_action( 'dokan_refund_adjust_dokan_orders', $vendor_refund, $refund_order, $order );
+    }
+
+    /**
+     * Whether a refund still needs handling here while Dokan Pro is active.
+     *
+     * Pro adjusts the vendor balance for the refunds it creates itself, so those must
+     * be skipped to avoid debiting twice. Refunds created anywhere else never reach
+     * Pro's flow and are handled here.
+     *
+     * Pro releases older than the one introducing Refund::is_dokan_refund() cannot mark
+     * their own refunds, so there is no way to tell the two apart. In that case this
+     * returns false, preserving the previous behaviour rather than risking a double
+     * adjustment — Lite and Pro are versioned independently and can be mismatched.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $refund_id The ID of the refund.
+     *
+     * @return bool
+     */
+    protected function should_handle_while_pro_active( int $refund_id ): bool {
+        $pro_refund_class = $this->get_pro_refund_class();
+
+        if ( ! method_exists( $pro_refund_class, 'is_dokan_refund' ) ) {
+            return false;
+        }
+
+        return ! $pro_refund_class::is_dokan_refund( $refund_id );
+    }
+
+    /**
+     * Fully qualified name of Pro's refund class.
+     *
+     * Kept as a seam so the Pro dependency can be substituted in tests, where Pro is
+     * not installed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected function get_pro_refund_class(): string {
+        return '\WeDevs\DokanPro\Refund\Refund';
     }
 
     /**
