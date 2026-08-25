@@ -413,7 +413,7 @@ jQuery(function($) {
         },
 
         /**
-         * Attach the shipped-date picker.
+         * Attach the order details date pickers.
          *
          * Runs at DOM-ready on the legacy page and again whenever the order details
          * fragment is injected into the Vendor panel.
@@ -469,6 +469,15 @@ jQuery(function($) {
                 .filter( ':not(.hasDatepicker)' )
                 .datepicker({
                     dateFormat: datepickerFormat
+                });
+
+            // Scoped to the permissions block rather than `input.datepicker` at page scope: that selector is script.js's own, and jQuery UI keeps whichever binding lands first, so a page-wide match would rebind every sale-price and coupon date field on the dashboard to a format their `pattern` rejects.
+            $( scope || document )
+                .find( '.order_download_permissions input.datepicker' )
+                .filter( ':not(.hasDatepicker)' )
+                .datepicker({
+                    // The format script.js gives these fields on the legacy page, so both surfaces read and write the same thing.
+                    dateFormat: 'yy-mm-dd'
                 });
         },
 

@@ -233,11 +233,16 @@ class OrderDetailsFragmentTest extends DokanTestCase {
     }
 
     /**
-     * A trashed order gets a clean error too.
+     * A trashed order still renders.
+     *
+     * The Vendor's order list includes trashed orders and the legacy details page opens
+     * them, and the panel is that same view — refusing them here would take away an order
+     * the Vendor can still reach by another route. Trash is not an ownership boundary;
+     * the ownership check above is what decides access.
      *
      * @return void
      */
-    public function test_trashed_order_returns_not_found(): void {
+    public function test_trashed_order_still_renders(): void {
         $order = wc_get_order( $this->order_id );
         $order->set_status( 'trash' );
         $order->save();
@@ -246,7 +251,28 @@ class OrderDetailsFragmentTest extends DokanTestCase {
 
         $response = $this->get_request( $this->fragment_route( $this->order_id ) );
 
-        $this->assertEquals( 404, $response->get_status() );
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertStringContainsString( 'dokan-order-details-wrap', $response->get_data()['html'] );
+    }
+
+    /**
+     * And a trashed order belonging to someone else is still refused.
+     *
+     * Pinned separately because the trash check used to reject these before the ownership
+     * check ever ran, so dropping it must not open a hole.
+     *
+     * @return void
+     */
+    public function test_trashed_order_of_another_vendor_is_still_forbidden(): void {
+        $order = wc_get_order( $this->order_id );
+        $order->set_status( 'trash' );
+        $order->save();
+
+        wp_set_current_user( $this->seller_id2 );
+
+        $response = $this->get_request( $this->fragment_route( $this->order_id ) );
+
+        $this->assertEquals( 403, $response->get_status() );
     }
 
     /**
