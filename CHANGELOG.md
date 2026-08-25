@@ -1,3 +1,8 @@
+### v5.0.17 ( Aug 25, 2026 ) ###
+
+- **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
+- **fix:** In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.
+
 ### v5.0.16 ( Aug 21, 2026 ) ###
 
 - **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.

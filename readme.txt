@@ -3,11 +3,11 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.9
-Tested up to: 7.0
+Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.16
+Stable tag: 5.0.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.17 ( Aug 25, 2026 ) =
+- **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
+- **fix:** In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.
+
 = v5.0.16 ( Aug 21, 2026 ) =
 - **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.
 - **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
@@ -395,8 +399,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v5.0.13 ( Aug 12, 2026 ) =
 - **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
 - **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
-
-= v5.0.12 ( Aug 03, 2026 ) =
-- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.17',
+        'released' => '2026-08-25',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.16',
         'released' => '2026-08-21',
         'changes'  => [
