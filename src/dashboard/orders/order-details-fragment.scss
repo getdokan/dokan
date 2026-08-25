@@ -509,13 +509,19 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         margin-bottom: 20px;
     }
 
-    // The strip holding Create New Shipment, named through the card body because Pro's two-class rule ties and `orders.less` wins on source order; the padding drops to nothing while the button is hidden so the strip cannot leave a sliver under the create form.
-    .dokan-panel-body .shipping-status-tracking-top-info {
+    // The strip holding Create New Shipment. Named through Pro's own panel id rather than the card
+    // body class: Pro styles the pieces below from selectors carrying that id, and a rule built only
+    // from classes cannot outrank one id no matter how many classes it stacks. Borrowing the id puts
+    // these one class ahead of Pro's, which is what `!important` was standing in for — and standing
+    // in badly, because a shorthand `margin: … !important` on the button also beat the adjacent-sibling
+    // rule below and pinned the empty-state gap at Pro's 10px + 16px instead of the 12px intended.
+    // The padding drops to nothing while the button is hidden so the strip cannot leave a sliver
+    // under the create form.
+    #dokan-order-shipping-status-tracking-panel .shipping-status-tracking-top-info {
         padding: 0 20px;
 
-        // `!important` is the only lever here: Pro sets the bottom margin from a selector carrying two ids, which nothing built from classes can outrank.
         #create-tracking-status-action {
-            margin: 16px 0 !important;
+            margin: 16px 0;
         }
 
         // Pro's paragraph margin left the button adrift below the centred empty-state message.
@@ -794,9 +800,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     // Equal thirds on a real gap instead of Pro's 33% with a 2% gutter, which left the last field 35px short; `margin-bottom: 0` is the important part, because a float's trailing margin extends the row box and pushes whatever clears it down on top of that element's own spacing.
+    // The "other provider" pair belongs here too: it is the second row of the same three-column
+    // grid, and on Pro's 33%/2% its two fields sat ~15px right of the columns above them.
     .shipping-status-provider,
     .shipped-status-date,
-    .shipped-tracking-number {
+    .shipped-tracking-number,
+    .tracking-status-other-provider,
+    .tracking-status-other-p-url {
         float: left;
         width: calc((100% - 32px) / 3);
         margin-inline-end: 16px;
