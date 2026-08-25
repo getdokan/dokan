@@ -34,9 +34,7 @@ class RefundHandler implements Hookable {
      * @return void
      */
     public function handle_refund( int $order_id, int $refund_id ): void {
-        // Refunds created by Pro's own flow are adjusted there. Anything else that
-        // reaches this hook -- REST API, WP-CLI, third-party plugins -- never passed
-        // through Pro and still needs the vendor balance adjusting here.
+        // Pro adjusts the refunds it creates; anything else still needs handling here.
         if ( dokan()->is_pro_exists() && ! $this->should_handle_while_pro_active( $refund_id ) ) {
             return;
         }
@@ -56,10 +54,7 @@ class RefundHandler implements Hookable {
 
         $vendor_refund = apply_filters( 'dokan_vendor_earning_in_refund', $refund_order, $order );
 
-        // Both amounts are the same here. Pro splits the payout from the earning when a
-        // gateway integration charges a fee, but that only happens inside its own refund
-        // flow — refunds reaching this handler never went through it, so there is no
-        // gateway-adjusted payout figure to use.
+        // Same on both sides: only Pro's own flow produces a gateway-adjusted payout figure.
         do_action( 'dokan_refund_adjust_vendor_balance', $vendor_refund, $refund_order, $order, $vendor_refund );
 
         do_action( 'dokan_refund_adjust_dokan_orders', $vendor_refund, $refund_order, $order );
@@ -68,14 +63,9 @@ class RefundHandler implements Hookable {
     /**
      * Whether a refund still needs handling here while Dokan Pro is active.
      *
-     * Pro adjusts the vendor balance for the refunds it creates itself, so those must
-     * be skipped to avoid debiting twice. Refunds created anywhere else never reach
-     * Pro's flow and are handled here.
-     *
-     * Pro releases older than the one introducing Refund::is_dokan_refund() cannot mark
-     * their own refunds, so there is no way to tell the two apart. In that case this
-     * returns false, preserving the previous behaviour rather than risking a double
-     * adjustment — Lite and Pro are versioned independently and can be mismatched.
+     * Pro releases that cannot mark their own refunds are indistinguishable, so this
+     * returns false for them, preserving the previous behaviour rather than risking a
+     * double adjustment. Lite and Pro are versioned independently.
      *
      * @since DOKAN_SINCE
      *
@@ -96,8 +86,7 @@ class RefundHandler implements Hookable {
     /**
      * Fully qualified name of Pro's refund class.
      *
-     * Kept as a seam so the Pro dependency can be substituted in tests, where Pro is
-     * not installed.
+     * A seam so the Pro dependency can be substituted in tests.
      *
      * @since DOKAN_SINCE
      *
