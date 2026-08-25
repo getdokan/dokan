@@ -809,9 +809,15 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     .tracking-status-other-p-url {
         float: left;
         width: calc((100% - 32px) / 3);
-        margin-inline-end: 16px;
+        // The start side is zeroed rather than left alone: Pro sets `margin-right` physically, which in RTL is no longer the side this logical gutter writes to, so both would apply and the third column would wrap.
+        margin-inline: 0 16px;
         margin-bottom: 0;
         overflow: visible;
+
+        // The gutter follows the writing direction but the float does not, so the columns have to be turned over by hand or they keep reading left-to-right inside an RTL page.
+        [dir="rtl"] & {
+            float: right;
+        }
     }
 
     // `padding`, not `margin`, because these blocks carry `clear: both` and a top margin is absorbed into the clearance and rendered as nothing; stated unconditionally rather than behind `:not(.dokan-hide)`, since jQuery's `.show()` leaves `dokan-hide` sitting on the element and that test never matched.
