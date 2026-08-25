@@ -790,36 +790,6 @@ class Assets {
     }
 
     /**
-     * Expose the store's currency symbol to CSS as a custom property.
-     *
-     * Some controls need the symbol as an affix — a refund amount field reads as a bare
-     * number without one — and those fields are rendered by templates this plugin does
-     * not own, so the symbol cannot be added to their markup. A custom property lets a
-     * stylesheet place it with `content` and keeps the value where it belongs: with the
-     * store, not hard-coded per theme.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    protected function get_currency_symbol_custom_property() {
-        // The symbol arrives HTML-encoded (`&#2547;` for BDT, `&pound;` for GBP), which
-        // `content` would print literally.
-        $symbol = html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8' );
-
-        // Nothing in a currency symbol needs angle brackets; dropping them keeps the value
-        // from being able to close the style element it is printed into.
-        $symbol = str_replace( [ '<', '>' ], '', $symbol );
-
-        // JSON quoting is the right shape for a CSS string, but only with the unicode left
-        // alone — `\u09f3` is a JSON escape, and CSS would print those six characters.
-        return sprintf(
-            ':root{--dokan-currency-symbol:%s}',
-            wp_json_encode( $symbol, JSON_UNESCAPED_UNICODE )
-        );
-    }
-
-    /**
      * Enqueue front-end scripts
      */
     public function enqueue_front_scripts() {

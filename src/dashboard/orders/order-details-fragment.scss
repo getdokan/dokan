@@ -2046,7 +2046,7 @@ body:has(.dokan-order-details-fragment) {
         width: 260px;
         padding: 8px;
         background: #fff;
-        border: 1px solid #e5e7eb;
+        border: 1px solid $od-border;
         border-radius: 6px;
         box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
         font-family: inherit;
@@ -2147,7 +2147,7 @@ body:has(.dokan-order-details-fragment) {
 body:has(.dokan-order-details-fragment) {
     .select2-container--default .select2-dropdown {
         // Stock select2 draws a mid-grey #7f868d hairline with 4px corners, which reads as a black box against the card's #e5e7eb fields.
-        border: 1px solid #e5e7eb;
+        border: 1px solid $od-border;
         border-radius: 6px;
         background: #fff;
         box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);

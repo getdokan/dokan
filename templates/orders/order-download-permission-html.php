@@ -15,12 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
             ? '<a href="' . esc_url( $permission_product_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $permission_product_name ) . '</a>'
             : esc_html( $permission_product_name );
 
-        // Links straight to the Vendor's own asset — WooCommerce's "customer download link" is avoided because that URL carries the buyer's email in its query string.
-        $permission_file_url  = $product->get_file_download_path( $download->download_id );
-        $permission_file_name = wc_get_filename_from_url( $permission_file_url );
-        $permission_file_html = $permission_file_url && $permission_file_name
-            ? '<a href="' . esc_url( $permission_file_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $permission_file_name ) . '</a>'
-            : esc_html( $permission_file_name );
+        // Named but not linked, as WooCommerce's own permissions metabox does: under the default Force Downloads method WooCommerce writes `deny from all` over the upload directory, so a direct link to the asset is dead on any server that honours it.
+        $permission_file_name = wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) );
 
         $permission_title = '#'
             . absint( $product->get_id() )
@@ -31,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 // translators: 1) download count, 2) download file name
                 __( 'File %1$s: %2$s', 'dokan-lite' ),
                 esc_html( $file_count ),
-                $permission_file_html
+                esc_html( $permission_file_name )
             );
         ?>
 
@@ -76,11 +72,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <td>
                             <label><?php esc_html_e( 'Access Expires', 'dokan-lite' ); ?>:</label>
                             <?php
-                            // Rendered in the site's date format so it matches what the date picker writes back.
-                            $expire_date = $download->access_expires ? dokan_current_datetime()->modify( $download->access_expires )->format( wc_date_format() ) : '';
+                            // ISO, matching WooCommerce's own permissions metabox and the format the date picker on this field reads and writes.
+                            $expire_date = $download->access_expires ? dokan_current_datetime()->modify( $download->access_expires )->format( 'Y-m-d' ) : '';
                             ?>
 
-                            <input type="text" style="width: 150px;" class="short datepicker" name="access_expires[<?php echo esc_attr( $loop ); ?>]" value="<?php echo esc_attr( $expire_date ); ?>" placeholder="<?php esc_attr_e( 'Never', 'dokan-lite' ); ?>" />
+                            <input type="text" style="width: 150px;" class="short datepicker" name="access_expires[<?php echo esc_attr( $loop ); ?>]" value="<?php echo esc_attr( $expire_date ); ?>" maxlength="10" placeholder="<?php esc_attr_e( 'Never', 'dokan-lite' ); ?>" pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])" />
                         </td>
                     </tr>
                 </tbody>
