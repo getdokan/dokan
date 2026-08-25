@@ -82,15 +82,10 @@
                 margin-right: 0;
                 margin-left: 3%;
 
-                // Only the gutter side flips — width comes from the LTR rule; the floor is cleared here too or it puts back the minimum that outgrew the row.
+                // Only the gutter side flips; the width and its cleared floor both come from the LTR rule, which is not direction-scoped.
                 .dokan-order-billing-address {
-                    min-width: 0;
                     margin-right:0;
                     margin-left:2%;
-                }
-
-                .dokan-order-shipping-address {
-                    min-width: 0;
                 }
             }
         }

@@ -5,9 +5,12 @@ $od-muted: #828282;
 $od-border: #e5e7eb;
 $od-radius: 6px;
 $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
+$od-body: #6b6b6b;
+$od-fill: #f3f4f6;
+$od-hairline: #e9e9e9;
 
-// The grey ground white cards sit on, matching the product editor canvas.
-.dokan-dashboard-content:has(.dokan-order-details-fragment) {
+// The grey ground white cards sit on, matching the product editor canvas. Reached through the route class rather than `:has()`, so `body` is not a `:has()` subject on panel routes that never render this view; the fragment's own nested `.dokan-dashboard-content` is painted back to transparent below.
+.dokan-order-details-active .dokan-dashboard-content {
     background-color: #f0f0f1;
 
     // The header badge already carries the status colours through its `dokan-badge-*` class, so `currentcolor` gives it a matching outline whatever the status.
@@ -155,7 +158,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         font-size: 14px;
         // Addresses run to many short lines with no separators between fields, so they need more leading than the single-line rows elsewhere to read as distinct lines.
         line-height: 28px;
-        color: #6b6b6b;
+        color: $od-body;
         // Addresses are free text and can carry long unbroken tokens; wrap rather than push the card wider than its column.
         overflow-wrap: anywhere;
 
@@ -164,12 +167,6 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             margin: 0;
             font-style: normal;
         }
-    }
-
-    // Bootstrap's `.panel-collapse.collapse` collides with the panel's Tailwind `visibility: collapse` utility and hid the permission details the legacy page shows; the utility is emitted `!important`, so no specificity wins.
-    .panel-collapse.collapse {
-        visibility: visible !important;
-        height: auto;
     }
 
     // Title and Revoke share one justified row, which makes legacy's float on the button redundant.
@@ -262,7 +259,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         // `min-height` with `height: auto`: this is a multi-select, so the box has to grow once a second product is chosen rather than clip the row of chips.
         height: auto;
         min-height: 40px;
-        padding-block: 3px 3px;
+        padding-block: 3px;
         padding-inline: 36px 12px;
         background-color: #fff;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23828282' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E");
@@ -270,7 +267,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         background-position: left 12px center;
         background-size: 16px 16px;
         border: 1px solid $od-border;
-        border-radius: 6px;
+        border-radius: $od-radius;
         box-shadow: none;
     }
 
@@ -316,7 +313,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         height: 26px;
         margin: 3px 6px 3px 0;
         padding: 0 8px;
-        background-color: #f3f4f6;
+        background-color: $od-fill;
         border: 1px solid $od-border;
         border-radius: 4px;
         font-size: 13px;
@@ -373,7 +370,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             border: 0;
             font-size: 14px;
             line-height: 22px;
-            color: #6b6b6b;
+            color: $od-body;
         }
 
         tr:last-child td:last-child {
@@ -420,7 +417,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             padding: 8px 12px !important;
             background-color: #fff !important;
             border: 1px solid $od-border !important;
-            border-radius: 6px !important;
+            border-radius: $od-radius !important;
             font-size: 14px !important;
             line-height: 22px;
             color: $od-text !important;
@@ -497,7 +494,6 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     .shipping-status-track-info-heading,
     .dokan-customer-shipment-notes-list-area h5 {
-        margin: 0 0 12px;
         font-size: 14px;
         font-weight: 600;
         line-height: 20px;
@@ -506,17 +502,10 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
     // Air, not size, separates this heading from the 13px/600 labels under it — the card's own heading is 14px too, and an inner heading has no business being larger — so it takes the same 20px step the card leaves under its heading.
     .shipping-status-track-info-heading {
-        margin-bottom: 20px;
+        margin: 0 0 20px;
     }
 
-    // The strip holding Create New Shipment. Named through Pro's own panel id rather than the card
-    // body class: Pro styles the pieces below from selectors carrying that id, and a rule built only
-    // from classes cannot outrank one id no matter how many classes it stacks. Borrowing the id puts
-    // these one class ahead of Pro's, which is what `!important` was standing in for — and standing
-    // in badly, because a shorthand `margin: … !important` on the button also beat the adjacent-sibling
-    // rule below and pinned the empty-state gap at Pro's 10px + 16px instead of the 12px intended.
-    // The padding drops to nothing while the button is hidden so the strip cannot leave a sliver
-    // under the create form.
+    // The strip holding Create New Shipment, named through Pro's own panel id because Pro styles the pieces below from selectors carrying it and no stack of classes outranks one id; borrowing the id is what the `!important` here used to stand in for, and it stood in badly, beating the adjacent-sibling rule below and pinning the empty-state gap at Pro's 10px + 16px instead of the 12px intended.
     #dokan-order-shipping-status-tracking-panel .shipping-status-tracking-top-info {
         padding: 0 20px;
 
@@ -540,7 +529,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         font-size: 14px;
         line-height: 28px;
         // Legacy sets #999 from a deeper selector, which made this message read as less important than the empty state beside it.
-        color: #6b6b6b !important;
+        color: $od-body !important;
     }
 
     // Empty state left as legacy renders it: the design's left-aligned `+` link was built, but two theme rules repaint `.dokan-btn` on hover and the override could not be demonstrated working, so it was reverted on request rather than shipped unverified.
@@ -646,13 +635,13 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         height: 28px;
         top: auto;
         margin: 0;
-        border-radius: 6px;
-        color: #6b6b6b;
+        border-radius: $od-radius;
+        color: $od-body;
         text-indent: 0;
         cursor: pointer;
 
         &:hover {
-            background-color: #f3f4f6;
+            background-color: $od-fill;
             color: $od-text;
         }
 
@@ -704,7 +693,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         }
 
         td {
-            padding-block: 12px 12px;
+            padding-block: 12px;
             padding-inline: 0 12px;
             background-color: transparent !important;
             border: 0;
@@ -741,8 +730,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             width: 36px;
             min-width: 36px;
             height: 36px;
-            background-color: #f3f4f6;
-            border: 1px solid #e9e9e9;
+            background-color: $od-fill;
+            border: 1px solid $od-hairline;
             border-radius: 3px;
             object-fit: cover;
         }
@@ -800,8 +789,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     // Equal thirds on a real gap instead of Pro's 33% with a 2% gutter, which left the last field 35px short; `margin-bottom: 0` is the important part, because a float's trailing margin extends the row box and pushes whatever clears it down on top of that element's own spacing.
-    // The "other provider" pair belongs here too: it is the second row of the same three-column
-    // grid, and on Pro's 33%/2% its two fields sat ~15px right of the columns above them.
+    // The "other provider" pair belongs here too — it is the second row of the same three-column grid, and on Pro's 33%/2% its two fields sat ~15px right of the columns above them.
     .shipping-status-provider,
     .shipped-status-date,
     .shipped-tracking-number,
@@ -879,7 +867,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     .shippments-tracking-footer select:disabled,
     .shippments-tracking-footer input[readonly] {
         background-color: #f9fafb !important;
-        border-color: #e9e9e9 !important;
+        border-color: $od-hairline !important;
         color: #a1a1aa !important;
         pointer-events: none;
     }
@@ -896,7 +884,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         // The heading is the section's header band, on the same grey as the card headings, with right padding keeping a long title clear of the toggle.
         h5 {
             margin: 0;
-            padding-block: 16px 16px;
+            padding-block: 16px;
             padding-inline: 20px 56px;
             background-color: #f9fafb;
         }
@@ -923,7 +911,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             padding-inline: 44px 0;
             font-size: 14px;
             line-height: 22px;
-            color: #6b6b6b;
+            color: $od-body;
 
             &:last-child {
                 padding-bottom: 0;
@@ -972,7 +960,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             margin: 12px 0 0;
             font-size: 13px;
             line-height: 20px;
-            color: #6b6b6b;
+            color: $od-body;
 
             &:first-child {
                 margin-top: 8px;
@@ -1043,7 +1031,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         // The quantity is on screen from the start, greyed until its row is ticked, so the column reads as "this row has a quantity" rather than as empty space.
         .shipping-tracking.is-disabled input {
             background-color: #f9fafb;
-            border-color: #e9e9e9;
+            border-color: $od-hairline;
             color: #a1a1aa;
             cursor: not-allowed;
         }
@@ -1230,7 +1218,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     }
 
     .woocommerce_order_items tbody td {
-        padding-block: 16px 16px;
+        padding-block: 16px;
         padding-inline: 0 12px;
         border: 0;
         font-size: 14px;
@@ -1262,7 +1250,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
         i {
             font-size: 20px;
-            color: #6b6b6b;
+            color: $od-body;
         }
     }
 
@@ -1278,8 +1266,8 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             height: 44px;
             // A product with no image falls back to WooCommerce's placeholder, which is not on every install — when it 404s the element collapses to its alt text and spills across the row, so the box holds its size and clips.
             overflow: hidden;
-            background-color: #f3f4f6;
-            border: 1px solid #e9e9e9;
+            background-color: $od-fill;
+            border: 1px solid $od-hairline;
             border-radius: 3px;
             object-fit: cover;
             font-size: 0;
@@ -1428,7 +1416,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 
         li.code {
             padding: 3px 10px;
-            background: #f3f4f6;
+            background: $od-fill;
             border: 1px solid $od-border;
             border-radius: 4px;
             font-size: 13px;
@@ -1468,7 +1456,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         padding: 6px 8px;
         background: #fff;
         border: 1px solid $od-border;
-        border-radius: 6px;
+        border-radius: $od-radius;
         font-size: 13px;
         line-height: 20px;
         color: $od-text;
@@ -1577,7 +1565,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             padding: 0;
             font-size: 14px;
             line-height: 22px;
-            color: #6b6b6b;
+            color: $od-body;
             list-style: none;
 
             // Figma labels the value, not the other way round: dark semibold label, grey value.
@@ -1616,7 +1604,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         border-radius: 0;
         font-size: 14px;
         line-height: 22px;
-        color: #6b6b6b;
+        color: $od-body;
 
         // The note arrived unstyled as a 12px label above a 16px body, so the caption read smaller than the thing it captions; it now matches the detail rows above, except that the note gets its own line as a sentence should.
         strong {
@@ -1696,7 +1684,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
             display: block;
             font-size: 14px;
             line-height: 22px;
-            color: #6b6b6b;
+            color: $od-body;
         }
 
         // Deliberately no `unicode-bidi: plaintext`: it takes direction from the first strong character, so a Latin pickup address turned this row LTR and aligned it against the opposite edge from every other row in the list. Latin content reordering under RTL is how every label on this page already behaves, and an RTL store has these strings translated anyway.
@@ -1908,7 +1896,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         margin-bottom: 16px;
         font-size: 14px;
         line-height: 22px;
-        color: #6b6b6b;
+        color: $od-body;
 
         > span:first-child {
             margin-inline-end: 4px;
@@ -1955,7 +1943,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         height: 38px;
         padding: 0 16px;
         line-height: 20px;
-        border-radius: 6px;
+        border-radius: $od-radius;
         font-size: 14px;
         font-weight: 500;
         text-shadow: none;
@@ -1968,7 +1956,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         .dokan-btn.dokan-btn-theme,
         .dokan-btn.dokan-btn-default,
         input[type="submit"].dokan-btn {
-            border-radius: 6px !important;
+            border-radius: $od-radius !important;
         }
     }
 }
@@ -1990,7 +1978,7 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
         padding: 8px 12px;
         background: #fff;
         border: 1px solid $od-border;
-        border-radius: 6px;
+        border-radius: $od-radius;
         font-size: 14px;
         line-height: 20px;
         color: $od-text;
@@ -2032,7 +2020,6 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
     input[type="text"]:focus,
     input[type="number"]:focus,
     input[type="email"]:focus,
-    input[type="date"]:focus,
     select:focus,
     textarea:focus,
     .select2-container--focus .select2-selection,
@@ -2044,18 +2031,18 @@ $od-shadow: 0 1px 3px 0 rgb(0 0 0 / 10%), 0 1px 2px -1px rgb(0 0 0 / 10%);
 }
 
 // ── Panel header ───────────────────────────────────────────────────────────────
-// The header is React, outside the fragment, so it is reached through the page with the same `:has()` guard the grey canvas and the date picker use; its shared-library buttons come at Tailwind's 4px while every control inside the view sits at 6px.
-body:has(.dokan-order-details-fragment) {
+// The header is React, outside the fragment, so it is reached through the page with the same route class the grey canvas and the date picker use; its shared-library buttons come at Tailwind's 4px while every control inside the view sits at 6px.
+body.dokan-order-details-active {
     .dokan-header-actions button,
     .dokan-header-actions a {
         // Tailwind's `rounded` is emitted `!important` in this build.
-        border-radius: 6px !important;
+        border-radius: $od-radius !important;
     }
 }
 
 // ── jQuery UI date picker ───────────────────────────────────────────────────────
-// The picker is appended to `<body>`, outside the fragment, so it is reached through the page, with `:has()` keeping that to pages actually showing the fragment.
-body:has(.dokan-order-details-fragment) {
+// The picker is appended to `<body>`, outside the fragment, so it is reached through the page, with the route class keeping that to pages actually showing the fragment.
+body.dokan-order-details-active {
     #ui-datepicker-div {
         // jQuery UI writes `z-index: 1` inline from the input's own stacking context, so the calendar opened underneath select2's product search and the search box painted straight through it.
         z-index: 1100 !important;
@@ -2063,7 +2050,7 @@ body:has(.dokan-order-details-fragment) {
         padding: 8px;
         background: #fff;
         border: 1px solid $od-border;
-        border-radius: 6px;
+        border-radius: $od-radius;
         box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
         font-family: inherit;
         font-size: 13px;
@@ -2080,7 +2067,7 @@ body:has(.dokan-order-details-fragment) {
     .ui-datepicker .ui-datepicker-title {
         font-size: 14px;
         font-weight: 600;
-        color: #25252d;
+        color: $od-text;
     }
 
     // The stock arrows are sprite-backed and read as grey blobs against a white header.
@@ -2095,7 +2082,7 @@ body:has(.dokan-order-details-fragment) {
         cursor: pointer;
 
         &:hover {
-            background: #f3f4f6;
+            background: $od-fill;
             border: 0;
         }
 
@@ -2110,8 +2097,8 @@ body:has(.dokan-order-details-fragment) {
                 width: 8px;
                 height: 8px;
                 margin: 5px auto;
-                border-top: 2px solid #6b6b6b;
-                border-right: 2px solid #6b6b6b;
+                border-top: 2px solid $od-body;
+                border-right: 2px solid $od-body;
                 content: "";
             }
         }
@@ -2129,7 +2116,7 @@ body:has(.dokan-order-details-fragment) {
         padding: 6px 0;
         font-size: 12px;
         font-weight: 600;
-        color: #828282;
+        color: $od-muted;
     }
 
     .ui-datepicker td {
@@ -2142,11 +2129,11 @@ body:has(.dokan-order-details-fragment) {
         border: 0;
         border-radius: 4px;
         font-weight: 400;
-        color: #25252d;
+        color: $od-text;
         text-align: center;
 
         &:hover {
-            background: #f3f4f6;
+            background: $od-fill;
         }
     }
 
@@ -2159,12 +2146,12 @@ body:has(.dokan-order-details-fragment) {
 }
 
 // ── select2 product search dropdown ────────────────────────────────────────────
-// The dropdown is a sibling of the field rather than a descendant of the fragment wrapper in every select2 configuration, so it is matched on its own classes and kept to pages showing the fragment by the same `:has()` guard.
-body:has(.dokan-order-details-fragment) {
+// The dropdown is a sibling of the field rather than a descendant of the fragment wrapper in every select2 configuration, so it is matched on its own classes and kept to pages showing the fragment by the same route class.
+body.dokan-order-details-active {
     .select2-container--default .select2-dropdown {
         // Stock select2 draws a mid-grey #7f868d hairline with 4px corners, which reads as a black box against the card's #e5e7eb fields.
         border: 1px solid $od-border;
-        border-radius: 6px;
+        border-radius: $od-radius;
         background: #fff;
         box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
         overflow: hidden;
@@ -2186,16 +2173,16 @@ body:has(.dokan-order-details-fragment) {
         padding: 9px 12px;
         font-size: 14px;
         line-height: 20px;
-        color: #25252d;
+        color: $od-text;
     }
 
     // The "type 3 more characters" hint is guidance, not a choice.
     .select2-container--default .select2-results__message {
-        color: #828282;
+        color: $od-muted;
     }
 
     .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: #f3f4f6;
-        color: #25252d;
+        background-color: $od-fill;
+        color: $od-text;
     }
 }

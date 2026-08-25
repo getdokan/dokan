@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         $permission_product_name = apply_filters( 'woocommerce_admin_download_permissions_title', $product->get_title(), $download->product_id, $download->order_id, $download->order_key, $download->download_id );
 
         // Pending, draft and private products 404 on `get_permalink()`, so those titles stay plain text rather than linking nowhere.
-        $permission_product_url  = is_post_publicly_viewable( $product->get_id() ) ? get_permalink( $product->get_id() ) : '';
+        $permission_product_url  = is_post_publicly_viewable( $product->get_id() ) ? $product->get_permalink() : '';
         $permission_product_html = $permission_product_url
             ? '<a href="' . esc_url( $permission_product_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $permission_product_name ) . '</a>'
             : esc_html( $permission_product_name );
@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         </button>
     </div>
 
-    <div id="collapse-<?php echo esc_attr( $download->download_id ); ?>" class="panel-collapse collapse">
+    <div class="panel-collapse">
         <div class="panel-body">
             <table class="wc-metabox-content" style="table-layout: fixed;">
                 <tbody>

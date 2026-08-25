@@ -471,18 +471,12 @@ jQuery(function($) {
                     dateFormat: datepickerFormat
                 });
 
-            // Download access-expiry fields, which script.js binds at DOM-ready and so
-            // misses entirely once the fragment is injected. Kept inside the permissions
-            // block on purpose: `input.datepicker` is script.js's own selector, and since
-            // jQuery UI keeps whichever binding lands first, matching it at page scope
-            // would take every sale-price and coupon date field on the dashboard and
-            // rebind it to a different format than the ISO their `pattern` accepts.
+            // Scoped to the permissions block rather than `input.datepicker` at page scope: that selector is script.js's own, and jQuery UI keeps whichever binding lands first, so a page-wide match would rebind every sale-price and coupon date field on the dashboard to a format their `pattern` rejects.
             $( scope || document )
                 .find( '.order_download_permissions input.datepicker' )
                 .filter( ':not(.hasDatepicker)' )
                 .datepicker({
-                    // The format script.js gives these fields on the legacy page, so the
-                    // two surfaces read and write the same thing.
+                    // The format script.js gives these fields on the legacy page, so both surfaces read and write the same thing.
                     dateFormat: 'yy-mm-dd'
                 });
         },

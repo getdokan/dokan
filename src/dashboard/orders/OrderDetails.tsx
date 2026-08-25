@@ -11,6 +11,15 @@ import type { OrderDetailsFragment, OrderDetailsInlineScript } from './types';
 import './order-details-fragment.scss';
 
 /**
+ * Marks the page while this route is mounted.
+ *
+ * The stylesheet ships in the panel's single CSS bundle, which every dashboard route
+ * loads, so the rules that reach outside the fragment wrapper need a way to say "only
+ * on this route". This class is that switch — see `order-details-fragment.scss`.
+ */
+const ORDER_DETAILS_BODY_CLASS = 'dokan-order-details-active';
+
+/**
  * Inline script elements this route currently has live in the document.
  *
  * Keyed by handle + position + code, so re-rendering the same order reuses the
@@ -247,7 +256,7 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
         }
 
         const jumpWithoutLeavingTheRoute = ( event: MouseEvent ) => {
-            const anchor = ( event.target as Element )?.closest?.( 'a' );
+            const anchor = ( event.target as Element )?.closest( 'a' );
 
             if ( ! anchor || event.defaultPrevented ) {
                 return;
@@ -263,11 +272,12 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
             event.preventDefault();
 
             const targetId = href.slice( 1 );
-            const target = targetId
-                ? container.querySelector( `#${ CSS.escape( targetId ) }` )
-                : null;
 
-            target?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+            if ( targetId ) {
+                container
+                    .querySelector( `#${ CSS.escape( targetId ) }` )
+                    ?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+            }
         };
 
         container.addEventListener( 'click', jumpWithoutLeavingTheRoute );
@@ -279,8 +289,15 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
 
     // Leaving the route entirely takes the render's inline data with it, so a later
     // visit cannot read a global belonging to an order the Vendor is no longer on.
+    // The body class goes with it: the page-level rules that dress this view — the grey
+    // canvas, the panel header, the date picker and select2 — sit outside the fragment
+    // wrapper, and matching them on a class beats making `body` a `:has()` subject on
+    // every panel route that will never render this view.
     useEffect( () => {
+        document.body.classList.add( ORDER_DETAILS_BODY_CLASS );
+
         return () => {
+            document.body.classList.remove( ORDER_DETAILS_BODY_CLASS );
             syncInlineScripts( [] );
         };
     }, [] );
@@ -299,18 +316,18 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
     return (
         <div className="dokan-order-details-wrapper dokan-react-order-details">
             { isLoading && (
-                // Mirrors the rendered layout — two columns, 24px gaps, 320px sidebar — so the page does not visibly reflow once the fragment lands.
+                // Mirrors the rendered layout — two columns, 24px gaps, 320px sidebar — so the page does not visibly reflow once the fragment lands. The blocks sit a step above the grey canvas the route paints from mount, without going all the way to the white of a finished card.
                 <div
                     className="flex flex-col gap-6 lg:flex-row"
                     aria-label={ __( 'Loading order details', 'dokan-lite' ) }
                 >
                     <div className="flex flex-1 flex-col gap-6">
-                        <div className="h-72 animate-pulse rounded-md bg-gray-200" />
-                        <div className="h-40 animate-pulse rounded-md bg-gray-200" />
+                        <div className="h-72 animate-pulse rounded-md bg-gray-50" />
+                        <div className="h-40 animate-pulse rounded-md bg-gray-50" />
                     </div>
                     <div className="flex w-full flex-col gap-6 lg:w-80">
-                        <div className="h-52 animate-pulse rounded-md bg-gray-200" />
-                        <div className="h-64 animate-pulse rounded-md bg-gray-200" />
+                        <div className="h-52 animate-pulse rounded-md bg-gray-50" />
+                        <div className="h-64 animate-pulse rounded-md bg-gray-50" />
                     </div>
                 </div>
             ) }
