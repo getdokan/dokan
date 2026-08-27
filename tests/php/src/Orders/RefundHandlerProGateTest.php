@@ -6,17 +6,15 @@ use WeDevs\Dokan\Order\RefundHandler;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
- * Pro-aware gate on the refund handler.
+ * Vendor balance adjustment for refunds Dokan did not create.
  *
- * Before this gate, Lite skipped every refund whenever Pro was active, while Pro only
- * intercepted the wp-admin refund button. Refunds created over REST, WP-CLI or by a
- * third-party plugin therefore reduced the WooCommerce order total but never touched the
- * vendor balance, so a fully refunded order stayed withdrawable
- * (plugin-internal-tasks#2314, item 1).
+ * Before this change Lite skipped every refund whenever Pro was active, while Pro only
+ * intercepted the wp-admin refund button. Refunds created over REST, WP-CLI or by a gateway
+ * reduced the WooCommerce order total but never touched the vendor balance, so a fully
+ * refunded order stayed withdrawable (plugin-internal-tasks#2314, item 1).
  *
- * Pro now marks the refunds it creates, and Lite handles only the unmarked ones. Pro
- * releases too old to mark their refunds must still be skipped entirely — Lite and Pro
- * are versioned independently, and double-debiting a vendor is worse than the original bug.
+ * Two behaviours are covered: refunds already accounted for elsewhere are skipped, and
+ * refunds carrying no line items still produce a vendor credit.
  *
  * @group orders
  * @group refund
@@ -24,186 +22,238 @@ use WeDevs\Dokan\Test\DokanTestCase;
 class RefundHandlerProGateTest extends DokanTestCase {
 
     /**
-     * Invoke the protected gate on a handler.
+     * Filters registered by a test, removed again in tearDown.
      *
-     * @param RefundHandler $handler   Handler under test.
-     * @param int           $refund_id Refund ID.
+     * @var array<int, array{0: string, 1: callable}>
+     */
+    private $registered_filters = [];
+
+    /**
+     * Remove any filter a test registered.
+     */
+    public function tearDown(): void {
+        foreach ( $this->registered_filters as $filter ) {
+            remove_filter( $filter[0], $filter[1], 10 );
+        }
+
+        $this->registered_filters = [];
+
+        parent::tearDown();
+    }
+
+    /**
+     * Register a filter for the duration of one test.
      *
-     * @return bool
+     * @param string   $hook     Filter name.
+     * @param callable $callback Callback.
      */
-    private function invoke_gate( RefundHandler $handler, int $refund_id ): bool {
-        $method = new \ReflectionMethod( $handler, 'should_handle_while_pro_active' );
-        $method->setAccessible( true );
+    private function add_temporary_filter( string $hook, callable $callback ) {
+        add_filter( $hook, $callback, 10, 3 );
 
-        return $method->invoke( $handler, $refund_id );
+        $this->registered_filters[] = [ $hook, $callback ];
     }
 
     /**
-     * Build a handler that resolves Pro's refund class to the given stand-in.
+     * Total credited to a vendor for an order.
      *
-     * @param string $pro_class Fully qualified class name to substitute.
+     * @param int $order_id Order ID.
      *
-     * @return RefundHandler
+     * @return float
      */
-    private function handler_using( string $pro_class ): RefundHandler {
-        return new class( $pro_class ) extends RefundHandler {
-
-            /**
-             * Substituted Pro refund class.
-             *
-             * @var string
-             */
-            private $pro_class;
-
-            /**
-             * @param string $pro_class Class name to return.
-             */
-            public function __construct( string $pro_class ) {
-                $this->pro_class = $pro_class;
-            }
-
-            protected function get_pro_refund_class(): string {
-                return $this->pro_class;
-            }
-        };
-    }
-
-    /**
-     * A Pro too old to mark its refunds cannot be told apart, so Lite must stand down.
-     *
-     * This is the version-skew case: new Lite paired with an older Pro. Handling the
-     * refund here would debit the vendor a second time.
-     */
-    public function test_gate_stands_down_when_pro_cannot_mark_refunds() {
-        $handler = $this->handler_using( '\Dokan\Test\NoSuchProRefundClass' );
-
-        $this->assertFalse(
-            $this->invoke_gate( $handler, 123 ),
-            'An unmarkable Pro must be treated as "Pro handles it" to avoid a double debit.'
-        );
-    }
-
-    /**
-     * A class that exists but lacks is_dokan_refund() is also treated as too old.
-     */
-    public function test_gate_stands_down_when_pro_class_lacks_the_marker_api() {
-        $legacy_pro = get_class(
-            new class() {
-                // A Pro release from before the refund marker existed.
-            }
-        );
-
-        $handler = $this->handler_using( $legacy_pro );
-
-        $this->assertFalse(
-            $this->invoke_gate( $handler, 123 ),
-            'A Pro class without is_dokan_refund() must not be probed for markers.'
-        );
-    }
-
-    /**
-     * A refund Pro created is already accounted for, so Lite must skip it.
-     */
-    public function test_gate_skips_refunds_created_by_pro() {
-        $marked_pro = get_class(
-            new class() {
-                public static function is_dokan_refund( $refund_id ) {
-                    return true;
-                }
-            }
-        );
-
-        $this->assertFalse(
-            $this->invoke_gate( $this->handler_using( $marked_pro ), 456 ),
-            'Pro-created refunds are adjusted by Pro and must not be handled twice.'
-        );
-    }
-
-    /**
-     * A refund from REST, WP-CLI or a third-party plugin is unmarked and must be handled.
-     */
-    public function test_gate_handles_refunds_not_created_by_pro() {
-        $unmarked_pro = get_class(
-            new class() {
-                public static function is_dokan_refund( $refund_id ) {
-                    return false;
-                }
-            }
-        );
-
-        $this->assertTrue(
-            $this->invoke_gate( $this->handler_using( $unmarked_pro ), 789 ),
-            'Refunds that never passed through Pro still need the vendor balance adjusting.'
-        );
-    }
-
-    /**
-     * The refund ID is passed through to Pro unchanged.
-     */
-    public function test_gate_passes_the_refund_id_to_pro() {
-        $recording_pro = get_class(
-            new class() {
-                /**
-                 * Last refund ID received.
-                 *
-                 * @var int
-                 */
-                public static $received_id = 0;
-
-                public static function is_dokan_refund( $refund_id ) {
-                    self::$received_id = (int) $refund_id;
-
-                    return false;
-                }
-            }
-        );
-
-        $this->invoke_gate( $this->handler_using( $recording_pro ), 4242 );
-
-        $this->assertSame( 4242, $recording_pro::$received_id );
-    }
-
-    /**
-     * Without Pro the handler keeps its original behaviour and records the refund.
-     *
-     * Guards against the gate accidentally changing Lite-only sites.
-     */
-    public function test_lite_only_site_still_records_the_refund_credit() {
+    private function get_refund_credit( int $order_id ): float {
         global $wpdb;
 
-        $order_id = $this->create_single_vendor_order();
-        $order    = wc_get_order( $order_id );
-        $items    = $order->get_items();
-        $item     = reset( $items );
+        return (float) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COALESCE( SUM( credit ), 0 ) FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id = %d AND trn_type = %s",
+                $order_id,
+                'dokan_refund'
+            )
+        );
+    }
 
-        // The refund must carry line items: commission is allocated per item, so an
-        // amount-only refund resolves to a zero vendor share and writes nothing.
+    /**
+     * Create a refund the way WooCommerce does for a given caller shape.
+     *
+     * @param int   $order_id   Order ID.
+     * @param float $amount     Refund amount.
+     * @param array $line_items Line items, empty for an item-less refund.
+     *
+     * @return \WC_Order_Refund
+     */
+    private function create_refund( int $order_id, float $amount, array $line_items ) {
         $refund = wc_create_refund(
             [
                 'order_id'   => $order_id,
-                'amount'     => 5,
-                'reason'     => 'Lite-only refund',
-                'line_items' => [
-                    $item->get_id() => [
-                        'qty'          => 0,
-                        'refund_total' => 5,
-                        'refund_tax'   => [],
-                    ],
-                ],
+                'amount'     => $amount,
+                'reason'     => 'test refund',
+                'line_items' => $line_items,
             ]
         );
 
         $this->assertNotWPError( $refund );
 
-        $credit = (float) $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COALESCE( SUM( credit ), 0 ) FROM {$wpdb->prefix}dokan_vendor_balance WHERE trn_id = %d AND trn_type = %s",
-                $order->get_id(),
-                'dokan_refund'
-            )
+        return $refund;
+    }
+
+    /**
+     * A refund another component already accounted for must not be credited again.
+     */
+    public function test_refund_handled_elsewhere_is_skipped() {
+        $order_id = $this->create_single_vendor_order();
+
+        $this->add_temporary_filter( 'dokan_refund_is_handled_externally', '__return_true' );
+
+        $this->create_refund( $order_id, 5, [] );
+
+        $this->assertSame(
+            0.0,
+            $this->get_refund_credit( $order_id ),
+            'A refund reported as handled elsewhere must not be credited by Lite.'
+        );
+    }
+
+    /**
+     * A refund nothing else handled is credited to the vendor.
+     */
+    public function test_refund_not_handled_elsewhere_is_credited() {
+        $order_id = $this->create_single_vendor_order();
+
+        $this->add_temporary_filter( 'dokan_refund_is_handled_externally', '__return_false' );
+
+        $this->create_refund( $order_id, 5, [] );
+
+        $this->assertGreaterThan(
+            0.0,
+            $this->get_refund_credit( $order_id ),
+            'A refund that reached this handler must credit the vendor balance.'
+        );
+    }
+
+    /**
+     * The filter receives the refund and order IDs so Pro can identify its own refunds.
+     */
+    public function test_filter_receives_the_refund_and_order_ids() {
+        $order_id = $this->create_single_vendor_order();
+        $seen     = [];
+
+        $this->add_temporary_filter(
+            'dokan_refund_is_handled_externally',
+            function ( $handled, $refund_id, $filtered_order_id ) use ( &$seen ) {
+                $seen = [
+                    'refund_id' => (int) $refund_id,
+                    'order_id'  => (int) $filtered_order_id,
+                ];
+
+                return $handled;
+            }
         );
 
-        $this->assertGreaterThan( 0.0, $credit, 'A Lite-only refund must still credit the vendor balance.' );
+        $refund = $this->create_refund( $order_id, 5, [] );
+
+        $this->assertSame( $refund->get_id(), $seen['refund_id'] );
+        $this->assertSame( $order_id, $seen['order_id'] );
+    }
+
+    /**
+     * An item-less full refund still credits the vendor.
+     *
+     * WooCommerce's wc_order_fully_refunded() fires on every transition to `wc-refunded` and passes
+     * `line_items => []`, as do the wc/v2 REST route and most gateway webhooks. Commission is
+     * allocated per refunded item, so without proration the vendor share resolved to 0.0, no
+     * balance row was written, and the order stayed withdrawable while fully refunded.
+     */
+    public function test_item_less_full_refund_credits_the_vendor() {
+        $order_id = $this->create_single_vendor_order();
+        $order    = wc_get_order( $order_id );
+
+        $this->add_temporary_filter( 'dokan_refund_is_handled_externally', '__return_false' );
+
+        // Exactly what wc_order_fully_refunded() passes.
+        $this->create_refund( $order_id, (float) $order->get_total(), [] );
+
+        $this->assertGreaterThan(
+            0.0,
+            $this->get_refund_credit( $order_id ),
+            'A fully refunded order must not leave the vendor holding the earning.'
+        );
+    }
+
+    /**
+     * An item-less partial refund credits a share, not the whole earning.
+     */
+    public function test_item_less_partial_refund_is_prorated() {
+        $order_id = $this->create_single_vendor_order();
+        $order    = wc_get_order( $order_id );
+        $total    = (float) $order->get_total();
+
+        $this->add_temporary_filter( 'dokan_refund_is_handled_externally', '__return_false' );
+
+        $this->create_refund( $order_id, $total / 2, [] );
+
+        $credit = $this->get_refund_credit( $order_id );
+
+        $this->assertGreaterThan( 0.0, $credit );
+        $this->assertLessThan( $total, $credit, 'Half a refund must not credit the whole order total.' );
+    }
+
+    /**
+     * A refund carrying line items credits the vendor's share of those items.
+     */
+    public function test_refund_with_line_items_credits_the_item_share() {
+        $order_id = $this->create_single_vendor_order();
+        $order    = wc_get_order( $order_id );
+        $items    = $order->get_items();
+        $item     = reset( $items );
+
+        $this->add_temporary_filter( 'dokan_refund_is_handled_externally', '__return_false' );
+
+        $this->create_refund(
+            $order_id,
+            5,
+            [
+                $item->get_id() => [
+                    'qty'          => 0,
+                    'refund_total' => 5,
+                    'refund_tax'   => [],
+                ],
+            ]
+        );
+
+        $this->assertEqualsWithDelta(
+            5.0,
+            $this->get_refund_credit( $order_id ),
+            0.01,
+            'The credit must match the refunded item amount, not the order total.'
+        );
+    }
+
+    /**
+     * A repeated event for the same refund must not credit the vendor twice.
+     *
+     * The balance entry is keyed by order rather than by refund, so without a guard a
+     * duplicate `woocommerce_order_refunded` would credit twice and drive the vendor's
+     * balance negative.
+     */
+    public function test_duplicate_refund_event_does_not_double_credit() {
+        $order_id = $this->create_single_vendor_order();
+        $order    = wc_get_order( $order_id );
+
+        $this->add_temporary_filter( 'dokan_refund_is_handled_externally', '__return_false' );
+
+        $refund = $this->create_refund( $order_id, (float) $order->get_total(), [] );
+
+        $after_first = $this->get_refund_credit( $order_id );
+
+        // Fire the same event again, as a retried webhook or a third-party plugin would.
+        do_action( 'woocommerce_order_refunded', $order_id, $refund->get_id() );
+
+        $this->assertEqualsWithDelta(
+            $after_first,
+            $this->get_refund_credit( $order_id ),
+            0.01,
+            'A duplicate refund event must not credit the vendor a second time.'
+        );
     }
 
     /**
@@ -214,8 +264,7 @@ class RefundHandlerProGateTest extends DokanTestCase {
 
         $before = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dokan_vendor_balance" );
 
-        $handler = new RefundHandler();
-        $handler->handle_refund( 999999, 999998 );
+        ( new RefundHandler() )->handle_refund( 999999, 999998 );
 
         $after = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}dokan_vendor_balance" );
 

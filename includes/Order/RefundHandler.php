@@ -3,11 +3,20 @@
 namespace WeDevs\Dokan\Order;
 
 use WeDevs\Dokan\Analytics\Reports\OrderType;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Commission\OrderRefundCommission;
 use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Cache;
 
 class RefundHandler implements Hookable {
+
+    /**
+     * Marks a refund whose vendor balance adjustment has already been applied.
+     *
+     * @since DOKAN_SINCE
+     */
+    const BALANCE_ADJUSTED_META_KEY = '_dokan_vendor_balance_adjusted';
+
     /**
      * Register necessary WordPress hooks.
      *
@@ -34,8 +43,24 @@ class RefundHandler implements Hookable {
      * @return void
      */
     public function handle_refund( int $order_id, int $refund_id ): void {
-        // Pro adjusts the refunds it creates; anything else still needs handling here.
-        if ( dokan()->is_pro_exists() && ! $this->should_handle_while_pro_active( $refund_id ) ) {
+        /**
+         * Whether something other than this handler already adjusted the vendor balance.
+         *
+         * Dokan Pro adjusts the refunds its own flow creates, so those must be skipped here
+         * to avoid debiting a vendor twice. Refunds created anywhere else -- REST, WP-CLI,
+         * a gateway webhook -- never reach that flow and still need handling.
+         *
+         * The default is `dokan()->is_pro_exists()`, so a Pro release too old to answer this
+         * filter leaves Lite standing down exactly as before. Lite and Pro are versioned
+         * independently, and debiting twice is worse than the leak this closes.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $handled_externally Whether the refund is already accounted for.
+         * @param int  $refund_id          The ID of the refund.
+         * @param int  $order_id           The ID of the order being refunded.
+         */
+        if ( apply_filters( 'dokan_refund_is_handled_externally', dokan()->is_pro_exists(), $refund_id, $order_id ) ) {
             return;
         }
 
@@ -52,48 +77,21 @@ class RefundHandler implements Hookable {
             return;
         }
 
+        // The balance entry is keyed by order, not by refund, so a repeated event for the
+        // same refund would credit the vendor twice and drive the balance negative.
+        if ( $refund_order->get_meta( self::BALANCE_ADJUSTED_META_KEY ) ) {
+            return;
+        }
+
         $vendor_refund = apply_filters( 'dokan_vendor_earning_in_refund', $refund_order, $order );
 
         // Same on both sides: only Pro's own flow produces a gateway-adjusted payout figure.
         do_action( 'dokan_refund_adjust_vendor_balance', $vendor_refund, $refund_order, $order, $vendor_refund );
 
         do_action( 'dokan_refund_adjust_dokan_orders', $vendor_refund, $refund_order, $order );
-    }
 
-    /**
-     * Whether a refund still needs handling here while Dokan Pro is active.
-     *
-     * Pro releases that cannot mark their own refunds are indistinguishable, so this
-     * returns false for them, preserving the previous behaviour rather than risking a
-     * double adjustment. Lite and Pro are versioned independently.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int $refund_id The ID of the refund.
-     *
-     * @return bool
-     */
-    protected function should_handle_while_pro_active( int $refund_id ): bool {
-        $pro_refund_class = $this->get_pro_refund_class();
-
-        if ( ! method_exists( $pro_refund_class, 'is_dokan_refund' ) ) {
-            return false;
-        }
-
-        return ! $pro_refund_class::is_dokan_refund( $refund_id );
-    }
-
-    /**
-     * Fully qualified name of Pro's refund class.
-     *
-     * A seam so the Pro dependency can be substituted in tests.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    protected function get_pro_refund_class(): string {
-        return '\WeDevs\DokanPro\Refund\Refund';
+        $refund_order->update_meta_data( self::BALANCE_ADJUSTED_META_KEY, dokan_current_datetime()->format( 'Y-m-d H:i:s' ) );
+        $refund_order->save();
     }
 
     /**
@@ -110,12 +108,62 @@ class RefundHandler implements Hookable {
             return 0.0;
         }
 
+        // Commission is allocated per refunded item, so a refund carrying none resolves to
+        // zero and would leave the vendor holding the full earning. Prorate those instead.
+        if ( ! $refund_order->get_items( [ 'line_item', 'fee', 'shipping' ] ) ) {
+            return $this->get_prorated_vendor_earning_in_refund( $refund_order, $order );
+        }
+
         $refund_commission = dokan_get_container()->get( OrderRefundCommission::class );
 
         $refund_commission->set_refund( $refund_order );
         $refund_commission->set_order( $order );
 
         return $refund_commission->get_vendor_total_refund();
+    }
+
+    /**
+     * Vendor share of a refund that carries no line items.
+     *
+     * WooCommerce creates item-less refunds on several common paths: wc_order_fully_refunded()
+     * on every transition to `wc-refunded`, the wc/v2 REST route, and most gateway webhooks.
+     * There is nothing to allocate commission against, so the vendor's earning for the order
+     * is prorated by the share of the order total being refunded.
+     *
+     * The earning is recalculated with refund adjustment disabled, because the order tables
+     * are already rewritten by the time `woocommerce_order_refunded` runs.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order_Refund $refund_order The refund object.
+     * @param \WC_Order        $order        The original order object.
+     *
+     * @return float
+     */
+    protected function get_prorated_vendor_earning_in_refund( \WC_Order_Refund $refund_order, \WC_Order $order ): float {
+        $order_total  = (float) $order->get_total();
+        $refund_total = abs( (float) $refund_order->get_total() );
+
+        if ( $order_total <= 0 || $refund_total <= 0 ) {
+            return 0.0;
+        }
+
+        try {
+            $commission = dokan_get_container()->get( OrderCommission::class );
+            $commission->set_order( $order );
+            $commission->set_should_adjust_refund( false );
+            $commission->calculate();
+
+            $vendor_earning = (float) $commission->get_vendor_earning();
+        } catch ( \Exception $e ) {
+            dokan_log( sprintf( 'Dokan: prorated refund earning failed for order %d. %s', $order->get_id(), $e->getMessage() ) );
+
+            return 0.0;
+        }
+
+        $refund_ratio = min( 1.0, $refund_total / $order_total );
+
+        return round( $vendor_earning * $refund_ratio, wc_get_price_decimals() );
     }
 
     /**
