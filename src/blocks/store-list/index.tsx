@@ -8,9 +8,49 @@ import {
     ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+
+// Sorting is filterable and Pro modules add to it, so the list comes from the server.
+const sortOptions = (): Record< string, string > =>
+    ( window as any )?.dokanBlocksData?.sortOptions ?? {};
 import SSREdit from '../shared/ssr-edit';
 import metadata from './block.json';
 import './style.scss';
+
+// Admin settings win: an element switched off site-wide is not offered here at all.
+const adminAllows = ( key: string ): boolean =>
+    ( window as any )?.dokanBlocksData?.settings?.[ key ] !== false;
+
+const cardElements = () =>
+    [
+        {
+            key: 'showAvatar',
+            label: __( 'Store avatar', 'dokan-lite' ),
+            help: __( 'The round store icon on each card.', 'dokan-lite' ),
+        },
+        {
+            key: 'showFeatured',
+            label: __( 'Featured tag', 'dokan-lite' ),
+        },
+        {
+            key: 'showOpenClose',
+            label: __( 'Open/closed status', 'dokan-lite' ),
+            enabled: adminAllows( 'openClose' ),
+        },
+        {
+            key: 'showRating',
+            label: __( 'Rating', 'dokan-lite' ),
+        },
+        {
+            key: 'showAddress',
+            label: __( 'Store address', 'dokan-lite' ),
+            enabled: adminAllows( 'address' ),
+        },
+        {
+            key: 'showPhone',
+            label: __( 'Phone number', 'dokan-lite' ),
+            enabled: adminAllows( 'phone' ),
+        },
+    ].filter( ( element ) => element.enabled !== false );
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
@@ -59,6 +99,19 @@ registerBlockType( metadata.name, {
                             setAttributes( { category } )
                         }
                     />
+                    <TextControl
+                        label={ __( 'Fallback store name', 'dokan-lite' ) }
+                        help={ __(
+                            'Shown when a vendor has not named their store. Leave empty to show nothing.',
+                            'dokan-lite'
+                        ) }
+                        value={ attributes.defaultStoreName }
+                        onChange={ ( defaultStoreName ) =>
+                            setAttributes( { defaultStoreName } )
+                        }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
                     <SelectControl
                         label={ __( 'Order by', 'dokan-lite' ) }
                         value={ attributes.orderby }
@@ -67,21 +120,29 @@ registerBlockType( metadata.name, {
                                 value: '',
                                 label: __( 'Site default', 'dokan-lite' ),
                             },
-                            {
-                                value: 'most_recent',
-                                label: __( 'Most Recent', 'dokan-lite' ),
-                            },
-                            {
-                                value: 'total_orders',
-                                label: __( 'Most Popular', 'dokan-lite' ),
-                            },
-                            {
-                                value: 'random',
-                                label: __( 'Random', 'dokan-lite' ),
-                            },
+                            ...Object.entries( sortOptions() ).map(
+                                ( [ value, label ] ) => ( { value, label } )
+                            ),
                         ] }
                         onChange={ ( orderby ) => setAttributes( { orderby } ) }
                     />
+                </PanelBody>
+
+                <PanelBody
+                    title={ __( 'Card Elements', 'dokan-lite' ) }
+                    initialOpen={ false }
+                >
+                    { cardElements().map( ( { key, label, help } ) => (
+                        <ToggleControl
+                            key={ key }
+                            label={ label }
+                            help={ help }
+                            checked={ attributes[ key ] }
+                            onChange={ ( value ) =>
+                                setAttributes( { [ key ]: value } )
+                            }
+                        />
+                    ) ) }
                 </PanelBody>
             </InspectorControls>
         </SSREdit>

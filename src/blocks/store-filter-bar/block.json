@@ -30,6 +30,22 @@
         "showViewToggle": {
             "type": "boolean",
             "default": true
+        },
+        "storeCountText": {
+            "type": "string",
+            "default": ""
+        },
+        "filterButtonText": {
+            "type": "string",
+            "default": ""
+        },
+        "sortLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "hiddenSortOptions": {
+            "type": "array",
+            "default": []
         }
     },
     "supports": {

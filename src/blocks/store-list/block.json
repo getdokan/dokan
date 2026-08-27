@@ -46,6 +46,34 @@
         "order": {
             "type": "string",
             "default": ""
+        },
+        "showAvatar": {
+            "type": "boolean",
+            "default": true
+        },
+        "defaultStoreName": {
+            "type": "string",
+            "default": ""
+        },
+        "showFeatured": {
+            "type": "boolean",
+            "default": true
+        },
+        "showOpenClose": {
+            "type": "boolean",
+            "default": true
+        },
+        "showRating": {
+            "type": "boolean",
+            "default": true
+        },
+        "showAddress": {
+            "type": "boolean",
+            "default": true
+        },
+        "showPhone": {
+            "type": "boolean",
+            "default": true
         }
     },
     "supports": {

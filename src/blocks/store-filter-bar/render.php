@@ -2,9 +2,9 @@
 /**
  * Render `dokan/store-filter-bar`.
  *
- * Reproduces the `store-lists-filter` template structure (same ids, classes
- * and hooks, so the legacy store-lists JS keeps working) with per-section
- * visibility toggles. Talks to `dokan/store-list` via GET params only.
+ * Renders the `store-lists-filter` template so the bar, its hooks and any theme
+ * override stay shared with the classic listing. Talks to `dokan/store-list`
+ * through GET params only.
  *
  * @since DOKAN_SINCE
  *
@@ -18,50 +18,63 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'showStoreCount' => true,
-        'showSearch'     => true,
-        'showSort'       => true,
-        'showViewToggle' => true,
+        'showStoreCount'    => true,
+        'showSearch'        => true,
+        'showSort'          => true,
+        'showViewToggle'    => true,
+        'storeCountText'    => '',
+        'filterButtonText'  => '',
+        'sortLabel'         => '',
+        'hiddenSortOptions' => [],
     ]
 );
 
-wp_enqueue_style( 'dokan-style' );
-wp_enqueue_style( 'dashicons' );
-wp_enqueue_script( 'dokan-script' );
+// Extensions drawing into this block read their own attributes from here; Pro's map toggle is one.
+\WeDevs\Dokan\Blocks\Manager::publish_rendering_attributes( $attributes );
 
-// The count reflects the filters currently applied to the listing, so it has to
-// run the same query the grid does. One row is enough — only the total is used.
-$requested_data = [];
+$requested_data = \WeDevs\Dokan\Vendor\StoreListsFilter::get_requested_data();
 
-if ( isset( $_GET['_store_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_store_filter_nonce'] ) ), 'dokan_store_lists_filter_nonce' ) ) {
-    $requested_data = wc_clean( wp_unslash( $_GET ) );
-}
+// The count has to reflect the filters the grid applied, so it runs the same query.
+// Nothing else reads the payload, so a hidden count skips the query entirely.
+$stores = [
+    'users' => [],
+    'count' => 0,
+];
 
-if ( isset( $_GET['store_categories'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-    $requested_data['store_categories'] = wc_clean( wp_unslash( $_GET['store_categories'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-}
-
-$count_args = [ 'number' => 1 ];
-
-if ( ! empty( $requested_data['dokan_seller_search'] ) ) {
-    $count_args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-        [
-            'key'     => 'dokan_store_name',
-            'value'   => $requested_data['dokan_seller_search'],
-            'compare' => 'LIKE',
-        ],
+if ( $attributes['showStoreCount'] ) {
+    $count_args = [
+        'number' => 1,
+        'fields' => 'ID',
     ];
+
+    if ( ! empty( $requested_data['dokan_seller_search'] ) ) {
+        $count_args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+            [
+                'key'     => 'dokan_store_name',
+                'value'   => $requested_data['dokan_seller_search'],
+                'compare' => 'LIKE',
+            ],
+        ];
+    }
+
+    /** This filter is documented in includes/Shortcodes/Stores.php */
+    $stores = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $count_args, $requested_data ) );
+
+    // A count-only query returns no usable rows; the hooks below expect a list.
+    $stores['users'] = [];
 }
 
-/** This filter is documented in includes/Shortcodes/Stores.php */
-$stores          = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $count_args, $requested_data ) );
-$number_of_store = absint( $stores['count'] );
-$sort_filters    = \WeDevs\Dokan\Vendor\StoreListsFilter::sort_by_options();
+// Hiding every option would leave an empty select, so the whole control goes with them.
+$sort_filters = array_diff_key(
+    \WeDevs\Dokan\Vendor\StoreListsFilter::sort_by_options(),
+    array_flip( array_map( 'sanitize_key', (array) $attributes['hiddenSortOptions'] ) )
+);
 
-$sort_by = isset( $_GET['stores_orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['stores_orderby'] ) ) : dokan_get_option( 'store_list_sort_by', 'dokan_appearance', 'most_recent' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$sort_by = \WeDevs\Dokan\Vendor\StoreListsFilter::get_requested_sort_by();
 
+// The visitor's sort may be one the editor hid; fall back to a visible option.
 if ( ! array_key_exists( $sort_by, $sort_filters ) ) {
-    $sort_by = 'most_recent';
+    $sort_by = array_key_exists( 'most_recent', $sort_filters ) ? 'most_recent' : (string) key( $sort_filters );
 }
 
 ?>
@@ -69,85 +82,22 @@ if ( ! array_key_exists( $sort_by, $sort_filters ) ) {
     <?php
     \WeDevs\Dokan\Blocks\Manager::dispatch_store_lists_filter_form( $stores );
 
-    do_action( 'dokan_before_store_lists_filter', $stores );
+    dokan_get_template_part(
+        'store-lists-filter',
+        '',
+        [
+            'stores'             => $stores,
+            'number_of_store'    => absint( $stores['count'] ),
+            'sort_filters'       => $sort_filters,
+            'sort_by'            => $sort_by,
+            'show_store_count'   => (bool) $attributes['showStoreCount'],
+            'show_search'        => (bool) $attributes['showSearch'],
+            'show_sort'          => (bool) $attributes['showSort'],
+            'show_view_toggle'   => (bool) $attributes['showViewToggle'],
+            'store_count_text'   => trim( (string) $attributes['storeCountText'] ),
+            'filter_button_text' => trim( (string) $attributes['filterButtonText'] ),
+            'sort_label'         => trim( (string) $attributes['sortLabel'] ),
+        ]
+    );
     ?>
-
-    <div id="dokan-store-listing-filter-wrap">
-        <?php do_action( 'dokan_before_store_lists_filter_left', $stores ); ?>
-        <div class="left">
-            <?php if ( $attributes['showStoreCount'] ) : ?>
-                <p class="item store-count">
-                    <?php
-                    // translators: 1) number of stores
-                    printf( esc_html( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ) ), esc_html( number_format_i18n( $number_of_store ) ) );
-                    ?>
-                </p>
-            <?php endif; ?>
-        </div>
-
-        <?php do_action( 'dokan_before_store_lists_filter_right', $stores ); ?>
-        <div class="right">
-            <?php if ( $attributes['showSearch'] ) : ?>
-                <div class="item">
-                    <div class="dokan-icons">
-                        <div class="dokan-icon-div"></div>
-                        <div class="dokan-icon-div"></div>
-                        <div class="dokan-icon-div"></div>
-                    </div>
-
-                    <button class="dokan-store-list-filter-button dokan-btn dokan-btn-theme">
-                        <?php esc_html_e( 'Filter', 'dokan-lite' ); ?>
-                    </button>
-                </div>
-            <?php endif; ?>
-
-            <?php if ( $attributes['showSort'] ) : ?>
-                <form name="stores_sorting" class="sort-by item" method="get">
-                    <label><?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>:</label>
-
-                    <select name="stores_orderby" id="stores_orderby" aria-label="<?php esc_attr_e( 'Sort by', 'dokan-lite' ); ?>">
-                        <?php foreach ( $sort_filters as $key => $filter ) : ?>
-                            <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $sort_by, $key ); ?>><?php echo esc_html( $filter ); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </form>
-            <?php endif; ?>
-
-            <?php if ( $attributes['showViewToggle'] ) : ?>
-                <div class="toggle-view item">
-                    <?php // Grid is what the listing actually renders before any preference is restored, so mark it now instead of leaving both icons idle. ?>
-                    <span class="dashicons dashicons-screenoptions active" data-view="grid-view"></span>
-                    <span class="dashicons dashicons-menu-alt" data-view="list-view"></span>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <?php do_action( 'dokan_before_store_lists_filter_form', $stores ); ?>
-
-    <?php if ( $attributes['showSearch'] ) : ?>
-        <form role="store-list-filter" method="get" name="dokan_store_lists_filter_form" id="dokan-store-listing-filter-form-wrap" style="display: none">
-            <?php
-            do_action( 'dokan_before_store_lists_filter_search', $stores );
-
-            if ( apply_filters( 'dokan_load_store_lists_filter_search_bar', true ) ) :
-                ?>
-                <div class="store-search grid-item">
-                    <input type="search" class="store-search-input" name="dokan_seller_search" placeholder="<?php esc_attr_e( 'Search Vendors', 'dokan-lite' ); ?>">
-                </div>
-                <?php
-            endif;
-
-            do_action( 'dokan_before_store_lists_filter_apply_button', $stores );
-            ?>
-
-            <div class="apply-filter">
-                <button id="cancel-filter-btn" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></button>
-                <button id="apply-filter-btn" class="dokan-btn dokan-btn-theme" type="submit"><?php esc_html_e( 'Apply', 'dokan-lite' ); ?></button>
-            </div>
-
-            <?php do_action( 'dokan_after_store_lists_filter_apply_button', $stores ); ?>
-            <?php wp_nonce_field( 'dokan_store_lists_filter_nonce', '_store_filter_nonce', false ); ?>
-        </form>
-    <?php endif; ?>
 </div>

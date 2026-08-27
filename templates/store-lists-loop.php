@@ -1,3 +1,28 @@
+<?php
+/**
+ * Store listing loop.
+ *
+ * @version DOKAN_SINCE
+ *
+ * @var array $sellers Seller query result.
+ * @var int   $per_row Cards per row.
+ * @var array $args    Optional card display overrides, see the defaults below.
+ */
+
+// Only the store listing block passes these; every other caller gets the full card.
+$card = wp_parse_args(
+    isset( $args ) ? $args : [],
+    [
+        'show_avatar'        => true,
+        'show_featured'      => true,
+        'show_open_close'    => true,
+        'show_rating'        => true,
+        'show_address'       => true,
+        'show_phone'         => true,
+        'default_store_name' => '',
+    ]
+);
+?>
 <div id="dokan-seller-listing-wrap" class="grid-view">
     <div class="seller-listing-content">
         <?php if ( $sellers['users'] ) : ?>
@@ -6,8 +31,13 @@
                 foreach ( $sellers['users'] as $seller ) {
                     $vendor                   = dokan()->vendor->get( $seller->ID );
                     $store_name               = $vendor->get_shop_name();
+                    $store_name               = '' !== $store_name ? $store_name : $card['default_store_name'];
                     $store_url                = $vendor->get_shop_url();
-                    $store_rating             = $vendor->get_rating();
+                    // Uncached per-card SQL, so it is only paid for when the stars are shown.
+                    $store_rating             = $card['show_rating'] ? $vendor->get_rating() : [
+						'rating' => 0,
+						'count' => 0,
+					];
                     $is_store_featured        = $vendor->is_featured();
                     $store_phone              = $vendor->get_phone();
                     $store_info               = dokan_get_store_info( $seller->ID );
@@ -18,7 +48,8 @@
                     $store_banner_alt         = ! empty( $banner_image_alt ) ? $banner_image_alt : $store_name;
                     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
                     $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
-                    $store_open_is_on         = ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled && ! $is_store_featured ) ? 'store_open_is_on' : '';
+                    $store_open_close_visible = $card['show_open_close'] && 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled;
+                    $store_open_is_on         = ( $store_open_close_visible && ! $is_store_featured ) ? 'store_open_is_on' : '';
                     ?>
 
                     <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?>">
@@ -34,13 +65,13 @@
                             <div class="store-content">
                                 <div class="store-data-container">
                                     <div class="featured-favourite">
-                                        <?php if ( $is_store_featured ) : ?>
+                                        <?php if ( $is_store_featured && $card['show_featured'] ) : ?>
                                             <div class="featured-label"><?php esc_html_e( 'Featured', 'dokan-lite' ); ?></div>
                                         <?php endif ?>
 
                                         <?php do_action( 'dokan_seller_listing_after_featured', $seller, $store_info ); ?>
                                     </div>
-                                    <?php if ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled ) : ?>
+                                    <?php if ( $store_open_close_visible ) : ?>
                                         <?php if ( dokan_is_store_open( $seller->ID ) ) { ?>
                                             <span class="dokan-store-is-open-close-status dokan-store-is-open-status" title="<?php esc_attr_e( 'Store is Open', 'dokan-lite' ); ?>"><?php esc_html_e( 'Open', 'dokan-lite' ); ?></span>
                                         <?php } else { ?>
@@ -51,7 +82,7 @@
                                     <div class="store-data <?php echo esc_attr( $store_open_is_on ); ?>">
                                         <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a> <?php do_action( 'dokan_store_list_loop_after_store_name', $vendor ); ?></h2>
 
-                                        <?php if ( ! empty( $store_rating['count'] ) ) : ?>
+                                        <?php if ( $card['show_rating'] && ! empty( $store_rating['count'] ) ) : ?>
                                             <div class="dokan-seller-rating"
                                                 title="
                                                 <?php
@@ -73,7 +104,7 @@
                                             </div>
                                         <?php endif ?>
 
-                                        <?php if ( ! dokan_is_vendor_info_hidden( 'address' ) && $store_address ) : ?>
+                                        <?php if ( $card['show_address'] && ! dokan_is_vendor_info_hidden( 'address' ) && $store_address ) : ?>
                                             <?php
                                             $allowed_tags = [
                                                 'span' => [
@@ -85,7 +116,7 @@
                                             <p class="store-address"><?php echo wp_kses( $store_address, $allowed_tags ); ?></p>
                                         <?php endif ?>
 
-                                        <?php if ( ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
+                                        <?php if ( $card['show_phone'] && ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
                                             <p class="store-phone">
                                                 <i class="fas fa-phone-alt" aria-hidden="true"></i> <?php echo esc_html( $store_phone ); ?>
                                             </p>
@@ -97,13 +128,15 @@
                             </div>
 
                             <div class="store-footer">
-                                <div class="seller-avatar">
-                                    <a href="<?php echo esc_url( $store_url ); ?>">
-                                        <img src="<?php echo esc_url( $vendor->get_avatar() ); ?>"
-                                            alt="<?php echo esc_attr( $vendor->get_shop_name() ); ?>"
-                                            size="150" />
-                                    </a>
-                                </div>
+                                <?php if ( $card['show_avatar'] ) : ?>
+                                    <div class="seller-avatar">
+                                        <a href="<?php echo esc_url( $store_url ); ?>">
+                                            <img src="<?php echo esc_url( $vendor->get_avatar() ); ?>"
+                                                alt="<?php echo esc_attr( $store_name ); ?>"
+                                                size="150" />
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
                                 <a href="<?php echo esc_url( $store_url ); ?>" title="<?php esc_attr_e( 'Visit Store', 'dokan-lite' ); ?>">
                                     <span class="dashicons dashicons-arrow-right-alt2 dokan-btn-theme dokan-btn-round"></span>
                                 </a>

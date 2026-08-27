@@ -8,11 +8,15 @@
  * replace their markup on every attribute change.
  */
 ( function () {
-    // The canvas is its own iframe with no `wp` global, so detect it from the DOM.
+    // Set by Dokan's admin-only preview enqueue, so it is true from parse time — the
+    // canvas body class only lands later, and the DOM check is the front-end fallback.
     const isEditor = () =>
-        !! document.body &&
-        ( document.body.classList.contains( 'block-editor-iframe__body' ) ||
-            !! document.querySelector( '.block-editor-block-list__layout' ) );
+        !! window.dokanBlocksEditorPreview ||
+        ( !! document.body &&
+            ( document.body.classList.contains( 'block-editor-iframe__body' ) ||
+                !! document.querySelector(
+                    '.block-editor-block-list__layout'
+                ) ) );
 
     // Dokan's listing script binds the same controls by id; let it win.
     const legacyDrivesPage = () =>
@@ -70,18 +74,7 @@
         }
     };
 
-    /*
-     * Controls added to the bar by other plugins opt into preview behaviour with
-     * markup instead of script, because the editor canvas is an iframe and the
-     * only script WordPress loads inside it is this block's own view script.
-     *
-     *   data-dokan-preview-toggle="<selector>"  show/hide that element on click
-     *   data-dokan-preview-choices              marks a group of choices, with
-     *     data-dokan-preview-single             one choice at a time
-     *     data-dokan-preview-active-class       class marking a chosen item
-     *     data-dokan-preview-label="<selector>" element listing the chosen items
-     *   data-dokan-preview-choice               a choice inside such a group
-     */
+    // Extensions opt into preview behaviour with data-dokan-preview-* markup; see Blocks\Manager for the contract.
     const togglePreviewTarget = ( trigger, bar ) => {
         const target = bar.querySelector( trigger.dataset.dokanPreviewToggle );
 
@@ -224,43 +217,41 @@
     } );
 
     const restoreState = () => {
-        if ( legacyDrivesPage() ) {
-            return;
+        if ( legacyDrivesPage() || isEditor() ) {
+            return; // A preview must not restore the visitor's saved state.
         }
 
-        if ( ! isEditor() ) {
-            let storedLayout = null;
+        let storedLayout = null;
 
-            try {
-                storedLayout = window.localStorage.getItem( 'dokan-layout' );
-            } catch ( error ) {
-                storedLayout = null;
-            }
+        try {
+            storedLayout = window.localStorage.getItem( 'dokan-layout' );
+        } catch ( error ) {
+            storedLayout = null;
+        }
 
-            if ( storedLayout ) {
-                applyLayout( storedLayout );
-            }
+        if ( storedLayout ) {
+            applyLayout( storedLayout );
+        }
 
-            // Keep the filter form open on an active search, matching the classic page.
-            if (
-                new URL( window.location.href ).searchParams.get(
-                    'dokan_seller_search'
-                )
-            ) {
-                document
-                    .querySelectorAll( '.dokan-store-filter-bar-block' )
-                    .forEach( ( bar ) => {
-                        const form = getForm( bar );
+        // Keep the filter form open on an active search, matching the classic page.
+        if (
+            new URL( window.location.href ).searchParams.get(
+                'dokan_seller_search'
+            )
+        ) {
+            document
+                .querySelectorAll( '.dokan-store-filter-bar-block' )
+                .forEach( ( bar ) => {
+                    const form = getForm( bar );
 
-                        if ( form ) {
-                            form.style.display = 'block';
-                        }
-                    } );
-            }
+                    if ( form ) {
+                        form.style.display = 'block';
+                    }
+                } );
         }
     };
 
-    // Extensions that draw into the listing register a starter here; the editor renders the block after their scripts have run, so this view script — the one WordPress guarantees runs against the live canvas — calls them once the markup is here. Front-end scripts already run after the markup and never need it.
+    // Extensions register a starter here; this is the only script the canvas runs, so it fires them once the markup lands.
     const extensions = ( window.dokanStoreListing =
         window.dokanStoreListing || {
             starters: [],
@@ -270,27 +261,38 @@
         } );
 
     const startExtensions = () => {
-        // Checked at match time, not now: the canvas body class and the markup both land after this deferred script boots.
+        // Each container is flagged on its own, so a re-rendered block starts again while its untouched neighbour is left alone.
         const start = () => {
-            const listing = document.querySelector(
-                '.dokan-store-list-block, .dokan-store-filter-bar-block'
-            );
-
-            if ( ! isEditor() || ! listing || listing.dataset.dokanStarted ) {
-                return false;
+            if ( ! isEditor() ) {
+                return; // Checked at match time: the canvas body class lands after this script boots.
             }
 
-            listing.dataset.dokanStarted = 'true';
-            extensions.starters.forEach( ( starter ) => starter( document ) );
+            const fresh = Array.from(
+                document.querySelectorAll(
+                    '.dokan-store-list-block, .dokan-store-filter-bar-block'
+                )
+            ).filter( ( listing ) => ! listing.dataset.dokanStarted );
 
-            return true;
+            if ( ! fresh.length ) {
+                return;
+            }
+
+            fresh.forEach( ( listing ) => {
+                listing.dataset.dokanStarted = 'true';
+            } );
+
+            // Scoped to what just appeared, so an extension need not rebuild the whole page.
+            extensions.starters.forEach( ( starter ) => starter( fresh ) );
         };
 
-        if ( start() || ! window.MutationObserver ) {
+        start();
+
+        // Only the editor re-renders a block in place, so nothing to watch elsewhere.
+        if ( ! isEditor() || ! window.MutationObserver ) {
             return;
         }
 
-        // Watch the root, not the body: the canvas swaps its body while it mounts, and an observer on the old one never hears about the block. The editor re-renders the block on every attribute change, so keep watching; each new render starts once.
+        // Watch the root: the canvas swaps its body while it mounts.
         new window.MutationObserver( start ).observe(
             document.documentElement,
             {

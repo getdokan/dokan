@@ -1,20 +1,25 @@
-/* Front-end + editor styles for dokan/store-filter-bar. */
+// Front-end + editor styles for dokan/store-filter-bar.
 
 .wp-block-dokan-store-filter-bar {
-	/*
-	 * Dokan only switches the bar to its stacked layout on a narrow viewport, so
-	 * a bar placed in a sidebar or a narrow column keeps the desktop layout and
-	 * its controls crowd each other. Sizing off the block's own width gives the
-	 * same treatment to a narrow block on a wide screen.
-	 */
+	// Dokan only switches the bar to its stacked layout on a narrow viewport, so a bar placed in a sidebar or a
+	// narrow column keeps the desktop layout and its controls crowd each other. Sizing off the block's own
+	// width gives the same treatment to a narrow block on a wide screen.
 	container-type: inline-size;
 	container-name: dokan-store-filter-bar;
 
-	/*
-	 * The container is named so extensions can give their own filter fields the
-	 * same treatment — Dokan Pro matches this query for its category, featured,
-	 * open-now and rating controls.
-	 */
+	// Spacing lives on the row rather than on the sorting control, which is where Dokan puts it. Hiding any one
+	// control then leaves the rest evenly spaced instead of flush against each other or gapped against an empty
+	// edge.
+	#dokan-store-listing-filter-wrap .right {
+		gap: 30px;
+
+		.item.sort-by {
+			margin: 0;
+		}
+	}
+
+	// The container is named so extensions can give their own filter fields the same treatment — Dokan Pro
+	// matches this query for its category, featured, open-now and rating controls.
 	@container dokan-store-filter-bar (max-width: 767px) {
 		#dokan-store-listing-filter-wrap {
 			display: block;

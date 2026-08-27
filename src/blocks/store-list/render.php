@@ -25,8 +25,19 @@ $attributes = wp_parse_args(
         'withProductsOnly' => false,
         'orderby'          => '',
         'order'            => '',
+        'showAvatar'       => true,
+        'defaultStoreName' => '',
+        'showFeatured'     => true,
+        'showOpenClose'    => true,
+        'showRating'       => true,
+        'showAddress'      => true,
+        'showPhone'        => true,
     ]
 );
+
+// Extensions that draw into this block read their own attributes from here — the
+// geolocation map is one of them, and its toggle is registered by Dokan Pro.
+\WeDevs\Dokan\Blocks\Manager::publish_rendering_attributes( $attributes );
 
 wp_enqueue_style( 'dokan-style' );
 wp_enqueue_style( 'dokan-fontawesome' );
@@ -37,26 +48,8 @@ $limit = max( 1, absint( $attributes['perPage'] ) );
 $page_num = is_front_page() ? max( 1, absint( get_query_var( 'page' ) ) ) : max( 1, absint( get_query_var( 'paged' ) ) );
 
 // Runtime listing state travels as GET params — shared contract with dokan/store-filter-bar.
-$dokan_seller_search = '';
-$requested_data      = [];
-
-if ( isset( $_GET['_store_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_store_filter_nonce'] ) ), 'dokan_store_lists_filter_nonce' ) ) {
-    $dokan_seller_search = isset( $_GET['dokan_seller_search'] ) ? sanitize_text_field( wp_unslash( $_GET['dokan_seller_search'] ) ) : '';
-    $requested_data      = wc_clean( wp_unslash( $_GET ) );
-}
-
-// Sorting is whitelisted, so it may travel without the filter-form nonce (e.g. plain sort links).
-if ( empty( $requested_data['stores_orderby'] ) && isset( $_GET['stores_orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-    $stores_orderby = sanitize_text_field( wp_unslash( $_GET['stores_orderby'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-    if ( array_key_exists( $stores_orderby, \WeDevs\Dokan\Vendor\StoreListsFilter::sort_by_options() ) ) {
-        $requested_data['stores_orderby'] = $stores_orderby;
-    }
-}
-
-if ( isset( $_GET['store_categories'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-    $requested_data['store_categories'] = wc_clean( wp_unslash( $_GET['store_categories'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-}
+$requested_data      = \WeDevs\Dokan\Vendor\StoreListsFilter::get_requested_data();
+$dokan_seller_search = isset( $requested_data['dokan_seller_search'] ) ? sanitize_text_field( $requested_data['dokan_seller_search'] ) : '';
 
 $seller_args = [
     'number' => $limit,
@@ -111,10 +104,8 @@ $pagination_base = empty( $post ) ? '' : str_replace( (string) $post->ID, '%#%',
 ?>
 <div <?php echo get_block_wrapper_attributes( [ 'class' => 'dokan-store-list-block' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <?php
-    // Modules render around the grid from these — the geolocation map is one of them.
-    // The dispatch first gives a module the chance to move its markup elsewhere,
-    // the way it would have before the listing on the classic template.
-    \WeDevs\Dokan\Blocks\Manager::dispatch_store_lists_filter_form( $sellers );
+    // Dispatch first so a module can relocate its markup before the grid renders.
+        \WeDevs\Dokan\Blocks\Manager::dispatch_store_lists_filter_form( $sellers );
 
     /** This action is documented in templates/store-lists.php */
     do_action( 'dokan_before_seller_listing_loop', $sellers );
@@ -123,15 +114,22 @@ $pagination_base = empty( $post ) ? '' : str_replace( (string) $post->ID, '%#%',
         'store-lists-loop',
         false,
         [
-            'sellers'         => $sellers,
-            'limit'           => $limit,
-            'offset'          => ( $page_num - 1 ) * $limit,
-            'paged'           => $page_num,
-            'search_query'    => $dokan_seller_search,
-            'pagination_base' => $pagination_base,
-            'per_row'         => max( 1, absint( $attributes['columns'] ) ),
-            'search_enabled'  => 'yes',
-            'image_size'      => 'full',
+            'sellers'            => $sellers,
+            'limit'              => $limit,
+            'offset'             => ( $page_num - 1 ) * $limit,
+            'paged'              => $page_num,
+            'search_query'       => $dokan_seller_search,
+            'pagination_base'    => $pagination_base,
+            'per_row'            => max( 1, absint( $attributes['columns'] ) ),
+            'search_enabled'     => 'yes',
+            'image_size'         => 'full',
+            'show_avatar'        => (bool) $attributes['showAvatar'],
+            'default_store_name' => sanitize_text_field( (string) $attributes['defaultStoreName'] ),
+            'show_featured'      => (bool) $attributes['showFeatured'],
+            'show_open_close'    => (bool) $attributes['showOpenClose'],
+            'show_rating'        => (bool) $attributes['showRating'],
+            'show_address'       => (bool) $attributes['showAddress'],
+            'show_phone'         => (bool) $attributes['showPhone'],
         ]
     );
 

@@ -1,18 +1,15 @@
-/* Front-end + editor styles for dokan/store-list. */
+// Front-end + editor styles for dokan/store-list.
 
 @use 'sass:math';
 
-/* Below this a card can no longer show a banner, name and address legibly. */
+// Below this a card can no longer show a banner, name and address legibly.
 $dokan-store-card-min-width: 260px;
 $dokan-store-max-columns: 6;
 
 .wp-block-dokan-store-list {
-	/*
-	 * Dokan sizes the cards off the viewport, which is wrong for a block: the
-	 * same grid can sit in a narrow column, and in the editor it renders inside
-	 * an iframe far narrower than the browser window. Sizing off the block's own
-	 * width makes the editor preview match what visitors get.
-	 */
+	// Dokan sizes the cards off the viewport, which is wrong for a block: the same grid can sit in a narrow
+	// column, and in the editor it renders inside an iframe far narrower than the browser window. Sizing off
+	// the block's own width makes the editor preview match what visitors get.
 	container-type: inline-size;
 	container-name: dokan-store-list;
 
@@ -21,13 +18,10 @@ $dokan-store-max-columns: 6;
 		float: none !important;
 	}
 
-	/*
-	 * Columns is a maximum, not a promise: the grid drops to as many columns as
-	 * the block is actually wide enough for, rather than collapsing to one. Each
-	 * step is emitted widest-last so the largest one that fits wins. Dokan's own
-	 * widths are viewport media queries ending in `!important`, hence the same
-	 * here — scoped to the block, leaving the `[dokan-stores]` shortcode alone.
-	 */
+	// Columns is a maximum, not a promise: the grid drops to as many columns as the block is actually wide
+	// enough for, rather than collapsing to one. Each step is emitted widest-last so the largest one that fits
+	// wins. Dokan's own widths are viewport media queries ending in `!important`, hence the same here — scoped
+	// to the block, leaving the `[dokan-stores]` shortcode alone.
 	@for $columns from 2 through $dokan-store-max-columns {
 		@for $fits from 2 through $columns {
 			@container dokan-store-list (min-width: #{$fits * $dokan-store-card-min-width}) {
@@ -39,7 +33,7 @@ $dokan-store-max-columns: 6;
 		}
 	}
 
-	/* List view stacks the cards whatever the Columns setting says. */
+	// List view stacks the cards whatever the Columns setting says.
 	#dokan-seller-listing-wrap.list-view ul.dokan-seller-wrap > li.dokan-single-seller {
 		width: 100% !important;
 		float: none !important;
