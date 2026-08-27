@@ -72,6 +72,25 @@ test.describe('vendor verification api test', () => {
         expect(response.ok()).toBeTruthy();
     });
 
+    // The Address method is the one the seller-address auto-fill flows key off. The installer
+    // seeds it once and never recreates it, so dokan-pro #5861 made the REST layer refuse the
+    // delete. Assert that refusal, otherwise dropping the guard would break nothing visible.
+    test('built-in address verification method can not be deleted', { tag: ['@pro'] }, async () => {
+        const allMethods = await apiUtils.getAllVerificationMethods();
+        const addressMethod = allMethods.find((o: { kind: string }) => o.kind === 'address');
+        test.skip(!addressMethod, 'no built-in address verification method on this site, nothing to assert against');
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteVerificationMethod(addressMethod.id), {}, false);
+        expect(response.status()).toBe(403);
+        expect(responseBody.code).toBe('dokan_pro_rest_cannot_delete');
+    });
+
+    // Same PR turned a missing id into a 404 instead of the old blanket 500.
+    test('deleting a missing verification method returns not found', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteVerificationMethod('999999999'), {}, false);
+        expect(response.status()).toBe(404);
+        expect(responseBody.code).toBe('dokan_pro_rest_no_resource');
+    });
+
     // verification requests
 
     test('get all verification requests', { tag: ['@pro'] }, async () => {
