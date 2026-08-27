@@ -187,6 +187,40 @@ class Manager implements Hookable {
     }
 
     /**
+     * Let extensions set up the store listing before a block renders it.
+     *
+     * `templates/store-lists.php` fires this once, ahead of the listing, and
+     * modules use it to decide where their own markup goes — the geolocation
+     * module moves its map out of the product loop and into the filter bar here.
+     * The editor renders every block in a request of its own, so each block that
+     * reproduces part of that template has to dispatch it too, or a module that
+     * relocates itself would render twice.
+     *
+     * Dokan's own listener draws the classic filter template the blocks replace,
+     * so it stands aside for the dispatch and goes back on the hook afterwards.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $stores Store query result passed to the action.
+     *
+     * @return void
+     */
+    public static function dispatch_store_lists_filter_form( $stores ): void {
+        if ( did_action( 'dokan_store_lists_filter_form' ) ) {
+            return;
+        }
+
+        $filter = dokan()->get_container()->get( \WeDevs\Dokan\Vendor\StoreListsFilter::class );
+
+        remove_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
+
+        /** This action is documented in templates/store-lists.php */
+        do_action( 'dokan_store_lists_filter_form', $stores );
+
+        add_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
+    }
+
+    /**
      * Register all block types from the built metadata collections.
      *
      * @since DOKAN_SINCE

@@ -260,9 +260,55 @@
         }
     };
 
-    if ( document.readyState === 'loading' ) {
-        document.addEventListener( 'DOMContentLoaded', restoreState );
-    } else {
+    // Extensions that draw into the listing register a starter here; the editor renders the block after their scripts have run, so this view script — the one WordPress guarantees runs against the live canvas — calls them once the markup is here. Front-end scripts already run after the markup and never need it.
+    const extensions = ( window.dokanStoreListing =
+        window.dokanStoreListing || {
+            starters: [],
+            onRender( starter ) {
+                this.starters.push( starter );
+            },
+        } );
+
+    const startExtensions = () => {
+        // Checked at match time, not now: the canvas body class and the markup both land after this deferred script boots.
+        const start = () => {
+            const listing = document.querySelector(
+                '.dokan-store-list-block, .dokan-store-filter-bar-block'
+            );
+
+            if ( ! isEditor() || ! listing || listing.dataset.dokanStarted ) {
+                return false;
+            }
+
+            listing.dataset.dokanStarted = 'true';
+            extensions.starters.forEach( ( starter ) => starter( document ) );
+
+            return true;
+        };
+
+        if ( start() || ! window.MutationObserver ) {
+            return;
+        }
+
+        // Watch the root, not the body: the canvas swaps its body while it mounts, and an observer on the old one never hears about the block. The editor re-renders the block on every attribute change, so keep watching; each new render starts once.
+        new window.MutationObserver( start ).observe(
+            document.documentElement,
+            {
+                childList: true,
+                subtree: true,
+            }
+        );
+    };
+
+    const boot = () => {
         restoreState();
+
+        startExtensions();
+    };
+
+    if ( document.readyState === 'loading' ) {
+        document.addEventListener( 'DOMContentLoaded', boot );
+    } else {
+        boot();
     }
 } )();

@@ -112,6 +112,10 @@ $pagination_base = empty( $post ) ? '' : str_replace( (string) $post->ID, '%#%',
 <div <?php echo get_block_wrapper_attributes( [ 'class' => 'dokan-store-list-block' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <?php
     // Modules render around the grid from these — the geolocation map is one of them.
+    // The dispatch first gives a module the chance to move its markup elsewhere,
+    // the way it would have before the listing on the classic template.
+    \WeDevs\Dokan\Blocks\Manager::dispatch_store_lists_filter_form( $sellers );
+
     /** This action is documented in templates/store-lists.php */
     do_action( 'dokan_before_seller_listing_loop', $sellers );
 

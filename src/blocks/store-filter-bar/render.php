@@ -67,20 +67,7 @@ if ( ! array_key_exists( $sort_by, $sort_filters ) ) {
 ?>
 <div <?php echo get_block_wrapper_attributes( [ 'class' => 'dokan-store-filter-bar-block' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <?php
-    if ( ! did_action( 'dokan_store_lists_filter_form' ) ) {
-        // Extensions plug into the filter bar from this action — the geolocation module
-        // registers its location search and map here. Dokan's own listener renders the
-        // classic filter template that this block replaces, so it stands aside while the
-        // action is dispatched, then goes back on the hook for the rest of the request.
-        $dokan_store_lists_filter = dokan()->get_container()->get( \WeDevs\Dokan\Vendor\StoreListsFilter::class );
-
-        remove_action( 'dokan_store_lists_filter_form', [ $dokan_store_lists_filter, 'filter_area' ] );
-
-        /** This action is documented in templates/store-lists.php */
-        do_action( 'dokan_store_lists_filter_form', $stores );
-
-        add_action( 'dokan_store_lists_filter_form', [ $dokan_store_lists_filter, 'filter_area' ] );
-    }
+    \WeDevs\Dokan\Blocks\Manager::dispatch_store_lists_filter_form( $stores );
 
     do_action( 'dokan_before_store_lists_filter', $stores );
     ?>
