@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * A URI check (preferring WooCommerce's own detection when present) is kept as a secondary
  * signal, and the result is filterable via `dokan_is_ability_context`.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class RequestContext {
 
@@ -56,7 +56,7 @@ class RequestContext {
      * Both the product and order ability scopers depend on these signals, so either may call this;
      * the guard keeps the execution counter from being incremented twice per ability.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -86,7 +86,7 @@ class RequestContext {
      * Vendor scoping follows the Ability, not the URL that reached it, so integrations must not
      * assume a non-MCP ability call is unscoped.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return bool
      */
@@ -98,7 +98,7 @@ class RequestContext {
         /**
          * Filters whether the current request should be treated as an Ability Context.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.15
          *
          * @param bool   $is_ability_context Whether an ability is executing / about to execute.
          * @param string $request_uri        The current request URI.
@@ -111,7 +111,7 @@ class RequestContext {
     /**
      * Whether a registered ability is currently executing.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return bool
      */
@@ -125,7 +125,7 @@ class RequestContext {
      * Store admins (manage_woocommerce) are intentionally left unscoped. Vendor staff resolve to
      * their parent vendor via dokan_get_current_user_id().
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return bool
      */
@@ -152,7 +152,7 @@ class RequestContext {
      * yet. Works for any MCP server built on the shared adapter (WooCommerce, a future Dokan
      * server, or a third-party such as MCP Site Manager).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param mixed $value Value passed by the filter; returned unchanged.
      *
@@ -167,7 +167,7 @@ class RequestContext {
     /**
      * Mark the start of an ability execution. Hooked to `wp_before_execute_ability`.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -178,7 +178,7 @@ class RequestContext {
     /**
      * Mark the end of an ability execution. Hooked to `wp_after_execute_ability`.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -189,7 +189,7 @@ class RequestContext {
     /**
      * Reset the per-request MCP state. Intended for test isolation.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -205,7 +205,7 @@ class RequestContext {
      * Prefers WooCommerce's own detection when present; otherwise (or when it reports false,
      * e.g. for a future `/dokan/mcp` endpoint) falls back to a URI check.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param string $request_uri The current request URI.
      *
@@ -226,7 +226,7 @@ class RequestContext {
     /**
      * Whether the current request is a REST request.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return bool
      */

@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
  * products but never configured a store — the WordPress display name is used so the payload is
  * never an empty label.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class VendorPayload {
 
     /**
      * Build the vendor payload for a user (vendor) ID.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param int $user_id Vendor / seller user ID. `0` for "no vendor" (e.g. a parent order).
      *

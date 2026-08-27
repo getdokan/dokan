@@ -3,11 +3,11 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.9
-Tested up to: 7.0
+Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.14
+Stable tag: 5.0.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,21 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.17 ( Aug 25, 2026 ) =
+- **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
+- **fix:** In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.
+
+= v5.0.16 ( Aug 21, 2026 ) =
+- **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.
+- **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
+- **fix:** The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.
+- **fix:** Vendor dashboard list labels such as "No data found" are now translatable through Dokan's language files.
+
+= v5.0.15 ( Aug 19, 2026 ) =
+- **new:** Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor's own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn't provide on its own.
+- **fix:** The product editor's Attributes field now honors the placeholder text configured in the Product Form Manager.
+- **fix:** Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.
+
 = v5.0.14 ( Aug 17, 2026 ) =
 - **fix:** Prevented unauthenticated visitors from reading a vendor's commission settings through the public store-categories endpoint.
 - **fix:** Prevented Shop Managers from installing or activating arbitrary plugins through Dokan's admin endpoints and setup wizard by requiring the proper plugin capabilities.
@@ -384,22 +399,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v5.0.13 ( Aug 12, 2026 ) =
 - **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
 - **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
-
-= v5.0.12 ( Aug 03, 2026 ) =
-- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
-
-= v5.0.11 ( Jul 27, 2026 ) =
-- **update:** Vendors can now search for products by SKU as well as by name.
-- **fix:** Store-page buttons now respect the Astra theme's global button styling.
-- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
-- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
-- **fix:** Prevented vendors from granting download access to another vendor's files.
-- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
-- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
-
-= v5.0.10 ( Jul 21, 2026 ) =
-- **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
-- **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
-- **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

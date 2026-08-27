@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * action. Cross-vendor writes are denied outright instead of being left to native capabilities,
  * and a permitted write is granted even where a native check would refuse it.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class OwnershipGate {
 
@@ -79,7 +79,7 @@ class OwnershipGate {
     /**
      * Whether a WooCommerce REST permission context mutates a record.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param string $context Request context: read, create, edit, delete, batch.
      *
@@ -92,7 +92,7 @@ class OwnershipGate {
     /**
      * Resolve the vendor owning a record.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param string $object_type Post type: `product` or `shop_order`.
      * @param int    $object_id   Record ID.
@@ -119,7 +119,7 @@ class OwnershipGate {
      * batch request re-checks each contained operation individually — except creates, which
      * never name a record: there the Dokan capability alone decides.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param string $object_type Post type: `product` or `shop_order`.
      * @param string $context     Request context.
@@ -179,7 +179,7 @@ class OwnershipGate {
      * Vendor, who holds every `dokan_*` capability, and bites only where a site has
      * deliberately narrowed staff capabilities.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param string $object_type Post type: `product` or `shop_order`.
      * @param string $view        `item` for a single record, `list` for a collection.
@@ -198,7 +198,7 @@ class OwnershipGate {
          * Filters the Dokan capability required to read vendor-scoped data over the
          * Abilities layer.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.15
          *
          * @param string $capability  Required capability, or an empty string for none.
          * @param string $object_type Post type being read.
@@ -217,7 +217,7 @@ class OwnershipGate {
     /**
      * Whether the caller holds the Dokan capability for this write.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param string $object_type Post type.
      * @param string $context     Request context.
@@ -236,7 +236,7 @@ class OwnershipGate {
          * Filters the Dokan capability required to write a vendor-owned record over the
          * Abilities layer.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.15
          *
          * @param string $capability  Required capability, or an empty string for none.
          * @param string $object_type Post type being written.

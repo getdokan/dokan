@@ -4,6 +4,68 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.17',
+        'released' => '2026-08-25',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.16',
+        'released' => '2026-08-21',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer\'s name, phone, and billing and shipping address instead of only the email and IP address.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard list labels such as "No data found" are now translatable through Dokan\'s language files.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.15',
+        'released' => '2026-08-19',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor\'s own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn\'t provide on its own.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'The product editor\'s Attributes field now honors the placeholder text configured in the Product Form Manager.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.14',
         'released' => '2026-08-17',
         'changes'  => [

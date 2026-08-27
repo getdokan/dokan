@@ -22,14 +22,14 @@ defined( 'ABSPATH' ) || exit;
  * autoloaded when that filter runs (which only happens when WooCommerce 10.9+ is active), nothing here
  * fatals on older WooCommerce.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.15
  */
 class DokanAbilityRegistrar implements Hookable {
 
     /**
      * Register hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -45,7 +45,7 @@ class DokanAbilityRegistrar implements Hookable {
     /**
      * Register the `dokan` ability category.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return void
      */
@@ -70,7 +70,7 @@ class DokanAbilityRegistrar implements Hookable {
     /**
      * Append Dokan ability definition classes.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @param array $classes Ability definition class names.
      *
@@ -87,7 +87,7 @@ class DokanAbilityRegistrar implements Hookable {
     /**
      * Dokan ability definition class names.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.15
      *
      * @return string[]
      */
@@ -95,7 +95,7 @@ class DokanAbilityRegistrar implements Hookable {
         /**
          * Filters the list of Dokan ability definition classes.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.15
          *
          * @param string[] $classes Fully-qualified ability definition class names.
          */
