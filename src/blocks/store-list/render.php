@@ -102,7 +102,17 @@ global $post;
 $pagination_base = empty( $post ) ? '' : str_replace( (string) $post->ID, '%#%', esc_url( get_pagenum_link( $post->ID ) ) );
 
 ?>
-<div <?php echo get_block_wrapper_attributes( [ 'class' => 'dokan-store-list-block' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<?php
+// The filter bar renders in a request of its own and cannot see this block's
+// featured/category/include settings, so it publishes the total it actually matched.
+$wrapper_attributes = get_block_wrapper_attributes(
+    [
+        'class'                  => 'dokan-store-list-block',
+        'data-dokan-store-count' => number_format_i18n( absint( $sellers['count'] ) ),
+    ]
+);
+?>
+<div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <?php
     // Dispatch first so a module can relocate its markup before the grid renders.
         \WeDevs\Dokan\Blocks\Manager::dispatch_store_lists_filter_form( $sellers );

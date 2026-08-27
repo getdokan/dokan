@@ -9,12 +9,13 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-// Sorting is filterable and Pro modules add to it, so the list comes from the server.
-const sortOptions = (): Record< string, string > =>
-    ( window as any )?.dokanBlocksData?.sortOptions ?? {};
 import SSREdit from '../shared/ssr-edit';
 import metadata from './block.json';
 import './style.scss';
+
+// Sorting is filterable and Pro modules add to it, so the list comes from the server.
+const sortOptions = (): Record< string, string > =>
+    ( window as any )?.dokanBlocksData?.sortOptions ?? {};
 
 // Admin settings win: an element switched off site-wide is not offered here at all.
 const adminAllows = ( key: string ): boolean =>
@@ -88,17 +89,19 @@ registerBlockType( metadata.name, {
                             setAttributes( { withProductsOnly } )
                         }
                     />
-                    <TextControl
-                        label={ __( 'Store categories', 'dokan-lite' ) }
-                        help={ __(
-                            'Comma separated store category slugs. Requires the store category feature.',
-                            'dokan-lite'
-                        ) }
-                        value={ attributes.category }
-                        onChange={ ( category ) =>
-                            setAttributes( { category } )
-                        }
-                    />
+                    { adminAllows( 'storeCategory' ) && (
+                        <TextControl
+                            label={ __( 'Store categories', 'dokan-lite' ) }
+                            help={ __(
+                                'Comma separated store category slugs. Requires the store category feature.',
+                                'dokan-lite'
+                            ) }
+                            value={ attributes.category }
+                            onChange={ ( category ) =>
+                                setAttributes( { category } )
+                            }
+                        />
+                    ) }
                     <TextControl
                         label={ __( 'Fallback store name', 'dokan-lite' ) }
                         help={ __(

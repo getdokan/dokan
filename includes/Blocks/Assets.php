@@ -27,10 +27,33 @@ class Assets implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
+        add_action( 'init', [ $this, 'register_store_listing_registry' ] );
         add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_editor_block_data' ] );
         add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_assets' ] );
         // After Dokan's own asset logic (@10) so store pages keep their enqueue order.
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_block_styles' ], 20 );
+    }
+
+    /**
+     * Register the store listing extension registry.
+     *
+     * Extensions that draw into the listing register a starter with
+     * `window.dokanStoreListing.onRender( fn )`; the block's view script calls
+     * them once the markup exists, which is what makes them work inside the
+     * editor canvas. Lite owns the object so a Dokan block and an extension
+     * script cannot end up with two different copies of it.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function register_store_listing_registry(): void {
+        wp_register_script( 'dokan-blocks-store-listing', false, [], DOKAN_PLUGIN_VERSION, true );
+
+        wp_add_inline_script(
+            'dokan-blocks-store-listing',
+            'window.dokanStoreListing = window.dokanStoreListing || { starters: [], onRender( starter ) { this.starters.push( starter ); } };'
+        );
     }
 
     /**
@@ -152,6 +175,11 @@ class Assets implements Hookable {
         /**
          * Script handles to load inside the block editor canvas.
          *
+         * A script listed here can register a starter with
+         * `window.dokanStoreListing.onRender( fn )` to draw into the listing
+         * once the block markup exists. Declare `dokan-blocks-store-listing`
+         * as a dependency to be sure the registry is there.
+         *
          * @since DOKAN_SINCE
          *
          * @param string[] $handles Registered script handles.
@@ -198,6 +226,8 @@ class Assets implements Hookable {
                     'openClose' => 'on' === dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' ),
                     'address'   => ! dokan_is_vendor_info_hidden( 'address' ),
                     'phone'     => ! dokan_is_vendor_info_hidden( 'phone' ),
+                    // Store categories are a Dokan Pro taxonomy; the control is dead without it.
+                    'storeCategory' => taxonomy_exists( 'store_category' ),
                 ],
             ]
         );

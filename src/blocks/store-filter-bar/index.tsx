@@ -28,7 +28,11 @@ const sections = [
     },
     {
         toggle: 'showSearch',
-        label: __( 'Show search', 'dokan-lite' ),
+        label: __( 'Show filter panel', 'dokan-lite' ),
+        toggleHelp: __(
+            'The Filter button and the panel it opens — vendor search, plus any filters extensions add such as category, rating or location.',
+            'dokan-lite'
+        ),
         text: 'filterButtonText',
         textLabel: __( 'Filter button label', 'dokan-lite' ),
         placeholder: __( 'Filter', 'dokan-lite' ),
@@ -67,6 +71,7 @@ registerBlockType( metadata.name, {
                             <Fragment key={ section.toggle }>
                                 <ToggleControl
                                     label={ section.label }
+                                    help={ section.toggleHelp }
                                     checked={ attributes[ section.toggle ] }
                                     onChange={ ( value ) =>
                                         setAttributes( {

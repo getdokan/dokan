@@ -19,6 +19,14 @@
  * @var array  $sort_filters       Sort options, keyed by slug.
  * @var string $sort_by            Selected sort option.
  * @var array  $args               Optional per-section overrides, see the defaults below.
+ *
+ * Note for overrides: the store filter bar block passes its per-section settings
+ * through $args. A copy of this template that predates them keeps working, but it
+ * renders the whole bar and silently ignores those block settings.
+ *
+ * dokan_before_store_lists_filter_left and _right are captured before
+ * dokan_before_store_lists_filter runs, so an all-hidden bar with nothing hooked
+ * into it prints no empty chrome. Their output still appears in the same place.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -61,12 +69,15 @@ $has_bar_content = $bar['show_store_count'] || $bar['show_search'] || $bar['show
             <?php if ( $bar['show_store_count'] ) : ?>
                 <p class="item store-count">
                     <?php
+                    // The number is wrapped so a filtered grid can correct it client-side without reflowing the wording.
+                    $store_count_value = '<span class="store-count-value">' . esc_html( number_format_i18n( $number_of_store ) ) . '</span>';
+
                     if ( '' !== $bar['store_count_text'] ) {
                         // A single placeholder keeps the wording free-form without risking a format error.
-                        echo esc_html( str_replace( '%s', number_format_i18n( $number_of_store ), $bar['store_count_text'] ) );
+                        echo wp_kses_post( str_replace( '%s', $store_count_value, esc_html( $bar['store_count_text'] ) ) );
                     } else {
                         // translators: 1) number of stores
-                        printf( esc_html( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ) ), esc_html( number_format_i18n( $number_of_store ) ) );
+                        printf( esc_html( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ) ), wp_kses_post( $store_count_value ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                     }
                     ?>
                 </p>

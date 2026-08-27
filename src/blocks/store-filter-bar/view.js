@@ -251,7 +251,7 @@
         }
     };
 
-    // Extensions register a starter here; this is the only script the canvas runs, so it fires them once the markup lands.
+    // Defined by the dokan-blocks-store-listing dependency; this script only reads it.
     const extensions = ( window.dokanStoreListing =
         window.dokanStoreListing || {
             starters: [],
@@ -292,18 +292,50 @@
             return;
         }
 
-        // Watch the root: the canvas swaps its body while it mounts.
-        new window.MutationObserver( start ).observe(
-            document.documentElement,
-            {
-                childList: true,
-                subtree: true,
+        // Watch the root: the canvas swaps its body while it mounts. Once the block
+        // list exists, narrow to it so sidebar and toolbar churn stops waking this.
+        const observer = new window.MutationObserver( () => {
+            start();
+
+            const canvas = document.querySelector(
+                '.block-editor-block-list__layout'
+            );
+
+            if ( canvas && observer.takeRecords ) {
+                observer.disconnect();
+                observer.observe( canvas, { childList: true, subtree: true } );
             }
+        } );
+
+        observer.observe( document.documentElement, {
+            childList: true,
+            subtree: true,
+        } );
+    };
+
+    // The bar counts what the query string asks for; the grid also applies its own
+    // block settings, so where the two disagree the grid is the honest number.
+    const syncStoreCount = () => {
+        const grid = document.querySelector(
+            '.dokan-store-list-block[data-dokan-store-count]'
         );
+
+        if ( ! grid ) {
+            return;
+        }
+
+        document
+            .querySelectorAll(
+                '.dokan-store-filter-bar-block .store-count-value'
+            )
+            .forEach( ( value ) => {
+                value.textContent = grid.dataset.dokanStoreCount;
+            } );
     };
 
     const boot = () => {
         restoreState();
+        syncStoreCount();
 
         startExtensions();
     };
