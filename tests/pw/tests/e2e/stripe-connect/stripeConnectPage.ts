@@ -359,6 +359,27 @@ export class StripeConnectPage {
         await mount.waitFor({ state: 'visible', timeout: 10_000 });
     }
 
+    /**
+     * Assert the Payment Element genuinely mounted and no initialisation error is on screen.
+     *
+     * `selectBlockGateway()` already waits for the mount node, but an empty mount plus a
+     * "Could not initialize Stripe" message satisfies that wait, which is exactly the shape of
+     * the bug this guards. So this also requires a live Stripe card iframe inside the mount and
+     * no init error text anywhere on the page.
+     */
+    async assertBlockPaymentElementReady(): Promise<void> {
+        const mount = this.page.locator(this.checkout.blockMount);
+        await mount.waitFor({ state: 'visible', timeout: 30_000 });
+
+        const cardFrame = mount.locator('iframe[name^="__privateStripeFrame"]');
+        await cardFrame.first().waitFor({ state: 'attached', timeout: 30_000 });
+
+        const initError = this.page.getByText(/could not initialize stripe|failed to initialize/i);
+        if (await initError.count()) {
+            throw new Error(`Stripe Payment Element reported an init error: ${(await initError.first().innerText()).slice(0, 200)}`);
+        }
+    }
+
     /** WooCommerce Blocks' own checkout status, or null when it cannot be read. */
     private async blockCheckoutStatus(): Promise<string | null> {
         return this.page
@@ -730,6 +751,108 @@ export class StripeConnectPage {
     // ============================================
     // SAVED CARDS (My Account)
     // ============================================
+
+    // The Blocks coupon panel collapses behind a toggle until opened.
+    blockCoupon = {
+        panelButton: '.wc-block-components-panel__button',
+        form: '.wc-block-components-totals-coupon__form',
+        input: '#wc-block-components-totals-coupon__input-0, .wc-block-components-totals-coupon__input input',
+        applyButton: '.wc-block-components-totals-coupon__button',
+        appliedChip: '.wc-block-components-totals-discount, .wc-block-components-chip',
+    };
+
+    /**
+     * Apply a coupon on the block checkout and wait for the Store API to answer, so the totals and
+     * the re-rendered payment box have settled. Filling the field and moving on would leave the
+     * next step reading pre-discount totals.
+     */
+    async applyCouponBlock(code: string): Promise<void> {
+        const form = this.page.locator(this.blockCoupon.form);
+        if (!(await form.isVisible().catch(() => false))) {
+            await this.page.locator(this.blockCoupon.panelButton).first().click();
+        }
+        const input = this.page.locator(this.blockCoupon.input).first();
+        await input.waitFor({ state: 'visible', timeout: 20_000 });
+        await input.fill(code);
+        await Promise.all([
+            this.page
+                .waitForResponse(res => /wc\/store\/v\d+\/cart\/apply-coupon|wc-ajax=apply_coupon/i.test(res.url()), { timeout: 20_000 })
+                .catch(() => undefined),
+            this.page.locator(this.blockCoupon.applyButton).first().click(),
+        ]);
+        await this.waitForCheckoutSettled();
+    }
+
+    // ============================================
+    // VENDOR SUBSCRIPTION — the NEW React dashboard
+    // ============================================
+
+    /**
+     * The vendor subscription surface is the React route, not the legacy
+     * `/dashboard/subscription/` page. Cancel opens a confirm modal and then calls REST with no
+     * navigation, so every assertion below waits on an SPA re-render rather than a page load.
+     */
+    vendorSubscription = {
+        dashboardUrl: toPath('dashboard/new/#/subscription?tab=packs'),
+        cardTitle: 'Current Subscription',
+    };
+
+    async gotoVendorSubscriptionDashboard(): Promise<void> {
+        await this.page.goto(this.vendorSubscription.dashboardUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+        await closeAnnouncementModal(this.page);
+        await this.page
+            .getByText(this.vendorSubscription.cardTitle, { exact: false })
+            .first()
+            .waitFor({ state: 'visible', timeout: 30_000 });
+    }
+
+    /** The Current Subscription card names the active pack and offers the Cancel control. */
+    async assertActivePackBanner(packTitle?: string): Promise<void> {
+        await this.gotoVendorSubscriptionDashboard();
+        await expect(
+            this.page.getByText(/You are using/i).first(),
+            'Current Subscription card should show the active pack for a subscribed vendor',
+        ).toBeVisible({ timeout: 20_000 });
+        if (packTitle) {
+            await expect(this.page.getByText(packTitle, { exact: false }).first(), 'card names the active pack').toBeVisible();
+        }
+        await expect(
+            this.page.getByRole('button', { name: 'Cancel', exact: true }),
+            'the Cancel control renders for an active recurring subscription',
+        ).toBeVisible();
+    }
+
+    /** Cancel through the React UI: Cancel, confirm modal, REST, SPA re-render. */
+    async cancelSubscriptionFromDashboard(): Promise<void> {
+        await this.gotoVendorSubscriptionDashboard();
+        await this.page.getByRole('button', { name: 'Cancel', exact: true }).click();
+        const confirm = this.page.getByRole('button', { name: 'Yes, Cancel' });
+        await expect(confirm, 'a Cancel confirmation modal should appear').toBeVisible({ timeout: 10_000 });
+        await confirm.click();
+        await expect(
+            this.page.getByText(/still active till/i).first(),
+            'after cancel, the "still active till" alert should appear',
+        ).toBeVisible({ timeout: 20_000 });
+        await expect(
+            this.page.getByRole('button', { name: 'Activate', exact: true }),
+            'after cancel, the action should flip to Activate',
+        ).toBeVisible();
+    }
+
+    /** Reactivate through the React UI: Activate, REST, no modal. */
+    async reactivateSubscriptionFromDashboard(): Promise<void> {
+        await this.gotoVendorSubscriptionDashboard();
+        await this.page.getByRole('button', { name: 'Activate', exact: true }).click();
+        await expect(
+            this.page.getByText(/still active till/i),
+            'after reactivate, the cancelled alert should clear',
+        ).toHaveCount(0, { timeout: 20_000 });
+        await expect(
+            this.page.getByRole('button', { name: 'Cancel', exact: true }),
+            'after reactivate, the action should flip back to Cancel',
+        ).toBeVisible({ timeout: 20_000 });
+    }
 
     async gotoMyAccountPaymentMethods(): Promise<void> {
         await this.page.goto(this.myAccount.url);

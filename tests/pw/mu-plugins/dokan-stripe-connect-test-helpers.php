@@ -394,3 +394,219 @@ add_action(
         );
     }
 );
+
+/**
+ * Vendor-subscription support routes.
+ *
+ * The `product_subscription` module and the `dokan_product_subscription[enable_pricing]`
+ * flag are two separate switches and BOTH have to be on before the vendor dashboard
+ * subscription endpoint and the cancel/reactivate handlers register. The flag is stored in
+ * a serialized option array, so it is written PHP-side rather than through wp-cli, which
+ * would flatten the array.
+ */
+add_action(
+    'rest_api_init',
+    function () {
+        // ------------------------------------------------------------------
+        // /set-vendor-subscription — flip dokan_product_subscription[enable_pricing].
+        // ------------------------------------------------------------------
+        register_rest_route(
+            'dokan-test-connect/v1',
+            '/set-vendor-subscription',
+            [
+                'methods'             => 'POST',
+                'permission_callback' => 'dokan_stripe_connect_test_can_manage',
+                'callback'            => function ( WP_REST_Request $request ) {
+                    $enable = filter_var( $request->get_param( 'enable' ), FILTER_VALIDATE_BOOLEAN );
+                    $opt    = get_option( 'dokan_product_subscription', [] );
+                    if ( ! is_array( $opt ) ) {
+                        $opt = [];
+                    }
+                    $opt['enable_pricing'] = $enable ? 'on' : 'off';
+                    update_option( 'dokan_product_subscription', $opt );
+
+                    // Read it back rather than reporting what we meant to write.
+                    $stored = get_option( 'dokan_product_subscription', [] );
+                    return rest_ensure_response(
+                        [
+                            'ok'             => true,
+                            'enable_pricing' => is_array( $stored ) && isset( $stored['enable_pricing'] ) ? $stored['enable_pricing'] : null,
+                        ]
+                    );
+                },
+            ]
+        );
+
+        // ------------------------------------------------------------------
+        // /set-module — activate or deactivate a Dokan Pro module by slug.
+        // Used for `product_subscription`, which the lead wants left OFF once the
+        // Stripe Connect run finishes.
+        // ------------------------------------------------------------------
+        register_rest_route(
+            'dokan-test-connect/v1',
+            '/set-module',
+            [
+                'methods'             => 'POST',
+                'permission_callback' => 'dokan_stripe_connect_test_can_manage',
+                'callback'            => function ( WP_REST_Request $request ) {
+                    $slug   = sanitize_text_field( (string) $request->get_param( 'slug' ) );
+                    $enable = filter_var( $request->get_param( 'enable' ), FILTER_VALIDATE_BOOLEAN );
+
+                    if ( '' === $slug || ! function_exists( 'dokan_pro' ) || ! dokan_pro()->module ) {
+                        return new WP_Error( 'dokan_test_no_module_manager', 'module manager unavailable', [ 'status' => 500 ] );
+                    }
+
+                    if ( $enable ) {
+                        dokan_pro()->module->activate_modules( [ $slug ] );
+                    } else {
+                        dokan_pro()->module->deactivate_modules( [ $slug ] );
+                    }
+
+                    $active = (array) get_option( 'dokan_pro_active_modules', [] );
+                    return rest_ensure_response(
+                        [
+                            'ok'     => true,
+                            'slug'   => $slug,
+                            'active' => in_array( $slug, $active, true ),
+                        ]
+                    );
+                },
+            ]
+        );
+
+        // ------------------------------------------------------------------
+        // /flush-rewrites — call as a SEPARATE request AFTER /set-vendor-subscription.
+        // This request's bootstrap re-reads enable_pricing, the module registers its
+        // dashboard endpoint, and only then does the flush regenerate rules including it.
+        // ------------------------------------------------------------------
+        register_rest_route(
+            'dokan-test-connect/v1',
+            '/flush-rewrites',
+            [
+                'methods'             => 'POST',
+                'permission_callback' => 'dokan_stripe_connect_test_can_manage',
+                'callback'            => function () {
+                    flush_rewrite_rules( true );
+                    return rest_ensure_response( [ 'ok' => true ] );
+                },
+            ]
+        );
+
+        // ------------------------------------------------------------------
+        // /force-renewal — drive a REAL WooCommerce Subscriptions renewal.
+        //
+        // `woocommerce_scheduled_subscription_payment_dokan-stripe-connect` is the hook
+        // the gateway actually registers (StripeConnect.php:127), so firing it charges the
+        // stored token for real, creates the transfers and runs the ledger writes that
+        // RenewalProcessor was just fixed to do. Injecting a synthetic invoice webhook
+        // instead would skip precisely the code under test.
+        // ------------------------------------------------------------------
+        register_rest_route(
+            'dokan-test-connect/v1',
+            '/force-renewal',
+            [
+                'methods'             => 'POST',
+                'permission_callback' => 'dokan_stripe_connect_test_can_manage',
+                'callback'            => function ( WP_REST_Request $request ) {
+                    $subscription_id = absint( $request->get_param( 'subscription_id' ) );
+
+                    if ( ! function_exists( 'wcs_get_subscription' ) || ! function_exists( 'wcs_create_renewal_order' ) ) {
+                        return new WP_Error( 'dokan_test_no_wcs', 'WooCommerce Subscriptions is not active', [ 'status' => 500 ] );
+                    }
+
+                    // No subscription id posted: resolve the newest one belonging to the
+                    // parent order instead, which is what a test usually has in hand.
+                    if ( ! $subscription_id ) {
+                        $order_id = absint( $request->get_param( 'order_id' ) );
+                        $subs     = $order_id ? wcs_get_subscriptions_for_order( $order_id, [ 'order_type' => 'any' ] ) : [];
+                        if ( empty( $subs ) ) {
+                            return new WP_Error( 'dokan_test_no_subscription', 'no subscription found for that order', [ 'status' => 404 ] );
+                        }
+                        $subscription    = reset( $subs );
+                        $subscription_id = $subscription->get_id();
+                    } else {
+                        $subscription = wcs_get_subscription( $subscription_id );
+                    }
+
+                    if ( ! $subscription ) {
+                        return new WP_Error( 'dokan_test_no_subscription', 'subscription not found', [ 'status' => 404 ] );
+                    }
+
+                    $renewal_order = wcs_create_renewal_order( $subscription );
+                    if ( is_wp_error( $renewal_order ) ) {
+                        return new WP_Error( 'dokan_test_renewal_failed', $renewal_order->get_error_message(), [ 'status' => 400 ] );
+                    }
+
+                    $gateway_id = $subscription->get_payment_method();
+                    $renewal_order->set_payment_method( $gateway_id );
+                    $renewal_order->save();
+
+                    do_action(
+                        'woocommerce_scheduled_subscription_payment_' . $gateway_id,
+                        $subscription->get_total(),
+                        $renewal_order
+                    );
+
+                    // Re-read from storage: the hook mutates the order in another instance.
+                    $fresh = wc_get_order( $renewal_order->get_id() );
+
+                    return rest_ensure_response(
+                        [
+                            'ok'              => true,
+                            'subscription_id' => $subscription_id,
+                            'renewal_order'   => $renewal_order->get_id(),
+                            'gateway'         => $gateway_id,
+                            'status'          => $fresh ? $fresh->get_status() : null,
+                            'total'           => $fresh ? (float) $fresh->get_total() : null,
+                        ]
+                    );
+                },
+            ]
+        );
+    }
+);
+
+/**
+ * Delete a user's stored WooCommerce payment tokens.
+ *
+ * A saved card left behind by an earlier spec gets pre-selected at the next checkout, so a case that
+ * means to test entering a card silently tests reusing a token instead. Worse, on a local site that
+ * path can confirm at Stripe and never settle the order, because there is no redirect back and no
+ * webhook can reach localhost, which reads as a payment defect and is not one.
+ */
+add_action(
+    'rest_api_init',
+    function () {
+        register_rest_route(
+            'dokan-test-connect/v1',
+            '/delete-payment-tokens',
+            [
+                'methods'             => 'POST',
+                'permission_callback' => 'dokan_stripe_connect_test_can_manage',
+                'callback'            => function ( WP_REST_Request $request ) {
+                    $user_id = absint( $request->get_param( 'user_id' ) );
+                    if ( ! $user_id ) {
+                        return new WP_Error( 'dokan_test_bad_user', 'user_id is required', [ 'status' => 400 ] );
+                    }
+
+                    $deleted = 0;
+                    foreach ( WC_Payment_Tokens::get_customer_tokens( $user_id ) as $token ) {
+                        WC_Payment_Tokens::delete( $token->get_id() );
+                        ++$deleted;
+                    }
+
+                    // Read back rather than reporting what we intended to do.
+                    $remaining = count( WC_Payment_Tokens::get_customer_tokens( $user_id ) );
+                    return rest_ensure_response(
+                        [
+                            'ok'        => true,
+                            'user_id'   => $user_id,
+                            'deleted'   => $deleted,
+                            'remaining' => $remaining,
+                        ]
+                    );
+                },
+            ]
+        );
+    }
+);
