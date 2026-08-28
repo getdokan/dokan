@@ -354,7 +354,7 @@
             $( window ).on( 'resize', function() {
                 // There is no list layout below 767px, so fall back to the grid —
                 // through setView, so the toggle icons stay in step with the layout.
-                if ( $( this ).width() < 767 ) {
+                if ( $( this ).width() <= 767 ) {
                     self.setView( 'grid-view', $( '.toggle-view span' ) );
                 }
             });
