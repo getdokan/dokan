@@ -30,18 +30,18 @@ class StoreListingBlocksTest extends DokanTestCase {
     /**
      * @test
      */
-    public function it_publishes_a_rendering_block_attributes_to_extensions() {
+    public function it_publishes_a_rendering_block_attributes_and_name_to_extensions() {
         $received = null;
 
         add_action(
-            'dokan_blocks_rendering_attributes', function ( $attributes ) use ( &$received ) {
-                $received = $attributes;
-            }
+            'dokan_blocks_rendering_attributes', function ( $attributes, $block_name ) use ( &$received ) {
+                $received = [ $attributes, $block_name ];
+            }, 10, 2
         );
 
-        Manager::publish_rendering_attributes( [ 'showMap' => false ] );
+        Manager::publish_rendering_attributes( [ 'columns' => 4 ], 'dokan/store-list' );
 
-        $this->assertSame( [ 'showMap' => false ], $received );
+        $this->assertSame( [ [ 'columns' => 4 ], 'dokan/store-list' ], $received );
     }
 
     /**

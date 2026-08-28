@@ -30,7 +30,7 @@ $attributes = wp_parse_args(
 );
 
 // Extensions drawing into this block read their own attributes from here; Pro's map toggle is one.
-\WeDevs\Dokan\Blocks\Manager::publish_rendering_attributes( $attributes );
+\WeDevs\Dokan\Blocks\Manager::publish_rendering_attributes( $attributes, 'dokan/store-filter-bar' );
 
 $requested_data = \WeDevs\Dokan\Vendor\StoreListsFilter::get_requested_data();
 

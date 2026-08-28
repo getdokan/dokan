@@ -37,7 +37,7 @@ $attributes = wp_parse_args(
 
 // Extensions that draw into this block read their own attributes from here — the
 // geolocation map is one of them, and its toggle is registered by Dokan Pro.
-\WeDevs\Dokan\Blocks\Manager::publish_rendering_attributes( $attributes );
+\WeDevs\Dokan\Blocks\Manager::publish_rendering_attributes( $attributes, 'dokan/store-list' );
 
 wp_enqueue_style( 'dokan-style' );
 wp_enqueue_style( 'dokan-fontawesome' );

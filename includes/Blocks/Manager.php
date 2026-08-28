@@ -58,11 +58,12 @@ class Manager implements Hookable {
      *
      * @since DOKAN_SINCE
      *
-     * @param array $attributes Block attributes.
+     * @param array  $attributes Block attributes.
+     * @param string $block_name Name of the block rendering, e.g. `dokan/store-list`.
      *
      * @return void
      */
-    public static function publish_rendering_attributes( array $attributes ): void {
+    public static function publish_rendering_attributes( array $attributes, string $block_name = '' ): void {
         /**
          * Fires as each Dokan block publishes its attributes.
          *
@@ -74,9 +75,10 @@ class Manager implements Hookable {
          *
          * @since DOKAN_SINCE
          *
-         * @param array $attributes Block attributes.
+         * @param array  $attributes Block attributes.
+         * @param string $block_name Name of the block rendering, so a listener can tell the bar from the grid.
          */
-        do_action( 'dokan_blocks_rendering_attributes', $attributes );
+        do_action( 'dokan_blocks_rendering_attributes', $attributes, $block_name );
     }
 
     /**
