@@ -22,6 +22,8 @@ class Templates implements Hookable {
 
     /**
      * Template slug.
+     *
+     * @since DOKAN_SINCE
      */
     public const TEMPLATE_SLUG = 'single-store';
 
