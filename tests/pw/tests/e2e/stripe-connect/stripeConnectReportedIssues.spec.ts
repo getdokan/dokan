@@ -119,16 +119,14 @@ test.describe.serial('Stripe Connect — validation of reported issues @pro', ()
 
         expect(classicMessage, 'the classic checkout should say why the card failed').toMatch(/declin/i);
         /*
-         * CONFIRMED DEFECT — getdokan/plugin-internal-tasks#2295, reproduced verbatim on this build:
-         *   classic: "Your card has been declined."
-         *   block:   "Something went wrong. Please contact us to get assistance."
-         * The decline is handled correctly underneath; only the message the shopper reads is wrong,
-         * which is what makes it a support problem rather than a money one.
+         * This was getdokan/plugin-internal-tasks#2295: the classic checkout said "Your card has
+         * been declined." while the block checkout replaced it with "Something went wrong. Please
+         * contact us to get assistance." The decline itself was always handled correctly, so this
+         * was a support problem rather than a money one.
          *
-         * test.fail() is imperative and one line before the failing assertion, so the positive
-         * control above (the classic checkout DOES show the reason) still reports honestly.
+         * Fixed on the revamp branch and verified here on 2026-08-27: the `test.fail()` marker that
+         * used to sit on the line below reported "Expected to fail, but passed", so it was removed.
          */
-        test.fail();
         expect(blockMessage.toLowerCase(), 'the block checkout should show the real decline reason, not a generic message').not.toContain('something went wrong');
     });
 

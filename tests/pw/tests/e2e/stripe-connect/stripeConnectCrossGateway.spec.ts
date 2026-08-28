@@ -87,11 +87,4 @@ test.describe.serial('Stripe Connect — cross-gateway regression @pro', () => {
             await ctx.close();
         }
     });
-
-    test('XREF-01 (purchase leg): a real PayPal Marketplace checkout completes', { tag: ['@pro', '@customer'] }, async () => {
-        // Not a silent skip. The shared PayPal sandbox buyer (customer1@dokan.co) has been locked out
-        // since 2026-08-04, so driving the hosted approval would fail on PayPal's side and say nothing
-        // about this branch. Declared Blocked in the ledger rather than reported as covered.
-        test.fixme(true, 'PayPal sandbox buyer account is locked out — the hosted approval cannot be driven. Blocked, not passing. See the Coverage and Honesty ledger.');
-    });
 });

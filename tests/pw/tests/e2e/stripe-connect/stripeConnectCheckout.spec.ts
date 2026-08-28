@@ -213,17 +213,15 @@ test.describe.serial('Stripe Connect — card checkout @pro', () => {
         expect(completion, 'the order should carry a completion note at all').toBeTruthy();
 
         /*
-         * CONFIRMED DEFECT — getdokan/plugin-internal-tasks#2299 (the first of its two claims).
-         * Independently reproduced here: orders 34, 35, 36, all paid with 4242 4242 4242 4242 and
-         * never challenged, each carry "payment is completed via Stripe Connect 3d secure."
+         * This was getdokan/plugin-internal-tasks#2299, where an unchallenged payment was still
+         * recorded as "payment is completed via Stripe Connect 3d secure." The note moves no money,
+         * but it is what support and finance read when answering a chargeback, and it asserted an
+         * authentication that never happened.
          *
-         * It moves no money, but it is the record support and finance read when answering a
-         * chargeback, and it asserts an authentication that never happened.
-         *
-         * test.fail() is imperative, one line before the failing assertion, so the positive control
-         * above (a completion note exists at all) still reports honestly.
+         * Fixed on the revamp branch and verified here on 2026-08-27: the `test.fail()` marker that
+         * used to sit on the line below reported "Expected to fail, but passed", so it was removed
+         * rather than left to mask the day this regresses.
          */
-        test.fail();
         expect(completion.toLowerCase(), 'a payment with no 3DS challenge must not be recorded as "3d secure"').not.toContain('3d secure');
     });
 
