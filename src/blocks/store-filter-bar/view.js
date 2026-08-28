@@ -251,7 +251,7 @@
         }
     };
 
-    // Defined by the dokan-blocks-store-listing dependency; this script only reads it.
+    // Owned by Lite's dokan-blocks-store-listing handle, which loads ahead of this script; the fallback only covers a canvas that dropped it.
     const extensions = ( window.dokanStoreListing =
         window.dokanStoreListing || {
             starters: [],
@@ -280,6 +280,9 @@
             fresh.forEach( ( listing ) => {
                 listing.dataset.dokanStarted = 'true';
             } );
+
+            // A re-rendered bar or grid comes back with the server's count, so line them up again.
+            syncStoreCount();
 
             // Scoped to what just appeared, so an extension need not rebuild the whole page.
             extensions.starters.forEach( ( starter ) => starter( fresh ) );

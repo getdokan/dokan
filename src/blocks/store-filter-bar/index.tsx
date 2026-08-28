@@ -20,7 +20,7 @@ const sections = [
         textLabel: __( 'Store count text', 'dokan-lite' ),
         // translators: %s is typed by the editor and marks where the store count appears.
         help: __(
-            'Use %s where the number should appear. Leave empty for the default wording.',
+            'Use %s where the number should appear. Leave empty for the default wording. The number follows the first Store List block on the page.',
             'dokan-lite'
         ),
         // translators: %s is the number of stores.

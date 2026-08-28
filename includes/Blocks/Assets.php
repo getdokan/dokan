@@ -189,14 +189,14 @@ class Assets implements Hookable {
             $this->get_block_handles( 'dokan/store-filter-bar', 'view_script_handles' )
         );
 
-        foreach ( (array) $handles as $handle ) {
-            if ( ! wp_script_is( $handle, 'registered' ) ) {
-                continue;
-            }
+        // The canvas body class lands after the view script boots, so the registry — the first
+        // listing script the canvas runs — tells every script after it where they are.
+        wp_add_inline_script( 'dokan-blocks-store-listing', 'window.dokanBlocksEditorPreview = true;', 'before' );
 
-            // The canvas body class lands after the view script boots, so it is told where it is up front.
-            wp_add_inline_script( $handle, 'window.dokanBlocksEditorPreview = true;', 'before' );
-            wp_enqueue_script( $handle );
+        foreach ( (array) $handles as $handle ) {
+            if ( wp_script_is( $handle, 'registered' ) ) {
+                wp_enqueue_script( $handle );
+            }
         }
     }
 

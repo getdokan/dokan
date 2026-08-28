@@ -63,8 +63,8 @@
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
     "viewScript": [
-        "file:./view.js",
-        "dokan-blocks-store-listing"
+        "dokan-blocks-store-listing",
+        "file:./view.js"
     ],
     "render": "file:./render.php"
 }
