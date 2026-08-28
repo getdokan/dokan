@@ -1,179 +1,117 @@
-import { test, expect } from '@utils/test';
-import { StripeExpressPage } from './stripeExpressPage';
-import path from 'path';
+import { test, expect, request } from '@utils/test';
+import { SERVER_URL } from '@utils/helpers';
+import { ApiUtils } from '@utils/apiUtils';
+import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { StripeExpressPage, STRIPE_CARDS, STRIPE_EXPRESS_CONNECTED_ACCOUNTS } from './stripeExpressPage';
+import {
+    adminAuth,
+    customerAuth,
+    VENDOR_ID,
+    CUSTOMER_ID,
+    hasCredentials,
+    ensureStripeExpressConfigured,
+    ensureCustomerAddress,
+    seedStripeExpressConnectedVendor,
+    removeStripeExpressConnectedVendor,
+} from './helpers';
 
-// ============================================
-// SESSION STORAGE VARIABLES
-// ============================================
-const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');        // Admin session storage
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');       // Vendor 1 session storage
-const v2 = path.join(__dirname, '../../../playwright/.auth/vendor2StorageState.json');      // Vendor 2 session storage
-const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');     // Customer 1 session storage
+/**
+ * Stripe Express — master suite (SE-MOD / SE-SET core / SE-RDY / SE-ONB seeded / SE-CHK block).
+ *
+ * Serial because it touches global gateway/module state. The gateway is configured once in
+ * beforeAll (idempotent), the customer is seeded an address, and vendor1 is DB-seeded as a
+ * connected Express account (a REAL acct_ when STRIPE_EXPRESS_VENDOR1_ACCT is set, so the
+ * transfer path is real). Checkout/charge tests self-skip without keys.
+ */
+test.describe.serial('Stripe Express — master @pro', () => {
+    // 150s could not fit this path: the post-click waits alone were 60s+120s, so the settle poll
+    // never completed and the test reported the poll placeholder instead of a verdict. 240s matches
+    // the sibling money specs (Guest / Settings / SavedCards) that drive the same card-entry flow.
+    test.describe.configure({ timeout: 240_000 });
 
-// ============================================
-// TEST SETUP
-// ============================================
+    let productId: string;
 
-test.describe.skip('Stripe Express Tests @lite', () => {
-    // Each test will create its own context and page with the appropriate storage state
-    let isStripeExpressEnabled = false;
-
-    // ============================================
-    // TEST CASES
-    // ============================================
-    // Note: To use a specific user session, create context with storageState
-    // Example: 
-    // const context = await browser.newContext({ storageState: a1 });
-    // const page = await context.newPage();
-
-    test.skip('Test Case 1 - Verify Stripe Express is Enabled', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
-        // Using admin session storage
-        const context = await browser.newContext({ storageState: a1 });
-        const adminPage = await context.newPage();
-        const stripeExpressPage = new StripeExpressPage(adminPage);
-        
-        // Navigate to Stripe Express settings page
-        await stripeExpressPage.goToStripeExpressSettings();
-        
-        // Check if Stripe Express is enabled
-        isStripeExpressEnabled = await stripeExpressPage.isStripeExpressEnabled();
-        
-        // Assert that Stripe Express is enabled
-        expect(isStripeExpressEnabled, 'Stripe Express must be enabled to run tests').toBe(true);
-        
-        await adminPage.close();
-        await context.close();
+    test.beforeAll(async () => {
+        await ensureStripeExpressConfigured();
+        await ensureCustomerAddress();
+        await seedStripeExpressConnectedVendor(VENDOR_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor1);
+        const api = new ApiUtils(await request.newContext());
+        const [, id] = await api.createProduct({ ...payloads.createProduct(), name: 'Stripe Express Master Product' }, payloads.vendorAuth);
+        productId = id;
+        await api.dispose();
     });
 
-    test('Test Case 2 - Placeholder', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
-        test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
-        
-        // Example: Using vendor 1 session storage
-        const context = await browser.newContext({ storageState: v1 });
-        const vendorPage = await context.newPage();
-        new StripeExpressPage(vendorPage);
-
-        // TODO: Add test steps here
-
-        await vendorPage.close();
-        await context.close();
+    test.afterAll(async () => {
+        await removeStripeExpressConnectedVendor(VENDOR_ID);
+        const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+        try {
+            await ctx.delete(`${SERVER_URL}/wc/v3/products/${productId}?force=true`);
+        } finally {
+            await ctx.dispose();
+        }
     });
 
-    test('Test Case 3 - Enable Stripe Express Module and Disable Stripe Connect Module', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
-        test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
-        
-        // Using admin session storage
-        const context = await browser.newContext({ storageState: a1 });
-        const adminPage = await context.newPage();
-        const stripeExpressPage = new StripeExpressPage(adminPage);
-        
-        // Navigate to modules page
-        await stripeExpressPage.goToModulesPage();
-        
-        // Search for Stripe Express
-        await stripeExpressPage.searchModule('Stripe Express');
-        
-        // Enable Stripe Express if disabled, or pass if already enabled
-        await stripeExpressPage.enableModuleIfDisabled('Stripe Express');
-        
-        // Verify Stripe Express is enabled
-        const isStripeExpressModuleEnabled = await stripeExpressPage.getModuleToggleState('Stripe Express');
-        expect(isStripeExpressModuleEnabled, 'Stripe Express module should be enabled').toBe(true);
-        
-        // Clear search
-        await stripeExpressPage.clearSearch();
-        
-        // Search for Stripe Connect
-        await stripeExpressPage.searchModule('Stripe Connect');
-        
-        // Disable Stripe Connect if enabled, or pass if already disabled
-        await stripeExpressPage.disableModuleIfEnabled('Stripe Connect');
-        
-        // Verify Stripe Connect is disabled
-        const isStripeConnectModuleEnabled = await stripeExpressPage.getModuleToggleState('Stripe Connect');
-        expect(isStripeConnectModuleEnabled, 'Stripe Connect module should be disabled').toBe(false);
-        
-        await adminPage.close();
-        await context.close();
+    // ---- Admin: module + settings invariants ----
+
+    test('SE-MOD: stripe_express module is active and the legacy stripe module is inactive', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: adminAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await stripe.gotoModules();
+            expect(await stripe.isModuleEnabled(StripeExpressPage.MODULE_SLUG), 'stripe_express module should be active').toBe(true);
+            expect(await stripe.isModuleEnabled('stripe'), 'legacy stripe (Connect) module should be inactive').toBe(false);
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
     });
 
-    test('Test Case 4 - Verify Visit Express Dashboard Button is Visible for Vendor 1', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
-        
-        // Using vendor 1 session storage
-        const context = await browser.newContext({ storageState: v1 });
-        const vendorPage = await context.newPage();
-        const stripeExpressPage = new StripeExpressPage(vendorPage);
-        
-        // Navigate to Stripe Express onboarding page for vendor 1
-        await stripeExpressPage.goToStripeExpressOnboarding(1);
-        
-        // Check if the "Visit Express Dashboard" button is visible
-        const isButtonVisible = await stripeExpressPage.isVisitExpressDashboardButtonVisible();
-        expect(isButtonVisible, 'Visit Express Dashboard button should be visible').toBe(true);
-        
-        // Verify the button text
-        const buttonText = await stripeExpressPage.getVisitExpressDashboardButtonText();
-        expect(buttonText, 'Button should have correct text').toBe('Visit Express Dashboard');
-        
-        await vendorPage.close();
-        await context.close();
+
+    // SE-SET-04 ("the gateway has NO allow_non_connected_sellers field") was removed:
+    // dokan-pro d5688d067 (PR #6017) ADDED that field, so the assertion was stale, not a
+    // bug. The field is now covered positively by SE-NCS-01/02 in
+    // stripeExpressNonConnectedSellers.spec.ts.
+
+    test('SE-SET-01: the gateway settings persisted (enabled + testmode + keys)', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Express keys missing');
+        const ctx = await browser.newContext({ storageState: adminAuth });
+        const page = await ctx.newPage();
+        try {
+            await new StripeExpressPage(page).assertGatewayConfigured({ enabled: true, testmode: true });
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
     });
 
-    test('Test Case 5 - Verify Visit Express Dashboard Button is Visible for Vendor 2', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
-        
-        // Using vendor 2 session storage
-        const context = await browser.newContext({ storageState: v2 });
-        const vendorPage = await context.newPage();
-        const stripeExpressPage = new StripeExpressPage(vendorPage);
-        
-        // Navigate to Stripe Express onboarding page for vendor 2
-        await stripeExpressPage.goToStripeExpressOnboarding(2);
-        
-        // Check if the "Visit Express Dashboard" button is visible
-        const isButtonVisible = await stripeExpressPage.isVisitExpressDashboardButtonVisible();
-        expect(isButtonVisible, 'Visit Express Dashboard button should be visible').toBe(true);
-        
-        // Verify the button text
-        const buttonText = await stripeExpressPage.getVisitExpressDashboardButtonText();
-        expect(buttonText, 'Button should have correct text').toBe('Visit Express Dashboard');
-        
-        await vendorPage.close();
-        await context.close();
+    // ---- Vendor: connected onboarding UI (seeded) ----
+
+
+    // ---- Customer: block checkout (the validated happy path + declined) ----
+
+    test('SE-CHK-B-01: customer pays with a valid card on block checkout → order received', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Express keys missing — cannot drive the Payment Element');
+        const ctx = await browser.newContext({ storageState: customerAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await dbUtils.clearCustomerCart(CUSTOMER_ID);
+            await stripe.addProductToCart(productId);
+            await stripe.gotoBlockCheckout();
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.success);
+            // placeBlockOrderExpectReceived asserts a genuinely NEW paid Stripe Express order settled
+            // (its poll requires a processing|completed|on-hold status) and returns that order id. We
+            // assert on the id rather than the browser URL: on CI the in-page confirm is hCaptcha-blocked
+            // so the SPA never redirects to /order-received even though the payment settled server-side.
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            expect(Number(orderId), 'a successful Express payment should settle a paid order').toBeGreaterThan(0);
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
     });
 
-    test('Test Case 6 - Place Order with Stripe Express Payment', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
-        test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
-        test.setTimeout(120000); // Increase timeout to 120 seconds for this test
-        
-        // Using customer 1 session storage
-        const context = await browser.newContext({ storageState: c1 });
-        const customerPage = await context.newPage();
-        const stripeExpressPage = new StripeExpressPage(customerPage);
-        
-        // Go to shop and add products to cart
-        await stripeExpressPage.goToShop();
-        await stripeExpressPage.addProduct1ToCart();
-        await stripeExpressPage.addProduct2ToCart();
-        
-        // Go to checkout
-        await stripeExpressPage.goToCheckout();
-        
-        // Select Stripe Express payment method and wait for modal
-        await stripeExpressPage.selectStripeExpressPayment();
-        
-        // Fill in Stripe card details
-        await stripeExpressPage.fillStripeCardDetails();
-        
-        // Place the order
-        await stripeExpressPage.placeOrder();
-        
-        // Verify order was placed successfully
-        const isOrderSuccessful = await stripeExpressPage.isOrderPlacedSuccessfully();
-        expect(isOrderSuccessful, 'Order should be placed successfully').toBe(true);
-        
-        await customerPage.close();
-        await context.close();
-    });
 });

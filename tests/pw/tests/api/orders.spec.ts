@@ -30,7 +30,8 @@ for (const version of versions) {
             await apiUtils.dispose();
         });
 
-        test.skip('get all orders', { tag: ['@lite'] }, async () => {
+        test('get all orders', { tag: ['@lite'] }, async () => {
+            test.skip(version === 'v2', 'BUG-1: GET /dokan/v2/orders 500 fatal — OrderControllerV2.php:256 prepare_data_for_response override collision. See SKIPPED-TESTS-BUG-REPORT.md');
             const [response, responseBody] = await apiUtils.get(endPoints.getAllOrders.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
@@ -51,14 +52,16 @@ for (const version of versions) {
             expect(responseBody).toMatchSchema(schemas.ordersSchema.ordersSchema);
         });
 
-        test.skip('get single order', { tag: ['@lite'] }, async () => {
+        test('get single order', { tag: ['@lite'] }, async () => {
+            test.skip(version === 'v2', 'BUG-1: GET /dokan/v2/orders/{id} 500 fatal — OrderControllerV2.php:256. See SKIPPED-TESTS-BUG-REPORT.md');
             const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrder(orderId).replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
             expect(responseBody).toMatchSchema(schemas.ordersSchema.orderSchema);
         });
 
-        test.skip('update an order', { tag: ['@lite'] }, async () => {
+        test('update an order', { tag: ['@lite'] }, async () => {
+            test.skip(version === 'v2', 'BUG-1: PUT /dokan/v2/orders/{id} 500 fatal — OrderControllerV2.php:256. See SKIPPED-TESTS-BUG-REPORT.md');
             const [response, responseBody] = await apiUtils.put(endPoints.updateOrder(orderId).replace('v1', version), { data: payloads.updateOrder });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();

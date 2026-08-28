@@ -74,10 +74,18 @@ const App = ( { params }: { params: { productId: string } } ) => {
 
     const fetchProductFields = useCallback( async () => {
         const id = Number( params.productId );
+        // Preselect a product type when the create URL carries a `?type=` hint
+        // (e.g. "Add New Auction Product" links to #/products/create?type=auction).
+        const type =
+            new URLSearchParams(
+                window.location.hash.split( '?' )[ 1 ] ?? ''
+            ).get( 'type' ) ?? '';
         setInitLoading( true );
         try {
             const response = await apiFetch< ProductEditorData >( {
-                path: `/dokan/v3/products/init/fields?id=${ id || '' }`,
+                path: `/dokan/v3/products/init/fields?id=${ id || '' }${
+                    type ? `&type=${ encodeURIComponent( type ) }` : ''
+                }`,
             } );
             setFormEditor( response );
             ( window as any ).dokanProductEditor = response;

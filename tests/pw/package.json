@@ -37,7 +37,8 @@
     "license": "GPL-2.0-or-later",
     "scripts": {
         "install:chromium": "playwright install chromium",
-        "start:env": "wp-env start || wp-env start || wp-env start",
+        "fix:env-lock": "find \"$HOME/.wp-env\" -name '*.lock' -delete 2>/dev/null; exit 0",
+        "start:env": "wp-env start || (npm run fix:env-lock && sleep 10 && wp-env start) || (npm run fix:env-lock && sleep 30 && wp-env start)",
         "stop:env": "wp-env stop",
         "restart:env": "npm run start:env",
         "reset:env": "wp-env destroy && npm run start:env",
@@ -47,6 +48,7 @@
         "docker:full": "npm run start:env && npm run create:admin && npm run docker:setup",
         "test": "npx playwright test",
         "test:e2e": "NO_SETUP=true npx playwright test --project=e2e_tests",
+        "test:e2e:newui": "NO_SETUP=true npx playwright test --project=e2e_tests --grep @new-ui",
         "test:e2e:coverage": "npx playwright test --project=coverage_report",
         "test:api": "npx playwright test --project=api_tests --config=api.config.ts",
         "test:headed": "npx playwright test --project=e2e_tests --headed",

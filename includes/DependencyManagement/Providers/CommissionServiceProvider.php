@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 use WeDevs\Dokan\Commission\Calculator;
 use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Commission\OrderLineItemCommission;
+use WeDevs\Dokan\Commission\OrderRefundCommission;
 use WeDevs\Dokan\Commission\ProductCommission;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 use WeDevs\Dokan\Order\VendorBalanceUpdateHandler;
@@ -18,6 +19,7 @@ class CommissionServiceProvider extends BaseServiceProvider {
     protected $services = [
         OrderCommission::class,
         OrderLineItemCommission::class,
+        OrderRefundCommission::class,
         ProductCommission::class,
         Calculator::class,
         VendorBalanceUpdateHandler::class,

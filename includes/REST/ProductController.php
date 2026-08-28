@@ -157,7 +157,7 @@ class ProductController extends DokanRESTController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
-                    'args'                => $this->get_collection_params(),
+                    'args'                => array_merge( $this->get_collection_params(), $this->get_exclude_types_param() ),
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
                 [
@@ -210,6 +210,7 @@ class ProductController extends DokanRESTController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_product_summary' ],
+                    'args'                => $this->get_exclude_types_param(),
                     'permission_callback' => [ $this, 'get_product_summary_permissions_check' ],
                 ],
             ]
@@ -559,16 +560,8 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
-        // Match the list's exclusion scope so tab counts can't drift from it —
-        // Pro modules add `product_pack` etc. via this filter.
-        $exclude_types = array_values(
-            array_unique(
-                array_merge(
-                    [ 'booking', 'auction' ],
-                    (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
-                )
-            )
-        );
+        // Match the list's exclusion scope so tab counts can't drift from it.
+        $exclude_types = $this->get_exclude_types( $request );
 
         $data = [
             'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
@@ -590,6 +583,54 @@ class ProductController extends DokanRESTController {
         $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Get the product types excluded from the vendor product listing.
+     *
+     * The vendor product list sends its own `exclude_types` set — omitting the
+     * types it wants shown (e.g. it drops `auction` to reveal auctions). Every
+     * other request (the manual order product picker, the legacy page) sends
+     * nothing and falls back to the default `[ 'auction', 'booking' ]`, so those
+     * keep excluding them.
+     *
+     * @since 5.0.10
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array
+     */
+    protected function get_exclude_types( $request ) {
+        $exclude_types = $request->get_param( 'exclude_types' );
+
+        // Null-check before casting: `(array) null` is `[]`, which would make
+        // `??` skip the default and drop the exclusion for requests that send
+        // nothing (e.g. the manual order picker).
+        return null !== $exclude_types
+            ? array_values( (array) $exclude_types )
+            : [ 'auction', 'booking' ];
+    }
+
+    /**
+     * Collection param schema for `exclude_types`.
+     *
+     * Product type slugs to hide from the vendor listing. Consumed by
+     * get_exclude_types(); the vendor product list sends it (omitting the types
+     * it wants shown, e.g. `auction`).
+     *
+     * @since 5.0.10
+     *
+     * @return array
+     */
+    protected function get_exclude_types_param() {
+        return [
+            'exclude_types' => [
+                'description'       => __( 'Product type slugs to exclude from the vendor listing (e.g. booking).', 'dokan-lite' ),
+                'type'              => 'array',
+                'items'             => [ 'type' => 'string' ],
+                'sanitize_callback' => 'wp_parse_slug_list',
+            ],
+        ];
     }
 
     /**
@@ -922,7 +963,7 @@ class ProductController extends DokanRESTController {
 
         // Exclude product types that belong to separate dashboards
         // (e.g. auction, booking, subscription — registered by their Pro modules).
-        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        $exclude_types = $this->get_exclude_types( $request );
         if ( ! empty( $exclude_types ) ) {
             $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                 'taxonomy' => 'product_type',
@@ -932,10 +973,49 @@ class ProductController extends DokanRESTController {
             ];
         }
 
+        // WP_Query's `s` can't match SKUs — reuse WP Admin's WooCommerce product search so SKU, numeric-ID and variation-SKU lookups behave identically here.
+        if ( isset( $request['search'] ) && '' !== $request['search'] && 'product' === $this->post_type ) {
+            $data_store = \WC_Data_Store::load( 'product' );
+
+            if ( $data_store->has_callable( 'search_products' ) ) {
+                /**
+                 * Filters the maximum number of products the product search may match.
+                 *
+                 * Null (default) keeps the match set unbounded so a vendor's own product is never
+                 * truncated away before the `author` constraint applies; large marketplaces can
+                 * bound the query at the cost of that guarantee.
+                 *
+                 * @since 5.0.11
+                 *
+                 * @param int|null $limit Maximum matches, or null for unlimited.
+                 */
+                $search_limit = apply_filters( 'dokan_rest_product_search_limit', null );
+
+                // All statuses searched — vendors must find their drafts; the query's `author` arg keeps results vendor-scoped.
+                $search_ids = array_filter( wp_parse_id_list( $data_store->search_products( wc_clean( $request['search'] ), '', true, true, $search_limit ) ) );
+
+                // Search runs last so any post__in set above (`include` param, on_sale) narrows the matches instead of being widened by them.
+                if ( ! empty( $args['post__in'] ) ) {
+                    $search_ids = array_intersect( $search_ids, wp_parse_id_list( $args['post__in'] ) );
+                }
+
+                // WP_Query ignores post__not_in once post__in is set, so honour `exclude` by hand.
+                if ( ! empty( $args['post__not_in'] ) ) {
+                    $search_ids = array_diff( $search_ids, wp_parse_id_list( $args['post__not_in'] ) );
+                }
+
+                // A zero-match search must return nothing — an empty post__in would drop the constraint and return the whole catalogue.
+                $args['post__in'] = ! empty( $search_ids ) ? $search_ids : [ 0 ];
+
+                unset( $args['s'] );
+            }
+        }
+
         /**
          * Filter the WP_Query args before executing the product listing query.
          * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
-         * filtering for both v1 and v2 REST endpoints.
+         * filtering for both v1 and v2 REST endpoints. Note: `post__in` may already
+         * carry the search/on_sale constraints — callbacks should narrow it, never widen it.
          *
          * @since 5.0.0
          *

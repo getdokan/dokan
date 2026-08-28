@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // ============================================
 // TEST DATA
@@ -31,7 +32,7 @@ export const adminVendorsData = {
 // The admin Vendors page is the unified @dokan/components AdminDataViews list
 // mounted on #dokan-admin-dashboard at admin.php?page=dokan-dashboard#/vendors.
 // Same DataViews surface as the vendor dashboard lists, so the row / search /
-// row-action selectors mirror tests/e2e/new-products/newProductsPage.ts.
+// row-action selectors mirror tests/e2e/products/newProductsPage.ts.
 // ============================================
 export const adminVendorsSelectors = {
     reactRoot: '#dokan-admin-dashboard',
@@ -207,7 +208,7 @@ export class AdminVendorsPage {
 
     /** Click an item in the open actions menu, e.g. 'Edit', 'Approve Vendors', 'Disable Selling'. */
     async clickActionMenuItem(label: string): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: new RegExp(escapeRegExp(label), 'i') }).first();
+        const item = actionMenuItemByName(this.page, new RegExp(escapeRegExp(label), 'i')).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
     }

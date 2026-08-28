@@ -141,4 +141,16 @@
         color: rgb(117, 117, 117);
         margin: 4px 0 0;
     }
+
+    // Quick-create modal only — the full editor keeps the default 232px box.
+    // `&` is `.dokan-product-product-editor`, so both classes sit on the same
+    // wrapper; the compound selector outranks the shared `.dokan-product-image_id`.
+    &.quick-create-product-editor {
+        .dokan-product-image_id {
+            height: 200px;
+            &.is-custom {
+                width: 200px;
+            }
+        }
+    }
 }

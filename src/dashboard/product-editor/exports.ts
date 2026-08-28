@@ -26,6 +26,7 @@ export { default as CustomField, getValidationError } from './components/CustomF
 // Utils
 export {
     getField,
+    isEmpty,
     resolveLabel,
     resolveRequired,
     resolveVisibility,

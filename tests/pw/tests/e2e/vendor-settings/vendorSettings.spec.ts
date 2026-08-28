@@ -5,19 +5,36 @@ import path from 'path';
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const { DOKAN_PRO, VENDOR_ID } = process.env;
 
-test.describe.skip('Vendor settings test', () => {
+test.describe('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
     let vPage: Page;
     let apiUtils: ApiUtils;
+    let originalSellingKeys: Record<string, string>;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext({ storageState: v1 });
         vPage = await vendorContext.newPage();
         vendor = new VendorSettingsPage(vPage);
         apiUtils = new ApiUtils(null);
+        // Deterministic state: reset store to defaults (banner:0, gravatar:0) so the
+        // "Upload banner"/"Upload Photo" controls render for the store-settings render test.
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        // Enable admin-level catalog mode so the vendor-facing catalog toggles render
+        // (Helper::is_enabled_by_admin gates them). The catalog and min-max tests reset these
+        // to 'off' inline, but an inline reset only runs if that test runs AND passes — a skip,
+        // a failure or a --grep that excludes it would leave catalog mode ON globally and hide
+        // add-to-cart for every later spec on the shard. afterAll is the only reliable place.
+        const [originalSelling] = await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        originalSellingKeys = {
+            catalog_mode_hide_add_to_cart_button: originalSelling?.catalog_mode_hide_add_to_cart_button ?? 'off',
+            catalog_mode_hide_product_price: originalSelling?.catalog_mode_hide_product_price ?? 'off',
+            enable_min_max_quantity: originalSelling?.enable_min_max_quantity ?? 'off',
+            enable_min_max_amount: originalSelling?.enable_min_max_amount ?? 'off',
+        };
     });
 
     test.afterAll(async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, originalSellingKeys);
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
         if (DOKAN_PRO) await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
         await vPage?.close();
@@ -34,7 +51,7 @@ test.describe.skip('Vendor settings test', () => {
     test('vendor can set store basic settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'basic'); });
     test('vendor can set store address settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'address'); });
     test('vendor can set euCompliance info settings', { tag: ['@pro', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'euCompliance'); });
-    test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'map'); });
+    test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => { test.skip(true, 'GMAP key in .env is a deleted Google Cloud project (DeletedApiProjectMapError); Maps SDK blocks geocode requests client-side, so no /maps/api response fires. Needs a valid billing-enabled key.'); await vendor.setStoreSettings(data.vendor.vendorInfo, 'map'); });
     test('vendor can set terms and conditions settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'toc'); });
     test('vendor can set open-close settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'open-close'); });
     test('vendor can set vacation settings', { tag: ['@pro', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'vacation'); });

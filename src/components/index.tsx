@@ -6,7 +6,7 @@ export {
     VIEW_LAYOUTS,
 } from '@wordpress/dataviews/wp';
 export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
-export { DataViews } from '@wedevs/plugin-ui';
+export { default as DataViews } from './dataviews/DokanDataViews';
 export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
 export { default as ListEmpty } from './dataviews/ListEmpty';
@@ -21,6 +21,7 @@ export { default as DokanAlert } from './Alert';
 export { default as AsyncSelect } from './AsyncSelect';
 export { default as DokanBadge } from './Badge';
 export { default as DokanButton } from './Button';
+export { default as ToolsSection } from './ToolsSection';
 export { default as CouponAsyncSelect } from './CouponAsyncSelect';
 export { default as CustomerFilter } from './CustomerFilter';
 export { default as DateRangePicker } from './DateRangePicker';

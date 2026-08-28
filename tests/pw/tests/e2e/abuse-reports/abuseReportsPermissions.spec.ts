@@ -1,7 +1,7 @@
 import { test, expect, request } from '@utils/test';
 import { AbuseReportsPage } from './abuseReportsPage';
 import { payloads } from '@utils/payloads';
-import { helpers, SERVER_URL } from '@utils/helpers';
+import { helpers, toPath, SERVER_URL } from '@utils/helpers';
 import path from 'path';
 import type { Page } from '@playwright/test';
 
@@ -164,17 +164,25 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
 
         await gotoAndSettle(vendorPage, abuseReportsPage.admin.settingsUrl);
 
-        // The vendor (seller role) lacks manage_woocommerce → WP gates the page.
-        // The settings heading must NOT be present.
-        const headingVisible = await vendorPage
-            .getByRole('heading', { name: /Product Report Abuse Settings/i })
-            .isVisible()
-            .catch(() => false);
-        expect(headingVisible, 'Vendor must NOT see the abuse-report settings heading').toBe(false);
+        // Assert the positive, server-rendered gate FIRST (deterministic).
         expect(
             await isAdminPageDenied(vendorPage),
             'Vendor opening the Dokan settings page should hit the WP "not allowed" gate (no manage_woocommerce)',
         ).toBe(true);
+
+        // The Dokan settings app must not have mounted at all.
+        //
+        // This used to assert the absence of the "Product Report Abuse Settings"
+        // heading — which only renders after searchSettings() switches the active
+        // tab, so it is absent on the bare #/settings landing for EVERY role
+        // including a full admin. The check passed for the wrong reason and
+        // could not detect a gating regression. `#dokan-admin-search` renders on
+        // that landing for any manage_woocommerce holder (it is exactly what
+        // goToSettingsPage() waits for), so its absence is a real signal.
+        await expect(
+            vendorPage.locator(abuseReportsPage.admin.settingsSearchInput),
+            'Vendor must NOT see the Dokan settings app',
+        ).toHaveCount(0);
 
         await vendorPage.close();
         await context.close();
@@ -193,11 +201,13 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
             'Guest hitting the Dokan settings page should be redirected to wp-login.php',
         ).toContain('wp-login.php');
 
-        const headingVisible = await guestPage
-            .getByRole('heading', { name: /Product Report Abuse Settings/i })
-            .isVisible()
-            .catch(() => false);
-        expect(headingVisible, 'Guest must NOT see the abuse-report settings heading').toBe(false);
+        // Same correction as P1: the settings heading is absent on the bare
+        // #/settings landing for every role, so its absence proved nothing.
+        // Assert the settings app itself never mounted.
+        await expect(
+            guestPage.locator(abuseReportsPage.admin.settingsSearchInput),
+            'Guest must NOT see the Dokan settings app',
+        ).toHaveCount(0);
 
         await guestPage.close();
         await context.close();
@@ -263,31 +273,41 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
         // shop_manager CAN open the list. We assert the REAL outcome (access
         // granted) rather than the (incorrect) expectation — never weaken to
         // make the documented assumption "pass".
-        const context = await browser.newContext({ storageState: a1 });
-        const adminPage = await context.newPage();
+        // This used to open an ADMIN session (storageState: a1) and assert the
+        // ADMIN reached the list, on the reasoning that admin is a superset of
+        // shop_manager caps. That makes the case unable to detect any change in
+        // shop_manager gating — the exact thing it is named for. Drive a real
+        // shop_manager session instead; no shop_manager storageState exists
+        // (playwright/.auth holds admin/vendor/customer only), so log the
+        // beforeAll-created account in through the WP login form.
+        const context = await browser.newContext(); // fresh — no storageState
+        const smPage = await context.newPage();
 
-        // Switch this browser's cookies to the shop_manager by logging in via
-        // the WP login form would require its own storage state. Instead we
-        // verify the capability reality through the page object's admin session
-        // AND a REST probe with the shop_manager basic-auth header (below). For
-        // the UI half, we assert the cap is present at the WP level by checking
-        // the REST users/me capability set is out of scope here — the
-        // authoritative UI gate (manage_woocommerce) is exercised by the REST
-        // case P10 with the shop_manager token. Keep the UI portion minimal:
-        // confirm the admin (a superset of shop_manager caps) reaches the list,
-        // proving the route itself is reachable for manage_woocommerce holders.
-        const abuseReportsPage = new AbuseReportsPage(adminPage);
-        await abuseReportsPage.goToAbuseReportsReact();
-        const listHeadingVisible = await adminPage
-            .locator(abuseReportsPage.adminReact.pageHeading)
-            .isVisible()
-            .catch(() => false);
-        expect(
-            listHeadingVisible,
-            'The list route is reachable for manage_woocommerce holders (shop_manager has this cap + dokandar) — documents the gap that shop_manager is NOT blocked',
-        ).toBe(true);
+        await smPage.goto(toPath('wp-login.php'), { waitUntil: 'domcontentloaded' });
+        await smPage.locator('#user_login').fill(SHOP_MANAGER_USER);
+        await smPage.locator('#user_pass').fill(SHOP_MANAGER_PASS);
+        await smPage.locator('#wp-submit').dispatchEvent('click');
 
-        await adminPage.close();
+        // Fails loudly if beforeAll's swallowed `wp user create` never produced
+        // the account, rather than silently testing a logged-out session.
+        await expect
+            .poll(
+                async () => {
+                    const cookie = (await context.cookies()).find(c => c.name.startsWith('wordpress_logged_in_'));
+                    return cookie ? decodeURIComponent(cookie.value).split('|')[0] : undefined;
+                },
+                { timeout: 30000, message: `${SHOP_MANAGER_USER} should be logged in` },
+            )
+            .toBe(SHOP_MANAGER_USER);
+
+        const abuseReportsPage = new AbuseReportsPage(smPage);
+        await smPage.goto(abuseReportsPage.admin.abuseReportsUrl, { waitUntil: 'domcontentloaded' });
+        await expect(
+            smPage.locator(abuseReportsPage.adminReact.pageHeading),
+            'A shop_manager reaches the abuse-reports list (has manage_woocommerce + dokandar) — documents the gap that shop_manager is NOT blocked',
+        ).toBeVisible({ timeout: 30000 });
+
+        await smPage.close();
         await context.close();
     });
 
@@ -332,11 +352,22 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
         // Directly visiting the list route now renders nothing / a gated view —
         // the React route is not registered, so the list heading is absent.
         await adminFlow.navigateTo(adminFlow.admin.abuseReportsUrl);
-        await adminPage.waitForLoadState('load').catch(() => undefined);
-        const listHeadingVisible = await adminPage
-            .locator(adminFlow.adminReact.pageHeading)
-            .isVisible()
-            .catch(() => false);
+
+        // Wait for the SPA to actually settle before asserting an absence.
+        // navigateTo() is page.goto() (default waitUntil 'load'), so the
+        // waitForLoadState('load') that used to sit here was a no-op, and
+        // Locator.isVisible() does not wait. The admin shell mounts inside
+        // domReady() and React commits in a later task, so the heading could
+        // not possibly be painted at that instant — the assertion passed even
+        // when the route WAS registered. With the module off the route is
+        // unregistered and react-router falls through to the `path: '*'`
+        // catch-all (Dashboard.tsx), which renders AdminNotFound's
+        // "Sorry, the page can't be found" heading (src/layout/admin404.tsx).
+        // Anchor on that positive signal, THEN assert the list heading is gone.
+        await adminPage
+            .getByRole('heading', { name: /page can.t be found/i })
+            .waitFor({ state: 'visible', timeout: 30000 });
+        const listHeadingVisible = await adminPage.locator(adminFlow.adminReact.pageHeading).isVisible();
         expect(
             listHeadingVisible,
             'Abuse Reports list heading must be absent when the module is disabled',
@@ -390,53 +421,46 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
 
     // ------------------------------------------------------------------
     // REST permissions (§REST:186, 187, 189). The list controller's
-    // permission_callback is is_dokandar() == current_user_can('dokandar').
+    // permission_callback is is_dokandar() == current_user_can( dokan_admin_menu_capability() ),
+    // i.e. manage_woocommerce — NOT the broad vendor 'dokandar' cap.
     // ------------------------------------------------------------------
 
-    test('Test Case P7 - REST: Vendor Token GET (ACTUAL behavior — documents missing manage_options gate vs §REST:186)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
-        // KNOWN-GAP DOC: TEST_CASES item 186 expects a vendor token to be
-        // rejected (401/403). In reality the controller only checks
-        // `current_user_can('dokandar')`, and the seller (vendor) role HAS the
-        // `dokandar` cap (Installer.php). So a vendor token CAN read EVERY
-        // marketplace abuse report — a real privilege gap. We assert the actual
-        // 200 and flag it, per the "never fake / assert real behavior" rule.
+    test('Test Case P7 - REST: Vendor Token GET Is Rejected (§REST:186)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
+        // Abuse reports are a marketplace-admin resource: the controller's
+        // permission_callback gates on `dokan_admin_menu_capability()`
+        // (manage_woocommerce). The seller (vendor) role does NOT hold that cap
+        // — it only holds `dokandar` — so a vendor token must be rejected and
+        // must never read marketplace-wide reports.
         const ctx = await request.newContext();
         const resp = await ctx.get(REST.list, { headers: payloads.vendorAuth });
 
-        // Document the real outcome explicitly so the gap is visible in reports.
         expect(
-            resp.status(),
-            'GAP: vendor token GET /abuse-reports is NOT rejected — controller gates on dokandar only and vendors HAVE dokandar (expected 200; if this ever flips to 401/403 the gap was fixed)',
-        ).toBe(200);
+            [401, 403],
+            'Vendor token GET /abuse-reports must be rejected — the route requires dokan_admin_menu_capability(), which vendors do not hold',
+        ).toContain(resp.status());
 
-        // The leak is the whole point of the gap — the body is a JSON array of
-        // reports the vendor should not be entitled to see marketplace-wide.
-        const body = await resp.json();
-        expect(Array.isArray(body), 'Vendor-token list response is a JSON array (data exposed)').toBe(true);
+        // No report data may leak: the body must be a WP_Error shape, never a
+        // list of reports.
+        const body = await resp.json().catch(() => null);
+        expect(Array.isArray(body), 'Vendor-token rejection must NOT return a list of reports').toBe(false);
+        expect(body, 'Rejection body should be a WP_Error-shaped object (code present)').toHaveProperty('code');
 
         await ctx.dispose();
     });
 
-    test('Test Case P8 - REST: Vendor Token DELETE (ACTUAL behavior — documents gap vs §REST:187)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
-        // Same gap as P7 for the single-DELETE route (also gated on dokandar).
-        // We DELETE a deliberately non-existent id so we never destroy real
-        // seed data: the permission check runs BEFORE the row lookup, so the
-        // status distinguishes "permission denied" (401/403) from "permitted
-        // but not found" (4xx report_not_found). A vendor with dokandar passes
-        // the permission gate, so we should get a not-found error, NOT a 401/403.
+    test('Test Case P8 - REST: Vendor Token DELETE Is Rejected (§REST:187)', { tag: ['@pro', '@vendor', '@permission', '@security'] }, async ({}) => {
+        // Same gate as P7 for the single-DELETE route. We target a deliberately
+        // non-existent id so we never destroy real seed data: the permission
+        // check runs BEFORE the row lookup, so a 401/403 proves the vendor was
+        // stopped at the gate rather than reaching the delete handler (which
+        // would answer report_not_found instead).
         const ctx = await request.newContext();
         const resp = await ctx.delete(REST.single(999999999), { headers: payloads.vendorAuth });
-        const status = resp.status();
 
-        // ACTUAL: the vendor is NOT blocked by permission (dokandar passes), so
-        // the response is a not-found error rather than 401/403. Assert it is
-        // NOT a permission rejection — that documents the missing gate.
         expect(
-            [401, 403].includes(status),
-            `GAP: vendor token DELETE is NOT permission-rejected (got ${status}); the dokandar-only gate lets vendors reach the delete handler`,
-        ).toBe(false);
-        // It should still be a client error (the id does not exist).
-        expect(status, 'DELETE of a non-existent id should be a 4xx (report_not_found), proving the handler ran').toBeGreaterThanOrEqual(400);
+            [401, 403],
+            'Vendor token DELETE /abuse-reports/<id> must be permission-rejected before the handler runs',
+        ).toContain(resp.status());
 
         await ctx.dispose();
     });
@@ -464,9 +488,11 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
 
     test('Test Case P10 - REST: shop_manager Token GET (ACTUAL behavior — documents gap vs §REST:186/§List:110)', { tag: ['@pro', '@admin', '@permission', '@security'] }, async ({}) => {
         // KNOWN-GAP DOC: shop_manager has BOTH manage_woocommerce (WC) and
-        // dokandar (Dokan installer). The controller checks dokandar, so a
-        // shop_manager token reads the full list. This is the REST counterpart
-        // to P5 and shows item 110's "no dokandar" premise is false in-stack.
+        // dokandar (Dokan installer). The controller gates on
+        // dokan_admin_menu_capability() == manage_woocommerce, which
+        // shop_manager HAS, so a shop_manager token reads the full list. This is
+        // the REST counterpart to P5 and shows item 110's "no access" premise is
+        // false in-stack.
         const ctx = await request.newContext();
         const resp = await ctx.get(REST.list, { headers: shopManagerAuth() });
         const status = resp.status();
@@ -476,12 +502,12 @@ test.describe('Abuse Reports — Permissions & Module Gating @pro', () => {
         // test. Treat that as inconclusive rather than a false pass.
         test.skip(
             status === 401,
-            'shop_manager basic-auth did not authenticate (env/credential issue) — cannot assess the dokandar gate',
+            'shop_manager basic-auth did not authenticate (env/credential issue) — cannot assess the capability gate',
         );
 
         expect(
             status,
-            'GAP: shop_manager token GET /abuse-reports is permitted (dokandar held) — documents that shop_manager is NOT blocked',
+            'GAP: shop_manager token GET /abuse-reports is permitted (manage_woocommerce held) — documents that shop_manager is NOT blocked',
         ).toBe(200);
         const body = await resp.json();
         expect(Array.isArray(body), 'shop_manager-token list response is a JSON array (access granted)').toBe(true);

@@ -109,6 +109,20 @@ export const dbUtils = {
         return optionValue;
     },
 
+    // safe option read — returns the option value (unserialized only when it actually is serialized,
+    // like WordPress's maybe_unserialize), or null when the row is ABSENT. getOptionValue() throws on a
+    // missing row (it indexes res[0]) and also throws on a plain-string option value (php-serialize's
+    // unserialize rejects anything unserialized), so use this when an option may legitimately not exist
+    // yet or may hold a scalar. Real driver errors still propagate.
+    async getOptionValueOrNull(optionName: string): Promise<any> {
+        const res = await dbUtils.dbQuery(`Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`, [optionName]);
+        if (!res.length) {
+            return null;
+        }
+        const raw = res[0].option_value as string;
+        return isSerialized(raw) ? unserialize(raw) : raw;
+    },
+
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
@@ -386,5 +400,52 @@ export const dbUtils = {
             await new Promise(resolve => setTimeout(resolve, 500));
         }
         return null;
+    },
+
+    // ============================================================
+    // Stripe Express e2e helpers (cart / user-meta) — DB-direct.
+    // The connected-vendor SEED lives in tests/e2e/stripe-express/helpers.ts
+    // (it POSTs the account_info ARRAY meta via the mu-plugin, PHP-native).
+    // ============================================================
+
+    /**
+     * Empty a logged-in customer's WooCommerce cart so a fresh browser context
+     * starts clean. A logged-in cart lives in TWO places — the
+     * `_woocommerce_persistent_cart_*` user meta AND the live session row in
+     * `_woocommerce_sessions` (keyed by user id) — so both must be cleared, or
+     * leftover items from prior tests (e.g. declined-card tests that never
+     * complete) pollute later checkouts.
+     */
+    async clearCustomerCart(userId: string | number): Promise<void> {
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key LIKE '_woocommerce_persistent_cart_%';`, [String(userId)]);
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_woocommerce_sessions WHERE session_key = ?;`, [String(userId)]);
+    },
+
+    // safe scalar user-meta read — returns the raw meta_value string (NOT unserialized), or null when the row is
+    // absent. getUserMeta() throws on a missing row; use this when a meta may legitimately not exist yet.
+    async getUserMetaValue(userId: string | number, metaKey: string): Promise<string | null> {
+        const res = await dbUtils.dbQuery(`SELECT meta_value FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`, [String(userId), metaKey]);
+        return res.length ? (res[0].meta_value as string) : null;
+    },
+
+    // delete one or more user-meta rows by key (generic).
+    async deleteUserMeta(userId: string | number, metaKeys: string[]): Promise<void> {
+        if (!metaKeys.length) {
+            return;
+        }
+        const placeholders = metaKeys.map(() => '?').join(', ');
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (${placeholders});`, [String(userId), ...metaKeys]);
+    },
+
+    // remove a vendor's active vendor-subscription (product_pack) state — cleanup for the subscription specs.
+    // Does NOT cancel the Stripe subscription itself; pair with stripeApi.cancelSubscription() when a sub_… exists.
+    async removeVendorSubscription(vendorId: string | number): Promise<void> {
+        await dbUtils.dbQuery(
+            `DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (` +
+                `'product_package_id', 'product_order_id', 'product_pack_startdate', 'product_pack_enddate', ` +
+                `'can_post_product', 'product_no_with_pack', '_customer_recurring_subscription', ` +
+                `'_dokan_stripe_express_stripe_subscription_id', 'dokan_has_active_cancelled_subscrption');`,
+            [String(vendorId)],
+        );
     },
 };

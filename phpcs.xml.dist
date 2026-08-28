@@ -150,6 +150,7 @@
                 <element value="edit_products"/>
                 <element value="edit_private_products"/>
                 <element value="edit_others_products"/>
+                <element value="publish_products"/>
                 <element value="edit_product"/>
                 <element value="publish_shop_orders"/>
                 <element value="edit_shop_orders"/>

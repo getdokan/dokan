@@ -7,6 +7,7 @@ const {
     ADMIN_PASSWORD,
     VENDOR,
     VENDOR2,
+    VENDOR3,
     CUSTOMER,
     CUSTOMER2,
     USER_PASSWORD,
@@ -49,6 +50,7 @@ const {
     ADMIN_PASSWORD: string;
     VENDOR: string;
     VENDOR2: string;
+    VENDOR3: string;
     CUSTOMER: string;
     CUSTOMER2: string;
     USER_PASSWORD: string;
@@ -113,6 +115,7 @@ export const data = {
         adminAuth: { extraHTTPHeaders: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) } },
         vendorAuth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR, ADMIN_PASSWORD) } },
         vendor2Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR2, ADMIN_PASSWORD) } },
+        vendor3Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR3, ADMIN_PASSWORD) } },
         customerAuth: { extraHTTPHeaders: { Authorization: basicAuth(CUSTOMER, ADMIN_PASSWORD) } },
     },
 
@@ -120,6 +123,7 @@ export const data = {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
         vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
+        vendor3AuthFile: 'playwright/.auth/vendor3StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
         customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
@@ -133,6 +137,10 @@ export const data = {
 
         vendor2Auth: {
             storageState: 'playwright/.auth/vendor2StorageState.json',
+        },
+
+        vendor3Auth: {
+            storageState: 'playwright/.auth/vendor3StorageState.json',
         },
 
         customerAuth: {
@@ -1370,6 +1378,14 @@ export const data = {
             password: USER_PASSWORD,
         },
 
+        // The permanent NON-CONNECTED Stripe Express vendor: never seeded with an
+        // Express account, so "not connected" is a stable property of this vendor
+        // instead of a per-spec mutation of vendor2.
+        vendor3: {
+            username: VENDOR3,
+            password: USER_PASSWORD,
+        },
+
         vendorInfo: {
             emailDomain: '@email.com',
             email: () => `${faker.person.firstName('male')}@email.com`,
@@ -2349,13 +2365,12 @@ export const data = {
                 'Reverse Withdrawal',
                 'Badge',
                 'Product Q&A',
-                'Return Request',
-                'Staff',
+                'Return Requests',
                 'Followers',
                 // 'Subscription',
                 'Booking',
                 'Announcements',
-                'Analytics',
+                'Store Stats',
                 'Tools',
                 'Auction',
                 'Support',
@@ -2445,8 +2460,8 @@ export const data = {
             settingTitle: 'Social Settings',
             platform: 'facebook',
             facebook: {
-                appId: FB_APP_ID,
-                appSecret: FB_APP_SECRET,
+                appId: FB_APP_ID || 'test-fb-app-id',
+                appSecret: FB_APP_SECRET || 'test-fb-app-secret',
             },
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2541,8 +2556,11 @@ export const data = {
             smsSentError: 'Unable to send sms. Contact admin',
             activeGateway: 'nexmo', // nexmo, twilio
             vonage: {
-                apiKey: VONAGE_API_KEY,
-                apiSecret: VONAGE_API_SECRET,
+                // Default to placeholders when the env vars are unset (e.g. CI has no Vonage secrets):
+                // this test only verifies the SMS-gateway settings form saves, not real Vonage delivery,
+                // so a non-empty string is enough. Without the fallback, fill(undefined) throws.
+                apiKey: VONAGE_API_KEY || 'test-vonage-api-key',
+                apiSecret: VONAGE_API_SECRET || 'test-vonage-api-secret',
             },
 
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2560,8 +2578,8 @@ export const data = {
         liveChat: {
             settingTitle: 'Live Chat Settings',
             chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
-            talkJsAppId: TALKJS_APP_ID,
-            talkJsAppSecret: TALKJS_APP_SECRET,
+            talkJsAppId: TALKJS_APP_ID || 'test-talkjs-app-id',
+            talkJsAppSecret: TALKJS_APP_SECRET || 'test-talkjs-app-secret',
             chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2645,8 +2663,8 @@ export const data = {
         // Printful Settings
         printful: {
             settingTitle: 'Printful Settings',
-            clientId: PRINTFUL_APP_ID,
-            secretKey: PRINTFUL_APP_SECRET,
+            clientId: PRINTFUL_APP_ID || 'test-printful-client-id',
+            secretKey: PRINTFUL_APP_SECRET || 'test-printful-secret-key',
             popupTitle: 'Size Guide',
             popupTextColor: '#000000',
             popupBackgroundColor: '#FFFFFF',
@@ -2759,8 +2777,10 @@ export const data = {
     },
 
     bookings: {
-        startDate: new Date(),
-        endDate: helpers.futureDate(new Date(), 1), // future date must be less than maximum duration
+        // Site time, not runner time: the site is seeded UTC+6, so a UTC runner past 18:00 picks a
+        // day the calendar already renders `not-bookable` and the day cell can never match.
+        startDate: helpers.siteToday(),
+        endDate: helpers.futureDate(helpers.siteToday(), 1), // future date must be less than maximum duration
     },
 
     uniqueId: {
@@ -2776,6 +2796,15 @@ export const data = {
                 product1: {
                     name: 'p1_v2 (simple)',
                     productName: () => 'p1_v2 (simple)',
+                },
+            },
+        },
+
+        vendor3: {
+            simpleProduct: {
+                product1: {
+                    name: 'p1_v3 (simple)',
+                    productName: () => 'p1_v3 (simple)',
                 },
             },
         },
@@ -2843,6 +2872,7 @@ export const data = {
             followFromSingleStore: 'singleStore',
             vendor1: `${VENDOR}store`,
             vendor2: `${VENDOR2}store`,
+            vendor3: `${VENDOR3}store`,
             vendor1FullName: `${VENDOR} v1`,
             shopUrl: `${VENDOR}store`,
         },

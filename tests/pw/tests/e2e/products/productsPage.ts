@@ -1,6 +1,6 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { toPath, SERVER_URL } from '@utils/helpers';
+import { toPath, SERVER_URL, closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -140,7 +140,7 @@ const productsAdmin = {
 const productsVendor = {
     menus: {
         all: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"All")]',
-        online: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Online")]',
+        publish: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Publish")]',
         draft: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Draft")]',
         pendingReview: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Pending Review")]',
         inStock: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"In stock")]',
@@ -762,6 +762,21 @@ export const api = {
         return [json, String(json.id), json.name];
     },
 
+    async ensureCategory(name: string): Promise<string> {
+        // Idempotent seed that returns the category's term id. The e2e setup deletes the default WC
+        // "Uncategorized" term and reseeds a custom category set, so this spec must create the category it
+        // needs instead of relying on ambient state. WooCommerce returns 200 with the new term on create,
+        // or a 400 { code: 'term_exists', data: { resource_id } } (a JSON body, not a thrown error) when it
+        // already exists — both give us the id, and a plain lookup is the final fallback.
+        const json = await this.post('/wc/v3/products/categories', { name }, this.adminAuth());
+        if (json?.id) return String(json.id);
+        if (json?.data?.resource_id) return String(json.data.resource_id);
+        const listResp = await this._context!.get(`${SERVER_URL}/wc/v3/products/categories?search=${encodeURIComponent(name)}&per_page=100`, { headers: this.adminAuth() });
+        const cats = await listResp.json();
+        const found = Array.isArray(cats) ? cats.find((c: any) => String(c.name).toLowerCase() === name.toLowerCase()) : null;
+        return found ? String(found.id) : '';
+    },
+
     async deleteAllProducts(prefix: string, headers?: Record<string, string>): Promise<void> {
         // This is a simplified version - deletes products by prefix
         const response = await this._context!.get(`${SERVER_URL}/dokan/v1/products?search=${prefix}&per_page=100`, {
@@ -784,6 +799,7 @@ export class ProductsPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     // ---- BasePage inlined helpers ----
@@ -1262,12 +1278,45 @@ export class ProductsPage {
         }
     }
 
+    // A fresh WooCommerce install shows a "Start by adding attributes" onboarding pointer the
+    // first time the Attributes tab is opened. It overlays the attribute controls and swallows
+    // the next click, so the add-existing-attribute AJAX never fires and clickAndWaitForResponse
+    // times out. It only appears on a fresh env (dismissed state accumulates locally), which is
+    // why this passed locally but failed on CI. Dismiss it if present (idempotent, no-op otherwise).
+    async dismissAttributesTour(): Promise<void> {
+        // On a fresh install WooCommerce shows a @wordpress/tour-kit onboarding tour
+        // (.woocommerce-tour-kit) the first time the Attributes tab is opened; its overlay +
+        // spotlight swallow clicks on the attribute controls. Wait for it to mount, then click its
+        // "Got it" done button (.woocommerce-tour-kit-step-navigation__done-btn). Idempotent —
+        // no-op when the tour was already dismissed. (Confirmed live via DOM inspection.)
+        // Guard on the "Got it" button, not the tour container (the container is a zero-size popper
+        // wrapper Playwright reports as not-visible; verified via live DOM inspection). Use waitFor
+        // (which waits) — isVisible() is an immediate snapshot. The tour's overlay/spotlight can keep
+        // intercepting clicks, so force-click the done button and retry until the overlay is actually
+        // gone (confirmed: once the overlay clears, the attribute select2 + its AJAX work).
+        const done = this.page
+            .locator('.woocommerce-tour-kit-step-navigation__done-btn, .tour-kit-frame button.is-primary')
+            .first();
+        try {
+            await done.waitFor({ state: 'visible', timeout: 8000 });
+        } catch {
+            return; // tour never appeared (already dismissed) — nothing to do
+        }
+        // The tour's overlay intercepts real pointer events, so a normal/force click lands on the
+        // overlay and misses the button. dispatchEvent fires the button's click handler directly,
+        // which closes the tour + overlay (verified live: normal/force click → overlay stays;
+        // dispatchEvent → overlay cleared).
+        await done.dispatchEvent('click').catch(() => undefined);
+        await this.page.locator('.tour-kit-overlay').first().waitFor({ state: 'hidden', timeout: 8000 }).catch(() => undefined);
+    }
+
     // admin add variable product
     async addVariableProduct(product: typeof productData.variable): Promise<void> {
         await this.goIfNotThere(subUrls.backend.wc.addNewProducts);
         await this.addProductNameAndType(product.productName(), product.productType);
 
         await this.clickAndWaitForResponse(subUrls.ajax, productsAdmin.product.subMenus.attributes);
+        await this.dismissAttributesTour();
 
         if (await this.isVisibleLocator(productsAdmin.product.customProductAttribute)) {
             await this.selectByValue(productsAdmin.product.customProductAttribute, `pa_${product.attribute}`);
@@ -1632,7 +1681,20 @@ export class ProductsPage {
 
     // save product
     async saveProduct(): Promise<void> {
-        await this.clickAndWaitForResponseAndLoadState(subUrls.frontend.vDashboard.products, productsVendor.saveProduct);
+        // The classic product editor binds its form-submit handler asynchronously (RankMath SEO / WooCommerce
+        // product init). Clicking "Save Product" before that handler is ready silently no-ops the first submit,
+        // so wait for the page to settle, then re-click until the save request actually fires.
+        await this.page.waitForLoadState('networkidle');
+        await this.toPass(
+            async () => {
+                const [response] = await Promise.all([
+                    this.page.waitForResponse(resp => resp.url().includes(subUrls.frontend.vDashboard.products) && resp.status() === 200, { timeout: 15000 }),
+                    this.page.locator(productsVendor.saveProduct).click(),
+                ]);
+                expect(response.status()).toBe(200);
+            },
+            { intervals: [1000, 2000, 3000], timeout: 90000 },
+        );
         await this.toContainText(productsVendor.updatedSuccessMessage, productData.createUpdateSaveSuccessMessage);
     }
 

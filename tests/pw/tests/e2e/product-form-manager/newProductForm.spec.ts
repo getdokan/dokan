@@ -1,12 +1,11 @@
-import path from 'path';
 import { test, expect, BrowserContext, Page } from '@utils/test';
 import { request } from '@playwright/test';
 import { NewProductFormPage, newProductFormData } from './newProductFormPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { payloads } from '@utils/payloads';
-
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
+import { SERVER_URL } from '@utils/helpers';
+import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 test.describe('Vendor new product form (React) functionality', () => {
     let ctx: BrowserContext;
@@ -30,7 +29,7 @@ test.describe('Vendor new product form (React) functionality', () => {
     // HAPPY PATHS
     // ============================================
     test.describe('happy paths', () => {
-        test('vendor can create a simple product with required fields', { tag: ['@lite', '@vendor'] }, async () => {
+        test('vendor can create a simple product with required fields', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
 
             await form.fillBasicInfo(data);
@@ -39,7 +38,7 @@ test.describe('Vendor new product form (React) functionality', () => {
             await form.waitForSaveSuccess();
         });
 
-        test('vendor can create a product with every option filled', { tag: ['@lite', '@vendor'] }, async () => {
+        test('vendor can create a product with every option filled', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             test.slow();
             const data = newProductFormData.valid();
 
@@ -67,8 +66,31 @@ test.describe('Vendor new product form (React) functionality', () => {
             await form.waitForSaveSuccess();
         });
 
-        test('vendor can save a product as draft', { tag: ['@lite', '@vendor'] }, async () => {
+        // A draft left behind is not harmless: it is the only product state another spec asserts
+        // the ABSENCE of (newProducts' "empty Draft tab"), so this one gets cleaned up by title.
+        const draftTitles: string[] = [];
+
+        test.afterAll(async () => {
+            if (!draftTitles.length) {
+                return;
+            }
+            const api = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+            try {
+                for (const title of draftTitles) {
+                    const res = await api.get(`${SERVER_URL}/wc/v3/products`, { params: { status: 'draft', search: title, _fields: 'id,name' } });
+                    const found = (await res.json()) as Array<{ id: number; name: string }>;
+                    for (const p of found.filter(p => p.name === title)) {
+                        await api.delete(`${SERVER_URL}/wc/v3/products/${p.id}?force=true`);
+                    }
+                }
+            } finally {
+                await api.dispose();
+            }
+        });
+
+        test('vendor can save a product as draft', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
+            draftTitles.push(data.title);
 
             await form.fillBasicInfo(data);
             await form.saveAsDraft();
@@ -80,7 +102,7 @@ test.describe('Vendor new product form (React) functionality', () => {
     // EDGE CASES — boundary & unusual input
     // ============================================
     test.describe('edge cases', () => {
-        test('handles a very long title (300+ chars) gracefully', { tag: ['@lite', '@vendor'] }, async () => {
+        test('handles a very long title (300+ chars) gracefully', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await form.title.fill(newProductFormData.invalid.longTitle);
 
             // Either the field truncates or stores the full value — both are
@@ -89,13 +111,13 @@ test.describe('Vendor new product form (React) functionality', () => {
             expect(v.length).toBeGreaterThan(0);
         });
 
-        test('preserves special characters in the title field', { tag: ['@lite', '@vendor'] }, async () => {
+        test('preserves special characters in the title field', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await form.title.fill(newProductFormData.invalid.specialTitle);
 
             expect(await form.title.inputValue()).toBe(newProductFormData.invalid.specialTitle);
         });
 
-        test('preserves the title field after a validation error', { tag: ['@lite', '@vendor'] }, async () => {
+        test('preserves the title field after a validation error', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
 
             await form.title.fill(data.title);
@@ -115,19 +137,19 @@ test.describe('Vendor new product form (React) functionality', () => {
     // ============================================
     test.describe('product images', () => {
         test.describe('happy paths', () => {
-            test('vendor can add a feature image', { tag: ['@lite', '@vendor'] }, async () => {
+            test('vendor can add a feature image', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
                 await form.uploadFeatureImage(newProductFormData.images.feature);
 
                 await expect(form.featureImagePreview).toHaveCount(1);
             });
 
-            test('vendor can add multiple gallery images', { tag: ['@lite', '@vendor'] }, async () => {
+            test('vendor can add multiple gallery images', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
                 await form.uploadGallery(newProductFormData.images.gallery);
 
                 await expect(form.galleryImagePreviews).toHaveCount(newProductFormData.images.gallery.length);
             });
 
-            test('vendor can create and save a product with feature and gallery images', { tag: ['@lite', '@vendor'] }, async () => {
+            test('vendor can create and save a product with feature and gallery images', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
                 const data = newProductFormData.valid();
 
                 await form.fillBasicInfo(data);
@@ -142,7 +164,7 @@ test.describe('Vendor new product form (React) functionality', () => {
         });
 
         test.describe('edge cases', () => {
-            test('vendor can remove a feature image after adding it', { tag: ['@lite', '@vendor'] }, async () => {
+            test('vendor can remove a feature image after adding it', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
                 await form.uploadFeatureImage(newProductFormData.images.feature);
                 await expect(form.featureImagePreview).toHaveCount(1);
 
@@ -151,7 +173,7 @@ test.describe('Vendor new product form (React) functionality', () => {
                 await expect(form.featureImagePreview).toHaveCount(0);
             });
 
-            test('vendor can remove a single gallery image while keeping the rest', { tag: ['@lite', '@vendor'] }, async () => {
+            test('vendor can remove a single gallery image while keeping the rest', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
                 await form.uploadGallery(newProductFormData.images.gallery);
                 await expect(form.galleryImagePreviews).toHaveCount(newProductFormData.images.gallery.length);
 
@@ -215,7 +237,7 @@ test.describe('Vendor new product form (React) functionality', () => {
                 await setCategoryStyle('multiple');
             });
 
-            test('vendor can select multiple product categories', { tag: ['@lite', '@vendor'] }, async () => {
+            test('vendor can select multiple product categories', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
                 await form.selectCategory(cat.a);
                 await form.selectCategory(cat.b);
                 expect(await form.isCategorySelected(cat.a), `${cat.a} stays selected`).toBe(true);
@@ -236,7 +258,7 @@ test.describe('Vendor new product form (React) functionality', () => {
             // set to 'single', FormSchema marks the `category_ids` field as
             // non-multiple, so selecting a second category replaces the first (a
             // true single-select holds exactly one value).
-            test('single mode limits the vendor to one product category', { tag: ['@lite', '@vendor'] }, async () => {
+            test('single mode limits the vendor to one product category', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
                 await form.selectCategory(cat.a);
                 await form.selectCategory(cat.b);
                 expect(await form.selectedCategoryCount(), 'single mode must keep exactly one category').toBe(1);
