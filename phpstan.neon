@@ -1,0 +1,12 @@
+parameters:
+    level: 5
+    paths:
+        - deprecated
+        - includes/
+        - templates
+        - tests
+        - dokan.php
+        - uninstall.php
+    bootstrapFiles:
+        - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
