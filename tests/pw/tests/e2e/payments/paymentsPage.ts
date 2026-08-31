@@ -267,6 +267,22 @@ export class PaymentsPage {
         await this.page.locator(selector).check();
     }
 
+    /**
+     * Tick a setting that the gateway itself may render read-only, and say so when it does.
+     *
+     * Only for controls a gateway deliberately disables. Everything else keeps using check(), so a
+     * field that goes read-only unexpectedly still fails the run instead of being skipped quietly.
+     */
+    private async checkIfOperable(selector: string, why: string): Promise<void> {
+        const box = this.page.locator(selector);
+        await expect(box, `${selector} should be rendered`).toBeAttached();
+        if (await box.isDisabled()) {
+            console.log(`[payments] skipped ${selector}: rendered read-only by the gateway (${why})`);
+            return;
+        }
+        await box.check();
+    }
+
     private async fill(selector: string, value: string): Promise<void> {
         await this.page.locator(selector).fill(value);
     }
@@ -461,7 +477,7 @@ export class PaymentsPage {
         await this.check(s.nonConnectedSellers);
         await this.check(s.displayNoticeToConnectSeller);
         await this.fill(s.displayNoticeInterval, payment.stripeConnect.displayNoticeInterval);
-        await this.check(s.threeDSecureAndSca);
+        await this.checkIfOperable(s.threeDSecureAndSca, 'Payment Elements keep SCA on permanently, so the revamped gateway ships this toggle disabled and keeps it only for legacy orders');
         await this.check(s.sellerPaysTheProcessingFeeIn3DsMode);
         await this.check(s.testMode);
         await this.check(s.savedCards);

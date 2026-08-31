@@ -262,11 +262,37 @@ export class StripeConnectPage {
         throw lastErr ?? new Error('failed to fill the Stripe Payment Element');
     }
 
-    /** Tick "Save payment method" so the charge mints a reusable token (SCTOK-01). */
+    /**
+     * Tick "Save payment method" so the charge mints a reusable token (SCTOK-01).
+     *
+     * The tick is retried rather than clicked once. Stripe keeps adding accordion rows to the
+     * Payment Element after the card fields are filled — on a US runner IP it offers ACH and Cash
+     * App, which this location never sees — and every row that lands pushes this checkbox further
+     * down the page. A click aimed at where the box just was is still delivered, so the state
+     * simply does not change, and `check()` reports "Clicking the checkbox did not change its
+     * state" and gives up without retrying. Re-measuring and clicking again clears it.
+     *
+     * The closing assertion is deliberately unchanged: if the box never ticks, this still fails.
+     */
     async saveCardAtCheckout(): Promise<void> {
         const box = this.page.locator(this.checkout.saveCardCheckbox).first();
         await expect(box, 'the save-card checkbox must exist when saved_cards is enabled').toBeVisible({ timeout: 15_000 });
-        await box.check();
+        await this.waitForCheckoutSettled();
+        let attempts = 0;
+        await expect(async () => {
+            attempts++;
+            if (!(await box.isChecked())) {
+                await box.check({ timeout: 5_000 });
+            }
+            expect(await box.isChecked(), 'the tick did not register — the checkbox most likely moved under the click').toBe(true);
+        }).toPass({ timeout: 30_000, intervals: [500, 1_000, 2_000] });
+        if (attempts > 1) {
+            // Say it out loud rather than recovering quietly. A miss now and then is the Payment
+            // Element still settling. A miss on every run would mean the first click is lost for a
+            // different reason — a late-bound handler in the gateway — and that is a product
+            // question, not a timing one. Silence here would hide the difference.
+            console.log(`[stripe-connect] save-card checkbox needed ${attempts} attempts to tick`);
+        }
         await expect(box, 'the save-card checkbox must actually be checked').toBeChecked();
     }
 
