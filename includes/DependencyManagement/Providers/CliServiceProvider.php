@@ -11,7 +11,7 @@ use WeDevs\Dokan\CLI\Manager;
  * Registers the WP-CLI command registry with the dependency container and tags
  * it so it is only resolved while running under WP-CLI.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.18
  */
 class CliServiceProvider extends BaseServiceProvider {
     /**
