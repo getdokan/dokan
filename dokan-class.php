@@ -329,6 +329,11 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             $ajax_services = $this->get_container()->get( 'ajax-service' );
         }
+
+        // Boot the WP-CLI command registry only when running under WP-CLI.
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+            $cli_services = $this->get_container()->get( 'cli-service' );
+        }
     }
 
     /**
