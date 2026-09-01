@@ -1,3 +1,7 @@
+### v5.0.18 ( Sep 01, 2026 ) ###
+
+- **new:** Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.
+
 ### v5.0.17 ( Aug 25, 2026 ) ###
 
 - **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
