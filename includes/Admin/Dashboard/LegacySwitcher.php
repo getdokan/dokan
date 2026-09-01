@@ -21,15 +21,6 @@ class LegacySwitcher implements Hookable {
     public const PRODUCT_EDITOR_SWITCH_ACTION = 'switch_product_editor';
 
     /**
-     * Default transient expiration time in seconds (15 days)
-     *
-     * @since 4.1.3
-     *
-     * @var int
-     */
-    protected int $transient_expiration = 15 * DAY_IN_SECONDS;
-
-    /**
      * Register hooks for the LegacySwitcher
      *
      * @since 4.1.3
@@ -126,7 +117,8 @@ class LegacySwitcher implements Hookable {
         if ( $current_is_legacy ) {
             delete_transient( $filtered_legacy_key );
         } else {
-            set_transient( $filtered_legacy_key, $new_legacy_state, $this->transient_expiration );
+            // Stored without an expiry: this is a preference the marketplace owner set, not a cache entry.
+            set_transient( $filtered_legacy_key, $new_legacy_state );
         }
 
         // Redirect to the new admin page, if needed.
