@@ -1286,6 +1286,7 @@ export const data = {
 
                 settingsVerification: 'dashboard/settings/verification',
                 settingsDeliveryTime: 'dashboard/settings/delivery-time',
+                settingsDeliveryTimeReact: 'dashboard/new/#settings/delivery-time',
                 settingsShipping: 'dashboard/settings/shipping',
                 settingsShipStation: 'dashboard/settings/shipstation',
                 settingsSocialProfile: 'dashboard/settings/social',
