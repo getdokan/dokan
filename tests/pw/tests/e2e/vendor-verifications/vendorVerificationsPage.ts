@@ -33,6 +33,8 @@ const selectors = {
             verifiedIconByIcon: (iconName: string) => `//i[@class='${iconName}']//../..`,
             verificationMethodRow: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..`,
             enableVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//label[@class="switch tips"]`,
+            // dokan-pro #5861 replaced the hover-revealed pill buttons with always-visible
+            // icon buttons carrying an aria-label. Key off the label, not the utility classes.
             editVerificationMethod: (methodName: string) => `button[aria-label="Edit ${methodName} verification method"]`,
             deleteVerificationMethod: (methodName: string) => `button[aria-label="Delete ${methodName} verification method"]`,
             confirmDelete: '.swal2-confirm',
@@ -284,10 +286,7 @@ export class VendorVerificationsPage {
     }
 
     private async getBackgroundColor(selector: string): Promise<string> {
-        return await this.page
-            .locator(selector)
-            .first()
-            .evaluate(el => window.getComputedStyle(el).getPropertyValue('background-color'));
+        return await this.page.locator(selector).first().evaluate(el => window.getComputedStyle(el).getPropertyValue('background-color'));
     }
 
     private async forceLinkToSameTab(selector: string): Promise<void> {
@@ -426,15 +425,6 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
-        /*
-         * The action buttons are no longer hover-revealed. dokan-pro #5861
-         * ("make method actions discoverable") replaced the hover-only icons with
-         * permanently visible buttons carrying an aria-label, and dropped the
-         * `rounded-full bg-violet` classes the old selector matched. That selector
-         * therefore never resolved and every attempt died on a 30s dispatchEvent
-         * timeout. Target the aria-label, which is semantic and survives restyling,
-         * and click normally now that the button is actually visible.
-         */
         await this.page.locator(settingsAdmin.vendorVerification.editVerificationMethod(methodName)).click();
         await this.updateVerificationMethod(verificationMethod);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.addNewVerification.update);
@@ -451,10 +441,6 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
-        // Same change as the edit path: dokan-pro #5861 made these buttons
-        // permanently visible and aria-labelled, so no hover dance is needed.
-        // Note the built-in Address method renders no delete button at all
-        // (`v-if="'address' !== doc.kind"`), matching the API's 403 guard.
         await this.page.locator(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName)).click();
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.confirmDelete, 204);
         await expect(this.page.locator(settingsAdmin.vendorVerification.methodDeleteSuccessMessage)).toBeVisible();

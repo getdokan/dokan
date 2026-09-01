@@ -51,13 +51,11 @@ export class ApiUtils {
             // wire one. Callers that pass a real context are unaffected.
             let ctx: APIRequestContext | null = null;
             this.request = new Proxy({} as APIRequestContext, {
-                get:
-                    (_t, prop) =>
-                    async (...args: unknown[]) => {
-                        if (!ctx) ctx = await pwRequest.newContext();
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        return (ctx as any)[prop](...args);
-                    },
+                get: (_t, prop) => async (...args: unknown[]) => {
+                    if (!ctx) ctx = await pwRequest.newContext();
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    return (ctx as any)[prop](...args);
+                },
             });
         }
     }
@@ -313,12 +311,12 @@ export class ApiUtils {
 
             // get store id if already exists
             sellerId = await this.getSellerId(payload.store_name, auth);
-
+            
             // If not found by store name, try to find by username (for cases where user exists but store might not)
             if (!sellerId && payload.user_login) {
                 sellerId = await this.getSellerIdByUsername(payload.user_login, auth);
             }
-
+            
             storeName = payload.store_name;
 
             // update store if already exists and sellerId is found
@@ -1599,24 +1597,10 @@ export class ApiUtils {
             console.log('No verification method exists');
             return;
         }
-        /*
-         * Skip the built-in Address method.
-         *
-         * dokan-pro #5861 made it undeletable: VerificationMethodsApi::delete_item() returns
-         * `dokan_pro_rest_cannot_delete` (403) for `kind === 'address'`, because the seller-address
-         * auto-fill flows query by that kind and install seeding never recreates it. Deleting every
-         * method blindly therefore fails the request, and `delete()` asserts `response.ok()`, so the
-         * whole cleanup throws and takes the calling test with it.
-         *
-         * Filtering here rather than tolerating the 403 in `delete()`, so a genuine delete failure
-         * on a custom method is still loud.
-         */
-        const deletableMethods = allVerificationMethods.filter((o: { kind?: string }) => o.kind !== 'address');
-        if (!deletableMethods.length) {
-            console.log('Only built-in verification methods exist, nothing to delete');
-            return;
-        }
-        const allMethodIds = deletableMethods.map((o: { id: unknown }) => o.id);
+        // The Address method is built in: the installer seeds it once and the REST layer
+        // refuses to delete it (403 dokan_pro_rest_cannot_delete, dokan-pro #5861). Skip it
+        // instead of letting the delete assertion take the whole beforeAll down.
+        const allMethodIds = allVerificationMethods.filter((o: { kind?: string }) => o.kind !== 'address').map((o: { id: unknown }) => o.id);
         for (const methodId of allMethodIds) {
             await this.delete(endPoints.deleteVerificationMethod(methodId), { headers: auth });
         }
