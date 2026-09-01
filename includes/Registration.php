@@ -22,6 +22,28 @@ class Registration {
     }
 
     /**
+     * Roles a visitor may register as through the WooCommerce sign-up form.
+     *
+     * `seller` drops out when the marketplace hides the "I am a vendor" toggle, because a role the
+     * form never offered has to be rejected server side too — the template alone only hides it.
+     * The filter still runs last, so an integration that opens vendor sign-ups by its own rules can
+     * put `seller` back.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    protected function get_allowed_registration_roles() {
+        $roles = [ 'customer', 'seller' ];
+
+        if ( 'off' === dokan_get_option( 'show_register_as_vendor', 'dokan_appearance', 'on' ) ) {
+            $roles = array_values( array_diff( $roles, [ 'seller' ] ) );
+        }
+
+        return apply_filters( 'dokan_register_user_role', $roles );
+    }
+
+    /**
      * Validate vendor registration
      *
      * @param \WP_Error $error
@@ -41,7 +63,7 @@ class Registration {
             return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
         }
 
-        $allowed_roles = apply_filters( 'dokan_register_user_role', [ 'customer', 'seller' ] );
+        $allowed_roles = $this->get_allowed_registration_roles();
 
         // is the role name allowed or user is trying to manipulate?
         if ( empty( $_POST['role'] ) || ( ! in_array( $_POST['role'], $allowed_roles, true ) ) ) {
@@ -89,7 +111,7 @@ class Registration {
             return $data;
         }
 
-        $allowed_roles = apply_filters( 'dokan_register_user_role', [ 'customer', 'seller' ] );
+        $allowed_roles = $this->get_allowed_registration_roles();
         $role          = ( isset( $_POST['role'] ) && in_array( $_POST['role'], $allowed_roles, true ) ) ? sanitize_text_field( wp_unslash( $_POST['role'] ) ) : 'customer';
 
         $data['role'] = $role;
