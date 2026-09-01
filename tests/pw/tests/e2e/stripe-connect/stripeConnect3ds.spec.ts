@@ -115,10 +115,10 @@ test.describe.serial('Stripe Connect — 3D Secure @pro', () => {
         try {
             const stripe = new StripeConnectPage(page);
             const paidBaseline = await stripe.latestPaidConnectOrderId();
-            // Pin the vendor's EXISTING transfers by id. An earlier version compared timestamps and
-            // treated any transfer inside a 3-minute window as belonging to this attempt, which
-            // caught SCPE-04's own legitimate transfer and failed on correct behaviour.
-            const transferIdsBefore = new Set((await stripeConnectApi.listTransfersToDestination(STRIPE_CONNECT_CONNECTED_ACCOUNTS.vendor1, 100)).map(t => String(t.id)));
+            // Newest Connect order at ANY status, so the attempt's own order can be identified
+            // afterwards. WooCommerce writes the row before the payment is attempted, so an
+            // abandoned challenge legitimately leaves an unpaid row behind.
+            const orderBaseline = await stripe.connectOrderBaseline();
             await stripe.addProductToCart(productId);
             await stripe.gotoBlockCheckout();
             await stripe.fillBlockGuestDetails({ ...guestBilling, email: 'guest.3ds.failed@example.com' });
@@ -138,9 +138,39 @@ test.describe.serial('Stripe Connect — 3D Secure @pro', () => {
             });
 
             await test.step('no NEW transfer was made to the vendor for this attempt', async () => {
-                const after = await stripeConnectApi.listTransfersToDestination(STRIPE_CONNECT_CONNECTED_ACCOUNTS.vendor1, 100);
-                const fresh = after.filter(t => !transferIdsBefore.has(String(t.id))).map(t => String(t.id));
-                expect(fresh, `an abandoned 3DS challenge must not pay the vendor — new transfers: ${JSON.stringify(fresh)}`).toHaveLength(0);
+                /*
+                 * Scoped to THIS attempt's charge, never to the vendor account as a whole.
+                 *
+                 * The previous version pinned every existing transfer to vendor1 by id and treated
+                 * anything new as belonging to this attempt. All twelve CI shards share one Stripe
+                 * platform and the same STRIPE_VENDOR1_ACCT, so a sibling shard paying that vendor
+                 * mid-test read as "the abandoned challenge paid the vendor". It failed in-shard on
+                 * runs 33367338869 and 33482179826 and passed alone both times, which is the
+                 * shard-pollution signature rather than a defect. Same class as the C5 fix: never
+                 * assert over an account-global Stripe list on a shared test account.
+                 *
+                 * A transfer for this attempt could only carry this attempt's charge as its
+                 * source_transaction, and no other shard can produce that. Each early return below
+                 * is a proof rather than a dodge — no order means no charge, and no charge means
+                 * Stripe had nothing to build a transfer from — so each one says which it was.
+                 */
+                const attemptOrderId = await stripe.connectOrderBaseline();
+                if (!attemptOrderId || attemptOrderId === orderBaseline) {
+                    log.info('SCPE-05: the abandoned attempt created no Connect order, so there was nothing to transfer');
+                    return;
+                }
+                const intentId = await getConnectIntentIdForOrder(attemptOrderId).catch(() => '');
+                if (!intentId) {
+                    log.info(`SCPE-05: order ${attemptOrderId} carries no PaymentIntent, so no charge and no transfer exist`);
+                    return;
+                }
+                const chargeId = await stripeConnectApi.getLatestChargeId(intentId).catch(() => '');
+                if (!chargeId) {
+                    log.info(`SCPE-05: intent ${intentId} never produced a charge, so the shopper was not billed and no transfer is possible`);
+                    return;
+                }
+                const transfers = await stripeConnectApi.transfersForChargeToVendor(chargeId, STRIPE_CONNECT_CONNECTED_ACCOUNTS.vendor1);
+                expect(transfers.map(t => String(t.id)), `an abandoned 3DS challenge must not pay the vendor — transfers against charge ${chargeId}: ${JSON.stringify(transfers.map(t => String(t.id)))}`).toHaveLength(0);
             });
 
             await test.step('the cart still holds the item so the shopper can retry', async () => {
