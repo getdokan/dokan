@@ -1322,6 +1322,52 @@ class StoreController extends WP_REST_Controller {
                 'description' => esc_html__( 'Category wise commission.', 'dokan-lite' ),
                 'type'        => 'object',
             ],
+            'vacation'      => [
+                'description' => esc_html__( 'Vacation settings.', 'dokan-lite' ),
+                'type'        => 'object',
+                'properties'  => [
+                    'setting_go_vacation'       => [
+                        'type' => 'string',
+                        'enum' => [ 'yes', 'no' ],
+                    ],
+                    'settings_closing_style'    => [
+                        'type' => 'string',
+                        'enum' => [ 'instantly', 'datewise' ],
+                    ],
+                    'setting_vacation_message'  => [
+                        'type' => 'string',
+                    ],
+                    'seller_vacation_schedules' => [
+                        'type'  => 'array',
+                        'items' => [
+                            'type'       => 'object',
+                            'properties' => [
+                                'from'    => [ 'type' => 'string', 'format' => 'date' ],
+                                'to'      => [ 'type' => 'string', 'format' => 'date' ],
+                                'message' => [ 'type' => 'string' ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'store_support' => [
+                'description' => esc_html__( 'Store support settings.', 'dokan-lite' ),
+                'type'        => 'object',
+                'properties'  => [
+                    'show_support_btn'         => [ 'type' => 'string', 'enum' => [ 'yes', 'no' ] ],
+                    'show_support_btn_product' => [ 'type' => 'string', 'enum' => [ 'yes', 'no' ] ],
+                    'support_btn_name'         => [ 'type' => 'string' ],
+                ],
+            ],
+            'cart_min_max'  => [
+                'description' => esc_html__( 'Cart min/max order amount settings.', 'dokan-lite' ),
+                'type'        => 'object',
+                'properties'  => [
+                    'enable_vendor_min_max_amount' => [ 'type' => 'string', 'enum' => [ 'yes', 'no' ] ],
+                    'min_amount_to_order'          => [ 'type' => 'number' ],
+                    'max_amount_to_order'          => [ 'type' => 'number' ],
+                ],
+            ],
         ];
 
         return apply_filters( 'dokan_rest_api_store_update_params', $params );
