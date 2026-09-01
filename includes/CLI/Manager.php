@@ -9,14 +9,14 @@ namespace WeDevs\Dokan\CLI;
  * filter so Dokan and its extensions (e.g. Dokan Pro) can register commands
  * under the same namespace from a single place.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.18
  */
 class Manager {
 
     /**
      * Bootstraps the CLI command registry.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.18
      */
     public function __construct() {
         // Only register commands while running under WP-CLI.
@@ -31,7 +31,7 @@ class Manager {
     /**
      * Registers every Dokan WP-CLI command collected from the filter.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.18
      *
      * @return void
      */

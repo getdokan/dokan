@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.17
+Stable tag: 5.0.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.18 ( Sep 01, 2026 ) =
+- **new:** Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.
+
 = v5.0.17 ( Aug 25, 2026 ) =
 - **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
 - **fix:** In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.
@@ -395,9 +398,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Prevented unauthenticated visitors from reading a vendor's commission settings through the public store-categories endpoint.
 - **fix:** Prevented Shop Managers from installing or activating arbitrary plugins through Dokan's admin endpoints and setup wizard by requiring the proper plugin capabilities.
 - **fix:** Prevented vendors from clearing their reverse-withdrawal balance with an arbitrary payment amount by reconciling it against their actual outstanding debt.
-
-= v5.0.13 ( Aug 12, 2026 ) =
-- **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
-- **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
