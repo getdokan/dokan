@@ -77,9 +77,7 @@ class Manager {
                 continue;
             }
 
-            // A vendor that never had the meta written carries no key at all, and both the status
-            // counters and the Users list read that as pending -- so the listing has to agree, or the
-            // tab reports a count it cannot show.
+            // The status counters and the Users list both read a missing key as pending, so the listing has to agree or the tab shows a count it cannot list.
             $meta_query[] = [
                 'relation' => 'OR',
                 [
