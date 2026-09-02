@@ -206,9 +206,29 @@ test.describe.serial('Stripe Connect — vendor WooCommerce subscription product
             'the renewal paid the vendor, so the payout must be booked',
         ).toHaveLength(1);
 
-        const withdrawsAfter = await approvedWithdraws();
-        const newWithdraws = withdrawsAfter.filter(w => !withdrawsBefore.some(b => b.id === w.id));
-        expect(newWithdraws, 'the renewal payout must be recorded as exactly one approved auto-withdraw').toHaveLength(1);
+        /*
+         * Poll for the booking rather than taking one reading.
+         *
+         * The auto-withdraw is written as a side effect of the renewal settling. The status poll
+         * above confirms the order reached a paid state, which is not the same instant the ledger
+         * row lands, so a single read taken straight after can beat the insert and report zero.
+         *
+         * The assertion is unchanged — still exactly one withdraw, still matched on amount and note
+         * below. This only allows the write time to arrive. Added after SCSUB-06 failed once in a
+         * full-folder run and then passed on three consecutive attempts, so the race is real but
+         * was not reproducible on demand; this hardens the one un-polled read in the case.
+         */
+        let newWithdraws: Awaited<ReturnType<typeof approvedWithdraws>> = [];
+        await expect
+            .poll(
+                async () => {
+                    const after = await approvedWithdraws();
+                    newWithdraws = after.filter(w => !withdrawsBefore.some(b => b.id === w.id));
+                    return newWithdraws.length;
+                },
+                { message: 'the renewal payout must be recorded as exactly one approved auto-withdraw', timeout: 60_000 },
+            )
+            .toBe(1);
         expect(Number(newWithdraws[0]?.amount ?? 0), "the booked withdraw must equal the vendor's renewal earning").toBeCloseTo(earning, 2);
         // The note carries the order id, so this pins the record to THIS renewal. Without it any
         // unrelated auto-withdraw appearing in the same window would satisfy the count above.
