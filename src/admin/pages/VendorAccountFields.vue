@@ -96,7 +96,9 @@
 
                 <template v-if="! getId()">
                     <div class="column">
-                        <label for="user-login">{{ __( 'Username', 'dokan-lite') }}</label><span class="required-field">*</span>
+                        <label for="user-login">{{ __( 'Username', 'dokan-lite') }}</label>
+                        <span class="required-field">*</span>
+
                         <input type="text" class="dokan-form-input"
                             id="user-login"
                             v-model="vendorInfo.user_login"
