@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.18',
+        'released' => '2026-09-01',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.17',
         'released' => '2026-08-25',
         'changes'  => [
