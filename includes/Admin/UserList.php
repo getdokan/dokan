@@ -71,6 +71,12 @@ class UserList {
             return $query;
         }
 
+        // Only the list table asks for this role; every other user query on the screen -- the pending
+        // count badge among them -- already carries its own criteria and must not be stacked on to.
+        if ( 'pending_vendor' !== $query->get( 'role' ) ) {
+            return $query;
+        }
+
         // Unset the role parameter for fetch all users and set our custom role query.
         $query->set( 'role', '' );
         $query->set( 'role__in', [ 'seller', 'administrator' ] );
