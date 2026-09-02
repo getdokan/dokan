@@ -183,6 +183,9 @@ class PayloadResolver {
      * schema sets no `additionalProperties`. ProductControllerV3::apply_image_positions() is the
      * only consumer.
      *
+     * The two fields compile into one WooCommerce array, so a request carrying either of them
+     * describes the product's whole image state — sending only one clears the other side.
+     *
      * @since 5.0.0
      *
      * @param array $data Request body keyed by schema field id.

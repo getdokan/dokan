@@ -389,7 +389,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     protected function apply_image_positions( $product, $request ) {
         $images = $request['images'];
 
-        // An empty array already cleared both sides in WooCommerce's own setter, so there is nothing to restore.
+        // Nothing to restore: not a product, no images in the request, or an empty array WooCommerce already cleared.
         if ( ! $product instanceof WC_Product || ! is_array( $images ) || empty( $images ) ) {
             return $product;
         }
