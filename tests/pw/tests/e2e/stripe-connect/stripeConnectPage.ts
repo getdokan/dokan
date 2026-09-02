@@ -693,7 +693,18 @@ export class StripeConnectPage {
         }
     }
 
-    async placeClassicOrderExpectError(): Promise<void> {
+    /**
+     * Place a classic order that must be refused, and wait for the refusal to appear.
+     *
+     * `errorSelector` defaults to the gateway's own inline error container, which is where a
+     * declined card surfaces. A rejection raised by WooCommerce validation instead — the
+     * non-connected-seller gate, for one — renders as a WC notice, so those callers pass their own
+     * selector rather than hand-rolling the click, which is the part that matters: the first
+     * place-order press on a cold runner routinely does not register, so this re-presses up to three
+     * times guarded on whether the submit actually fired.
+     */
+    async placeClassicOrderExpectError(errorSelector?: string, errorMessage = 'a declined card should surface an inline error'): Promise<void> {
+        const errorTarget = errorSelector ?? this.checkout.classicError;
         const paidBaseline = await this.latestPaidConnectOrderId();
         let confirmFired = false;
         const onReq = (req: { url(): string }) => {
@@ -702,7 +713,7 @@ export class StripeConnectPage {
         this.page.on('request', onReq);
         const errorVisible = () =>
             this.page
-                .locator(this.checkout.classicError)
+                .locator(errorTarget)
                 .first()
                 .isVisible()
                 .catch(() => false);
@@ -716,11 +727,11 @@ export class StripeConnectPage {
                     await this.page.waitForTimeout(1_000);
                 }
             }
-            await expect(this.page.locator(this.checkout.classicError).first(), 'a declined card should surface an inline error').toBeVisible({
+            await expect(this.page.locator(errorTarget).first(), errorMessage).toBeVisible({
                 timeout: 40_000,
             });
-            await expect(this.page, 'a declined card must not reach order-received').not.toHaveURL(/order-received/);
-            expect(await this.latestPaidConnectOrderId(), 'a declined card must not create a NEW PAID Stripe Connect order').toBe(paidBaseline);
+            await expect(this.page, 'a refused checkout must not reach order-received').not.toHaveURL(/order-received/);
+            expect(await this.latestPaidConnectOrderId(), 'a refused checkout must not create a NEW PAID Stripe Connect order').toBe(paidBaseline);
         } finally {
             this.page.off('request', onReq);
         }

@@ -91,20 +91,34 @@ test.describe.serial('Stripe Connect — non-connected sellers @pro', () => {
             await stripe.fillCardDetails(STRIPE_CARDS.success);
 
             await test.step('the checkout refuses the order and says why', async () => {
-                // WooCommerce's own validation notice, not the Stripe JS error container the
-                // declined-card helper watches — this rejection comes from
-                // `woocommerce_after_checkout_validation`, so it renders as a WC error notice.
-                await stripe.waitForCheckoutSettled();
-                await page.locator(stripe.checkout.placeOrderClassic).click();
+                /*
+                 * Driven through the shared helper, not a bare click.
+                 *
+                 * The first place-order press on a cold runner routinely does not register, so a
+                 * single click leaves the form unsubmitted: validation never runs, no notice is
+                 * ever rendered, and the case fails reporting a missing error rather than a missing
+                 * refusal. That is exactly how this failed on CI run 33604421784, three attempts out
+                 * of three, while passing locally — the page snapshot showed the checkout still
+                 * sitting there with the gateway selected and no order placed. The helper re-presses
+                 * up to three times guarded on whether the submit actually fired, and also asserts
+                 * no paid order was left behind.
+                 *
+                 * The selector is passed because this rejection comes from
+                 * `woocommerce_after_checkout_validation` and renders as a WooCommerce notice, not
+                 * in the gateway's own inline error container that a declined card uses.
+                 */
+                await stripe.placeClassicOrderExpectError(
+                    '.woocommerce-error, .woocommerce-NoticeGroup-checkout .woocommerce-error li',
+                    'buying from a vendor who cannot be paid must be refused with a visible reason',
+                );
                 const notice = page.locator('.woocommerce-error, .woocommerce-NoticeGroup-checkout .woocommerce-error li').first();
-                await expect(notice, 'buying from a vendor who cannot be paid must be refused with a visible reason').toBeVisible({ timeout: 60_000 });
                 await expect(notice, 'the refusal must name the Stripe requirement so the shopper knows what is wrong').toContainText(/enabled Stripe as a payment gateway/i);
             });
 
             await test.step('no order was paid', async () => {
                 // The money invariant. A refusal that still took the payment would be worse than
-                // no gate at all.
-                await expect(page, 'a refused checkout must not reach order-received').not.toHaveURL(/order-received/);
+                // no gate at all. The helper already checks this; re-stated against the baseline
+                // captured before the purchase so the case is explicit about what it guarantees.
                 expect(await stripe.latestPaidConnectOrderId(), 'a refused checkout must not leave a PAID order behind').toBe(paidBaseline);
             });
             log.success('SC-45a non-connected vendor was refused at checkout and no order was paid');
