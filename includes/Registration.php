@@ -11,10 +11,22 @@ use WP_Error;
  */
 class Registration {
 
-    /** Nonce action marking a request as coming from Dokan's own vendor sign-up form. @since DOKAN_SINCE */
+    /**
+     * Nonce action marking a request as coming from Dokan's own vendor sign-up form.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
     const VENDOR_FORM_NONCE_ACTION = 'dokan_vendor_registration_form';
 
-    /** Field carrying the vendor sign-up form marker. @since DOKAN_SINCE */
+    /**
+     * Field carrying the vendor sign-up form marker.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
     const VENDOR_FORM_NONCE_FIELD = 'dokan_vendor_registration_form_nonce';
 
     public function __construct() {
@@ -58,7 +70,7 @@ class Registration {
         $roles = [ 'customer' ];
 
         // Dokan's dedicated vendor pages exist to sign vendors up, so a setting naming the WooCommerce form must not close them.
-        if ( $this->is_vendor_form_request() || dokan_is_vendor_registration_offered() ) {
+        if ( $this->is_vendor_form_request() || 'off' !== dokan_get_option( 'show_register_as_vendor', 'dokan_appearance', 'on' ) ) {
             $roles[] = 'seller';
         }
 
