@@ -256,8 +256,9 @@ export default {
 
         // getId function has been used to identify whether is it vendor edit page or not
         getId() {
-            // Pin to a numeric ID so a crafted route param can't traverse the REST path into another endpoint (XSS).
-            return String( parseInt( this.$route.params.id, 10 ) || 0 );
+            // Numeric, not a string: the templates read this as "are we editing?", and "0" is truthy.
+            // parseInt still pins it so a crafted route param can't traverse the REST path (XSS, #3290).
+            return parseInt( this.$route.params.id, 10 ) || 0;
         },
 
         onSelectBanner( image ) {
