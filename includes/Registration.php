@@ -11,6 +11,24 @@ use WP_Error;
  */
 class Registration {
 
+    /**
+     * Nonce action marking a request as coming from Dokan's own vendor sign-up form.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    const VENDOR_FORM_NONCE_ACTION = 'dokan_vendor_registration_form';
+
+    /**
+     * Field carrying the vendor sign-up form marker.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    const VENDOR_FORM_NONCE_FIELD = 'dokan_vendor_registration_form_nonce';
+
     public function __construct() {
         // validate registration
         add_filter( 'woocommerce_process_registration_errors', [ $this, 'validate_registration' ] );
@@ -19,28 +37,77 @@ class Registration {
         // after registration
         add_filter( 'woocommerce_new_customer_data', [ $this, 'set_new_vendor_names' ] );
         add_action( 'woocommerce_created_customer', [ $this, 'save_vendor_info' ], 10, 2 );
+
+        // stamp the dedicated vendor form so the two sign-up forms can be told apart on submit
+        add_action( 'dokan_vendor_reg_form_start', [ $this, 'render_vendor_form_marker' ] );
     }
 
     /**
-     * Roles a visitor may register as through the WooCommerce sign-up form.
+     * Print the marker identifying Dokan's dedicated vendor sign-up form.
      *
-     * `seller` drops out when the marketplace hides the "I am a vendor" toggle, because a role the
-     * form never offered has to be rejected server side too — the template alone only hides it.
-     * The filter still runs last, so an integration that opens vendor sign-ups by its own rules can
-     * put `seller` back.
+     * Hooked to an action only that form fires, so the marker travels with the submission even when
+     * a theme overrides the template.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function render_vendor_form_marker() {
+        wp_nonce_field( self::VENDOR_FORM_NONCE_ACTION, self::VENDOR_FORM_NONCE_FIELD, false );
+    }
+
+    /**
+     * Roles a visitor may register as through the request being processed.
+     *
+     * `seller` drops out when the WooCommerce sign-up form hides the "I am a vendor" toggle, because
+     * a role that form never offered has to be rejected server side too — the template alone only
+     * hides it. Dokan's own vendor sign-up pages are exempt, see is_vendor_role_on_offer(). The
+     * filter still runs last, so an integration that opens vendor sign-ups by its own rules can put
+     * `seller` back.
      *
      * @since DOKAN_SINCE
      *
      * @return array
      */
-    protected function get_allowed_registration_roles() {
+    public function get_allowed_registration_roles() {
         $roles = [ 'customer', 'seller' ];
 
-        if ( 'off' === dokan_get_option( 'show_register_as_vendor', 'dokan_appearance', 'on' ) ) {
+        if ( ! $this->is_vendor_role_on_offer() ) {
             $roles = array_values( array_diff( $roles, [ 'seller' ] ) );
         }
 
         return apply_filters( 'dokan_register_user_role', $roles );
+    }
+
+    /**
+     * Whether the vendor role is on offer for the request being processed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function is_vendor_role_on_offer() {
+        // Dokan's dedicated vendor pages exist to sign vendors up, so a setting that names the
+        // WooCommerce sign-up form must not close them.
+        if ( $this->is_vendor_form_request() ) {
+            return true;
+        }
+
+        return 'off' !== dokan_get_option( 'show_register_as_vendor', 'dokan_appearance', 'on' );
+    }
+
+    /**
+     * Whether the request was submitted from Dokan's dedicated vendor sign-up form.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function is_vendor_form_request() {
+        // Only that form prints this marker, so a request that never rendered it cannot claim to be one.
+        $nonce = isset( $_POST[ self::VENDOR_FORM_NONCE_FIELD ] ) ? sanitize_key( wp_unslash( $_POST[ self::VENDOR_FORM_NONCE_FIELD ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- this is the nonce check.
+
+        return ! empty( $nonce ) && wp_verify_nonce( $nonce, self::VENDOR_FORM_NONCE_ACTION );
     }
 
     /**
