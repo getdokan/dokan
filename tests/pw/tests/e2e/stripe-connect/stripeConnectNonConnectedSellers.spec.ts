@@ -9,6 +9,7 @@ import {
     VENDOR_ID,
     hasCredentials,
     ensureStripeConnectConfigured,
+    ensureClassicCheckoutPage,
     restoreStripeExpress,
     removeStripeConnectVendor,
     setConnectGatewaySettings,
@@ -43,6 +44,11 @@ test.describe.serial('Stripe Connect — non-connected sellers @pro', () => {
             return;
         }
         await ensureStripeConnectConfigured();
+        // Both cases drive the classic checkout, and the shortcode page does not exist in a fresh
+        // environment — every shard provisions its own. Without this the run dies on a 404 rather
+        // than on anything to do with connected sellers, which is exactly what happened on CI run
+        // 33590556960 while it passed locally on a site where an earlier spec had already made it.
+        await ensureClassicCheckoutPage();
         // The subject of the whole file: a vendor with neither connection meta.
         await removeStripeConnectVendor(VENDOR_ID);
         const api = new ApiUtils(await request.newContext());
