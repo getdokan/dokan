@@ -71,8 +71,7 @@ class UserList {
             return $query;
         }
 
-        // Only the list table asks for this role; every other user query on the screen -- the pending
-        // count badge among them -- already carries its own criteria and must not be stacked on to.
+        // Only the list table asks for this role; the pending-count badge query on the same screen already carries its own criteria.
         if ( 'pending_vendor' !== $query->get( 'role' ) ) {
             return $query;
         }
