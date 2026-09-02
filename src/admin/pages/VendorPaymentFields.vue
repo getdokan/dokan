@@ -170,8 +170,7 @@ export default {
         },
 
         getId() {
-            // Numeric, not a string: the templates read this as "are we editing?", and "0" is truthy.
-            // parseInt still pins it so a crafted route param can't traverse the REST path (XSS, #3290).
+            // Templates read this as "are we editing?" and the string "0" is truthy; parseInt keeps the numeric pin from #3290.
             return parseInt( this.$route.params.id, 10 ) || 0;
         },
     }
