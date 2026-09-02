@@ -67,10 +67,30 @@ class Manager {
                 continue;
             }
 
+            if ( 'approved' === $stat ) {
+                $meta_query[] = [
+                    'key'     => 'dokan_enable_selling',
+                    'value'   => 'yes',
+                    'compare' => '=',
+                ];
+
+                continue;
+            }
+
+            // A vendor that never had the meta written carries no key at all, and both the status
+            // counters and the Users list read that as pending -- so the listing has to agree, or the
+            // tab reports a count it cannot show.
             $meta_query[] = [
-                'key'     => 'dokan_enable_selling',
-                'value'   => ( $stat == 'approved' ) ? 'yes' : 'no',
-                'compare' => '=',
+                'relation' => 'OR',
+                [
+                    'key'     => 'dokan_enable_selling',
+                    'value'   => 'no',
+                    'compare' => '=',
+                ],
+                [
+                    'key'     => 'dokan_enable_selling',
+                    'compare' => 'NOT EXISTS',
+                ],
             ];
         }
 
