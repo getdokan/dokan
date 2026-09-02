@@ -13,69 +13,52 @@ use WeDevs\Dokan\Registration;
 class RegistrationTest extends DokanTestCase {
 
     /**
-     * @var Registration
+     * No REST server or seeded vendors are needed here.
+     *
+     * @var bool
      */
-    private $registration;
-
-    public function set_up() {
-        parent::set_up();
-
-        $this->registration = new Registration();
-    }
-
-    public function tear_down() {
-        unset( $_POST[ Registration::VENDOR_FORM_NONCE_FIELD ] );
-
-        parent::tear_down();
-    }
+    protected $is_unit_test = true;
 
     /**
      * Set the "Show Register as a Vendor in Sign Up Page" appearance toggle.
      *
-     * @param string $value Either `on` or `off`.
+     * @param string|null $value Either `on`, `off`, or null to leave the setting unsaved.
      *
      * @return void
      */
     private function set_vendor_signup_toggle( $value ) {
-        $appearance = (array) get_option( 'dokan_appearance', [] );
+        if ( null === $value ) {
+            delete_option( 'dokan_appearance' );
 
-        $appearance['show_register_as_vendor'] = $value;
+            return;
+        }
 
-        update_option( 'dokan_appearance', $appearance );
+        update_option( 'dokan_appearance', [ 'show_register_as_vendor' => $value ] );
+    }
+
+    public static function toggle_provider(): array {
+        return [
+            'toggle on'      => [ 'on', [ 'customer', 'seller' ] ],
+            'toggle off'     => [ 'off', [ 'customer' ] ],
+            'never saved'    => [ null, [ 'customer', 'seller' ] ],
+        ];
     }
 
     /**
-     * Put a genuine vendor form marker on the request.
-     *
-     * @return void
+     * @dataProvider toggle_provider
      */
-    private function stamp_vendor_form_request() {
-        $_POST[ Registration::VENDOR_FORM_NONCE_FIELD ] = wp_create_nonce( Registration::VENDOR_FORM_NONCE_ACTION );
-    }
+    public function test_allowed_roles_follow_the_toggle( $toggle, $expected ) {
+        $this->set_vendor_signup_toggle( $toggle );
 
-    public function test_vendor_role_is_offered_while_the_toggle_is_on() {
-        $this->set_vendor_signup_toggle( 'on' );
-
-        $this->assertSame( [ 'customer', 'seller' ], $this->registration->get_allowed_registration_roles() );
-    }
-
-    public function test_vendor_role_is_withheld_while_the_toggle_is_off() {
-        $this->set_vendor_signup_toggle( 'off' );
-
-        $this->assertSame( [ 'customer' ], $this->registration->get_allowed_registration_roles() );
-    }
-
-    public function test_vendor_role_is_offered_by_default() {
-        delete_option( 'dokan_appearance' );
-
-        $this->assertSame( [ 'customer', 'seller' ], $this->registration->get_allowed_registration_roles() );
+        $this->assertSame( $expected, dokan()->registration->get_allowed_registration_roles() );
     }
 
     public function test_dedicated_vendor_form_keeps_the_vendor_role_while_the_toggle_is_off() {
         $this->set_vendor_signup_toggle( 'off' );
-        $this->stamp_vendor_form_request();
 
-        $this->assertSame( [ 'customer', 'seller' ], $this->registration->get_allowed_registration_roles() );
+        $_POST[ Registration::VENDOR_FORM_NONCE_FIELD ] = wp_create_nonce( Registration::VENDOR_FORM_NONCE_ACTION );
+
+        $this->assertSame( [ 'customer', 'seller' ], dokan()->registration->get_allowed_registration_roles() );
     }
 
     public function test_a_forged_vendor_form_marker_does_not_reopen_the_vendor_role() {
@@ -83,7 +66,7 @@ class RegistrationTest extends DokanTestCase {
 
         $_POST[ Registration::VENDOR_FORM_NONCE_FIELD ] = 'not-a-real-nonce';
 
-        $this->assertSame( [ 'customer' ], $this->registration->get_allowed_registration_roles() );
+        $this->assertSame( [ 'customer' ], dokan()->registration->get_allowed_registration_roles() );
     }
 
     public function test_the_filter_can_reopen_the_vendor_role() {
@@ -98,14 +81,14 @@ class RegistrationTest extends DokanTestCase {
             }
         );
 
-        $this->assertContains( 'seller', $this->registration->get_allowed_registration_roles() );
+        $this->assertContains( 'seller', dokan()->registration->get_allowed_registration_roles() );
     }
 
-    public function test_the_vendor_form_marker_is_printed_for_the_dedicated_form() {
+    public function test_the_dedicated_vendor_form_prints_the_marker() {
         ob_start();
-        do_action( 'dokan_vendor_reg_form_start' );
-        $output = ob_get_clean();
+        dokan_get_template_part( 'account/vendor-registration', false, [ 'data' => dokan_get_seller_registration_form_data() ] );
+        $form = ob_get_clean();
 
-        $this->assertStringContainsString( Registration::VENDOR_FORM_NONCE_FIELD, $output );
+        $this->assertStringContainsString( Registration::VENDOR_FORM_NONCE_FIELD, $form );
     }
 }

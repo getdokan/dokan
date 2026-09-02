@@ -3707,6 +3707,19 @@ function dokan_clear_product_caches( $product ) {
 }
 
 /**
+ * Whether the WooCommerce sign-up form offers the vendor role.
+ *
+ * Read by the form template and by the server-side role check, so both tell the same story.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return bool
+ */
+function dokan_is_vendor_registration_offered() {
+    return 'off' !== dokan_get_option( 'show_register_as_vendor', 'dokan_appearance', 'on' );
+}
+
+/**
  * Check which vendor info should be hidden
  *
  * @since 3.0.4
