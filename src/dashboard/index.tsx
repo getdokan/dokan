@@ -6,6 +6,7 @@ import Layout from '../layout';
 import getRoutes, { withRouter } from '../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { store as coreDataStore } from '@wordpress/core-data';
 import coreStore from '@dokan/stores/core';
 import Skeleton from '@src/layout/Skeleton';
 import InternalError from '@src/layout/500';
@@ -37,6 +38,16 @@ const App = () => {
 
     // @ts-ignore — invalidateResolution is a store metadata action, absent from the store's own types.
     const { invalidateResolution } = useDispatch( coreStore );
+    // @ts-ignore — same metadata action on the WordPress store Dokan's resolver reads through.
+    const { invalidateResolution: invalidateCoreData } =
+        useDispatch( coreDataStore );
+
+    // Dokan's resolver awaits resolveSelect( coreDataStore ).getCurrentUser(), which replays that
+    // store's cached failure, so retrying only Dokan's own resolution would never re-issue the request.
+    const retryCurrentUser = () => {
+        invalidateCoreData( 'getCurrentUser', [] );
+        invalidateResolution( 'getCurrentUser', [] );
+    };
 
     const mapedRoutes = routes.map( ( route ) => {
         const WithRouterComponent = withRouter(
@@ -71,7 +82,7 @@ const App = () => {
                     'Your account details could not be read. Try again, and contact the marketplace owner if this keeps happening.',
                     'dokan-lite'
                 ) }
-                onRefresh={ () => invalidateResolution( 'getCurrentUser', [] ) }
+                onRefresh={ retryCurrentUser }
             />
         );
     }
