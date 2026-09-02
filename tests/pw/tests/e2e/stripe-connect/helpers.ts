@@ -540,3 +540,25 @@ export async function getVendorBalance(auth: Record<string, string>): Promise<nu
         await ctx.dispose();
     }
 }
+
+/**
+ * Put the shared customer actor back on the `customer` role.
+ *
+ * WooCommerce Subscriptions promotes a buyer to `subscriber` when a subscription is created, and
+ * that REPLACES `customer` rather than adding to it. Both the role and the actor are global, so a
+ * spec that buys a subscription and does not restore it leaves every later spec with a customer who
+ * is no longer a customer. Dokan's RMA REST create then refuses with 403 "Only customers can create
+ * warranty requests" — which is exactly how vendorReturnRequest failed on CI run 33590556960 while
+ * passing locally, and why its isolation re-run failed too: the damage is persistent, not transient.
+ */
+export async function restoreCustomerRole(customerId: string | number): Promise<void> {
+    const ctx = await adminContext();
+    try {
+        const res = await ctx.post(`${SERVER_URL}/wp/v2/users/${Number(customerId)}`, { data: { roles: ['customer'] } });
+        if (!res.ok()) {
+            throw new Error(`could not restore the customer role (${res.status()}): ${(await res.text()).slice(0, 200)}`);
+        }
+    } finally {
+        await ctx.dispose();
+    }
+}

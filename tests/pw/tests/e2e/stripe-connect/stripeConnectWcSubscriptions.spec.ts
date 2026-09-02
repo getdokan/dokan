@@ -9,6 +9,7 @@ import { StripeConnectPage, STRIPE_CARDS, STRIPE_CONNECT_CONNECTED_ACCOUNTS } fr
 import {
     VENDOR_ID,
     CUSTOMER_ID,
+    restoreCustomerRole,
     customerAuth,
     hasCredentials,
     HAS_REAL_CONNECTED_ACCOUNTS,
@@ -364,4 +365,18 @@ test.describe.serial('Stripe Connect — zero-total subscription checkout @pro',
             `a shopper must be able to enter a card for a free-trial subscription (saw ${JSON.stringify(seen)})`,
         ).toBeGreaterThan(0);
     });
+});
+
+/**
+ * File-level teardown: hand the shared customer back as a customer.
+ *
+ * Placed at file scope rather than inside either describe so it runs whichever of them executed.
+ * See restoreCustomerRole for why this matters — WooCommerce Subscriptions replaces the `customer`
+ * role with `subscriber` on purchase, and the next spec in the shard inherits that.
+ */
+test.afterAll(async () => {
+    if (!hasCredentials) {
+        return;
+    }
+    await restoreCustomerRole(CUSTOMER_ID);
 });
