@@ -76,6 +76,8 @@ export type FormItem = {
     value?: any;
     variant?: string;
     multiple?: boolean;
+    /** Upper bound a schema provider puts on the field; on a gallery, the most images allowed. */
+    max?: number;
     options?: { label: string; value: string }[] | Record< string, string >;
     options_map?: Record< string, { label: string; value: string }[] >;
     dependencies?: DependencyCondition[];

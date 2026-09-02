@@ -6,16 +6,21 @@ import ImagePreview from './ImagePreview';
 
 const GalleryImages = ( { field, onChange, validity }: any ) => {
     const [ files, setFiles ] = useState( field.value || [] );
+    // A schema provider (e.g. a subscription pack) can cap the gallery via `max`; unset means no cap.
+    const max = Number( field.max ) > 0 ? Number( field.max ) : Infinity;
+    const atLimit = files.length >= max;
     const onSelect = ( value: any ) => {
         const newValues = [ ...files, ...value ];
         // find unique images based on id
         const uniqueValues = newValues.filter( ( img, index, self ) => {
             return index === self.findIndex( ( t ) => t.id === img.id );
         } );
+        // Never drop what the product already had; only stop the selection from growing past the cap.
+        const capped = uniqueValues.slice( 0, Math.max( max, files.length ) );
         onChange( {
-            [ field.id ]: uniqueValues.map( ( img: any ) => img.id ),
+            [ field.id ]: capped.map( ( img: any ) => img.id ),
         } );
-        setFiles( uniqueValues );
+        setFiles( capped );
     };
 
     const onRemove = ( index: number ) => {
@@ -33,13 +38,15 @@ const GalleryImages = ( { field, onChange, validity }: any ) => {
                 onRemove={ onRemove }
                 itemClassName={ `dokan-product-${ field.id }` }
             >
-                <MediaUploader
-                    onSelect={ onSelect }
-                    className={ `dokan-product-${ field.id }` }
-                    multiple={ true }
-                >
-                    <Upload size={ 16 } />
-                </MediaUploader>
+                { ! atLimit && (
+                    <MediaUploader
+                        onSelect={ onSelect }
+                        className={ `dokan-product-${ field.id }` }
+                        multiple={ true }
+                    >
+                        <Upload size={ 16 } />
+                    </MediaUploader>
+                ) }
             </ImagePreview>
         </CustomField>
     );
