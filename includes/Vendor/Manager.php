@@ -58,45 +58,28 @@ class Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-        $status = (array) $args['status'];
+        $status         = (array) $args['status'];
+        $filter_status  = ! in_array( 'all', $status, true );
+        $wants_approved = $filter_status && in_array( 'approved', $status, true );
+        $wants_pending  = $filter_status && (bool) array_diff( $status, [ 'approved' ] );
 
-        $meta_query = [ 'relation' => 'OR' ];
-
-        foreach ( $status as $stat ) {
-            if ( $stat === 'all' ) {
-                continue;
-            }
-
-            if ( 'approved' === $stat ) {
-                $meta_query[] = [
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'yes',
-                    'compare' => '=',
-                ];
-
-                continue;
-            }
-
-            // The status counters and the Users list both read a missing key as pending, so the listing has to agree or the tab shows a count it cannot list.
-            $meta_query[] = [
+        // Asking for approved and pending together is asking for everyone.
+        if ( $wants_approved && ! $wants_pending ) {
+            $meta_query = [
                 'relation' => 'OR',
                 [
                     'key'     => 'dokan_enable_selling',
-                    'value'   => 'no',
+                    'value'   => 'yes',
                     'compare' => '=',
                 ],
-                [
-                    'key'     => 'dokan_enable_selling',
-                    'compare' => 'NOT EXISTS',
-                ],
             ];
-        }
 
-        if ( ! empty( $args['meta_query'] ) ) {
-            $args['meta_query']['relation'] = 'AND';
-            $args['meta_query'][]           = $meta_query;
-        } else {
-            $args['meta_query'] = $meta_query;
+            if ( ! empty( $args['meta_query'] ) ) {
+                $args['meta_query']['relation'] = 'AND';
+                $args['meta_query'][]           = $meta_query;
+            } else {
+                $args['meta_query'] = $meta_query;
+            }
         }
 
         // if featured
@@ -112,8 +95,15 @@ class Manager {
         unset( $args['status'] );
         unset( $args['featured'] );
 
+        // Pending is everyone not approved. One keyed subquery costs no usermeta joins; an OR group with NOT EXISTS costs three.
+        if ( $wants_pending && ! $wants_approved ) {
+            add_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] );
+        }
+
         $user_query = new WP_User_Query( $args );
         $results    = $user_query->get_results();
+
+        remove_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] );
 
         $this->total_users = $user_query->total_users;
 
@@ -126,6 +116,28 @@ class Manager {
         }
 
         return $vendors;
+    }
+
+    /**
+     * Drop every vendor whose selling flag is approved from a user query.
+     *
+     * The status counters and the Users list both read a missing dokan_enable_selling key as pending,
+     * so the listing has to agree or the Pending tab reports a count it cannot show.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_User_Query $query
+     *
+     * @return void
+     */
+    public function exclude_approved_vendors( $query ) {
+        global $wpdb;
+
+        $query->query_where .= $wpdb->prepare(
+            " AND {$wpdb->users}.ID NOT IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s AND meta_value = %s )",
+            'dokan_enable_selling',
+            'yes'
+        );
     }
 
     /**
