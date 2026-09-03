@@ -350,6 +350,8 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return $invalid;
         }
 
+        $product = $this->apply_image_positions( $product, $request );
+
         /**
          * Filters a vendor product prepared for the database, before it is saved.
          *
@@ -364,6 +366,56 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
          * @param bool            $creating Whether a new product is being created.
          */
         return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
+    }
+
+    /**
+     * Restore the vendor's featured/gallery split after WooCommerce has consumed `images`.
+     *
+     * WooCommerce takes the featured image from array index 0, and its v3 images schema has no
+     * `position` at all, so a product saved with gallery images but no featured image loses its
+     * first gallery image to the featured slot — with a single gallery image the gallery ends up
+     * empty. PayloadResolver::resolve_images() tags every entry with the position the vendor
+     * actually chose, so the split is reapplied here.
+     *
+     * Payloads this plugin did not resolve carry no positions and are left to WooCommerce.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Data|WC_Product $product Product assembled from the request, not yet saved.
+     * @param WP_REST_Request    $request Full details about the request.
+     *
+     * @return WC_Data|WC_Product
+     */
+    protected function apply_image_positions( $product, $request ) {
+        $images = $request['images'];
+
+        // Nothing to restore: not a product, no images in the request, or an empty array WooCommerce already cleared.
+        if ( ! $product instanceof WC_Product || ! is_array( $images ) || empty( $images ) ) {
+            return $product;
+        }
+
+        $featured = 0;
+        $gallery  = [];
+
+        foreach ( $images as $image ) {
+            if ( ! is_array( $image ) || ! isset( $image['id'], $image['position'] ) ) {
+                return $product;
+            }
+
+            $id = absint( $image['id'] );
+
+            if ( 0 === absint( $image['position'] ) ) {
+                $featured = $id;
+                continue;
+            }
+
+            $gallery[] = $id;
+        }
+
+        $product->set_image_id( $featured > 0 ? $featured : '' );
+        $product->set_gallery_image_ids( $gallery );
+
+        return $product;
     }
 
     /**

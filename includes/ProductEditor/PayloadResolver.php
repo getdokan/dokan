@@ -176,32 +176,60 @@ class PayloadResolver {
     /**
      * Transform featured image and gallery image IDs into the WC REST images array.
      *
+     * Every entry carries a `position` — 0 for the featured image, 1..n for the gallery — because
+     * the flat array on its own cannot express a product that has gallery images but no featured
+     * image. This mirrors the convention ProductController (v1) already splits on; WooCommerce's
+     * own v3 images schema has no `position`, and ignores the key while preserving it, since that
+     * schema sets no `additionalProperties`. ProductControllerV3::apply_image_positions() is the
+     * only consumer.
+     *
+     * The two fields compile into one WooCommerce array, so a request carrying either of them
+     * describes the product's whole image state — sending only one clears the other side.
+     *
      * @since 5.0.0
+     *
+     * @param array $data Request body keyed by schema field id.
+     *
+     * @return array
      */
     public function resolve_images( array $data ): array {
-        $images = [];
+        $has_featured = array_key_exists( Elements::FEATURED_IMAGE_ID, $data );
+        $has_gallery  = isset( $data[ Elements::GALLERY_IMAGE_IDS ] ) && is_array( $data[ Elements::GALLERY_IMAGE_IDS ] );
 
-        if ( ! empty( $data[ Elements::FEATURED_IMAGE_ID ] ) ) {
-            $id = $this->extract_image_id( $data[ Elements::FEATURED_IMAGE_ID ] );
-            if ( $id > 0 ) {
-                $images[] = [ 'id' => $id ];
-            }
-            unset( $data[ Elements::FEATURED_IMAGE_ID ] );
+        if ( ! $has_featured && ! $has_gallery ) {
+            return $data;
         }
 
-        if ( isset( $data[ Elements::GALLERY_IMAGE_IDS ] ) && is_array( $data[ Elements::GALLERY_IMAGE_IDS ] ) ) {
+        $images = [];
+
+        if ( $has_featured ) {
+            $id = $this->extract_image_id( $data[ Elements::FEATURED_IMAGE_ID ] );
+            unset( $data[ Elements::FEATURED_IMAGE_ID ] );
+
+            if ( $id > 0 ) {
+                $images[] = [
+                    'id'       => $id,
+                    'position' => 0,
+                ];
+            }
+        }
+
+        if ( $has_gallery ) {
+            $position = 1;
             foreach ( $data[ Elements::GALLERY_IMAGE_IDS ] as $img ) {
                 $id = $this->extract_image_id( $img );
                 if ( $id > 0 ) {
-                    $images[] = [ 'id' => $id ];
+                    $images[] = [
+                        'id'       => $id,
+                        'position' => $position++,
+                    ];
                 }
             }
             unset( $data[ Elements::GALLERY_IMAGE_IDS ] );
         }
 
-        if ( ! empty( $images ) ) {
-            $data['images'] = $images;
-        }
+        // An empty array is meaningful — it is how a vendor who removed every image clears them.
+        $data['images'] = $images;
 
         return $data;
     }
