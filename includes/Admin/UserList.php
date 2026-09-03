@@ -71,8 +71,11 @@ class UserList {
             return $query;
         }
 
+        // Core copies $_REQUEST['role'] into the query var raw, so normalise it the same way the guard above does.
+        $query_role = sanitize_text_field( wp_unslash( $query->get( 'role' ) ) );
+
         // Only the list table asks for this role; the pending-count badge query on the same screen already carries its own criteria.
-        if ( 'pending_vendor' !== $query->get( 'role' ) ) {
+        if ( 'pending_vendor' !== $query_role ) {
             return $query;
         }
 
