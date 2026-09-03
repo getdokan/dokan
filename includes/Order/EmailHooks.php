@@ -131,7 +131,13 @@ class EmailHooks {
                 $product_id  = $item['product_id'];
                 $author      = get_post_field( 'post_author', $product_id );
                 $author_data = get_userdata( absint( $author ) );
-                $user_email  = $author_data->user_email;
+
+                // Same guard as above: a deleted product or vendor gives false here.
+                if ( ! $author_data instanceof WP_User ) {
+                    continue;
+                }
+
+                $user_email = $author_data->user_email;
 
                 $headers .= "Reply-to: <$user_email>\r\n";
             }

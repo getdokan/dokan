@@ -220,10 +220,10 @@ jobs:
               run: |
                   IMAGES="mariadb:lts phpmyadmin:latest wordpress:php$PHP_VERSION wordpress:cli-php$PHP_VERSION"
                   echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
-                  # Same key format as e2e_api_tests.yml, and the same four images, so
-                  # the 8.2 entry reuses the ~529MB set e2e already keeps warm on
-                  # refs/heads/develop instead of pulling it again. Keep this key
-                  # byte-identical to the e2e one.
+                  # Same key format as e2e_api_tests.yml. It is per-PHP-version, and e2e
+                  # runs 8.2, so nothing is shared with it at 7.4/8.3 — the format is kept
+                  # identical so a matrix entry matching e2e's phpVersion would reuse its
+                  # ~529MB set instead of pulling again.
                   echo "key=wp-env-images-v1-php$PHP_VERSION-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
                   echo "images: $IMAGES"
 
@@ -278,6 +278,10 @@ jobs:
             # ---------------------------------------------------------------
             - name: Annotate test results
               if: always()
+              # A fork PR gets a read-only GITHUB_TOKEN whatever `permissions:` says, so
+              # creating the check run 403s. That is an API error, not a test failure, so
+              # `fail_on_failure: false` does not cover it.
+              continue-on-error: true
               uses: mikepenz/action-junit-report@v5
               with:
                   report_paths: phpunit-junit.xml
