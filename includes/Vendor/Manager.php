@@ -70,7 +70,7 @@ class Manager {
         }
 
         // if featured
-        if ( 'yes' == $args['featured'] ) {
+        if ( 'yes' === $args['featured'] ) {
             $args['meta_query']['relation'] = 'AND';
             $args['meta_query'][] = [
                 'key'     => 'dokan_feature_seller',
@@ -210,26 +210,28 @@ class Manager {
         /**
          * @since 3.2.7 added $data parameter
          */
-        $store_data = apply_filters( 'dokan_vendor_create_data', [
-            'store_name'              => ! empty( $data['store_name'] ) ? $data['store_name'] : '',
-            'social'                  => ! empty( $data['social'] ) ? $data['social'] : [],
-            'payment'                 => ! empty( $data['payment'] ) ? $data['payment'] : [
-                'paypal' => [ 'email' ],
-                'bank'   => [],
-            ],
-            'phone'                   => ! empty( $data['phone'] ) ? $data['phone'] : '',
-            'show_email'              => ! empty( $data['show_email'] ) ? $data['show_email'] : 'no',
-            'address'                 => ! empty( $data['address'] ) ? $data['address'] : [],
-            'location'                => ! empty( $data['location'] ) ? $data['location'] : '',
-            'banner'                  => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
-            'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
-            'gravatar'                => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
-            'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
-            'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
-            'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
-            'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
-            'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : [],
-        ], $data );
+        $store_data = apply_filters(
+            'dokan_vendor_create_data', [
+				'store_name'              => ! empty( $data['store_name'] ) ? $data['store_name'] : '',
+				'social'                  => ! empty( $data['social'] ) ? $data['social'] : [],
+				'payment'                 => ! empty( $data['payment'] ) ? $data['payment'] : [
+					'paypal' => [ 'email' ],
+					'bank'   => [],
+				],
+				'phone'                   => ! empty( $data['phone'] ) ? $data['phone'] : '',
+				'show_email'              => ! empty( $data['show_email'] ) ? $data['show_email'] : 'no',
+				'address'                 => ! empty( $data['address'] ) ? $data['address'] : [],
+				'location'                => ! empty( $data['location'] ) ? $data['location'] : '',
+				'banner'                  => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
+				'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
+				'gravatar'                => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
+				'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
+				'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
+				'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
+				'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
+				'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : [],
+			], $data
+        );
 
         $vendor = dokan()->vendor->get( $vendor_id );
 
@@ -425,7 +427,7 @@ class Manager {
 
         // for backward compatibility we'll allow both `enable_tnc` and `toc_enabled` to set store trams and condition settings
         if ( ( isset( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) )
-             || ( isset( $data['toc_enabled'] ) && dokan_validate_boolean( $data['toc_enabled'] ) ) ) {
+            || ( isset( $data['toc_enabled'] ) && dokan_validate_boolean( $data['toc_enabled'] ) ) ) {
             $vendor->set_enable_tnc( 'on' );
         } else {
             $vendor->set_enable_tnc( 'off' );
