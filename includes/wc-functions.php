@@ -1085,3 +1085,94 @@ function dokan_vendor_product_review_restriction( array $data ): array {
     return $data;
 }
 add_filter( 'woocommerce_product_review_comment_form_args', 'dokan_vendor_product_review_restriction' );
+
+/**
+ * Give a vendor's REST product save the same status treatment as the vendor product form.
+ *
+ * `handle_product_update()` runs the submitted status through `dokan_update_product_post_data`,
+ * which is where Dokan Pro downgrades an untrusted vendor's `publish` back to pending review.
+ * No REST controller applied that filter, so the same edit made through the new product
+ * editor stayed published and skipped review entirely — the approval setting simply did not
+ * apply to that editor. Verified live: a vendor's edit to a published product over
+ * `dokan/v3/products` left it published and reached customers immediately.
+ *
+ * Only a vendor saving their own product is affected: somebody who can manage WooCommerce is
+ * the reviewer, and their save must not be downgraded.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param WC_Product      $product  Product object about to be saved.
+ * @param WP_REST_Request $request  Request object.
+ * @param bool            $creating True when the product is being created.
+ *
+ * @return WC_Product
+ */
+function dokan_rest_apply_vendor_product_status( $product, $request, $creating = false ) {
+    if ( ! $product instanceof WC_Product ) {
+        return $product;
+    }
+
+    /**
+     * Filter whether a vendor's REST product save is put through the review status rules.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool       $apply   Whether to apply the vendor status rules.
+     * @param WC_Product $product Product being saved.
+     */
+    if ( ! apply_filters( 'dokan_rest_apply_vendor_product_status', true, $product ) ) {
+        return $product;
+    }
+
+    // Creation is deliberately out of scope. A new product has no ID yet, and the
+    // `dokan_update_product_post_data` consumers are written against the vendor form, which
+    // only ever fires on a product that already exists — Pro's subscription module calls
+    // `wc_get_product( $data['ID'] )->get_status()` with no guard, so handing it `ID => 0`
+    // is fatal.
+    //
+    // Note that this leaves a separate, pre-existing hole: creating over REST with
+    // `status: publish` publishes immediately without review. That is its own bug.
+    if ( $creating || ! $product->get_id() ) {
+        return $product;
+    }
+
+    $user_id = dokan_get_current_user_id();
+
+    if ( ! $user_id || user_can( $user_id, 'manage_woocommerce' ) || ! dokan_is_user_seller( $user_id ) ) {
+        return $product;
+    }
+
+    // only the vendor's own product
+    if ( (int) get_post_field( 'post_author', $product->get_id() ) !== $user_id ) {
+        return $product;
+    }
+
+    $status = $product->get_status();
+
+    // `auto-draft` is the quick-create flow, not a submission; leave it alone
+    if ( ! $status || 'auto-draft' === $status ) {
+        return $product;
+    }
+
+    // The full array shape the vendor product form produces. Consumers of this filter are
+    // written against that shape, so handing them a partial payload risks undefined-index
+    // notices; every key here is derivable from the product being saved.
+    $data = apply_filters(
+        'dokan_update_product_post_data',
+        [
+            'ID'             => $product->get_id(),
+            'post_title'     => $product->get_name( 'edit' ),
+            'post_content'   => $product->get_description( 'edit' ),
+            'post_excerpt'   => $product->get_short_description( 'edit' ),
+            'post_status'    => $status,
+            'comment_status' => $product->get_reviews_allowed( 'edit' ) ? 'open' : 'closed',
+        ]
+    );
+
+    if ( ! empty( $data['post_status'] ) && $data['post_status'] !== $status ) {
+        $product->set_status( $data['post_status'] );
+    }
+
+    return $product;
+}
+add_filter( 'woocommerce_rest_pre_insert_product_object', 'dokan_rest_apply_vendor_product_status', 20, 3 );
