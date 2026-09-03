@@ -21,6 +21,7 @@ on:
             - 'tests/php/**'
             - 'composer.json'
             - 'composer.lock'
+            - 'package.json'
             - 'phpunit.xml'
             - '.wp-env.json'
             - '.github/workflows/phpunit.yml'
@@ -31,6 +32,7 @@ on:
             - 'tests/php/**'
             - 'composer.json'
             - 'composer.lock'
+            - 'package.json'
             - 'phpunit.xml'
             - '.wp-env.json'
             - '.github/workflows/phpunit.yml'
@@ -81,7 +83,15 @@ jobs:
                 php: ['7.4', '8.3']
 
         steps:
+            # persist-credentials: false — this job runs `npm ci`, which executes
+            # lifecycle scripts from PR-controlled dependencies. Left on, the workflow
+            # token sits in .git/config as an extraheader for them to read, and on a
+            # same-repo branch PR that token is read-write. Nothing after checkout
+            # needs git auth: every npm/composer dependency resolves from a public
+            # source.
             - uses: actions/checkout@v4
+              with:
+                  persist-credentials: false
 
             # ---------------------------------------------------------------
             # Built assets
