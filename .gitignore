@@ -21,6 +21,11 @@ phpcs-report.txt
 /phpcs.xml
 .phpunit.result.cache
 test-results/
+phpunit-junit.xml
+
+# Local/CI wp-env overrides (PHP version, extra plugins). Generated, never committed —
+# a committed one silently overrides everyone else's environment.
+.wp-env.override.json
 
 #unwanted webpack files
 /assets/js/
