@@ -444,7 +444,7 @@ export const dbUtils = {
             `DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (` +
                 `'product_package_id', 'product_order_id', 'product_pack_startdate', 'product_pack_enddate', ` +
                 `'can_post_product', 'product_no_with_pack', '_customer_recurring_subscription', ` +
-                `'_dokan_stripe_express_stripe_subscription_id', 'dokan_has_active_cancelled_subscrption');`,
+                `'_dokan_stripe_express_stripe_subscription_id', '_stripe_subscription_id', 'dokan_has_active_cancelled_subscrption');`,
             [String(vendorId)],
         );
     },
