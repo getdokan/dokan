@@ -1764,16 +1764,27 @@ function dokan_rest_apply_vendor_product_status( $product, $request, $creating =
         return $product;
     }
 
+    // Creation is deliberately out of scope here. A new product has no ID yet, and the
+    // `dokan_update_product_post_data` consumers are written against the vendor form, which
+    // only ever fires on a product that already exists — Pro's subscription module calls
+    // `wc_get_product( $data['ID'] )->get_status()` with no guard, so handing it `ID => 0`
+    // is fatal.
+    //
+    // Note that this leaves a separate, pre-existing hole: creating over REST with
+    // `status: publish` publishes immediately without review. That is its own bug and wants
+    // its own fix rather than being folded in here.
+    if ( $creating || ! $product->get_id() ) {
+        return $product;
+    }
+
     $user_id = dokan_get_current_user_id();
 
     if ( ! $user_id || user_can( $user_id, 'manage_woocommerce' ) || ! dokan_is_user_seller( $user_id ) ) {
         return $product;
     }
 
-    // only the vendor's own product; an existing product keeps its recorded author
-    $author_id = $creating || ! $product->get_id() ? $user_id : (int) get_post_field( 'post_author', $product->get_id() );
-
-    if ( $author_id !== $user_id ) {
+    // only the vendor's own product
+    if ( (int) get_post_field( 'post_author', $product->get_id() ) !== $user_id ) {
         return $product;
     }
 
