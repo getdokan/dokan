@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.18\n"
+"Project-Id-Version: Dokan 5.0.19\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-01T10:44:18+00:00\n"
+"POT-Creation-Date: 2026-09-03T10:39:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -2908,7 +2908,7 @@ msgid "You don't have enough permission"
 msgstr ""
 
 #: includes/Ajax.php:109
-#: includes/Registration.php:41
+#: includes/Registration.php:154
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -5704,11 +5704,11 @@ msgstr ""
 msgid "Related orders"
 msgstr ""
 
-#: includes/Order/EmailHooks.php:145
+#: includes/Order/EmailHooks.php:168
 msgid "Your {site_title} order receipt from {order_date}"
 msgstr ""
 
-#: includes/Order/EmailHooks.php:146
+#: includes/Order/EmailHooks.php:169
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
@@ -6681,7 +6681,7 @@ msgid "Configure your downloadable product settings"
 msgstr ""
 
 #: includes/ProductEditor/FormSchema.php:897
-#: includes/REST/ProductControllerV3.php:424
+#: includes/REST/ProductControllerV3.php:476
 msgid "Downloadable Files"
 msgstr ""
 
@@ -6799,31 +6799,31 @@ msgstr ""
 msgid "top rated products"
 msgstr ""
 
-#: includes/Registration.php:48
+#: includes/Registration.php:161
 msgid "Cheating, eh?"
 msgstr ""
 
-#: includes/Registration.php:55
+#: includes/Registration.php:168
 msgid "Please enter your first name."
 msgstr ""
 
-#: includes/Registration.php:56
+#: includes/Registration.php:169
 msgid "Please enter your last name."
 msgstr ""
 
-#: includes/Registration.php:57
+#: includes/Registration.php:170
 msgid "Please enter your phone number."
 msgstr ""
 
-#: includes/Registration.php:58
+#: includes/Registration.php:171
 msgid "Please provide a shop name."
 msgstr ""
 
-#: includes/Registration.php:59
+#: includes/Registration.php:172
 msgid "Please provide a unique shop URL."
 msgstr ""
 
-#: includes/Registration.php:73
+#: includes/Registration.php:186
 msgid "Shop URL is not available"
 msgstr ""
 
@@ -8699,17 +8699,17 @@ msgid "You do not have permission to delete this product."
 msgstr ""
 
 #. translators: %s: label of the downloadable files field.
-#: includes/REST/ProductControllerV3.php:430
+#: includes/REST/ProductControllerV3.php:482
 msgid "%s is required. Please attach at least one downloadable file."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:459
+#: includes/REST/ProductControllerV3.php:511
 msgid "The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:509
-#: includes/REST/ProductControllerV3.php:538
-#: includes/REST/ProductControllerV3.php:598
+#: includes/REST/ProductControllerV3.php:561
+#: includes/REST/ProductControllerV3.php:590
+#: includes/REST/ProductControllerV3.php:650
 msgid "Invalid product ID."
 msgstr ""
 
@@ -12830,6 +12830,28 @@ msgstr ""
 #: assets/js/components.js:2
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
+#: assets/js/vendor-dashboard/reports/index.js:2
+msgid "Oh no! Something went wrong…"
+msgstr ""
+
+#: assets/js/components.js:2
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+#: assets/js/vendor-dashboard/reports/index.js:2
+msgid "Kindly refresh the page to load data or try again."
+msgstr ""
+
+#: assets/js/components.js:2
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/dokan-admin-onboard.js:1
+#: assets/js/frontend.js:2
+#: assets/js/vendor-dashboard/reports/index.js:2
+msgid "Try Again"
+msgstr ""
+
+#: assets/js/components.js:2
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/product-editor-utils.js:2
 msgid "Enter Date"
 msgstr ""
@@ -12899,28 +12921,6 @@ msgstr ""
 #: assets/js/frontend.js:2
 #: assets/js/product-editor-utils.js:2
 msgid "Yes, Delete"
-msgstr ""
-
-#: assets/js/components.js:2
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/frontend.js:2
-#: assets/js/vendor-dashboard/reports/index.js:2
-msgid "Oh no! Something went wrong…"
-msgstr ""
-
-#: assets/js/components.js:2
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/frontend.js:2
-#: assets/js/vendor-dashboard/reports/index.js:2
-msgid "Kindly refresh the page to load data or try again."
-msgstr ""
-
-#: assets/js/components.js:2
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/dokan-admin-onboard.js:1
-#: assets/js/frontend.js:2
-#: assets/js/vendor-dashboard/reports/index.js:2
-msgid "Try Again"
 msgstr ""
 
 #: assets/js/components.js:2
@@ -16222,6 +16222,14 @@ msgstr ""
 
 #: assets/js/frontend.js:2
 msgid "Failed to add to cart"
+msgstr ""
+
+#: assets/js/frontend.js:2
+msgid "We could not load your dashboard"
+msgstr ""
+
+#: assets/js/frontend.js:2
+msgid "Your account details could not be read. Try again, and contact the marketplace owner if this keeps happening."
 msgstr ""
 
 #: assets/js/leaderboards.js:1
