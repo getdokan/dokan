@@ -124,13 +124,23 @@
                         <label for="store-password">{{ __( 'Password', 'dokan-lite') }}</label>
                         <span class="required-field">*</span>
 
-                        <input
-                            id="store-password"
-                            type="text"
-                            v-model="vendorInfo.user_pass"
-                            :class="{'dokan-form-input': true, 'has-error': getError('user_pass')}"
-                            :placeholder="getError( 'user_pass' ) ? __( 'Password is required', 'dokan-lite' ) : __( 'Enter password or Generate', 'dokan-lite' )"
-                        >
+                        <div class="password-field">
+                            <input
+                                id="store-password"
+                                :type="passwordVisible ? 'text' : 'password'"
+                                v-model="vendorInfo.user_pass"
+                                :class="{'dokan-form-input': true, 'has-error': getError('user_pass')}"
+                                :placeholder="getError( 'user_pass' ) ? __( 'Password is required', 'dokan-lite' ) : __( 'Enter password or Generate', 'dokan-lite' )"
+                            >
+
+                            <button type="button"
+                                class="password-toggle"
+                                :aria-pressed="passwordVisible ? 'true' : 'false'"
+                                :aria-label="passwordVisible ? __( 'Hide password', 'dokan-lite' ) : __( 'Show password', 'dokan-lite' )"
+                                @click.prevent="passwordVisible = ! passwordVisible">
+                                <span class="dashicons" :class="passwordVisible ? 'dashicons-hidden' : 'dashicons-visibility'"></span>
+                            </button>
+                        </div>
 
                         <password-generator
                             @passwordGenerated="setPassword"
@@ -183,6 +193,8 @@ export default {
     data() {
         return {
             showStoreUrl: true,
+            // The generated password is readable only on request; masking is the resting state.
+            passwordVisible: false,
             otherStoreUrl: null,
             banner: '',
             defaultUrl: dokan.urls.siteUrl + dokan.urls.storePrefix + '/',
@@ -242,6 +254,7 @@ export default {
         // Cancel only drops the generated value; the input stays so a required field is always fillable.
         this.$root.$on( 'passwordCancelled', () => {
             this.vendorInfo.user_pass = '';
+            this.passwordVisible = false;
         } );
     },
 

@@ -436,6 +436,41 @@ export default {
                         }
                     }
 
+                    .password-field {
+                        position: relative;
+
+                        // Keep the value clear of the reveal control.
+                        .dokan-form-input {
+                            padding-right: 36px;
+                        }
+
+                        .password-toggle {
+                            position: absolute;
+                            top: 6px;
+                            right: 0;
+                            height: 40px;
+                            width: 36px;
+                            padding: 0;
+                            border: 0;
+                            background: none;
+                            cursor: pointer;
+                            color: #82878c;
+
+                            &:hover,
+                            &:focus {
+                                color: #23282d;
+                            }
+
+                            .dashicons {
+                                width: 20px;
+                                height: 20px;
+                                font-size: 20px;
+                                line-height: 20px;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+
                     .password-generator {
                         margin-top: 6px;
                         // Stands in for an input, so it carries the same bottom rhythm.
