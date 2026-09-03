@@ -1963,3 +1963,25 @@ function dokan_editor_show_staged_downloadable_files( $data, $product_id = 0 ) {
     return $data;
 }
 add_filter( 'dokan_product_editor_args', 'dokan_editor_show_staged_downloadable_files', 10, 2 );
+
+/**
+ * Show a vendor their own pending downloadable files when the editor loads a product.
+ *
+ * The product editor has two data endpoints and they apply different filters:
+ * `/dokan/v3/products/init/fields` fires `dokan_product_editor_args`, while
+ * `/dokan/v3/products/<id>/fields` — the one used to open an existing product, and so the
+ * only one that matters for a held submission — fires this filter instead. Without it the
+ * vendor is handed the approved files with no sign that their upload is being held, and
+ * saving that back reads as a withdrawal.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param array           $data    Editor payload.
+ * @param WC_Product|null $product Product being edited.
+ *
+ * @return array
+ */
+function dokan_rest_editor_fields_show_staged_downloadable_files( $data, $product = null ) {
+    return dokan_editor_show_staged_downloadable_files( $data, $product instanceof WC_Product ? $product->get_id() : 0 );
+}
+add_filter( 'dokan_rest_prepare_product_editor_fields', 'dokan_rest_editor_fields_show_staged_downloadable_files', 20, 2 );
