@@ -1309,6 +1309,12 @@ function dokan_downloadable_files_released_this_request( $product_id, $set = nul
  * @return mixed True to swallow the write, otherwise the unchanged short-circuit value.
  */
 function dokan_hold_downloadable_files_meta_write( $check, $object_id, $meta_key, $meta_value = null ) {
+    // `update_post_metadata` is one of the hottest filters in WordPress: this runs on every
+    // post meta write on the site. Both guards below are deliberately the cheapest possible
+    // and ordered accordingly — a string comparison against two keys rejects effectively
+    // every call before anything touches the database. `get_post_type()` returns false for a
+    // non-post id, which fails the second check, so a caller passing something that is not a
+    // post never reaches the logic underneath.
     if ( null !== $check || ! in_array( $meta_key, [ '_downloadable_files', '_downloadable' ], true ) ) {
         return $check;
     }
@@ -1728,90 +1734,6 @@ function dokan_sync_download_permissions_on_crud_save( $product_id, $variation_i
 add_action( 'woocommerce_process_product_file_download_paths', 'dokan_sync_download_permissions_on_crud_save', 10, 3 );
 
 /**
- * Give a vendor's REST product save the same status treatment as the vendor product form.
- *
- * `handle_product_update()` runs the submitted status through `dokan_update_product_post_data`,
- * which is where Dokan Pro downgrades an untrusted vendor's `publish` back to pending review.
- * No REST controller applied that filter, so the same edit made through the new product
- * editor stayed published and skipped review entirely — the approval setting simply did not
- * apply to that editor.
- *
- * Only a vendor saving their own product is affected: somebody who can manage WooCommerce is
- * the reviewer, and their save must not be downgraded.
- *
- * @since DOKAN_SINCE
- *
- * @param WC_Product      $product  Product object about to be saved.
- * @param WP_REST_Request $request  Request object.
- * @param bool            $creating True when the product is being created.
- *
- * @return WC_Product
- */
-function dokan_rest_apply_vendor_product_status( $product, $request, $creating = false ) {
-    if ( ! $product instanceof WC_Product ) {
-        return $product;
-    }
-
-    /**
-     * Filter whether a vendor's REST product save is put through the review status rules.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param bool       $apply   Whether to apply the vendor status rules.
-     * @param WC_Product $product Product being saved.
-     */
-    if ( ! apply_filters( 'dokan_rest_apply_vendor_product_status', true, $product ) ) {
-        return $product;
-    }
-
-    // Creation is deliberately out of scope here. A new product has no ID yet, and the
-    // `dokan_update_product_post_data` consumers are written against the vendor form, which
-    // only ever fires on a product that already exists — Pro's subscription module calls
-    // `wc_get_product( $data['ID'] )->get_status()` with no guard, so handing it `ID => 0`
-    // is fatal.
-    //
-    // Note that this leaves a separate, pre-existing hole: creating over REST with
-    // `status: publish` publishes immediately without review. That is its own bug and wants
-    // its own fix rather than being folded in here.
-    if ( $creating || ! $product->get_id() ) {
-        return $product;
-    }
-
-    $user_id = dokan_get_current_user_id();
-
-    if ( ! $user_id || user_can( $user_id, 'manage_woocommerce' ) || ! dokan_is_user_seller( $user_id ) ) {
-        return $product;
-    }
-
-    // only the vendor's own product
-    if ( (int) get_post_field( 'post_author', $product->get_id() ) !== $user_id ) {
-        return $product;
-    }
-
-    $status = $product->get_status();
-
-    // `auto-draft` is the quick-create flow, not a submission; leave it alone
-    if ( ! $status || 'auto-draft' === $status ) {
-        return $product;
-    }
-
-    $data = apply_filters(
-        'dokan_update_product_post_data',
-        [
-            'ID'          => $product->get_id(),
-            'post_status' => $status,
-        ]
-    );
-
-    if ( ! empty( $data['post_status'] ) && $data['post_status'] !== $status ) {
-        $product->set_status( $data['post_status'] );
-    }
-
-    return $product;
-}
-add_filter( 'woocommerce_rest_pre_insert_product_object', 'dokan_rest_apply_vendor_product_status', 20, 3 );
-
-/**
  * Discard a product's pending downloadable file submission, variations included.
  *
  * @since DOKAN_SINCE
@@ -1931,10 +1853,19 @@ function dokan_staged_downloads_for_rest( $staged, $as_attachment_ids = false ) 
 
     foreach ( (array) $staged as $key => $file ) {
         $url = isset( $file['file'] ) ? $file['file'] : '';
+        $id  = (string) $key;
+
+        if ( $as_attachment_ids ) {
+            // the product editor keys rows by attachment id, the REST product schema by
+            // download id. `attachment_url_to_postid()` returns 0 for anything that is not a
+            // WP attachment, and downloadable files are often external URLs — every one of
+            // those would collide on id "0", so fall back to the download id, which is unique.
+            $attachment_id = attachment_url_to_postid( $url );
+            $id            = $attachment_id ? (string) $attachment_id : (string) $key;
+        }
 
         $downloads[] = [
-            // the product editor keys rows by attachment id, the REST product schema by download id
-            'id'   => $as_attachment_ids ? (string) attachment_url_to_postid( $url ) : (string) $key,
+            'id'   => $id,
             'name' => isset( $file['name'] ) ? $file['name'] : '',
             'file' => $url,
         ];

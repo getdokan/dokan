@@ -273,6 +273,7 @@ class Hooks {
 
         ProductHooks::save_per_product_commission_options( $product->get_id(), $_REQUEST ); // phpcs:ignore
     }
+
     /**
      * Show the downloadable files a vendor submitted for approval below the live files.
      *
