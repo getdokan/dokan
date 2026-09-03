@@ -107,7 +107,7 @@ jobs:
     # Each consumer job downloads the tar artifacts and skips its own build steps.
     build_lite:
         name: build dokan-lite
-        runs-on: ubuntu-latest
+        runs-on: [self-hosted, linux, x64, getdokan]
         timeout-minutes: 15
         steps:
             - name: Checkout testing repo
@@ -167,7 +167,7 @@ jobs:
 
     build_pro:
         name: build dokan-pro
-        runs-on: ubuntu-latest
+        runs-on: [self-hosted, linux, x64, getdokan]
         timeout-minutes: 15
         # Only run when secrets are available (i.e. not a fork PR). Same gate as today.
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
@@ -285,7 +285,7 @@ jobs:
 
     e2e_tests:
         name: e2e tests
-        runs-on: ubuntu-latest
+        runs-on: [self-hosted, linux, x64, getdokan]
         timeout-minutes: 75
         # Only the 14:00 pinned REFERENCE lane is allowed not to gate. Everything else --
         # including the default `latest` -- fails the run on failure. Note this can no longer
@@ -735,7 +735,7 @@ jobs:
 
     api_tests:
         name: api tests
-        runs-on: ubuntu-latest
+        runs-on: [self-hosted, linux, x64, getdokan]
         timeout-minutes: 25
         # See e2e_tests: only the 14:00 pinned reference lane is allowed not to gate.
         continue-on-error: ${{ github.event.schedule == '0 14 * * *' }}
@@ -1022,7 +1022,7 @@ jobs:
         # Merge reports after playwright-tests, even if some shards have failed
         if: ${{ !cancelled() }}
         needs: [e2e_tests, api_tests]
-        runs-on: ubuntu-24.04
+        runs-on: [self-hosted, linux, x64, getdokan]
         timeout-minutes: 5
 
         # Override reports path specifically for this job
