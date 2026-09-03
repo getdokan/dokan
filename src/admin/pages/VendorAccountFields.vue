@@ -122,13 +122,14 @@
 
                     <div class="column">
                         <label for="store-password">{{ __( 'Password', 'dokan-lite') }}</label>
+                        <span class="required-field">*</span>
+
                         <input
                             id="store-password"
-                            v-if="showPassword"
                             type="text"
                             v-model="vendorInfo.user_pass"
-                            class="dokan-form-input"
-                            placeholder="********"
+                            :class="{'dokan-form-input': true, 'has-error': getError('user_pass')}"
+                            :placeholder="getError( 'user_pass' ) ? __( 'Password is required', 'dokan-lite' ) : __( 'Enter password or Generate', 'dokan-lite' )"
                         >
 
                         <password-generator
@@ -182,7 +183,6 @@ export default {
     data() {
         return {
             showStoreUrl: true,
-            showPassword: false,
             otherStoreUrl: null,
             banner: '',
             defaultUrl: dokan.urls.siteUrl + dokan.urls.storePrefix + '/',
@@ -239,8 +239,9 @@ export default {
         this.checkStoreName = debounce( this.checkStore, this.delay );
         this.checkUsername = debounce( this.searchUsername, this.delay );
         this.checkEmail = debounce( this.searchEmail, this.delay );
+        // Cancel only drops the generated value; the input stays so a required field is always fillable.
         this.$root.$on( 'passwordCancelled', () => {
-            this.showPassword = false;
+            this.vendorInfo.user_pass = '';
         } );
     },
 
@@ -380,7 +381,6 @@ export default {
         },
 
         setPassword( password ) {
-            this.showPassword = true;
             this.vendorInfo.user_pass = password;
         },
 

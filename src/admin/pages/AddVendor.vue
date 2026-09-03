@@ -129,7 +129,8 @@ export default {
             requiredFields: [
                 'store_name',
                 'user_login',
-                'email'
+                'email',
+                'user_pass'
             ],
             errors: [],
             storeAvailable: false,
