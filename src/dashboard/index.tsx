@@ -1,4 +1,4 @@
-import { createRoot } from '@wordpress/element';
+import { createRoot, useEffect } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
@@ -38,16 +38,32 @@ const App = () => {
 
     // @ts-ignore — invalidateResolution is a store metadata action, absent from the store's own types.
     const { invalidateResolution } = useDispatch( coreStore );
-    // @ts-ignore — same metadata action on the WordPress store Dokan's resolver reads through.
-    const { invalidateResolution: invalidateCoreData } =
-        useDispatch( coreDataStore );
+    // @ts-ignore — same metadata actions on the WordPress store Dokan's resolver reads through.
+    const {
+        invalidateResolution: invalidateCoreData,
+        invalidateResolutionForStoreSelector: invalidateCoreDataSelector,
+    } = useDispatch( coreDataStore );
 
-    // Dokan's resolver awaits resolveSelect( coreDataStore ).getCurrentUser(), which replays that
-    // store's cached failure, so retrying only Dokan's own resolution would never re-issue the request.
+    // Dokan's resolver awaits both getCurrentUser() and getUser( id ), and either leg replays its own
+    // cached failure, so a retry that misses one is a permanent no-op for whoever failed on that leg.
     const retryCurrentUser = () => {
+        invalidateCoreDataSelector( 'getUser' );
         invalidateCoreData( 'getCurrentUser', [] );
         invalidateResolution( 'getCurrentUser', [] );
     };
+
+    // Without the WP_Error, support cannot tell a blocking security plugin from a network blip.
+    useEffect( () => {
+        if ( 'error' !== loading?.status ) {
+            return;
+        }
+
+        // eslint-disable-next-line no-console
+        console.error(
+            'Dokan: current user resolution failed',
+            loading?.error
+        );
+    }, [ loading?.status, loading?.error ] );
 
     const mapedRoutes = routes.map( ( route ) => {
         const WithRouterComponent = withRouter(
