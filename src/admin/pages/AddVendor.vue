@@ -402,6 +402,12 @@ export default {
                     content: " ";
                 }
 
+                // Slot-filled groups (Pro fields) share the row model; floats stagger and leave holes.
+                > .form-group {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
                 .column {
                     float: left;
                     width: 50%;
@@ -432,6 +438,8 @@ export default {
 
                     .password-generator {
                         margin-top: 6px;
+                        // Stands in for an input, so it carries the same bottom rhythm.
+                        margin-bottom: 16px;
 
                         .regen-button {
                             margin-right: 5px;
@@ -444,6 +452,7 @@ export default {
 
                     .checkbox-left.notify-vendor {
                         margin-top: 6px;
+                        margin-bottom: 16px;
                     }
 
                     .multiselect {
