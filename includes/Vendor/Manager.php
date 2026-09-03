@@ -58,28 +58,15 @@ class Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-        $status         = (array) $args['status'];
-        $filter_status  = ! in_array( 'all', $status, true );
-        $wants_approved = $filter_status && in_array( 'approved', $status, true );
-        $wants_pending  = $filter_status && (bool) array_diff( $status, [ 'approved' ] );
+        $status = $this->resolve_status( $args['status'] );
 
-        // Asking for approved and pending together is asking for everyone.
-        if ( $wants_approved && ! $wants_pending ) {
-            $meta_query = [
-                'relation' => 'OR',
-                [
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'yes',
-                    'compare' => '=',
-                ],
+        if ( 'approved' === $status ) {
+            $args['meta_query']['relation'] = 'AND';
+            $args['meta_query'][]           = [
+                'key'     => 'dokan_enable_selling',
+                'value'   => 'yes',
+                'compare' => '=',
             ];
-
-            if ( ! empty( $args['meta_query'] ) ) {
-                $args['meta_query']['relation'] = 'AND';
-                $args['meta_query'][]           = $meta_query;
-            } else {
-                $args['meta_query'] = $meta_query;
-            }
         }
 
         // if featured
@@ -95,8 +82,8 @@ class Manager {
         unset( $args['status'] );
         unset( $args['featured'] );
 
-        // Pending is everyone not approved. One keyed subquery costs no usermeta joins; an OR group with NOT EXISTS costs three.
-        if ( $wants_pending && ! $wants_approved ) {
+        // Pending is everyone not approved, a missing flag included, exactly as the status counters and dokan_is_seller_enabled() read it.
+        if ( 'pending' === $status ) {
             add_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] );
         }
 
@@ -119,10 +106,35 @@ class Manager {
     }
 
     /**
-     * Drop every vendor whose selling flag is approved from a user query.
+     * Collapse the requested statuses into the single filter the query applies.
      *
-     * The status counters and the Users list both read a missing dokan_enable_selling key as pending,
-     * so the listing has to agree or the Pending tab reports a count it cannot show.
+     * Anything other than 'approved' or 'all' has always been read as pending, and asking
+     * for approved and pending together is asking for everyone.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string|string[] $status
+     *
+     * @return string One of 'all', 'approved' or 'pending'.
+     */
+    private function resolve_status( $status ): string {
+        $statuses = array_unique(
+            array_map(
+                static function ( $item ) {
+                    return in_array( $item, [ 'all', 'approved' ], true ) ? $item : 'pending';
+                },
+                (array) $status
+            )
+        );
+
+        return 1 === count( $statuses ) ? reset( $statuses ) : 'all';
+    }
+
+    /**
+     * Drop every approved vendor from a user query, leaving the pending ones.
+     *
+     * A keyed subquery adds no usermeta join, where the equivalent OR / NOT EXISTS meta
+     * query adds two and turns every join on the query into a LEFT JOIN.
      *
      * @since DOKAN_SINCE
      *
