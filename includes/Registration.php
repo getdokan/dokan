@@ -40,20 +40,58 @@ class Registration {
 
         // stamp the dedicated vendor form so the two sign-up forms can be told apart on submit
         add_action( 'dokan_vendor_reg_form_start', [ $this, 'render_vendor_form_marker' ] );
+        add_filter( 'dokan_vendor_reg_form', [ $this, 'inject_vendor_form_marker' ] );
+    }
+
+    /**
+     * Build the marker identifying Dokan's dedicated vendor sign-up form.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected function get_vendor_form_marker() {
+        return wp_nonce_field( self::VENDOR_FORM_NONCE_ACTION, self::VENDOR_FORM_NONCE_FIELD, false, false );
     }
 
     /**
      * Print the marker identifying Dokan's dedicated vendor sign-up form.
-     *
-     * Hooked to an action only that template fires. A theme override keeping the action keeps the
-     * marker; one that drops it falls back to the appearance setting like any other form.
      *
      * @since DOKAN_SINCE
      *
      * @return void
      */
     public function render_vendor_form_marker() {
-        wp_nonce_field( self::VENDOR_FORM_NONCE_ACTION, self::VENDOR_FORM_NONCE_FIELD, false );
+        echo $this->get_vendor_form_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_nonce_field() builds its own escaped markup.
+    }
+
+    /**
+     * Add the marker to a rendered vendor sign-up form that did not print it itself.
+     *
+     * A theme override copied before the marker existed never fires the action, and the toggle would
+     * then close that site's own vendor page with no way to tell why. Stamping the rendered markup
+     * keeps such an override working, whatever it did to the form.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $content Rendered vendor sign-up markup.
+     *
+     * @return string
+     */
+    public function inject_vendor_form_marker( $content ) {
+        if ( ! is_string( $content ) || false !== strpos( $content, self::VENDOR_FORM_NONCE_FIELD ) ) {
+            return $content;
+        }
+
+        $closing_tag = strrpos( $content, '</form>' );
+
+        // Onboarding renders the login form too, so only stamp markup that actually asks for a role.
+        if ( false === $closing_tag || ! preg_match( '/<input[^>]+name=["\']?role["\'\s>]/i', $content ) ) {
+            return $content;
+        }
+
+        // The sign-up form is the last one on both the shortcode and the onboarding layout.
+        return substr_replace( $content, $this->get_vendor_form_marker(), $closing_tag, 0 );
     }
 
     /**
@@ -85,6 +123,11 @@ class Registration {
      * @return bool
      */
     protected function is_vendor_form_request() {
+        // A site that turned the register-nonce check off drives its own sign-up forms; do not strand them.
+        if ( ! apply_filters( 'dokan_register_nonce_check', true ) ) {
+            return true;
+        }
+
         // Only that form prints this marker, so a request that never rendered it cannot claim to be one.
         $nonce = isset( $_POST[ self::VENDOR_FORM_NONCE_FIELD ] ) ? sanitize_key( wp_unslash( $_POST[ self::VENDOR_FORM_NONCE_FIELD ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- this is the nonce check.
 
