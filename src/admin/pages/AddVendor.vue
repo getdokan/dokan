@@ -478,9 +478,16 @@ export default {
 
                         .regen-button {
                             margin-right: 5px;
+                            // Centre the icon against the label instead of guessing a line-height.
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
 
-                            span {
-                                line-height: 26px;
+                            .dashicons {
+                                width: 20px;
+                                height: 20px;
+                                font-size: 20px;
+                                line-height: 20px;
                             }
                         }
                     }
