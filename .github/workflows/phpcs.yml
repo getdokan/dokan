@@ -1,16 +1,10 @@
 on:
-  # Runs once a day only, to keep Actions cost down. Pull requests no longer
-  # trigger this workflow -- it now inspects every PHP file committed to the
-  # default branch in the last 24 hours.
-  # Target start time is 9:00 AM BDT. GitHub queues scheduled runs and releases
-  # them once capacity frees up: on this repository that delay has been roughly
-  # 70 minutes every day, so 02:00 UTC (nominally 8:00 AM BDT) is what actually
-  # starts the run near 9:00 AM BDT. Check the real start times of recent
-  # scheduled runs before "correcting" this to 03:00 UTC.
-  schedule:
-    - cron: 0 2 * * *
-  # workflow can be manually triggered
-  workflow_dispatch:
+  # Every pull request that touches a PHP file, inspecting only the files that
+  # pull request changes. The paths filter keeps frontend-only work from
+  # spending a runner on a job with nothing to check.
+  pull_request:
+    paths:
+      - '**.php'
 
 # Cancels a previous run of this workflow that has not completed.
 concurrency:
@@ -23,11 +17,14 @@ jobs:
     name: Run PHPCS inspection
     runs-on: ubuntu-latest
     steps:
-      # Full history so the 24-hour git log window below can resolve commits.
+      # A pull_request checkout is the merge commit, whose first parent is the
+      # base branch tip and second parent is the pull request head. Depth 2 is
+      # therefore all the history the diff below needs -- full history costs a
+      # clone of the whole repository to answer the same question.
       # The job never pushes, so the checkout token is not kept on disk.
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
           persist-credentials: false
 
       - name: Setup PHP
@@ -51,20 +48,17 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
 
-      # PHP files that reached this branch in the last 24 hours. --first-parent
-      # plus --diff-merges=first-parent counts a merge by when it landed, not by
-      # when its commits were originally written, so a pull request merged today
-      # is inspected even when the work inside it is older than the window.
-      # Deleted files are dropped by the -f test, as in the old PR check.
+      # The PHP files this pull request changes: the merge commit against its
+      # first parent, so nothing that merely landed on the base branch in the
+      # meantime is inspected. Deleted files are dropped by the -f test.
       - id: changes
         run: |
-          FILES=$(git log --first-parent --diff-merges=first-parent \
-              --since='24 hours ago' --name-only --pretty=format: -- '*.php' \
+          FILES=$(git diff --name-only HEAD^1 HEAD -- '*.php' \
             | sort -u \
             | while read -r f; do [ -n "$f" ] && [ -f "$f" ] && echo "$f"; done \
             | xargs)
           echo "files=$FILES" >> $GITHUB_OUTPUT
-          echo "PHP files changed in the last 24h: ${FILES:-none}" >> $GITHUB_STEP_SUMMARY
+          echo "PHP files changed by this pull request: ${FILES:-none}" >> $GITHUB_STEP_SUMMARY
 
       - name: Detect coding standard violations
         if: steps.changes.outputs.files != ''
