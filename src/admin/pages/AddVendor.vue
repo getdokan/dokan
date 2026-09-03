@@ -129,7 +129,8 @@ export default {
             requiredFields: [
                 'store_name',
                 'user_login',
-                'email'
+                'email',
+                'user_pass'
             ],
             errors: [],
             storeAvailable: false,
@@ -401,6 +402,12 @@ export default {
                     content: " ";
                 }
 
+                // Slot-filled groups (Pro fields) share the row model; floats stagger and leave holes.
+                > .form-group {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
                 .column {
                     float: left;
                     width: 50%;
@@ -429,20 +436,65 @@ export default {
                         }
                     }
 
+                    .password-field {
+                        position: relative;
+
+                        // Keep the value clear of the reveal control.
+                        .dokan-form-input {
+                            padding-right: 36px;
+                        }
+
+                        .password-toggle {
+                            position: absolute;
+                            top: 6px;
+                            right: 0;
+                            height: 40px;
+                            width: 36px;
+                            padding: 0;
+                            border: 0;
+                            background: none;
+                            cursor: pointer;
+                            color: #82878c;
+
+                            &:hover,
+                            &:focus {
+                                color: #23282d;
+                            }
+
+                            .dashicons {
+                                width: 20px;
+                                height: 20px;
+                                font-size: 20px;
+                                line-height: 20px;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+
                     .password-generator {
                         margin-top: 6px;
+                        // Stands in for an input, so it carries the same bottom rhythm.
+                        margin-bottom: 16px;
 
                         .regen-button {
                             margin-right: 5px;
+                            // Centre the icon against the label instead of guessing a line-height.
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 4px;
 
-                            span {
-                                line-height: 26px;
+                            .dashicons {
+                                width: 20px;
+                                height: 20px;
+                                font-size: 20px;
+                                line-height: 20px;
                             }
                         }
                     }
 
                     .checkbox-left.notify-vendor {
                         margin-top: 6px;
+                        margin-bottom: 16px;
                     }
 
                     .multiselect {
