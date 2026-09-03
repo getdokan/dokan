@@ -14,7 +14,7 @@ class Registration {
     /**
      * Nonce action marking a request as coming from Dokan's own vendor sign-up form.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @var string
      */
@@ -23,7 +23,7 @@ class Registration {
     /**
      * Field carrying the vendor sign-up form marker.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @var string
      */
@@ -46,7 +46,7 @@ class Registration {
     /**
      * Build the marker identifying Dokan's dedicated vendor sign-up form.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class Registration {
     /**
      * Print the marker identifying Dokan's dedicated vendor sign-up form.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @return void
      */
@@ -72,7 +72,7 @@ class Registration {
      * then close that site's own vendor page with no way to tell why. Stamping the rendered markup
      * keeps such an override working, whatever it did to the form.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @param string $content Rendered vendor sign-up markup.
      *
@@ -100,7 +100,7 @@ class Registration {
      * The appearance setting only hides the vendor option in the WooCommerce form's template, so a
      * role that form never offered has to be refused server side too.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @return array
      */
@@ -118,7 +118,7 @@ class Registration {
     /**
      * Whether the request was submitted from Dokan's dedicated vendor sign-up form.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @return bool
      */

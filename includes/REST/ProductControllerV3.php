@@ -379,7 +379,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      *
      * Payloads this plugin did not resolve carry no positions and are left to WooCommerce.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.19
      *
      * @param WC_Data|WC_Product $product Product assembled from the request, not yet saved.
      * @param WP_REST_Request    $request Full details about the request.
