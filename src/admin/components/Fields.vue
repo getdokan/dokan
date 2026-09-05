@@ -253,7 +253,7 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field add_files">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
+                            <input type="button" class="button wpsa-browse" :value="__( 'Choose File', 'dokan-lite' )" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
                             <input
                               type="text"
                               class="regular-text medium wpsa-url"
