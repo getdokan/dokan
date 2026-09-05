@@ -405,7 +405,7 @@ export const General = ( {
                             </div>
                             <div className="w-1/2">
                                 <SimpleInput
-                                    label={ __( 'Last Name' ) }
+                                    label={ __( 'Last Name', 'dokan-lite' ) }
                                     value={ vendor?.last_name ?? '' }
                                     onChange={ ( e ) => {
                                         setData( 'last_name', e.target.value );
