@@ -169,6 +169,10 @@ class OrderStatusChangeTest extends DokanTestCase {
             [ 'processing', 'completed' ],
             [ 'pending', 'cancelled' ],
             [ 'completed', 'refunded' ],
+            // The sub-order whitelist has allowed wc-processing => wc-cancelled since
+            // #2354. Cancelling the parent must cancel the vendor's sub-order, otherwise
+            // vendors keep fulfilling an order the customer already cancelled.
+            [ 'processing', 'cancelled' ],
         ];
     }
 
@@ -180,7 +184,6 @@ class OrderStatusChangeTest extends DokanTestCase {
             [ 'completed', 'processing' ],
             [ 'refunded', 'completed' ],
             [ 'cancelled', 'processing' ],
-            [ 'processing', 'cancelled' ],
         ];
     }
 
