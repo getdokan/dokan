@@ -329,8 +329,8 @@ const settingsSelectors = {
         verifiedIconByIcon: (iconName: string) => `//i[@class='${iconName}']//../..`,
         verificationMethodRow: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..`,
         enableVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//label[@class="switch tips"]`,
-        editVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-violet')]`,
-        deleteVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-red')]`,
+        editVerificationMethod: (methodName: string) => `button[aria-label="Edit ${methodName} verification method"]`,
+        deleteVerificationMethod: (methodName: string) => `button[aria-label="Delete ${methodName} verification method"]`,
 
         confirmDelete: '.swal2-confirm',
         cancelDelete: '.swal2-cancel',

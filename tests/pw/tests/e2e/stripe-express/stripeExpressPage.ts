@@ -1,7 +1,8 @@
-import { Page, Frame, expect, request } from '@playwright/test';
+import { Page, Frame, Browser, expect, request } from '@playwright/test';
 import { toPath, closeAnnouncementModal, SERVER_URL, parseBoolean } from '@utils/helpers';
 import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
 import { stripeApi } from '@utils/stripeApi';
+import { dbUtils } from '@utils/dbUtils';
 
 // The suite's strict tsconfig doesn't pull in `@types/node`, so `process` would
 // otherwise be flagged as undefined. Declare it locally (same pattern as the
@@ -102,7 +103,8 @@ export class StripeExpressPage {
         statementDescriptor: '#woocommerce_dokan_stripe_express_statement_descriptor',
         disburseMode: '#woocommerce_dokan_stripe_express_disburse_mode',
         paymentRequest: '#woocommerce_dokan_stripe_express_payment_request',
-        // Express has NO `enable_3d_secure` field (SCA always on) and NO `allow_non_connected_sellers`.
+        // Express has NO `enable_3d_secure` field (SCA always on). `allow_non_connected_sellers`
+        // DOES exist since dokan-pro PR #6017 — see assertAllowNonConnectedField().
         enable3dSecure: '#woocommerce_dokan_stripe_express_enable_3d_secure',
         allowNonConnected: '#woocommerce_dokan_stripe_express_allow_non_connected_sellers',
         saveButton: 'button.woocommerce-save-button[name="save"], button[name="save"]',
@@ -275,10 +277,20 @@ export class StripeExpressPage {
         await expect(this.page.locator(this.admin.enable3dSecure), 'Express must have no enable_3d_secure field').toHaveCount(0);
     }
 
-    /** Express has NO `allow_non_connected_sellers` field (gateway available regardless of connection). */
-    async assertNoAllowNonConnectedField(): Promise<void> {
+    /**
+     * The `allow_non_connected_sellers` checkbox (dokan-pro PR #6017). Asserts it exists
+     * and matches the expected checked state — the setting is written through the
+     * mu-plugin, so this only ever READS the rendered form.
+     */
+    async assertAllowNonConnectedField(checked: boolean): Promise<void> {
         await this.gotoGatewaySettings();
-        await expect(this.page.locator(this.admin.allowNonConnected), 'Express must have no allow_non_connected_sellers field').toHaveCount(0);
+        const field = this.page.locator(this.admin.allowNonConnected);
+        await expect(field, 'the allow_non_connected_sellers field must exist').toHaveCount(1);
+        if (checked) {
+            await expect(field, 'allow_non_connected_sellers must be checked').toBeChecked();
+        } else {
+            await expect(field, 'allow_non_connected_sellers must be unchecked').not.toBeChecked();
+        }
     }
 
     // ============================================
@@ -604,7 +616,12 @@ export class StripeExpressPage {
         // live: button present, 0 console errors), it just occasionally hydrates slowly.
         for (let attempt = 1; attempt <= 2; attempt++) {
             await this.page.goto(this.checkout.blockUrl, { waitUntil: 'domcontentloaded' });
-            await this.page.waitForLoadState('networkidle').catch(() => undefined);
+            // Bounded on purpose. An unbounded networkidle NEVER rejects when the page keeps a socket
+            // open -- Stripe, TalkJS and hCaptcha all long-poll -- so `.catch()` is dead code and the
+            // wait silently consumes the whole test budget. Measured on CI run 32354048263:
+            // SE-GUEST-01 hung the full 240s on its first attempt, then passed in 31.5s on retry once
+            // the caches were warm. Idle is a nice-to-have here, not a precondition.
+            await this.page.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
             try {
                 await this.page.locator(this.blockSelectors.placeOrder).waitFor({ state: 'visible', timeout: 45_000 });
                 return;
@@ -657,7 +674,9 @@ export class StripeExpressPage {
             await phoneField.fill(d.phone);
             await expect(phoneField, 'the guest phone must actually persist into the field').toHaveValue(/\d/);
         }
-        await p.waitForLoadState('networkidle').catch(() => undefined);
+        // Bounded -- see the note on the other networkidle wait: unbounded, it never rejects and
+        // burns the entire test timeout when a long-polling script keeps the network busy.
+        await p.waitForLoadState('networkidle', { timeout: 10_000 }).catch(() => undefined);
         await p.waitForTimeout(1_500);
     }
 
@@ -1071,11 +1090,63 @@ export class StripeExpressPage {
     }
 
     /**
-     * Save a card via My Account → Add payment method (SetupIntent → pm ATTACHED on Stripe).
-     * Fills the PE (accordion-aware), submits form#add_payment_method, waits for the redirect
-     * back to /payment-methods/.
+     * Navigate to My Account → Add payment method with the card form mounted and ready.
+     *
+     * Blocks the Stripe LINK backend for the same reason gotoBlockCheckout does, and the failure
+     * mode here is worse: with Link reachable, submitting the form opens Link's enrolment panel
+     * ("Save my information for faster checkout") INSTEAD of confirming the SetupIntent. The
+     * intent is created but never confirmed, so Stripe reports `requires_payment_method` with
+     * `last_setup_error: null` — no decline, no error text, nothing for a test to assert on.
+     * That silently broke SE-SAVE-08 outright and made SE-SAVE-01 slow and flaky.
+     *
+     * A plain card save needs no Link enrolment, so cutting merchant-ui-api removes the
+     * interference.
+     *
+     * `blockLink = false` is REQUIRED for the SCA/3DS variants. Measured, not assumed: with Link
+     * blocked, an SCA SetupIntent never completes its challenge and the page never redirects to
+     * /payment-methods/ (SE-SAVE-07 times out at 60s, 3/3 attempts). Blocking Link therefore does
+     * NOT leave 3DS untouched — the callers that drive an SCA challenge must opt out.
      */
-    async addCardViaMyAccount(card: string = STRIPE_CARDS.success): Promise<void> {
+    /**
+     * Dismiss Stripe's Link panel if the Payment Element renders one, so the raw card fields are
+     * reachable. Two different panels can appear and BOTH swallow the submit:
+     *   - enrolment ("Save my information for faster checkout") on a fresh email;
+     *   - login/OTP ("Use your saved information", 6-digit code) once that email is a Link
+     *     consumer — which any earlier test that ran with Link reachable will have made it.
+     * The second is why blocking merchant-ui-api alone is not enough: SE-SAVE-07 must keep Link
+     * reachable for its SCA challenge, and it enrols the shared customer as a side effect, so
+     * SE-SAVE-08 met the OTP panel and its SetupIntent was never confirmed
+     * (`requires_payment_method`, `last_setup_error: null`).
+     * No-op when no panel is present.
+     */
+    async dismissLinkPanel(): Promise<void> {
+        const deadline = Date.now() + 6_000;
+        while (Date.now() < deadline) {
+            for (const frame of this.page.frames()) {
+                if (!frame.url().includes('js.stripe.com') && !frame.name().includes('__privateStripeFrame')) {
+                    continue;
+                }
+                const close = frame.getByTestId('link-branded-widget-header-close').first();
+                if (await close.count().catch(() => 0)) {
+                    await close.click({ timeout: 3_000 }).catch(() => undefined);
+                    await this.page.waitForTimeout(500);
+                    return;
+                }
+            }
+            // The card field being present already means no panel is covering it.
+            for (const frame of this.page.frames()) {
+                if (await frame.locator(StripeExpressPage.PE_NUMBER).count().catch(() => 0)) {
+                    return;
+                }
+            }
+            await this.page.waitForTimeout(400);
+        }
+    }
+
+    async gotoAddPaymentMethod(blockLink = true): Promise<void> {
+        if (blockLink) {
+            await this.page.route(/merchant-ui-api\.stripe\.com/i, route => route.abort());
+        }
         await this.page.route(/hcaptcha/i, route => route.abort());
         await this.page.goto(this.addPaymentMethod.url);
         await this.page.waitForLoadState('domcontentloaded');
@@ -1085,8 +1156,28 @@ export class StripeExpressPage {
             await this.page.locator(this.addPaymentMethod.gatewayLabel).click().catch(() => undefined);
         }
         await this.page.locator(this.addPaymentMethod.mount).waitFor({ state: 'visible', timeout: 30_000 });
+        // Only for the card-only flows. A caller that opted OUT of the Link block did so because it
+        // needs Link (the SCA variants), so tearing its panel down here works against it.
+        if (blockLink) {
+            await this.dismissLinkPanel();
+        }
+    }
+
+    /**
+     * Save a card via My Account → Add payment method (SetupIntent → pm ATTACHED on Stripe).
+     * Fills the PE (accordion-aware), submits form#add_payment_method, waits for the redirect
+     * back to /payment-methods/.
+     */
+    async addCardViaMyAccount(card: string = STRIPE_CARDS.success): Promise<void> {
+        await this.gotoAddPaymentMethod();
         await this.fillCardDetails(card);
         await this.page.locator(this.addPaymentMethod.submit).click();
+        // Link can raise its enrolment panel ON SUBMIT, not just on mount — verified live: the
+        // "Save my information / Email / Mobile" fields appear only after the button is pressed.
+        // Dismissing before the fill therefore cannot catch it, and while it is up the SetupIntent
+        // is never confirmed (Stripe reports requires_payment_method with last_setup_error null),
+        // so the redirect below never comes and the test burns its full timeout.
+        await this.dismissLinkPanel();
         // The SetupIntent confirms in-page (a Stripe round-trip) and WC then redirects to the saved-methods
         // list (…/payment-methods/?redirect_status=succeeded — verified live). That round-trip can exceed
         // 60s when the suite is hammering the Stripe test API, so wait generously rather than fail a slow-
@@ -1108,4 +1199,161 @@ export class StripeExpressPage {
         await this.page.waitForLoadState('domcontentloaded');
         await closeAnnouncementModal(this.page);
     }
+
+    /**
+     * Buy the given products as the CURRENT context's customer through block checkout and return
+     * the paid order id. Wraps the cart-clear → add → checkout → card → place sequence the
+     * non-connected-seller cases repeat, so the flow lives with the other page interactions
+     * rather than being re-implemented per spec.
+     */
+    async buyProductsExpectReceived(customerId: string | number, productIds: Array<string | number>): Promise<string> {
+        await dbUtils.clearCustomerCart(customerId);
+        for (const id of productIds) {
+            await this.addProductToCart(id);
+        }
+        await this.gotoBlockCheckout();
+        await this.selectBlockGateway();
+        await this.fillCardDetails();
+        return await this.placeBlockOrderExpectReceived();
+    }
+
+
+    /* ================================================================== *
+     * Whole-journey drivers.
+     *
+     * These own the browser context so a spec never has to. A spec calls one,
+     * gets an order id back, and spends its own body on assertions only.
+     * ================================================================== */
+
+    /**
+     * Buy as the logged-in customer on block checkout. Returns the paid order id.
+     * `storageState` is the customer auth file; the caller supplies it so this stays
+     * usable for any actor without the page object reaching into helpers.
+     */
+    static async placeOrderAsCustomer(
+        browser: Browser,
+        storageState: string,
+        customerId: string | number,
+        productIds: Array<string | number>,
+        card: string = STRIPE_CARDS.success,
+    ): Promise<string> {
+        const ctx = await browser.newContext({ storageState });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await dbUtils.clearCustomerCart(customerId);
+            for (const pid of productIds) {
+                await stripe.addProductToCart(pid);
+            }
+            await stripe.gotoBlockCheckout();
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails(card);
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('could not parse the order id from the order-received URL');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    }
+
+    /** Buy as a GUEST (no storage state) on block checkout. Returns the paid order id. */
+    static async placeGuestBlockOrder(browser: Browser, productId: string | number, email: string): Promise<string> {
+        const ctx = await browser.newContext();
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await stripe.addProductToCart(productId);
+            await stripe.gotoBlockCheckout();
+            // BILLING names the street `address1`; the block form helper expects `address`.
+            const b = StripeExpressPage.BILLING;
+            await stripe.fillBlockGuestDetails({ ...b, address: b.address1, email });
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.success);
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('guest block checkout did not reach order-received');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    }
+
+    /** Buy as a GUEST (no storage state) on classic checkout. Returns the paid order id. */
+    static async placeGuestClassicOrder(browser: Browser, productId: string | number, email: string): Promise<string> {
+        const ctx = await browser.newContext();
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await stripe.addProductToCart(productId);
+            await stripe.gotoClassicCheckout();
+            await stripe.fillBillingClassic({ ...StripeExpressPage.BILLING, email });
+            await stripe.selectClassicGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.success);
+            const orderId = await stripe.placeClassicOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('guest classic checkout did not reach order-received');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    }
+
+
+    /**
+     * Apply a coupon on block checkout. The coupon UI is a collapsible panel toggled by
+     * `.wc-block-components-panel__button` labelled "Add coupons" (MCP-verified); the input id is
+     * `…__input-coupon`. Expand, fill, Apply, then wait for the cart to recalculate — the totals
+     * must be settled before the Payment Element reads the amount.
+     */
+    async applyBlockCoupon(code: string): Promise<void> {
+        const toggle = this.page.locator('.wc-block-components-panel__button').filter({ hasText: /coupon/i }).first();
+        if (await toggle.isVisible().catch(() => false)) {
+            await toggle.click().catch(() => undefined);
+        }
+        const input = this.page.locator('#wc-block-components-totals-coupon__input-coupon, input[id^="wc-block-components-totals-coupon"]').first();
+        await input.waitFor({ state: 'visible', timeout: 15_000 });
+        await input.fill(code);
+        await this.page.locator('.wc-block-components-totals-coupon__button:has-text("Apply"), button:has-text("Apply")').first().click();
+        await this.page.waitForResponse(r => /apply-coupon|batch|\/cart/i.test(r.url()) && r.request().method() === 'POST', { timeout: 20_000 }).catch(() => undefined);
+        await this.page.waitForTimeout(2_000);
+    }
+
+    /** Buy as the logged-in customer with a coupon applied at block checkout. Returns the paid order id. */
+    static async placeOrderWithCoupon(
+        browser: Browser,
+        storageState: string,
+        customerId: string | number,
+        productIds: Array<string | number>,
+        couponCode: string,
+    ): Promise<string> {
+        const ctx = await browser.newContext({ storageState });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeExpressPage(page);
+            await dbUtils.clearCustomerCart(customerId);
+            for (const pid of productIds) {
+                await stripe.addProductToCart(pid);
+            }
+            await stripe.gotoBlockCheckout();
+            await stripe.applyBlockCoupon(couponCode);
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails();
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            if (!orderId) {
+                throw new Error('coupon checkout did not reach order-received');
+            }
+            return orderId;
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    }
+
 }

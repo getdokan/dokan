@@ -10,11 +10,13 @@ on:
     # is what actually starts the run near 9:00 AM BDT. Check the real start
     # times of recent scheduled runs before "correcting" this to 03:00 UTC.
     schedule:
-        # 02:00 UTC -- the gating run, on the pinned WordPress/WooCommerce versions.
+        # 02:00 UTC -- the gating run, on whatever WordPress/WooCommerce is current.
         - cron: 0 2 * * *
-        # 14:00 UTC -- the canary run, on whatever WordPress/WooCommerce is current.
-        # It warns and never gates: see WP_STACK below and the continue-on-error on
-        # the test jobs. Change this cron and you must change the WP_STACK expression.
+        # 14:00 UTC -- the pinned reference run, on the versions committed in .wp-env*.json.
+        # It warns and never gates; its job is triage. When the latest lane goes red, this
+        # says whether the pinned stack is red too, which separates "a WordPress/WooCommerce
+        # release broke us" from "we broke ourselves". Change this cron and you must change
+        # the WP_STACK expression AND the continue-on-error on the test jobs.
         - cron: 0 14 * * *
     # workflow can be manually triggered
     workflow_dispatch:
@@ -28,8 +30,8 @@ on:
                     - API
                     - All
             wp_stack:
-                description: 'pinned = the versions committed in .wp-env*.json; latest = resolve WordPress and WooCommerce to current (failures do not gate)'
-                default: pinned
+                description: 'latest = resolve WordPress and WooCommerce to current (the default, and it gates); pinned = the versions committed in .wp-env*.json, for bisecting a regression against a known stack'
+                default: latest
                 type: choice
                 options:
                     - pinned
@@ -38,9 +40,9 @@ on:
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
     # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
-    # The stack is part of the group so the pinned run and the latest-canary never cancel
+    # The stack is part of the group so the latest run and the pinned reference never cancel
     # each other on the same commit.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'pinned' }}
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -53,15 +55,16 @@ permissions:
 # workflow environment variables
 env:
     # Which WordPress/WooCommerce versions this run installs.
-    #   pinned -- the versions committed in .wp-env*.json (the gating lane)
-    #   latest -- whatever WordPress and WooCommerce are current (the canary lane)
-    # Sourced from the workflow_dispatch input, else from which cron fired, else pinned.
+    #   latest -- whatever WordPress and WooCommerce are current (the DEFAULT, and it gates)
+    #   pinned -- the versions committed in .wp-env*.json (the 14:00 reference lane, never gates)
+    # Sourced from the workflow_dispatch input, else from which cron fired, else latest.
     # `inputs.wp_stack` is empty (falsy) on scheduled runs, so the fallbacks apply.
-    WP_STACK: ${{ inputs.wp_stack || (github.event.schedule == '0 14 * * *' && 'latest') || 'pinned' }}
+    WP_STACK: ${{ inputs.wp_stack || (github.event.schedule == '0 14 * * *' && 'pinned') || 'latest' }}
     ADMIN: admin
     ADMIN_PASSWORD: password
     VENDOR: vendor1
     VENDOR2: vendor2
+    VENDOR3: vendor3
     CUSTOMER: customer1
     CUSTOMER2: customer2
     USER_PASSWORD: 01dokan01
@@ -284,9 +287,12 @@ jobs:
         name: e2e tests
         runs-on: ubuntu-latest
         timeout-minutes: 75
-        # The canary lane warns, it never gates. `env` is not readable from a job-level
-        # continue-on-error, so the WP_STACK expression is repeated here.
-        continue-on-error: ${{ inputs.wp_stack == 'latest' || github.event.schedule == '0 14 * * *' }}
+        # Only the 14:00 pinned REFERENCE lane is allowed not to gate. Everything else --
+        # including the default `latest` -- fails the run on failure. Note this can no longer
+        # key off `wp_stack == 'latest'`: that is now the default, so doing so would make every
+        # run non-gating and turn a green check into no signal at all. `env` is not readable
+        # from a job-level continue-on-error, so the schedule test is repeated here.
+        continue-on-error: ${{ github.event.schedule == '0 14 * * *' }}
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
         # `always() && build_lite succeeded` covers the fork-PR path too.
         needs: [build_lite, build_pro]
@@ -361,8 +367,9 @@ jobs:
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
                   fi
-                  # Canary lane: drop the version pins so wp-env resolves whatever
-                  # WordPress and WooCommerce are current. Gating lane is untouched.
+                  # Default lane: drop the version pins so wp-env resolves whatever
+                  # WordPress and WooCommerce are current. The pinned reference lane
+                  # (14:00) is untouched and keeps the committed versions.
                   if [ "$WP_STACK" = "latest" ]; then
                     jq '.env.tests.core = null
                         | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
@@ -471,8 +478,12 @@ jobs:
                   ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
                   WP=$(ver wp core version)
                   WC=$(ver wp plugin get woocommerce --field=version)
+                  # Job log only — deliberately NOT $GITHUB_STEP_SUMMARY. Any job that writes a
+                  # step summary gets its own collapsible block on the run page, so writing here
+                  # produced 13 near-empty "… summary" panels burying the one that matters.
+                  # merge-reports prints the consolidated stack line from resolved-versions.json.
                   echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
-                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+                  echo "- $WP_STACK lane — WordPress ${WP:-unknown}, WooCommerce ${WC:-unknown}"
 
                   # Persist for merge-reports, which runs on a clean runner with no
                   # wp-env stack and so cannot resolve these itself. Rides along in the
@@ -661,7 +672,7 @@ jobs:
                           echo "(no re-run log — first pass failed without recorded test failures)"
                       fi
                       echo '```'
-                  } >> "$GITHUB_STEP_SUMMARY"
+                  } # job log only — see the note on the version line above
 
             # The actual gate. The shard is red unless the isolation re-run cleared every failure.
             - name: Fail the shard when the isolation re-run did not clear
@@ -726,8 +737,8 @@ jobs:
         name: api tests
         runs-on: ubuntu-latest
         timeout-minutes: 25
-        # See e2e_tests: the canary lane warns, it never gates.
-        continue-on-error: ${{ inputs.wp_stack == 'latest' || github.event.schedule == '0 14 * * *' }}
+        # See e2e_tests: only the 14:00 pinned reference lane is allowed not to gate.
+        continue-on-error: ${{ github.event.schedule == '0 14 * * *' }}
         needs: [build_lite, build_pro]
         if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
         strategy:
@@ -909,8 +920,12 @@ jobs:
                   ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
                   WP=$(ver wp core version)
                   WC=$(ver wp plugin get woocommerce --field=version)
+                  # Job log only — deliberately NOT $GITHUB_STEP_SUMMARY. Any job that writes a
+                  # step summary gets its own collapsible block on the run page, so writing here
+                  # produced 13 near-empty "… summary" panels burying the one that matters.
+                  # merge-reports prints the consolidated stack line from resolved-versions.json.
                   echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
-                  echo "- \`$WP_STACK\` lane — WordPress **${WP:-unknown}**, WooCommerce **${WC:-unknown}**" >> "$GITHUB_STEP_SUMMARY"
+                  echo "- $WP_STACK lane — WordPress ${WP:-unknown}, WooCommerce ${WC:-unknown}"
 
                   # Persist for merge-reports, which runs on a clean runner with no
                   # wp-env stack and so cannot resolve these itself. Rides along in the

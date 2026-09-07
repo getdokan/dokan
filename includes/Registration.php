@@ -11,6 +11,24 @@ use WP_Error;
  */
 class Registration {
 
+    /**
+     * Nonce action marking a request as coming from Dokan's own vendor sign-up form.
+     *
+     * @since 5.0.19
+     *
+     * @var string
+     */
+    const VENDOR_FORM_NONCE_ACTION = 'dokan_vendor_registration_form';
+
+    /**
+     * Field carrying the vendor sign-up form marker.
+     *
+     * @since 5.0.19
+     *
+     * @var string
+     */
+    const VENDOR_FORM_NONCE_FIELD = 'dokan_vendor_registration_form_nonce';
+
     public function __construct() {
         // validate registration
         add_filter( 'woocommerce_process_registration_errors', [ $this, 'validate_registration' ] );
@@ -19,6 +37,101 @@ class Registration {
         // after registration
         add_filter( 'woocommerce_new_customer_data', [ $this, 'set_new_vendor_names' ] );
         add_action( 'woocommerce_created_customer', [ $this, 'save_vendor_info' ], 10, 2 );
+
+        // stamp the dedicated vendor form so the two sign-up forms can be told apart on submit
+        add_action( 'dokan_vendor_reg_form_start', [ $this, 'render_vendor_form_marker' ] );
+        add_filter( 'dokan_vendor_reg_form', [ $this, 'inject_vendor_form_marker' ] );
+    }
+
+    /**
+     * Build the marker identifying Dokan's dedicated vendor sign-up form.
+     *
+     * @since 5.0.19
+     *
+     * @return string
+     */
+    protected function get_vendor_form_marker() {
+        return wp_nonce_field( self::VENDOR_FORM_NONCE_ACTION, self::VENDOR_FORM_NONCE_FIELD, false, false );
+    }
+
+    /**
+     * Print the marker identifying Dokan's dedicated vendor sign-up form.
+     *
+     * @since 5.0.19
+     *
+     * @return void
+     */
+    public function render_vendor_form_marker() {
+        echo $this->get_vendor_form_marker(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_nonce_field() builds its own escaped markup.
+    }
+
+    /**
+     * Add the marker to a rendered vendor sign-up form that did not print it itself.
+     *
+     * A theme override copied before the marker existed never fires the action, and the toggle would
+     * then close that site's own vendor page with no way to tell why. Stamping the rendered markup
+     * keeps such an override working, whatever it did to the form.
+     *
+     * @since 5.0.19
+     *
+     * @param string $content Rendered vendor sign-up markup.
+     *
+     * @return string
+     */
+    public function inject_vendor_form_marker( $content ) {
+        if ( ! is_string( $content ) || false !== strpos( $content, self::VENDOR_FORM_NONCE_FIELD ) ) {
+            return $content;
+        }
+
+        $closing_tag = strrpos( $content, '</form>' );
+
+        // Onboarding renders the login form too, so only stamp markup that actually asks for a role.
+        if ( false === $closing_tag || ! preg_match( '/<input[^>]+name=["\']?role["\'\s>]/i', $content ) ) {
+            return $content;
+        }
+
+        // The sign-up form is the last one on both the shortcode and the onboarding layout.
+        return substr_replace( $content, $this->get_vendor_form_marker(), $closing_tag, 0 );
+    }
+
+    /**
+     * Roles a visitor may register as through the request being processed.
+     *
+     * The appearance setting only hides the vendor option in the WooCommerce form's template, so a
+     * role that form never offered has to be refused server side too.
+     *
+     * @since 5.0.19
+     *
+     * @return array
+     */
+    public function get_allowed_registration_roles() {
+        $roles = [ 'customer' ];
+
+        // Dokan's dedicated vendor pages exist to sign vendors up, so a setting naming the WooCommerce form must not close them.
+        if ( $this->is_vendor_form_request() || 'off' !== dokan_get_option( 'show_register_as_vendor', 'dokan_appearance', 'on' ) ) {
+            $roles[] = 'seller';
+        }
+
+        return apply_filters( 'dokan_register_user_role', $roles );
+    }
+
+    /**
+     * Whether the request was submitted from Dokan's dedicated vendor sign-up form.
+     *
+     * @since 5.0.19
+     *
+     * @return bool
+     */
+    protected function is_vendor_form_request() {
+        // A site that turned the register-nonce check off drives its own sign-up forms; do not strand them.
+        if ( ! apply_filters( 'dokan_register_nonce_check', true ) ) {
+            return true;
+        }
+
+        // Only that form prints this marker, so a request that never rendered it cannot claim to be one.
+        $nonce = isset( $_POST[ self::VENDOR_FORM_NONCE_FIELD ] ) ? sanitize_key( wp_unslash( $_POST[ self::VENDOR_FORM_NONCE_FIELD ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- this is the nonce check.
+
+        return (bool) wp_verify_nonce( $nonce, self::VENDOR_FORM_NONCE_ACTION );
     }
 
     /**
@@ -41,7 +154,7 @@ class Registration {
             return new WP_Error( 'nonce_verification_failed', __( 'Nonce verification failed', 'dokan-lite' ) );
         }
 
-        $allowed_roles = apply_filters( 'dokan_register_user_role', [ 'customer', 'seller' ] );
+        $allowed_roles = $this->get_allowed_registration_roles();
 
         // is the role name allowed or user is trying to manipulate?
         if ( empty( $_POST['role'] ) || ( ! in_array( $_POST['role'], $allowed_roles, true ) ) ) {
@@ -89,7 +202,7 @@ class Registration {
             return $data;
         }
 
-        $allowed_roles = apply_filters( 'dokan_register_user_role', [ 'customer', 'seller' ] );
+        $allowed_roles = $this->get_allowed_registration_roles();
         $role          = ( isset( $_POST['role'] ) && in_array( $_POST['role'], $allowed_roles, true ) ) ? sanitize_text_field( wp_unslash( $_POST['role'] ) ) : 'customer';
 
         $data['role'] = $role;

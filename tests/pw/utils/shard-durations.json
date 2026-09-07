@@ -572,71 +572,27 @@
     },
     {
       "file": "stripe-express/stripeExpress.spec.ts",
-      "ms": 53553
+      "ms": 67000
     },
     {
-      "file": "stripe-express/stripeExpress3ds.spec.ts",
-      "ms": 45
+      "file": "stripe-express/stripeExpressNonConnectedSellers.spec.ts",
+      "ms": 211000
     },
     {
-      "file": "stripe-express/stripeExpressAdvertisement.spec.ts",
-      "ms": 18712
-    },
-    {
-      "file": "stripe-express/stripeExpressCurrency.spec.ts",
-      "ms": 106495
-    },
-    {
-      "file": "stripe-express/stripeExpressEdge.spec.ts",
-      "ms": 107284
+      "file": "stripe-express/stripeExpressCoupon.spec.ts",
+      "ms": 82000
     },
     {
       "file": "stripe-express/stripeExpressGuest.spec.ts",
-      "ms": 558579
+      "ms": 112000
     },
     {
       "file": "stripe-express/stripeExpressPayouts.spec.ts",
-      "ms": 219634
+      "ms": 271000
     },
     {
       "file": "stripe-express/stripeExpressPreflight.spec.ts",
-      "ms": 9
-    },
-    {
-      "file": "stripe-express/stripeExpressRefunds.spec.ts",
-      "ms": 144490
-    },
-    {
-      "file": "stripe-express/stripeExpressSavedCards.spec.ts",
-      "ms": 268662
-    },
-    {
-      "file": "stripe-express/stripeExpressSecurity.spec.ts",
-      "ms": 39547
-    },
-    {
-      "file": "stripe-express/stripeExpressSettings.spec.ts",
-      "ms": 84204
-    },
-    {
-      "file": "stripe-express/stripeExpressSubscriptions.spec.ts",
-      "ms": 7
-    },
-    {
-      "file": "stripe-express/stripeExpressVendorOnboarding.spec.ts",
-      "ms": 24609
-    },
-    {
-      "file": "stripe-express/stripeExpressWallet.spec.ts",
-      "ms": 16032
-    },
-    {
-      "file": "stripe-express/stripeExpressWebhooks.spec.ts",
-      "ms": 118549
-    },
-    {
-      "file": "stripe-express/stripeExpressXss.spec.ts",
-      "ms": 55978
+      "ms": 0
     },
     {
       "file": "table-rate-shipping/newShippingRate.spec.ts",

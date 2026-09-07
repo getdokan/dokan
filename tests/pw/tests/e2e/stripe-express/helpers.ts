@@ -12,10 +12,13 @@ declare const process: { env: Record<string, string | undefined> };
 export const adminAuth = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 export const vendorAuth = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 export const vendor2Auth = path.join(__dirname, '../../../playwright/.auth/vendor2StorageState.json');
+export const vendor3Auth = path.join(__dirname, '../../../playwright/.auth/vendor3StorageState.json');
 export const customerAuth = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
 export const VENDOR_ID = process.env.VENDOR_ID ?? '3';
 export const VENDOR2_ID = process.env.VENDOR2_ID ?? '5';
+/** vendor3 is NEVER seeded with an Express account — the permanent non-connected vendor. */
+export const VENDOR3_ID = process.env.VENDOR3_ID ?? '6';
 export const CUSTOMER_ID = process.env.CUSTOMER_ID ?? '2';
 
 // Test-support mu-plugin namespace (dokan-stripe-express-test-helpers.php).
@@ -61,7 +64,11 @@ export async function ensureStripeExpressConfigured(): Promise<void> {
             data: {
                 publishable: STRIPE_EXPRESS_KEYS.publishable,
                 secret: STRIPE_EXPRESS_KEYS.secret,
-                settings: { disburse_mode: 'ON_ORDER_COMPLETED' },
+                // `allow_non_connected_sellers` is pinned to 'no' rather than left to the
+                // gateway default: SE-PAY-03/-11, SE-REF-06 and SE-EDGE-05 assert that Express
+                // REFUSES a non-connected vendor's cart, which is only true while the toggle is
+                // off. Without the pin, a prior spec that turned it on would silently invert them.
+                settings: { disburse_mode: 'ON_ORDER_COMPLETED', allow_non_connected_sellers: 'no' },
             },
         });
         if (!res.ok()) {
@@ -492,5 +499,195 @@ export async function cleanupSubscription(packId: string | undefined, subIds: st
         } finally {
             await ctx.dispose();
         }
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Vendor balance / earnings reads (non-connected-seller assertions)   */
+/* ------------------------------------------------------------------ */
+
+/** dbUtils keeps its table prefix module-private, so the direct reads below resolve it the same way. */
+const DB = process.env.DB_PREFIX ?? 'wp';
+
+/** A vendor's spendable balance, from the same endpoint the dashboard widget uses. */
+export async function getVendorBalance(auth: Record<string, string>): Promise<number> {
+    const ctx = await request.newContext({ extraHTTPHeaders: auth });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/dokan/v1/withdraw/balance`);
+        const body = (await res.json().catch(() => ({}))) as { current_balance?: number };
+        return Number(body.current_balance ?? 0);
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** The vendor earning Dokan credited for an order — what the admin owes when settling by hand. */
+export async function getVendorEarningForOrder(orderId: string | number): Promise<number> {
+    const rows = (await dbUtils.dbQuery(`SELECT net_amount FROM ${DB}_dokan_orders WHERE order_id = ?;`, [Number(orderId)])) as Array<{ net_amount: string }>;
+    return Number(rows?.[0]?.net_amount ?? 0);
+}
+
+/**
+ * The vendor-balance ledger row for an order, with `balance_date` normalised to epoch millis.
+ * The mysql driver returns a Date for DATETIME columns but a string under `dateStrings`, so both
+ * are handled — a held earning is matured to "now" instead of the withdraw threshold.
+ */
+export async function getBalanceRowForOrder(vendorId: string | number, orderId: string | number): Promise<{ debit: number; daysParked: number } | undefined> {
+    const rows = (await dbUtils.dbQuery(
+        // `daysParked` is computed BY MySQL from two columns of the SAME row, written by the same
+        // code on the same clock: 0 when the earning was matured immediately, or the withdraw
+        // threshold (e.g. 7) when it was parked. No timezone is involved, which is the point.
+        //
+        // Earlier versions compared balance_date against a wall clock and were wrong twice.
+        // `Date.now()` is the RUNNER's clock; WordPress writes balance_date in SITE-local time
+        // (Asia/Dhaka, +6), so it agreed only on a machine sharing the site's timezone and failed
+        // 3/3 on the UTC CI runner (run 32359050741). Substituting MySQL `NOW()` did not fix it
+        // either -- that is the DATABASE's clock (UTC), still not WordPress's. The invariant never
+        // needed a clock: it is a relationship between two columns.
+        `SELECT debit, TIMESTAMPDIFF(DAY, trn_date, balance_date) AS days_parked
+           FROM ${DB}_dokan_vendor_balance
+          WHERE vendor_id = ? AND trn_id = ? AND trn_type = 'dokan_orders';`,
+        [Number(vendorId), Number(orderId)],
+    )) as Array<{ debit: string; days_parked: number | string }>;
+    const row = rows?.[0];
+    return row ? { debit: Number(row.debit), daysParked: Number(row.days_parked) } : undefined;
+}
+
+/**
+ * Sub-order id → vendor id for a multi-vendor parent. MUST be called AFTER the parent is
+ * completed: completion regenerates the sub-orders, so ids captured before it are stale.
+ */
+export async function getSubOrdersByVendor(parentId: string | number): Promise<Map<number, number>> {
+    const rows = (await dbUtils.dbQuery(
+        `SELECT o.order_id, o.seller_id FROM ${DB}_dokan_orders o WHERE o.order_id IN (SELECT id FROM ${DB}_wc_orders WHERE parent_order_id = ?);`,
+        [Number(parentId)],
+    )) as Array<{ order_id: number; seller_id: number }>;
+    return new Map((rows ?? []).map(r => [Number(r.order_id), Number(r.seller_id)]));
+}
+
+/* ------------------------------------------------------------------ */
+/* Payout / order reconciliation (shared by the payout + guest specs)  */
+/* ------------------------------------------------------------------ */
+
+/** Skip reason for cases that need REAL Stripe test connected accounts. */
+export const REAL_ACCOUNTS_SKIP =
+    'needs REAL Stripe test connected accounts (STRIPE_EXPRESS_VENDOR1_ACCT/STRIPE_EXPRESS_VENDOR2_ACCT) — placeholder accounts cannot receive a Transfer';
+
+/** Skip reason for cases that cannot run without the gateway keys. */
+export const CREDENTIALS_SKIP = 'Stripe Express keys missing — the gateway cannot be driven';
+
+/** Order meta holding the Stripe Transfer id written on a successful disbursement. */
+export const TRANSFER_META = '_dokan_stripe_express_transfer_id';
+
+/** All WC sub-order ids of a (multi-vendor) parent order. */
+export async function getSubOrderIds(parentId: string | number): Promise<number[]> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?parent=${parentId}&per_page=20&_fields=id`);
+        const subs = (await res.json().catch(() => [])) as Array<{ id: number }>;
+        return Array.isArray(subs) ? subs.map(s => s.id) : [];
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/**
+ * Drive a parent order AND each per-vendor sub-order to `completed`, which is what fires the
+ * ON_ORDER_COMPLETED disbursement. Sub-orders are fetched after the parent is completed because
+ * completing the parent regenerates them.
+ */
+export async function completeOrderFully(parentId: string | number): Promise<void> {
+    await setOrderStatus(parentId, 'completed');
+    for (const subId of await getSubOrderIds(parentId)) {
+        await setOrderStatus(subId, 'completed');
+    }
+}
+
+/** Poll until exactly one transfer funded by `chargeId` has landed on `acct`, then return it. */
+export async function firstVendorTransfer(
+    chargeId: string,
+    acct: string,
+): Promise<{ id: string; amount: number; destination: string; source_transaction: string }> {
+    await expect
+        .poll(async () => (await stripeApi.transfersForChargeToVendor(chargeId, acct)).length, {
+            message: `exactly one transfer to ${acct} for this charge`,
+            timeout: 60_000, // disbursement on completion lags under back-to-back money runs
+        })
+        .toBe(1);
+    return (await stripeApi.transfersForChargeToVendor(chargeId, acct))[0];
+}
+
+/** Captured charge amount (amount_received, falling back to amount) for an order's PaymentIntent. */
+export async function capturedAmount(orderId: string | number): Promise<number> {
+    const pi = await stripeApi.getPaymentIntent(await getStripeIntentIdForOrder(orderId));
+    return pi.amount_received ?? pi.amount;
+}
+
+/** Count Dokan withdraw entries created by the Stripe Express method, regardless of status. */
+export function countExpressWithdraws(rows: unknown): number {
+    const list = Array.isArray(rows) ? rows : [];
+    return list.filter(w => (w as { method?: string })?.method === StripeExpressPage.WITHDRAW_METHOD).length;
+}
+
+/**
+ * Seed an admin/marketplace percentage coupon (cart-wide; the admin absorbs the discount).
+ * Returns [id, code] so a caller can apply it and delete it afterwards.
+ */
+export async function seedMarketplaceCoupon(amount: string): Promise<[number, string]> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const code = `SE_MKT_${Date.now().toString(36)}`;
+        const res = await ctx.post(`${SERVER_URL}/wc/v3/coupons`, {
+            data: { code, discount_type: 'percent', amount, individual_use: false, meta_data: [{ key: 'admin_coupons_enabled_for_vendor', value: 'yes' }] },
+        });
+        const body = (await res.json().catch(() => ({}))) as { id?: number; code?: string };
+        if (!res.ok() || !body.id) {
+            throw new Error(`seedMarketplaceCoupon failed (${res.status()}): ${JSON.stringify(body)}`);
+        }
+        return [body.id, body.code ?? code];
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** Delete a coupon by id (teardown; ignores a missing coupon). */
+export async function deleteCoupon(couponId: number | undefined): Promise<void> {
+    if (!couponId) return;
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        await ctx.delete(`${SERVER_URL}/wc/v3/coupons/${couponId}?force=true`).catch(() => undefined);
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** An order's monetary fields, read back through the REST API (never the DB). */
+export async function getOrderTotals(orderId: string | number): Promise<{ total: number; discount_total: number }> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${orderId}?_fields=total,discount_total`);
+        const b = (await res.json().catch(() => ({}))) as { total?: string; discount_total?: string };
+        return { total: Number(b.total ?? 0), discount_total: Number(b.discount_total ?? 0) };
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** vendor3's fixture product — owned by the permanent NEVER-connected vendor. */
+export const PRODUCT_V3 = process.env.PRODUCT_ID_V3 ?? '';
+/** vendor1's fixture product — owned by the vendor seeded CONNECTED for money cases. */
+export const PRODUCT_V1 = process.env.PRODUCT_ID ?? '';
+/** Timeout for the non-connected-seller block: each case can drive a full checkout. */
+export const NCS_TIMEOUT = 240_000;
+
+/** An order's identity fields, read back through the REST API (never the DB). */
+export async function getOrderSummary(orderId: string | number): Promise<{ status: string; payment_method: string; customer_id: number; billing_email: string }> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${orderId}?_fields=status,payment_method,customer_id,billing`);
+        const b = (await res.json().catch(() => ({}))) as { status?: string; payment_method?: string; customer_id?: number; billing?: { email?: string } };
+        return { status: b.status ?? '', payment_method: b.payment_method ?? '', customer_id: Number(b.customer_id ?? -1), billing_email: b.billing?.email ?? '' };
+    } finally {
+        await ctx.dispose();
     }
 }

@@ -176,6 +176,24 @@ setup.describe('add & authenticate users', () => {
         }
     });
 
+    // vendor3 is the permanent NON-CONNECTED marketplace-payment vendor: no Stripe
+    // Express (or PayPal) account is ever attached to it. Specs that need a vendor
+    // the gateway will refuse use this one instead of stripping vendor2's account,
+    // which leaked state across specs sharing a shard.
+    setup('add vendor3', { tag: ['@lite'] }, async () => {
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore3, payloads.adminAuth, true);
+
+        if (sellerId) {
+            await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
+            if (isPro) {
+                await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
+            }
+            await dbUtils.addStoreMapLocation(sellerId);
+
+            helpers.createEnvVar('VENDOR3_ID', sellerId);
+        }
+    });
+
     setup('authenticate customer', { tag: ['@lite'] }, async ({ page }) => {
         await frontendLogin(page, data.customer, data.auth.customerAuthFile);
     });
@@ -202,6 +220,14 @@ setup.describe('add & authenticate users', () => {
             await frontendLogin(page, data.vendor.vendor2, data.auth.vendor2AuthFile);
         } catch {
             console.log('Vendor2 authentication timed out, but continuing...');
+        }
+    });
+
+    setup('authenticate vendor3', { tag: ['@lite'] }, async ({ page }) => {
+        try {
+            await frontendLogin(page, data.vendor.vendor3, data.auth.vendor3AuthFile);
+        } catch {
+            console.log('Vendor3 authentication timed out, but continuing...');
         }
     });
 });
