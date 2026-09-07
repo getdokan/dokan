@@ -1,3 +1,10 @@
+### v5.0.19 ( Sep 03, 2026 ) ###
+
+- **update:** Declared compatibility with WooCommerce 11.0.1 so the outdated compatibility notice no longer appears on the Plugins screen.
+- **fix:** In the new product editor, saving a product that has gallery images but no featured image no longer moves the first gallery image into the featured slot, so all gallery photos are kept.
+- **fix:** The vendor dashboard now shows an error message instead of loading forever when it can't load the current user.
+- **fix:** Turning off the "Register as a Vendor" option now blocks vendor sign-ups on the server, not just in the form, so a crafted request can no longer register a vendor while the option is disabled.
+
 ### v5.0.18 ( Sep 01, 2026 ) ###
 
 - **new:** Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.
