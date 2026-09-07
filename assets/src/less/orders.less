@@ -6,13 +6,20 @@
         .dokan-order-left-content {
             margin-right: 3%;
 
-            .dokan-order-billing-address {
-                min-width: 49%;
-                margin-right:2%;
+            // These are shrink-to-fit floats, so `min-width` let a long address outgrow half the row and drop shipping to its own line; the 1px keeps the pair under 100% against rounding.
+            .dokan-order-billing-address,
+            .dokan-order-shipping-address {
+                width: ~"calc(49% - 1px)";
+                min-width: 0;
+
+                // A single unbroken word — long place names, reference numbers — would overflow a column that can no longer grow.
+                .dokan-panel-body {
+                    overflow-wrap: anywhere;
+                }
             }
 
-            .dokan-order-shipping-address {
-                min-width: 49%;
+            .dokan-order-billing-address {
+                margin-right:2%;
             }
         }
 

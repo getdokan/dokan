@@ -34,6 +34,9 @@ function dokan_get_dashboard_nav(): array {
     // TODO: Drop this toggle once the legacy product pages are removed — then always register the new (React) product page.
     $use_new_product_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred();
 
+    // Same idea for orders: the "Vendor Order Details" setting drives the list menu too, so the legacy details page is always reached from the legacy list rather than from the React one.
+    $use_new_order_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_order_details_legacy_preferred();
+
     $menus = [
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
@@ -54,11 +57,12 @@ function dokan_get_dashboard_nav(): array {
         'orders'    => [
             'title'       => __( 'Orders', 'dokan-lite' ),
             'icon'        => '<i class="fas fa-shopping-cart"></i>',
-            'url'         => dokan_get_navigation_url( 'orders' ),
+            'url'         => dokan_get_navigation_url( 'orders', $use_new_order_ui ),
             'pos'         => 50,
             'icon_name'   => 'ShoppingCart',
             'permission'  => 'dokan_view_order_menu',
-            'react_route' => 'orders',
+            // Only a React route while the new order UI is on. On legacy this has to be empty or `VendorNavMenuChecker` rewrites the URL back to the panel and the setting has no effect — the products menu gets the same result by carrying no route at all.
+            'react_route' => $use_new_order_ui ? 'orders' : '',
         ],
         'withdraw'  => [
             'title'       => __( 'Withdraw', 'dokan-lite' ),
