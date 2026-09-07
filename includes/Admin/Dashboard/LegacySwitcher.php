@@ -205,6 +205,49 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
+     * Whether the given user prefers the legacy order list and order details.
+     *
+     * Defaults to `false` — the new (React) order list with in-panel details. That is the
+     * opposite of the product editor's default on purpose: in-panel order details shipped
+     * on for everyone before this setting existed, so defaulting to legacy here would take
+     * a working screen away from sites that never asked for the change.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $user_id Optional. Defaults to current user.
+     *
+     * @return bool
+     */
+    public function is_order_details_legacy_preferred( int $user_id = 0 ): bool {
+        if ( ! $user_id ) {
+            $user_id = get_current_user_id();
+        }
+
+        // Anonymous context (cron, emails without a current user) → prefer the new list.
+        if ( ! $user_id ) {
+            return false;
+        }
+
+        $appearance = get_option( 'dokan_appearance', [] );
+
+        return isset( $appearance['vendor_order_details'] ) && 'legacy' === $appearance['vendor_order_details'];
+    }
+
+    /**
+     * Build the new (React) order details URL.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $order_id
+     *
+     * @return string
+     */
+    public function get_new_order_details_url( int $order_id ): string {
+        // `dokan_get_navigation_url( 'orders', true )` already ends with `#orders/`.
+        return dokan_get_navigation_url( 'orders', true ) . $order_id;
+    }
+
+    /**
      * Build the new (React) product editor URL.
      *
      * @since 5.0.0

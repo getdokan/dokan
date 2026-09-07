@@ -849,6 +849,18 @@ class Settings {
                         'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
                     ],
                 ],
+                'vendor_order_details'         => [
+                    'name'    => 'vendor_order_details',
+                    'label'   => esc_html__( 'Vendor Order Details', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor order list and order details.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    // `latest` where the product editor defaults to `legacy`: the in-panel order details were already on for everyone before this setting existed, so defaulting to legacy would take a working screen away on upgrade.
+                    'default' => 'latest',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
                 'show_register_as_vendor'      => [
                     'name'    => 'show_register_as_vendor',
                     'label'   => esc_html__( 'Show "Register as a Vendor" in Sign Up Page', 'dokan-lite' ),
