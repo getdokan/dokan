@@ -1157,11 +1157,19 @@ class FormSchema {
                 $to = $product->get_date_on_sale_to( 'edit' );
                 return $to ? $to->date( 'Y-m-d' ) : '';
             case Elements::CATEGORIES:
+                // The term list carries every ancestor of the picked category, so read back what the vendor chose.
+                $chosen_categories = ProductCategoryHelper::get_product_chosen_category( $product );
+
+                if ( empty( $chosen_categories ) ) {
+                    // Products saved outside Dokan recorded no selection, so fall back to the deepest term of each branch.
+                    $chosen_categories = ProductCategoryHelper::generate_chosen_categories( $product->get_category_ids() );
+                }
+
                 // Async select expects [ { value, label }, ... ] so selected categories render
                 // without the full category tree being embedded in the schema.
-                $category_options = self::terms_to_async_options( $product->get_category_ids(), 'product_cat' );
+                $category_options = self::terms_to_async_options( $chosen_categories, 'product_cat' );
 
-                // Single-category stores keep one selection; surface only the first saved term.
+                // Single-category stores keep one selection; surface only the first chosen term.
                 if ( ProductCategoryHelper::product_category_selection_is_single() ) {
                     return array_slice( $category_options, 0, 1 );
                 }
