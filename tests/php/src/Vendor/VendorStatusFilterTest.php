@@ -113,7 +113,7 @@ class VendorStatusFilterTest extends DokanTestCase {
     }
 
     /**
-     * The clause is welded onto query_where, so it must not outlive the listing that asked for it.
+     * The callback stays hooked after the listing, so it must sit out every query that did not ask for pending.
      */
     public function test_pending_filter_does_not_outlive_the_query() {
         $this->ids_for( 'pending' );
@@ -145,25 +145,27 @@ class VendorStatusFilterTest extends DokanTestCase {
     }
 
     /**
-     * A throw mid-query must not leave every later user query filtered.
+     * A listing started from inside pre_get_users must not disarm the pending listing already running.
      */
-    public function test_pending_filter_is_detached_when_the_query_throws() {
-        $boom = static function () {
-            throw new \RuntimeException( 'boom' );
+    public function test_nested_listing_does_not_disarm_the_pending_filter() {
+        $nested = null;
+
+        $spy = function () use ( &$nested, &$spy ) {
+            remove_action( 'pre_get_users', $spy, 5 );
+
+            $nested = $this->ids_for( 'approved' );
         };
 
-        add_action( 'pre_user_query', $boom, 20 );
+        add_action( 'pre_get_users', $spy, 5 );
 
         try {
-            $this->ids_for( 'pending' );
-            $this->fail( 'The query was expected to throw.' );
-        } catch ( \RuntimeException $e ) {
-            $this->assertSame( 'boom', $e->getMessage() );
+            $outer = $this->ids_for( 'pending' );
         } finally {
-            remove_action( 'pre_user_query', $boom, 20 );
+            remove_action( 'pre_get_users', $spy, 5 );
         }
 
-        $this->assertEqualSets( [ $this->approved ], $this->unfiltered_ids() );
+        $this->assertEqualSets( [ $this->approved ], $nested );
+        $this->assertEqualSets( [ $this->disabled, $this->flagless ], $outer );
     }
 
     public function test_pending_filter_keeps_caller_meta_query() {

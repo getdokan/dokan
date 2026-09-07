@@ -19,7 +19,7 @@ class Manager {
      *
      * @var integer
      */
-    protected $total_users;
+    private $total_users;
 
     /**
      * Get all vendors
@@ -91,15 +91,14 @@ class Manager {
             // Carried into the query so the callback can tell our query from any other one running inside the same hook.
             $args['dokan_pending_only'] = true;
 
-            add_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] );
+            // Hooked once and left in place: it is a no-op without the query var, and unhooking it around the query let a nested listing disarm the outer one.
+            if ( ! has_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] ) ) {
+                add_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] );
+            }
         }
 
-        try {
-            $user_query = new WP_User_Query( $args );
-            $results    = $user_query->get_results();
-        } finally {
-            remove_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] );
-        }
+        $user_query = new WP_User_Query( $args );
+        $results    = $user_query->get_results();
 
         $this->total_users = $user_query->total_users;
 
@@ -140,11 +139,9 @@ class Manager {
     }
 
     /**
-     * Drop every approved vendor from a user query, leaving the pending ones.
+     * Drop every approved vendor from a user query that asked for pending ones only.
      *
-     * Correlated on user_id so it rides the usermeta index and stops at the first match per
-     * row, where the equivalent meta query adds two joins and turns every join on the query
-     * into a LEFT JOIN.
+     * A correlated NOT EXISTS rides the usermeta index and stops at the first match per row.
      *
      * @since DOKAN_SINCE
      *
@@ -155,7 +152,7 @@ class Manager {
     public function exclude_approved_vendors( $query ) {
         global $wpdb;
 
-        // The hook is global while our query runs, so anyone else's nested user query would inherit this clause.
+        // Every user query on the site passes through here once hooked, so only the one that asked for pending gets the clause.
         if ( ! $query->get( 'dokan_pending_only' ) ) {
             return;
         }
