@@ -1,3 +1,7 @@
+### v5.1.0 ( Sep 07, 2026 ) ###
+
+- **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
+
 ### v5.0.19 ( Sep 03, 2026 ) ###
 
 - **update:** Declared compatibility with WooCommerce 11.0.1 so the outdated compatibility notice no longer appears on the Plugins screen.
