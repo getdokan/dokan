@@ -118,7 +118,7 @@ class VendorStatusFilterTest extends DokanTestCase {
     /**
      * The callback stays hooked after the listing, so it must sit out every query that did not ask for pending.
      */
-    public function test_pending_filter_does_not_outlive_the_query() {
+    public function test_hooked_filter_is_a_noop_for_other_queries() {
         $this->ids_for( 'pending' );
 
         $this->assertEqualSets( [ $this->approved ], $this->unfiltered_ids() );
