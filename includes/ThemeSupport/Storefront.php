@@ -60,7 +60,7 @@ class Storefront {
 
         // Theme sidebar (get_sidebar) renders inside Dokan's already sized sidebar column,
         // so Storefront's `.right-sidebar .widget-area` width would apply a second time.
-         if (dokan_is_store_page()) {
+        if ( dokan_is_store_page() ) {
             $style .= '#dokan-secondary.dokan-store-sidebar .widget-area { width: 100%; float: none; margin-right: 0; margin-left: 0; }';
         }
 
