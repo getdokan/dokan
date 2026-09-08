@@ -42,7 +42,6 @@ export type SettingsElement = {
     max?: number;
     increment?: number;
     hook_key?: string;
-    dependency_key?: string;
     children?: Array< SettingsElement >;
     dependencies?: Array< SettingsElementDependency >;
     prefix?: string;

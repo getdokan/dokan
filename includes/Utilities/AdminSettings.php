@@ -44,4 +44,29 @@ class AdminSettings {
             ]
         );
     }
+
+    /**
+     * Order statuses that can release a withdraw request.
+     *
+     * Single source of truth for the `dokan_settings_withdraw_order_status_options`
+     * filter — consumed by the legacy admin settings registration
+     * ({@see \WeDevs\Dokan\Admin\Settings}) and by the new flat schema
+     * ({@see \WeDevs\Dokan\Admin\Settings\Schema\SettingsSchema}) so additions
+     * made by Pro / extensions show up on both UIs and in the bridge mapping
+     * with one declaration.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string,string> Map of `wc-<status>` slug => translated label.
+     */
+    public static function withdraw_order_status_options(): array {
+        return apply_filters(
+            'dokan_settings_withdraw_order_status_options',
+            [
+                'wc-completed'  => __( 'Completed', 'dokan-lite' ),
+                'wc-processing' => __( 'Processing', 'dokan-lite' ),
+                'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
+            ]
+        );
+    }
 }

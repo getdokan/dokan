@@ -175,7 +175,11 @@ class Settings {
              */
             do_action( 'dokan_before_saving_settings', $option_name, $option_value, $old_options );
 
-            update_option( $option_name, $option_value );
+            // Route through the legacy settings repository: mapped keys are
+            // mirrored into the new flat option (the canonical source of
+            // truth) and stripped from the legacy row, which receives the
+            // unmapped subset only.
+            dokan_save_legacy_settings_section( $option_name, $option_value );
 
             /**
              * @since 3.5.1 added $old_options parameter
@@ -409,14 +413,7 @@ class Settings {
         $pages_array = $this->get_post_type( 'page' );
 
         $commission_types              = dokan_commission_types();
-        $withdraw_order_status_options = apply_filters(
-            'dokan_settings_withdraw_order_status_options',
-            [
-                'wc-completed'  => __( 'Completed', 'dokan-lite' ),
-                'wc-processing' => __( 'Processing', 'dokan-lite' ),
-                'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
-            ]
-        );
+        $withdraw_order_status_options = \WeDevs\Dokan\Utilities\AdminSettings::withdraw_order_status_options();
 
         $general_site_options = apply_filters(
             'dokan_settings_general_site_options', [
@@ -679,7 +676,7 @@ class Settings {
                     'type'    => 'switcher',
                     'default' => 'off',
                     'show_if' => [
-                        'dokan_selling.one_step_product_create' => [ 'equal' => 'off' ],
+                        'one_step_product_create' => [ 'equal' => 'off' ],
                     ],
                     'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],

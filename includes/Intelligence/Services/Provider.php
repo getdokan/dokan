@@ -73,6 +73,37 @@ abstract class Provider implements AIProviderInterface, Hookable {
 
     abstract public function get_default_model_id(): string;
 
+    /**
+     * Get the default model id for a specific generation type.
+     *
+     * A provider that serves more than one generation type cannot express its
+     * default as a single id — a text model id is never a valid image model id,
+     * so `get_default_model_id()` is necessarily wrong for one of them. Honour
+     * the declared default only when it actually supports the requested type,
+     * and otherwise fall back to the first registered model of that type, so
+     * the returned id is always one the caller can offer.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type The generation type (e.g. 'text', 'image').
+     *
+     * @return string A model id supporting $type, or an empty string when the
+     *                provider registers no model of that type.
+     */
+    public function get_default_model_id_by_type( string $type ): string {
+        $declared = $this->get_default_model_id();
+        $model    = '' !== $declared ? $this->get_model( $declared ) : null;
+
+        if ( $model instanceof AIModelInterface && $model->supports( $type ) ) {
+            return $declared;
+        }
+
+        $models = $this->get_models_by_type( $type );
+        $first  = ! empty( $models ) ? reset( $models ) : null;
+
+        return $first instanceof AIModelInterface ? $first->get_id() : '';
+    }
+
 	/**
 	 * @inheritDoc
 	 */

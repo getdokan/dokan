@@ -101,3 +101,27 @@ export const unformatNumber = ( value ) => {
             window?.dokanAdminDashboard?.currency.decimal
     );
 };
+
+// Raw currency config (symbol/separators/precision) for masked inputs like the commission widgets — resolved once per page load and cached so every consumer shares it.
+let cachedCurrency:
+    | { symbol: string; thousand: string; decimal: string; precision: number }
+    | undefined;
+
+export const getDokanCurrency = () => {
+    if ( cachedCurrency ) {
+        return cachedCurrency;
+    }
+
+    const currency =
+        window?.dokanAdminDashboard?.currency ||
+        window?.dokanFrontend?.currency;
+
+    cachedCurrency = {
+        symbol: currency?.symbol ?? '$',
+        thousand: currency?.thousand ?? ',',
+        decimal: currency?.decimal ?? '.',
+        precision: currency?.precision ?? 2,
+    };
+
+    return cachedCurrency;
+};

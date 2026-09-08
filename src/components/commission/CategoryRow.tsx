@@ -1,4 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
+import { twMerge } from 'tailwind-merge';
 import CommissionInputs from './CommissionInputs';
 import { CategoryRowProps } from './types';
 import { SquareMinus, SquarePlus } from 'lucide-react';
@@ -10,6 +11,7 @@ const CategoryRow = ( {
     hasChildren,
     onToggle,
     commissionInputsProps,
+    className = '',
 }: CategoryRowProps ) => {
     const isAllCategory = category.term_id === 'all';
 
@@ -35,7 +37,10 @@ const CategoryRow = ( {
     return (
         <div
             key={ `${ category.term_id }-${ level }` }
-            className="bg-white border-b border-[#E9E9E9] h-20"
+            className={ twMerge(
+                'bg-white border-b border-[#E9E9E9] h-20',
+                className
+            ) }
         >
             <div className="h-20 w-full flex items-center px-5">
                 <div

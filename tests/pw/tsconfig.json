@@ -15,6 +15,7 @@
         "rootDir": "." /* Specify the root directory of input files. */,
         "paths": {
             "@featureMap/*": ["./feature-map/*"],
+            "@pages/*": ["./pages/*"],
             "@utils/*": ["./utils/*"],
             "@apiEndPoints": ["./utils/apiEndPoints"],
             "@apiUtils": ["./utils/apiUtils"],

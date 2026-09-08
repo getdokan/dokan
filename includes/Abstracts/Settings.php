@@ -42,6 +42,16 @@ abstract class Settings extends SettingsElement {
 	 */
 	public function populate(): array {
 		$this->hydrate_data();
+		return parent::populate();
+	}
+
+	/**
+	 * Populate settings children_only.
+	 *
+	 * @return array
+	 */
+	public function populate_children_only(): array {
+		$this->hydrate_data();
 		return parent::populate()['children'];
 	}
 
@@ -68,6 +78,11 @@ abstract class Settings extends SettingsElement {
 			$data = get_option( $this->storage_key, $data );
 		} else {
 			$data = get_user_meta( get_current_user_id(), $this->storage_key, true );
+		}
+
+		// Backward/compatibility: if data is wrapped under the element/page ID, unwrap it.
+		if ( is_array( $data ) && isset( $data[ $this->id ] ) && is_array( $data[ $this->id ] ) ) {
+			$data = $data[ $this->id ];
 		}
 
 		return $data;

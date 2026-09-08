@@ -170,6 +170,6 @@ class AppearanceStep extends AbstractStep {
         $dokan_appearance['hide_vendor_info']['phone']   = $data['appearance']['vendor-info']['phone'] ?? $default_settings['hide_vendor_info']['phone'];
         $dokan_appearance['hide_vendor_info']['address'] = $data['appearance']['vendor-info']['address'] ?? $default_settings['hide_vendor_info']['address'];
 
-        update_option( 'dokan_appearance', $dokan_appearance );
+        dokan_save_legacy_settings_section( 'dokan_appearance', $dokan_appearance );
     }
 }

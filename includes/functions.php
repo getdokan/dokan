@@ -1070,13 +1070,64 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
 function dokan_get_option( $option, $section, $default_value = '' ) {
     [ $option, $section ] = dokan_admin_settings_rearrange_map( $option, $section );
 
+    if ( function_exists( 'dokan_get_container' ) ) {
+        try {
+            return dokan_get_container()
+                ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+                ->get( $section, $option, $default_value );
+        } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+            // Container not booted — fall back to raw legacy read (no overlay).
+        }
+    }
+
     $options = get_option( $section );
+    $options = is_array( $options ) ? $options : [];
 
     if ( isset( $options[ $option ] ) ) {
         return $options[ $option ];
     }
 
     return $default_value;
+}
+
+/**
+ * Save a legacy section option through the settings repository.
+ *
+ * Routes a full-row legacy payload through {@see LegacySettingsRepository::replace()},
+ * which:
+ *   1. Mirrors mapped keys into the new flat `dokan_admin_settings` option
+ *      (the canonical source of truth).
+ *   2. Persists the payload under the legacy `$option_name` row. With the
+ *      legacy mirror enabled (default) mapped keys stay in the row so a
+ *      downgraded plugin still reads current data; with it disabled they
+ *      are stripped and only the unmapped remainder is stored.
+ *   3. Fires `dokan_legacy_settings_changed` and refreshes the in-request snapshot.
+ *
+ * Callers should NOT also call `update_option( $option_name, ... )` — the
+ * repository owns that write. If the DI container is unavailable (early
+ * bootstrap, isolated tests), this falls back to a raw `update_option` so
+ * legacy writes still succeed without the source-of-truth guarantee.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string              $option_name Legacy wp_option name (e.g. `dokan_general`).
+ * @param array<string,mixed> $payload     Legacy-shaped payload to persist.
+ *
+ * @return void
+ */
+function dokan_save_legacy_settings_section( string $option_name, array $payload ): void {
+    if ( ! function_exists( 'dokan_get_container' ) ) {
+        update_option( $option_name, $payload );
+        return;
+    }
+    try {
+        dokan_get_container()
+            ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+            ->replace( $option_name, $payload );
+    } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+        unset( $e );
+        update_option( $option_name, $payload );
+    }
 }
 
 /**
@@ -3227,7 +3278,9 @@ function dokan_get_permalink( $page_id ) {
         return false;
     }
 
-    $pages = get_option( 'dokan_pages' );
+    $pages = dokan_get_container()
+        ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+        ->all( 'dokan_pages' );
 
     return isset( $pages[ $page_id ] ) ? get_permalink( $pages[ $page_id ] ) : false;
 }
@@ -3665,7 +3718,9 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
  * @return bool
  */
 function dokan_has_map_api_key() {
-    $dokan_appearance = get_option( 'dokan_appearance', [] );
+    $dokan_appearance = dokan_get_container()
+        ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+        ->all( 'dokan_appearance' );
 
     if ( ! empty( $dokan_appearance['map_api_source'] ) && 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
         return true;

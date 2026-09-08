@@ -29,8 +29,10 @@ if (!fs.existsSync(reportsDir)) {
 }
 
 const merged = new Map();
+/** @type {string[]} */
 const shardFiles = [];
 
+/** @param {string} dir */
 function walk(dir) {
     for (const name of fs.readdirSync(dir)) {
         const full = path.join(dir, name);
@@ -59,7 +61,7 @@ for (const f of shardFiles) {
             merged.set(entry.file, cur);
         }
     } catch (e) {
-        console.warn(`skipping malformed ${f}: ${e.message}`);
+        console.warn(`skipping malformed ${f}: ${e instanceof Error ? e.message : String(e)}`);
     }
 }
 
