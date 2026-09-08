@@ -86,9 +86,9 @@ class ProductEditorCategoryFieldTest extends DokanTestCase {
             ->set_seller_id( $this->seller_id1 )
             ->create(
                 [
-					'name'          => 'Categorised Product',
-					'regular_price' => '10',
-				]
+                    'name'          => 'Categorised Product',
+                    'regular_price' => '10',
+                ]
             );
 
         wp_set_current_user( $this->seller_id1 );
@@ -158,6 +158,17 @@ class ProductEditorCategoryFieldTest extends DokanTestCase {
      * @return array Term ids the field is populated with.
      */
     protected function get_field_category_ids( ?int $product_id = null ): array {
+        return wp_list_pluck( $this->get_field_category_value( $product_id ), 'value' );
+    }
+
+    /**
+     * Read the raw Categories field value, the async-select option objects the editor renders.
+     *
+     * @param int|null $product_id Product to read, defaults to the test product.
+     *
+     * @return array Option objects: [ { value, label }, ... ].
+     */
+    protected function get_field_category_value( ?int $product_id = null ): array {
         $product_id = $product_id ?? $this->product_id;
 
         $request = new WP_REST_Request( 'GET', $this->get_route( '/products/' . $product_id . '/fields' ) );
@@ -167,7 +178,7 @@ class ProductEditorCategoryFieldTest extends DokanTestCase {
 
         foreach ( $data['form_items'] ?? [] as $item ) {
             if ( Elements::CATEGORIES === ( $item['id'] ?? '' ) ) {
-                return wp_list_pluck( (array) ( $item['value'] ?? [] ), 'value' );
+                return array_values( (array) ( $item['value'] ?? [] ) );
             }
         }
 
@@ -229,13 +240,40 @@ class ProductEditorCategoryFieldTest extends DokanTestCase {
     public function test_resaving_the_field_value_does_not_overwrite_the_choice(): void {
         $this->save_categories( [ $this->grandchild_id ] );
 
-        // A vendor who reopens the product and edits something unrelated sends the field back as-is.
-        $this->save_categories( $this->get_field_category_ids() );
+        // A vendor who reopens the product and edits something unrelated sends the field back as-is:
+        // the async select posts whole option objects, not bare ids, so exercise that round trip.
+        $this->save_categories( $this->get_field_category_value() );
 
         $this->assertSame(
             [ $this->grandchild_id ],
             $this->get_field_category_ids(),
             'Re-saving the form must not walk the selection up to the parent.'
+        );
+    }
+
+    /**
+     * Single mode surfaces the first chosen category, not whichever sorts first by name.
+     *
+     * A product can carry more than one chosen category — a store switched from multiple to single,
+     * or terms spanning two branches — and the field must not let the name sort decide the winner.
+     *
+     * @return void
+     */
+    public function test_single_mode_keeps_the_first_chosen_id_regardless_of_name_order(): void {
+        // 'bbb-apparel' sorts before the grandchild 'mmm-smartwatches', so a name-sorted read would pick it.
+        $unrelated_id = $this->create_category( 'bbb-apparel' );
+
+        wp_set_object_terms(
+            $this->product_id,
+            [ $this->parent_id, $this->child_id, $this->grandchild_id, $unrelated_id ],
+            'product_cat'
+        );
+        update_post_meta( $this->product_id, 'chosen_product_cat', [ $this->grandchild_id, $unrelated_id ] );
+
+        $this->assertSame(
+            [ $this->grandchild_id ],
+            $this->get_field_category_ids(),
+            'Single mode must keep the first chosen category, not the one that sorts first by name.'
         );
     }
 

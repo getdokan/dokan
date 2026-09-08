@@ -1161,20 +1161,18 @@ class FormSchema {
                 $chosen_categories = ProductCategoryHelper::get_product_chosen_category( $product );
 
                 if ( empty( $chosen_categories ) ) {
-                    // Products saved outside Dokan recorded no selection, so fall back to the deepest term of each branch.
+                    // Products saved outside Dokan recorded no selection, so fall back to the deepest term of each branch (not get_saved_products_category(), which self-heals by writing terms and a read must not).
                     $chosen_categories = ProductCategoryHelper::generate_chosen_categories( $product->get_category_ids() );
+                }
+
+                // Single-category stores keep one selection; narrow before building options, because terms_to_async_options() re-sorts by name and slicing after it would surface the alphabetically-first category rather than the one the vendor picked.
+                if ( ProductCategoryHelper::product_category_selection_is_single() ) {
+                    $chosen_categories = array_slice( $chosen_categories, 0, 1 );
                 }
 
                 // Async select expects [ { value, label }, ... ] so selected categories render
                 // without the full category tree being embedded in the schema.
-                $category_options = self::terms_to_async_options( $chosen_categories, 'product_cat' );
-
-                // Single-category stores keep one selection; surface only the first chosen term.
-                if ( ProductCategoryHelper::product_category_selection_is_single() ) {
-                    return array_slice( $category_options, 0, 1 );
-                }
-
-                return $category_options;
+                return self::terms_to_async_options( $chosen_categories, 'product_cat' );
             case Elements::TAGS:
                 // Async select expects [ { value, label }, ... ] so selected tags render
                 // without the full tag list being embedded in the schema.
