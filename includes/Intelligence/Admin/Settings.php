@@ -90,7 +90,9 @@ class Settings implements Hookable {
                 'type'    => 'select',
                 'options' => array_map( fn( $model ) => $model->get_title(), $provider->get_models_by_type( Model::SUPPORTS_TEXT ) ),
                 'desc'    => __( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default' => $provider->get_default_model_id(),
+                'default' => method_exists( $provider, 'get_default_model_id_by_type' )
+                    ? $provider->get_default_model_id_by_type( Model::SUPPORTS_TEXT )
+                    : $provider->get_default_model_id(),
                 'is_lite' => true,
                 'show_if' => [
                     'dokan_ai_engine' => [
