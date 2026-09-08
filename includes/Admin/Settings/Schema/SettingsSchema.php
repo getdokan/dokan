@@ -986,7 +986,10 @@ class SettingsSchema {
                 'section_id'  => 'cod_payments_section',
                 'title'       => esc_html__( 'COD Payments', 'dokan-lite' ),
                 'description' => esc_html__( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
-                'default'     => 'include',
+                // 'on' (Include) is the mirror of the legacy `exclude_cod_payment`
+                // default of 'off' through InvertOnOffTransformer, so an unsaved
+                // site reads the same either side of the bridge.
+                'default'     => 'on',
                 'options'     => [
                     [
 						'title' => esc_html__( 'Include', 'dokan-lite' ),
