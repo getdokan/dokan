@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.1.0',
+        'released' => '2026-09-07',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.19',
         'released' => '2026-09-03',
         'changes'  => [

@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.0.19
+Stable tag: 5.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.1.0 ( Sep 07, 2026 ) =
+- **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
+
 = v5.0.19 ( Sep 03, 2026 ) =
 - **update:** Declared compatibility with WooCommerce 11.0.1 so the outdated compatibility notice no longer appears on the Plugins screen.
 - **fix:** In the new product editor, saving a product that has gallery images but no featured image no longer moves the first gallery image into the featured slot, so all gallery photos are kept.
@@ -394,10 +397,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
 - **fix:** The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.
 - **fix:** Vendor dashboard list labels such as "No data found" are now translatable through Dokan's language files.
-
-= v5.0.15 ( Aug 19, 2026 ) =
-- **new:** Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor's own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn't provide on its own.
-- **fix:** The product editor's Attributes field now honors the placeholder text configured in the Product Form Manager.
-- **fix:** Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
