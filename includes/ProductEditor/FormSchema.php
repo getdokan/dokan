@@ -661,8 +661,7 @@ class FormSchema {
                 'variant'          => 'async_select',
                 'placeholder'      => __( 'Select product categories', 'dokan-lite' ),
                 'value'            => [],
-                // Loaded on demand as a nested tree instead of embedding the whole
-                // category hierarchy in the schema, which bloats memory on large catalogs.
+                // Loaded on demand as a nested tree so the whole category hierarchy never bloats the schema on large catalogs.
                 'api_endpoint'     => '/dokan/v1/products/categories/tree',
                 'tree'             => true,
                 // Honor the admin "single vs. multiple" category selection setting.
@@ -679,8 +678,7 @@ class FormSchema {
                 'variant'          => 'async_select',
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
-                // Tags load on demand from WooCommerce core (searchable/paginated) instead of
-                // embedding the whole tag taxonomy in the schema, which can exhaust memory on large stores.
+                // Tags load on demand from WooCommerce core (searchable/paginated) so the whole tag taxonomy never bloats the schema on large stores.
                 'api_endpoint'     => '/wc/v3/products/tags',
                 'creatable'        => 'on' === $can_create_tags,
                 'visibility'       => true,
@@ -1170,12 +1168,10 @@ class FormSchema {
                     $chosen_categories = array_slice( $chosen_categories, 0, 1 );
                 }
 
-                // Async select expects [ { value, label }, ... ] so selected categories render
-                // without the full category tree being embedded in the schema.
+                // Async select expects [ { value, label }, ... ] so selections render without embedding the whole tree.
                 return self::terms_to_async_options( $chosen_categories, 'product_cat' );
             case Elements::TAGS:
-                // Async select expects [ { value, label }, ... ] so selected tags render
-                // without the full tag list being embedded in the schema.
+                // Async select expects [ { value, label }, ... ] so selections render without embedding the whole tag list.
                 return self::terms_to_async_options( $product->get_tag_ids(), 'product_tag' );
             case Elements::BRANDS:
                 if ( method_exists( $product, 'get_brand_ids' ) ) {

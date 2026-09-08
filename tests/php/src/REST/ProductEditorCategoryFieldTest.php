@@ -70,12 +70,10 @@ class ProductEditorCategoryFieldTest extends DokanTestCase {
         $controller = new ProductControllerV3();
         $controller->register_routes();
 
-        // register_routes() only arms the payload resolver once per process, and WordPress restores
-        // hooks between tests, so re-add it here to keep every test on the editor's real save path.
+        // register_routes() arms the payload resolver only once per process, so re-add it here since WordPress restores hooks between tests.
         add_filter( 'rest_pre_dispatch', [ $controller, 'resolve_product_payload_before_validation' ], 1, 3 );
 
-        // Names run parent < grandchild < child alphabetically, so a field that reads the raw term
-        // list cannot accidentally land on the picked category through ordering.
+        // Names sort parent < grandchild < child, so a field reading the raw term list cannot land on the picked category by ordering.
         $this->parent_id     = $this->create_category( 'aaa-gadgets' );
         $this->child_id      = $this->create_category( 'zzz-wearables', $this->parent_id );
         $this->grandchild_id = $this->create_category( 'mmm-smartwatches', $this->child_id );
@@ -240,8 +238,7 @@ class ProductEditorCategoryFieldTest extends DokanTestCase {
     public function test_resaving_the_field_value_does_not_overwrite_the_choice(): void {
         $this->save_categories( [ $this->grandchild_id ] );
 
-        // A vendor who reopens the product and edits something unrelated sends the field back as-is:
-        // the async select posts whole option objects, not bare ids, so exercise that round trip.
+        // A reopened form posts whole option objects back, not bare ids, so exercise that round trip.
         $this->save_categories( $this->get_field_category_value() );
 
         $this->assertSame(
