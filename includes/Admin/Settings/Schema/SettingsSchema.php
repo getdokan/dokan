@@ -2347,24 +2347,37 @@ class SettingsSchema {
 
         // Build model options + default model id defensively — providers may
         // not implement get_models_by_type / get_default_model_id.
+        $model_const   = 'image' === ( $cfg['model_kind'] ?? '' )
+            ? '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_IMAGE'
+            : '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_TEXT';
         $model_options = [];
-        if ( method_exists( $provider, 'get_models_by_type' ) ) {
-            $model_const = 'image' === ( $cfg['model_kind'] ?? '' )
-                ? '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_IMAGE'
-                : '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_TEXT';
-            try {
-                $models = $provider->get_models_by_type( constant( $model_const ) );
+        $default_model = '';
+
+        try {
+            $model_type = constant( $model_const );
+
+            if ( method_exists( $provider, 'get_models_by_type' ) ) {
+                $models = $provider->get_models_by_type( $model_type );
                 foreach ( $models as $model_id => $model ) {
                     $model_options[] = [
 						'title' => $model->get_title(),
 						'value' => (string) $model_id,
 					];
                 }
-            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-                unset( $e );
             }
+
+            // Resolve the default against this field's generation type. A provider
+            // serving both text and image cannot express one default valid for
+            // both, so the untyped getter is only a fallback for providers that
+            // predate the typed one.
+            if ( method_exists( $provider, 'get_default_model_id_by_type' ) ) {
+                $default_model = (string) $provider->get_default_model_id_by_type( $model_type );
+            } elseif ( method_exists( $provider, 'get_default_model_id' ) ) {
+                $default_model = (string) $provider->get_default_model_id();
+            }
+        } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+            unset( $e );
         }
-        $default_model = method_exists( $provider, 'get_default_model_id' ) ? (string) $provider->get_default_model_id() : '';
 
         $api_key_url = method_exists( $provider, 'get_api_key_url' ) ? (string) $provider->get_api_key_url() : '';
         $image_url   = method_exists( $provider, 'get_image_url' ) ? (string) $provider->get_image_url() : '';
