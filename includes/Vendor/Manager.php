@@ -15,6 +15,15 @@ use WeDevs\Dokan\Vendor\Vendor;
 class Manager {
 
     /**
+     * The statuses the vendor listing knows how to filter on.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string[]
+     */
+    const STATUSES = [ 'all', 'approved', 'pending' ];
+
+    /**
      * Total vendors found
      *
      * @var integer
@@ -37,9 +46,9 @@ class Manager {
     /**
      * Get vendors
      *
-     * `status` accepts 'all', 'approved' or 'pending' (string or array); anything else reads
-     * as pending, and a mix of them reads as 'all'. Pending is applied through the
-     * `dokan_pending_only` query var, which `exclude_approved_vendors()` acts on.
+     * `status` accepts 'all', 'approved' or 'pending' (string or array); asking for both halves
+     * means everyone and anything unrecognised falls back to 'approved'. Pending is applied
+     * through the `dokan_pending_only` query var, which `exclude_approved_vendors()` acts on.
      *
      * @param array $args
      *
@@ -116,8 +125,10 @@ class Manager {
     /**
      * Collapse the requested statuses into the single filter the query applies.
      *
-     * Anything other than 'approved' or 'all' has always been read as pending, and any mix of
-     * statuses — 'approved' with 'pending', or either of them with 'all' — is asking for everyone.
+     * Only 'all', 'approved' and 'pending' are understood. Asking for both halves — or for 'all'
+     * outright — means everyone. Anything else names no status this listing can filter on, so it
+     * falls back to the default rather than widening the result, the same way
+     * `Abilities\Definitions\VendorsQuery::resolve_status()` coerces an unknown status.
      *
      * @since DOKAN_SINCE
      *
@@ -126,16 +137,14 @@ class Manager {
      * @return string One of 'all', 'approved' or 'pending'.
      */
     protected function resolve_status( $status ): string {
-        $statuses = array_unique(
-            array_map(
-                static function ( $item ) {
-                    return in_array( $item, [ 'all', 'approved' ], true ) ? $item : 'pending';
-                },
-                (array) $status
-            )
-        );
+        $known = array_values( array_unique( array_intersect( (array) $status, self::STATUSES ) ) );
 
-        return 1 === count( $statuses ) ? reset( $statuses ) : 'all';
+        // Never let a typo read as a wider set than the caller asked for.
+        if ( empty( $known ) ) {
+            return 'approved';
+        }
+
+        return 1 === count( $known ) ? $known[0] : 'all';
     }
 
     /**

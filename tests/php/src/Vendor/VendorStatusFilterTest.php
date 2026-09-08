@@ -70,11 +70,14 @@ class VendorStatusFilterTest extends DokanTestCase {
             'default is approved'   => [ null, 'approved' ],
             'approved string'       => [ 'approved', 'approved' ],
             'pending array'         => [ [ 'pending' ], 'pending' ],
-            'unknown reads pending' => [ 'no', 'pending' ],
             'all string'            => [ 'all', 'all' ],
             'approved plus pending' => [ [ 'approved', 'pending' ], 'all' ],
             'all plus approved'     => [ [ 'all', 'approved' ], 'all' ],
-            'empty list'            => [ [], 'all' ],
+            // An unknown status names nothing to filter on, so it must not widen the listing.
+            'unknown alone'         => [ 'rejected', 'approved' ],
+            'unknown with approved' => [ [ 'approved', 'rejected' ], 'approved' ],
+            'unknown with pending'  => [ [ 'pending', 'rejected' ], 'pending' ],
+            'empty list'            => [ [], 'approved' ],
         ];
     }
 
