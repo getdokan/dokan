@@ -4,6 +4,38 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.1.1',
+        'released' => '2026-09-09',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'The Vendors screen\'s Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The Pending vendors filter now runs as a single keyed subquery instead of stacked meta queries, so the Vendors screen stays fast on sites with many users.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The new product editor now shows the category the vendor actually picked instead of its top-level parent.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The store sidebar no longer collapses to a narrow column on the Storefront theme when the theme\'s store sidebar is enabled.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The admin Status and Pro Features pages now load their translations instead of always showing English.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The admin settings "Choose File" button and the vendor form\'s "Last Name" label are now translatable.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.1.0',
         'released' => '2026-09-07',
         'changes'  => [
