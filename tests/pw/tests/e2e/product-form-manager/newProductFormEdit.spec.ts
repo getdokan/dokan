@@ -50,6 +50,11 @@ test.describe('Vendor product editor (React) — edit persistence', () => {
     let form: NewProductFormPage;
 
     test.beforeEach(async ({ browser }) => {
+        // Each case does two full React hydrations (gotoEdit) plus a save whose
+        // internal waits (button-enable + PUT + toast) can approach the default
+        // 60s local budget. Triple it so a slow render doesn't time out mid-test
+        // and tear down the shared apiUtils context ("Request context disposed").
+        test.slow();
         ctx = await browser.newContext({ storageState: v1 });
         page = await ctx.newPage();
         form = new NewProductFormPage(page);
