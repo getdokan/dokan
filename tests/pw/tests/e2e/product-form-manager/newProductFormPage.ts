@@ -351,6 +351,20 @@ export class NewProductFormPage {
         return this.page.locator(`${newProductFormSelectors.taxClassWrapper} .react-select__single-value`).first();
     }
 
+    // Shipping / tax field wrappers as count-able locators — used to assert the
+    // shipping sub-form disappears for virtual products while Tax stays. The
+    // wrapper ids are schema-driven (stable across builds), unlike the WP
+    // components checkbox markup.
+    get shippingClassField(): Locator {
+        return this.page.locator(newProductFormSelectors.shippingClassWrapper);
+    }
+    get taxStatusField(): Locator {
+        return this.page.locator(newProductFormSelectors.taxStatusWrapper);
+    }
+    get taxClassField(): Locator {
+        return this.page.locator(newProductFormSelectors.taxClassWrapper);
+    }
+
     // ---- Internal helpers ----
     private checkboxByLabel(text: string): Locator {
         return this.page
@@ -675,6 +689,23 @@ export class NewProductFormPage {
         await this.save();
     }
 
+    /**
+     * Wait for the async-hydrated "Digital Product Options" group (Virtual /
+     * Downloadable) to mount. It renders noticeably later than title/price, so
+     * toggling Virtual straight after waitForFormReady() can silently no-op.
+     */
+    async waitForDigitalOptions(timeoutMs = 20000): Promise<void> {
+        await this.virtualToggle.waitFor({ state: 'attached', timeout: timeoutMs }).catch(() => undefined);
+    }
+
+    /** Create a virtual product (basic info + Virtual) and return its persisted id. */
+    async createVirtualProduct(data: ProductData): Promise<number | null> {
+        await this.fillBasicInfo(data);
+        await this.waitForDigitalOptions();
+        await this.enableVirtual();
+        return this.saveAndGetProductId();
+    }
+
     // ---- EDIT surface (/dashboard/new/#/products/:id/edit) ----
     // The create + edit routes share the same App component. Edit prefills from
     // GET dokan/v3/products/init/fields?id=, saves via PUT dokan/v3/products/:id
@@ -948,7 +979,7 @@ export class NewProductFormPage {
         // Walk one month at a time until the calendar shows the target month.
         for (let i = 0; i < 60; i++) {
             const current = (await heading.textContent())?.replace(/\s+/g, ' ').trim() ?? '';
-            const [curMonthName, curYearStr] = current.split(' ');
+            const [curMonthName = '', curYearStr = ''] = current.split(' ');
             const curTotal = Number(curYearStr) * 12 + monthNames.indexOf(curMonthName);
             if (curTotal === targetTotal) break;
             const nav = targetTotal > curTotal ? 'View next month' : 'View previous month';
@@ -1025,13 +1056,6 @@ export class NewProductFormPage {
         ]);
         const match = resp?.url().match(/\/products\/(\d+)/);
         return match ? Number(match[1]) : null;
-    }
-
-    /** Open a product in the new editor's edit route and wait for it to hydrate. */
-    async gotoEdit(productId: number): Promise<void> {
-        await this.page.goto(`${BASE_URL}/dashboard/new/#/products/${productId}/edit`);
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.title.waitFor({ state: 'visible', timeout: 30000 });
     }
 }
 
