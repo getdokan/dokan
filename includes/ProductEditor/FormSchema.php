@@ -661,8 +661,7 @@ class FormSchema {
                 'variant'          => 'async_select',
                 'placeholder'      => __( 'Select product categories', 'dokan-lite' ),
                 'value'            => [],
-                // Loaded on demand as a nested tree instead of embedding the whole
-                // category hierarchy in the schema, which bloats memory on large catalogs.
+                // Loaded on demand as a nested tree so the whole category hierarchy never bloats the schema on large catalogs.
                 'api_endpoint'     => '/dokan/v1/products/categories/tree',
                 'tree'             => true,
                 // Honor the admin "single vs. multiple" category selection setting.
@@ -679,8 +678,7 @@ class FormSchema {
                 'variant'          => 'async_select',
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
-                // Tags load on demand from WooCommerce core (searchable/paginated) instead of
-                // embedding the whole tag taxonomy in the schema, which can exhaust memory on large stores.
+                // Tags load on demand from WooCommerce core (searchable/paginated) so the whole tag taxonomy never bloats the schema on large stores.
                 'api_endpoint'     => '/wc/v3/products/tags',
                 'creatable'        => 'on' === $can_create_tags,
                 'visibility'       => true,
@@ -1157,19 +1155,23 @@ class FormSchema {
                 $to = $product->get_date_on_sale_to( 'edit' );
                 return $to ? $to->date( 'Y-m-d' ) : '';
             case Elements::CATEGORIES:
-                // Async select expects [ { value, label }, ... ] so selected categories render
-                // without the full category tree being embedded in the schema.
-                $category_options = self::terms_to_async_options( $product->get_category_ids(), 'product_cat' );
+                // The term list carries every ancestor of the picked category, so read back what the vendor chose.
+                $chosen_categories = ProductCategoryHelper::get_product_chosen_category( $product );
 
-                // Single-category stores keep one selection; surface only the first saved term.
-                if ( ProductCategoryHelper::product_category_selection_is_single() ) {
-                    return array_slice( $category_options, 0, 1 );
+                if ( empty( $chosen_categories ) ) {
+                    // Products saved outside Dokan recorded no selection, so fall back to the deepest term of each branch (not get_saved_products_category(), which self-heals by writing terms and a read must not).
+                    $chosen_categories = ProductCategoryHelper::generate_chosen_categories( $product->get_category_ids() );
                 }
 
-                return $category_options;
+                // Single-category stores keep one selection; narrow before building options, because terms_to_async_options() re-sorts by name and slicing after it would surface the alphabetically-first category rather than the one the vendor picked.
+                if ( ProductCategoryHelper::product_category_selection_is_single() ) {
+                    $chosen_categories = array_slice( $chosen_categories, 0, 1 );
+                }
+
+                // Async select expects [ { value, label }, ... ] so selections render without embedding the whole tree.
+                return self::terms_to_async_options( $chosen_categories, 'product_cat' );
             case Elements::TAGS:
-                // Async select expects [ { value, label }, ... ] so selected tags render
-                // without the full tag list being embedded in the schema.
+                // Async select expects [ { value, label }, ... ] so selections render without embedding the whole tag list.
                 return self::terms_to_async_options( $product->get_tag_ids(), 'product_tag' );
             case Elements::BRANDS:
                 if ( method_exists( $product, 'get_brand_ids' ) ) {
