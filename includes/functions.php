@@ -1500,7 +1500,7 @@ function dokan_get_seller_count( $from = null, $to = null ) {
     $now              = dokan_current_datetime();
     $inactive_sellers = dokan_get_sellers(
         [
-            'number' => - 1,
+            'number' => 1, // Only the total is read; one row keeps this from building a Vendor object per pending seller.
             'status' => 'pending',
         ]
     );
@@ -3484,14 +3484,12 @@ if ( ! function_exists( 'dokan_get_pending_vendor_count' ) ) {
     /**
      * Count the vendors that are waiting for admin approval.
      *
-     * Delegates to the very query the Vendors list is built from instead of reusing
-     * `dokan_get_seller_status_count()['inactive']`. That figure is derived as
-     * "everything that is not approved", so it also counts users carrying no
-     * `dokan_enable_selling` meta at all — every administrator, for one, since
-     * `dokan_admin_user_register()` only writes that meta for the `seller` role. The
-     * listing matches on `dokan_enable_selling = 'no'` and therefore leaves those users
-     * out, so a count taken from `inactive` is one an admin can never clear: the page it
-     * points at has nothing pending to show.
+     * Delegates to the very query the Vendors list is built from, so the badge can never
+     * claim a count the Pending tab is unable to show. Both read a missing
+     * `dokan_enable_selling` flag as pending, as `dokan_is_seller_enabled()`,
+     * `dokan_get_seller_status_count()` and the Users-screen "Pending Vendors" filter all
+     * do. That includes an administrator who never touched the seller fields, since
+     * `dokan_admin_user_register()` only writes the flag for the `seller` role.
      *
      * Cached in the shared `vendors` group, which VendorCache already invalidates on
      * vendor create/update/delete and on enable/disable.
