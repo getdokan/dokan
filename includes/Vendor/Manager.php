@@ -17,7 +17,7 @@ class Manager {
     /**
      * The statuses the vendor listing knows how to filter on.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.1
      *
      * @var string[]
      */
@@ -130,7 +130,7 @@ class Manager {
      * falls back to the default rather than widening the result, the same way
      * `Abilities\Definitions\VendorsQuery::resolve_status()` coerces an unknown status.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.1
      *
      * @param string|string[] $status
      *
@@ -152,7 +152,7 @@ class Manager {
      *
      * A correlated NOT EXISTS rides the usermeta index and stops at the first match per row.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.1
      *
      * @param \WP_User_Query $query
      *

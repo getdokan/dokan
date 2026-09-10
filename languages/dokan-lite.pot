@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.1.0\n"
+"Project-Id-Version: Dokan 5.1.1\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-07T09:00:05+00:00\n"
+"POT-Creation-Date: 2026-09-09T11:36:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -903,7 +903,7 @@ msgstr ""
 #: includes/Admin/Dashboard/Pages/Status.php:24
 #: includes/Admin/WithdrawLogExporter.php:114
 #: includes/Product/functions.php:215
-#: includes/ProductEditor/FormSchema.php:944
+#: includes/ProductEditor/FormSchema.php:942
 #: includes/REST/WithdrawExportController.php:44
 #: templates/my-orders.php:27
 #: templates/orders/listing.php:33
@@ -1342,7 +1342,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:146
 #: includes/Admin/Settings.php:539
 #: includes/Admin/Settings.php:592
-#: includes/Product/Hooks.php:492
+#: includes/Product/Hooks.php:494
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -3011,7 +3011,7 @@ msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:651
-#: includes/Product/Hooks.php:66
+#: includes/Product/Hooks.php:68
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -3676,7 +3676,7 @@ msgid "Allow"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: includes/ProductEditor/FormSchema.php:680
+#: includes/ProductEditor/FormSchema.php:679
 #: templates/products/edit-product-single.php:400
 #: templates/products/new-product.php:273
 #: templates/products/tmpl-add-product-popup.php:18
@@ -3684,7 +3684,7 @@ msgid "Select tags/Add tags"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: includes/ProductEditor/FormSchema.php:680
+#: includes/ProductEditor/FormSchema.php:679
 #: templates/products/edit-product-single.php:400
 #: templates/products/new-product.php:273
 #: templates/products/tmpl-add-product-popup.php:18
@@ -5346,12 +5346,12 @@ msgid "privacy policy"
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3578
+#: includes/functions.php:3576
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3591
+#: includes/functions.php:3589
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -6203,7 +6203,7 @@ msgid "Set scheduled sale dates"
 msgstr ""
 
 #: includes/Product/functions.php:229
-#: includes/ProductEditor/FormSchema.php:766
+#: includes/ProductEditor/FormSchema.php:764
 #: templates/products/inventory.php:3
 msgid "Inventory"
 msgstr ""
@@ -6314,7 +6314,7 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:204
+#: includes/Product/Hooks.php:206
 #: templates/products/listing-filter.php:110
 #: assets/js/components.js:2
 #: assets/js/dashboard-charts.js:1
@@ -6370,30 +6370,30 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:73
+#: includes/Product/Hooks.php:75
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:163
+#: includes/Product/Hooks.php:165
 #: templates/orders/commission-meta-box-html.php:85
 #: assets/js/frontend.js:2
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:200
+#: includes/Product/Hooks.php:202
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:208
+#: includes/Product/Hooks.php:210
 msgid "Shop order"
 msgstr ""
 
-#: includes/Product/Hooks.php:426
+#: includes/Product/Hooks.php:428
 msgid "As this is your own product, the \"Add to Cart\" button has been removed. Please visit as a guest to view it."
 msgstr ""
 
-#: includes/Product/Hooks.php:496
-#: includes/Product/Hooks.php:497
+#: includes/Product/Hooks.php:498
+#: includes/Product/Hooks.php:499
 #: assets/js/vue-admin.js:2
 msgid "When the value is 0, no commissions will be deducted from this vendor."
 msgstr ""
@@ -6501,254 +6501,254 @@ msgstr ""
 msgid "Select product categories"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:678
+#: includes/ProductEditor/FormSchema.php:677
 #: templates/products/edit-product-single.php:396
 #: templates/products/new-product.php:272
 #: templates/products/tmpl-add-product-popup.php:106
 msgid "Tags"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:692
+#: includes/ProductEditor/FormSchema.php:690
 msgid "Brands"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:694
+#: includes/ProductEditor/FormSchema.php:692
 msgid "Select product brands"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:703
+#: includes/ProductEditor/FormSchema.php:701
 msgid "Feature Image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:706
+#: includes/ProductEditor/FormSchema.php:704
 msgid "Select product image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:713
+#: includes/ProductEditor/FormSchema.php:711
 msgid "Gallery Image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:716
+#: includes/ProductEditor/FormSchema.php:714
 msgid "Select product gallery images"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:723
+#: includes/ProductEditor/FormSchema.php:721
 #: templates/products/edit-product-single.php:499
 msgid "Short Description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:725
+#: includes/ProductEditor/FormSchema.php:723
 msgid "Enter product short description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:732
+#: includes/ProductEditor/FormSchema.php:730
 #: templates/products/edit-product-single.php:519
 #: templates/products/new-product.php:288
 msgid "Description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:734
+#: includes/ProductEditor/FormSchema.php:732
 msgid "Enter product description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:743
+#: includes/ProductEditor/FormSchema.php:741
 #: templates/products/download-virtual.php:4
 #: templates/products/products-listing-row.php:246
 msgid "Downloadable"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:745
+#: includes/ProductEditor/FormSchema.php:743
 #: templates/products/download-virtual.php:4
 msgid "Downloadable products give access to a file upon purchase."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:753
+#: includes/ProductEditor/FormSchema.php:751
 #: templates/products/download-virtual.php:9
 #: templates/products/products-listing-row.php:244
 msgid "Virtual"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:755
+#: includes/ProductEditor/FormSchema.php:753
 msgid "Virtual products are intangible and are not shipped."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:767
+#: includes/ProductEditor/FormSchema.php:765
 msgid "Manage inventory for this product"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:774
+#: includes/ProductEditor/FormSchema.php:772
 #: templates/products/inventory.php:14
 #: templates/products/products-listing-row.php:172
 #: templates/products/products-listing.php:125
 msgid "SKU"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:774
+#: includes/ProductEditor/FormSchema.php:772
 msgid "Stock Keeping Unit"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:776
+#: includes/ProductEditor/FormSchema.php:774
 msgid "Enter product SKU"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:777
+#: includes/ProductEditor/FormSchema.php:775
 msgid "SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:784
+#: includes/ProductEditor/FormSchema.php:782
 msgid "GTIN, UPC, EAN, or ISBN"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:784
+#: includes/ProductEditor/FormSchema.php:782
 msgid "Product Identifiers"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:786
+#: includes/ProductEditor/FormSchema.php:784
 msgid "Enter code"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:787
+#: includes/ProductEditor/FormSchema.php:785
 msgid "Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:794
+#: includes/ProductEditor/FormSchema.php:792
 #: templates/products/inventory.php:19
 msgid "Stock Status"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:796
+#: includes/ProductEditor/FormSchema.php:794
 #: includes/REST/DummyDataController.php:444
 #: includes/REST/ProductController.php:2224
 msgid "Controls whether or not the product is listed as \"in stock\" or \"out of stock\" on the frontend."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:811
+#: includes/ProductEditor/FormSchema.php:809
 msgid "Manage stock?"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:813
+#: includes/ProductEditor/FormSchema.php:811
 msgid "Manage stock level (quantity)"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:820
+#: includes/ProductEditor/FormSchema.php:818
 #: templates/products/inventory.php:47
 msgid "Stock quantity"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:823
+#: includes/ProductEditor/FormSchema.php:821
 msgid "Stock quantity. If this is a variable product this value will be used to control stock for all variations, unless you define stock at variation level."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:837
+#: includes/ProductEditor/FormSchema.php:835
 #: templates/products/inventory.php:55
 msgid "Low stock threshold"
 msgstr ""
 
 #. translators: %d: store-wide threshold
-#: includes/ProductEditor/FormSchema.php:841
+#: includes/ProductEditor/FormSchema.php:839
 msgid "Store-wide threshold (%d)"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:844
+#: includes/ProductEditor/FormSchema.php:842
 msgid "When product stock reaches this amount you will be notified by email. It is possible to define different values for each variation individually."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:858
+#: includes/ProductEditor/FormSchema.php:856
 #: templates/products/inventory.php:61
 msgid "Allow Backorders"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:860
+#: includes/ProductEditor/FormSchema.php:858
 msgid "If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:875
+#: includes/ProductEditor/FormSchema.php:873
 msgid "Allow only one quantity of this product to be bought in a single order."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:877
+#: includes/ProductEditor/FormSchema.php:875
 msgid "Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:887
+#: includes/ProductEditor/FormSchema.php:885
 #: templates/products/downloadable.php:3
 msgid "Downloadable Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:888
+#: includes/ProductEditor/FormSchema.php:886
 #: templates/products/downloadable.php:4
 msgid "Configure your downloadable product settings"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:897
+#: includes/ProductEditor/FormSchema.php:895
 #: includes/REST/ProductControllerV3.php:476
 msgid "Downloadable Files"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:900
+#: includes/ProductEditor/FormSchema.php:898
 msgid "Pick downloadable files from upload directory which is approved by the store admin."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:901
+#: includes/ProductEditor/FormSchema.php:899
 msgid "Upload files that customers can download after purchase."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:910
+#: includes/ProductEditor/FormSchema.php:908
 #: templates/products/downloadable.php:58
 msgid "Download Limit"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:912
+#: includes/ProductEditor/FormSchema.php:910
 #: templates/orders/order-download-permission-html.php:64
 #: templates/products/downloadable.php:59
 msgid "Unlimited"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:913
+#: includes/ProductEditor/FormSchema.php:911
 msgid "Leave blank for unlimited re-downloads."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:922
+#: includes/ProductEditor/FormSchema.php:920
 #: templates/products/downloadable.php:63
 msgid "Download Expiry"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:924
+#: includes/ProductEditor/FormSchema.php:922
 #: templates/orders/order-download-permission-html.php:72
 #: templates/products/downloadable.php:64
 msgid "Never"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:925
+#: includes/ProductEditor/FormSchema.php:923
 msgid "Enter the number of days before a download link expires, or leave blank."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:936
+#: includes/ProductEditor/FormSchema.php:934
 #: templates/products/others.php:7
 msgid "Other Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:937
+#: includes/ProductEditor/FormSchema.php:935
 #: templates/products/others.php:8
 msgid "Set your extra product options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:955
+#: includes/ProductEditor/FormSchema.php:953
 #: templates/products/others.php:28
 msgid "Visibility"
 msgstr ""
 
+#: includes/ProductEditor/FormSchema.php:964
 #: includes/ProductEditor/FormSchema.php:966
-#: includes/ProductEditor/FormSchema.php:968
 #: templates/products/others.php:41
 msgid "Purchase Note"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:969
+#: includes/ProductEditor/FormSchema.php:967
 msgid "Customer will get this in order email."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:976
+#: includes/ProductEditor/FormSchema.php:974
 #: templates/products/others.php:52
 msgid "Enable product reviews"
 msgstr ""
@@ -9816,16 +9816,16 @@ msgstr ""
 msgid "Manually"
 msgstr ""
 
-#: includes/Vendor/Manager.php:197
+#: includes/Vendor/Manager.php:262
 msgid "Unable to create vendor"
 msgstr ""
 
-#: includes/Vendor/Manager.php:303
+#: includes/Vendor/Manager.php:368
 msgid "Email is not valid"
 msgstr ""
 
-#: includes/Vendor/Manager.php:541
-#: includes/Vendor/Manager.php:560
+#: includes/Vendor/Manager.php:606
+#: includes/Vendor/Manager.php:625
 msgid "Invalid vendor ID."
 msgstr ""
 
@@ -10410,6 +10410,7 @@ msgstr ""
 #: templates/account/update-customer-to-vendor.php:30
 #: templates/account/vendor-registration.php:23
 #: templates/global/seller-registration-form.php:21
+#: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Last Name"
@@ -15458,6 +15459,18 @@ msgid "Enjoy 24/7 premium support from experts to keep your marketplace running 
 msgstr ""
 
 #: assets/js/dokan-pro-features.js:2
+msgid "Curated Features for Your Thriving Marketplace"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Scroll left"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Scroll right"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
 msgid "Flexible Commission Structure"
 msgstr ""
 
@@ -15810,6 +15823,10 @@ msgstr ""
 
 #: assets/js/dokan-status.js:1
 msgid "Select a tab"
+msgstr ""
+
+#: assets/js/dokan-status.js:1
+msgid "Tabs"
 msgstr ""
 
 #: assets/js/dokan-status.js:1
@@ -16486,6 +16503,10 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Both percentage and fixed fee is required."
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Choose File"
 msgstr ""
 
 #: assets/js/vue-admin.js:2

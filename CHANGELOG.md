@@ -1,3 +1,12 @@
+### v5.1.1 ( Sep 09, 2026 ) ###
+
+- **fix:** The Vendors screen's Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.
+- **fix:** The Pending vendors filter now runs as a single keyed subquery instead of stacked meta queries, so the Vendors screen stays fast on sites with many users.
+- **fix:** The new product editor now shows the category the vendor actually picked instead of its top-level parent.
+- **fix:** The store sidebar no longer collapses to a narrow column on the Storefront theme when the theme's store sidebar is enabled.
+- **fix:** The admin Status and Pro Features pages now load their translations instead of always showing English.
+- **fix:** The admin settings "Choose File" button and the vendor form's "Last Name" label are now translatable.
+
 ### v5.1.0 ( Sep 07, 2026 ) ###
 
 - **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
