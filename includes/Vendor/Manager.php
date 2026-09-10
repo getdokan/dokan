@@ -15,6 +15,15 @@ use WeDevs\Dokan\Vendor\Vendor;
 class Manager {
 
     /**
+     * The statuses the vendor listing knows how to filter on.
+     *
+     * @since 5.1.1
+     *
+     * @var string[]
+     */
+    const STATUSES = [ 'all', 'approved', 'pending' ];
+
+    /**
      * Total vendors found
      *
      * @var integer
@@ -37,6 +46,10 @@ class Manager {
     /**
      * Get vendors
      *
+     * `status` accepts 'all', 'approved' or 'pending' (string or array); asking for both halves
+     * means everyone and anything unrecognised falls back to 'approved'. Pending is applied
+     * through the `dokan_pending_only` query var, which `exclude_approved_vendors()` acts on.
+     *
      * @param array $args
      *
      * @return array
@@ -58,31 +71,19 @@ class Manager {
 
         $args = wp_parse_args( $args, $defaults );
 
-        $status = (array) $args['status'];
+        $status = $this->resolve_status( $args['status'] );
 
-        $meta_query = [ 'relation' => 'OR' ];
-
-        foreach ( $status as $stat ) {
-            if ( $stat === 'all' ) {
-                continue;
-            }
-
-            $meta_query[] = [
+        if ( 'approved' === $status ) {
+            $args['meta_query']['relation'] = 'AND';
+            $args['meta_query'][]           = [
                 'key'     => 'dokan_enable_selling',
-                'value'   => ( $stat == 'approved' ) ? 'yes' : 'no',
+                'value'   => 'yes',
                 'compare' => '=',
             ];
         }
 
-        if ( ! empty( $args['meta_query'] ) ) {
-            $args['meta_query']['relation'] = 'AND';
-            $args['meta_query'][]           = $meta_query;
-        } else {
-            $args['meta_query'] = $meta_query;
-        }
-
         // if featured
-        if ( 'yes' == $args['featured'] ) {
+        if ( 'yes' === $args['featured'] ) {
             $args['meta_query']['relation'] = 'AND';
             $args['meta_query'][] = [
                 'key'     => 'dokan_feature_seller',
@@ -93,6 +94,17 @@ class Manager {
 
         unset( $args['status'] );
         unset( $args['featured'] );
+
+        // Pending is everyone not approved, a missing flag included, exactly as the status counters and dokan_is_seller_enabled() read it.
+        if ( 'pending' === $status ) {
+            // Carried into the query so the callback can tell our query from any other one running inside the same hook.
+            $args['dokan_pending_only'] = true;
+
+            // Hooked once and left in place: it is a no-op without the query var, and unhooking it around the query let a nested listing disarm the outer one.
+            if ( ! has_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] ) ) {
+                add_action( 'pre_user_query', [ $this, 'exclude_approved_vendors' ] );
+            }
+        }
 
         $user_query = new WP_User_Query( $args );
         $results    = $user_query->get_results();
@@ -108,6 +120,57 @@ class Manager {
         }
 
         return $vendors;
+    }
+
+    /**
+     * Collapse the requested statuses into the single filter the query applies.
+     *
+     * Only 'all', 'approved' and 'pending' are understood. Asking for both halves — or for 'all'
+     * outright — means everyone. Anything else names no status this listing can filter on, so it
+     * falls back to the default rather than widening the result, the same way
+     * `Abilities\Definitions\VendorsQuery::resolve_status()` coerces an unknown status.
+     *
+     * @since 5.1.1
+     *
+     * @param string|string[] $status
+     *
+     * @return string One of 'all', 'approved' or 'pending'.
+     */
+    protected function resolve_status( $status ): string {
+        $known = array_values( array_unique( array_intersect( (array) $status, self::STATUSES ) ) );
+
+        // Never let a typo read as a wider set than the caller asked for.
+        if ( empty( $known ) ) {
+            return 'approved';
+        }
+
+        return 1 === count( $known ) ? $known[0] : 'all';
+    }
+
+    /**
+     * Drop every approved vendor from a user query that asked for pending ones only.
+     *
+     * A correlated NOT EXISTS rides the usermeta index and stops at the first match per row.
+     *
+     * @since 5.1.1
+     *
+     * @param \WP_User_Query $query
+     *
+     * @return void
+     */
+    public function exclude_approved_vendors( $query ) {
+        global $wpdb;
+
+        // Every user query on the site passes through here once hooked, so only the one that asked for pending gets the clause.
+        if ( ! $query->get( 'dokan_pending_only' ) ) {
+            return;
+        }
+
+        $query->query_where .= $wpdb->prepare(
+            " AND NOT EXISTS ( SELECT 1 FROM {$wpdb->usermeta} WHERE user_id = {$wpdb->users}.ID AND meta_key = %s AND meta_value = %s )",
+            'dokan_enable_selling',
+            'yes'
+        );
     }
 
     /**
@@ -168,26 +231,28 @@ class Manager {
         /**
          * @since 3.2.7 added $data parameter
          */
-        $store_data = apply_filters( 'dokan_vendor_create_data', [
-            'store_name'              => ! empty( $data['store_name'] ) ? $data['store_name'] : '',
-            'social'                  => ! empty( $data['social'] ) ? $data['social'] : [],
-            'payment'                 => ! empty( $data['payment'] ) ? $data['payment'] : [
-                'paypal' => [ 'email' ],
-                'bank'   => [],
-            ],
-            'phone'                   => ! empty( $data['phone'] ) ? $data['phone'] : '',
-            'show_email'              => ! empty( $data['show_email'] ) ? $data['show_email'] : 'no',
-            'address'                 => ! empty( $data['address'] ) ? $data['address'] : [],
-            'location'                => ! empty( $data['location'] ) ? $data['location'] : '',
-            'banner'                  => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
-            'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
-            'gravatar'                => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
-            'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
-            'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
-            'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
-            'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
-            'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : [],
-        ], $data );
+        $store_data = apply_filters(
+            'dokan_vendor_create_data', [
+                'store_name'              => ! empty( $data['store_name'] ) ? $data['store_name'] : '',
+                'social'                  => ! empty( $data['social'] ) ? $data['social'] : [],
+                'payment'                 => ! empty( $data['payment'] ) ? $data['payment'] : [
+                    'paypal' => [ 'email' ],
+                    'bank'   => [],
+                ],
+                'phone'                   => ! empty( $data['phone'] ) ? $data['phone'] : '',
+                'show_email'              => ! empty( $data['show_email'] ) ? $data['show_email'] : 'no',
+                'address'                 => ! empty( $data['address'] ) ? $data['address'] : [],
+                'location'                => ! empty( $data['location'] ) ? $data['location'] : '',
+                'banner'                  => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
+                'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
+                'gravatar'                => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
+                'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
+                'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
+                'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
+                'store_seo'               => ! empty( $data['store_seo'] ) ? $data['store_seo'] : [],
+                'dokan_store_time'        => ! empty( $data['store_open_close'] ) ? $data['store_open_close'] : [],
+            ], $data
+        );
 
         $vendor = dokan()->vendor->get( $vendor_id );
 
@@ -383,7 +448,7 @@ class Manager {
 
         // for backward compatibility we'll allow both `enable_tnc` and `toc_enabled` to set store trams and condition settings
         if ( ( isset( $data['enable_tnc'] ) && dokan_validate_boolean( $data['enable_tnc'] ) )
-             || ( isset( $data['toc_enabled'] ) && dokan_validate_boolean( $data['toc_enabled'] ) ) ) {
+            || ( isset( $data['toc_enabled'] ) && dokan_validate_boolean( $data['toc_enabled'] ) ) ) {
             $vendor->set_enable_tnc( 'on' );
         } else {
             $vendor->set_enable_tnc( 'off' );
