@@ -7,6 +7,11 @@ export const endPoints = {
     getAllDokanEndpointsV2: `${SERVER_URL}/dokan/v2`,
     getAllDokanEndpointsAdmin: `${SERVER_URL}/dokan/v1/admin`,
 
+    // admin settings (flat-array schema) — distinct from `getAdminSettings`
+    // below, which is the legacy /admin/option endpoint.
+    getAdminSettingsSchema: `${SERVER_URL}/dokan/v1/admin/settings`,
+    saveAdminSettingsPage: (pageId: string) => `${SERVER_URL}/dokan/v1/admin/settings/${pageId}`,
+
     // stores
     getAllStores: `${SERVER_URL}/dokan/v1/stores`,
     getSingleStore: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}`,

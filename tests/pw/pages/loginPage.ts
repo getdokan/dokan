@@ -75,6 +75,13 @@ export class LoginPage extends BasePage {
             // wp-admin dashboard render is slow on CI, so dispatch the click and
             // confirm via the logged-in cookie below.
             await this.page.locator('#wp-submit').dispatchEvent('click');
+            // The submit starts a real navigation to wp-admin. The cookie poll
+            // below can confirm the session before the browser commits it, and a
+            // goto() issued inside that window is aborted by Playwright as
+            // "interrupted by another navigation".
+            await this.page
+                .waitForURL(url => url.pathname.includes('/wp-admin/'), { waitUntil: 'domcontentloaded', timeout: 30000 })
+                .catch(() => {});
         }
         await expect
             .poll(async () => await this.getCurrentUser(), { timeout: 30000 })
