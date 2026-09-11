@@ -6,7 +6,8 @@ export {
     VIEW_LAYOUTS,
 } from '@wordpress/dataviews/wp';
 export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
-export { DataViews, Switch, LabeledSwitch } from '@wedevs/plugin-ui';
+export { default as DataViews } from './dataviews/DokanDataViews';
+export { Switch, LabeledSwitch } from '@wedevs/plugin-ui';
 
 export { DokanSwitch } from './Switch';
 export { default as DokanModal } from './modals/DokanModal';

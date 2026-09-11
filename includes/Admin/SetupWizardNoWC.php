@@ -121,6 +121,15 @@ class SetupWizardNoWC extends DokanSetupWizard {
     public function install_woocommerce() {
         check_admin_referer( 'dokan-setup' );
 
+        // The wizard itself only requires `manage_woocommerce`, but installing and activating WooCommerce needs the plugin caps.
+        if ( ! $this->user_can_install_plugin() ) {
+            wp_die(
+                esc_html__( 'You do not have permission to install plugins.', 'dokan-lite' ),
+                esc_html__( 'Error installing WooCommerce plugin', 'dokan-lite' ),
+                [ 'response' => 403 ]
+            );
+        }
+
         require_once DOKAN_INC_DIR . '/functions.php';
 
         // Using output buffer to prevent outputting `trigger_error` in `plugins_api` function

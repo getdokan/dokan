@@ -4,15 +4,159 @@
  */
 $changelog = [
     [
-        'version'  => 'Version 5.0.12',
-        'released' => '2026-08-03',
+        'version'  => 'Version 5.1.0',
+        'released' => '2026-09-07',
         'changes'  => [
-            'New' => [
+            'Fix' => [
                 [
-                    'title'       => 'Made the WooCommerce Abilities (MCP) layer vendor-aware, so AI assistants and MCP tools only access a vendor\'s own products and orders, and added Dokan-native abilities for vendor data WooCommerce doesn\'t cover.',
+                    'title'       => 'The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.',
                     'description' => '',
                 ],
             ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.19',
+        'released' => '2026-09-03',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Declared compatibility with WooCommerce 11.0.1 so the outdated compatibility notice no longer appears on the Plugins screen.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'In the new product editor, saving a product that has gallery images but no featured image no longer moves the first gallery image into the featured slot, so all gallery photos are kept.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The vendor dashboard now shows an error message instead of loading forever when it can\'t load the current user.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Turning off the "Register as a Vendor" option now blocks vendor sign-ups on the server, not just in the form, so a crafted request can no longer register a vendor while the option is disabled.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.18',
+        'released' => '2026-09-01',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.17',
+        'released' => '2026-08-25',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.16',
+        'released' => '2026-08-21',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer\'s name, phone, and billing and shipping address instead of only the email and IP address.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard list labels such as "No data found" are now translatable through Dokan\'s language files.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.15',
+        'released' => '2026-08-19',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor\'s own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn\'t provide on its own.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'The product editor\'s Attributes field now honors the placeholder text configured in the Product Form Manager.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.14',
+        'released' => '2026-08-17',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevented unauthenticated visitors from reading a vendor\'s commission settings through the public store-categories endpoint.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented Shop Managers from installing or activating arbitrary plugins through Dokan\'s admin endpoints and setup wizard by requiring the proper plugin capabilities.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from clearing their reverse-withdrawal balance with an arbitrary payment amount by reconciling it against their actual outstanding debt.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.13',
+        'released' => '2026-08-12',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'A store\'s public product listing now returns only that store\'s products instead of the entire catalogue.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.12',
+        'released' => '2026-08-03',
+        'changes'  => [
             'Fix' => [
                 [
                     'title'       => 'Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.',

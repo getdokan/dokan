@@ -165,6 +165,14 @@ const totals = {
 totals.ran = totals.passed + totals.failed;
 totals.passRate = totals.ran > 0 ? Math.round((totals.passed / totals.ran) * 1000) / 10 : 0;
 
+// Test NAMES, not just counts. Both summaries already carry `failed_tests` / `flaky_tests`
+// (mergeSummaryReport writes them); the report only ever read the numbers, so it could say
+// "2 failed" without saying which two. Tolerate a missing or non-array field so an older
+// summary shape degrades to an empty list instead of throwing.
+const namesOf = (/** @type {any} */ report, /** @type {string} */ key) => (Array.isArray(report?.[key]) ? report[key].filter(Boolean).map(String) : []);
+const failedTestNames = [...namesOf(apiResult, 'failed_tests'), ...namesOf(e2eResult, 'failed_tests')];
+const flakyTestNames = [...namesOf(apiResult, 'flaky_tests'), ...namesOf(e2eResult, 'flaky_tests')];
+
 // Combined coverage: weight by endpoint/feature counts when available; else
 // average the percentages. Keep 2-decimal precision so this reconciles with the
 // per-suite figures (which display .toFixed(2)) instead of drifting by rounding
@@ -434,8 +442,19 @@ if (SUMMARY_FILE) {
     lines.push('</table>');
     lines.push('');
 
-    // --- Outcomes pie chart ---------------------------------------------
-    if (totals.ran > 0) {
+    // --- Outcomes -------------------------------------------------------
+    // A pie is only drawn when it can tell the truth, i.e. when the run is green.
+    //
+    // Mermaid renders every pie slice label as an INTEGER-rounded percentage and offers no
+    // precision setting. With 2537 passed against 2 failed the failing share is 0.08%, so the
+    // chart printed a full green circle labelled "100%" on a run that had two real failures, and
+    // the red slice was smaller than a pixel. That is the exact fake-green this suite exists to
+    // catch, produced by our own report — the status badge said "2 failures" while the graph next
+    // to it said 100%.
+    //
+    // No chart type fixes this: any proportional visual of 2 against 2537 is unreadable. So on a
+    // failing run the pie is replaced by the thing a reader actually needs — WHICH tests failed.
+    if (totals.ran > 0 && totals.failed === 0) {
         lines.push('```mermaid');
         lines.push(mermaidTheme);
         lines.push('pie showData');
@@ -443,6 +462,33 @@ if (SUMMARY_FILE) {
         lines.push(`  "Passed" : ${totals.passed}`);
         lines.push(`  "Failed" : ${totals.failed}`);
         lines.push('```');
+        lines.push('');
+    }
+
+    // --- Failures ---------------------------------------------------------
+    // Named, not counted. `failed_tests` has always been present in the merged summary and was
+    // never surfaced, so reading the report told you two tests failed but never which two.
+    if (failedTestNames.length) {
+        lines.push('<h2>❌ Failed Tests</h2>');
+        lines.push('');
+        // Computed here from the raw counts rather than reusing the rounded 1-decimal `passRate`:
+        // this section exists because rounding is what produced the "100%" lie in the first place.
+        const ran = totals.passed + totals.failed;
+        const exactRate = ran > 0 ? ((totals.passed / ran) * 100).toFixed(2) : '0.00';
+        lines.push(`Pass rate **${exactRate}%** — ${fmtNum(totals.passed)} passed, ${fmtNum(totals.failed)} failed.`);
+        lines.push('');
+        failedTestNames.forEach(name => lines.push(`- ❌ ${escape(name)}`));
+        lines.push('');
+    }
+
+    // Flaky = passed only on a retry. Not a failure, but not a pass either: it is the category a
+    // green run hides, so it is named whenever it occurs.
+    if (flakyTestNames.length) {
+        lines.push('<h2>⚠️ Flaky Tests</h2>');
+        lines.push('');
+        lines.push('Passed on retry — a green run here is retry-masked, not clean.');
+        lines.push('');
+        flakyTestNames.forEach(name => lines.push(`- ⚠️ ${escape(name)}`));
         lines.push('');
     }
 

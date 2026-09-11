@@ -27,6 +27,7 @@ async function closeAnnouncementModal(page: Page): Promise<void> {
 }
 
 import { toPath, SERVER_URL } from '@utils/helpers';
+import { MOBILE_TEST_PHONE } from '@utils/payloads';
 const DOKAN_PRO = process.env.DOKAN_PRO;
 
 const { VENDOR, ADMIN, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
@@ -137,7 +138,7 @@ const createOrderPayload = {
         postcode: '10003',
         country: 'US',
         email: 'customer1@email.com',
-        phone: '(555) 555-5555',
+        phone: MOBILE_TEST_PHONE,
     },
     shipping: {
         first_name: 'customer1',

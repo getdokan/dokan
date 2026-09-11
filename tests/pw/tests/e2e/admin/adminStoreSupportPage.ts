@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // ============================================
 // TEST DATA
@@ -227,7 +228,7 @@ export class AdminStoreSupportPage {
 
     /** Click an item in the open actions menu, e.g. 'Open', 'Close', 'Mark as Read'. */
     async clickActionMenuItem(label: string): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: new RegExp(escapeRegExp(label), 'i') }).first();
+        const item = actionMenuItemByName(this.page, new RegExp(escapeRegExp(label), 'i')).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
         await this.page.waitForTimeout(1200); // POST + list refetch.
@@ -277,11 +278,7 @@ export class AdminStoreSupportPage {
         // been moved, deleted or does not exist", and a "Back to Dashboard"
         // button. Match those exact, stable phrases (the old regex never
         // appeared in the rendered copy, so NotFound was never detected).
-        return this.page
-            .locator(
-                'text=/can.?t be found|appears to have been moved|moved, deleted or does not exist|Back to Dashboard/i'
-            )
-            .first();
+        return this.page.locator('text=/can.?t be found|appears to have been moved|moved, deleted or does not exist|Back to Dashboard/i').first();
     }
     /** True when the single-ticket page rendered the NotFound fallback (bad id/IDOR). */
     async isDetailNotFound(): Promise<boolean> {

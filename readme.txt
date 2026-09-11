@@ -2,12 +2,12 @@
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.9
-Tested up to: 7.0
+Requires at least: 7.0
+Tested up to: 7.1
 WC requires at least: 8.5.0
-WC tested up to: 10.4.3
+WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.0.12
+Stable tag: 5.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,34 +376,26 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v5.0.12 ( Aug 03, 2026 ) =
-- **new:** Made the WooCommerce Abilities (MCP) layer vendor-aware, so AI assistants and MCP tools only access a vendor's own products and orders, and added Dokan-native abilities for vendor data WooCommerce doesn't cover.
-- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
+= v5.1.0 ( Sep 07, 2026 ) =
+- **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
 
-= v5.0.11 ( Jul 27, 2026 ) =
-- **update:** Vendors can now search for products by SKU as well as by name.
-- **fix:** Store-page buttons now respect the Astra theme's global button styling.
-- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
-- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
-- **fix:** Prevented vendors from granting download access to another vendor's files.
-- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
-- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
+= v5.0.19 ( Sep 03, 2026 ) =
+- **update:** Declared compatibility with WooCommerce 11.0.1 so the outdated compatibility notice no longer appears on the Plugins screen.
+- **fix:** In the new product editor, saving a product that has gallery images but no featured image no longer moves the first gallery image into the featured slot, so all gallery photos are kept.
+- **fix:** The vendor dashboard now shows an error message instead of loading forever when it can't load the current user.
+- **fix:** Turning off the "Register as a Vendor" option now blocks vendor sign-ups on the server, not just in the form, so a crafted request can no longer register a vendor while the option is disabled.
 
-= v5.0.10 ( Jul 21, 2026 ) =
-- **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
-- **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
-- **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
+= v5.0.18 ( Sep 01, 2026 ) =
+- **new:** Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.
 
-= v5.0.9 ( Jul 14, 2026 ) =
-- **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
-- **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
-- **fix:** Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.
-- **fix:** Vendors can no longer give their customers download access to another vendor's downloadable files.
-- **fix:** Vendors can no longer change another vendor's product attributes.
-- **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
-- **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
+= v5.0.17 ( Aug 25, 2026 ) =
+- **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
+- **fix:** In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.
 
-= v5.0.8 ( Jul 06, 2026 ) =
-- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
+= v5.0.16 ( Aug 21, 2026 ) =
+- **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.
+- **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
+- **fix:** The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.
+- **fix:** Vendor dashboard list labels such as "No data found" are now translatable through Dokan's language files.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

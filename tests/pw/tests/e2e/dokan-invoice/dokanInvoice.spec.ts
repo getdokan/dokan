@@ -3,11 +3,12 @@ import path from 'path';
 import { DokanInvoicePage } from './dokanInvoicePage';
 import { payloads } from '@utils/payloads';
 import { SERVER_URL } from '@utils/helpers';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // ============================================
 // SESSION STORAGE VARIABLES
 // ============================================
-const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');     // Admin
+const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json'); // Admin
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json'); // Customer 1
 const c2 = path.join(__dirname, '../../../playwright/.auth/customer2StorageState.json'); // Customer 2
 
@@ -99,9 +100,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             // dokan-invoice's wpo_wcpdf_shop_name filter appends
             // "Vendor: <store_name>" to the shop name block for single-
             // vendor parent orders.
-            expect(html, 'invoice HTML should reference vendor1 store name').toMatch(
-                new RegExp(inv.testData.vendor1StoreName, 'i'),
-            );
+            expect(html, 'invoice HTML should reference vendor1 store name').toMatch(new RegExp(inv.testData.vendor1StoreName, 'i'));
 
             await inv.dispose();
             await ctx.close();
@@ -207,10 +206,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
 
             const orderId = await inv.seedVendor1Order('processing');
             const apiCtx = await request.newContext();
-            const res = await apiCtx.get(
-                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
-                { headers: inv.testData.vendor1.authHeader },
-            );
+            const res = await apiCtx.get(`${SERVER_URL}/dokan/v1/orders/${orderId}`, { headers: inv.testData.vendor1.authHeader });
             expect(res.ok(), `vendor1 GET order ${orderId} → ${res.status()}`).toBeTruthy();
             const body = await res.json();
             expect(body?.actions?.invoice?.url, 'vendor must see actions.invoice.url for their own order').toBeTruthy();
@@ -219,7 +215,6 @@ test.describe('Dokan Invoice Tests @pro', () => {
             await inv.dispose();
             await ctx.close();
         });
-
     });
 
     // ============================================
@@ -253,9 +248,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             const html = await inv.fetchHtmlPreviewFromAdminPage(page, orderId);
             // Vendor's seeded store name (from auth_setup) — proves
             // `wpo_wcpdf_shop_name` filter ran.
-            expect(html, 'HTML must contain vendor1 store name').toMatch(
-                new RegExp(inv.testData.vendor1StoreName, 'i'),
-            );
+            expect(html, 'HTML must contain vendor1 store name').toMatch(new RegExp(inv.testData.vendor1StoreName, 'i'));
             // Vendor's seeded address city — proves
             // `wpo_wcpdf_shop_address` filter ran (the default WC site
             // address would not contain "New York" with our seed).
@@ -272,8 +265,8 @@ test.describe('Dokan Invoice Tests @pro', () => {
             const html = await inv.fetchHtmlPreviewFromAdminPage(page, orderId);
             // Billing block content (from payloads.createOrder) — catches
             // regressions in WC PDF's billing rendering.
-            expect(html).toContain('abc street');     // address line 1
-            expect(html).toContain('10003');          // postcode
+            expect(html).toContain('abc street'); // address line 1
+            expect(html).toContain('10003'); // postcode
             expect(html.toLowerCase()).toContain('customer1'); // first name
             await inv.dispose();
             await ctx.close();
@@ -298,10 +291,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             const orderId = await inv.seedVendor1Order('processing');
 
             const apiCtx = await request.newContext();
-            const res = await apiCtx.get(
-                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
-                { headers: payloads.adminAuth },
-            );
+            const res = await apiCtx.get(`${SERVER_URL}/dokan/v1/orders/${orderId}`, { headers: payloads.adminAuth });
             expect(res.ok()).toBeTruthy();
             const body = await res.json();
             const url: string = body?.actions?.invoice?.url ?? '';
@@ -325,17 +315,12 @@ test.describe('Dokan Invoice Tests @pro', () => {
             const orderId = await inv.seedVendor1Order('processing');
 
             const apiCtx = await request.newContext();
-            const res = await apiCtx.get(
-                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
-                { headers: payloads.adminAuth },
-            );
+            const res = await apiCtx.get(`${SERVER_URL}/dokan/v1/orders/${orderId}`, { headers: payloads.adminAuth });
             const body = await res.json();
             const slip = body?.actions?.['packing-slip'];
             // Setup enables the packing-slip document; if it ever
             // regresses to disabled-by-default, the assertion fails.
-            expect(slip?.url, 'packing-slip URL should be injected when WC PDF document is enabled').toMatch(
-                /document_type=packing-slip/,
-            );
+            expect(slip?.url, 'packing-slip URL should be injected when WC PDF document is enabled').toMatch(/document_type=packing-slip/);
             expect(slip.url).toMatch(new RegExp(`order_ids=${orderId}\\b`));
             await apiCtx.dispose();
             await inv.dispose();
@@ -376,10 +361,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
 
             // Flip to completed via WC REST.
             const apiCtx = await request.newContext();
-            const upd = await apiCtx.put(
-                `${SERVER_URL}/wc/v3/orders/${orderId}`,
-                { data: { status: 'completed' }, headers: payloads.adminAuth },
-            );
+            const upd = await apiCtx.put(`${SERVER_URL}/wc/v3/orders/${orderId}`, { data: { status: 'completed' }, headers: payloads.adminAuth });
             expect(upd.ok()).toBeTruthy();
             await apiCtx.dispose();
 
@@ -416,11 +398,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             await page.goto(inv.customer.myAccountOrdersUrl);
             // Stylesheet handle is `dokan-invoice-styles`. WordPress
             // emits it as <link id="dokan-invoice-styles-css" …>.
-            const cssLoaded = await page.evaluate(() =>
-                Boolean(document.querySelector('link[id="dokan-invoice-styles-css"]'))
-                || Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'))
-                    .some(l => l.href.includes('/dokan-invoice/assets/css/style.css')),
-            );
+            const cssLoaded = await page.evaluate(() => Boolean(document.querySelector('link[id="dokan-invoice-styles-css"]')) || Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')).some(l => l.href.includes('/dokan-invoice/assets/css/style.css')));
             expect(cssLoaded, 'dokan-invoice/assets/css/style.css should be enqueued').toBeTruthy();
             await inv.dispose();
             await ctx.close();
@@ -431,10 +409,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             const page = await ctx.newPage();
             const inv = new DokanInvoicePage(page);
             await page.goto(inv.customer.myAccountOrdersUrl);
-            const jsLoaded = await page.evaluate(() =>
-                Array.from(document.querySelectorAll<HTMLScriptElement>('script[src]'))
-                    .some(s => s.src.includes('/dokan-invoice/assets/js/dokan-orders.js')),
-            );
+            const jsLoaded = await page.evaluate(() => Array.from(document.querySelectorAll<HTMLScriptElement>('script[src]')).some(s => s.src.includes('/dokan-invoice/assets/js/dokan-orders.js')));
             expect(jsLoaded, 'dokan-invoice/assets/js/dokan-orders.js should be enqueued').toBeTruthy();
             await inv.dispose();
             await ctx.close();
@@ -487,10 +462,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
                 storageState: path.join(__dirname, '../../../playwright/.auth/vendor2StorageState.json'),
             });
             const v2Page = await v2Ctx.newPage();
-            const res = await v2Page.request.get(
-                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
-                { headers: payloads.vendor2Auth },
-            );
+            const res = await v2Page.request.get(`${SERVER_URL}/dokan/v1/orders/${orderId}`, { headers: payloads.vendor2Auth });
             expect([401, 403, 404]).toContain(res.status());
             await v2Ctx.close();
         });
@@ -581,8 +553,8 @@ test.describe('Dokan Invoice Tests @pro', () => {
             await page.waitForSelector(inv.vendor.dataRow, { timeout: 15000 });
 
             await page.locator(inv.vendor.rowActionsTrigger).first().click();
-            await expect(page.getByRole('menuitem', inv.vendor.viewInvoiceMenuItem)).toBeVisible();
-            await expect(page.getByRole('menuitem', inv.vendor.viewPackingSlipMenuItem)).toBeVisible();
+            await expect(actionMenuItemByName(page, inv.vendor.viewInvoiceMenuItem.name)).toBeVisible();
+            await expect(actionMenuItemByName(page, inv.vendor.viewPackingSlipMenuItem.name)).toBeVisible();
 
             await inv.dispose();
             await ctx.close();
@@ -612,7 +584,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             });
 
             await page.locator(inv.vendor.rowActionsTrigger).first().click();
-            await page.getByRole('menuitem', inv.vendor.viewInvoiceMenuItem).click();
+            await actionMenuItemByName(page, inv.vendor.viewInvoiceMenuItem.name).click();
             await page.waitForTimeout(500);
 
             const captured: string[] = await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls);
@@ -646,7 +618,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             });
 
             await page.locator(inv.vendor.rowActionsTrigger).first().click();
-            await page.getByRole('menuitem', inv.vendor.viewPackingSlipMenuItem).click();
+            await actionMenuItemByName(page, inv.vendor.viewPackingSlipMenuItem.name).click();
             await page.waitForTimeout(500);
 
             const captured: string[] = await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls);
@@ -679,7 +651,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             });
 
             await page.locator(inv.vendor.rowActionsTrigger).first().click();
-            await page.getByRole('menuitem', inv.vendor.viewInvoiceMenuItem).click();
+            await actionMenuItemByName(page, inv.vendor.viewInvoiceMenuItem.name).click();
             await page.waitForTimeout(500);
 
             const capturedUrls = await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls);

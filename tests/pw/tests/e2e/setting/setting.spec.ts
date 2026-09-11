@@ -107,10 +107,15 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set store terms and conditions (general settings)', { tag: ['@lite', '@vendor'] }, async () => {
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'on' });
+        // This option is GLOBAL and the test deliberately ends on 'off', which is NOT the seeded
+        // default ('on'). Left that way it hides the store TOC tab for every later spec on the
+        // shard — singleStore.spec.ts carries a defensive re-seed purely because of this. Capture
+        // and restore so the on/off assertions stay, without the leak.
+        const [originalGeneral] = await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'on' });
         await vendor.setStoreTermsAndConditions('on');
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'off' });
         await vendor.setStoreTermsAndConditions('off');
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: originalGeneral?.seller_enable_terms_and_conditions ?? 'on' });
     });
 
     test('admin can set store products per page (general settings)', { tag: ['@lite', '@customer'] }, async () => {

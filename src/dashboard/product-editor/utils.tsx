@@ -69,18 +69,63 @@ export function fieldValueForProduct( item: FormItem ): any {
     return v ?? '';
 }
 
-/** True if value is considered empty (null, undefined, '', whitespace-only, or empty array). */
-function isEmptyValue( val: any ): boolean {
+/** True for a plain `{}` object — class instances such as Date own no enumerable values and must not read as empty. */
+const isPlainObject = ( val: any ): boolean =>
+    typeof val === 'object' &&
+    val !== null &&
+    ! Array.isArray( val ) &&
+    [ Object.prototype, null ].includes( Object.getPrototypeOf( val ) );
+
+/**
+ * Walk a value for emptiness, remembering collections already visited.
+ *
+ * @param val  Value to test.
+ * @param seen Collections visited on this walk, allocated only once one is reached.
+ */
+function isEmptyDeep( val: any, seen?: WeakSet< object > ): boolean {
     if ( val === undefined || val === null ) {
         return true;
     }
     if ( typeof val === 'string' ) {
         return val.trim() === '';
     }
-    if ( Array.isArray( val ) ) {
-        return val.length === 0;
+    if ( ! Array.isArray( val ) && ! isPlainObject( val ) ) {
+        return false;
     }
-    return false;
+
+    // A branch that loops back on itself adds no value, and this backs a public helper an extension can hand any object.
+    const visited = seen ?? new WeakSet();
+
+    if ( visited.has( val ) ) {
+        return true;
+    }
+    visited.add( val );
+
+    return Object.values( val ).every( ( entry ) =>
+        isEmptyDeep( entry, visited )
+    );
+}
+
+/**
+ * True if a value carries nothing: null, undefined, whitespace-only text, or a
+ * collection whose entries are all themselves empty.
+ *
+ * Recursing matters for repeater fields — a downloadable-file row the vendor
+ * added but never filled in is `{ id: '', name: '', file: '' }`, and a list of
+ * those rows is no more a value than an empty list is. Scalars keep their usual
+ * meaning, so `0` and `false` are values.
+ *
+ * An extension whose blank value is meaningful should send a scalar — `{}` and `[ '' ]` read as empty.
+ *
+ * Backs both the `required` validation and the `empty`/`not_empty` dependency
+ * comparisons, so the form only ever holds one definition of "no value".
+ *
+ * @since 5.0.16
+ *
+ * @param val Value to test.
+ */
+export function isEmpty( val: any ): boolean {
+    return isEmptyDeep( val );
 }
 
 /** Normalize checkbox-like values to boolean for comparison. */
@@ -108,9 +153,9 @@ function resolveCondition(
 
     switch ( comparison ) {
         case 'empty':
-            return isEmptyValue( depValue );
+            return isEmpty( depValue );
         case 'not_empty':
-            return ! isEmptyValue( depValue );
+            return ! isEmpty( depValue );
         case '==':
         case 'equal':
             return (

@@ -4,6 +4,7 @@ import { NewProductFormPage, newProductFormData } from './newProductFormPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { payloads } from '@utils/payloads';
+import { SERVER_URL } from '@utils/helpers';
 import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 test.describe('Vendor new product form (React) functionality', () => {
@@ -65,8 +66,31 @@ test.describe('Vendor new product form (React) functionality', () => {
             await form.waitForSaveSuccess();
         });
 
+        // A draft left behind is not harmless: it is the only product state another spec asserts
+        // the ABSENCE of (newProducts' "empty Draft tab"), so this one gets cleaned up by title.
+        const draftTitles: string[] = [];
+
+        test.afterAll(async () => {
+            if (!draftTitles.length) {
+                return;
+            }
+            const api = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+            try {
+                for (const title of draftTitles) {
+                    const res = await api.get(`${SERVER_URL}/wc/v3/products`, { params: { status: 'draft', search: title, _fields: 'id,name' } });
+                    const found = (await res.json()) as Array<{ id: number; name: string }>;
+                    for (const p of found.filter(p => p.name === title)) {
+                        await api.delete(`${SERVER_URL}/wc/v3/products/${p.id}?force=true`);
+                    }
+                }
+            } finally {
+                await api.dispose();
+            }
+        });
+
         test('vendor can save a product as draft', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
+            draftTitles.push(data.title);
 
             await form.fillBasicInfo(data);
             await form.saveAsDraft();

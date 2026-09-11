@@ -155,6 +155,9 @@ trait ObjectCache {
      * ```
      *
      * @since 3.3.2
+     * @since 5.0.16 Removed the redundant `wp_cache_flush_group()` call. It targeted a group
+     *                    no key is ever written to, while forcing persistent backends such as
+     *                    Redis into a full keyspace scan on every call.
      *
      * @param string $group Group of caches to clear.
      *
@@ -163,11 +166,10 @@ trait ObjectCache {
     public static function invalidate_group( $group ) {
         $group = static::get_cache_group_with_prefix( $group );
 
-        $supported = wp_cache_supports( 'flush_group' );
-        if ( $supported ) {
-            wp_cache_flush_group( $group . '_prefix' );
-        }
-
+        // Rewriting the group's time prefix is the complete invalidation: every key
+        // derived from the old prefix becomes unreachable, and the orphaned entries
+        // are evicted by their own expiry. Do not add a wp_cache_flush_group() call
+        // here — on Redis/Memcached a group flush scans the entire keyspace.
         return wp_cache_set( $group . '_prefix', static::get_time_prefix(), $group );
     }
 
