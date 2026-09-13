@@ -177,7 +177,11 @@ const WeeklyTimeSlots = ( {
                 return next;
             } );
         }
-        commit( dayKey, { ...day, slots: nextSlots } );
+        // Single mode edits only the visible range, so drop any hidden extras rather than saving ranges the vendor can't see.
+        commit( dayKey, {
+            ...day,
+            slots: multiple ? nextSlots : nextSlots.slice( 0, 1 ),
+        } );
     };
 
     const handleAddSlot = ( dayKey: string ) => {
@@ -211,6 +215,13 @@ const WeeklyTimeSlots = ( {
             ? errors[ dayKey ]?.[ index ]
             : undefined;
         const isFullDaySlot = slot.opening_time === FULL_DAY;
+        // Once a slot closes at the last selectable preset (11:30 pm on the
+        // 30-min grid) the day is full, so its add control retires the way the
+        // legacy "Add hours" link disappears at the end of the day.
+        const closingMinutes = timeToMinutes( slot.closing_time );
+        const atDayEnd =
+            closingMinutes !== null && closingMinutes >= MINUTES_PER_DAY - step;
+        const addDisabled = isFullDaySlot || atDayEnd;
         return (
             <div
                 key={ index }
@@ -276,19 +287,33 @@ const WeeklyTimeSlots = ( {
                         >
                             <Trash size={ 16 } className="shrink-0" />
                         </button>
-                        { /* Add: real on the last non-Full-Day slot. On other rows it collapses when stacked (delete hugs the right edge) but keeps its space side-by-side so trashes stay in a column. */ }
+                        { /* Add: functional on the last dated slot. A Full Day
+                             slot shows it disabled (a full day already spans 24h)
+                             so the row still lines up with dated rows instead of
+                             leaving a gap next to the trash. Non-last rows keep
+                             their space but hide the glyph so the last row owns the +. */ }
                         <button
                             type="button"
                             aria-label={ __( 'Add time slot', 'dokan-lite' ) }
+                            disabled={ addDisabled }
                             onClick={ () => handleAddSlot( dayKey ) }
-                            style={ {
-                                color: 'var(--dokan-button-background-color, #7047EB)',
-                            } }
+                            style={
+                                addDisabled
+                                    ? undefined
+                                    : {
+                                          color: 'var(--dokan-button-background-color, #7047EB)',
+                                      }
+                            }
                             className={ twMerge(
                                 iconBtnBase,
-                                'hover:bg-gray-50!',
-                                ( isFullDaySlot ||
-                                    index !== day.slots.length - 1 ) &&
+                                isFullDaySlot
+                                    ? 'text-gray-500! cursor-not-allowed opacity-50'
+                                    : // Matches the delete button's tinted hover, on the brand colour (see .dokan-soft-primary).
+                                      'dokan-soft-primary',
+                                // Retire the glyph on the day-end row too, so a full
+                                // day reads like the legacy rows (× only, no add).
+                                ( index !== day.slots.length - 1 ||
+                                    atDayEnd ) &&
                                     'hidden @3xl:flex @3xl:invisible'
                             ) }
                         >
@@ -342,10 +367,12 @@ const WeeklyTimeSlots = ( {
                 { dayMessages.length > 0 && renderDayMessages( dayMessages ) }
             </div>
         );
+        // Single mode shows one range per day even when the stored value carries extra slots (data written while multi-slot was available).
+        const visibleSlots = multiple ? day.slots : day.slots.slice( 0, 1 );
         const slotsBlock = ( wrapCls: string ) =>
             hasSlots && (
                 <div className={ twMerge( wrapCls, slotsOverlay ) }>
-                    { day.slots.map( ( slot, index ) =>
+                    { visibleSlots.map( ( slot, index ) =>
                         renderSlotRow( dayKey, day, slot, index )
                     ) }
                 </div>
