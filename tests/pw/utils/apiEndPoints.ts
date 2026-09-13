@@ -383,6 +383,54 @@ export const endPoints = {
     createShipStationOrderStatusSettings: `${SERVER_URL}/dokan/v1/shipstation/order-statuses`,
     deleteShipStationOrderStatusSettings: (vendorId: string) => `${SERVER_URL}/dokan/v1/shipstation/order-statuses/${vendorId}`,
 
+    // admin dashboard stats
+    getAdminDashboardTodo: `${SERVER_URL}/dokan/v1/admin/dashboard/todo`,
+    getAdminDashboardAnalytics: `${SERVER_URL}/dokan/v1/admin/dashboard/analytics`,
+    getAdminDashboardMonthlyOverview: `${SERVER_URL}/dokan/v1/admin/dashboard/monthly-overview`,
+    getAdminDashboardSalesChart: `${SERVER_URL}/dokan/v1/admin/dashboard/sales-chart`,
+    getAdminDashboardAllTimeStats: `${SERVER_URL}/dokan/v1/admin/dashboard/all-time-stats`,
+    getAdminDashboardTopPerformingVendors: `${SERVER_URL}/dokan/v1/admin/dashboard/top-performing-vendors`,
+    getAdminDashboardMostReviewedProducts: `${SERVER_URL}/dokan/v1/admin/dashboard/most-reviewed-products`,
+    getAdminDashboardVendorMetrics: `${SERVER_URL}/dokan/v1/admin/dashboard/vendor-metrics`,
+    getAdminDashboardStatus: `${SERVER_URL}/dokan/v1/admin/dashboard/status`,
+
+    // admin extensions
+    installAdminExtension: `${SERVER_URL}/dokan/v1/admin/extensions/install`, // post
+
+    // admin onboarding
+    getAdminOnboarding: `${SERVER_URL}/dokan/v1/admin/onboarding`,
+    saveAdminOnboarding: `${SERVER_URL}/dokan/v1/admin/onboarding`, // post
+
+    // admin setup guide
+    getAdminSetupGuide: `${SERVER_URL}/dokan/v1/admin/setup-guide`,
+    updateAdminSetupGuide: `${SERVER_URL}/dokan/v1/admin/setup-guide`, // put/post
+    getSingleAdminSetupGuide: (id: string) => `${SERVER_URL}/dokan/v1/admin/setup-guide/${id}`,
+    updateSingleAdminSetupGuide: (id: string) => `${SERVER_URL}/dokan/v1/admin/setup-guide/${id}`,
+
+    // admin tools
+    createDokanPages: `${SERVER_URL}/dokan/v1/admin/tools/create-pages`, // post
+    checkAllDokanPagesExist: `${SERVER_URL}/dokan/v1/admin/tools/check-all-dokan-pages-exists`,
+    clearDokanCaches: `${SERVER_URL}/dokan/v1/admin/tools/clear-caches`, // post
+
+    // customers search
+    searchCustomers: `${SERVER_URL}/dokan/v1/customers/search`,
+
+    // data continents & countries
+    getAllContinents: `${SERVER_URL}/dokan/v1/data/continents`,
+    getSingleContinent: (code: string) => `${SERVER_URL}/dokan/v1/data/continents/${code}`,
+    getAllCountries: `${SERVER_URL}/dokan/v1/data/countries`,
+    getSingleCountry: (code: string) => `${SERVER_URL}/dokan/v1/data/countries/${code}`,
+
+    // reports export
+    exportReport: (type: string) => `${SERVER_URL}/dokan/v1/reports/${type}/export`, // post
+    getExportReportStatus: (type: string, exportId: string) => `${SERVER_URL}/dokan/v1/reports/${type}/export/${exportId}/status`,
+    getWithdrawExportReport: `${SERVER_URL}/dokan/v1/reports/withdraws`,
+
+    // vendor product categories
+    getVendorProductCategories: `${SERVER_URL}/dokan/v1/products/categories`,
+    getVendorProductCategoriesTree: `${SERVER_URL}/dokan/v1/products/categories/tree`,
+    getSingleVendorProductCategory: (id: string) => `${SERVER_URL}/dokan/v1/products/categories/${id}`,
+
     wc: {
         // coupons
         getAllCoupons: `${SERVER_URL}/wc/v3/coupons`,
