@@ -44,3 +44,5 @@ base-tailwind.config.js
 CLAUDE.md
 CONTEXT.md
 /.claude
+/graphify-out
+.graphifyignore
