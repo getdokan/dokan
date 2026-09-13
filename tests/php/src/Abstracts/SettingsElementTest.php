@@ -2,16 +2,55 @@
 
 namespace WeDevs\Dokan\Test\Abstracts;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Field;
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\Page;
+use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Test\DokanTestCase;
+
+/**
+ * Minimal concrete `page` element for exercising the abstract.
+ */
+class SettingsElementPageDouble extends SettingsElement {
+
+    protected $type = 'page';
+
+    public function data_validation( $data ): bool {
+        return is_array( $data );
+    }
+
+    public function sanitize_element( $data ) {
+        return $data;
+    }
+
+    public function escape_element( $data ) {
+        return $data;
+    }
+}
+
+/**
+ * Minimal concrete `field` element for exercising the abstract.
+ */
+class SettingsElementFieldDouble extends SettingsElement {
+
+    protected $type = 'field';
+
+    public function data_validation( $data ): bool {
+        return true;
+    }
+
+    public function sanitize_element( $data ) {
+        return $data;
+    }
+
+    public function escape_element( $data ) {
+        return $data;
+    }
+}
 
 /**
  * Tests for the abstract SettingsElement class.
  *
- * Concrete subclasses (Page, Field) are used as instantiable stand-ins for the
- * abstract — they are the same classes the legacy onboarding flow exercises in
- * production, so the assertions reflect the real wiring.
+ * Lightweight in-file doubles stand in for the abstract so the assertions cover
+ * the generic element behavior (id, children, dependencies, validations,
+ * serialization) without depending on any concrete production element.
  *
  * @group admin-settings
  * @group settings-schema
@@ -24,8 +63,8 @@ class SettingsElementTest extends DokanTestCase {
      * parent's `get_children()` must carry their declared id unchanged.
      */
     public function test_get_id_returns_field_identifier_after_set_children() {
-        $parent = new Page( 'general' );
-        $child  = new Field( 'commission_type' );
+        $parent = new SettingsElementPageDouble( 'general' );
+        $child  = new SettingsElementFieldDouble( 'commission_type' );
         $parent->set_children( [ $child ] );
 
         $children = $parent->get_children();
@@ -42,7 +81,7 @@ class SettingsElementTest extends DokanTestCase {
      * key the rest of the system uses.
      */
     public function test_get_dependencies_uses_id_for_self() {
-        $field = new Field( 'commission_type' );
+        $field = new SettingsElementFieldDouble( 'commission_type' );
         $field->add_dependency( 'enable_commission', true );
 
         $dependencies = $field->get_dependencies();
@@ -56,7 +95,7 @@ class SettingsElementTest extends DokanTestCase {
      * stamp the `self` key with the element's id.
      */
     public function test_get_validations_uses_id_for_self() {
-        $field = new Field( 'commission_type' );
+        $field = new SettingsElementFieldDouble( 'commission_type' );
         $field->add_validation( 'required', 'Required' );
 
         $validations = $field->get_validations();
@@ -66,11 +105,11 @@ class SettingsElementTest extends DokanTestCase {
     }
 
     /**
-     * to_array() / populate() output must omit the legacy `dependency_key`
-     * field — it was deleted from the schema in Task 11.
+     * populate() output must omit the legacy `dependency_key` field — it was
+     * deleted from the schema in the dependency_key cleanup.
      */
     public function test_populate_omits_dependency_key() {
-        $field = new Field( 'site_logo' );
+        $field = new SettingsElementFieldDouble( 'site_logo' );
         $this->assertArrayNotHasKey( 'dependency_key', $field->populate() );
     }
 }
