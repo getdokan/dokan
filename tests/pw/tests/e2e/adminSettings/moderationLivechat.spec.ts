@@ -43,12 +43,14 @@ const newDataset = {
             type: 'switch',
             value: true
         },
-        // {
-        //     There is problem of some fields. Todo: Fix those selectors later.
-        //     selector: '[data-testid="settings-field-livechat_provider"] div[role="radio"][aria-checked="true"]:has-text("Tawk.to")',
-        //     type: 'radio',
-        //     value: true
-        // },
+        {
+            // `customize_radio` variant — the legacy side asserts the Tawk.to
+            // option, so it has to be set here. Without it the provider stays
+            // at its `talkjs` default and the legacy check fails.
+            selector: '[data-testid="settings-field-livechat_provider"]',
+            type: 'customize-radio',
+            value: 'tawkto',
+        },
         {
             selector: '[data-testid="settings-field-livechat_vendor_page_button"] [role="switch"]',
             type: 'switch',

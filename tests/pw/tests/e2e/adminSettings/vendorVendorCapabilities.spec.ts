@@ -21,11 +21,10 @@ const oldDataset = [
         "url": "wp-admin/admin.php?page=dokan#/settings",
         "selector": '//div[@class="nav-title" and contains(text(),"Selling Options")]',
         "fields": [
-            {
-                "selector": '//select[@id="dokan_selling[new_seller_enable_selling]"]',
-                "type": "select",
-                "value": "automatically"
-            },
+            // `dokan_selling.new_seller_enable_selling` is not asserted here: it
+            // bridges to `vendor_auto_enable_selling` on the Vendor Onboarding
+            // subpage, which this dataset never sets. Its own spec
+            // (vendorVendorOnboarding) owns both sides of that field.
             {
                 "selector": '//label[@for="dokan_selling[allow_vendor_create_manual_order]"]//label[@class="switch tips"]',
                 "type": "checkbox",

@@ -38,10 +38,24 @@ export class AdminSettingsPageNew extends AdminPage {
         }
     }
 
+    // The legacy settings app only renders its fields once the
+    // `dokan_get_setting_values` ajax resolves (`v-if="isLoaded"` in
+    // `src/admin/pages/Settings.vue`) and shows a `.loading` overlay until then.
+    // Looking a field up before that lands times out on a loaded box, so wait
+    // the overlay out first. The new settings app has no such element, where
+    // this resolves immediately.
+    async waitForLegacyLoader() {
+        await this.page
+            .locator('.dokan-settings-wrap > .loading')
+            .waitFor({ state: 'detached', timeout: 60000 })
+            .catch(() => null);
+    }
+
     async updateSettings( dataSet: any ) {
         await this.goIfNotThere(dataSet.url)
         await this.waitForLoadState();
         await this.navigateThroughSelectors(dataSet.selector || '');
+        await this.waitForLegacyLoader();
 
         await this.setFieldValues( dataSet.fields );
         await this.saveSettings();
@@ -55,6 +69,7 @@ export class AdminSettingsPageNew extends AdminPage {
         if (dataSet.selector) {
             await this.navigateThroughSelectors(dataSet.selector);
         }
+        await this.waitForLegacyLoader();
 
         await this.assertFieldValues( dataSet.fields );
     }
@@ -72,7 +87,30 @@ export class AdminSettingsPageNew extends AdminPage {
         if (await saveBtn.isDisabled()) {
             return;
         }
+        // Both UIs persist over XHR and neither blocks on it: the new app
+        // `apiFetch`es `PUT /dokan/v1/admin/settings/{scope}`, the legacy Vue
+        // app posts `dokan_save_settings` to admin-ajax. Returning on the click
+        // alone lets the next step navigate away mid-flight, which aborts the
+        // request — the source of "saved value reads back empty" flakes. Wait
+        // for whichever response the click triggered.
+        const persisted = this.page
+            .waitForResponse(
+                res => {
+                    const request = res.request();
+                    if (request.method() === 'PUT' && res.url().includes('/dokan/v1/admin/settings/')) {
+                        return true;
+                    }
+                    return (
+                        res.url().includes('admin-ajax.php') &&
+                        (request.postData() ?? '').includes('action=dokan_save_settings')
+                    );
+                },
+                { timeout: 30000 },
+            )
+            .catch(() => null);
+
         await saveBtn.click();
+        await persisted;
         await this.waitForLoadState();
     }
 
