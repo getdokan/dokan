@@ -307,7 +307,7 @@
                 jQuery.post( dokan.ajaxurl, data, function(resp) {
                     if ( resp.success ) {
 
-                        Object.keys( self.settingFields ).forEach( function( section, index ) {
+                        Object.keys( self.settingFields ).forEach( function( section ) {
                             // Copy the saved section once up front — re-assigning it inside the loop wiped defaults already applied to earlier fields.
                             self.settingValues[section] = jQuery.extend( {}, resp.data[section] );
 

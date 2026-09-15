@@ -44,10 +44,8 @@ class Settings implements Hookable {
                     continue;
                 }
 
-                $models = $provider->get_models_by_type( $type );
-
                 // A retired model id is not among the select options, so it would render blank.
-                if ( ! isset( $models[ $values[ $key ] ] ) ) {
+                if ( ! $provider->has_model_id( $type, (string) $values[ $key ] ) ) {
                     $values[ $key ] = $provider->get_default_model_id_by_type( $type );
                 }
             }
