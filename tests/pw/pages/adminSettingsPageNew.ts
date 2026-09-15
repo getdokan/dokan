@@ -38,12 +38,9 @@ export class AdminSettingsPageNew extends AdminPage {
         }
     }
 
-    // The legacy settings app only renders its fields once the
-    // `dokan_get_setting_values` ajax resolves (`v-if="isLoaded"` in
-    // `src/admin/pages/Settings.vue`) and shows a `.loading` overlay until then.
-    // Looking a field up before that lands times out on a loaded box, so wait
-    // the overlay out first. The new settings app has no such element, where
-    // this resolves immediately.
+    // The legacy app renders its fields only once `dokan_get_setting_values`
+    // resolves (`v-if="isLoaded"`), showing a `.loading` overlay until then.
+    // No-ops on the new settings app, which has no such element.
     async waitForLegacyLoader() {
         await this.page
             .locator('.dokan-settings-wrap > .loading')
@@ -87,17 +84,15 @@ export class AdminSettingsPageNew extends AdminPage {
         if (await saveBtn.isDisabled()) {
             return;
         }
-        // Both UIs persist over XHR and neither blocks on it: the new app
-        // `apiFetch`es `PUT /dokan/v1/admin/settings/{scope}`, the legacy Vue
-        // app posts `dokan_save_settings` to admin-ajax. Returning on the click
-        // alone lets the next step navigate away mid-flight, which aborts the
-        // request — the source of "saved value reads back empty" flakes. Wait
-        // for whichever response the click triggered.
+        // Both UIs persist over XHR without blocking on it, so returning on the
+        // click alone lets the next step navigate away mid-flight and abort the
+        // save. Match on "not a GET" rather than on PUT: `apiFetch` ships the
+        // update as a POST carrying `X-HTTP-Method-Override: PUT`.
         const persisted = this.page
             .waitForResponse(
                 res => {
                     const request = res.request();
-                    if (request.method() === 'PUT' && res.url().includes('/dokan/v1/admin/settings/')) {
+                    if (request.method() !== 'GET' && /\/dokan\/v\d+\/admin\/settings\//.test(res.url())) {
                         return true;
                     }
                     return (

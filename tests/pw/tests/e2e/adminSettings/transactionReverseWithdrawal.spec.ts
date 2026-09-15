@@ -9,13 +9,13 @@ const oldDataset = [
         url: 'wp-admin/admin.php?page=dokan#/settings',
         selector: '//div[@class="nav-title" and contains(text(),"Reverse Withdrawal")]',
         fields: [
-            // Enable Reverse Withdrawal
-            // {
-            //     selector: '//label[@for="dokan_reverse_withdrawal[enabled]"]//label[@class="switch tips"]',
-            //     type: 'checkbox',
-            //     value: true,
-            // },
-            
+            // Set first: the legacy section gates the fields below it on this too.
+            {
+                selector: '//label[@for="dokan_reverse_withdrawal[enabled]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+
             // // Enable Reverse Withdrawal for Gateway - Cash on delivery
             // ToDo: Those fields will be vary based on enabled payment gateways in the site.
             // {
@@ -88,14 +88,14 @@ const newDataset = {
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
     selector: '[data-testid="settings-menu-transaction"] >> [data-testid="settings-menu-reverse_withdrawal"]',
     fields: [
-        // Activate Reverse Withdrawal (Cash On Delivery) - Switch
-        // Those fields will be vary based on enabled payment gateways in the site.
-        // {
-        //     selector: '[data-testid="settings-field-reverse_withdrawal_enabled"] button[role="switch"]',
-        //     type: 'switch',
-        //     value: true,
-        // },
-        
+        // Set first: everything below is dependency-gated on it. The control is
+        // a `span[role="switch"]`, not a button.
+        {
+            selector: '[data-testid="settings-field-reverse_withdrawal_enabled"] [role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+
         // Billing Type - Radio Group
         {
             selector: '[data-testid="settings-field-reverse_withdrawal_billing_type"]',

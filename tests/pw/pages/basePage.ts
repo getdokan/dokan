@@ -34,12 +34,9 @@ export class BasePage {
         await this.page.waitForLoadState(state, options);
     }
 
-    // Reload the current page.
-    //
-    // The legacy settings app reloads itself after saving any field flagged
-    // `refresh_after_save` (e.g. `dokan_live_chat.provider`). When that fires
-    // first, our own reload is aborted by the concurrent navigation. The page
-    // still ends up freshly loaded, so settle on that rather than fail.
+    // Reload the current page. The legacy app reloads itself after saving a
+    // field flagged `refresh_after_save` (e.g. `dokan_live_chat.provider`); when
+    // that wins the race it aborts ours, and the page is freshly loaded anyway.
     async reload(): Promise<void> {
         try {
             await this.page.reload();

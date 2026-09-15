@@ -43,6 +43,18 @@ const oldDataset = [
                 value: 'automatically',
             },
         ]
+    },
+    {
+        title: 'Admin Old Setting: Appearance (onboarding-owned fields)',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"Appearance")]',
+        fields: [
+            {
+                selector: '//label[@for="dokan_appearance[show_register_as_vendor]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+        ],
     }
 ];
 
@@ -81,6 +93,12 @@ const newDataset = {
             selector: '[data-testid="settings-field-vendor_setup_wizard_message"] [contenteditable="true"]',
             type: 'richtext',
             value: 'Welcome to our marketplace!',
+        },
+        // Onboarding owns it in the new UI; legacy keeps it in dokan_appearance.
+        {
+            selector: '[data-testid="settings-field-show_register_as_vendor"] [role="switch"]',
+            type: 'switch',
+            value: true,
         },
     ],
 };

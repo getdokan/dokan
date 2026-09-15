@@ -26,6 +26,25 @@ const oldDataset = [
             },
         ],
     },
+    {
+        // Privacy owns two `dokan_general` switches that the legacy page keeps
+        // on its General section.
+        title: 'Admin Old Setting: General (privacy-owned fields)',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"General")]',
+        fields: [
+            {
+                selector: '//label[@for="dokan_general[seller_enable_terms_and_conditions]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                selector: '//label[@for="dokan_general[admin_access]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+        ],
+    },
 ];
 
 const newDataset = {
@@ -52,6 +71,18 @@ const newDataset = {
             selector: '[data-testid="settings-field-privacy_policy_content"] [contenteditable="true"]',
             type: 'richtext',
             value: 'newTest',
+        },
+
+        {
+            selector: '[data-testid="settings-field-seller_enable_terms_and_conditions"] [role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+
+        {
+            selector: '[data-testid="settings-field-admin_access_for_vendors"] [role="switch"]',
+            type: 'switch',
+            value: true,
         },
     ],
 };

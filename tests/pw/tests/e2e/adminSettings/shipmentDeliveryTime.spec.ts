@@ -78,16 +78,15 @@ const newDataset = {
             type: 'switch',
             value: true,
         },
-        // { Todo: Fix mapping issue later
-        //     selector: 'input#simple-checkbox-group-delivery',
-        //     type: 'checkbox',
-        //     value: true,
-        // },
-        // {
-        //     selector: 'input#simple-checkbox-group-store-pickup',
-        //     type: 'checkbox',
-        //     value: true,
-        // },
+        {
+            // The legacy side asserts both Home Delivery and Store Pickup, so
+            // they have to be set here. Left unset, this dataset inherited
+            // whatever the previous spec stored and the legacy check failed
+            // depending on run order.
+            selector: '[data-testid="settings-field-delivery_support"]',
+            type: 'multicheck',
+            value: ['Home Delivery', 'Store Pickup'],
+        },
         {
             selector: '[data-testid="settings-field-delivery_date_label"] input',
             type: 'text',

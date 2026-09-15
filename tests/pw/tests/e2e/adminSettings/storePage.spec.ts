@@ -18,6 +18,11 @@ const oldDataset = [
             value: true,
         },
         {
+            selector: '//select[@id="dokan_appearance[captcha_provider]"]',
+            type: 'select',
+            value: 'google_recaptcha_v3',
+        },
+        {
             selector: 'label[for="dokan_appearance[contact_seller]"] .switch',
             type: 'checkbox',
             value: true,
@@ -90,6 +95,11 @@ const newDatasets = [
                 selector: '[data-testid="settings-field-captcha_enable_status"] [role="switch"]',
                 type: 'switch',
                 value: true,
+            },
+            {
+                selector: '[data-testid="settings-field-captcha_provider"] button[role="combobox"]',
+                type: 'radix-dropdown',
+                value: 'Google reCAPTCHA v3',
             },
             {
                 selector: '[data-testid="settings-field-recaptcha_site_key"] input[type="password"]',
