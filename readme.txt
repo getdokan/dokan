@@ -96,8 +96,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 To provide a comprehensive frontend experience, every vendor has a [personalized customizable dashboard](https://dokan.co/wordpress/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) on the store frontend. They can easily navigate and control every aspect of their marketplace from there. Backend access is restricted to only the admin, which sets Dokan apart from other marketplace plugins. However, all Dokan [modules](https://dokan.co/wordpress/modules/) are frontend compatible so that both the admin and vendors can enjoy the benefits and advanced features of Dokan.
 
-Dokan (Pro) comes with a free, fully responsive eCommerce theme - [Dokani](https://dokan.co/wordpress/dokani-theme/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) with special widgets to ensure you can customize the theme however you like and biult any multi seller store. 
-
+Dokan (Pro) comes with a free, fully responsive eCommerce theme - [Dokani](https://dokan.co/wordpress/dokani-theme/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) With special widgets that let you customize your theme however you like and build any type of multivendor store.
 Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-theme/), a customizable and fully responsive WordPress theme for any hotel booking management site.
 
 = IT’S FAST AND EASY TO USE =
