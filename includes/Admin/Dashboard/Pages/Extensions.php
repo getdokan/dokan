@@ -146,7 +146,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'flycrm',
                 'title'       => esc_html__( 'FlyCRM', 'dokan-lite' ),
-                'description' => esc_html__( 'Turn buyers into repeat customers - track leads, deals, and follow-ups in a self-hosted CRM that syncs with your WooCommerce store.', 'dokan-lite' ),
+                'description' => esc_html__( 'Keep customers and vendors organized - store contacts, track deals, and nurture every relationship to drive repeat marketplace revenue.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/flycrm.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'flycrm',
