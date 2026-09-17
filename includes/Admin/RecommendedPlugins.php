@@ -26,7 +26,7 @@ class RecommendedPlugins {
             [
                 'type'        => 'flycrm',
                 'title'       => fn() => __( 'FlyCRM', 'dokan-lite' ),
-                'description' => fn() => __( 'Track leads, deals and follow-ups in a self-hosted WordPress CRM', 'dokan-lite' ),
+                'description' => fn() => __( 'Track leads, contacts and deals for your marketplace inside WordPress', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/flycrm.svg',
                 'img_alt'     => fn() => __( 'FlyCRM logo', 'dokan-lite' ),
                 'slug'        => 'flycrm',
