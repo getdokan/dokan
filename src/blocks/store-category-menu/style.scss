@@ -1,0 +1,14 @@
+/*
+ * Front-end + editor styles for dokan/store-category-menu.
+ *
+ * The widget markup is the classic one, so it keeps the classic
+ * `.widget.dokan-store-widget` classes and whatever styles those already carry.
+ * Only the block wrapper is styled here.
+ */
+
+.wp-block-dokan-store-category-menu {
+
+	.widget-title {
+		margin-block-start: 0;
+	}
+}

@@ -34,6 +34,7 @@ class Manager implements Hookable {
         add_filter( 'block_categories_all', [ $this, 'register_block_category' ], 9 );
         add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_styles' ] );
         add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_scripts' ] );
+        add_action( 'enqueue_block_editor_assets', [ $this, 'localize_store_tab_preview' ] );
         // After Dokan's own asset logic (@10) so store pages keep their enqueue order.
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_block_styles' ], 20 );
     }
@@ -165,6 +166,35 @@ class Manager implements Hookable {
                 wp_enqueue_script( $handle );
             }
         }
+    }
+
+    /**
+     * Hand the Store Tab Content block the tabs its editor preview can show.
+     *
+     * The tab list is server-side — extensions add tabs through `dokan_store_tabs`
+     * — so the editor's Preview tab control cannot know it on its own. Read for
+     * the id-less preview store, which is what extensions check to offer their
+     * tabs in the editor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function localize_store_tab_preview(): void {
+        $tabs = [];
+
+        foreach ( dokan_get_store_tabs( 0 ) as $key => $tab ) {
+            $tabs[] = [
+                'value' => (string) $key,
+                'label' => wp_strip_all_tags( (string) ( $tab['title'] ?? $key ) ),
+            ];
+        }
+
+        wp_add_inline_script(
+            generate_block_asset_handle( 'dokan/store-tab-content', 'editorScript' ),
+            'window.dokanStoreTabPreview = ' . wp_json_encode( [ 'tabs' => $tabs ] ) . ';',
+            'before'
+        );
     }
 
     /**
