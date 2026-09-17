@@ -16,11 +16,38 @@
         "showPagination": {
             "type": "boolean",
             "default": true
+        },
+        "previewTab": {
+            "type": "string",
+            "default": "products"
         }
     },
     "supports": {
         "html": false,
         "align": [ "wide", "full" ],
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true,
+            "heading": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true,
+            "__experimentalFontFamily": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        },
+        "__experimentalBorder": {
+            "color": true,
+            "radius": true,
+            "style": true,
+            "width": true,
+            "__experimentalDefaultControls": {
+                "radius": true
+            }
+        },
         "spacing": {
             "margin": true,
             "padding": true

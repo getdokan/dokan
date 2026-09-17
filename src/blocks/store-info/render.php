@@ -3,7 +3,7 @@
  * Render `dokan/store-info`.
  *
  * Reproduces `ul.dokan-store-info` from `templates/store-header.php` as
- * block-scoped markup. See docs/adr/0005-store-header-blocks-emit-fresh-markup.md.
+ * block-scoped markup. See docs/adr/0009-store-header-blocks-emit-fresh-markup.md.
  *
  * Every field carries the same server-side gate the classic template applies.
  * Block attributes are client-supplied, so a toggle may only ever *subtract* a

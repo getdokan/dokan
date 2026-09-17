@@ -2,7 +2,7 @@
 /**
  * Render `dokan/store-social`.
  *
- * See docs/adr/0005-store-header-blocks-emit-fresh-markup.md for why this block
+ * See docs/adr/0009-store-header-blocks-emit-fresh-markup.md for why this block
  * does not reuse `templates/store-header.php`.
  *
  * This block is also the anchor Pro's follow, support, live-chat and share

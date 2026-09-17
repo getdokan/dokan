@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'layout'  => '',
+        'headerLayout' => '',
     ]
 );
 
@@ -44,7 +44,9 @@ if ( ! $vendor ) {
     return; // Not a store context and not an editor preview — render nothing.
 }
 
-$layout = sanitize_key( $attributes['layout'] );
+// Not `layout`: WordPress reserves that attribute name for its layout block
+// support, which stores an object there.
+$layout = sanitize_key( $attributes['headerLayout'] );
 
 if ( '' === $layout ) {
     /*

@@ -5,7 +5,7 @@
  * Emits its own markup rather than reusing `templates/store-header.php`: that
  * template is one monolithic tree whose styles hang off a seven-level selector
  * chain no sibling block can reproduce. See
- * docs/adr/0005-store-header-blocks-emit-fresh-markup.md.
+ * docs/adr/0009-store-header-blocks-emit-fresh-markup.md.
  *
  * @since DOKAN_SINCE
  *

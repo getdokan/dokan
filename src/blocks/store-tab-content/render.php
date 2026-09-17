@@ -26,6 +26,7 @@ $attributes = wp_parse_args(
     [
         'columns'        => 0,
         'showPagination' => true,
+        'previewTab'     => 'products',
     ]
 );
 
@@ -62,17 +63,29 @@ $dokan_tab_wrapper = static function ( $extra_class = '' ) {
 };
 
 /*
- * Editor preview. PreviewVendor has no products and no tabs, so the preview
- * shows the Products tab over the shop's latest products — the grid, columns
- * and pagination below are the real ones. Its `data` is null, which is also
- * what keeps dokan_store_profile_frame_after from firing for it: five
- * listeners dereference that user object.
+ * Editor preview. PreviewVendor has no store page, so the tab to show is the
+ * block's Preview tab setting. Products preview over the shop's latest
+ * products — the grid, columns and pagination below are the real ones — Terms
+ * and Conditions over the preview's sample terms, and extension tabs through
+ * dokan_block_store_tab_content, where listeners render their own sample
+ * content for a PreviewVendor. Its `data` is null, which is also what keeps
+ * dokan_store_profile_frame_after from firing for it: five listeners
+ * dereference that user object.
  */
 $dokan_preview = ! $store_id;
 
-// Resolve before entering store context, which would otherwise make every
-// vendor look like the one being viewed.
-$current_tab = $dokan_preview ? '' : dokan_get_current_store_tab( $store_id );
+if ( $dokan_preview ) {
+    $current_tab = sanitize_key( $attributes['previewTab'] );
+
+    // An empty tab is the products grid below; so is a tab no longer registered.
+    if ( 'products' === $current_tab || ! array_key_exists( $current_tab, dokan_get_store_tabs( 0 ) ) ) {
+        $current_tab = '';
+    }
+} else {
+    // Resolve before entering store context, which would otherwise make every
+    // vendor look like the one being viewed.
+    $current_tab = dokan_get_current_store_tab( $store_id );
+}
 
 // Terms and conditions — the body of templates/store-toc.php.
 if ( 'terms_and_conditions' === $current_tab ) {
@@ -100,7 +113,7 @@ if ( 'terms_and_conditions' === $current_tab ) {
 /*
  * Extensions render their tab bodies here. Pro's Reviews and Biography tabs use
  * this instead of taking over `template_include`, which is broken on block
- * themes — see docs/adr/0006-pro-store-tabs-render-as-bodies-not-template-takeovers.md.
+ * themes — see docs/adr/0010-pro-store-tabs-render-as-bodies-not-template-takeovers.md.
  */
 if ( '' !== $current_tab && 'products' !== $current_tab ) {
     $tab_body = $resolver->render_in_store_context(
@@ -158,7 +171,7 @@ if ( ! did_action( 'dokan_store_profile_frame_after' ) && $vendor->data instance
  * sort form and Pro's filters working. Anywhere else the main query belongs to
  * whatever page the block was dropped on, so it has to be queried explicitly.
  */
-$dokan_own_page = '' !== $current_tab;
+$dokan_own_page = ! $dokan_preview && '' !== $current_tab;
 
 if ( $dokan_own_page ) {
     $dokan_query = $GLOBALS['wp_query'];

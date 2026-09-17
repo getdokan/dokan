@@ -15,7 +15,7 @@
  * what every store using the classic template renders today. That layout floats
  * the panel over the banner with a diagonal edge; blocks place the two side by
  * side instead, which reads the same without the fixed-position markup the
- * classic stylesheet needs. See docs/adr/0005-store-header-blocks-emit-fresh-markup.md.
+ * classic stylesheet needs. See docs/adr/0009-store-header-blocks-emit-fresh-markup.md.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

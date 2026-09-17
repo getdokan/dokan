@@ -3,13 +3,31 @@ import { InspectorControls } from '@wordpress/block-editor';
 import {
     PanelBody,
     RangeControl,
+    SelectControl,
     ToggleControl,
-    Notice,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
 import metadata from './block.json';
 import './style.scss';
+
+type TabOption = { value: string; label: string };
+
+/*
+ * The store tabs are server-side — extensions add theirs through
+ * `dokan_store_tabs` — so Blocks\Manager hands the editor the list.
+ */
+const previewTabs = (): TabOption[] => {
+    const tabs = (
+        window as unknown as {
+            dokanStoreTabPreview?: { tabs?: TabOption[] };
+        }
+     ).dokanStoreTabPreview?.tabs;
+
+    return tabs?.length
+        ? tabs
+        : [ { value: 'products', label: __( 'Products', 'dokan-lite' ) } ];
+};
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => (
@@ -44,12 +62,20 @@ registerBlockType( metadata.name, {
                         __nextHasNoMarginBottom
                     />
 
-                    <Notice status="info" isDismissible={ false }>
-                        { __(
-                            'The editor always previews the products tab. Terms and Conditions, and any tabs added by extensions, render on the front end when their tab is open.',
+                    <SelectControl
+                        label={ __( 'Preview tab', 'dokan-lite' ) }
+                        help={ __(
+                            'Which tab the editor previews, with sample data. On the store page this block shows the tab the visitor opens.',
                             'dokan-lite'
                         ) }
-                    </Notice>
+                        value={ attributes.previewTab ?? 'products' }
+                        options={ previewTabs() }
+                        onChange={ ( previewTab ) =>
+                            setAttributes( { previewTab } )
+                        }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
                 </PanelBody>
             </InspectorControls>
         </SSREdit>

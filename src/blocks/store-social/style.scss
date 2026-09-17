@@ -5,7 +5,7 @@
  * social`:
  * every classic rule for those is nested under `.dokan-single-store`, a wrapper
  * only templates/store.php emits, so an FSE store template can never match it.
- * See docs/adr/0005-store-header-blocks-emit-fresh-markup.md.
+ * See docs/adr/0009-store-header-blocks-emit-fresh-markup.md.
  *
  * The icon size travels as the --dokan-social-icon-size custom property that
  * render.php prints on the wrapper.

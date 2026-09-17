@@ -9,7 +9,7 @@
     "keywords": [ "dokan", "store", "vendor", "header", "layout", "banner" ],
     "textdomain": "dokan-lite",
     "attributes": {
-        "layout": {
+        "headerLayout": {
             "type": "string",
             "default": ""
         }

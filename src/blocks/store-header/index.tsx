@@ -37,14 +37,16 @@ registerBlockType( metadata.name, {
                 <PanelBody title={ __( 'Header Layout', 'dokan-lite' ) }>
                     <SelectControl
                         label={ __( 'Layout', 'dokan-lite' ) }
-                        value={ attributes.layout ?? '' }
+                        value={ attributes.headerLayout ?? '' }
                         options={ LAYOUTS }
-                        onChange={ ( layout ) => setAttributes( { layout } ) }
+                        onChange={ ( headerLayout ) =>
+                            setAttributes( { headerLayout } )
+                        }
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                     />
 
-                    { ! attributes.layout && (
+                    { ! attributes.headerLayout && (
                         <Notice status="info" isDismissible={ false }>
                             { __(
                                 'Following the layout chosen in Dokan settings. Pick one here to override it for this template only.',
