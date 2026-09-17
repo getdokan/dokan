@@ -63,6 +63,7 @@ class FormSchema {
         'gallery',
         'attribute',
         'location_map',
+        'spmv_search',
     ];
 
     /**
