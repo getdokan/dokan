@@ -23,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId' => 0,
         'level'   => 1,
         'isLink'  => false,
     ]

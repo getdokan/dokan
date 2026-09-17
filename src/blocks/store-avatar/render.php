@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId' => 0,
         'shape'   => 'circle',
         'size'    => 150,
         'isLink'  => false,

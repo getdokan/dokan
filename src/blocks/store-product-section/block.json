@@ -17,12 +17,7 @@
         "top rated"
     ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "sectionId": {
             "type": "string",
             "default": "featured"

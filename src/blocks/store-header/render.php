@@ -26,7 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId' => 0,
         'layout'  => '',
     ]
 );
@@ -108,9 +107,8 @@ if ( ! $pattern || empty( $pattern['content'] ) ) {
 
 /*
  * The pattern's blocks resolve their own vendor. Block context does not reach
- * blocks parsed from a string, so run the whole thing in store context instead:
- * that is what lets this block be pinned to a vendor on an ordinary page and
- * have the header follow.
+ * blocks parsed from a string, so run the whole thing in store context instead,
+ * or every block in the header would resolve its vendor on its own.
  */
 $rendering = true;
 

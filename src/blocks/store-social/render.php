@@ -25,7 +25,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'    => 0,
         'iconSize'     => 24,
         'showLabels'   => false,
         'openInNewTab' => true,

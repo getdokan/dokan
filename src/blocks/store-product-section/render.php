@@ -28,7 +28,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'   => 0,
         'sectionId' => 'featured',
         'title'     => '',
     ]
@@ -89,15 +88,10 @@ if ( ! $section->is_enabled() ) {
     return;
 }
 
-// The preview vendor has no products to query.
-if ( ! $vendor->get_id() ) {
-    $dokan_section_placeholder(
-        __( "The vendor's products for this section appear here on the store page.", 'dokan-lite' )
-    );
-
-    return;
-}
-
+/*
+ * The preview vendor has no products of its own. Its id of 0 reaches the section
+ * query as "no author", so the editor previews the section over the whole shop.
+ */
 $products = $section->get_products( $vendor->get_id() );
 
 // No products means no section at all — not an empty heading, matching the classic page.

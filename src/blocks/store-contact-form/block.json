@@ -8,12 +8,7 @@
     "description": "A form letting customers message the vendor.",
     "keywords": [ "dokan", "store", "vendor", "contact", "form", "message" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "title": {
             "type": "string",
             "default": ""

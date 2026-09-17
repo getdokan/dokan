@@ -5,8 +5,7 @@
  * Reuses the `StoreContactForm` widget verbatim, so the markup, the settings it
  * reads and the hooks it fires stay identical to the classic store sidebar.
  * The widget gates on `dokan_is_store_page()` and reads the `author` query var,
- * both of which `VendorResolver::render_in_store_context()` supplies — which is
- * what lets the block work on an ordinary page with a pinned vendor.
+ * both of which `VendorResolver::render_in_store_context()` supplies.
  *
  * @since DOKAN_SINCE
  *
@@ -24,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'   => 0,
         'title'     => '',
         'showTitle' => true,
     ]
@@ -81,12 +79,32 @@ if ( ! empty( $attributes['showTitle'] ) ) {
         : __( 'Contact Vendor', 'dokan-lite' );
 }
 
-// The preview vendor has no id, so the widget would bail — show why instead.
+/*
+ * The preview vendor has no id, so the widget would bail. The form itself does
+ * not depend on the vendor, so render the widget's own template for it; the
+ * editor preview is inert, so the id-less form can never be submitted.
+ */
 if ( ! $vendor->get_id() ) {
+    $dokan_user = wp_get_current_user();
+
+    ob_start();
+
+    dokan_get_template_part(
+        'widgets/store-contact-form',
+        '',
+        [
+            'seller_id'  => 0,
+            'store_info' => [],
+            'username'   => $dokan_user->exists() ? $dokan_user->display_name : '',
+            'email'      => $dokan_user->exists() ? $dokan_user->user_email : '',
+        ]
+    );
+
     printf(
-        '<div %1$s><p class="dokan-info">%2$s</p></div>',
-        get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
-        esc_html__( 'The contact form appears here on the store page.', 'dokan-lite' )
+        '<div %1$s><aside class="widget dokan-store-widget dokan-store-contact">%2$s%3$s</aside></div>',
+        get_block_wrapper_attributes(),
+        '' !== $widget_title ? '<h3 class="widget-title">' . esc_html( $widget_title ) . '</h3>' : '',
+        ob_get_clean() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the template part.
     );
 
     return;

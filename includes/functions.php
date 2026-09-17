@@ -1302,9 +1302,9 @@ function dokan_get_current_store_tab( $store_id = 0 ) {
     $tab      = '';
 
     /*
-     * A store page is only "current" for the vendor it belongs to. A block pinned
-     * to another vendor sits on somebody else's store page, and must not adopt
-     * that page's active tab.
+     * A store page is only "current" for the vendor it belongs to. A vendor
+     * passed in that is not the one being viewed must not adopt that page's
+     * active tab.
      */
     $viewed_slug = get_query_var( dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) );
     $store_user  = $store_id ? get_userdata( $store_id ) : false;

@@ -8,12 +8,7 @@
     "description": "Displays links to the vendor's social profiles.",
     "keywords": [ "dokan", "store", "vendor", "social", "profile", "links" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "iconSize": {
             "type": "number",
             "default": 24

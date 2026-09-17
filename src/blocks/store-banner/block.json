@@ -8,12 +8,7 @@
     "description": "Displays the vendor's store banner image.",
     "keywords": [ "dokan", "store", "vendor", "banner", "cover" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "height": {
             "type": "number",
             "default": 0

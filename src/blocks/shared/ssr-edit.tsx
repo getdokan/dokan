@@ -54,16 +54,11 @@ const SSREdit = ( {
          * declare carries a default, which is what separates them from the
          * editor-injected ones (lock, metadata, className, align, style…) a
          * reset must not touch — wiping those would unlock locked blocks and
-         * throw away template alignment. The pinned vendor survives too: it is
-         * a data binding, not a setting.
+         * throw away template alignment.
          */
         const defaults: Record< string, unknown > = {};
 
         for ( const [ key, def ] of Object.entries( type.attributes ?? {} ) ) {
-            if ( key === 'storeId' ) {
-                continue;
-            }
-
             if ( def && typeof def === 'object' && 'default' in def ) {
                 const value = ( def as { default: unknown } ).default;
 
@@ -97,7 +92,7 @@ const SSREdit = ( {
                         </Button>
                         <p>
                             { __(
-                                'Returns this block\u2019s own settings to their defaults. The store selection is kept, and colors or typography set through the style panels reset from those panels.',
+                                'Returns this block\u2019s own settings to their defaults. Colors or typography set through the style panels reset from those panels.',
                                 'dokan-lite'
                             ) }
                         </p>

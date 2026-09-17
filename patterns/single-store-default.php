@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 ?>
-<!-- wp:group {"align":"full","className":"dokan-single-store","layout":{"type":"constrained"}} -->
+<!-- wp:group {"metadata":{"name":"Single Store"},"align":"full","className":"dokan-single-store","layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignfull dokan-single-store">
     <?php
     /*
@@ -50,9 +50,9 @@ if ( ! defined( 'ABSPATH' ) ) {
      * comment so it does not travel into the rendered page.
      */
     ?>
-    <!-- wp:columns {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
+    <!-- wp:columns {"metadata":{"name":"Store Body"},"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|40"}}}} -->
     <div class="wp-block-columns alignwide" style="margin-top:var(--wp--preset--spacing--40)">
-        <!-- wp:column {"width":"33%"} -->
+        <!-- wp:column {"metadata":{"name":"Sidebar Column"},"width":"33%"} -->
         <div class="wp-block-column" style="flex-basis:33%">
             <!-- wp:dokan/store-sidebar -->
             <!-- wp:dokan/store-category-menu /-->
@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
         <!-- /wp:column -->
 
-        <!-- wp:column {"width":"67%"} -->
+        <!-- wp:column {"metadata":{"name":"Content Column"},"width":"67%"} -->
         <div class="wp-block-column" style="flex-basis:67%">
             <!-- wp:dokan/store-tab-content /-->
         </div>

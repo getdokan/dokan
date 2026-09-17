@@ -16,6 +16,7 @@
  * @var WP_Block $block      Block instance.
  */
 
+use WeDevs\Dokan\Blocks\PreviewVendor;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,7 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'       => 0,
         'showAddress'   => true,
         'showPhone'     => true,
         'showEmail'     => true,
@@ -65,7 +65,11 @@ $dokan_info_icon = static function ( $classes ) use ( $attributes ) {
 
 // Address — admin privacy gate.
 if ( ! empty( $attributes['showAddress'] ) && ! dokan_is_vendor_info_hidden( 'address' ) ) {
-    $store_address = dokan_get_seller_short_address( $store_id, false );
+    // The address is looked up by vendor id, which the editor preview does not
+    // have — it carries its sample address instead.
+    $store_address = $vendor instanceof PreviewVendor
+        ? esc_html( $vendor->get_location_label() )
+        : dokan_get_seller_short_address( $store_id, false );
 
     if ( ! empty( $store_address ) ) {
         $items .= sprintf(
@@ -132,8 +136,10 @@ if (
     && 'on' === dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' )
     && $vendor->is_store_time_enabled()
 ) {
+    // dokan_is_store_open() looks the hours up by vendor id, which the id-less
+    // editor preview does not have — preview the open state instead.
     $current_time = dokan_current_datetime();
-    $is_open      = dokan_is_store_open( $store_id );
+    $is_open      = $store_id ? dokan_is_store_open( $store_id ) : true;
     $notice       = $is_open
         ? $vendor->get_store_open_notice( __( 'Store Open', 'dokan-lite' ) )
         : $vendor->get_store_close_notice( __( 'Store Closed', 'dokan-lite' ) );

@@ -8,12 +8,7 @@
     "description": "Displays the vendor's store name as a heading.",
     "keywords": [ "dokan", "store", "vendor", "name", "heading" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "level": {
             "type": "number",
             "default": 1

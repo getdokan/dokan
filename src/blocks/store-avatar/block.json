@@ -16,12 +16,7 @@
         "logo"
     ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "shape": {
             "type": "string",
             "default": "circle"

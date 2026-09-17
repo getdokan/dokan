@@ -5,8 +5,7 @@
  * Reuses the `StoreLocation` widget verbatim, so the markup, the settings it
  * reads and the hooks it fires stay identical to the classic store sidebar.
  * The widget gates on `dokan_is_store_page()` and reads the `author` query var,
- * both of which `VendorResolver::render_in_store_context()` supplies — which is
- * what lets the block work on an ordinary page with a pinned vendor.
+ * both of which `VendorResolver::render_in_store_context()` supplies.
  *
  * @since DOKAN_SINCE
  *
@@ -24,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'   => 0,
         'title'     => '',
         'showTitle' => true,
     ]
@@ -62,12 +60,29 @@ if ( ! empty( $attributes['showTitle'] ) ) {
         : __( 'Store Location', 'dokan-lite' );
 }
 
-// The preview vendor has no id, so the widget would bail — show why instead.
+/*
+ * The preview vendor has no id, so the widget would bail. The map itself cannot
+ * be drawn here either: its Google Maps / Mapbox script is inline in the widget
+ * template, and a server-side preview is inserted as markup whose scripts never
+ * run. Render the widget with a static map card for the preview's sample
+ * location, behind the same marketplace gates the widget checks.
+ */
 if ( ! $vendor->get_id() ) {
+    if ( 'on' !== dokan_get_option( 'store_map', 'dokan_appearance', 'off' ) || ! dokan_has_map_api_key() ) {
+        printf(
+            '<div %1$s><p class="dokan-info">%2$s</p></div>',
+            get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
+            esc_html__( 'The store map is switched off or has no map API key in Dokan settings, so this block will not appear on the store page.', 'dokan-lite' )
+        );
+
+        return;
+    }
+
     printf(
-        '<div %1$s><p class="dokan-info">%2$s</p></div>',
-        get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
-        esc_html__( 'The store location map appears here on the store page. It needs a map API key in Dokan settings and a location on the vendor\'s profile.', 'dokan-lite' )
+        '<div %1$s><aside class="widget dokan-store-widget dokan-store-location">%2$s<div class="location-container"><div class="dokan-store-location-preview"><span class="dokan-store-location-preview__pin fas fa-map-marker-alt" aria-hidden="true"></span><span class="dokan-store-location-preview__label">%3$s</span></div></div></aside></div>',
+        get_block_wrapper_attributes(),
+        '' !== $widget_title ? '<h3 class="widget-title">' . esc_html( $widget_title ) . '</h3>' : '',
+        esc_html( $vendor->get_location_label() )
     );
 
     return;

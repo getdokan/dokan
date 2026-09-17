@@ -8,12 +8,7 @@
     "description": "Displays the body of the store's active tab: the vendor's products, terms and conditions, or an extension's tab.",
     "keywords": [ "dokan", "store", "vendor", "products", "tab", "content" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "columns": {
             "type": "number",
             "default": 0

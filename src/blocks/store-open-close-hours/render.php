@@ -5,8 +5,7 @@
  * Reuses the `StoreOpenClose` widget verbatim, so the markup, the settings it
  * reads and the hooks it fires stay identical to the classic store sidebar.
  * The widget gates on `dokan_is_store_page()` and reads the `author` query var,
- * both of which `VendorResolver::render_in_store_context()` supplies — which is
- * what lets the block work on an ordinary page with a pinned vendor.
+ * both of which `VendorResolver::render_in_store_context()` supplies.
  *
  * @since DOKAN_SINCE
  *
@@ -24,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'   => 0,
         'title'     => '',
         'showTitle' => true,
     ]
@@ -62,12 +60,39 @@ if ( ! empty( $attributes['showTitle'] ) ) {
         : __( 'Store Time', 'dokan-lite' );
 }
 
-// The preview vendor has no id, so the widget would bail — show why instead.
+/*
+ * The preview vendor has no id, so the widget would bail. Render the widget's
+ * own template over the preview's sample hours instead, behind the same
+ * marketplace switch the widget checks.
+ */
 if ( ! $vendor->get_id() ) {
+    if ( 'on' !== dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' ) ) {
+        printf(
+            '<div %1$s><p class="dokan-info">%2$s</p></div>',
+            get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
+            esc_html__( 'Store opening hours are switched off in Dokan settings, so this block will not appear on the store page.', 'dokan-lite' )
+        );
+
+        return;
+    }
+
+    ob_start();
+
+    dokan_get_template_part(
+        'widgets/store-open-close',
+        '',
+        [
+            'seller_id'        => 0,
+            'dokan_store_time' => $vendor->get_store_time(),
+            'dokan_days'       => dokan_get_translated_days(),
+        ]
+    );
+
     printf(
-        '<div %1$s><p class="dokan-info">%2$s</p></div>',
-        get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
-        esc_html__( 'The vendor\'s opening hours appear here on the store page.', 'dokan-lite' )
+        '<div %1$s><aside class="widget dokan-store-widget dokan-store-open-close">%2$s%3$s</aside></div>',
+        get_block_wrapper_attributes(),
+        '' !== $widget_title ? '<h3 class="widget-title">' . esc_html( $widget_title ) . '</h3>' : '',
+        ob_get_clean() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the template part.
     );
 
     return;

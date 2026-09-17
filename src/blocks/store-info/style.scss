@@ -53,8 +53,14 @@
 		position: relative;
 		z-index: 1;
 
-		.store-notice {
-			min-width: 96px;
+		/* The caret follows the notice at a fixed gap. No min-width on the notice,
+		   so a short one ("Store Open") does not push the caret away, and a
+		   vendor's longer custom one does not collide with it. */
+		.fa-angle-down {
+			flex-shrink: 0;
+			margin-inline-start: 0.5em;
+			font-size: 0.75em;
+			line-height: 1;
 		}
 
 		#vendor-store-times {

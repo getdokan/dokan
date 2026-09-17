@@ -15,12 +15,7 @@
         "navigation"
     ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "title": {
             "type": "string",
             "default": ""

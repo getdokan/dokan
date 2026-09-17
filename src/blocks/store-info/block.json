@@ -16,12 +16,7 @@
         "hours"
     ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "showAddress": {
             "type": "boolean",
             "default": true

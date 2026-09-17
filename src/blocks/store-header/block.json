@@ -8,12 +8,7 @@
     "description": "The store header, in any of the layouts a marketplace can choose from.",
     "keywords": [ "dokan", "store", "vendor", "header", "layout", "banner" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
     "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        },
         "layout": {
             "type": "string",
             "default": ""

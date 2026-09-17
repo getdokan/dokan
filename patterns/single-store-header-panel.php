@@ -22,11 +22,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 ?>
-<!-- wp:group {"align":"wide","className":"dokan-single-store-header is-panel","style":{"color":{"background":"#1f2937","text":"#ffffff"},"spacing":{"margin":{"bottom":"2.5rem"},"padding":{"top":"0","bottom":"0"}}},"layout":{"type":"default"}} -->
+<!-- wp:group {"metadata":{"name":"Store Header"},"align":"wide","className":"dokan-single-store-header is-panel","style":{"color":{"background":"#1f2937","text":"#ffffff"},"spacing":{"margin":{"bottom":"2.5rem"},"padding":{"top":"0","bottom":"0"}}},"layout":{"type":"default"}} -->
 <div class="wp-block-group alignwide dokan-single-store-header is-panel has-text-color has-background" style="color:#ffffff;background-color:#1f2937;margin-bottom:2.5rem;padding-top:0;padding-bottom:0">
-    <!-- wp:columns {"verticalAlignment":"stretch","isStackedOnMobile":true,"style":{"spacing":{"blockGap":{"left":"0"}}}} -->
+    <!-- wp:columns {"metadata":{"name":"Header Columns"},"verticalAlignment":"stretch","isStackedOnMobile":true,"style":{"spacing":{"blockGap":{"left":"0"}}}} -->
     <div class="wp-block-columns are-vertically-aligned-stretch">
-        <!-- wp:column {"verticalAlignment":"center","width":"38%","style":{"spacing":{"padding":{"top":"2rem","bottom":"2rem","left":"2rem","right":"2rem"},"blockGap":"1rem"}}} -->
+        <!-- wp:column {"metadata":{"name":"Store Details"},"verticalAlignment":"center","width":"38%","style":{"spacing":{"padding":{"top":"2rem","bottom":"2rem","left":"2rem","right":"2rem"},"blockGap":"1rem"}}} -->
         <div class="wp-block-column is-vertically-aligned-center" style="padding-top:2rem;padding-right:2rem;padding-bottom:2rem;padding-left:2rem;flex-basis:38%">
             <!-- wp:dokan/store-avatar {"shape":"circle","size":110} /-->
 
@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
         <!-- /wp:column -->
 
-        <!-- wp:column {"verticalAlignment":"stretch","width":"62%"} -->
+        <!-- wp:column {"metadata":{"name":"Banner Column"},"verticalAlignment":"stretch","width":"62%"} -->
         <div class="wp-block-column is-vertically-aligned-stretch" style="flex-basis:62%">
             <!-- wp:dokan/store-banner {"height":420} /-->
         </div>

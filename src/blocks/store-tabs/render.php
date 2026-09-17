@@ -20,8 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-$attributes = wp_parse_args( $attributes, [ 'storeId' => 0 ] );
-
 /*
  * Store pages already carry these, but a block can sit on any page — and blocks
  * placed in a block template are not in post_content, so the content sniff in

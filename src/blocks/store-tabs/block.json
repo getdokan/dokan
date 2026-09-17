@@ -8,13 +8,6 @@
     "description": "Navigation between the store's tabs, such as Products and Terms and Conditions.",
     "keywords": [ "dokan", "store", "vendor", "tabs", "navigation", "menu" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
-    "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        }
-    },
     "supports": {
         "html": false,
         "align": [ "wide" ],

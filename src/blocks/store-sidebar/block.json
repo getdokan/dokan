@@ -8,16 +8,6 @@
     "description": "A container for store widgets, replacing the classic store sidebar on block themes.",
     "keywords": [ "dokan", "store", "vendor", "sidebar", "widgets", "aside" ],
     "textdomain": "dokan-lite",
-    "usesContext": [ "dokan/storeId" ],
-    "providesContext": {
-        "dokan/storeId": "storeId"
-    },
-    "attributes": {
-        "storeId": {
-            "type": "number",
-            "default": 0
-        }
-    },
     "supports": {
         "html": false,
         "color": {

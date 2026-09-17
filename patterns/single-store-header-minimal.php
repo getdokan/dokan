@@ -16,17 +16,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 ?>
-<!-- wp:group {"align":"wide","className":"dokan-single-store-header","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<!-- wp:group {"metadata":{"name":"Store Header"},"align":"wide","className":"dokan-single-store-header","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignwide dokan-single-store-header" style="margin-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:columns {"verticalAlignment":"center"} -->
+    <!-- wp:columns {"metadata":{"name":"Header Columns"},"verticalAlignment":"center"} -->
     <div class="wp-block-columns are-vertically-aligned-center">
-        <!-- wp:column {"verticalAlignment":"center","width":"65%"} -->
+        <!-- wp:column {"metadata":{"name":"Details Column"},"verticalAlignment":"center","width":"65%"} -->
         <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:65%">
-            <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"center"}} -->
+            <!-- wp:group {"metadata":{"name":"Store Identity"},"style":{"spacing":{"blockGap":"var:preset|spacing|20"}},"layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"center"}} -->
             <div class="wp-block-group">
                 <!-- wp:dokan/store-avatar {"shape":"square","size":90} /-->
 
-                <!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|10"}},"layout":{"type":"default"}} -->
+                <!-- wp:group {"metadata":{"name":"Name and Info"},"style":{"spacing":{"blockGap":"var:preset|spacing|10"}},"layout":{"type":"default"}} -->
                 <div class="wp-block-group">
                     <!-- wp:dokan/store-name {"level":1,"style":{"typography":{"fontSize":"1.75rem"}}} /-->
 
@@ -38,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
         <!-- /wp:column -->
 
-        <!-- wp:column {"verticalAlignment":"center","width":"35%"} -->
+        <!-- wp:column {"metadata":{"name":"Social Column"},"verticalAlignment":"center","width":"35%"} -->
         <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:35%">
             <!-- wp:dokan/store-social {"showLabels":false} /-->
         </div>

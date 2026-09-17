@@ -16,17 +16,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 ?>
-<!-- wp:group {"align":"wide","className":"dokan-single-store-header","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
+<!-- wp:group {"metadata":{"name":"Store Header"},"align":"wide","className":"dokan-single-store-header","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
 <div class="wp-block-group alignwide dokan-single-store-header" style="margin-bottom:var(--wp--preset--spacing--50)">
-    <!-- wp:columns {"verticalAlignment":"center"} -->
+    <!-- wp:columns {"metadata":{"name":"Header Columns"},"verticalAlignment":"center"} -->
     <div class="wp-block-columns are-vertically-aligned-center">
-        <!-- wp:column {"verticalAlignment":"center","width":"30%"} -->
+        <!-- wp:column {"metadata":{"name":"Avatar Column"},"verticalAlignment":"center","width":"30%"} -->
         <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:30%">
             <!-- wp:dokan/store-avatar {"shape":"circle","size":180} /-->
         </div>
         <!-- /wp:column -->
 
-        <!-- wp:column {"verticalAlignment":"center","width":"70%"} -->
+        <!-- wp:column {"metadata":{"name":"Details Column"},"verticalAlignment":"center","width":"70%"} -->
         <div class="wp-block-column is-vertically-aligned-center" style="flex-basis:70%">
             <!-- wp:dokan/store-name {"level":1} /-->
 

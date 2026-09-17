@@ -4,7 +4,6 @@ import {
     useBlockProps,
     useInnerBlocksProps,
 } from '@wordpress/block-editor';
-import StorePanel from '../shared/store-panel';
 import metadata from './block.json';
 import './style.scss';
 
@@ -20,21 +19,13 @@ const TEMPLATE = [
     [ 'dokan/store-contact-form', {} ],
 ];
 
-const Edit = ( { attributes, setAttributes } ) => {
+const Edit = () => {
     const blockProps = useBlockProps( { className: 'dokan-store-sidebar' } );
     const innerBlocksProps = useInnerBlocksProps( blockProps, {
         template: TEMPLATE,
     } );
 
-    return (
-        <>
-            <StorePanel
-                attributes={ attributes }
-                setAttributes={ setAttributes }
-            />
-            <div { ...innerBlocksProps } />
-        </>
-    );
+    return <div { ...innerBlocksProps } />;
 };
 
 registerBlockType( metadata.name, {

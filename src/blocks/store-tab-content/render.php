@@ -24,7 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'        => 0,
         'columns'        => 0,
         'showPagination' => true,
     ]
@@ -63,23 +62,17 @@ $dokan_tab_wrapper = static function ( $extra_class = '' ) {
 };
 
 /*
- * Editor preview. PreviewVendor has no products, and its `data` is null — firing
- * dokan_store_profile_frame_after with that would hand null to five listeners
- * that dereference it. Render a static stand-in and stop.
+ * Editor preview. PreviewVendor has no products and no tabs, so the preview
+ * shows the Products tab over the shop's latest products — the grid, columns
+ * and pagination below are the real ones. Its `data` is null, which is also
+ * what keeps dokan_store_profile_frame_after from firing for it: five
+ * listeners dereference that user object.
  */
-if ( ! $store_id ) {
-    printf(
-        '<div %1$s><p class="dokan-info">%2$s</p></div>',
-        $dokan_tab_wrapper( 'is-editor-placeholder' ),
-        esc_html__( "The vendor's products appear here on the store page.", 'dokan-lite' )
-    );
-
-    return;
-}
+$dokan_preview = ! $store_id;
 
 // Resolve before entering store context, which would otherwise make every
 // vendor look like the one being viewed.
-$current_tab = dokan_get_current_store_tab( $store_id );
+$current_tab = $dokan_preview ? '' : dokan_get_current_store_tab( $store_id );
 
 // Terms and conditions — the body of templates/store-toc.php.
 if ( 'terms_and_conditions' === $current_tab ) {
@@ -170,15 +163,19 @@ $dokan_own_page = '' !== $current_tab;
 if ( $dokan_own_page ) {
     $dokan_query = $GLOBALS['wp_query'];
 } else {
-    $dokan_query = new WP_Query(
-        [
-            'post_type'      => 'product',
-            'post_status'    => 'publish',
-            'author'         => $store_id,
-            'posts_per_page' => absint( dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ),
-            'paged'          => max( 1, absint( get_query_var( 'paged' ) ) ),
-        ]
-    );
+    $dokan_query_args = [
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        'posts_per_page' => absint( dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ),
+        'paged'          => max( 1, absint( get_query_var( 'paged' ) ) ),
+    ];
+
+    // The preview has no vendor, so it is not scoped to an author: it shows the whole shop.
+    if ( ! $dokan_preview ) {
+        $dokan_query_args['author'] = $store_id;
+    }
+
+    $dokan_query = new WP_Query( $dokan_query_args );
 }
 
 ob_start();
@@ -247,7 +244,9 @@ if ( $dokan_query->have_posts() ) {
 } else {
     printf(
         '<p class="dokan-info">%s</p>',
-        esc_html__( 'No products were found of this vendor!', 'dokan-lite' )
+        $dokan_preview
+            ? esc_html__( 'The vendor\'s products appear here once the shop has published products.', 'dokan-lite' )
+            : esc_html__( 'No products were found of this vendor!', 'dokan-lite' )
     );
 }
 

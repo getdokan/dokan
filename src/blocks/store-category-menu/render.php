@@ -5,8 +5,7 @@
  * Reuses the `StoreCategoryMenu` widget verbatim, so the markup, the settings it
  * reads and the hooks it fires stay identical to the classic store sidebar.
  * The widget gates on `dokan_is_store_page()` and reads the `author` query var,
- * both of which `VendorResolver::render_in_store_context()` supplies — which is
- * what lets the block work on an ordinary page with a pinned vendor.
+ * both of which `VendorResolver::render_in_store_context()` supplies.
  *
  * @since DOKAN_SINCE
  *
@@ -24,7 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'storeId'   => 0,
         'title'     => '',
         'showTitle' => true,
     ]
@@ -62,12 +60,19 @@ if ( ! empty( $attributes['showTitle'] ) ) {
         : __( 'Store Categories', 'dokan-lite' );
 }
 
-// The preview vendor has no id, so the widget would bail — show why instead.
+/*
+ * The preview vendor has no id, so the widget would bail. Render the widget's
+ * own markup — the menu dokan_store_category_menu() prints — over the preview's
+ * sample categories instead.
+ */
 if ( ! $vendor->get_id() ) {
+    $dokan_walker = new \WeDevs\Dokan\Walkers\StoreCategory( 0 );
+
     printf(
-        '<div %1$s><p class="dokan-info">%2$s</p></div>',
-        get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
-        esc_html__( 'The vendor\'s product categories appear here on the store page.', 'dokan-lite' )
+        '<div %1$s><aside class="widget dokan-store-widget dokan-store-menu">%2$s<div class="store-cat-stack-dokan cat-drop-stack"><ul>%3$s</ul></div></aside></div>',
+        get_block_wrapper_attributes(),
+        '' !== $widget_title ? '<h3 class="widget-title">' . esc_html( $widget_title ) . '</h3>' : '',
+        wp_kses_post( $dokan_walker->walk( $vendor->get_store_categories(), 0, [] ) )
     );
 
     return;

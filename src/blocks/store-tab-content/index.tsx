@@ -8,7 +8,6 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
-import StorePanel from '../shared/store-panel';
 import metadata from './block.json';
 import './style.scss';
 
@@ -53,11 +52,6 @@ registerBlockType( metadata.name, {
                     </Notice>
                 </PanelBody>
             </InspectorControls>
-
-            <StorePanel
-                attributes={ attributes }
-                setAttributes={ setAttributes }
-            />
         </SSREdit>
     ),
     save: () => null,
