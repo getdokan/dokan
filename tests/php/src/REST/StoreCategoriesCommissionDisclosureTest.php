@@ -1,0 +1,205 @@
+<?php
+
+namespace WeDevs\Dokan\Test\REST;
+
+use WeDevs\Dokan\REST\StoreController;
+use WeDevs\Dokan\Test\DokanTestCase;
+
+/**
+ * Authorization test for the store-categories REST endpoint.
+ *
+ * Covers the unauthenticated commission disclosure (audit L10 /
+ * plugin-internal-tasks#2172): `GET dokan/v1/stores/<id>/categories` is a public
+ * route, so the vendor's admin-configured commission must not ride along in the
+ * response for callers the single-store endpoint would not show it to.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @group dokan-store-controller
+ * @group dokan-authorization
+ * @group security
+ *
+ * @covers \WeDevs\Dokan\REST\StoreController::get_store_category
+ */
+class StoreCategoriesCommissionDisclosureTest extends DokanTestCase {
+
+    /**
+     * Commission fields that must reach only authorized callers.
+     *
+     * @var array
+     */
+    protected const COMMISSION_FIELDS = [ 'admin_commission_type', 'commission' ];
+
+    /**
+     * Rate the vendor falls back to for categories without their own override.
+     *
+     * @var array
+     */
+    protected const DEFAULT_COMMISSION = [
+        'percentage' => '42',
+        'flat'       => '3',
+    ];
+
+    /**
+     * Rate configured against one specific category.
+     *
+     * @var array
+     */
+    protected const OVERRIDE_COMMISSION = [
+        'percentage' => '17',
+        'flat'       => '1',
+    ];
+
+    /**
+     * Category carrying its own rate.
+     *
+     * @var int
+     */
+    protected $override_category_id;
+
+    /**
+     * Category with no rate of its own.
+     *
+     * @var int
+     */
+    protected $default_category_id;
+
+    public function set_up() {
+        parent::set_up();
+
+        ( new StoreController() )->register_routes();
+
+        $this->override_category_id = $this->factory()->term->create( [ 'taxonomy' => 'product_cat' ] );
+        $this->default_category_id  = $this->factory()->term->create( [ 'taxonomy' => 'product_cat' ] );
+
+        $product = $this->factory()->product->create_simple_product();
+
+        wp_update_post(
+            [
+                'ID'          => $product->get_id(),
+                'post_author' => $this->seller_id1,
+                'post_status' => 'publish',
+            ]
+        );
+        wp_set_object_terms( $product->get_id(), [ $this->override_category_id, $this->default_category_id ], 'product_cat' );
+
+        // Give the vendor real rates, so the authorized cases assert the payload the leak exposed rather than bare key presence.
+        update_user_meta( $this->seller_id1, 'dokan_admin_percentage_type', 'category_based' );
+        update_user_meta(
+            $this->seller_id1,
+            'admin_category_commission',
+            [
+                'all'   => self::DEFAULT_COMMISSION,
+                'items' => [ $this->override_category_id => self::OVERRIDE_COMMISSION ],
+            ]
+        );
+    }
+
+    /**
+     * An anonymous caller gets the category terms but no commission data.
+     */
+    public function test_anonymous_caller_does_not_receive_commission_fields() {
+        wp_set_current_user( 0 );
+
+        $this->assertCommissionFieldsVisible( false, 'Anonymous callers' );
+    }
+
+    /**
+     * Another vendor is no more privileged than the public for this store's commission.
+     */
+    public function test_other_vendor_does_not_receive_commission_fields() {
+        wp_set_current_user( $this->seller_id2 );
+
+        $this->assertCommissionFieldsVisible( false, 'A different vendor' );
+    }
+
+    /**
+     * Vendor staff are excluded too, matching what the single-store endpoint strips from them.
+     */
+    public function test_vendor_staff_does_not_receive_commission_fields() {
+        wp_set_current_user( $this->create_vendor_staff( $this->seller_id1 ) );
+
+        $this->assertCommissionFieldsVisible( false, 'Vendor staff' );
+    }
+
+    /**
+     * The store's own vendor still sees their commission settings.
+     */
+    public function test_store_owner_receives_commission_fields() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $this->assertCommissionFieldsVisible( true, 'The store owner' );
+    }
+
+    /**
+     * An admin still sees commission settings for any store.
+     */
+    public function test_admin_receives_commission_fields() {
+        wp_set_current_user( $this->admin_id );
+
+        $this->assertCommissionFieldsVisible( true, 'An admin' );
+    }
+
+    /**
+     * A shop manager keeps access too — Installer grants them 'dokandar', which is what the gate accepts.
+     */
+    public function test_shop_manager_receives_commission_fields() {
+        $shop_manager_id = $this->factory()->user->create( [ 'role' => 'shop_manager' ] );
+        wp_set_current_user( $shop_manager_id );
+
+        $this->assertTrue( current_user_can( 'manage_woocommerce' ), 'Precondition: the fixture really is a shop manager.' );
+        $this->assertFalse( current_user_can( 'manage_options' ), 'Precondition: shop managers are not administrators.' );
+
+        $this->assertCommissionFieldsVisible( true, 'A shop manager' );
+    }
+
+    /**
+     * Assert whether the commission fields are attached to every returned term.
+     */
+    protected function assertCommissionFieldsVisible( bool $expected, string $who ) {
+        foreach ( $this->request_store_categories() as $term ) {
+            $data = get_object_vars( $term );
+
+            foreach ( self::COMMISSION_FIELDS as $field ) {
+                if ( ! $expected ) {
+                    $this->assertArrayNotHasKey( $field, $data, sprintf( '%s must not receive "%s".', $who, $field ) );
+                    continue;
+                }
+
+                $this->assertArrayHasKey( $field, $data, sprintf( '%s should still receive "%s".', $who, $field ) );
+            }
+
+            if ( ! $expected ) {
+                continue;
+            }
+
+            $this->assertSame( 'category_based', $data['admin_commission_type'], sprintf( '%s should see the configured commission type.', $who ) );
+
+            $rate = (int) $term->term_id === (int) $this->override_category_id ? self::OVERRIDE_COMMISSION : self::DEFAULT_COMMISSION;
+
+            $this->assertSame( $rate, $data['commission'], sprintf( '%s should see the rate configured for term %d.', $who, $term->term_id ) );
+        }
+    }
+
+    /**
+     * Dispatch the public store-categories route for seller_id1.
+     */
+    protected function request_store_categories(): array {
+        $response = $this->get_request( "stores/{$this->seller_id1}/categories" );
+
+        $this->assertSame( 200, $response->get_status() );
+
+        $terms = (array) $response->get_data();
+
+        // Guard the assertions below against passing vacuously — the terms themselves stay public for everyone.
+        $this->assertCount( 2, $terms, 'Both the overridden and the fallback category stay public.' );
+
+        return $terms;
+    }
+
+    public function tear_down() {
+        wp_set_current_user( 0 );
+
+        parent::tear_down();
+    }
+}

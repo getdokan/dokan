@@ -109,4 +109,20 @@ setup.describe('add users', () => {
 
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
+
+    // vendor3 — the permanent NON-CONNECTED marketplace-payment vendor (kept in step
+    // with tests/e2e/_auth.setup.ts so the two setups do not drift).
+    setup('add vendor3', { tag: ['@lite'] }, async () => {
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore3, payloads.adminAuth, true);
+        // add open-close time
+        await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
+        // add review
+        if (isPro) {
+            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
+        }
+        // add map location
+        await dbUtils.addStoreMapLocation(sellerId);
+
+        helpers.createEnvVar('VENDOR3_ID', sellerId);
+    });
 });

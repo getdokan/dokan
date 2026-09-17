@@ -33,8 +33,10 @@ const selectors = {
             verifiedIconByIcon: (iconName: string) => `//i[@class='${iconName}']//../..`,
             verificationMethodRow: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..`,
             enableVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//label[@class="switch tips"]`,
-            editVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-violet')]`,
-            deleteVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-red')]`,
+            // dokan-pro #5861 replaced the hover-revealed pill buttons with always-visible
+            // icon buttons carrying an aria-label. Key off the label, not the utility classes.
+            editVerificationMethod: (methodName: string) => `button[aria-label="Edit ${methodName} verification method"]`,
+            deleteVerificationMethod: (methodName: string) => `button[aria-label="Delete ${methodName} verification method"]`,
             confirmDelete: '.swal2-confirm',
             methodCreateSuccessMessage: '//div[text()="Created Successfully."]',
             methodUpdateSuccessMessage: '//div[text()="Updated Successfully."]',
@@ -423,11 +425,7 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
-        // The edit button is CSS hover-revealed (visibility:hidden until the row
-        // is hovered via `group-hover/item:visible`), which Playwright cannot
-        // reliably surface in headless; dispatch the click to fire the Vue handler.
-        await this.page.locator(settingsAdmin.vendorVerification.verificationMethodRow(methodName)).hover();
-        await this.page.locator(settingsAdmin.vendorVerification.editVerificationMethod(methodName)).dispatchEvent('click');
+        await this.page.locator(settingsAdmin.vendorVerification.editVerificationMethod(methodName)).click();
         await this.updateVerificationMethod(verificationMethod);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.addNewVerification.update);
         await expect(this.page.locator(settingsAdmin.vendorVerification.methodUpdateSuccessMessage)).toBeVisible();
@@ -443,10 +441,7 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
-        // The delete button is CSS hover-revealed (visibility:hidden until the row
-        // is hovered); dispatch the click to fire the Vue handler in headless.
-        await this.page.locator(settingsAdmin.vendorVerification.verificationMethodRow(methodName)).hover();
-        await this.page.locator(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName)).dispatchEvent('click');
+        await this.page.locator(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName)).click();
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.confirmDelete, 204);
         await expect(this.page.locator(settingsAdmin.vendorVerification.methodDeleteSuccessMessage)).toBeVisible();
 

@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 export const adminProductQaData = {
     // The vendor store that owns the product the questions target.
@@ -198,13 +199,7 @@ export class AdminProductQaPage {
      * response so that the status pill reflects the real DB value, not the
      * component's initial empty-string state (which renders "Hidden"). */
     async gotoDetail(questionId: string): Promise<void> {
-        await Promise.all([
-            this.page.waitForResponse(
-                r => r.url().includes(`/dokan/v1/product-questions/${questionId}`) && r.request().method() === 'GET',
-                { timeout: 20000 }
-            ).catch(() => undefined),
-            this.page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/product-qa/${questionId}`)),
-        ]);
+        await Promise.all([this.page.waitForResponse(r => r.url().includes(`/dokan/v1/product-questions/${questionId}`) && r.request().method() === 'GET', { timeout: 20000 }).catch(() => undefined), this.page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/product-qa/${questionId}`))]);
         await this.page.waitForLoadState('domcontentloaded');
         await this.reactRoot.waitFor({ state: 'visible', timeout: 30000 });
         // Small buffer for React to paint the fetched data.
@@ -237,19 +232,18 @@ export class AdminProductQaPage {
         const saveBtn = this.saveButton;
         await saveBtn.waitFor({ state: 'visible', timeout: 10000 });
         // Poll until the Save button is not disabled.
-        await this.page.waitForFunction(
-            () => {
-                const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('button'));
-                const save = btns.find(b => b.textContent?.trim() === 'Save');
-                return save && !save.disabled;
-            },
-            undefined,
-            { timeout: 8000 }
-        ).catch(() => undefined);
-        await Promise.all([
-            this.page.waitForResponse(r => /\/dokan\/v1\/product-answers/.test(r.url()) && r.request().method() === 'POST', { timeout: 15000 }).catch(() => null),
-            saveBtn.click(),
-        ]);
+        await this.page
+            .waitForFunction(
+                () => {
+                    const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('button'));
+                    const save = btns.find(b => b.textContent?.trim() === 'Save');
+                    return save && !save.disabled;
+                },
+                undefined,
+                { timeout: 8000 },
+            )
+            .catch(() => undefined);
+        await Promise.all([this.page.waitForResponse(r => /\/dokan\/v1\/product-answers/.test(r.url()) && r.request().method() === 'POST', { timeout: 15000 }).catch(() => null), saveBtn.click()]);
         await this.page.waitForTimeout(1200);
     }
 
@@ -311,8 +305,7 @@ export class AdminProductQaPage {
 
     /** Whether a given action menu item is present (eligibility gating check). */
     async actionMenuItemVisible(label: RegExp): Promise<boolean> {
-        return await this.page
-            .getByRole('menuitem', { name: label })
+        return await actionMenuItemByName(this.page, label)
             .first()
             .isVisible({ timeout: 5000 })
             .catch(() => false);
@@ -320,7 +313,7 @@ export class AdminProductQaPage {
 
     /** Click an item in the open actions menu, e.g. 'Mark as Read', 'Delete'. */
     async clickActionMenuItem(label: RegExp): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: label }).first();
+        const item = actionMenuItemByName(this.page, label).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
         await this.page.waitForTimeout(1000); // PUT bulk_action + list refetch.

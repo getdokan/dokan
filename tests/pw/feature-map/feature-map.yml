@@ -1280,7 +1280,6 @@
       vendor:
           vendor can add PayPal Marketplace payment method: false
           vendor can remove PayPal Marketplace payment method: false
-          admin can refund order using PayPal Marketplace payment method: false
       customer:
           customer can buy product using PayPal Marketplace payment method: false
 

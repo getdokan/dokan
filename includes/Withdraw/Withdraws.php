@@ -180,6 +180,18 @@ class Withdraws {
                 ), ARRAY_A
             );
             // @codingStandardsIgnoreEnd
+
+            /*
+             * Only the status counts are cached here. The result set of a listing query
+             * cannot be, because its total is read straight afterwards from FOUND_ROWS(),
+             * which is only populated by the query above having actually run.
+             *
+             * WithdrawCache invalidates the `withdraws` group on withdraw
+             * create/update/status-change/delete, so the counts cannot go stale.
+             */
+            if ( 'count' === $args['return'] ) {
+                Cache::set( $cache_key, $withdraws, $cache_group );
+            }
         }
 
         if ( 'count' === $args['return'] ) {

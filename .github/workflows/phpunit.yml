@@ -1,0 +1,326 @@
+name: PHPUnit Tests
+
+# Runs the PHP unit suite (tests/php) against a real WordPress + WooCommerce
+# install provisioned by wp-env — the same environment `npm run phpunit` gives
+# you locally, so a red CI run reproduces verbatim on a dev machine.
+#
+# This job used to live at the bottom of phpcs.yml, which meant a single
+# coding-standards violation on a changed file aborted the workflow before a
+# single test ran. It is now independent.
+
+on:
+    pull_request:
+        # Deliberately NOT filtered to `develop`. Work here is often stacked on
+        # long-lived integration branches (e.g. refactor/settings-accessor-api);
+        # a base-branch filter would silently drop the suite for every sub-PR.
+        #
+        # NOTE: this list is duplicated under `push:` below. GitHub Actions does
+        # not support YAML anchors, so the two must be kept in sync by hand.
+        paths:
+            - '**.php'
+            - 'tests/php/**'
+            - 'composer.json'
+            - 'composer.lock'
+            - 'package.json'
+            - 'phpunit.xml'
+            - '.wp-env.json'
+            - '.github/workflows/phpunit.yml'
+    push:
+        branches: [develop]
+        paths:
+            - '**.php'
+            - 'tests/php/**'
+            - 'composer.json'
+            - 'composer.lock'
+            - 'package.json'
+            - 'phpunit.xml'
+            - '.wp-env.json'
+            - '.github/workflows/phpunit.yml'
+    workflow_dispatch:
+
+# Cancels superseded runs: pushing a new commit to a PR kills the in-flight run.
+#
+# The group is a hardcoded literal rather than `${{ github.workflow }}` on purpose.
+# Interpolating the workflow name means the group changes whenever this workflow is
+# renamed, and — worse — that any other workflow that ends up with the same `name:`
+# silently joins this group and can cancel these runs. A literal keyed to this file
+# can only ever be shared by something that copies this exact string.
+#
+# This only governs runs cancelling each other. A run cancelled from the UI, the
+# REST API, or by an org/GitHub-side action (quota, incident) cannot be prevented
+# from inside the workflow.
+concurrency:
+    group: dokan-lite-phpunit-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+    checks: write
+    pull-requests: write
+
+jobs:
+    phpunit:
+        name: PHPUnit (PHP ${{ matrix.php }})
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+
+        strategy:
+            # 7.4 is the floor Dokan declares (`Requires PHP: 7.4`) and WooCommerce's
+            # legacy minimum. 8.3 is what WooCommerce actually requires from 10.8
+            # onward and what WordPress recommends, so it is the version real installs
+            # are expected to be on:
+            #   https://woocommerce.com/document/server-requirements/
+            #   https://wordpress.org/about/requirements/
+            #
+            # The "Prepare wp-env config" step below rewrites .wp-env.json's phpVersion
+            # from this value, and the image cache key includes it, so adding a version
+            # needs no other change.
+            #
+            # fail-fast is off on purpose: a failure on one version must not cancel the
+            # other, or a single 8.3 deprecation would hide 7.4's result.
+            fail-fast: false
+            matrix:
+                php: ['7.4', '8.3']
+
+        steps:
+            # persist-credentials: false — this job runs `npm ci`, which executes
+            # lifecycle scripts from PR-controlled dependencies. Left on, the workflow
+            # token sits in .git/config as an extraheader for them to read, and on a
+            # same-repo branch PR that token is read-write. Nothing after checkout
+            # needs git auth: every npm/composer dependency resolves from a public
+            # source.
+            - uses: actions/checkout@v4
+              with:
+                  persist-credentials: false
+
+            # ---------------------------------------------------------------
+            # Built assets
+            #
+            # PHPUnit CANNOT run without a webpack build. This is not an
+            # optimisation that can be dropped — see docs/adr/0005. In short:
+            #   dokan-class.php:266  add_action('init', 'init_classes', 4)
+            #   init_classes()       resolves the whole 'container-service' tag
+            #   Assets::__construct  add_action('init', 'register_all_scripts', 10)
+            #   get_scripts():424    require DOKAN_DIR.'/assets/js/frontend.asset.php'
+            # assets/js is gitignored build output, so with no build that bare
+            # `require` is a FATAL error during bootstrap and zero tests run.
+            #
+            # Cache the two generated directories (neither contains any
+            # committed file) keyed on everything that can change bundle
+            # output. On a hit — the common case for a PHP-only PR, which is
+            # exactly what the `paths` filter above selects for — the whole
+            # webpack run is skipped.
+            #
+            # This step MUST stay ahead of `Npm install`. The install falls back to
+            # `npm i` when `npm ci` fails, and `npm i` rewrites package-lock.json
+            # (this repo has `github:` dependencies whose resolved commits get
+            # re-pinned). Hashing the lockfile after that ran produced a different
+            # key on warm runs than on cold ones, so the cache could never hit.
+            # Computing the key against the pristine checkout keeps it stable.
+            # ---------------------------------------------------------------
+            - name: Cache built assets
+              id: assets
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      assets/js
+                      assets/css
+                  key: dokan-assets-v1-${{ runner.os }}-${{ hashFiles('src/**', 'webpack.config.js', 'webpack-entries.js', 'webpack-dependency-mapping.js', 'postcss.config.js', 'tsconfig.json', 'package-lock.json', 'package.json') }}
+
+            # ---------------------------------------------------------------
+            # Node — needed on every run, because wp-env itself is a
+            # devDependency. Only the webpack build below is skippable.
+            # ---------------------------------------------------------------
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+
+            # Deliberately the SAME key as e2e_api_tests.yml's "Cache lite node_modules"
+            # (`lite-nm-<os>-<hash of package-lock.json>`, same `node_modules` path, same
+            # `npm ci` contents), so the two workflows share one entry instead of storing
+            # ~200MB twice. The payoff is on cold runs: e2e keeps this cache populated on
+            # refs/heads/develop, and PR runs inherit caches from the base branch, so a
+            # brand-new PR branch restores node_modules on its very first run rather than
+            # spending ~200s in `npm ci`. Keep this key byte-identical to the e2e one.
+            - name: Cache node_modules
+              id: node-modules
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Npm install
+              if: steps.node-modules.outputs.cache-hit != 'true'
+              run: npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Build assets
+              if: steps.assets.outputs.cache-hit != 'true'
+              run: npm run build
+
+            # ---------------------------------------------------------------
+            # PHP + Composer
+            # ---------------------------------------------------------------
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: none
+                  tools: composer:v2
+
+            - name: Get composer cache directory
+              id: composercache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ${{ steps.composercache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            # `composer install` runs mozart via post-install-cmd, which the
+            # plugin's lib/packages autoloading depends on.
+            - name: Install composer dependencies
+              run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
+
+            # ---------------------------------------------------------------
+            # wp-env environment
+            # ---------------------------------------------------------------
+            # Rewrite phpVersion from the matrix so adding a version above is
+            # genuinely a one-line change. wp-env merges .wp-env.override.json
+            # over .wp-env.json; the file is gitignored, so this is CI-local.
+            - name: Prepare wp-env config
+              env:
+                  PHP_VERSION: ${{ matrix.php }}
+              run: |
+                  jq --arg php "$PHP_VERSION" '.phpVersion = $php' .wp-env.json > .wp-env.override.json
+                  cat .wp-env.override.json
+
+            # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
+            # (mariadb, phpmyadmin, wordpress — all official library/* images) then come from the
+            # mirror instead of registry-1.docker.io, dodging Docker Hub's anonymous pull-rate-limit
+            # / connection timeouts that randomly fail `wp-env start`. No credentials needed; Docker
+            # falls back to Docker Hub if the mirror misses an image.
+            - name: Route Docker Hub pulls through a mirror
+              run: |
+                  # Merge into any existing daemon.json (jq is preinstalled on the runner) so we
+                  # never clobber the runner's own Docker config; create it only if absent.
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  # Wait for the daemon socket instead of a fixed sleep.
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
+            # Anonymous Docker Hub pulls from shared runner IPs randomly time out even with the gcr
+            # mirror configured (the daemon silently falls back to registry-1.docker.io when the
+            # mirror misses), so pre-seed the images: restore them from the actions cache, else pull
+            # from AWS's public mirror of Docker official images and retag. Once the images exist
+            # locally, compose/build skip the Docker Hub pull entirely. The ISO week in the cache key
+            # stops the floating tags (lts, latest) from pinning forever.
+            - name: Compute wp-env image list and cache key
+              id: wp-env-images
+              env:
+                  PHP_VERSION: ${{ matrix.php }}
+              run: |
+                  IMAGES="mariadb:lts phpmyadmin:latest wordpress:php$PHP_VERSION wordpress:cli-php$PHP_VERSION"
+                  echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
+                  # Same key format as e2e_api_tests.yml. It is per-PHP-version, and e2e
+                  # runs 8.2, so nothing is shared with it at 7.4/8.3 — the format is kept
+                  # identical so a matrix entry matching e2e's phpVersion would reuse its
+                  # ~529MB set instead of pulling again.
+                  echo "key=wp-env-images-v1-php$PHP_VERSION-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+                  echo "images: $IMAGES"
+
+            - name: Restore wp-env docker images from cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/wp-env-images
+                  key: ${{ steps.wp-env-images.outputs.key }}
+
+            - name: Pre-seed wp-env docker images
+              env:
+                  IMAGES: ${{ steps.wp-env-images.outputs.list }}
+              run: |
+                  TAR="$HOME/.cache/wp-env-images/images.tar"
+                  if [ -f "$TAR" ]; then
+                      docker load -i "$TAR"
+                  else
+                      mkdir -p "$(dirname "$TAR")"
+                      complete=true
+                      for img in $IMAGES; do
+                          pulled=false
+                          for attempt in 1 2 3; do
+                              if docker pull "public.ecr.aws/docker/library/$img"; then pulled=true; break; fi
+                              sleep 15
+                          done
+                          if [ "$pulled" = true ]; then
+                              docker tag "public.ecr.aws/docker/library/$img" "$img"
+                              docker rmi "public.ecr.aws/docker/library/$img" >/dev/null
+                          else
+                              echo "::warning::could not pre-seed $img from the ECR mirror; wp-env will pull it from Docker Hub"
+                              complete=false
+                          fi
+                      done
+                      # Only cache a complete set so a partial failure is retried next run.
+                      if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
+                  fi
+                  docker image ls
+
+            - name: Start WordPress environment
+              run: npm run env:start
+
+            # ---------------------------------------------------------------
+            # The suite
+            # ---------------------------------------------------------------
+            # No retry wrapper: unit tests are expected to be deterministic, and
+            # auto-retrying here would hide genuine flakiness.
+            - name: Run PHPUnit
+              run: npm run phpunit -- --log-junit phpunit-junit.xml
+
+            # ---------------------------------------------------------------
+            # Diagnostics
+            # ---------------------------------------------------------------
+            - name: Annotate test results
+              if: always()
+              # A fork PR gets a read-only GITHUB_TOKEN whatever `permissions:` says, so
+              # creating the check run 403s. That is an API error, not a test failure, so
+              # `fail_on_failure: false` does not cover it.
+              continue-on-error: true
+              uses: mikepenz/action-junit-report@v5
+              with:
+                  report_paths: phpunit-junit.xml
+                  check_name: PHPUnit results (PHP ${{ matrix.php }})
+                  # The `Run PHPUnit` step above already carries the pass/fail
+                  # signal; this step exists purely to surface failures inline
+                  # on the PR, so it must not fail the job a second time.
+                  fail_on_failure: false
+                  require_tests: false
+
+            - name: Collect WordPress debug log
+              if: failure()
+              run: |
+                  npx wp-env run cli --env-cwd=wp-content cat debug.log > wp-debug.log 2>/dev/null || echo "no debug.log produced" > wp-debug.log
+
+            - name: Upload failure artifacts
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: phpunit-failure-php${{ matrix.php }}
+                  path: |
+                      phpunit-junit.xml
+                      wp-debug.log
+                  if-no-files-found: ignore
+                  retention-days: 7
+
+            # Diagnostics only on failure. `wp-env stop` is deliberately absent:
+            # the runner is torn down immediately after the job, so stopping the
+            # containers costs ~15s per run and buys nothing.
+            - name: Dump container logs
+              if: failure()
+              run: npx wp-env logs all --watch=false || true

@@ -329,7 +329,7 @@ function DokanMarketplaceUI() {
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-white text-gray-400 cursor-not-allowed'
                         }` }
-                        aria-label="Scroll left"
+                        aria-label={ __( 'Scroll left', 'dokan-lite' ) }
                     >
                         <span className="text-lg font-bold">
                             <ChevronLeft />
@@ -343,7 +343,7 @@ function DokanMarketplaceUI() {
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-white text-gray-400 cursor-not-allowed'
                         }` }
-                        aria-label="Scroll right"
+                        aria-label={ __( 'Scroll right', 'dokan-lite' ) }
                     >
                         <span className="text-lg font-bold">
                             <ChevronRight />

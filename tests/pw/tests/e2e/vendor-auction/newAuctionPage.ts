@@ -1,20 +1,21 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
 import {
-    REACT_ROOT,
-    SEARCH_INPUT,
-    PHP_FATAL,
     DATA_ROW_ANY,
     DATA_ROW_SETTLED,
+    PHP_FATAL,
+    REACT_ROOT,
+    SEARCH_INPUT,
     SKELETON_ANY,
     actionMenuItem as dvActionMenuItem,
-    statusTab as dvStatusTab,
-    waitForRootReady as dvWaitForRootReady,
-    hasNoPhpFatal as dvHasNoPhpFatal,
-    parseTabCount,
+    actionMenuItemByName,
+    clearDataViewsSearch,
     dataViewsConfirm,
     fillDataViewsSearch,
-    clearDataViewsSearch,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    parseTabCount,
+    statusTab as dvStatusTab,
+    waitForRootReady as dvWaitForRootReady,
 } from '@utils/dataViews';
 
 // ============================================
@@ -217,7 +218,7 @@ export class NewAuctionPage {
     /** Delete a product via row action + destructive alertdialog confirm. */
     async deleteProduct(text: string): Promise<void> {
         await this.openRowMenu(text);
-        const item = this.page.getByRole('menuitem', { name: /Delete Permanently|Delete/i }).first();
+        const item = actionMenuItemByName(this.page, /Delete Permanently|Delete/i).first();
         await item.waitFor({ state: 'visible', timeout: 8000 });
         await item.click();
         const dialog = dataViewsConfirm(this.page);
@@ -234,7 +235,7 @@ export class NewAuctionPage {
     /** Click the Edit row action and report the URL it navigates to (the React product editor). */
     async editActionTarget(text: string): Promise<string> {
         await this.openRowMenu(text);
-        const edit = this.page.getByRole('menuitem', { name: /^Edit$/i }).first();
+        const edit = actionMenuItemByName(this.page, /^Edit$/i).first();
         const before = this.page.url();
         await edit.click().catch(() => undefined);
         await this.page.waitForTimeout(1500);
