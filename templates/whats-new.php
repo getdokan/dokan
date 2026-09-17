@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.1.2',
+        'released' => '2026-09-17',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.1.1',
         'released' => '2026-09-09',
         'changes'  => [

@@ -153,7 +153,7 @@ class AIRequestController extends DokanBaseVendorController {
     /**
      * Build a misconfiguration error response.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.2
      *
      * @param string $message Human readable reason.
      *

@@ -1,3 +1,8 @@
+### v5.1.2 ( Sep 17, 2026 ) ###
+
+- **fix:** Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.
+- **fix:** The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.
+
 ### v5.1.1 ( Sep 09, 2026 ) ###
 
 - **fix:** The Vendors screen's Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.

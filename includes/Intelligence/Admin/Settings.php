@@ -20,7 +20,7 @@ class Settings implements Hookable {
     /**
      * Replace saved model ids that a provider has since retired.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.2
      *
      * @param array  $values     Section setting values.
      * @param string $section_id Section id.
