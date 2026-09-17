@@ -28,7 +28,7 @@ class Gemini extends Provider {
 	}
 
 	public function get_default_model_id(): string {
-		return 'gemini-2.0-flash';
+		return 'gemini-2.5-flash';
 	}
 
 

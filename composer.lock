@@ -104,16 +104,16 @@
         },
         {
             "name": "jakeasmith/http_build_url",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jakeasmith/http_build_url.git",
-                "reference": "93c273e77cb1edead0cf8bcf8cd2003428e74e37"
+                "reference": "18627808c80621219f80337fa4adcee7a31aff7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jakeasmith/http_build_url/zipball/93c273e77cb1edead0cf8bcf8cd2003428e74e37",
-                "reference": "93c273e77cb1edead0cf8bcf8cd2003428e74e37",
+                "url": "https://api.github.com/repos/jakeasmith/http_build_url/zipball/18627808c80621219f80337fa4adcee7a31aff7d",
+                "reference": "18627808c80621219f80337fa4adcee7a31aff7d",
                 "shasum": ""
             },
             "type": "library",
@@ -129,15 +129,17 @@
             "authors": [
                 {
                     "name": "Jake A. Smith",
-                    "email": "theman@jakeasmith.com"
+                    "email": "theman@jakeasmith.com",
+                    "homepage": "https://jakeasmith.com"
                 }
             ],
-            "description": "Provides functionality for http_build_url() to environments without pecl_http.",
+            "description": "Deprecated: use PHP 8.5's built-in Uri\\Rfc3986\\Uri instead. Provides http_build_url() for environments without pecl_http.",
             "support": {
                 "issues": "https://github.com/jakeasmith/http_build_url/issues",
                 "source": "https://github.com/jakeasmith/http_build_url"
             },
-            "time": "2017-05-01T15:36:40+00:00"
+            "abandoned": true,
+            "time": "2026-09-15T07:48:37+00:00"
         }
     ],
     "packages-dev": [
@@ -893,16 +895,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.8.0",
+            "version": "v5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f"
+                "reference": "9e33da9553fe7786f0962b35f4e4ecf01be89def"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
-                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9e33da9553fe7786f0962b35f4e4ecf01be89def",
+                "reference": "9e33da9553fe7786f0962b35f4e4ecf01be89def",
                 "shasum": ""
             },
             "require": {
@@ -944,9 +946,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.8.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.9.0"
             },
-            "time": "2026-07-04T14:30:18+00:00"
+            "time": "2026-09-13T18:51:52+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -3996,12 +3998,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "f72bcdfc4da28526a6e753bcecfaeff8a80a6d00"
+                "reference": "b2f0c372b930b228f36056c1dc3665759858c1c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/f72bcdfc4da28526a6e753bcecfaeff8a80a6d00",
-                "reference": "f72bcdfc4da28526a6e753bcecfaeff8a80a6d00",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/b2f0c372b930b228f36056c1dc3665759858c1c6",
+                "reference": "b2f0c372b930b228f36056c1dc3665759858c1c6",
                 "shasum": ""
             },
             "require": {
@@ -4055,7 +4057,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-08-20T23:19:15+00:00"
+            "time": "2026-09-11T18:24:55+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
