@@ -156,7 +156,7 @@ setup.describe('setup woocommerce settings', () => {
         // `latestUnread` query returns null and the modal never renders.
         // Table: wp_dokan_announcement (id, user_id, status='unread'|'read'|'trash')
         const dbPrefix = process.env.DB_PREFIX || 'wp';
-        const ids = [process.env.VENDOR_ID, process.env.VENDOR2_ID].filter(Boolean) as string[];
+        const ids = [process.env.VENDOR_ID, process.env.VENDOR2_ID, process.env.VENDOR3_ID].filter(Boolean) as string[];
         for (const userId of ids) {
             await dbUtils.dbQuery(
                 `UPDATE ${dbPrefix}_dokan_announcement SET status = 'read' WHERE user_id = ? AND status = 'unread'`,
@@ -216,6 +216,14 @@ setup.describe('setup user settings', () => {
         // create store product
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
         helpers.createEnvVar('PRODUCT_ID_V2', productId);
+    });
+
+    setup('add vendor3 product', { tag: ['@lite'] }, async () => {
+        // p1_v3 belongs to the permanent NON-CONNECTED vendor — the fixture the Stripe
+        // Express non-connected-seller specs buy from.
+        await apiUtils.deleteAllProducts(data.predefined.vendor3.simpleProduct.product1.name, payloads.vendor3Auth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor3.simpleProduct.product1.name }, payloads.vendor3Auth);
+        helpers.createEnvVar('PRODUCT_ID_V3', productId);
     });
 
     setup('add vendor1 coupon', { tag: ['@pro'] }, async () => {

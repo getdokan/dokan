@@ -5,6 +5,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { SERVER_URL } from '@utils/helpers';
 import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
+import { expectTabCountAtLeast } from '@utils/dataViews';
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)
@@ -96,7 +97,7 @@ test.describe('Auction (React) functionality', () => {
         test('the All / Published / Draft tabs render with counts (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await seedAuction();
             await auction.gotoList();
-            expect(await auction.getTabCount('all'), 'All tab count >= 1 after seeding').toBeGreaterThanOrEqual(1);
+            await expectTabCountAtLeast(() => auction.getTabCount('all'), 1, 'All tab count >= 1 after seeding');
         });
 
         test('searching by product name narrows the list (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {

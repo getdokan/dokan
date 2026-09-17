@@ -93,11 +93,17 @@ class VendorResolver {
         set_query_var( $store_query_var, $vendor->data->user_nicename ?? '' );
 
         ob_start();
-        $renderer();
-        $output = ob_get_clean();
 
-        set_query_var( 'author', $previous_author );
-        set_query_var( $store_query_var, $previous_store );
+        // Restored even if the renderer throws, or the swapped store context leaks
+        // into whatever renders next in this request.
+        try {
+            $renderer();
+        } finally {
+            $output = ob_get_clean();
+
+            set_query_var( 'author', $previous_author );
+            set_query_var( $store_query_var, $previous_store );
+        }
 
         return (string) $output;
     }

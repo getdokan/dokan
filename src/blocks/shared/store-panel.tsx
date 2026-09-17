@@ -18,6 +18,9 @@ type StoreOption = { value: number; label: string };
  * Store blocks follow the vendor whose store page is being viewed. Choosing a
  * vendor here pins the block to that store instead, which is what makes the
  * blocks usable on ordinary pages, where there is no store context to follow.
+ *
+ * @since DOKAN_SINCE
+ *
  * @param root0
  * @param root0.attributes
  * @param root0.setAttributes

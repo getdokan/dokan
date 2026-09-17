@@ -22,6 +22,8 @@ class Templates implements Hookable {
 
     /**
      * Template slug.
+     *
+     * @since DOKAN_SINCE
      */
     public const TEMPLATE_SLUG = 'single-store';
 
@@ -78,11 +80,24 @@ class Templates implements Hookable {
      * @return bool
      */
     public static function is_available(): bool {
-        if ( ! wp_is_block_theme() || ! function_exists( 'resolve_block_template' ) ) {
-            return false;
+        // resolve_block_template() runs a wp_template query and a theme scan with no
+        // cache of its own, and the answer cannot change within a request — the store
+        // and store-TOC hooks would otherwise pay for it twice on every store page.
+        static $available = null;
+
+        if ( null !== $available ) {
+            return $available;
         }
 
-        return null !== resolve_block_template( self::TEMPLATE_SLUG, [ self::TEMPLATE_SLUG ], '' );
+        if ( ! wp_is_block_theme() || ! function_exists( 'resolve_block_template' ) ) {
+            $available = false;
+
+            return $available;
+        }
+
+        $available = null !== resolve_block_template( self::TEMPLATE_SLUG, [ self::TEMPLATE_SLUG ], '' );
+
+        return $available;
     }
 
     /**

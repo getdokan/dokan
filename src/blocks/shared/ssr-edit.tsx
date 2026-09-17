@@ -25,6 +25,9 @@ type SSREditProps = {
  * to the inspector: it returns every attribute — including the style, colour
  * and typography ones the block supports add — to its block.json default, the
  * per-block counterpart of the template's own Reset.
+ *
+ * @since DOKAN_SINCE
+ *
  * @param root0
  * @param root0.name
  * @param root0.attributes

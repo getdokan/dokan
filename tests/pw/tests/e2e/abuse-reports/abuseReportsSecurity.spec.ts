@@ -81,13 +81,20 @@ async function selectReasonRadioByLabelText(page: Page, snippet: string) {
 const SAVED_REASON_LIST = 'ul.dokan-settings-repeatable-list';
 
 async function getSavedReasonTexts(page: Page): Promise<string[]> {
-    const items = page.locator(`${SAVED_REASON_LIST} li`);
-    const count = await items.count();
-    const texts: string[] = [];
-    for (let i = 0; i < count; i++) {
-        texts.push(((await items.nth(i).innerText().catch(() => '')) || '').trim());
-    }
-    return texts;
+    // WordPress ships wp-emoji-release.min.js in wp-admin, which rewrites emoji
+    // characters into <img class="emoji" alt="🚩">. Neither innerText nor
+    // textContent reads an <img>, so an emoji in a saved reason is invisible to a
+    // plain text read even though it stored and renders correctly. Substitute each
+    // emoji image back for its alt so the assertions see what the admin sees.
+    return page.$$eval(`${SAVED_REASON_LIST} li`, items =>
+        items.map(item => {
+            const clone = item.cloneNode(true) as HTMLElement;
+            clone.querySelectorAll('img.emoji').forEach(img => {
+                img.replaceWith(document.createTextNode((img as HTMLImageElement).alt));
+            });
+            return (clone.textContent ?? '').trim();
+        }),
+    );
 }
 
 async function removeSavedReasonBySnippet(page: Page, snippet: string) {

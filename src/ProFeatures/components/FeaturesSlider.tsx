@@ -130,7 +130,10 @@ function FeaturesSlider() {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h3 className="font-bold text-2xl leading-[130%] tracking-normal">
-                    Curated Features for Your Thriving Marketplace
+                    { __(
+                        'Curated Features for Your Thriving Marketplace',
+                        'dokan-lite'
+                    ) }
                 </h3>
                 <div className="flex space-x-2">
                     <button
@@ -141,7 +144,7 @@ function FeaturesSlider() {
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
                         }` }
-                        aria-label="Scroll left"
+                        aria-label={ __( 'Scroll left', 'dokan-lite' ) }
                     >
                         <span className="text-lg font-bold">
                             <ChevronLeft />
@@ -155,7 +158,7 @@ function FeaturesSlider() {
                                 ? 'border-[#7C3AED] bg-white text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white cursor-pointer'
                                 : 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed opacity-50'
                         }` }
-                        aria-label="Scroll right"
+                        aria-label={ __( 'Scroll right', 'dokan-lite' ) }
                     >
                         <span className="text-lg font-bold">
                             <ChevronRight />
