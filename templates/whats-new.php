@@ -7,6 +7,16 @@ $changelog = [
         'version'  => 'Version 5.1.2',
         'released' => '2026-09-17',
         'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added FlyCRM to the setup wizard\'s recommended add-ons and removed Texty from that step.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added FlyCRM to the admin Extensions page as an installable add-on.',
+                    'description' => '',
+                ],
+            ],
             'Fix' => [
                 [
                     'title'       => 'Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.',

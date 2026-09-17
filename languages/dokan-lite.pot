@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-17T06:04:00+00:00\n"
+"POT-Creation-Date: 2026-09-17T10:24:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -377,123 +377,131 @@ msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:148
 #: includes/Admin/RecommendedPlugins.php:28
-msgid "wePos"
+msgid "FlyCRM"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:149
-msgid "Run your physical store smarter - manage sales, inventory, and customers in real time with a powerful POS built for WooCommerce."
+msgid "Keep customers and vendors organized - store contacts, track deals, and nurture every relationship to drive repeat marketplace revenue."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:159
-#: includes/Admin/RecommendedPlugins.php:55
-msgid "Texty"
+#: includes/Admin/RecommendedPlugins.php:37
+msgid "wePos"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:160
-msgid "Stay connected with instant SMS alerts - notify vendors and customers about orders, updates, and key actions without missing a moment."
+msgid "Run your physical store smarter - manage sales, inventory, and customers in real time with a powerful POS built for WooCommerce."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:170
+msgid "Texty"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Extensions.php:171
+msgid "Stay connected with instant SMS alerts - notify vendors and customers about orders, updates, and key actions without missing a moment."
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Extensions.php:181
 #: includes/Admin/RecommendedPlugins.php:64
 msgid "StoreGrowth"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:171
+#: includes/Admin/Dashboard/Pages/Extensions.php:182
 msgid "Accelerate your store growth with smart tools - boost engagement, increase conversions, and turn more visitors into paying customers."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:181
+#: includes/Admin/Dashboard/Pages/Extensions.php:192
 #: includes/Admin/RecommendedPlugins.php:73
 msgid "weDocs"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:182
+#: includes/Admin/Dashboard/Pages/Extensions.php:193
 msgid "Build a self-serve help center for your marketplace. Publish vendor-specific docs alongside store guides so vendors find answers instantly."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:192
+#: includes/Admin/Dashboard/Pages/Extensions.php:203
 msgid "TryAura"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:193
+#: includes/Admin/Dashboard/Pages/Extensions.php:204
 msgid "Deliver immersive virtual try-ons - help customers visualize products better, build confidence, and increase conversions across your store."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:203
+#: includes/Admin/Dashboard/Pages/Extensions.php:214
 msgid "WPUF"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:204
+#: includes/Admin/Dashboard/Pages/Extensions.php:215
 msgid "Enable frontend control for users - collect posts, registrations, and data easily without backend access, improving user experience."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:214
-#: includes/Admin/RecommendedPlugins.php:37
+#: includes/Admin/Dashboard/Pages/Extensions.php:225
+#: includes/Admin/RecommendedPlugins.php:46
 msgid "weMail"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:215
+#: includes/Admin/Dashboard/Pages/Extensions.php:226
 msgid "Simplify email marketing with automation - engage customers, nurture leads, and drive repeat sales with powerful campaigns."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:225
+#: includes/Admin/Dashboard/Pages/Extensions.php:236
 msgid "CartPulse"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:226
+#: includes/Admin/Dashboard/Pages/Extensions.php:237
 msgid "Recover abandoned carts automatically - send timely follow-ups and bring customers back to complete their purchases and boost revenue."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:236
+#: includes/Admin/Dashboard/Pages/Extensions.php:247
 msgid "Conversion Tracking for WooCommerce"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:237
+#: includes/Admin/Dashboard/Pages/Extensions.php:248
 msgid "Track conversions, optimize campaigns, and use clear insights to boost ROI and drive smarter growth."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:247
+#: includes/Admin/Dashboard/Pages/Extensions.php:258
 #: assets/js/dokan-pro-features.js:2
 msgid "Dokan Migrator"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:248
+#: includes/Admin/Dashboard/Pages/Extensions.php:259
 msgid "Migrate your marketplace with ease - transfer data securely from other platforms and launch quickly without losing valuable information."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:327
+#: includes/Admin/Dashboard/Pages/Extensions.php:338
 msgid "Dokan Customer App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:328
+#: includes/Admin/Dashboard/Pages/Extensions.php:339
 msgid "For Customers"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:329
+#: includes/Admin/Dashboard/Pages/Extensions.php:340
 msgid "A fully-featured shopping app for your Dokan marketplace customers. Browse vendor stores, discover products, place orders, and track deliveries all from one place."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:336
+#: includes/Admin/Dashboard/Pages/Extensions.php:347
 msgid "Dokan Vendor App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:337
+#: includes/Admin/Dashboard/Pages/Extensions.php:348
 msgid "For Vendors"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:338
+#: includes/Admin/Dashboard/Pages/Extensions.php:349
 msgid "Gives vendors complete control over their store on the go. Manage products, process orders, view earnings, and respond to customer queries without needing a desktop."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:345
+#: includes/Admin/Dashboard/Pages/Extensions.php:356
 msgid "Delivery Driver App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:346
+#: includes/Admin/Dashboard/Pages/Extensions.php:357
 msgid "For Delivery Staff"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:347
+#: includes/Admin/Dashboard/Pages/Extensions.php:358
 msgid "Built for delivery agents to accept tasks, navigate routes, update delivery status in real time, and communicate with customers and vendors seamlessly."
 msgstr ""
 
@@ -1571,39 +1579,39 @@ msgid "With the simplest configuration options available, only by enabling a sin
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:29
-msgid "Run your counter and online store from one fast POS system"
+msgid "Track leads, contacts and deals for your marketplace inside WordPress"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:31
-msgid "wePos logo"
+msgid "FlyCRM logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:38
-msgid "Send campaigns and automate email marketing inside WordPress"
+msgid "Run your counter and online store from one fast POS system"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:40
-msgid "weMail logo"
-msgstr ""
-
-#: includes/Admin/RecommendedPlugins.php:46
-msgid "WooCommerce Conversion Tracking"
+msgid "wePos logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:47
-msgid "Advanced WooCommerce conversion tracking for every ad platform"
+msgid "Send campaigns and automate email marketing inside WordPress"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:49
-msgid "WooCommerce Conversion Tracking logo"
+msgid "weMail logo"
+msgstr ""
+
+#: includes/Admin/RecommendedPlugins.php:55
+msgid "WooCommerce Conversion Tracking"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:56
-msgid "Keep buyers updated with instant SMS for every order and alert"
+msgid "Advanced WooCommerce conversion tracking for every ad platform"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:58
-msgid "Texty logo"
+msgid "WooCommerce Conversion Tracking logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:65
