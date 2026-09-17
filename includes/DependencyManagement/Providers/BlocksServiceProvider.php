@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
+use WeDevs\Dokan\Blocks\Assets;
 use WeDevs\Dokan\Blocks\Manager;
 use WeDevs\Dokan\Blocks\Patterns;
 use WeDevs\Dokan\Blocks\Templates;
@@ -11,8 +12,8 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 /**
  * Class BlocksServiceProvider
  *
- * Registers the Gutenberg/FSE block services (block types, patterns, block
- * templates and the shared vendor context resolver) with the container.
+ * Registers the Gutenberg/FSE block services (block types, assets, patterns,
+ * block templates and the shared vendor context resolver) with the container.
  *
  * @since DOKAN_SINCE
  *
@@ -29,6 +30,7 @@ class BlocksServiceProvider extends BaseServiceProvider {
      */
     protected $services = [
         Manager::class,
+        Assets::class,
         Patterns::class,
         Templates::class,
         VendorResolver::class,

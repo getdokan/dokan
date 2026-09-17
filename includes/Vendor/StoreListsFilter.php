@@ -63,12 +63,65 @@ class StoreListsFilter {
      * @return void
      */
     public function filter_area( $stores ) {
-        dokan_get_template_part( 'store-lists-filter', '', [
-            'stores'          => $stores,
-            'number_of_store' => $stores['count'],
-            'sort_filters'    => self::sort_by_options(),
-            'sort_by'         => $this->orderby,
-        ] );
+        dokan_get_template_part(
+            'store-lists-filter', '', [
+				'stores'          => $stores,
+				'number_of_store' => $stores['count'],
+				'sort_filters'    => self::sort_by_options(),
+				'sort_by'         => $this->orderby,
+			]
+        );
+    }
+
+    /**
+     * Read the listing filters the visitor asked for.
+     *
+     * The store listing carries its runtime state in the query string, and every
+     * caller that rebuilds the listing has to read it the same way — the store
+     * blocks each render in a request of their own, so this is what keeps their
+     * results describing the same result set.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public static function get_requested_data(): array {
+        $requested_data = [];
+
+        if ( isset( $_GET['_store_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_store_filter_nonce'] ) ), 'dokan_store_lists_filter_nonce' ) ) {
+            $requested_data = wc_clean( wp_unslash( $_GET ) );
+        }
+
+        // Sorting is whitelisted, so it travels without the filter-form nonce on plain sort links.
+        if ( empty( $requested_data['stores_orderby'] ) && isset( $_GET['stores_orderby'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $stores_orderby = sanitize_text_field( wp_unslash( $_GET['stores_orderby'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+            if ( array_key_exists( $stores_orderby, self::sort_by_options() ) ) {
+                $requested_data['stores_orderby'] = $stores_orderby;
+            }
+        }
+
+        if ( isset( $_GET['store_categories'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $requested_data['store_categories'] = wc_clean( wp_unslash( $_GET['store_categories'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        }
+
+        return $requested_data;
+    }
+
+    /**
+     * Get the sort option in effect, falling back to the marketplace default.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function get_requested_sort_by(): string {
+        $requested = self::get_requested_data();
+        $sort_by   = ! empty( $requested['stores_orderby'] )
+            ? $requested['stores_orderby']
+            : dokan_get_option( 'store_list_sort_by', 'dokan_appearance', 'most_recent' );
+
+        return array_key_exists( $sort_by, self::sort_by_options() ) ? $sort_by : 'most_recent';
     }
 
     /**
@@ -79,11 +132,13 @@ class StoreListsFilter {
      * @return array
      */
     public static function sort_by_options() {
-        return apply_filters( 'dokan_store_lists_sort_by_options', [
-            'most_recent'   => __( 'Most Recent', 'dokan-lite' ),
-            'total_orders'  => __( 'Most Popular', 'dokan-lite' ),
-            'random'        => __( 'Random', 'dokan-lite' ),
-        ] );
+        return apply_filters(
+            'dokan_store_lists_sort_by_options', [
+				'most_recent'   => __( 'Most Recent', 'dokan-lite' ),
+				'total_orders'  => __( 'Most Popular', 'dokan-lite' ),
+				'random'        => __( 'Random', 'dokan-lite' ),
+			]
+        );
     }
 
     /**
