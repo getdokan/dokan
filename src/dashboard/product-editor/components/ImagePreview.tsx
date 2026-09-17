@@ -85,7 +85,9 @@ const ImagePreview = ( {
                     namespace="product-editor-gallery-images"
                     strategy="grid"
                     wrapperElement={ null }
-                    keyExtractor={ ( item: any ) => item.id }
+                    keyExtractor={ ( item: any ) => item.id ?? item.url }
+                    // SortableList spreads its props onto DndContext after its
+                    // default sensors, so these replace the default PointerSensor.
                     sensors={ sensors }
                     onChange={ onSort }
                     renderItem={ renderItem }
