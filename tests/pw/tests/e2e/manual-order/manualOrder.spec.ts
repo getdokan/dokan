@@ -33,7 +33,18 @@ test.afterAll(async ({ browser }) => {
     }
 });
 
-test.describe('Manual Order Tests', () => {
+// RETIRED 2026-08-14. `manualOrderPage.ts` is an all-stub page object: every
+// method is an empty no-op and `isAddNewOrderButtonVisible()` returns a hard
+// `false`. So the two admin cases asserted NOTHING and still reported green,
+// and the vendor case always took its `else` branch to a bare "Orders" text
+// check. Superseded in full by `manual-order/newManualOrder.spec.ts`, which
+// drives the React `#/orders/new` route and covers the same three behaviours
+// for real: "admin can enable vendor order creation, making the React route
+// reachable", "admin can disable vendor order creation, hiding the React
+// route", and "vendor can create a manual order by adding a product line"
+// (+8 more). Do not un-skip without writing a real page object.
+
+test.describe.skip('Manual Order Tests', () => {
     test.describe('Admin Configuration', () => {
         test.use({ storageState: a1 });
 

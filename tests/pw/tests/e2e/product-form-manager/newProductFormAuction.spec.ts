@@ -38,22 +38,22 @@ test.describe('Vendor new product form (React) — auction & product types', () 
     // PRODUCT TYPE COVERAGE — the shared type dropdown
     // ============================================
     test.describe('product type dropdown', () => {
-        test('offers Simple, Variable, External/Affiliate and Group types', { tag: ['@lite', '@vendor'] }, async () => {
+        test('offers Simple, Variable, External/Affiliate and Group types', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             for (const label of ['Simple', 'Variable', 'External/Affiliate product', 'Group Product']) {
                 expect(await form.isProductTypeOptionAvailable(label), `${label} is offered`).toBe(true);
             }
         });
 
-        test('offers the Auction type when the auction module is active', { tag: ['@pro', '@vendor'] }, async () => {
+        test('offers the Auction type when the auction module is active', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             expect(await form.isProductTypeOptionAvailable('Auction')).toBe(true);
         });
 
-        test('selecting Simple keeps the native price field', { tag: ['@lite', '@vendor'] }, async () => {
+        test('selecting Simple keeps the native price field', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await form.setProductType('simple');
             expect(await form.isFieldPresent('regular_price'), 'simple products expose the native price').toBe(true);
         });
 
-        test('selecting Auction swaps the native price for the Auction Options card', { tag: ['@pro', '@vendor'] }, async () => {
+        test('selecting Auction swaps the native price for the Auction Options card', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await form.setProductType('auction');
             await expect(form.auctionStartPrice).toBeVisible();
             // Auction replaces the native price with a dedicated "Buy it now" field.
@@ -66,7 +66,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
     // AUCTION — happy paths
     // ============================================
     test.describe('auction happy paths', () => {
-        test('renders every Auction Options field when the auction type is chosen', { tag: ['@pro', '@vendor'] }, async () => {
+        test('renders every Auction Options field when the auction type is chosen', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await form.setProductType('auction');
 
             await expect(form.auctionStartPrice).toBeVisible();
@@ -79,7 +79,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
             expect(await form.isFieldPresent('_auction_dates_to')).toBe(true);
         });
 
-        test('vendor can create an auction with the required fields', { tag: ['@pro', '@vendor'] }, async () => {
+        test('vendor can create an auction with the required fields', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             test.slow();
             const data = newProductFormData.auction();
 
@@ -95,7 +95,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
             await form.waitForSaveSuccess();
         });
 
-        test('vendor can create an auction with every option filled', { tag: ['@pro', '@vendor'] }, async () => {
+        test('vendor can create an auction with every option filled', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             test.slow();
             const data = newProductFormData.auction();
 
@@ -116,7 +116,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
     // AUCTION — field restriction (legacy field set only)
     // ============================================
     test.describe('auction field restriction', () => {
-        test('hides unrelated fields for the auction type', { tag: ['@pro', '@vendor'] }, async () => {
+        test('hides unrelated fields for the auction type', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await form.setProductType('auction');
             await expect(form.auctionStartPrice).toBeVisible();
 
@@ -127,7 +127,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
             }
         });
 
-        test('keeps the allow-listed fields for the auction type', { tag: ['@pro', '@vendor'] }, async () => {
+        test('keeps the allow-listed fields for the auction type', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await form.setProductType('auction');
             await expect(form.auctionStartPrice).toBeVisible();
 
@@ -141,7 +141,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
     // AUCTION — round-trip (create → edit → values reload)
     // ============================================
     test.describe('auction round-trip', () => {
-        test('reloads saved auction values when the product is re-opened', { tag: ['@pro', '@vendor'] }, async () => {
+        test('reloads saved auction values when the product is re-opened', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             test.slow();
             const data = newProductFormData.auction();
 
@@ -170,7 +170,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
     // AUCTION — negative / validation cases
     // ============================================
     test.describe('auction negative cases', () => {
-        test('blocks save when the start price is missing', { tag: ['@pro', '@vendor'] }, async () => {
+        test('blocks save when the start price is missing', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.auction();
 
             await form.title.fill(data.title);
@@ -187,7 +187,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
             expect(disabled || (await error.isVisible().catch(() => false))).toBe(true);
         });
 
-        test('blocks save when the bid increment is missing', { tag: ['@pro', '@vendor'] }, async () => {
+        test('blocks save when the bid increment is missing', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.auction();
 
             await form.title.fill(data.title);
@@ -204,7 +204,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
             expect(disabled || (await error.isVisible().catch(() => false))).toBe(true);
         });
 
-        test('rejects an end date that is not after the start date', { tag: ['@pro', '@vendor'] }, async () => {
+        test('rejects an end date that is not after the start date', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             test.slow();
             const data = newProductFormData.auction();
 

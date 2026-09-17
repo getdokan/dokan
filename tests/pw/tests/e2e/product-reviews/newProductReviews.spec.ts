@@ -1,6 +1,6 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
-import { NewStoreReviewsPage, newStoreReviewData } from './newStoreReviewsPage';
+import { NewProductReviewsPage, newProductReviewData } from './newProductReviewsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -10,7 +10,12 @@ const { VENDOR_ID, PRODUCT_ID } = process.env;
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)
-// Parity coverage for the 5.0.0 React rewrite of vendor Store Reviews.
+// Parity coverage for the 5.0.0 React rewrite of the vendor Reviews screen.
+// MOVED 2026-08-14 from `store-reviews/newStoreReviews.spec.ts`: the file was
+// named for store reviews but has always exercised PRODUCT reviews (it seeds
+// with `createProductReview` and reads /dokan/v1/reviews), so it belongs beside
+// its real legacy counterpart, `product-reviews/productReviews.spec.ts`.
+// Store reviews (`dokan_store_reviews`) have an ADMIN React route only.
 // Surface: /dashboard/new/#/reviews  (DataViews list, Pro).
 //
 // IMPORTANT — what the React /reviews list actually shows:
@@ -48,21 +53,21 @@ async function vendorReviewCount(apiUtils: ApiUtils): Promise<number> {
     return Array.isArray(all) ? all.length : 0;
 }
 
-test.describe('Store Reviews (React) functionality', () => {
+test.describe('Product Reviews (React) functionality', () => {
     // ----------------------------------------
     // VENDOR — React DataViews list at /dashboard/new/#/reviews
     // ----------------------------------------
     test.describe('vendor', () => {
         let ctx: BrowserContext;
         let page: Page;
-        let reviews: NewStoreReviewsPage;
+        let reviews: NewProductReviewsPage;
         let apiUtils: ApiUtils;
 
         test.beforeAll(async () => {
             // Clean slate, then seed one approved product review against vendor1's product.
             apiUtils = new ApiUtils(await request.newContext());
             await trashAllProductReviews(apiUtils);
-            await apiUtils.createProductReview(PRODUCT_ID, newStoreReviewData.review(), payloads.adminAuth);
+            await apiUtils.createProductReview(PRODUCT_ID, newProductReviewData.review(), payloads.adminAuth);
             // Confirm the seed exists via the same endpoint the React list reads
             // (vendor-scoped /dokan/v1/reviews).
             expect(await vendorReviewCount(apiUtils), 'seeded product review exists in /dokan/v1/reviews').toBeGreaterThan(0);
@@ -71,7 +76,7 @@ test.describe('Store Reviews (React) functionality', () => {
         test.beforeEach(async ({ browser }) => {
             ctx = await browser.newContext({ storageState: v1 });
             page = await ctx.newPage();
-            reviews = new NewStoreReviewsPage(page);
+            reviews = new NewProductReviewsPage(page);
             await reviews.goto();
         });
 
@@ -94,13 +99,13 @@ test.describe('Store Reviews (React) functionality', () => {
             expect(await reviews.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
 
-        test('vendor sees the seeded store review in the list (React)', { tag: ['@pro', '@vendor', '@customer', '@new-ui'] }, async () => {
+        test('vendor sees the seeded product review in the list (React)', { tag: ['@pro', '@vendor', '@customer', '@new-ui'] }, async () => {
             // The seeded review is approved -> lands under Approved. Assert it surfaces.
             const active = await reviews.getActiveReviewCount();
             expect(active, 'seeded review present across Approved/Pending tabs').toBeGreaterThan(0);
             const rowCount = await reviews.openTabWithReview();
             expect(rowCount, 'tab with the seeded review shows rows').toBeGreaterThan(0);
-            expect(await reviews.hasReviewText(newStoreReviewData.matchText), 'seeded review text is visible').toBe(true);
+            expect(await reviews.hasReviewText(newProductReviewData.matchText), 'seeded review text is visible').toBe(true);
         });
 
         test('vendor can switch status tabs to filter reviews (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
@@ -144,9 +149,9 @@ test.describe('Store Reviews (React) functionality', () => {
             await apiUtils.dispose();
         });
 
-        test('customer can review store (React parity)', { tag: ['@pro', '@customer', '@new-ui'] }, async () => {
+        test('customer review of a vendor product is listed (React parity)', { tag: ['@pro', '@customer', '@new-ui'] }, async () => {
             await trashAllProductReviews(apiUtils);
-            const [responseBody, reviewId] = await apiUtils.createProductReview(PRODUCT_ID, newStoreReviewData.review(), payloads.adminAuth);
+            const [responseBody, reviewId] = await apiUtils.createProductReview(PRODUCT_ID, newProductReviewData.review(), payloads.adminAuth);
             expect(responseBody, 'create review returns a body').toBeTruthy();
             expect(reviewId, 'created review has an id').toBeTruthy();
 
@@ -155,11 +160,11 @@ test.describe('Store Reviews (React) functionality', () => {
         });
 
         test('customer can submit a review with the configured rating (React parity)', { tag: ['@pro', '@customer', '@new-ui'] }, async () => {
-            const [responseBody] = await apiUtils.createProductReview(PRODUCT_ID, newStoreReviewData.review(), payloads.adminAuth);
+            const [responseBody] = await apiUtils.createProductReview(PRODUCT_ID, newProductReviewData.review(), payloads.adminAuth);
             expect(responseBody, 'review created with rating').toBeTruthy();
             // rating round-trips on the WC response body.
             if (responseBody?.rating !== undefined) {
-                expect(Number(responseBody.rating), 'rating round-trips').toBe(newStoreReviewData.rating);
+                expect(Number(responseBody.rating), 'rating round-trips').toBe(newProductReviewData.rating);
             }
         });
     });
@@ -180,9 +185,9 @@ test.describe('Store Reviews (React) functionality', () => {
             await apiUtils.dispose();
         });
 
-        test('admin can trash a store review (REST — no React vendor surface)', { tag: ['@pro', '@admin', '@new-ui'] }, async () => {
+        test('admin can trash a product review (REST — no React vendor surface)', { tag: ['@pro', '@admin', '@new-ui'] }, async () => {
             await trashAllProductReviews(apiUtils);
-            const [, reviewId] = await apiUtils.createProductReview(PRODUCT_ID, newStoreReviewData.review(), payloads.adminAuth);
+            const [, reviewId] = await apiUtils.createProductReview(PRODUCT_ID, newProductReviewData.review(), payloads.adminAuth);
             expect(reviewId, 'seeded a review to moderate').toBeTruthy();
 
             expect(await vendorReviewCount(apiUtils), 'review present before trash').toBeGreaterThan(0);
@@ -209,10 +214,10 @@ test.describe('Store Reviews (React) functionality', () => {
             await apiUtils.dispose();
         });
 
-        test('customer reviews store then vendor sees it in React reviews list (React)', { tag: ['@pro', '@customer', '@vendor', '@new-ui'] }, async ({ browser }) => {
+        test('customer reviews a product then vendor sees it in the React reviews list (React)', { tag: ['@pro', '@customer', '@vendor', '@new-ui'] }, async ({ browser }) => {
             // 1. A customer review of the vendor's product (clean slate first so the count is deterministic).
             await trashAllProductReviews(apiUtils);
-            const [responseBody, reviewId] = await apiUtils.createProductReview(PRODUCT_ID, newStoreReviewData.review(), payloads.adminAuth);
+            const [responseBody, reviewId] = await apiUtils.createProductReview(PRODUCT_ID, newProductReviewData.review(), payloads.adminAuth);
             expect(responseBody, 'customer review created').toBeTruthy();
             expect(reviewId, 'review id returned').toBeTruthy();
             // Confirm via the same endpoint the React list reads (VENDOR_ID owns PRODUCT_ID).
@@ -221,14 +226,14 @@ test.describe('Store Reviews (React) functionality', () => {
             // 2. Vendor opens the React reviews list and sees it under Approved.
             const vCtx = await browser.newContext({ storageState: v1 });
             const vPage = await vCtx.newPage();
-            const reviews = new NewStoreReviewsPage(vPage);
+            const reviews = new NewProductReviewsPage(vPage);
             await reviews.goto();
 
             const active = await reviews.getActiveReviewCount();
             expect(active, 'vendor sees the new review in Approved/Pending').toBeGreaterThan(0);
             const rowCount = await reviews.openTabWithReview();
             expect(rowCount, 'the review is listed as a row').toBeGreaterThan(0);
-            expect(await reviews.hasReviewText(newStoreReviewData.matchText), 'vendor sees the review text').toBe(true);
+            expect(await reviews.hasReviewText(newProductReviewData.matchText), 'vendor sees the review text').toBe(true);
 
             await vPage.close();
             await vCtx.close();
