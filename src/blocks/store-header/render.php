@@ -114,14 +114,17 @@ if ( ! $pattern || empty( $pattern['content'] ) ) {
  */
 $rendering = true;
 
-$header = $resolver->render_in_store_context(
-    $vendor,
-    function () use ( $pattern ) {
-        echo do_blocks( $pattern['content'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered by the block renderer.
-    }
-);
-
-$rendering = false;
+try {
+    $header = $resolver->render_in_store_context(
+        $vendor,
+        function () use ( $pattern ) {
+            echo do_blocks( $pattern['content'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Rendered by the block renderer.
+        }
+    );
+} finally {
+    // Released even on a throw, or every later header in the request renders nothing.
+    $rendering = false;
+}
 
 if ( '' === trim( $header ) ) {
     return;

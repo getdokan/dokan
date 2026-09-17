@@ -1306,7 +1306,7 @@ function dokan_get_current_store_tab( $store_id = 0 ) {
      * passed in that is not the one being viewed must not adopt that page's
      * active tab.
      */
-    $viewed_slug = get_query_var( dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) );
+    $viewed_slug = get_query_var( (string) dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) );
     $store_user  = $store_id ? get_userdata( $store_id ) : false;
     $is_viewed   = ! empty( $viewed_slug ) && $store_user && $viewed_slug === $store_user->user_nicename;
 

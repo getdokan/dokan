@@ -63,13 +63,18 @@ $heading_tag  = in_array( $level, [ 1, 2, 3, 4, 5, 6 ], true ) ? 'h' . $level : 
  * callbacks that gate on dokan_is_store_page() still produce output when the
  * block sits on an ordinary page.
  */
-$after_name = $resolver->render_in_store_context(
-    $vendor,
-    function () use ( $vendor ) {
-        /** This action is documented in templates/store-header.php */
-        do_action( 'dokan_store_header_after_store_name', $vendor );
-    }
-);
+$after_name = '';
+
+// Once per request, so a second name block does not repeat Pro's verification badge.
+if ( ! did_action( 'dokan_store_header_after_store_name' ) ) {
+    $after_name = $resolver->render_in_store_context(
+        $vendor,
+        function () use ( $vendor ) {
+            /** This action is documented in templates/store-header.php */
+            do_action( 'dokan_store_header_after_store_name', $vendor );
+        }
+    );
+}
 
 printf( '<%1$s %2$s>', esc_html( $heading_tag ), get_block_wrapper_attributes() );
 

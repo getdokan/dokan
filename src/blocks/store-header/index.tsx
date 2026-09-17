@@ -3,8 +3,13 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, Notice } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
+import type { StoreBlockEditProps } from '../shared/types';
 import metadata from './block.json';
 import './style.scss';
+
+type StoreHeaderAttributes = {
+    headerLayout: string;
+};
 
 /*
  * Switching layouts is a dropdown here rather than deleting the header and
@@ -27,7 +32,10 @@ const LAYOUTS = [
 ];
 
 registerBlockType( metadata.name, {
-    edit: ( { attributes, setAttributes } ) => (
+    edit: ( {
+        attributes,
+        setAttributes,
+    }: StoreBlockEditProps< StoreHeaderAttributes > ) => (
         <SSREdit
             name={ metadata.name }
             attributes={ attributes }

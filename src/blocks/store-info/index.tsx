@@ -8,10 +8,24 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
+import type { StoreBlockEditProps } from '../shared/types';
 import metadata from './block.json';
 import './style.scss';
 
-const FIELDS = [
+type StoreInfoAttributes = {
+    showAddress: boolean;
+    showPhone: boolean;
+    showEmail: boolean;
+    showRating: boolean;
+    showOpenClose: boolean;
+    showIcons: boolean;
+    infoLayout: 'list' | 'inline';
+};
+
+const FIELDS: {
+    key: keyof Omit< StoreInfoAttributes, 'showIcons' | 'infoLayout' >;
+    label: string;
+}[] = [
     { key: 'showAddress', label: __( 'Show address', 'dokan-lite' ) },
     { key: 'showPhone', label: __( 'Show phone', 'dokan-lite' ) },
     { key: 'showEmail', label: __( 'Show email', 'dokan-lite' ) },
@@ -20,7 +34,10 @@ const FIELDS = [
 ];
 
 registerBlockType( metadata.name, {
-    edit: ( { attributes, setAttributes } ) => (
+    edit: ( {
+        attributes,
+        setAttributes,
+    }: StoreBlockEditProps< StoreInfoAttributes > ) => (
         <SSREdit
             name={ metadata.name }
             attributes={ attributes }

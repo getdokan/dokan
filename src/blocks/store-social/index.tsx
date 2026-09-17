@@ -3,11 +3,21 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
+import type { StoreBlockEditProps } from '../shared/types';
 import metadata from './block.json';
 import './style.scss';
 
+type StoreSocialAttributes = {
+    iconSize: number;
+    showLabels: boolean;
+    openInNewTab: boolean;
+};
+
 registerBlockType( metadata.name, {
-    edit: ( { attributes, setAttributes } ) => (
+    edit: ( {
+        attributes,
+        setAttributes,
+    }: StoreBlockEditProps< StoreSocialAttributes > ) => (
         <SSREdit
             name={ metadata.name }
             attributes={ attributes }

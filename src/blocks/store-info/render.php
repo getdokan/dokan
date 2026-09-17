@@ -99,10 +99,13 @@ if ( ! empty( $attributes['showEmail'] ) && ! dokan_is_vendor_info_hidden( 'emai
     $email = $vendor->get_email();
 
     if ( ! empty( $email ) ) {
+        $obfuscated_email = antispambot( $email );
+
         $items .= sprintf(
-            '<li class="dokan-store-email">%1$s<a href="mailto:%2$s">%2$s</a></li>',
+            '<li class="dokan-store-email">%1$s<a href="mailto:%2$s">%3$s</a></li>',
             $dokan_info_icon( 'far fa-envelope' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
-            esc_attr( antispambot( $email ) )
+            esc_attr( $obfuscated_email ),
+            esc_html( $obfuscated_email )
         );
     }
 }

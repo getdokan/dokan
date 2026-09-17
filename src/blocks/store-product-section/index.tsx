@@ -8,8 +8,14 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
+import type { StoreBlockEditProps } from '../shared/types';
 import metadata from './block.json';
 import './style.scss';
+
+type StoreProductSectionAttributes = {
+    sectionId: string;
+    title: string;
+};
 
 const SECTIONS = [
     { value: 'featured', label: __( 'Featured Products', 'dokan-lite' ) },
@@ -22,7 +28,10 @@ const SECTIONS = [
 ];
 
 registerBlockType( metadata.name, {
-    edit: ( { attributes, setAttributes } ) => (
+    edit: ( {
+        attributes,
+        setAttributes,
+    }: StoreBlockEditProps< StoreProductSectionAttributes > ) => (
         <SSREdit
             name={ metadata.name }
             attributes={ attributes }
