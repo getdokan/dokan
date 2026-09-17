@@ -79,7 +79,7 @@ abstract class Provider implements AIProviderInterface, Hookable {
      * `get_models()` is a filter, so a third party may enlist a model under an
      * arbitrary key. Re-keying here keeps every id lookup honest.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.2
      *
      * @param string $type The type of generation (e.g., 'text', 'image').
      *
@@ -100,7 +100,7 @@ abstract class Provider implements AIProviderInterface, Hookable {
     /**
      * Check whether a model id is still registered for a generation type.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.2
      *
      * @param string $type     The type of generation (e.g., 'text', 'image').
      * @param string $model_id Model id to look for.
@@ -116,7 +116,7 @@ abstract class Provider implements AIProviderInterface, Hookable {
     /**
      * Resolve the model to use for a generation type, tolerating stale saved ids.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.2
      *
      * @param string $type     The type of generation (e.g., 'text', 'image').
      * @param string $model_id Optional. Saved model id to prefer.
@@ -143,7 +143,7 @@ abstract class Provider implements AIProviderInterface, Hookable {
          * Counterpart of `dokan_intelligence_{provider}_provider_{model_id}_model`
          * for the resolution path, where the saved id may no longer exist.
          *
-         * @since DOKAN_SINCE
+         * @since 5.1.2
          *
          * @param AIModelInterface|null $model    The resolved model, or null when the provider has none of that type.
          * @param string                $type     The type of generation.
@@ -155,7 +155,7 @@ abstract class Provider implements AIProviderInterface, Hookable {
     /**
      * Get the default model id for a generation type.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.2
      *
      * @param string $type The type of generation (e.g., 'text', 'image').
      *

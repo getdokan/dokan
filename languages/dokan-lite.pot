@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.1.1\n"
+"Project-Id-Version: Dokan 5.1.2\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-09T11:36:48+00:00\n"
+"POT-Creation-Date: 2026-09-17T10:24:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -377,123 +377,131 @@ msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:148
 #: includes/Admin/RecommendedPlugins.php:28
-msgid "wePos"
+msgid "FlyCRM"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:149
-msgid "Run your physical store smarter - manage sales, inventory, and customers in real time with a powerful POS built for WooCommerce."
+msgid "Keep customers and vendors organized - store contacts, track deals, and nurture every relationship to drive repeat marketplace revenue."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:159
-#: includes/Admin/RecommendedPlugins.php:55
-msgid "Texty"
+#: includes/Admin/RecommendedPlugins.php:37
+msgid "wePos"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:160
-msgid "Stay connected with instant SMS alerts - notify vendors and customers about orders, updates, and key actions without missing a moment."
+msgid "Run your physical store smarter - manage sales, inventory, and customers in real time with a powerful POS built for WooCommerce."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:170
+msgid "Texty"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Extensions.php:171
+msgid "Stay connected with instant SMS alerts - notify vendors and customers about orders, updates, and key actions without missing a moment."
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Extensions.php:181
 #: includes/Admin/RecommendedPlugins.php:64
 msgid "StoreGrowth"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:171
+#: includes/Admin/Dashboard/Pages/Extensions.php:182
 msgid "Accelerate your store growth with smart tools - boost engagement, increase conversions, and turn more visitors into paying customers."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:181
+#: includes/Admin/Dashboard/Pages/Extensions.php:192
 #: includes/Admin/RecommendedPlugins.php:73
 msgid "weDocs"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:182
+#: includes/Admin/Dashboard/Pages/Extensions.php:193
 msgid "Build a self-serve help center for your marketplace. Publish vendor-specific docs alongside store guides so vendors find answers instantly."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:192
+#: includes/Admin/Dashboard/Pages/Extensions.php:203
 msgid "TryAura"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:193
+#: includes/Admin/Dashboard/Pages/Extensions.php:204
 msgid "Deliver immersive virtual try-ons - help customers visualize products better, build confidence, and increase conversions across your store."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:203
+#: includes/Admin/Dashboard/Pages/Extensions.php:214
 msgid "WPUF"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:204
+#: includes/Admin/Dashboard/Pages/Extensions.php:215
 msgid "Enable frontend control for users - collect posts, registrations, and data easily without backend access, improving user experience."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:214
-#: includes/Admin/RecommendedPlugins.php:37
+#: includes/Admin/Dashboard/Pages/Extensions.php:225
+#: includes/Admin/RecommendedPlugins.php:46
 msgid "weMail"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:215
+#: includes/Admin/Dashboard/Pages/Extensions.php:226
 msgid "Simplify email marketing with automation - engage customers, nurture leads, and drive repeat sales with powerful campaigns."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:225
+#: includes/Admin/Dashboard/Pages/Extensions.php:236
 msgid "CartPulse"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:226
+#: includes/Admin/Dashboard/Pages/Extensions.php:237
 msgid "Recover abandoned carts automatically - send timely follow-ups and bring customers back to complete their purchases and boost revenue."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:236
+#: includes/Admin/Dashboard/Pages/Extensions.php:247
 msgid "Conversion Tracking for WooCommerce"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:237
+#: includes/Admin/Dashboard/Pages/Extensions.php:248
 msgid "Track conversions, optimize campaigns, and use clear insights to boost ROI and drive smarter growth."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:247
+#: includes/Admin/Dashboard/Pages/Extensions.php:258
 #: assets/js/dokan-pro-features.js:2
 msgid "Dokan Migrator"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:248
+#: includes/Admin/Dashboard/Pages/Extensions.php:259
 msgid "Migrate your marketplace with ease - transfer data securely from other platforms and launch quickly without losing valuable information."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:327
+#: includes/Admin/Dashboard/Pages/Extensions.php:338
 msgid "Dokan Customer App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:328
+#: includes/Admin/Dashboard/Pages/Extensions.php:339
 msgid "For Customers"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:329
+#: includes/Admin/Dashboard/Pages/Extensions.php:340
 msgid "A fully-featured shopping app for your Dokan marketplace customers. Browse vendor stores, discover products, place orders, and track deliveries all from one place."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:336
+#: includes/Admin/Dashboard/Pages/Extensions.php:347
 msgid "Dokan Vendor App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:337
+#: includes/Admin/Dashboard/Pages/Extensions.php:348
 msgid "For Vendors"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:338
+#: includes/Admin/Dashboard/Pages/Extensions.php:349
 msgid "Gives vendors complete control over their store on the go. Manage products, process orders, view earnings, and respond to customer queries without needing a desktop."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:345
+#: includes/Admin/Dashboard/Pages/Extensions.php:356
 msgid "Delivery Driver App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:346
+#: includes/Admin/Dashboard/Pages/Extensions.php:357
 msgid "For Delivery Staff"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:347
+#: includes/Admin/Dashboard/Pages/Extensions.php:358
 msgid "Built for delivery agents to accept tasks, navigate routes, update delivery status in real time, and communicate with customers and vendors seamlessly."
 msgstr ""
 
@@ -903,7 +911,7 @@ msgstr ""
 #: includes/Admin/Dashboard/Pages/Status.php:24
 #: includes/Admin/WithdrawLogExporter.php:114
 #: includes/Product/functions.php:215
-#: includes/ProductEditor/FormSchema.php:942
+#: includes/ProductEditor/FormSchema.php:943
 #: includes/REST/WithdrawExportController.php:44
 #: templates/my-orders.php:27
 #: templates/orders/listing.php:33
@@ -1279,7 +1287,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:112
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:121
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:130
-#: includes/ProductEditor/FormSchema.php:574
+#: includes/ProductEditor/FormSchema.php:575
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Enabled"
@@ -1571,39 +1579,39 @@ msgid "With the simplest configuration options available, only by enabling a sin
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:29
-msgid "Run your counter and online store from one fast POS system"
+msgid "Track leads, contacts and deals for your marketplace inside WordPress"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:31
-msgid "wePos logo"
+msgid "FlyCRM logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:38
-msgid "Send campaigns and automate email marketing inside WordPress"
+msgid "Run your counter and online store from one fast POS system"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:40
-msgid "weMail logo"
-msgstr ""
-
-#: includes/Admin/RecommendedPlugins.php:46
-msgid "WooCommerce Conversion Tracking"
+msgid "wePos logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:47
-msgid "Advanced WooCommerce conversion tracking for every ad platform"
+msgid "Send campaigns and automate email marketing inside WordPress"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:49
-msgid "WooCommerce Conversion Tracking logo"
+msgid "weMail logo"
+msgstr ""
+
+#: includes/Admin/RecommendedPlugins.php:55
+msgid "WooCommerce Conversion Tracking"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:56
-msgid "Keep buyers updated with instant SMS for every order and alert"
+msgid "Advanced WooCommerce conversion tracking for every ad platform"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:58
-msgid "Texty logo"
+msgid "WooCommerce Conversion Tracking logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:65
@@ -1644,7 +1652,7 @@ msgid "Setting has been saved successfully."
 msgstr ""
 
 #: includes/Admin/Settings.php:336
-#: includes/ProductEditor/FormSchema.php:529
+#: includes/ProductEditor/FormSchema.php:530
 #: includes/Vendor/SettingsApi/Settings/Pages/Payments/Payments.php:60
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:48
 #: assets/js/dokan-admin-dashboard.js:2
@@ -3151,7 +3159,7 @@ msgid "mins"
 msgstr ""
 
 #: includes/Assets.php:1051
-#: includes/ProductEditor/FormSchema.php:649
+#: includes/ProductEditor/FormSchema.php:650
 #: templates/products/edit-product-single.php:382
 #: templates/products/new-product.php:252
 #: templates/products/tmpl-add-product-popup.php:87
@@ -3160,7 +3168,7 @@ msgid "To"
 msgstr ""
 
 #: includes/Assets.php:1053
-#: includes/ProductEditor/FormSchema.php:638
+#: includes/ProductEditor/FormSchema.php:639
 #: templates/products/edit-product-single.php:375
 #: templates/products/new-product.php:245
 #: templates/products/tmpl-add-product-popup.php:80
@@ -3676,7 +3684,7 @@ msgid "Allow"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: includes/ProductEditor/FormSchema.php:679
+#: includes/ProductEditor/FormSchema.php:680
 #: templates/products/edit-product-single.php:400
 #: templates/products/new-product.php:273
 #: templates/products/tmpl-add-product-popup.php:18
@@ -3684,7 +3692,7 @@ msgid "Select tags/Add tags"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: includes/ProductEditor/FormSchema.php:679
+#: includes/ProductEditor/FormSchema.php:680
 #: templates/products/edit-product-single.php:400
 #: templates/products/new-product.php:273
 #: templates/products/tmpl-add-product-popup.php:18
@@ -4994,7 +5002,7 @@ msgid "%1$s %2$d"
 msgstr ""
 
 #: includes/functions.php:2264
-#: includes/ProductEditor/FormSchema.php:208
+#: includes/ProductEditor/FormSchema.php:209
 #: includes/REST/ProductControllerV2.php:274
 #: templates/products/edit-product-single.php:272
 #: templates/products/products-listing-row.php:248
@@ -5355,82 +5363,95 @@ msgstr ""
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:27
+#: includes/Intelligence/Admin/Settings.php:66
 msgid "AI Assist"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:29
+#: includes/Intelligence/Admin/Settings.php:68
 msgid "Dokan AI Assist"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:31
+#: includes/Intelligence/Admin/Settings.php:70
 msgid "AI Assist Settings"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:32
+#: includes/Intelligence/Admin/Settings.php:71
 msgid "Set up AI to elevate your platform with enhanced capabilities."
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:51
+#: includes/Intelligence/Admin/Settings.php:90
 msgid "AI Product Info Generator"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:52
+#: includes/Intelligence/Admin/Settings.php:91
 msgid "Let vendors generate product info by AI"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:57
+#: includes/Intelligence/Admin/Settings.php:96
 msgid "Engine"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:63
+#: includes/Intelligence/Admin/Settings.php:102
 msgid "Select which AI provider to use for generating content."
 msgstr ""
 
 #. translators: %s is the provider name, e.g., OpenAI
-#: includes/Intelligence/Admin/Settings.php:73
+#: includes/Intelligence/Admin/Settings.php:112
 msgid "%s API Key"
 msgstr ""
 
 #. translators: 1: OpenAi Link
-#: includes/Intelligence/Admin/Settings.php:76
+#: includes/Intelligence/Admin/Settings.php:115
 msgid "You can get your API Keys in your <a href=\"%1$s\" target=\"_blank\">%2$s Account.</a>"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:84
+#: includes/Intelligence/Admin/Settings.php:123
 msgid "Your API key provides secure access to the AI service. Usage costs will be charged to the connected account."
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:89
+#: includes/Intelligence/Admin/Settings.php:128
 msgid "Model"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:92
+#: includes/Intelligence/Admin/Settings.php:131
 msgid "More advanced models provide higher quality output but may cost more per generation."
 msgstr ""
 
-#: includes/Intelligence/REST/AIRequestController.php:58
+#: includes/Intelligence/REST/AIRequestController.php:61
 msgid "Prompt to process"
 msgstr ""
 
-#: includes/Intelligence/REST/AIRequestController.php:63
+#: includes/Intelligence/REST/AIRequestController.php:66
 msgid "Optional data payload"
 msgstr ""
 
-#: includes/Intelligence/REST/AIRequestController.php:87
-msgid "AI provider or model is not configured properly."
+#: includes/Intelligence/REST/AIRequestController.php:93
+msgid "AI image generation is not enabled for this marketplace."
+msgstr ""
+
+#: includes/Intelligence/REST/AIRequestController.php:98
+msgid "AI is not configured for this marketplace. Kindly reach out to Marketplace Owner."
+msgstr ""
+
+#: includes/Intelligence/REST/AIRequestController.php:108
+msgid "The configured AI provider is no longer available. Kindly reach out to Marketplace Owner."
 msgstr ""
 
 #. translators: %s: type of generation.
-#: includes/Intelligence/REST/AIRequestController.php:100
+#: includes/Intelligence/REST/AIRequestController.php:119
+msgid "No AI model is available for %s generation. Kindly reach out to Marketplace Owner."
+msgstr ""
+
+#. translators: %s: type of generation.
+#: includes/Intelligence/REST/AIRequestController.php:128
 msgid "Model does not support %s generation."
 msgstr ""
 
-#: includes/Intelligence/REST/AIRequestController.php:112
+#: includes/Intelligence/REST/AIRequestController.php:141
 msgid "Something went wrong in the configuration. Kindly reach out to Marketplace Owner"
 msgstr ""
 
-#: includes/Intelligence/REST/AIRequestController.php:118
+#: includes/Intelligence/REST/AIRequestController.php:147
 msgid "Service is not available due to some reason. Kindly reach out to Marketplace Owner"
 msgstr ""
 
@@ -6203,7 +6224,7 @@ msgid "Set scheduled sale dates"
 msgstr ""
 
 #: includes/Product/functions.php:229
-#: includes/ProductEditor/FormSchema.php:764
+#: includes/ProductEditor/FormSchema.php:765
 #: templates/products/inventory.php:3
 msgid "Inventory"
 msgstr ""
@@ -6419,57 +6440,57 @@ msgid "This category has already been selected"
 msgstr ""
 
 #. translators: 1: attribute name, 2: field id
-#: includes/ProductEditor/FormSchema.php:90
+#: includes/ProductEditor/FormSchema.php:91
 msgid "Missing required attribute \"%1$s\" on field: %2$s"
 msgstr ""
 
 #. translators: 1: field type, 2: field id
-#: includes/ProductEditor/FormSchema.php:103
+#: includes/ProductEditor/FormSchema.php:104
 msgid "Invalid field type: %1$s and id: %2$s"
 msgstr ""
 
 #. translators: 1: field variant, 2: field id
-#: includes/ProductEditor/FormSchema.php:115
+#: includes/ProductEditor/FormSchema.php:116
 msgid "Invalid field variant: %1$s and id: %2$s"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:303
+#: includes/ProductEditor/FormSchema.php:304
 msgid "Digital Product Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:538
+#: includes/ProductEditor/FormSchema.php:539
 #: templates/products/edit-product-single.php:251
 msgid "Title"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:540
+#: includes/ProductEditor/FormSchema.php:541
 msgid "Enter product title..."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:549
+#: includes/ProductEditor/FormSchema.php:550
 msgid "Permalink"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:551
+#: includes/ProductEditor/FormSchema.php:552
 msgid "Enter product slug..."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:560
+#: includes/ProductEditor/FormSchema.php:561
 #: templates/products/edit-product-single.php:279
 #: assets/js/frontend.js:2
 msgid "Product Type"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:566
+#: includes/ProductEditor/FormSchema.php:567
 #: templates/products/edit-product-single.php:279
 msgid "Choose Variable if your product has multiple attributes - like sizes, colors, quality etc"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:567
+#: includes/ProductEditor/FormSchema.php:568
 msgid "Choose product type."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:590
+#: includes/ProductEditor/FormSchema.php:591
 #: templates/emails/vendor-completed-order.php:56
 #: templates/emails/vendor-new-order.php:55
 #: templates/products/edit-product-single.php:305
@@ -6481,274 +6502,274 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:605
+#: includes/ProductEditor/FormSchema.php:606
 msgid "Sale Price"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:613
+#: includes/ProductEditor/FormSchema.php:614
 msgid "Sale price must be less than the regular price."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:628
+#: includes/ProductEditor/FormSchema.php:629
 msgid "Create Schedule for Discount"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:660
+#: includes/ProductEditor/FormSchema.php:661
 msgid "Categories"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:662
+#: includes/ProductEditor/FormSchema.php:663
 msgid "Select product categories"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:677
+#: includes/ProductEditor/FormSchema.php:678
 #: templates/products/edit-product-single.php:396
 #: templates/products/new-product.php:272
 #: templates/products/tmpl-add-product-popup.php:106
 msgid "Tags"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:690
+#: includes/ProductEditor/FormSchema.php:691
 msgid "Brands"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:692
+#: includes/ProductEditor/FormSchema.php:693
 msgid "Select product brands"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:701
+#: includes/ProductEditor/FormSchema.php:702
 msgid "Feature Image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:704
+#: includes/ProductEditor/FormSchema.php:705
 msgid "Select product image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:711
+#: includes/ProductEditor/FormSchema.php:712
 msgid "Gallery Image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:714
+#: includes/ProductEditor/FormSchema.php:715
 msgid "Select product gallery images"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:721
+#: includes/ProductEditor/FormSchema.php:722
 #: templates/products/edit-product-single.php:499
 msgid "Short Description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:723
+#: includes/ProductEditor/FormSchema.php:724
 msgid "Enter product short description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:730
+#: includes/ProductEditor/FormSchema.php:731
 #: templates/products/edit-product-single.php:519
 #: templates/products/new-product.php:288
 msgid "Description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:732
+#: includes/ProductEditor/FormSchema.php:733
 msgid "Enter product description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:741
+#: includes/ProductEditor/FormSchema.php:742
 #: templates/products/download-virtual.php:4
 #: templates/products/products-listing-row.php:246
 msgid "Downloadable"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:743
+#: includes/ProductEditor/FormSchema.php:744
 #: templates/products/download-virtual.php:4
 msgid "Downloadable products give access to a file upon purchase."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:751
+#: includes/ProductEditor/FormSchema.php:752
 #: templates/products/download-virtual.php:9
 #: templates/products/products-listing-row.php:244
 msgid "Virtual"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:753
+#: includes/ProductEditor/FormSchema.php:754
 msgid "Virtual products are intangible and are not shipped."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:765
+#: includes/ProductEditor/FormSchema.php:766
 msgid "Manage inventory for this product"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:772
+#: includes/ProductEditor/FormSchema.php:773
 #: templates/products/inventory.php:14
 #: templates/products/products-listing-row.php:172
 #: templates/products/products-listing.php:125
 msgid "SKU"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:772
+#: includes/ProductEditor/FormSchema.php:773
 msgid "Stock Keeping Unit"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:774
+#: includes/ProductEditor/FormSchema.php:775
 msgid "Enter product SKU"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:775
+#: includes/ProductEditor/FormSchema.php:776
 msgid "SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:782
+#: includes/ProductEditor/FormSchema.php:783
 msgid "GTIN, UPC, EAN, or ISBN"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:782
+#: includes/ProductEditor/FormSchema.php:783
 msgid "Product Identifiers"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:784
+#: includes/ProductEditor/FormSchema.php:785
 msgid "Enter code"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:785
+#: includes/ProductEditor/FormSchema.php:786
 msgid "Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:792
+#: includes/ProductEditor/FormSchema.php:793
 #: templates/products/inventory.php:19
 msgid "Stock Status"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:794
+#: includes/ProductEditor/FormSchema.php:795
 #: includes/REST/DummyDataController.php:444
 #: includes/REST/ProductController.php:2224
 msgid "Controls whether or not the product is listed as \"in stock\" or \"out of stock\" on the frontend."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:809
+#: includes/ProductEditor/FormSchema.php:810
 msgid "Manage stock?"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:811
+#: includes/ProductEditor/FormSchema.php:812
 msgid "Manage stock level (quantity)"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:818
+#: includes/ProductEditor/FormSchema.php:819
 #: templates/products/inventory.php:47
 msgid "Stock quantity"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:821
+#: includes/ProductEditor/FormSchema.php:822
 msgid "Stock quantity. If this is a variable product this value will be used to control stock for all variations, unless you define stock at variation level."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:835
+#: includes/ProductEditor/FormSchema.php:836
 #: templates/products/inventory.php:55
 msgid "Low stock threshold"
 msgstr ""
 
 #. translators: %d: store-wide threshold
-#: includes/ProductEditor/FormSchema.php:839
+#: includes/ProductEditor/FormSchema.php:840
 msgid "Store-wide threshold (%d)"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:842
+#: includes/ProductEditor/FormSchema.php:843
 msgid "When product stock reaches this amount you will be notified by email. It is possible to define different values for each variation individually."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:856
+#: includes/ProductEditor/FormSchema.php:857
 #: templates/products/inventory.php:61
 msgid "Allow Backorders"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:858
+#: includes/ProductEditor/FormSchema.php:859
 msgid "If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:873
+#: includes/ProductEditor/FormSchema.php:874
 msgid "Allow only one quantity of this product to be bought in a single order."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:875
+#: includes/ProductEditor/FormSchema.php:876
 msgid "Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:885
+#: includes/ProductEditor/FormSchema.php:886
 #: templates/products/downloadable.php:3
 msgid "Downloadable Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:886
+#: includes/ProductEditor/FormSchema.php:887
 #: templates/products/downloadable.php:4
 msgid "Configure your downloadable product settings"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:895
+#: includes/ProductEditor/FormSchema.php:896
 #: includes/REST/ProductControllerV3.php:476
 msgid "Downloadable Files"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:898
+#: includes/ProductEditor/FormSchema.php:899
 msgid "Pick downloadable files from upload directory which is approved by the store admin."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:899
+#: includes/ProductEditor/FormSchema.php:900
 msgid "Upload files that customers can download after purchase."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:908
+#: includes/ProductEditor/FormSchema.php:909
 #: templates/products/downloadable.php:58
 msgid "Download Limit"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:910
+#: includes/ProductEditor/FormSchema.php:911
 #: templates/orders/order-download-permission-html.php:64
 #: templates/products/downloadable.php:59
 msgid "Unlimited"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:911
+#: includes/ProductEditor/FormSchema.php:912
 msgid "Leave blank for unlimited re-downloads."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:920
+#: includes/ProductEditor/FormSchema.php:921
 #: templates/products/downloadable.php:63
 msgid "Download Expiry"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:922
+#: includes/ProductEditor/FormSchema.php:923
 #: templates/orders/order-download-permission-html.php:72
 #: templates/products/downloadable.php:64
 msgid "Never"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:923
+#: includes/ProductEditor/FormSchema.php:924
 msgid "Enter the number of days before a download link expires, or leave blank."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:934
+#: includes/ProductEditor/FormSchema.php:935
 #: templates/products/others.php:7
 msgid "Other Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:935
+#: includes/ProductEditor/FormSchema.php:936
 #: templates/products/others.php:8
 msgid "Set your extra product options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:953
+#: includes/ProductEditor/FormSchema.php:954
 #: templates/products/others.php:28
 msgid "Visibility"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:964
-#: includes/ProductEditor/FormSchema.php:966
+#: includes/ProductEditor/FormSchema.php:965
+#: includes/ProductEditor/FormSchema.php:967
 #: templates/products/others.php:41
 msgid "Purchase Note"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:967
+#: includes/ProductEditor/FormSchema.php:968
 msgid "Customer will get this in order email."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:974
+#: includes/ProductEditor/FormSchema.php:975
 #: templates/products/others.php:52
 msgid "Enable product reviews"
 msgstr ""
