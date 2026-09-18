@@ -4,7 +4,17 @@ import { useToast } from '@getdokan/dokan-ui';
 import { addAction, applyFilters, removeAction } from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
 import { useNavigate } from 'react-router-dom';
-import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
+import {
+    Boxes,
+    Package,
+    ExternalLink,
+    LayoutGrid,
+    Plus,
+    RefreshCw,
+    Repeat,
+    Hammer,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
     DataViews,
     DokanBadge,
@@ -92,53 +102,80 @@ const getStatusLabel = ( status: string ) => {
     ) as string;
 };
 
+/**
+ * Product types the current vendor may use, as a `{ slug: label }` map.
+ *
+ * Localized from PHP through the `dokan_product_types` filter, so types that
+ * come from modules — subscriptions, auctions, … — carry their own translated
+ * label. Lite alone localizes a plain slug list, which yields an empty map.
+ */
+const getVendorProductTypes = (): Record< string, string > => {
+    const types = ( window as any ).dokan?.product_types;
+
+    return types && ! Array.isArray( types ) ? types : {};
+};
+
+const PRODUCT_TYPE_LABELS: Record< string, string > = {
+    simple: __( 'Simple', 'dokan-lite' ),
+    variable: __( 'Variable', 'dokan-lite' ),
+    grouped: __( 'Grouped', 'dokan-lite' ),
+    external: __( 'External/Affiliate', 'dokan-lite' ),
+};
+
+/**
+ * Icon per product type.
+ *
+ * Types owned by a module are listed too: the products keep their type when the
+ * module is deactivated, so this is the baseline that keeps such a row from
+ * looking like a simple product. A module that needs richer output (the auction
+ * one greys the icon for closed auctions) still overrides the whole cell
+ * through `dokan_product_list_table_fields`.
+ */
+const PRODUCT_TYPE_ICONS: Record< string, LucideIcon > = {
+    simple: Package,
+    variable: Boxes,
+    grouped: LayoutGrid,
+    external: ExternalLink,
+    subscription: RefreshCw,
+    'variable-subscription': Repeat,
+    // Matches the auction module's own icon, so toggling it doesn't change the
+    // glyph — only the extras the module layers on.
+    auction: Hammer,
+};
+
 const getProductTypeLabel = ( item: ProductItem ) => {
-    if ( item.type === 'grouped' ) {
-        return __( 'Grouped', 'dokan-lite' );
-    }
-    if ( item.type === 'external' ) {
-        return __( 'External/Affiliate', 'dokan-lite' );
-    }
-    if ( item.type === 'variable' ) {
-        return __( 'Variable', 'dokan-lite' );
-    }
-    return __( 'Simple', 'dokan-lite' );
+    // The REST payload is typed, not guaranteed: a row without a type must not
+    // take the whole listing down with it.
+    const type = item.type || 'simple';
+
+    const label =
+        PRODUCT_TYPE_LABELS[ type ] ??
+        getVendorProductTypes()[ type ] ??
+        // Unknown type: humanize the slug rather than mislabel it as Simple.
+        type.replace( /[-_]/g, ' ' ).replace( /^./, ( c ) => c.toUpperCase() );
+
+    /**
+     * Filter the human-readable label for a product type.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {string} label Default label.
+     * @param {string} type  Product type slug.
+     */
+    return applyFilters( 'dokan_product_type_label', label, type ) as string;
 };
 
 const ProductTypeIcon = ( { item }: { item: ProductItem } ) => {
-    const cls = 'w-5 h-5 text-gray-500';
-    if ( item.type === 'variable' ) {
-        return <Boxes className={ cls } />;
-    }
-    if ( item.type === 'grouped' ) {
-        return <LayoutGrid className={ cls } />;
-    }
-    if ( item.type === 'external' ) {
-        return <ExternalLink className={ cls } />;
-    }
-    return <Package className={ cls } />;
+    const Icon = PRODUCT_TYPE_ICONS[ item.type ] ?? Package;
+
+    return <Icon className="w-5 h-5 text-gray-500" />;
 };
 
 // ── Product type options ──────────────────────────────────────────────────────
 
-const PRODUCT_TYPE_OPTIONS = [
-    {
-        value: 'simple',
-        label: __( 'Simple', 'dokan-lite' ),
-    },
-    {
-        value: 'variable',
-        label: __( 'Variable', 'dokan-lite' ),
-    },
-    {
-        value: 'grouped',
-        label: __( 'Grouped', 'dokan-lite' ),
-    },
-    {
-        value: 'external',
-        label: __( 'External/Affiliate', 'dokan-lite' ),
-    },
-];
+const PRODUCT_TYPE_OPTIONS = Object.entries( PRODUCT_TYPE_LABELS ).map(
+    ( [ value, label ] ) => ( { value, label } )
+);
 
 // ── Product listing localized data from PHP ───────────────────────────────────
 
