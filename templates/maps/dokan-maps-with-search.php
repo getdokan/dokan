@@ -11,7 +11,12 @@ if ( 'mapbox' === $source ) {
     }
 
     $map_id   = 'dokan-maps-' . wp_rand();
-    $location = explode( ',', $map_location );
+    $location = dokan_parse_map_location( $map_location );
+
+    // Discard a stored location that holds no usable coordinates, so it is not echoed back and saved again.
+    if ( empty( $location ) ) {
+        $map_location = '';
+    }
 
     $map_address = ! empty( $map_address ) ? $map_address : 'Dhaka';
 
@@ -23,8 +28,8 @@ if ( 'mapbox' === $source ) {
         $latitude     = ! empty( $default_location['latitude'] ) ? $default_location['latitude'] : 23.709921;
         $map_location = $latitude . ',' . $longitude;
     } else {
-        $longitude   = ! empty( $location[1] ) ? $location[1] : 90.40714300000002;
-        $latitude    = ! empty( $location[0] ) ? $location[0] : 23.709921;
+        $longitude   = $location ? $location['longitude'] : 90.40714300000002;
+        $latitude    = $location ? $location['latitude'] : 23.709921;
     }
 
     dokan_get_template(
@@ -42,8 +47,13 @@ if ( 'mapbox' === $source ) {
         )
     );
 } else {
-    $location    = explode( ',', $map_location );
+    $location    = dokan_parse_map_location( $map_location );
     $map_address = ! empty( $map_address ) ? $map_address : 'Dhaka';
+
+    // Discard a stored location that holds no usable coordinates, so it is not echoed back and saved again.
+    if ( empty( $location ) ) {
+        $map_location = '';
+    }
 
     if ( empty( $map_location ) && function_exists( 'dokan_geo_get_default_location' ) && ! empty( dokan_geo_get_default_location() ) ) {
         $default_location = dokan_geo_get_default_location();
@@ -53,8 +63,8 @@ if ( 'mapbox' === $source ) {
         $latitude     = ! empty( $default_location['latitude'] ) ? $default_location['latitude'] : 23.709921;
         $map_location = $latitude . ',' . $longitude;
     } else {
-        $longitude   = ! empty( $location[1] ) ? $location[1] : 90.40714300000002;
-        $latitude    = ! empty( $location[0] ) ? $location[0] : 23.709921;
+        $longitude   = $location ? $location['longitude'] : 90.40714300000002;
+        $latitude    = $location ? $location['latitude'] : 23.709921;
     }
 
     dokan_get_template(

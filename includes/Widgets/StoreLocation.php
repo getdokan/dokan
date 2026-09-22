@@ -46,7 +46,7 @@ class StoreLocation extends WP_Widget {
             $store_info   = dokan_get_store_info( get_query_var( 'author' ) );
             $map_location = isset( $store_info['location'] ) ? esc_attr( $store_info['location'] ) : '';
 
-            if ( empty( $map_location ) || ! dokan_has_map_api_key() || 'on' !== dokan_get_option( 'store_map', 'dokan_appearance', 'off' ) ) {
+            if ( ! dokan_parse_map_location( $map_location ) || ! dokan_has_map_api_key() || 'on' !== dokan_get_option( 'store_map', 'dokan_appearance', 'off' ) ) {
                 return;
             }
 

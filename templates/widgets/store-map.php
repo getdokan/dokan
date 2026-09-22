@@ -7,7 +7,9 @@
  * @package dokan
  */
 
-if ( empty( $map_location ) ) {
+$location = dokan_parse_map_location( $map_location );
+
+if ( empty( $location ) ) {
     return;
 }
 
@@ -19,9 +21,8 @@ if ( empty( $map_location ) ) {
 
 $source = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
 
-$location  = explode( ',', $map_location );
-$longitude = ! empty( $location[1] ) ? $location[1] : 90.40714300000002;
-$latitude  = ! empty( $location[0] ) ? $location[0] : 23.709921;
+$longitude = $location['longitude'];
+$latitude  = $location['latitude'];
 
 if ( 'mapbox' === $source ) {
     $access_token = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', null );

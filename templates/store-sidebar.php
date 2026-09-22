@@ -14,7 +14,7 @@
 
                 dokan_store_category_widget();
 
-                if ( ! empty( $map_location ) ) {
+                if ( dokan_parse_map_location( $map_location ) ) {
                     dokan_store_location_widget();
                 }
 
