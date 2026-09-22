@@ -303,13 +303,23 @@ function ProductList() {
             id: 'type',
             label: __( 'Type', 'dokan-lite' ),
             enableSorting: false,
-            render: ( { item }: { item: ProductItem } ) => (
-                <DokanTooltip content={ getProductTypeLabel( item ) }>
-                    <span className="inline-flex items-center">
-                        <ProductTypeIcon item={ item } />
-                    </span>
-                </DokanTooltip>
-            ),
+            render: ( { item }: { item: ProductItem } ) => {
+                const label = getProductTypeLabel( item );
+
+                // The glyph is the only content of this cell and its SVG is
+                // aria-hidden, so without a name here the column reads as empty.
+                return (
+                    <DokanTooltip content={ label }>
+                        <span
+                            className="inline-flex items-center"
+                            role="img"
+                            aria-label={ label }
+                        >
+                            <ProductTypeIcon item={ item } />
+                        </span>
+                    </DokanTooltip>
+                );
+            },
         },
         {
             id: 'stock',
