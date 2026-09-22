@@ -1,19 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { FieldValidator, FormItem, ValidationRule, DependencyCondition } from '../../types';
-import { resolveDependency } from '../../utils';
-
-export const isEmpty = ( v: any ) => {
-    if ( v === null || v === undefined ) {
-        return true;
-    }
-    if ( typeof v === 'string' ) {
-        return v.trim().length === 0;
-    }
-    if ( Array.isArray( v ) ) {
-        return v.length === 0;
-    }
-    return false;
-};
+import { isEmpty, resolveDependency } from '../../utils';
 
 // ---------------------------------------------------------------------------
 // Schema-driven validation engine

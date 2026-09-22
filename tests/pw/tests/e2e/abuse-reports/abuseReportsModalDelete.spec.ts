@@ -298,11 +298,23 @@ test.describe('Abuse Reports — Modal, Delete-edge & Orphaned records @pro', ()
 
         // Description section is conditionally rendered ({ modalItem.description && ... }),
         // so with no description there should be NO "Description" heading.
-        const descriptionHeading = adminPage.locator(abuse.adminReact.detailModalDescriptionBlock).first();
-        expect(
-            await descriptionHeading.isVisible().catch(() => false),
+        //
+        // Positive control first: without it, a selector that stopped matching
+        // (heading shape changed) is indistinguishable from an absent section —
+        // the old `isVisible().catch(() => false)` returned false either way.
+        // Both section labels render as h4 inside the dialog
+        // (ReportAbusePage.tsx:630 Reason, :643 Description).
+        await expect(
+            adminPage.locator("//*[@role='dialog']//h4[normalize-space()='Reason']"),
+            'Control: modal section labels render as h4 inside role=dialog',
+        ).toHaveCount(1);
+
+        // Count, not visibility: an unconditionally-rendered heading with an
+        // empty body would still report isVisible() === false.
+        await expect(
+            adminPage.locator("//*[@role='dialog']//h4[normalize-space()='Description']"),
             'No Description section should render when the report has no description',
-        ).toBe(false);
+        ).toHaveCount(0);
 
         // Reported By: ACTUAL behavior — the REST builder always returns a
         // reported_by object (id 0 for guests), so the modal's `! reported_by`

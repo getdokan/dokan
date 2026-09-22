@@ -99,7 +99,7 @@ export const useProducts = (
                  * server-side default `[ auction, booking ]`. Pro modules can
                  * add types to hide via this filter.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.0.10
                  *
                  * @param {string[]} excludeTypes Product type slugs to exclude.
                  */

@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { confirmDataViewsAction, dismissDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // ============================================
 // TEST DATA
@@ -181,7 +182,7 @@ export class AdminRefundRequestsPage {
     /** A row-action menu item locator by visible label (e.g. 'Refund Manually',
      * 'Refund via Payment Gateway', 'Cancel', 'Delete'). */
     actionMenuItem(label: string): Locator {
-        return this.page.getByRole('menuitem', { name: new RegExp(escapeRegExp(label), 'i') }).first();
+        return actionMenuItemByName(this.page, new RegExp(escapeRegExp(label), 'i')).first();
     }
 
     /** Click an item in the open actions menu. */

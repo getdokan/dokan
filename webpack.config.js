@@ -29,6 +29,23 @@ const updatedConfig = {
     },
     entry: {
         ...entryPoints,
+        // Shared third-party UI bundles. These are imported by several entries; building them
+        // once and externalising the bare specifiers (see webpack-dependency-mapping.js) keeps
+        // webpack from inlining a full copy of each into every consuming bundle.
+        'plugin-ui': {
+            import: './src/externals/plugin-ui.js',
+            library: {
+                name: [ 'dokan', 'pluginUI' ],
+                type: 'window',
+            },
+        },
+        'dokan-ui': {
+            import: './src/externals/dokan-ui.js',
+            library: {
+                name: [ 'dokan', 'dokanUI' ],
+                type: 'window',
+            },
+        },
         components: {
             import: './src/components/index.tsx',
             library: {

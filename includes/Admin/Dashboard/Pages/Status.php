@@ -73,5 +73,7 @@ class Status extends AbstractPage {
                 'in_footer' => true,
             ]
         );
+
+        wp_set_script_translations( 'dokan-status', 'dokan-lite' );
     }
 }

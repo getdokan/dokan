@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 export const adminWithdrawData = {
     // Read-only fixtures — a standing pending and a standing cancelled request,
@@ -164,7 +165,7 @@ export class AdminWithdrawPage {
 
     /** Click an item in the open actions menu, e.g. 'View', 'Approve', 'Cancel', 'Add Note', 'Delete'. */
     async clickActionMenuItem(label: string): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: new RegExp(escapeRegExp(label), 'i') }).first();
+        const item = actionMenuItemByName(this.page, new RegExp(escapeRegExp(label), 'i')).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
     }
@@ -172,7 +173,7 @@ export class AdminWithdrawPage {
     /** True when an action menu item is offered for a row (used to assert hidden Approve/Cancel on non-pending rows). */
     async rowActionAvailable(storeName: string, label: string): Promise<boolean> {
         await this.openRowActionMenuFor(storeName);
-        const item = this.page.getByRole('menuitem', { name: new RegExp(escapeRegExp(label), 'i') }).first();
+        const item = actionMenuItemByName(this.page, new RegExp(escapeRegExp(label), 'i')).first();
         const visible = await item.isVisible({ timeout: 3000 }).catch(() => false);
         await this.page.keyboard.press('Escape').catch(() => undefined);
         return visible;

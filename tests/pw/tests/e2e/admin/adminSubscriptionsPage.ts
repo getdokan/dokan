@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { DATA_ROW, waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // Admin-only Subscriptions DataViews list. Page is gated behind the "Enable
 // Vendor Subscription" setting (dokan_product_subscription.enable_pricing === 'on').
@@ -80,7 +81,11 @@ export class AdminSubscriptionsPage {
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
-        const fatal = await this.page.locator(adminSubscriptionsSelectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
+        const fatal = await this.page
+            .locator(adminSubscriptionsSelectors.phpFatal)
+            .first()
+            .isVisible({ timeout: 1000 })
+            .catch(() => false);
         return !fatal;
     }
 
@@ -137,17 +142,23 @@ export class AdminSubscriptionsPage {
         await btn.click();
     }
     async actionMenuItemVisible(label: RegExp): Promise<boolean> {
-        return await this.page.getByRole('menuitem', { name: label }).first().isVisible({ timeout: 5000 }).catch(() => false);
+        return await actionMenuItemByName(this.page, label)
+            .first()
+            .isVisible({ timeout: 5000 })
+            .catch(() => false);
     }
     async clickActionMenuItem(label: RegExp): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: label }).first();
+        const item = actionMenuItemByName(this.page, label).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
     }
 
     // Cancel opens a DokanModal (role="dialog"), not the inline alertdialog.
     get cancelModal(): Locator {
-        return this.page.getByRole('dialog').filter({ hasText: /Cancel Subscription|cancel.*period|Immediately/i }).first();
+        return this.page
+            .getByRole('dialog')
+            .filter({ hasText: /Cancel Subscription|cancel.*period|Immediately/i })
+            .first();
     }
     async cancelModalVisible(): Promise<boolean> {
         return await this.cancelModal.isVisible({ timeout: 8000 }).catch(() => false);

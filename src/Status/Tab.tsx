@@ -47,7 +47,7 @@ const Tab = ( {
                     <div className="border-b border-gray-200">
                         <nav
                             className="-mb-px flex space-x-8"
-                            aria-label="Tabs"
+                            aria-label={ __( 'Tabs', 'dokan-lite' ) }
                         >
                             { tabs.map( ( tab ) => {
                                 return (
