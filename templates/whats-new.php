@@ -4,6 +4,64 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.1.2',
+        'released' => '2026-09-17',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added FlyCRM to the setup wizard\'s recommended add-ons and removed Texty from that step.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added FlyCRM to the admin Extensions page as an installable add-on.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.1.1',
+        'released' => '2026-09-09',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'The Vendors screen\'s Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The Pending vendors filter now runs as a single keyed subquery instead of stacked meta queries, so the Vendors screen stays fast on sites with many users.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The new product editor now shows the category the vendor actually picked instead of its top-level parent.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The store sidebar no longer collapses to a narrow column on the Storefront theme when the theme\'s store sidebar is enabled.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The admin Status and Pro Features pages now load their translations instead of always showing English.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The admin settings "Choose File" button and the vendor form\'s "Last Name" label are now translatable.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.1.0',
         'released' => '2026-09-07',
         'changes'  => [

@@ -74,34 +74,97 @@ abstract class Provider implements AIProviderInterface, Hookable {
     abstract public function get_default_model_id(): string;
 
     /**
-     * Get the default model id for a specific generation type.
+     * Get the models of a generation type, keyed by model id.
      *
-     * A provider that serves more than one generation type cannot express its
-     * default as a single id — a text model id is never a valid image model id,
-     * so `get_default_model_id()` is necessarily wrong for one of them. Honour
-     * the declared default only when it actually supports the requested type,
-     * and otherwise fall back to the first registered model of that type, so
-     * the returned id is always one the caller can offer.
+     * `get_models()` is a filter, so a third party may enlist a model under an
+     * arbitrary key. Re-keying here keeps every id lookup honest.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.2
      *
-     * @param string $type The generation type (e.g. 'text', 'image').
+     * @param string $type The type of generation (e.g., 'text', 'image').
      *
-     * @return string A model id supporting $type, or an empty string when the
-     *                provider registers no model of that type.
+     * @return array<string, AIModelInterface>
      */
-    public function get_default_model_id_by_type( string $type ): string {
-        $declared = $this->get_default_model_id();
-        $model    = '' !== $declared ? $this->get_model( $declared ) : null;
+    protected function get_models_map( string $type ): array {
+        $models = [];
 
-        if ( $model instanceof AIModelInterface && $model->supports( $type ) ) {
-            return $declared;
+        foreach ( $this->get_models_by_type( $type ) as $model ) {
+            if ( $model instanceof AIModelInterface ) {
+                $models[ $model->get_id() ] = $model;
+            }
         }
 
-        $models = $this->get_models_by_type( $type );
-        $first  = ! empty( $models ) ? reset( $models ) : null;
+        return $models;
+    }
 
-        return $first instanceof AIModelInterface ? $first->get_id() : '';
+    /**
+     * Check whether a model id is still registered for a generation type.
+     *
+     * @since 5.1.2
+     *
+     * @param string $type     The type of generation (e.g., 'text', 'image').
+     * @param string $model_id Model id to look for.
+     *
+     * @return bool
+     */
+    public function has_model_id( string $type, string $model_id ): bool {
+        $models = $this->get_models_map( $type );
+
+        return isset( $models[ $model_id ] );
+    }
+
+    /**
+     * Resolve the model to use for a generation type, tolerating stale saved ids.
+     *
+     * @since 5.1.2
+     *
+     * @param string $type     The type of generation (e.g., 'text', 'image').
+     * @param string $model_id Optional. Saved model id to prefer.
+     *
+     * @return AIModelInterface|null
+     */
+    public function resolve_model( string $type, string $model_id = '' ): ?AIModelInterface {
+        // Keyed by model id, so every lookup below is an array read rather than another filter dispatch.
+        $models = $this->get_models_map( $type );
+        $model  = $models[ $model_id ] ?? null;
+
+        // A model id saved before the provider retired that model must not break generation.
+        if ( ! $model instanceof AIModelInterface ) {
+            $model = $models[ $this->get_default_model_id() ] ?? null;
+        }
+
+        if ( ! $model instanceof AIModelInterface && ! empty( $models ) ) {
+            $model = reset( $models );
+        }
+
+        /**
+         * Filters the model resolved for a generation type.
+         *
+         * Counterpart of `dokan_intelligence_{provider}_provider_{model_id}_model`
+         * for the resolution path, where the saved id may no longer exist.
+         *
+         * @since 5.1.2
+         *
+         * @param AIModelInterface|null $model    The resolved model, or null when the provider has none of that type.
+         * @param string                $type     The type of generation.
+         * @param string                $model_id The saved model id that was asked for.
+         */
+        return apply_filters( 'dokan_intelligence_' . $this->get_id() . '_provider_resolved_model', $model, $type, $model_id );
+    }
+
+    /**
+     * Get the default model id for a generation type.
+     *
+     * @since 5.1.2
+     *
+     * @param string $type The type of generation (e.g., 'text', 'image').
+     *
+     * @return string Empty string when the provider has no model of that type.
+     */
+    public function get_default_model_id_by_type( string $type ): string {
+        $model = $this->resolve_model( $type );
+
+        return $model instanceof AIModelInterface ? $model->get_id() : '';
     }
 
 	/**

@@ -445,6 +445,13 @@ export const dbUtils = {
         await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (${placeholders});`, [String(userId), ...metaKeys]);
     },
 
+    // Pro's EmailVerification adds _dokan_email_pending_verification on every customer it creates —
+    // even while the feature is off — so any user seeded earlier gets locked out the moment a spec
+    // (or a human) turns verification on. Wipe the flag site-wide so seeded users are always verified.
+    async clearPendingEmailVerification(): Promise<void> {
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE meta_key = '_dokan_email_pending_verification';`);
+    },
+
     // remove a vendor's active vendor-subscription (product_pack) state — cleanup for the subscription specs.
     // Does NOT cancel the Stripe subscription itself; pair with stripeApi.cancelSubscription() when a sub_… exists.
     async removeVendorSubscription(vendorId: string | number): Promise<void> {

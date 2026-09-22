@@ -475,7 +475,7 @@
                             <input
                                 type="button"
                                 class="button wpsa-browse"
-                                value="Choose File"
+                                :value="__( 'Choose File', 'dokan-lite' )"
                                 v-on:click.prevent="
                                     $emit(
                                         'openMedia',

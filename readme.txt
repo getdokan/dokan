@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.1.0
+Stable tag: 5.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,20 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.1.2 ( Sep 17, 2026 ) =
+- **update:** Added FlyCRM to the setup wizard's recommended add-ons and removed Texty from that step.
+- **update:** Added FlyCRM to the admin Extensions page as an installable add-on.
+- **fix:** Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.
+- **fix:** The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.
+
+= v5.1.1 ( Sep 09, 2026 ) =
+- **fix:** The Vendors screen's Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.
+- **fix:** The Pending vendors filter now runs as a single keyed subquery instead of stacked meta queries, so the Vendors screen stays fast on sites with many users.
+- **fix:** The new product editor now shows the category the vendor actually picked instead of its top-level parent.
+- **fix:** The store sidebar no longer collapses to a narrow column on the Storefront theme when the theme's store sidebar is enabled.
+- **fix:** The admin Status and Pro Features pages now load their translations instead of always showing English.
+- **fix:** The admin settings "Choose File" button and the vendor form's "Last Name" label are now translatable.
+
 = v5.1.0 ( Sep 07, 2026 ) =
 - **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
 
@@ -387,15 +401,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 = v5.0.18 ( Sep 01, 2026 ) =
 - **new:** Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.
-
-= v5.0.17 ( Aug 25, 2026 ) =
-- **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
-- **fix:** In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.
-
-= v5.0.16 ( Aug 21, 2026 ) =
-- **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.
-- **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
-- **fix:** The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.
-- **fix:** Vendor dashboard list labels such as "No data found" are now translatable through Dokan's language files.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
