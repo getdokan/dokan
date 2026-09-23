@@ -431,7 +431,7 @@ class Vendor {
     /**
      * Get the shop location
      *
-     * @return array
+     * @return string|null
      */
     public function get_location() {
         return $this->get_info_part( 'location' );
