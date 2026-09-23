@@ -1,5 +1,7 @@
 <?php
 
+use WeDevs\Dokan\Utilities\MapUtil;
+
 $source = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
 
 if ( 'mapbox' === $source ) {
@@ -11,7 +13,7 @@ if ( 'mapbox' === $source ) {
     }
 
     $map_id   = 'dokan-maps-' . wp_rand();
-    $location = dokan_parse_map_location( $map_location );
+    $location = MapUtil::parse_location( $map_location );
 
     // Discard a stored location that holds no usable coordinates, so it is not echoed back and saved again.
     if ( empty( $location ) ) {
@@ -47,7 +49,7 @@ if ( 'mapbox' === $source ) {
         )
     );
 } else {
-    $location    = dokan_parse_map_location( $map_location );
+    $location    = MapUtil::parse_location( $map_location );
     $map_address = ! empty( $map_address ) ? $map_address : 'Dhaka';
 
     // Discard a stored location that holds no usable coordinates, so it is not echoed back and saved again.

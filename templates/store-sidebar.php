@@ -1,3 +1,4 @@
+<?php use WeDevs\Dokan\Utilities\MapUtil; ?>
 <div id="dokan-secondary" class="dokan-store-sidebar" role="complementary">
     <?php if ( dokan_get_option( 'enable_theme_store_sidebar', 'dokan_appearance', 'off' ) === 'off' ) { ?>
 
@@ -14,7 +15,7 @@
 
                 dokan_store_category_widget();
 
-                if ( dokan_parse_map_location( $map_location ) ) {
+                if ( MapUtil::parse_location( $map_location ) ) {
                     dokan_store_location_widget();
                 }
 

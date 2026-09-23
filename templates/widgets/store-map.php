@@ -7,7 +7,9 @@
  * @package dokan
  */
 
-$location = dokan_parse_map_location( $map_location );
+use WeDevs\Dokan\Utilities\MapUtil;
+
+$location = MapUtil::parse_location( $map_location );
 
 if ( empty( $location ) ) {
     return;
