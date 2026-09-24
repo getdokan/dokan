@@ -26,11 +26,19 @@ const GalleryImages = ( { field, onChange, validity }: any ) => {
         setFiles( newValues );
     };
 
+    const onSort = ( sortedValues: any[] ) => {
+        onChange( {
+            [ field.id ]: sortedValues.map( ( img: any ) => img.id ),
+        } );
+        setFiles( sortedValues );
+    };
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             <ImagePreview
                 images={ files }
                 onRemove={ onRemove }
+                onSort={ onSort }
                 itemClassName={ `dokan-product-${ field.id }` }
             >
                 <MediaUploader
