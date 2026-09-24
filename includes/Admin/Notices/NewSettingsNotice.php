@@ -19,11 +19,11 @@ class NewSettingsNotice {
     public const SCOPE = 'legacy_settings';
 
     /**
-     * Option that stores the timestamp until which the notice is hidden.
+     * Transient set while the notice is postponed.
      *
      * @since DOKAN_SINCE
      */
-    public const POSTPONED_OPTION = 'dokan_new_settings_notice_postponed';
+    public const POSTPONED_TRANSIENT = 'dokan_new_settings_notice_postponed';
 
     /**
      * Class constructor.
@@ -54,8 +54,7 @@ class NewSettingsNotice {
             return $notices;
         }
 
-        $postponed = (int) get_option( self::POSTPONED_OPTION, 0 );
-        if ( $postponed > time() ) {
+        if ( get_transient( self::POSTPONED_TRANSIENT ) ) {
             return $notices;
         }
 
@@ -120,7 +119,7 @@ class NewSettingsNotice {
          */
         $days = (int) apply_filters( 'dokan_new_settings_notice_postponed_days', 20 );
 
-        update_option( self::POSTPONED_OPTION, dokan_current_datetime()->modify( "+$days days" )->getTimestamp() );
+        set_transient( self::POSTPONED_TRANSIENT, 'yes', $days * DAY_IN_SECONDS );
 
         wp_send_json_success();
     }
