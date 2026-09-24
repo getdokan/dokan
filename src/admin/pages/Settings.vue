@@ -3,6 +3,7 @@
         <div class="dokan-settings">
             <h1 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h1>
             <AdminNotice></AdminNotice>
+            <AdminNotice scope="legacy_settings"></AdminNotice>
 <!--            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
 
             <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
