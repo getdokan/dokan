@@ -203,7 +203,7 @@ class OrderControllerV2 extends OrderController {
             $product_id = intval( $download->product_id );
             if ( isset( $products[ $product_id ] ) ) {
                 $download->product = $products[ $product_id ];
-                $downloads[] = $this->prepare_data_for_response( $download, $request );
+                $downloads[] = $this->prepare_download_for_response( $download, $request );
             }
         }
 
@@ -238,16 +238,20 @@ class OrderControllerV2 extends OrderController {
     }
 
     /**
-     * Prepare data for response.
+     * Prepare a download permission for response.
+     *
+     * Named apart from the parent's prepare_data_for_response(), which serializes orders
+     * for the inherited get_items()/get_item() routes; overriding it broke those routes.
      *
      * @since 4.0.0
+     * @since DOKAN_SINCE Renamed from prepare_data_for_response().
      *
      * @param \stdClass        $download
      * @param \WP_REST_Request $request
      *
      * @return \stdClass
      */
-    public function prepare_data_for_response( $download, $request ) {
+    public function prepare_download_for_response( $download, $request ) {
         $product = $download->product;
         /** @var WC_Product $product */
         unset( $download->product );
