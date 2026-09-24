@@ -1793,16 +1793,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.36",
+            "version": "9.6.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "abab27ed286d3e1246fbbfe6b56bfd732d945ec9"
+                "reference": "aceaa623912caf8e80bffea22fc4103a0a01565f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/abab27ed286d3e1246fbbfe6b56bfd732d945ec9",
-                "reference": "abab27ed286d3e1246fbbfe6b56bfd732d945ec9",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/aceaa623912caf8e80bffea22fc4103a0a01565f",
+                "reference": "aceaa623912caf8e80bffea22fc4103a0a01565f",
                 "shasum": ""
             },
             "require": {
@@ -1876,7 +1876,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.36"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.37"
             },
             "funding": [
                 {
@@ -1884,7 +1884,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-08-11T06:25:15+00:00"
+            "time": "2026-09-23T09:59:59+00:00"
         },
         {
             "name": "psr/container",
@@ -3998,12 +3998,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "b2f0c372b930b228f36056c1dc3665759858c1c6"
+                "reference": "8c038cfcc4fca8ca50e3deff8c7c53befcb0aaa7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/b2f0c372b930b228f36056c1dc3665759858c1c6",
-                "reference": "b2f0c372b930b228f36056c1dc3665759858c1c6",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/8c038cfcc4fca8ca50e3deff8c7c53befcb0aaa7",
+                "reference": "8c038cfcc4fca8ca50e3deff8c7c53befcb0aaa7",
                 "shasum": ""
             },
             "require": {
@@ -4057,7 +4057,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-09-11T18:24:55+00:00"
+            "time": "2026-09-21T00:35:30+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",

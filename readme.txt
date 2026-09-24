@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.1.2
+Stable tag: 5.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -375,6 +375,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.1.3 ( Sep 24, 2026 ) =
+- **fix:** The vendor dashboard navigation is no longer rebuilt on every request, so cron, Action Scheduler, and other background requests no longer do that work on each hit.
+- **fix:** The vendor product list now shows each product's real type instead of labeling unrecognized types as Simple.
+- **fix:** Prices on the vendor dashboard now follow the store's configured number of decimals, so a zero-decimal currency no longer shows trailing decimals.
+- **fix:** Vendors can now reorder product gallery images by dragging them in the new product editor.
+- **fix:** REST pagination links now point at the endpoint that actually served the request instead of the controller's shared base route.
+- **fix:** Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.
+
 = v5.1.2 ( Sep 17, 2026 ) =
 - **update:** Added FlyCRM to the setup wizard's recommended add-ons and removed Texty from that step.
 - **update:** Added FlyCRM to the admin Extensions page as an installable add-on.
@@ -397,8 +405,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** In the new product editor, saving a product that has gallery images but no featured image no longer moves the first gallery image into the featured slot, so all gallery photos are kept.
 - **fix:** The vendor dashboard now shows an error message instead of loading forever when it can't load the current user.
 - **fix:** Turning off the "Register as a Vendor" option now blocks vendor sign-ups on the server, not just in the form, so a crafted request can no longer register a vendor while the option is disabled.
-
-= v5.0.18 ( Sep 01, 2026 ) =
-- **new:** Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

@@ -244,7 +244,7 @@ class OrderControllerV2 extends OrderController {
      * for the inherited get_items()/get_item() routes; overriding it broke those routes.
      *
      * @since 4.0.0
-     * @since DOKAN_SINCE Renamed from prepare_data_for_response().
+     * @since 5.1.3 Renamed from prepare_data_for_response().
      *
      * @param \stdClass        $download
      * @param \WP_REST_Request $request
