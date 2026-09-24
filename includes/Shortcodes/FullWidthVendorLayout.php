@@ -30,7 +30,10 @@ class FullWidthVendorLayout implements Hookable {
         // Register vendor dashboard assets if the vendor layout is not legacy.
         $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
         if ( 'latest' === $vendor_layout ) {
-            add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ], 99 );
+            // On wp_enqueue_scripts (not init): it only fires on front-end page
+            // renders — never for cron, Action Scheduler, AJAX, REST or admin —
+            // and the seller-dashboard check inside needs the parsed query.
+            add_action( 'wp_enqueue_scripts', [ $this, 'register_vendor_dashboard_assets' ], 5 );
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
             add_filter( 'template_include', [ $this, 'rewrite_vendor_dashboard_template' ] );
         }
@@ -94,6 +97,10 @@ class FullWidthVendorLayout implements Hookable {
      * @return void
      */
     public function register_vendor_dashboard_assets() {
+        if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
+            return;
+        }
+
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/vendor-dashboard/layout/index.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
