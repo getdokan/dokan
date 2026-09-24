@@ -20,15 +20,18 @@ trait RESTResponseError {
      * @return \WP_Error
      */
     protected function send_response_error( Exception $e, $default_message = '' ) {
-        if ( $e instanceof DokanException && $e->get_error_code() instanceof WP_Error ) {
-            $error = $e->get_error_code();
+        $error_code = $e instanceof DokanException ? $e->get_error_code() : '';
+
+        if ( $e instanceof DokanException && $error_code instanceof WP_Error ) {
+            // Clone so the caller's WP_Error is left untouched.
+            $error = clone $error_code;
 
             if ( $error->has_errors() ) {
                 $data = $error->get_error_data();
 
-                // Attach the exception status unless the error already carries one.
+                // Attach the exception status unless the error already carries one; set directly so add_data() keeps no stale copy.
                 if ( ! $data || ( is_array( $data ) && ! isset( $data['status'] ) ) ) {
-                    $error->add_data( array_merge( $data ? $data : [], [ 'status' => $e->get_status_code() ] ) );
+                    $error->error_data[ $error->get_error_code() ] = array_merge( $data ? $data : [], [ 'status' => $e->get_status_code() ] );
                 }
 
                 return $error;
