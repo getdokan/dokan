@@ -201,6 +201,23 @@ export class NewProductsPage {
         }
     }
 
+    /**
+     * Narrow the list to the seeded fixture before asserting on its row.
+     *
+     * The DataViews list is paginated and sorted newest-first, and every spec in
+     * the suite creates products for the same vendor, so on a full run the
+     * long-lived `p1_v1 (simple)` seed is pushed off page 1 and a bare
+     * `rowByName(...)` assertion fails with "element(s) not found" even though
+     * the product exists. Search is server-side (see `search`), so it finds the
+     * seed regardless of how many products sit ahead of it.
+     *
+     * Call this before asserting on the seeded row — never as a substitute for
+     * the assertion itself.
+     */
+    async revealSeeded(): Promise<void> {
+        await this.search(newProductsData.searchHit);
+    }
+
     // ---- Navigation actions ----
     /**
      * Click "Add new product". With `one_step_product_create` on (the Lite
@@ -381,9 +398,35 @@ export class NewProductsPage {
         await this.page.locator('body').first().waitFor({ state: 'visible', timeout: 15000 });
     }
 
-    async storeShowsProduct(name: string): Promise<boolean> {
-        const product = this.page.getByText(new RegExp(escapeRegExp(name), 'i')).first();
-        return await product.isVisible({ timeout: 10000 }).catch(() => false);
+    /**
+     * True when `name` is listed on the vendor's storefront.
+     *
+     * The store archive is paginated and ordered newest-first. On a full suite
+     * run other specs create ~20 products for this same vendor, which pushes the
+     * long-lived seed off page 1 — so checking only the first page reports
+     * "missing" for a product that is plainly on the store. Walk the archive
+     * (`/store/<slug>/page/N/`) until the product is found or the pages run out.
+     *
+     * Assumes page 1 is already loaded (callers use `gotoStore` first).
+     */
+    async storeShowsProduct(name: string, maxPages = 8): Promise<boolean> {
+        const re = new RegExp(escapeRegExp(name), 'i');
+        for (let pageNo = 1; pageNo <= maxPages; pageNo++) {
+            if (pageNo > 1) {
+                await this.page.goto(`${this.storeUrl}page/${pageNo}/`);
+                await this.page.waitForLoadState('domcontentloaded');
+            }
+            const visible = await this.page
+                .getByText(re)
+                .first()
+                .isVisible({ timeout: pageNo === 1 ? 10000 : 3000 })
+                .catch(() => false);
+            if (visible) return true;
+            // Out of products (or past the last page) — nothing further to scan.
+            const cards = await this.page.locator('ul.products li.product, li.product').count().catch(() => 0);
+            if (cards === 0) break;
+        }
+        return false;
     }
 }
 

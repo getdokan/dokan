@@ -109,7 +109,7 @@ test.describe('Reverse Withdrawal (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 3 - Vendor /reverse-withdrawal route mounts in new dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 3 - Vendor /reverse-withdrawal route mounts in new dashboard', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/new/#/reverse-withdrawal`));
@@ -120,7 +120,7 @@ test.describe('Reverse Withdrawal (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - Vendor reverse-withdrawal page shows balance widget', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 4 - Vendor reverse-withdrawal page shows balance widget', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/new/#/reverse-withdrawal`));
