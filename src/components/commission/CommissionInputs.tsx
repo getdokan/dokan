@@ -36,9 +36,6 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
             <div className="w-[142px]">
                 <DebouncedInput
                     component={ MaskedInput }
-                    input={ {
-                        type: 'number',
-                    } }
                     value={ formatValueProp(
                         getCommissionValue( 'percentage', categoryId ) || ''
                     ) }
@@ -56,7 +53,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                             isAllCategory
                         )
                     }
-                    className={ `w-full h-10 pl-6  text-sm bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !border-r-0 !rounded-r-none` }
+                    className={ `w-full h-10 pl-6  text-sm bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !m-0 !border-r-0 !rounded-r-none` }
                     maskRule={ {
                         numeral: true,
                         delimiter: currency.thousand,
@@ -94,7 +91,10 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                         numeralDecimalMark: currency.decimal,
                         numeralDecimalScale: currency.precision,
                     } }
-                    className={ `w-full h-10 pl-6 pr-3 text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !border-l-0 !rounded-l-none` }
+                    // Left border stays: dokan-ui's addOnLeft span already ships
+                    // `border-r-0`, so removing this side too leaves a 1px hole
+                    // at the seam rather than a single shared line.
+                    className={ `w-full h-10 pl-6 pr-3 text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !m-0 !rounded-l-none` }
                 />
             </div>
         </div>

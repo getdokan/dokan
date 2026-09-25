@@ -186,7 +186,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
             }
 
             $general_options['custom_store_url'] = $custom_store_url;
-            update_option( 'dokan_general', $general_options );
+            dokan_save_legacy_settings_section( 'dokan_general', $general_options );
         }
 
         $share_essentials = isset( $data['share_essentials'] ) ? (bool) $data['share_essentials'] : false;

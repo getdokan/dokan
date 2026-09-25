@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
+use WeDevs\Dokan\Admin\OnboardingSetup\Steps\AbstractStep;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -140,7 +141,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          * @since 4.0.0
          *
          * @param array  $step_array The populated step data.
-         * @param object $step       The step object.
+         * @param AbstractStep $step       The step object.
          */
         $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
 
@@ -193,7 +194,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          *
          * @return array The modified step response data.
          */
-        $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
+        $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate_children_only(), $step );
         return rest_ensure_response( $step_array );
     }
 

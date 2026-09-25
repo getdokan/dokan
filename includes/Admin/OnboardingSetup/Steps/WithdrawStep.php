@@ -177,6 +177,6 @@ class WithdrawStep extends AbstractStep {
         $dokan_withdraw['withdraw_methods']['paypal'] = $data['withdraw']['paypal'] ?? $default_settings['withdraw_methods']['paypal'];
         $dokan_withdraw['withdraw_methods']['skrill'] = $data['withdraw']['skrill'] ?? $default_settings['withdraw_methods']['skrill'];
 
-        update_option( 'dokan_withdraw', $dokan_withdraw );
+        dokan_save_legacy_settings_section( 'dokan_withdraw', $dokan_withdraw );
     }
 }

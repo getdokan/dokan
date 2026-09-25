@@ -206,7 +206,7 @@ class Update_Category_Commission {
         }
 
         $dokan_selling['commission_category_based_values'] = $category_commission;
-        update_option( 'dokan_selling', $dokan_selling );
+        dokan_save_legacy_settings_section( 'dokan_selling', $dokan_selling );
     }
 
     /**

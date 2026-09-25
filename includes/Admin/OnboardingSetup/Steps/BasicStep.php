@@ -169,6 +169,6 @@ class BasicStep extends AbstractStep {
         $dokan_selling['order_status_change']        = $data['basic']['order_status_change'] ?? $default_settings['order_status_change'];
         $dokan_selling['new_seller_enable_selling']  = $data['basic']['new_seller_enable_selling'] ?? $default_settings['new_seller_enable_selling'];
 
-        update_option( 'dokan_selling', $dokan_selling );
+        dokan_save_legacy_settings_section( 'dokan_selling', $dokan_selling );
     }
 }

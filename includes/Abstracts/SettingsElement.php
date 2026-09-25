@@ -66,6 +66,13 @@ abstract class SettingsElement {
 	protected $dependencies = array();
 
 	/**
+	 * The settings validations.
+	 *
+	 * @var array $validations Validations.
+	 */
+	protected $validations = array();
+
+	/**
 	 * Settings Type.
 	 *
 	 * @var string $type Settings Type.
@@ -79,13 +86,40 @@ abstract class SettingsElement {
 	 */
 	public $hook_key = '';
 
-	/**
-	 * The key for generating dynamic Dependency.
-	 *
-	 * @var string $dependency_key Dependency Key.
-	 */
-	public $dependency_key = '';
+    /**
+     * Page doc link.
+     *
+     * @var string|null $doc_link
+     */
+    protected ?string $doc_link = null;
 
+    /**
+     * Get the subpage doc link.
+     *
+     * @return string|null
+     */
+    public function get_doc_link(): ?string {
+        return $this->doc_link;
+    }
+
+    /**
+     * Help text of the settings element.
+     *
+     * @var string $helpText Help text.
+     */
+    protected $tooltip = '';
+
+    /**
+     * Set the subpage doc link.
+     *
+     * @param string $doc_link
+     *  return SettingsElement
+     */
+    public function set_doc_link( string $doc_link ): SettingsElement {
+        $this->doc_link = $doc_link;
+
+        return $this;
+    }
 	/**
 	 * The constructor.
 	 *
@@ -170,6 +204,28 @@ abstract class SettingsElement {
 		return $this;
 	}
 
+    /**
+     * Get the Help Text of the Settings element.
+     *
+     * @return string
+     */
+    public function get_tooltip(): string {
+        return $this->tooltip;
+    }
+
+    /**
+     * Set the Help Text of the Settings element.
+     *
+     * @param string $tooltip Title.
+     *
+     * @return SettingsElement
+     */
+    public function set_tooltip( string $tooltip ): SettingsElement {
+        $this->tooltip = $tooltip;
+
+        return $this;
+    }
+
 	/**
 	 * Get the icon of the Settings element.
 	 *
@@ -210,28 +266,6 @@ abstract class SettingsElement {
 	 */
 	public function set_hook_key( string $hook_key ): SettingsElement {
 		$this->hook_key = $hook_key;
-
-		return $this;
-	}
-
-	/**
-	 * Get Dependencies key.
-	 *
-	 * @return string
-	 */
-	public function get_dependency_key(): string {
-		return $this->dependency_key;
-	}
-
-	/**
-	 * Set Dependencies key.
-	 *
-	 * @param string $dependency_key The dependency_key.
-	 *
-	 * @return SettingsElement
-	 */
-	public function set_dependency_key( string $dependency_key ): SettingsElement {
-		$this->dependency_key = $dependency_key;
 
 		return $this;
 	}
@@ -303,11 +337,14 @@ abstract class SettingsElement {
          * @param SettingsElement $this
          */
 		$filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
-
 		foreach ( $filtered_children as $child ) {
 			$child->set_hook_key( $this->get_hook_key() . '_' . $child->get_id() );
-			$child->set_dependency_key( trim( $this->get_dependency_key() . '.' . $child->get_id(), '. ' ) );
-			$children[ $child->get_id() ] = $child;
+
+            if ( isset( $this->value[ $child->get_id() ] ) ) {
+                $child->set_value( $this->value[ $child->get_id() ] );
+            }
+
+            $children[ $child->get_id() ] = $child;
 		}
 
 		return $children;
@@ -338,11 +375,11 @@ abstract class SettingsElement {
 	 * @return array
 	 */
 	public function get_dependencies(): array {
-		$dependency_key = $this->get_dependency_key();
+		$self = $this->get_id();
 
 		return array_map(
-			function ( $dependency ) use ( $dependency_key ) {
-				$dependency['self'] = $dependency_key;
+			function ( $dependency ) use ( $self ) {
+				$dependency['self'] = $self;
 				return $dependency;
 			},
 			$this->dependencies
@@ -385,6 +422,124 @@ abstract class SettingsElement {
 		);
 
 		return $this;
+	}
+
+	/**
+	 * Get element validation array.
+     *
+     * @since DOKAN_SINCE
+	 *
+	 * @return array
+	 */
+	public function get_validations(): array {
+		$self = $this->get_id();
+
+		return array_map(
+			function ( $validation ) use ( $self ) {
+				$validation['self'] = $self;
+				return $validation;
+			},
+			$this->validations
+		);
+	}
+
+	/**
+	 * Set Validations.
+     *
+     * @SINCE DOKAN_SINCE
+	 *
+	 * @param array $validations Validations.
+	 *
+	 * @return SettingsElement
+	 */
+	public function set_validations( array $validations ): SettingsElement {
+		$this->validations = $validations;
+
+		return $this;
+	}
+
+	/**
+	 * Add Validation to the SettingsElement.
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * Supports multiple formats:
+	 *
+	 * Format 1: Multiple rules as pipe-separated string
+	 * ->add_validation( 'required|not_empty|min_value', 'Error message' )
+	 *
+	 * Format 2: Rules as array with params
+	 * ->add_validation( ['not_empty', 'min_value' => 10, 'max_value' => 1440 ], 'Error message' )
+	 *
+	 * @param string|array $rules   Validation rules (string or array).
+	 * @param string       $message Custom error message.
+	 *
+	 * @return SettingsElement
+	 */
+	public function add_validation( $rules, string $message = '' ): SettingsElement {
+		$rules_list = array();
+		$params     = array();
+
+		if ( is_string( $rules ) ) {
+			$rules_list[] = $rules;
+		}
+
+		if ( is_array( $rules ) ) {
+			foreach ( $rules as $key => $value ) {
+				if ( is_int( $key ) ) {
+					// Indexed value - rule name or error message.
+					if ( $this->is_validation_rule( $value ) ) {
+						$rules_list[] = $value;
+					} elseif ( empty( $message ) ) {
+						$message = $value;
+					}
+					continue;
+				}
+
+				// Associative key - rule name with its param value.
+				$rules_list[] = $key;
+
+				if ( in_array( $key, array( 'min_value', 'max_value' ), true ) ) {
+					$params[ str_replace( '_value', '', $key ) ] = $value;
+				} elseif ( in_array( $key, array( 'in_array', 'not_in' ), true ) ) {
+					$params['values'] = (array) $value;
+				}
+			}
+		}
+
+		$this->validations[] = array(
+			'rules'   => implode( '|', $rules_list ),
+			'message' => $message,
+			'params'  => $params,
+		);
+
+		return $this;
+	}
+
+	/**
+	 * Check if a string is a valid validation rule name.
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * @param mixed $value The value to check.
+	 *
+	 * @return bool True if it's a validation rule name.
+	 */
+	protected function is_validation_rule( $value ): bool {
+		if ( ! is_string( $value ) ) {
+			return false;
+		}
+
+		$validation_rules = array(
+			'required',
+			'not_empty',
+			'min_value',
+			'max_value',
+			'in_array',
+			'not_in',
+		);
+
+		return in_array( $value, $validation_rules, true );
 	}
 
 	/**
@@ -432,6 +587,8 @@ abstract class SettingsElement {
 	/**
 	 * Validate the Data.
 	 *
+	 * @since DOKAN_SINCE Updated to support error messages from data_validation.
+	 *
 	 * @param mixed $data Data to store.
 	 *
 	 * @return bool
@@ -441,9 +598,12 @@ abstract class SettingsElement {
 
 		if ( $validity && $this->is_support_children() ) {
 			foreach ( $this->get_children() as $child ) {
-				if ( ! isset( $data[ $child->get_id() ] ) || ! $child->validate( $data[ $child->get_id() ] ) ) {
-					$validity = false;
-					break;
+				// Allow partial updates: only validate child if it is present in the incoming data.
+				if ( isset( $data[ $child->get_id() ] ) ) {
+					if ( ! $child->validate( $data[ $child->get_id() ] ) ) {
+						$validity = false;
+						break;
+					}
 				}
 			}
 		}
@@ -469,12 +629,13 @@ abstract class SettingsElement {
 			'type'           => $this->get_type(),
 			'title'          => $this->get_title(),
 			'icon'           => $this->get_icon(),
+            'tooltip'        => $this->get_tooltip(),
 			'display'        => true, // to manage element display action from dependencies.
 			'hook_key'       => $this->get_hook_key(),
 			'children'       => $children,
 			'description'    => $this->get_description(),
-			'dependency_key' => $this->get_dependency_key(),
 			'dependencies'   => $this->get_dependencies(),
+			'validations'    => $this->get_validations(),
 		);
 
         /**
@@ -503,9 +664,12 @@ abstract class SettingsElement {
 	public function sanitize( $data ) {
 		$data = $this->sanitize_element( $data );
 
-		if ( $this->is_support_children() ) {
+		if ( $this->is_support_children() && is_array( $data ) ) {
 			foreach ( $this->get_children() as $child ) {
-				$data[ $child->get_id() ] = $child->sanitize( $data[ $child->get_id() ] );
+				// Allow partial updates: only sanitize child if present in incoming data
+				if ( array_key_exists( $child->get_id(), $data ) ) {
+					$data[ $child->get_id() ] = $child->sanitize( $data[ $child->get_id() ] );
+				}
 			}
 		}
 		return $data;
@@ -513,6 +677,8 @@ abstract class SettingsElement {
 
 	/**
 	 * Data Validation condition.
+	 *
+	 * @since DOKAN_SINCE Updated return type to support error messages.
 	 *
 	 * @param mixed $data Data for validation.
 	 *

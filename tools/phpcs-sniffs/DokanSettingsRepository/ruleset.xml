@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ruleset name="DokanSettingsRepository">
+    <description>Forbid raw update_option/add_option/delete_option calls against the dokan_admin_settings key outside the SettingsRepository.</description>
+    <rule ref="./Sniffs/Repository/ForbidRawOptionWriteSniff.php"/>
+</ruleset>

@@ -28,6 +28,10 @@ const expressionEvaluator = (
             return value1 != value2;
         case '!==':
             return value1 !== value2;
+        case 'in':
+            return Array.isArray( value1 ) ? value1.includes( value2 ) : false;
+        case 'not_in':
+            return Array.isArray( value1 ) ? ! value1.includes( value2 ) : true;
         default:
             return value1 === value2;
     }
@@ -48,7 +52,11 @@ const applyEffectToElement = (
         if ( 'display' === effect.attribute ) {
             element.display = effect.effect !== 'hide';
         } else if ( 'value' === effect.attribute ) {
-            element.value = effect.value;
+            if ( effect.effect ) {
+                element.value = effect.effect;
+            } else {
+                element.value = effect.value;
+            }
         } else if ( 'disabled' === effect.attribute ) {
             element.disabled = effect.effect === 'yes';
         } else if ( 'readonly' === effect.attribute ) {
@@ -69,19 +77,16 @@ const settingsDependencyApplicator = (
         ...settings.map( ( element ) => {
             const elementDependencies = dependencies.filter(
                 ( dependency ) =>
-                    dependency.key === element.dependency_key ||
-                    dependency.self === element.dependency_key
+                    dependency.key === element.id ||
+                    dependency.self === element.id
             );
 
             elementDependencies.forEach( ( elDep ) => {
-                if ( elDep.to_self && elDep.self === element.dependency_key ) {
+                if ( elDep.to_self && elDep.self === element.id ) {
                     element = {
                         ...applyEffectToElement( { ...element }, elDep ),
                     };
-                } else if (
-                    ! elDep.to_self &&
-                    elDep.key === element.dependency_key
-                ) {
+                } else if ( ! elDep.to_self && elDep.key === element.id ) {
                     element = {
                         ...applyEffectToElement( { ...element }, elDep ),
                     };
