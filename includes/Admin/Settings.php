@@ -846,6 +846,17 @@ class Settings {
                         'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
                     ],
                 ],
+                'vendor_store_settings'        => [
+                    'name'    => 'vendor_store_settings',
+                    'label'   => esc_html__( 'Vendor Store Settings', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor store settings.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'legacy',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
                 'show_register_as_vendor'      => [
                     'name'    => 'show_register_as_vendor',
                     'label'   => esc_html__( 'Show "Register as a Vendor" in Sign Up Page', 'dokan-lite' ),
