@@ -133,6 +133,22 @@ class CommissionControllerAuthorizationTest extends DokanTestCase {
     }
 
     /**
+     * A vendor account without product capabilities cannot use the calculator either (ADR-0007).
+     */
+    public function test_vendor_without_product_capabilities_is_refused() {
+        wp_set_current_user( 0 );
+
+        $vendor = new \WP_User( $this->seller_id1 );
+        $vendor->add_cap( 'dokan_add_product', false );
+        $vendor->add_cap( 'dokan_edit_product', false );
+
+        wp_set_current_user( $this->seller_id1 );
+
+        $this->assertTrue( current_user_can( 'dokandar' ), 'Precondition: the account is still a vendor.' ); // phpcs:ignore WordPress.WP.Capabilities.Unknown
+        $this->assertSame( 403, $this->request( [ 'product_id' => $this->own_product_id ] )->get_status() );
+    }
+
+    /**
      * Admins keep calculating for any vendor.
      */
     public function test_admin_can_target_any_vendor() {

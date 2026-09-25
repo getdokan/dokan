@@ -89,7 +89,7 @@ class CommissionControllerV1 extends DokanRESTController {
      * Checking if have any permission.
      *
      * @since 3.14.0
-     * @since DOKAN_SINCE Vendors may only calculate against their own vendor ID and products.
+     * @since DOKAN_SINCE Vendors need a product capability and may only calculate against their own vendor ID and products.
      *
      * @param WP_REST_Request $request
      *
@@ -105,8 +105,13 @@ class CommissionControllerV1 extends DokanRESTController {
             return false;
         }
 
-        $vendor_id  = $request->get_param( 'vendor_id' );
-        $product_id = $request->get_param( 'product_id' );
+        // The calculator backs product creation and editing, so it needs that capability too (ADR-0007).
+        if ( ! current_user_can( 'dokan_add_product' ) && ! current_user_can( 'dokan_edit_product' ) ) {
+            return false;
+        }
+
+        $vendor_id  = absint( $request->get_param( 'vendor_id' ) );
+        $product_id = absint( $request->get_param( 'product_id' ) );
 
         // A vendor may only price against their own commission setup, never another vendor's.
         if ( ( $vendor_id && $vendor_id !== dokan_get_current_user_id() ) || ( $product_id && ! dokan_is_product_author( $product_id ) ) ) {
