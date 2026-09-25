@@ -89,12 +89,31 @@ class CommissionControllerV1 extends DokanRESTController {
      * Checking if have any permission.
      *
      * @since 3.14.0
+     * @since DOKAN_SINCE Vendors may only calculate against their own vendor ID and products.
      *
-     * @return boolean
+     * @param WP_REST_Request $request
+     *
+     * @return bool|WP_Error
      */
-    public function get_permissions_check() {
+    public function get_permissions_check( $request ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
         // phpcs:ignore WordPress.WP.Capabilities.Unknown
-        return current_user_can( 'dokandar' ) || current_user_can( 'manage_options' );
+        if ( ! current_user_can( 'dokandar' ) ) {
+            return false;
+        }
+
+        $vendor_id  = $request->get_param( 'vendor_id' );
+        $product_id = $request->get_param( 'product_id' );
+
+        // A vendor may only price against their own commission setup, never another vendor's.
+        if ( ( $vendor_id && $vendor_id !== dokan_get_current_user_id() ) || ( $product_id && ! dokan_is_product_author( $product_id ) ) ) {
+            return new WP_Error( 'dokan_rest_forbidden_target', __( 'You are not allowed to calculate commission for this vendor.', 'dokan-lite' ), [ 'status' => rest_authorization_required_code() ] );
+        }
+
+        return true;
     }
 
     /**
