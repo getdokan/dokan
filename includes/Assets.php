@@ -531,7 +531,8 @@ class Assets {
             ],
             'dokan-script'              => [
                 'src'     => $asset_url . '/js/dokan.js',
-                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'wp-i18n', $jquery_tiptip, 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
+                // dokan.js calls `$.validator.setDefaults()` and `$( '.datepicker' ).datepicker()` while it initialises, so both have to be real dependencies: without them the bundle throws and every module after it — including the store listing behaviour Pro hooks into — never registers.
+                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'wp-i18n', $jquery_tiptip, 'moment', 'dokan-date-range-picker', 'dokan-accounting', 'dokan-form-validate', 'jquery-ui-datepicker' ],
                 'version' => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor'          => [

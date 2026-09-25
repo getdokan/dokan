@@ -55,7 +55,8 @@ defined( 'ABSPATH' ) || exit; ?>
         </form>
 
         <div class="toggle-view item">
-            <span class="dashicons dashicons-screenoptions" data-view="grid-view"></span>
+            <?php // Grid is what the listing renders before a saved preference is restored, so mark it now instead of leaving both icons idle. ?>
+            <span class="dashicons dashicons-screenoptions active" data-view="grid-view"></span>
             <span class="dashicons dashicons-menu-alt" data-view="list-view"></span>
         </div>
     </div>

@@ -3250,7 +3250,15 @@ function dokan_is_store_listing() {
     if ( ! $found ) {
         $post = get_post( $page_id );
 
-        if ( $post && false !== strpos( $post->post_content, '[dokan-stores' ) ) {
+        if (
+            $post
+            && (
+                false !== strpos( $post->post_content, '[dokan-stores' )
+                || has_block( 'dokan/store-list', $post )
+                // A page built from the store listing pattern references it instead of holding the blocks.
+                || false !== strpos( $post->post_content, 'wp:pattern {"slug":"dokan/store-listing' )
+            )
+        ) {
             $found = true;
         }
     }
