@@ -21,39 +21,39 @@ class OrderControllerV3 extends OrderControllerV2 {
     protected $namespace = 'dokan/v3';
 
     /**
-     * @param               $downloads
-     * @param \WC_Product[] $products
+     * Attach product and file details to each download permission.
+     *
+     * @since 4.0.0
+     * @since DOKAN_SINCE Skips permissions whose product or file is gone instead of fataling.
+     *
+     * @param \stdClass[]   $downloads Permissions already run through prepare_download_for_response(), so `product_id` lives in `product['id']`.
+     * @param \WC_Product[] $products  Keyed by product ID.
      *
      * @return array
      */
     protected function format_downloads_data( $downloads, $products ) {
-        $updated_response = array_map(
-            function ( $download ) use ( $products ) {
-                $product = array_filter(
-                    $products, function ( $product_item ) use ( $download ) {
-						return ! empty( $product_item->get_id() ) && ! empty( $download->product_id ) && absint( $product_item->get_id() ) === absint( $download->product_id );
-					}
-                );
-                $product = reset( $product );
+        $updated_response = [];
 
-                $download->product = [
-                    'id'   => $product->get_id(),
-                    'name' => $product->get_name(),
-                    'slug' => $product->get_slug(),
-                    'link' => $product->get_permalink(),
-                ];
+        foreach ( $downloads as $download ) {
+            $product = $products[ absint( $download->product['id'] ?? 0 ) ] ?? null;
+            $file    = $product ? $product->get_file( $download->download_id ) : false;
 
-                /**
-                 * @var $file \WC_Product_Download
-                 */
-                $file                              = $product->get_file( $download->download_id );
-                $download->file_data               = $file->get_data();
-                $download->file_data['file_title'] = wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) );
+            if ( ! $file ) {
+                continue;
+            }
 
-                return $download;
-            },
-            $downloads
-        );
+            $download->product = [
+                'id'   => $product->get_id(),
+                'name' => $product->get_name(),
+                'slug' => $product->get_slug(),
+                'link' => $product->get_permalink(),
+            ];
+
+            $download->file_data               = $file->get_data();
+            $download->file_data['file_title'] = wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) );
+
+            $updated_response[] = $download;
+        }
 
         return $updated_response;
     }
