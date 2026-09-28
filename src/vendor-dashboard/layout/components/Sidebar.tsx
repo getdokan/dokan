@@ -11,6 +11,7 @@ import {
     useState,
 } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
+import { decodeEntities } from '@wordpress/html-entities';
 import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
@@ -37,6 +38,16 @@ export const getActiveSubmenuKey = (
     } );
     return activeKey;
 };
+
+// Labels arrive HTML-escaped from esc_html__, so decode for display (&amp; -> &) while JSX still escapes markup.
+const getMenuTitle = ( hookName: string, menuItem: any ): string =>
+    decodeEntities(
+        applyFilters(
+            hookName,
+            menuItem?.menu_manager_title || menuItem?.title,
+            menuItem
+        ) as string
+    );
 
 const Sidebar = ( {
     collapsed,
@@ -313,11 +324,10 @@ const Sidebar = ( {
                                     );
 
                                     const menuItemRef = getMenuItemRef( key );
-                                    const menuTitle = applyFilters(
+                                    const menuTitle = getMenuTitle(
                                         'dokan_sidebar_menu_title',
-                                        item?.menu_manager_title || item?.title,
                                         item
-                                    ) as string;
+                                    );
                                     const isMenuItemActive =  isParentActive || isParentActiveCollapsed ;
 
                                     return (
@@ -460,12 +470,10 @@ const Sidebar = ( {
                                                                     activeSubkey;
 
                                                                 const subMenuTitle =
-                                                                    applyFilters(
+                                                                    getMenuTitle(
                                                                         'dokan_sidebar_submenu_title',
-                                                                        subitem?.menu_manager_title ||
-                                                                            subitem?.title,
                                                                         subitem
-                                                                    ) as string;
+                                                                    );
 
                                                                 return (
                                                                     <li

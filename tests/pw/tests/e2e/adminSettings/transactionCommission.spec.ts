@@ -31,13 +31,13 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Transaction -> Commission',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_transaction >> #dokan_settings_transaction_commission',
+    selector: '[data-testid="settings-menu-transaction"] >> [data-testid="settings-menu-commission"]',
     fields: [
         // Commission Type - Radio Group
         {
-            selector: '#dokan_settings_transaction_commission_commission_commission_type button[name="fixed"]',
-            type: 'radio',
-            value: 'true', // Options: 'fixed', 'category_based'
+            selector: '[data-testid="settings-field-commission_type"]',
+            type: 'radio-capsule',
+            value: 'Fixed', // Options: 'fixed', 'category_based'
         },
 
         // Those fields are working in when we go through --debug mode but in ui mode first fill with our given value but immediately after that it fill with previouly filled value.
@@ -45,14 +45,14 @@ const newDataset = {
         
         // // Admin Commission Percentage
         // {
-        //     selector: '#dokan_settings_transaction_commission_commission_admin_commission div.relative.flex:has(span:text("%")) input[type="text"]',
+        //     selector: '[data-testid="settings-field-admin_commission"] div.relative.flex:has(span:text("%")) input[type="text"]',
         //     type: 'text',
         //     value: '14',
         // },
         
         // // Admin Commission Fixed Fee
         // {
-        //     selector: '#dokan_settings_transaction_commission_commission_admin_commission div.relative.flex:has(span:text("$")) input[type="text"]',
+        //     selector: '[data-testid="settings-field-admin_commission"] div.relative.flex:has(span:text("$")) input[type="text"]',
         //     type: 'text',
         //     value: '11',
         // },

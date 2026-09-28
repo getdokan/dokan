@@ -15,9 +15,12 @@ use WeDevs\Dokan\Contracts\Hookable;
  *
  * The write side is handled at each writer (via
  * {@see LegacySettingsBridge::persist_legacy_section()}): mapped keys land
- * in `dokan_admin_settings` only; the legacy row holds unmapped keys only.
- * No reverse mirror is installed — that would defeat the single-source
- * invariant.
+ * in `dokan_admin_settings`. When the legacy mirror is enabled (default —
+ * see {@see LegacySettingsBridge::is_legacy_mirror_enabled()}) the legacy
+ * row also keeps a physical copy of mapped values, maintained by
+ * {@see LegacyMirror}, so plugin versions without this bridge (downgrades)
+ * still read current data. With the mirror disabled the legacy row holds
+ * unmapped keys only and the flat option is the single physical source.
  *
  * Reentry latch: the bridge's own internal reads (build_map, hydrate*)
  * must see raw legacy data, not the overlay; the static guard short-
@@ -56,6 +59,31 @@ class BridgeBootstrap implements Hookable {
      */
     public function __construct( ?LegacySettingsBridge $bridge = null ) {
         $this->bridge = $bridge;
+    }
+
+    /**
+     * Run a callback with the overlay filters suppressed.
+     *
+     * Required by writers that must observe and persist the RAW legacy rows:
+     * with the overlay active, `update_option()`'s internal old-value read is
+     * projected too, so a physically-stale row can look up-to-date and the
+     * write silently no-ops. The latch is saved/restored so nested calls are
+     * safe.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param callable $callback Callback to run without the overlay.
+     *
+     * @return mixed The callback's return value.
+     */
+    public static function without_overlay( callable $callback ) {
+        $previous         = self::$in_overlay;
+        self::$in_overlay = true;
+        try {
+            return $callback();
+        } finally {
+            self::$in_overlay = $previous;
+        }
     }
 
     /**

@@ -378,7 +378,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         $gateway_fee         = $this->order->get_meta( 'dokan_gateway_fee', true );
         $gateway_fee_paid_by = $this->order->get_meta( 'dokan_gateway_fee_paid_by', true );
 
-        if ( ! empty( $processing_fee ) && empty( $gateway_fee_paid_by ) ) {
+        if ( ! empty( $gateway_fee ) && empty( $gateway_fee_paid_by ) ) {
             /**
              * @since 3.7.15 dokan_gateway_fee_paid_by meta key returns empty value if gateway fee is paid admin
              */

@@ -958,6 +958,9 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
     $status = sanitize_text_field( wp_unslash( $postdata['status'] ) );
     $orders = array_map( 'absint', $postdata['bulk_orders'] );
 
+    // Guard ownership at the shared sink so every caller (REST bulk-actions + the legacy dashboard bulk form) is covered.
+    $orders = array_filter( $orders, [ \WeDevs\Dokan\Utilities\OrderUtil::class, 'current_user_can_manage_order' ] );
+
     // -1 means bluk action option value
     $excluded_status = [ '-1', 'cancelled', 'refunded' ];
 

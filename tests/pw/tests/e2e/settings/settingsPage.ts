@@ -329,8 +329,8 @@ const settingsSelectors = {
         verifiedIconByIcon: (iconName: string) => `//i[@class='${iconName}']//../..`,
         verificationMethodRow: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..`,
         enableVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//label[@class="switch tips"]`,
-        editVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-violet')]`,
-        deleteVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-red')]`,
+        editVerificationMethod: (methodName: string) => `button[aria-label="Edit ${methodName} verification method"]`,
+        deleteVerificationMethod: (methodName: string) => `button[aria-label="Delete ${methodName} verification method"]`,
 
         confirmDelete: '.swal2-confirm',
         cancelDelete: '.swal2-cancel',
@@ -612,23 +612,17 @@ const settingsSelectors = {
         addField: (blockName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//span[normalize-space(text())='Add Field']/..`,
 
         fieldSection: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..`,
-        enableField: (blockName: string, fieldName: string) =>
-            `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//span[normalize-space(text())='Enabled']/..//label[@class="switch tips"])[last()]`, //todo: resolve the issue
+        enableField: (blockName: string, fieldName: string) => `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//span[normalize-space(text())='Enabled']/..//label[@class="switch tips"])[last()]`, //todo: resolve the issue
         requireField: (blockName: string, fieldName: string) =>
             `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//span[normalize-space(text())='Required']/..//label[@class="switch tips"])[last()]`,
         editField: (blockName: string, fieldName: string) => `(//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../..//button[contains(@class,'field-edit-button')])[last()]`,
 
         fieldContents: {
-            label: (blockName: string, fieldName: string) =>
-                `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id="field-input-label"]`,
-            type: (blockName: string, fieldName: string) =>
-                `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//select[@id="field-input-type"]`,
-            placeholder: (blockName: string, fieldName: string) =>
-                `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-placeholder']`,
-            helpContent: (blockName: string, fieldName: string) =>
-                `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-help-content']`,
-            cancel: (blockName: string, fieldName: string) =>
-                `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-Cancel"]`,
+            label: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id="field-input-label"]`,
+            type: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//select[@id="field-input-type"]`,
+            placeholder: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-placeholder']`,
+            helpContent: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//input[@id='input-help-content']`,
+            cancel: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-Cancel"]`,
             done: (blockName: string, fieldName: string) => `//h3[contains(@class,'block-header-title') and normalize-space(text())="${blockName}"]/../../../../..//h3[normalize-space(text())='${fieldName}']/../../..//div[@class="field-form-control-wrapper"]//button[@id="input-submit"]`,
         },
 
@@ -756,10 +750,7 @@ export class SettingsPage {
         const span = this.switcherSpan(selector);
         const value = await this.getBackgroundColor(span);
         if (!value.includes('rgb(0, 144, 255)')) {
-            const [response] = await Promise.all([
-                this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-                this.page.locator(span).click(),
-            ]);
+            const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(span).click()]);
             return response;
         }
         return '';
@@ -780,14 +771,7 @@ export class SettingsPage {
         await this.page.waitForLoadState('networkidle');
         await expect(async () => {
             const [response] = await Promise.all([
-                this.page.waitForResponse(
-                    resp =>
-                        resp.url().includes(data.subUrls.ajax) &&
-                        resp.request().method() === 'POST' &&
-                        (resp.request().postData() ?? '').includes('action=dokan_save_settings') &&
-                        resp.status() === 200,
-                    { timeout: 15000 },
-                ),
+                this.page.waitForResponse(resp => resp.url().includes(data.subUrls.ajax) && resp.request().method() === 'POST' && (resp.request().postData() ?? '').includes('action=dokan_save_settings') && resp.status() === 200, { timeout: 15000 }),
                 this.page.locator(settingsSelectors.saveChanges).click(),
             ]);
             expect(response.status()).toBe(200);
@@ -806,10 +790,7 @@ export class SettingsPage {
     }
 
     private async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<void> {
-        await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.page.locator(selector).fill(text),
-        ]);
+        await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).fill(text)]);
     }
 
     // assert every leaf selector in a (possibly nested) selector object is visible;
@@ -844,7 +825,13 @@ export class SettingsPage {
     private async isVisible(selector: string, timeoutSec = 2): Promise<boolean> {
         const start = Date.now();
         while (Date.now() - start < timeoutSec * 1000) {
-            if (await this.page.locator(selector).isVisible().catch(() => false)) return true;
+            if (
+                await this.page
+                    .locator(selector)
+                    .isVisible()
+                    .catch(() => false)
+            )
+                return true;
             await this.page.waitForTimeout(100);
         }
         return false;

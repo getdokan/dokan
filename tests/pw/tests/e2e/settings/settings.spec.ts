@@ -18,7 +18,7 @@ test.describe('Settings test', () => {
 
         // Seed the "National ID" verification method the vendor-verification test
         // reads. On a fresh install Dokan Pro ships it as a default method, but the
-        // sibling `vendorVerifications.spec.ts` beforeAll deletes ALL methods, so on
+        // sibling `vendorVerifications.spec.ts` beforeAll deletes every custom method, so on
         // a shared DB it may be gone — its settings-tab row would then be absent and
         // the switcher would time out. Idempotently ensure it exists (create only
         // when missing) so this test never relies on ambient state. The tab lists the

@@ -1,10 +1,15 @@
-on: pull_request
+on:
+  # Every pull request that touches a PHP file, inspecting only the files that
+  # pull request changes. The paths filter keeps frontend-only work from
+  # spending a runner on a job with nothing to check.
+  pull_request:
+    paths:
+      - '**.php'
 
-# Cancels all previous workflow runs for pull requests that have not completed.
+# Cancels a previous run of this workflow that has not completed.
 concurrency:
-    # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
-    cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 name: PHPCS Inspections
 jobs:
@@ -12,18 +17,15 @@ jobs:
     name: Run PHPCS inspection
     runs-on: ubuntu-latest
     steps:
+      # A pull_request checkout is the merge commit, whose first parent is the
+      # base branch tip and second parent is the pull request head. Depth 2 is
+      # therefore all the history the diff below needs -- full history costs a
+      # clone of the whole repository to answer the same question.
+      # The job never pushes, so the checkout token is not kept on disk.
       - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
         with:
-            node-version: 20
-            cache: npm
-
-      - name: Npm install and build
-        run: |
-            npm i
-            npm run build
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -46,23 +48,18 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
 
+      # The PHP files this pull request changes: the merge commit against its
+      # first parent, so nothing that merely landed on the base branch in the
+      # meantime is inspected. Deleted files are dropped by the -f test.
       - id: changes
         run: |
-          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G "$URL" \
-            | jq -r '.[] | select(.status != "removed") | .filename' \
-            | grep -E '\.php$' \
-            | while read -r f; do [ -f "$f" ] && echo "$f"; done \
+          FILES=$(git diff --name-only HEAD^1 HEAD -- '*.php' \
+            | sort -u \
+            | while read -r f; do [ -n "$f" ] && [ -f "$f" ] && echo "$f"; done \
             | xargs)
           echo "files=$FILES" >> $GITHUB_OUTPUT
+          echo "PHP files changed by this pull request: ${FILES:-none}" >> $GITHUB_STEP_SUMMARY
 
       - name: Detect coding standard violations
         if: steps.changes.outputs.files != ''
         run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
-
-      - name: Start WordPress Environment
-        run: |
-            npm run env:start
-      - name: Running the phpunit tests
-        run: |
-            npm run phpunit

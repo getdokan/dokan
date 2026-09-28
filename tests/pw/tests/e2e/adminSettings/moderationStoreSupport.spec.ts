@@ -32,22 +32,22 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Moderation -> store_support',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_moderation >> #dokan_settings_moderation_store_support',
+    selector: '[data-testid="settings-menu-moderation"] >> [data-testid="settings-menu-store_support"]',
     fields: [
         {
-            selector: '#dokan_settings_moderation_store_support_store_support_settings_store_support_order_details button[role="switch"]',
+            selector: '[data-testid="settings-field-store_support_order_details"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_moderation_store_support_store_support_settings_store_support_button_label input',
+            selector: '[data-testid="settings-field-store_support_button_label"] input',
             type: 'text',
             value: 'Support',
         },
         {
-            selector: '#dokan_settings_moderation_store_support_store_support_settings_store_support_product_page div[role="radio"][aria-checked="true"][aria-label="Above Product Tab"]',
+            selector: '[data-testid="settings-field-store_support_product_page"]',
             type: 'customize-radio',
-            value: 'Above Product Tab'
+            value: 'above_tab'
         }
     ],
 };

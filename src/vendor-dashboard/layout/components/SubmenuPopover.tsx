@@ -2,6 +2,7 @@ import { Popover } from '@wordpress/components';
 import { twMerge } from 'tailwind-merge';
 // eslint-disable-next-line import/named
 import { RefObject, useEffect, useState } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 import { isRTL } from '@wordpress/i18n';
 import { getActiveSubmenuKey } from './Sidebar';
 
@@ -65,7 +66,7 @@ const SubmenuPopover = ( {
                                         ) }
                                     >
                                         <span className="ms-1">
-                                            { subitem.title }
+                                            { decodeEntities( subitem.title ) }
                                         </span>
                                         { subitem.counts > 0 && (
                                             <span className="ms-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white sidebar-submenu-bubble">

@@ -2,26 +2,26 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
-// Shipping Providers – New UI locators (button[role="switch"])
+// Shipping Providers – New UI locators ([role="switch"])
 const shippingProviderLocators = {
-    australiaPost:      '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-australia-post button[role="switch"]',
-    canadaPost:         '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-canada-post button[role="switch"]',
-    cityLink:           '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-city-link button[role="switch"]',
-    dhl:                '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dhl button[role="switch"]',
-    dpd:                '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dpd button[role="switch"]',
-    fastwaySouthAfrica: '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fastway-south-africa button[role="switch"]',
-    fedex:              '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fedex button[role="switch"]',
-    onTrac:             '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-ontrac button[role="switch"]',
-    parcelForce:        '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-parcelforce button[role="switch"]',
-    polishProviders:    '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-polish-shipping-providers button[role="switch"]',
-    royalMail:          '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-royal-mail button[role="switch"]',
-    tntConsignment:     '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-tnt-express-consignment button[role="switch"]',
-    tntReference:       '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-tnt-express-reference button[role="switch"]',
-    fedexSameday:       '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-fedex-sameday button[role="switch"]',
-    ups:                '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-ups button[role="switch"]',
-    usps:               '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-usps button[role="switch"]',
-    dhlUs:              '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-dhl-us button[role="switch"]',
-    other:              '#dokan_settings_shipment_shipment-setting-page_shipment-provider_sp-other button[role="switch"]',
+    australiaPost:      '[data-testid="settings-field-sp-australia-post"] [role="switch"]',
+    canadaPost:         '[data-testid="settings-field-sp-canada-post"] [role="switch"]',
+    cityLink:           '[data-testid="settings-field-sp-city-link"] [role="switch"]',
+    dhl:                '[data-testid="settings-field-sp-dhl"] [role="switch"]',
+    dpd:                '[data-testid="settings-field-sp-dpd"] [role="switch"]',
+    fastwaySouthAfrica: '[data-testid="settings-field-sp-fastway-south-africa"] [role="switch"]',
+    fedex:              '[data-testid="settings-field-sp-fedex"] [role="switch"]',
+    onTrac:             '[data-testid="settings-field-sp-ontrac"] [role="switch"]',
+    parcelForce:        '[data-testid="settings-field-sp-parcelforce"] [role="switch"]',
+    polishProviders:    '[data-testid="settings-field-sp-polish-shipping-providers"] [role="switch"]',
+    royalMail:          '[data-testid="settings-field-sp-royal-mail"] [role="switch"]',
+    tntConsignment:     '[data-testid="settings-field-sp-tnt-express-consignment"] [role="switch"]',
+    tntReference:       '[data-testid="settings-field-sp-tnt-express-reference"] [role="switch"]',
+    fedexSameday:       '[data-testid="settings-field-sp-fedex-sameday"] [role="switch"]',
+    ups:                '[data-testid="settings-field-sp-ups"] [role="switch"]',
+    usps:               '[data-testid="settings-field-sp-usps"] [role="switch"]',
+    dhlUs:              '[data-testid="settings-field-sp-dhl-us"] [role="switch"]',
+    other:              '[data-testid="settings-field-sp-other"] [role="switch"]',
 };
 
 // Old UI - All Shipping Provider Switch Locators (label containing text → switch)
@@ -106,12 +106,12 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Shipment -> shipment-settings',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_shipment >> #dokan_settings_shipment_shipment-setting-page',
+    selector: '[data-testid="settings-menu-shipment"] >> [data-testid="settings-menu-shipment-setting-page"]',
     fields: [
         // Main toggles
-        { selector: '#dokan_settings_shipment_shipment-setting-page_shipment-settings_allows_shipment_tracking button[role="switch"]', type: 'switch', value: true },
-        { selector: '#dokan_settings_shipment_shipment-setting-page_shipment-settings_enable_shipstation_logging button[role="switch"]', type: 'switch', value: true },
-        { selector: '#dokan_settings_shipment_shipment-setting-page_shipment-settings_allow_mark_received button[role="switch"]', type: 'switch', value: true },
+        { selector: '[data-testid="settings-field-allows_shipment_tracking"] [role="switch"]', type: 'switch', value: true },
+        { selector: '[data-testid="settings-field-enable_shipstation_logging"] [role="switch"]', type: 'switch', value: true },
+        { selector: '[data-testid="settings-field-allow_mark_received"] [role="switch"]', type: 'switch', value: true },
 
         // All shipping providers
         { selector: shippingProviderLocators.australiaPost,      type: 'switch', value: true },

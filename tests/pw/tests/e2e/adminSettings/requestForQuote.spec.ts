@@ -44,36 +44,36 @@ const oldDataset = {
 const newDataset = {
     title: 'Admin Setting: Product -> Request For Quote',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_product >> #dokan_settings_product_request_for_quote',
+    selector: '[data-testid="settings-menu-product"] >> [data-testid="settings-menu-request_for_quote"]',
     fields: [
         {
-            selector: '#dokan_settings_product_request_for_quote_enable_quote_out_of_stock button[role="switch"]',
+            selector: '[data-testid="settings-field-enable_quote_out_of_stock"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_product_request_for_quote_enable_ajax_add_to_quote button[role="switch"]',
+            selector: '[data-testid="settings-field-enable_ajax_add_to_quote"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_product_request_for_quote_redirect_to_quote_page button[role="switch"]',
+            selector: '[data-testid="settings-field-redirect_to_quote_page"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_product_request_for_quote_decrease_offered_price input[type="number"]',
+            selector: '[data-testid="settings-field-decrease_offered_price"] input[type="number"]',
             type: 'number',
             value: '10',
         },
         {
-            selector: '#dokan_settings_product_request_for_quote_convert_to_order button[role="switch"]',
+            selector: '[data-testid="settings-field-convert_to_order"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_product_request_for_quote_quote_converter_display button[role="switch"]',
-            type: 'switchs',
+            selector: '[data-testid="settings-field-quote_converter_display"] [role="switch"]',
+            type: 'switch',
             value: false,
         },
     ],

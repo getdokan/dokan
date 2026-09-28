@@ -144,6 +144,17 @@ class Extensions extends AbstractPage {
                 'position'    => 40,
             ],
             [
+                'slug'        => 'flycrm',
+                'title'       => esc_html__( 'FlyCRM', 'dokan-lite' ),
+                'description' => esc_html__( 'Keep customers and vendors organized - store contacts, track deals, and nurture every relationship to drive repeat marketplace revenue.', 'dokan-lite' ),
+                'image'       => $thumbnail_dir . '/addons/flycrm.svg',
+                'button_type' => 'install',
+                'wp_org_slug' => 'flycrm',
+                'basename'    => 'flycrm/flycrm.php',
+                'installed'   => isset( $installed_plugins['flycrm/flycrm.php'] ),
+                'position'    => 45,
+            ],
+            [
                 'slug'        => 'wepos',
                 'title'       => esc_html__( 'wePos', 'dokan-lite' ),
                 'description' => esc_html__( 'Run your physical store smarter - manage sales, inventory, and customers in real time with a powerful POS built for WooCommerce.', 'dokan-lite' ),

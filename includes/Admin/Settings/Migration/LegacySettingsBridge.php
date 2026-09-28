@@ -114,6 +114,47 @@ class LegacySettingsBridge {
     }
 
     /**
+     * Whether legacy rows are kept as a full, downgrade-safe mirror.
+     *
+     * Enabled (default): mapped values are written through to the legacy
+     * `dokan_*` rows on every save ({@see LegacyMirror}), legacy payloads are
+     * NOT stripped of mapped keys, and edits made by an older plugin version
+     * (which knows nothing about `dokan_admin_settings`) are reconciled back
+     * into the flat option on re-upgrade. Disabled: the pre-mirror strict
+     * model — mapped keys live only in `dokan_admin_settings` and legacy rows
+     * hold the unmapped remainder.
+     *
+     * Single-line switch: `add_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );`
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_legacy_mirror_enabled(): bool {
+        /**
+         * Filter whether the downgrade-safe legacy mirror is enabled.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $enabled Default true.
+         */
+        return (bool) apply_filters( 'dokan_admin_settings_legacy_mirror', true );
+    }
+
+    /**
+     * Unique legacy wp_option names the current mapping refers to, including
+     * options reached only through multi-slot (1:N) mappings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<int,string>
+     */
+    public function known_sections(): array {
+        $this->build_map();
+        return array_keys( $this->by_option ?? [] );
+    }
+
+    /**
      * Flush the in-request caches held by this bridge and its collaborators.
      *
      * Drops the mapping memo, the defaults/transformers indices, and asks the
@@ -354,24 +395,24 @@ class LegacySettingsBridge {
     /**
      * Persist a legacy section payload through the bridge:
      *   1. Mirror mapped keys into the new flat option.
-     *   2. Strip those mapped keys from the payload.
+     *   2. When the legacy mirror is disabled, strip those mapped keys
+     *      from the payload; when enabled (default), keep them so the
+     *      legacy row stays a downgrade-safe physical copy.
      *
-     * Returns the stripped payload; the caller is responsible for the
+     * Returns the payload to write; the caller is responsible for the
      * `update_option( $option_name, ... )` write. The split keeps callers
      * in control of side effects (do_action hooks, cache flushes, etc.)
-     * while centralizing the strip + mirror logic.
+     * while centralizing the mirror logic.
      *
-     * Strict mode: stripping happens unconditionally. If the new-option
-     * write throws, we log and continue — the mapped values are lost from
-     * this save, but the legacy row never holds mapped data. Source of
-     * truth stays single.
+     * If the new-option write throws, we log and continue — the legacy row
+     * write still proceeds so the save is not lost entirely.
      *
      * @since DOKAN_SINCE
      *
      * @param string              $option_name Legacy wp_option name.
      * @param array<string,mixed> $payload     Legacy-shaped payload.
      *
-     * @return array<string,mixed> Stripped payload, safe to `update_option`.
+     * @return array<string,mixed> Payload safe to `update_option`.
      */
     public function persist_legacy_section( string $option_name, array $payload ): array {
         try {
@@ -384,7 +425,7 @@ class LegacySettingsBridge {
                 dokan_log( '[LegacySettingsBridge] persist_legacy_section new-write failed: ' . $e->getMessage() );
             }
         }
-        return $this->strip_mapped_keys( $option_name, $payload );
+        return self::is_legacy_mirror_enabled() ? $payload : $this->strip_mapped_keys( $option_name, $payload );
     }
 
     /**
