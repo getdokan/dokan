@@ -232,6 +232,10 @@ class AdminSettingsController extends DokanBaseAdminController {
         $legacy_before = $this->legacy_save_hooks->snapshot( $sanitized );
         $legacy_errors = $this->legacy_save_hooks->run_before( $sanitized, $legacy_before );
 
+        if ( is_wp_error( $legacy_errors ) ) {
+            return $legacy_errors;
+        }
+
         if ( ! empty( $legacy_errors ) ) {
             return new WP_Error(
                 'dokan_rest_validation_failed',

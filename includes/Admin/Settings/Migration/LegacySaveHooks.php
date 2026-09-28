@@ -6,6 +6,7 @@ use RuntimeException;
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepositoryInterface;
 use WeDevs\Dokan\Contracts\Hookable;
+use WP_Error;
 
 /**
  * Runs the legacy `dokan_{before,after}_saving_settings` hooks for new-settings saves.
@@ -64,24 +65,37 @@ class LegacySaveHooks implements Hookable {
      * @param array<string,mixed> $new_slice New-option keys and values about to be saved.
      * @param array<string,array> $before    Result of {@see snapshot()}.
      *
-     * @return array<string,string[]> Error messages keyed by new-option key, empty when valid.
+     * @return array<string,string[]>|WP_Error Error messages keyed by new-option key (empty when valid),
+     *                                         or WP_Error when a listener stopped the request for another reason.
      */
-    public function run_before( array $new_slice, array $before ): array {
+    public function run_before( array $new_slice, array $before ) {
         $projected = $this->bridge()->project_new_onto_legacy( $new_slice, $before );
+        $errors    = [];
 
+        // Validate every section so one save reports all legacy validation errors.
         foreach ( $before as $section => $old_value ) {
-            $response = $this->catch_json_error(
+            $halt = $this->catch_json_error(
                 static function () use ( $section, $projected, $old_value ) {
                     do_action( 'dokan_before_saving_settings', $section, $projected[ $section ], $old_value );
                 }
             );
 
-            if ( null !== $response ) {
-                return $this->map_errors( $section, $response );
+            if ( null === $halt ) {
+                continue;
             }
+
+            if ( false !== ( $halt['payload']['success'] ?? null ) ) {
+                return new WP_Error(
+                    'dokan_rest_settings_save_halted',
+                    '' !== $halt['message'] ? $halt['message'] : __( 'Saving the settings was stopped unexpectedly.', 'dokan-lite' ),
+                    [ 'status' => 500 ]
+                );
+            }
+
+            $errors = array_merge_recursive( $errors, $this->map_errors( $section, $halt['payload'] ) );
         }
 
-        return [];
+        return $errors;
     }
 
     /**
@@ -117,7 +131,7 @@ class LegacySaveHooks implements Hookable {
 
         $errors = [];
 
-        if ( ! empty( $option_value['withdraw_limit'] && $option_value['withdraw_limit'] < 0 ) ) {
+        if ( ! empty( $option_value['withdraw_limit'] ) && $option_value['withdraw_limit'] < 0 ) {
             $errors[] = [
                 'name'  => 'withdraw_limit',
                 'error' => __( 'Minimum Withdraw Limit can\'t be negative value.', 'dokan-lite' ),
@@ -164,18 +178,20 @@ class LegacySaveHooks implements Hookable {
     }
 
     /**
-     * Run a callback and turn a `wp_send_json_error()` exit into its decoded payload.
+     * Run a callback and capture a `wp_die()` exit instead of ending the request.
      *
-     * @param callable $callback Callback that may call `wp_send_json_error()`.
+     * @param callable $callback Callback that may call `wp_send_json_error()` or `wp_die()`.
      *
-     * @return array|null The JSON payload, or null when the callback returned normally.
+     * @return array{payload:mixed,message:string}|null Decoded JSON output and wp_die() message, or null when the callback returned normally.
      */
     private function catch_json_error( callable $callback ): ?array {
         $halted      = false;
+        $message     = '';
         $doing_ajax  = static fn() => true;
-        $die_handler = static function () use ( &$halted ) {
-            return static function () use ( &$halted ) {
-                $halted = true;
+        $die_handler = static function () use ( &$halted, &$message ) {
+            return static function ( $die_message = '' ) use ( &$halted, &$message ) {
+                $halted  = true;
+                $message = is_wp_error( $die_message ) ? $die_message->get_error_message() : wp_strip_all_tags( (string) $die_message );
                 throw new RuntimeException( 'dokan_legacy_settings_validation_halt' );
             };
         };
@@ -204,9 +220,10 @@ class LegacySaveHooks implements Hookable {
             return null;
         }
 
-        $response = json_decode( $output, true );
-
-        return is_array( $response ) ? $response : [];
+        return [
+            'payload' => json_decode( $output, true ),
+            'message' => $message,
+        ];
     }
 
     /**

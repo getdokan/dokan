@@ -30,7 +30,7 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
         get_user_by( 'id', $this->admin_id )->add_cap( 'manage_woocommerce' );
         wp_set_current_user( $this->admin_id );
 
-        foreach ( [ 'dokan_admin_settings', 'dokan_general', 'dokan_withdraw' ] as $option ) {
+        foreach ( [ 'dokan_admin_settings', 'dokan_general', 'dokan_withdraw', 'dokan_reverse_withdrawal' ] as $option ) {
             delete_option( $option );
         }
 
@@ -46,7 +46,7 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
                 remove_filter( $hook_name, [ $this->test_bootstrap, 'apply_overlay' ], 10 );
             }
         }
-        foreach ( [ 'dokan_admin_settings', 'dokan_general', 'dokan_withdraw' ] as $option ) {
+        foreach ( [ 'dokan_admin_settings', 'dokan_general', 'dokan_withdraw', 'dokan_reverse_withdrawal' ] as $option ) {
             delete_option( $option );
         }
         parent::tear_down();
@@ -91,6 +91,41 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
         $this->assertSame( 'dokan_rest_validation_failed', $data['code'] );
         $this->assertArrayHasKey( 'minimum_withdraw_limit', $data['data']['errors'] );
         $this->assertSame( 50, ( new SettingsRepository() )->get( 'minimum_withdraw_limit' ), 'A rejected save must not be stored.' );
+    }
+
+    public function test_errors_from_every_legacy_section_are_returned_together(): void {
+        $response = $this->put(
+            'transaction',
+            [
+                'minimum_withdraw_limit'        => -100,
+                'reverse_withdrawal_due_period' => 99,
+            ]
+        );
+        $errors   = $response->get_data()['data']['errors'] ?? [];
+
+        $this->assertSame( 400, $response->get_status() );
+        $this->assertArrayHasKey( 'minimum_withdraw_limit', $errors, 'dokan_withdraw validator error missing.' );
+        $this->assertArrayHasKey( 'reverse_withdrawal_due_period', $errors, 'dokan_reverse_withdrawal validator error missing.' );
+    }
+
+    public function test_unexpected_wp_die_is_not_reported_as_validation_error(): void {
+        ( new SettingsRepository() )->update( [ 'vendor_store_url_slug' => 'old-slug' ] );
+
+        $halt = static function ( $option_name ) {
+            if ( 'dokan_general' === $option_name ) {
+                wp_die( 'Nonce check failed.' );
+            }
+        };
+        add_action( 'dokan_before_saving_settings', $halt, 5 );
+
+        $response = $this->put( 'marketplace', [ 'vendor_store_url_slug' => 'new-slug' ] );
+
+        remove_action( 'dokan_before_saving_settings', $halt, 5 );
+
+        $this->assertSame( 500, $response->get_status() );
+        $this->assertSame( 'dokan_rest_settings_save_halted', $response->get_data()['code'] );
+        $this->assertSame( 'Nonce check failed.', $response->get_data()['message'] );
+        $this->assertSame( 'old-slug', ( new SettingsRepository() )->get( 'vendor_store_url_slug' ), 'A halted save must not be stored.' );
     }
 
     public function test_reserved_slug_with_surrounding_whitespace_is_rejected(): void {
