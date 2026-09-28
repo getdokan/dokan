@@ -69,6 +69,9 @@ class SettingsRegistry {
         // 3. Fire hook_key filters on structural nodes.
         $elements = $this->fire_hook_key_filters( $elements );
 
+        // 3b. Drop pages left without children (e.g. Product when Pro is inactive).
+        $elements = $this->remove_empty_pages( $elements );
+
         // 4. Fill default properties.
         $elements = $this->fill_defaults( $elements );
 
@@ -285,6 +288,26 @@ class SettingsRegistry {
         }
 
         return $elements;
+    }
+
+    /**
+     * Remove pages that have no child elements.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $elements Flat array of schema elements.
+     *
+     * @return array Elements without empty pages.
+     */
+    private function remove_empty_pages( array $elements ): array {
+        $parent_page_ids = array_flip( array_filter( array_column( $elements, 'page_id' ) ) );
+
+        return array_values(
+            array_filter(
+                $elements,
+                fn( $el ) => 'page' !== ( $el['type'] ?? '' ) || isset( $parent_page_ids[ $el['id'] ?? '' ] )
+            )
+        );
     }
 
     /**
