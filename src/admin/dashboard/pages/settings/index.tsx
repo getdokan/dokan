@@ -31,6 +31,35 @@ const URL_PARAM_PAGE = 'page_id';
 const URL_PARAM_SUBPAGE = 'subpage_id';
 const URL_PARAM_TAB = 'tab_id';
 
+type RestSaveError = {
+    data?: { errors?: Record< string, string | string[] > };
+};
+
+// REST sends `data.errors` as { fieldId: string[] }; plugin-ui reads `errors` as { fieldId: string }.
+const getFieldErrors = ( error: unknown ): Record< string, string > => {
+    const errors = ( error as RestSaveError )?.data?.errors ?? {};
+
+    return Object.fromEntries(
+        Object.entries( errors ).map( ( [ id, messages ] ) => [
+            id,
+            Array.isArray( messages )
+                ? messages.join( ' ' )
+                : String( messages ),
+        ] )
+    );
+};
+
+const hasElement = (
+    elements: SettingsElement[],
+    id: string,
+    type: string
+): boolean =>
+    elements.some(
+        ( el ) =>
+            ( el.id === id && el.type === type ) ||
+            hasElement( el.children || [], id, type )
+    );
+
 /**
  * Mounts inside the SettingsProvider tree (via renderSaveButton) and binds
  * the active subpage/tab to URL query params. Plugin-ui only exposes the
@@ -39,6 +68,7 @@ const URL_PARAM_TAB = 'tab_id';
  */
 const UrlSync = (): null => {
     const {
+        schema,
         activePage,
         activeSubpage,
         activeTab,
@@ -56,14 +86,24 @@ const UrlSync = (): null => {
         }
         const urlSub = searchParams.get( URL_PARAM_SUBPAGE );
         const urlTab = searchParams.get( URL_PARAM_TAB );
-        if ( urlSub && urlSub !== activeSubpage ) {
+        // Ignore ids that don't exist, so a stale or edited URL can't open a blank page.
+        if (
+            urlSub &&
+            urlSub !== activeSubpage &&
+            hasElement( schema, urlSub, 'subpage' )
+        ) {
             setActiveSubpage( urlSub );
         }
-        if ( urlTab && urlTab !== activeTab ) {
+        if (
+            urlTab &&
+            urlTab !== activeTab &&
+            hasElement( schema, urlTab, 'tab' )
+        ) {
             setActiveTab( urlTab );
         }
         setRestored( true );
     }, [
+        schema,
         activePage,
         activeSubpage,
         activeTab,
@@ -83,6 +123,10 @@ const UrlSync = (): null => {
         setSearchParams(
             ( prev ) => {
                 const next = new URLSearchParams( prev );
+                // Keep page_id in step with the page that owns the active subpage.
+                if ( activePage ) {
+                    next.set( URL_PARAM_PAGE, activePage );
+                }
                 if ( activeSubpage ) {
                     next.set( URL_PARAM_SUBPAGE, activeSubpage );
                 } else {
@@ -97,7 +141,7 @@ const UrlSync = (): null => {
             },
             { replace: true }
         );
-    }, [ activeSubpage, activeTab, restored, setSearchParams ] );
+    }, [ activePage, activeSubpage, activeTab, restored, setSearchParams ] );
 
     return null;
 };
@@ -152,10 +196,14 @@ export default function SettingsPage() {
         } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Failed to save settings:', error );
-            toast.error(
+            const message =
                 ( error as { message?: string } )?.message ||
-                    __( 'Failed to save settings.', 'dokan-lite' )
-            );
+                __( 'Failed to save settings.', 'dokan-lite' );
+            toast.error( message );
+            // Rethrow so plugin-ui keeps the page dirty and shows the field errors.
+            throw Object.assign( new Error( message ), {
+                errors: getFieldErrors( error ),
+            } );
         } finally {
             setSaving( false );
         }
@@ -176,7 +224,15 @@ export default function SettingsPage() {
         );
     };
 
-    const initialPage = searchParams.get( URL_PARAM_PAGE ) || undefined;
+    // A subpage in the URL decides the page, so a mismatched page_id can't open the wrong sidebar group.
+    const urlSubpage = searchParams.get( URL_PARAM_SUBPAGE );
+    const subpageOwner = schema.find(
+        ( el ) => el.type === 'subpage' && el.id === urlSubpage
+    ) as ( SettingsElement & { page_id?: string } ) | undefined;
+    const initialPage =
+        subpageOwner?.page_id ||
+        searchParams.get( URL_PARAM_PAGE ) ||
+        undefined;
 
     return (
         <>
