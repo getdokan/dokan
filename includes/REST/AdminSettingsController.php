@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Admin\Settings\Migration\LegacySaveHooks;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
@@ -42,14 +43,23 @@ class AdminSettingsController extends DokanBaseAdminController {
     protected SettingsRepositoryInterface $settings_repo;
 
     /**
+     * Legacy save-hook dispatcher.
+     *
+     * @var LegacySaveHooks
+     */
+    protected LegacySaveHooks $legacy_save_hooks;
+
+    /**
      * Constructor.
      *
-     * @param SettingsRegistry|null            $registry      Optional registry instance (for testing).
-     * @param SettingsRepositoryInterface|null $settings_repo Optional repository instance (for testing).
+     * @param SettingsRegistry|null            $registry          Optional registry instance (for testing).
+     * @param SettingsRepositoryInterface|null $settings_repo     Optional repository instance (for testing).
+     * @param LegacySaveHooks|null             $legacy_save_hooks Optional legacy save-hook dispatcher (for testing).
      */
-    public function __construct( ?SettingsRegistry $registry = null, ?SettingsRepositoryInterface $settings_repo = null ) {
-        $this->registry      = $registry ?? new SettingsRegistry();
-        $this->settings_repo = $settings_repo ?? new SettingsRepository();
+    public function __construct( ?SettingsRegistry $registry = null, ?SettingsRepositoryInterface $settings_repo = null, ?LegacySaveHooks $legacy_save_hooks = null ) {
+        $this->registry          = $registry ?? new SettingsRegistry();
+        $this->settings_repo     = $settings_repo ?? new SettingsRepository();
+        $this->legacy_save_hooks = $legacy_save_hooks ?? dokan_get_container()->get( LegacySaveHooks::class );
     }
 
     /**
@@ -138,7 +148,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * The keys in `values` are field ids (globally unique per SchemaValidator).
      * Unknown keys are silently ignored. Values are merged into the single
-     * `dokan_settings` wp_option.
+     * `dokan_admin_settings` wp_option.
      *
      * @since DOKAN_SINCE
      *
@@ -196,13 +206,15 @@ class AdminSettingsController extends DokanBaseAdminController {
                 continue;
             }
 
+            // Validate the sanitized value so rules see what will actually be stored.
+            $value  = $this->sanitize_field_value( $field, $value );
             $errors = $this->validate_field_value( $field, $value );
             if ( ! empty( $errors ) ) {
                 $validation_errors[ $leaf_id ] = $errors;
                 continue;
             }
 
-            $sanitized[ $leaf_id ] = $this->sanitize_field_value( $field, $value );
+            $sanitized[ $leaf_id ] = $value;
         }
 
         if ( ! empty( $validation_errors ) ) {
@@ -212,6 +224,21 @@ class AdminSettingsController extends DokanBaseAdminController {
                 [
                     'status' => 400,
                     'errors' => $validation_errors,
+                ]
+            );
+        }
+
+        // Legacy listeners (validation, capabilities, crons) still hook the per-section save actions.
+        $legacy_before = $this->legacy_save_hooks->snapshot( $sanitized );
+        $legacy_errors = $this->legacy_save_hooks->run_before( $sanitized, $legacy_before );
+
+        if ( ! empty( $legacy_errors ) ) {
+            return new WP_Error(
+                'dokan_rest_validation_failed',
+                implode( ' ', array_merge( ...array_values( $legacy_errors ) ) ),
+                [
+                    'status' => 400,
+                    'errors' => $legacy_errors,
                 ]
             );
         }
@@ -229,6 +256,8 @@ class AdminSettingsController extends DokanBaseAdminController {
 
         $this->settings_repo->update( $sanitized );
         $merged = $this->settings_repo->all();
+
+        $this->legacy_save_hooks->run_after( $legacy_before );
 
         /**
          * Fired after saving admin settings.
