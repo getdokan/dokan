@@ -222,7 +222,7 @@ class SettingsSchema {
 				'variant'       => 'switch',
 				'section_id'    => 'marketplace_settings',
                 'title'   => __( 'Product Price Visibility', 'dokan-lite' ),
-                'description'    => __( 'Show or hide the product price on product pages in catalog mode.', 'dokan-lite' ),
+                'description'    => __( 'Show or hide the product price on product pages.', 'dokan-lite' ),
                 'default' => 'on',
 				'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
