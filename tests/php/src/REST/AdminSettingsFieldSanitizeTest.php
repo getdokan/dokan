@@ -117,4 +117,91 @@ class AdminSettingsFieldSanitizeTest extends DokanTestCase {
         $this->assertSame( 200, $response->get_status() );
         $this->assertSame( $url, ( new SettingsRepository() )->get( 'default_store_banner' ) );
     }
+
+    /**
+     * @dataProvider invalid_withdraw_charge_provider
+     */
+    public function test_withdraw_charge_rejects_out_of_range_values( string $percentage, string $fixed ): void {
+        $valid = [
+            'admin_percentage' => '1',
+            'additional_fee'   => '2',
+        ];
+        ( new SettingsRepository() )->update( [ 'bank_transfer_withdraw_charges' => $valid ] );
+
+        $response = $this->save(
+            'withdraw_charge',
+            [
+                'bank_transfer_withdraw'         => 'on',
+                'bank_transfer_withdraw_charges' => [
+                    'admin_percentage' => $percentage,
+                    'additional_fee'   => $fixed,
+                ],
+            ]
+        );
+
+        $this->assertSame( 400, $response->get_status() );
+        $this->assertArrayHasKey( 'bank_transfer_withdraw_charges', $response->get_data()['data']['errors'] );
+        $this->assertEquals( $valid, ( new SettingsRepository() )->get( 'bank_transfer_withdraw_charges' ), 'A rejected charge must not be stored.' );
+    }
+
+    public function invalid_withdraw_charge_provider(): array {
+        return [
+            'negative fixed fee'   => [ '5', '-10' ],
+            'negative percentage'  => [ '-5', '10' ],
+            'percentage above 100' => [ '150', '10' ],
+            'non-numeric fixed'    => [ '5', 'abc' ],
+        ];
+    }
+
+    public function test_withdraw_charge_accepts_values_in_range(): void {
+        $charges = [
+            'admin_percentage' => '100',
+            'additional_fee'   => '0',
+        ];
+
+        $response = $this->save(
+            'withdraw_charge',
+            [
+                'bank_transfer_withdraw'         => 'on',
+                'bank_transfer_withdraw_charges' => $charges,
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertEquals( $charges, ( new SettingsRepository() )->get( 'bank_transfer_withdraw_charges' ) );
+    }
+
+    public function test_admin_commission_rejects_a_negative_fixed_fee(): void {
+        $response = $this->save(
+            'commission',
+            [
+                'commission_type'  => 'fixed',
+                'admin_commission' => [
+                    'admin_percentage' => '10',
+                    'additional_fee'   => '-1',
+                ],
+            ]
+        );
+
+        $this->assertSame( 400, $response->get_status() );
+        $this->assertArrayHasKey( 'admin_commission', $response->get_data()['data']['errors'] );
+    }
+
+    public function test_category_commission_rejects_a_negative_nested_fee(): void {
+        $response = $this->save(
+            'commission',
+            [
+                'commission_type'                  => 'category_based',
+                'commission_category_based_values' => [
+                    'all' => [
+                        'percentage' => '10',
+                        'flat'       => '-1',
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertSame( 400, $response->get_status() );
+        $this->assertArrayHasKey( 'commission_category_based_values', $response->get_data()['data']['errors'] );
+    }
 }
