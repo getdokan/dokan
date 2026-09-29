@@ -412,6 +412,11 @@ class AdminSettingsController extends DokanBaseAdminController {
             }
         }
 
+        // Commission and withdraw charge fields: a percentage stays within 0–100 and a fixed fee is never negative.
+        if ( in_array( $variant, [ 'combine_input', 'category_based_commission' ], true ) && is_array( $value ) ) {
+            $errors = array_merge( $errors, $this->get_charge_errors( $value ) );
+        }
+
         // Option-list fields only accept one of their declared options; empty means nothing selected.
         $allowed = $this->get_option_values( $field );
         if ( null !== $allowed && '' !== $value && null !== $value ) {
@@ -455,6 +460,39 @@ class AdminSettingsController extends DokanBaseAdminController {
          * @param string   $variant The field's `variant` (or `field_type` fallback) for variant-specific dispatch.
          */
         return (array) apply_filters( 'dokan_rest_admin_settings_validate_field', $errors, $field, $value, $variant );
+    }
+
+    /**
+     * Range errors for percentage / fixed-fee pairs, including nested per-category values.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $value Field value.
+     *
+     * @return string[]
+     */
+    protected function get_charge_errors( array $value ): array {
+        $percentage_keys = [ 'admin_percentage', 'percentage' ];
+        $fixed_keys      = [ 'additional_fee', 'flat', 'fixed' ];
+        $errors          = [];
+
+        array_walk_recursive(
+            $value,
+            static function ( $amount, $key ) use ( $percentage_keys, $fixed_keys, &$errors ) {
+                // Empty means "not set"; the field's required rules decide whether that is allowed.
+                if ( '' === $amount || null === $amount ) {
+                    return;
+                }
+
+                if ( in_array( $key, $percentage_keys, true ) && ( ! is_numeric( $amount ) || $amount < 0 || $amount > 100 ) ) {
+                    $errors['percentage'] = __( 'Percentage must be between 0 and 100.', 'dokan-lite' );
+                } elseif ( in_array( $key, $fixed_keys, true ) && ( ! is_numeric( $amount ) || $amount < 0 ) ) {
+                    $errors['fixed'] = __( 'Fixed fee must be 0 or more.', 'dokan-lite' );
+                }
+            }
+        );
+
+        return array_values( $errors );
     }
 
     /**
