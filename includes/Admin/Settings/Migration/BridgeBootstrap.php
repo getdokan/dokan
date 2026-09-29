@@ -15,7 +15,8 @@ use WeDevs\Dokan\Contracts\Hookable;
  *
  * The write side is handled at each writer (via
  * {@see LegacySettingsBridge::persist_legacy_section()}): mapped keys land
- * in `dokan_admin_settings`. When the legacy mirror is enabled (default —
+ * in `dokan_admin_settings`. Plain `update_option()` writes to a legacy row
+ * that bypass those writers are adopted by {@see LegacyMirror}. When the legacy mirror is enabled (default —
  * see {@see LegacySettingsBridge::is_legacy_mirror_enabled()}) the legacy
  * row also keeps a physical copy of mapped values, maintained by
  * {@see LegacyMirror}, so plugin versions without this bridge (downgrades)
@@ -84,6 +85,21 @@ class BridgeBootstrap implements Hookable {
         } finally {
             self::$in_overlay = $previous;
         }
+    }
+
+    /**
+     * Whether the overlay is currently suppressed.
+     *
+     * True while bridge-internal work runs (overlay projection, mirror
+     * writes). Write listeners use it to ignore the bridge's own writes to
+     * the legacy rows.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_overlay_suppressed(): bool {
+        return self::$in_overlay;
     }
 
     /**
