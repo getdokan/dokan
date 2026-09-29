@@ -44,6 +44,35 @@ class AdminSettingsDependencyValidationTest extends DokanTestCase {
         $this->assertSame( '16', get_option( 'dokan_admin_settings' )['admin_commission']['admin_percentage'] );
     }
 
+    public function test_hidden_invalid_field_keeps_the_stored_value(): void {
+        $this->save_commission(
+            [
+                'commission_type'                  => 'category_based',
+                'commission_category_based_values' => [
+                    'all'   => [
+                        'percentage' => '10',
+                        'flat'       => '5',
+                    ],
+                    'items' => [],
+                ],
+            ]
+        );
+
+        $response = $this->save_commission(
+            [
+                'commission_type'                  => 'fixed',
+                'admin_commission'                 => [
+                    'admin_percentage' => '16',
+                    'additional_fee'   => '10',
+                ],
+                'commission_category_based_values' => '',
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( '10', get_option( 'dokan_admin_settings' )['commission_category_based_values']['all']['percentage'] );
+    }
+
     public function test_shown_field_is_still_validated(): void {
         $response = $this->save_commission(
             [

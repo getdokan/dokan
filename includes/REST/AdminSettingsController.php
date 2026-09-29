@@ -197,9 +197,11 @@ class AdminSettingsController extends DokanBaseAdminController {
             }
 
             $errors = $this->validate_field_value( $field, $value );
-            // A field hidden by its dependencies is not on the form, so its errors must not block the save.
-            if ( ! empty( $errors ) && ! $this->is_field_hidden( $field, $flat_values ) ) {
-                $validation_errors[ $leaf_id ] = $errors;
+            if ( ! empty( $errors ) ) {
+                // A hidden field is not on the form: keep what is stored instead of blocking the save.
+                if ( ! $this->is_field_hidden( $field, $flat_values ) ) {
+                    $validation_errors[ $leaf_id ] = $errors;
+                }
                 continue;
             }
 
