@@ -213,7 +213,6 @@ const settingsSelectors = {
     reverseWithdraw: {
         // Reverse Withdraw Settings
         enableReverseWithdrawal: '.enabled.dokan-settings-field-type-switcher .switch',
-        enableReverseWithdrawalForThisGateway: '.payment_gateways.dokan-settings-field-type-multicheck .switch',
         billingType: '#dokan_reverse_withdrawal\\[billing_type\\]',
         monthlyBillingDate: '#dokan_reverse_withdrawal\\[monthly_billing_day\\]',
         reverseBalanceThreshold: '#dokan_reverse_withdrawal\\[reverse_balance_threshold\\]',
@@ -1036,7 +1035,6 @@ export class SettingsPage {
 
         // reverse withdraw options
         await this.enableSwitcher(settingsSelectors.reverseWithdraw.enableReverseWithdrawal);
-        await this.enableSwitcher(settingsSelectors.reverseWithdraw.enableReverseWithdrawalForThisGateway);
 
         await this.page.locator(settingsSelectors.reverseWithdraw.billingType).selectOption({ value: reverseWithdraw.billingType });
         await this.page.locator(settingsSelectors.reverseWithdraw.reverseBalanceThreshold).fill(reverseWithdraw.reverseBalanceThreshold);

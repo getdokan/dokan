@@ -50,15 +50,8 @@ class Settings {
                 'refresh_after_save' => true,
                 'is_lite'            => true,
             ],
-            'payment_gateways' => [
-                'name'    => 'payment_gateways',
-                'label'   => esc_html__( 'Enable Reverse Withdrawal for this Gateway', 'dokan-lite' ),
-                'desc'    => esc_html__( 'Check the payment gateways you want to enable reverse withdrawal for. For now, only cash on delivery is available.', 'dokan-lite' ),
-                'type'    => 'multicheck',
-                'options' => SettingsHelper::get_reverse_withrawal_payment_gateways(),
-                'default' => [ 'cod' => 'cod' ],
-                'is_lite' => true,
-            ],
+            // No `payment_gateways` multicheck: every reverse-withdrawal gateway
+            // follows the `enabled` switch (SettingsHelper::get_enabled_payment_gateways()).
             'billing_type' => [
                 'name'    => 'billing_type',
                 'label'   => esc_html__( 'Billing Type', 'dokan-lite' ),
