@@ -198,7 +198,10 @@ class AdminSettingsController extends DokanBaseAdminController {
 
             $errors = $this->validate_field_value( $field, $value );
             if ( ! empty( $errors ) ) {
-                $validation_errors[ $leaf_id ] = $errors;
+                // A hidden field is not on the form: keep what is stored instead of blocking the save.
+                if ( ! $this->is_field_hidden( $field, $flat_values ) ) {
+                    $validation_errors[ $leaf_id ] = $errors;
+                }
                 continue;
             }
 
@@ -299,6 +302,38 @@ class AdminSettingsController extends DokanBaseAdminController {
         }
 
         return $ids;
+    }
+
+    /**
+     * Check whether the submitted values hide a field through its dependencies.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $field  The field schema element.
+     * @param array $values The submitted values.
+     *
+     * @return bool
+     */
+    protected function is_field_hidden( array $field, array $values ): bool {
+        foreach ( $field['dependencies'] ?? [] as $dependency ) {
+            $actual     = $values[ $dependency['key'] ?? '' ] ?? null;
+            $expected   = $dependency['value'] ?? null;
+            $comparison = $dependency['comparison'] ?? '==';
+
+            // Without both values, or with another operator, the field counts as shown.
+            if ( ! is_scalar( $actual ) || ! is_scalar( $expected ) || ! in_array( $comparison, [ '==', '===', '!=', '!==' ], true ) ) {
+                continue;
+            }
+
+            $equal   = (string) $actual === (string) $expected;
+            $matched = '!' === $comparison[0] ? ! $equal : $equal;
+
+            if ( 'hide' === ( $dependency['effect'] ?? 'show' ) ? $matched : ! $matched ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
