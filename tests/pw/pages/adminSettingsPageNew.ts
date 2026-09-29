@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect, type Locator, type Response } from '@playwright/test';
 import { AdminPage } from './adminPage';
 
 export class AdminSettingsPageNew extends AdminPage {
@@ -105,7 +105,11 @@ export class AdminSettingsPageNew extends AdminPage {
             .catch(() => null);
 
         await saveBtn.click();
-        await persisted;
+        const response = await persisted;
+        // A rejected save used to pass silently here, hiding values that never persisted.
+        if (response && /\/admin\/settings\//.test(response.url())) {
+            expect(response.status(), `settings save rejected: ${await response.text()}`).toBeLessThan(400);
+        }
         await this.waitForLoadState();
     }
 
@@ -519,5 +523,88 @@ export class AdminSettingsPageNew extends AdminPage {
             .filter({ hasText: label })
             .locator('[role="checkbox"]')
             .first();
+    }
+
+    // ---- input value round trip ---------------------------------------------
+
+    async openSubpage(menu: string, subpage: string) {
+        const parent = this.page.locator(`[data-testid="settings-menu-${menu}"] > button`);
+        const item = this.page.locator(`[data-testid="settings-menu-${menu}"] [data-testid="settings-menu-${subpage}"]`);
+        // The parent toggles, and the sidebar auto-expands the active page after
+        // load, so a blind click can collapse it. Settle on expanded first.
+        await expect(async () => {
+            if ((await parent.getAttribute('aria-expanded')) !== 'true') {
+                await parent.click();
+            }
+            await expect(parent).toHaveAttribute('aria-expanded', 'true', { timeout: 2000 });
+        }).toPass();
+        await item.click();
+        await expect(this.page).toHaveURL(new RegExp(`subpage_id=${subpage}(&|$)`));
+    }
+
+    inputFor(id: string): Locator {
+        return this.page.locator(`[data-testid="settings-field-${id}"]`).locator('input, textarea').first();
+    }
+
+    // combine_input renders no settings-field testid; its wrapper carries the
+    // field id and holds exactly two textboxes: percentage, then flat fee.
+    combineInputsFor(id: string): { percentage: Locator; fixed: Locator } {
+        const inputs = this.page.locator(`#${id}`).getByRole('textbox');
+        return { percentage: inputs.nth(0), fixed: inputs.nth(1) };
+    }
+
+    switchFor(id: string): Locator {
+        return this.page.locator(`[data-testid="settings-field-${id}"]`).getByRole('switch');
+    }
+
+    async ensureSwitchOn(id: string) {
+        const control = this.switchFor(id);
+        if ((await control.getAttribute('aria-checked')) !== 'true') {
+            await control.click();
+        }
+        await expect(control).toHaveAttribute('aria-checked', 'true');
+    }
+
+    // Real keystrokes, not `fill`: the commission/charge inputs are masked and
+    // debounced, and the lost-value bug lives in those per-keystroke handlers.
+    async typeValue(input: Locator, value: string) {
+        await input.click();
+        await input.press('ControlOrMeta+a');
+        await input.press('Backspace');
+        if (value !== '') {
+            await input.pressSequentially(value);
+        }
+    }
+
+    // Commission/charge inputs debounce 500ms before reaching form state.
+    // Fast-forwards the fake clock (the spec installs it) instead of sleeping.
+    async flushDebounce() {
+        await this.page.clock.runFor(1000);
+    }
+
+    // saveSettings() no-ops on a disabled button; after typing, a disabled Save
+    // means the edit never reached the form state (or is still debouncing).
+    async saveChanges() {
+        await expect(this.page.locator(this.saveButtonSelector).first(), 'typed change should enable Save').toBeEnabled();
+        await this.saveSettings();
+    }
+
+    // Clicks save and hands back the settings response (null when the UI
+    // blocked the save client-side), without judging it.
+    async clickSaveAndCapture(): Promise<Response | null> {
+        const saveBtn = this.page.locator(this.saveButtonSelector).first();
+        if (!(await saveBtn.isVisible()) || (await saveBtn.isDisabled())) {
+            return null;
+        }
+        const response = this.page
+            .waitForResponse(res => res.request().method() !== 'GET' && /\/dokan\/v\d+\/admin\/settings\//.test(res.url()), { timeout: 30000 })
+            .catch(() => null);
+        await saveBtn.click();
+        return response;
+    }
+
+    async reloadSettings() {
+        await this.page.reload();
+        await this.page.locator(this.saveButtonSelector).first().waitFor({ state: 'visible' });
     }
 }
