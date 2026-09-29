@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Install;
 
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper as ReverseWithdrawalInstallerHelper;
 use WeDevs\Dokan\Rewrites;
 use WP_Roles;
@@ -45,6 +46,10 @@ class Installer {
             update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
             update_option( 'dokan_admin_setup_wizard_ready', false );
             set_transient( '_dokan_setup_page_redirect', true, 30 );
+
+            // Fresh installs start on the new settings; upgraded sites stay on classic.
+            // It will be removed in 1 january 2027
+            update_option( LegacySwitcher::NEW_SETTINGS_OPTION, 'yes' );
         }
     }
 
