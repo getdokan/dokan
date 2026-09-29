@@ -224,15 +224,7 @@ export default function SettingsPage() {
         );
     };
 
-    // A subpage in the URL decides the page, so a mismatched page_id can't open the wrong sidebar group.
-    const urlSubpage = searchParams.get( URL_PARAM_SUBPAGE );
-    const subpageOwner = schema.find(
-        ( el ) => el.type === 'subpage' && el.id === urlSubpage
-    ) as ( SettingsElement & { page_id?: string } ) | undefined;
-    const initialPage =
-        subpageOwner?.page_id ||
-        searchParams.get( URL_PARAM_PAGE ) ||
-        undefined;
+    const initialPage = searchParams.get( URL_PARAM_PAGE ) || undefined;
 
     return (
         <>
