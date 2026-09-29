@@ -357,6 +357,17 @@ class AdminSettingsController extends DokanBaseAdminController {
             }
         }
 
+        // Option-list fields only accept one of their declared options; empty means nothing selected.
+        $allowed = $this->get_option_values( $field );
+        if ( null !== $allowed && '' !== $value && null !== $value ) {
+            foreach ( (array) $value as $selected ) {
+                if ( ! is_scalar( $selected ) || ! in_array( (string) $selected, $allowed, true ) ) {
+                    $errors[] = __( 'Please select a valid option.', 'dokan-lite' );
+                    break;
+                }
+            }
+        }
+
         // Run custom validation_func if present.
         if ( ! empty( $field['validation_func'] ) && is_callable( $field['validation_func'] ) ) {
             $result = call_user_func( $field['validation_func'], $value );
@@ -389,6 +400,42 @@ class AdminSettingsController extends DokanBaseAdminController {
          * @param string   $variant The field's `variant` (or `field_type` fallback) for variant-specific dispatch.
          */
         return (array) apply_filters( 'dokan_rest_admin_settings_validate_field', $errors, $field, $value, $variant );
+    }
+
+    /**
+     * Allowed option values of a select/radio field, or null when the field has no fixed option list.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $field The field schema element.
+     *
+     * @return string[]|null
+     */
+    protected function get_option_values( array $field ): ?array {
+        $variants = [ 'select', 'radio', 'radio_capsule', 'radio_box', 'customize_radio' ];
+        $options  = $field['options'] ?? null;
+
+        if ( ! in_array( $field['variant'] ?? '', $variants, true ) || ! is_array( $options ) || empty( $options ) ) {
+            return null;
+        }
+
+        $is_list = array_keys( $options ) === range( 0, count( $options ) - 1 );
+        $values  = [];
+        foreach ( $options as $key => $option ) {
+            if ( is_array( $option ) ) {
+                // [ 'value' => …, 'title' => … ] row.
+                $values[] = (string) ( $option['value'] ?? '' );
+            } elseif ( $is_list ) {
+                // A plain list is either the values themselves or index => label, so accept both.
+                $values[] = (string) $option;
+                $values[] = (string) $key;
+            } else {
+                // A value => label map.
+                $values[] = (string) $key;
+            }
+        }
+
+        return $values;
     }
 
     /**
@@ -465,6 +512,13 @@ class AdminSettingsController extends DokanBaseAdminController {
             case 'single_product_preview':
                 // Complex types — sanitize recursively.
                 return $this->sanitize_recursive( $value );
+
+            case 'wp_media_upload':
+                // Media fields hold an attachment URL; esc_url_raw() drops unsafe schemes such as javascript:.
+                if ( is_numeric( $value ) ) {
+                    return absint( $value );
+                }
+                return is_string( $value ) ? esc_url_raw( $value ) : '';
 
             case 'html':
             case 'notice':
