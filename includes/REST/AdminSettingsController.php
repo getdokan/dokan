@@ -419,10 +419,20 @@ class AdminSettingsController extends DokanBaseAdminController {
             return null;
         }
 
-        $values = [];
+        $is_list = array_keys( $options ) === range( 0, count( $options ) - 1 );
+        $values  = [];
         foreach ( $options as $key => $option ) {
-            // Options are either [ 'value' => …, 'title' => … ] rows or a value => label map.
-            $values[] = (string) ( is_array( $option ) ? ( $option['value'] ?? '' ) : $key );
+            if ( is_array( $option ) ) {
+                // [ 'value' => …, 'title' => … ] row.
+                $values[] = (string) ( $option['value'] ?? '' );
+            } elseif ( $is_list ) {
+                // A plain list is either the values themselves or index => label, so accept both.
+                $values[] = (string) $option;
+                $values[] = (string) $key;
+            } else {
+                // A value => label map.
+                $values[] = (string) $key;
+            }
         }
 
         return $values;
