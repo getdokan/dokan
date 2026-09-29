@@ -4,7 +4,6 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap;
 use WeDevs\Dokan\Admin\Settings\Migration\LegacyMirror;
-use WeDevs\Dokan\Admin\Settings\Migration\LegacySaveHooks;
 use WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge;
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepositoryInterface;
@@ -31,7 +30,6 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
         LegacySettingsRepository::class,
         BridgeBootstrap::class,
         LegacyMirror::class,
-        LegacySaveHooks::class,
     ];
 
 	/**

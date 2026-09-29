@@ -161,13 +161,13 @@ The SettingsPage syncs `page_id`, `subpage_id`, `tab_id` query params to/from pl
 
 ## Hook Lifecycle on Save
 
-`AdminSettingsController::update_item()` sanitizes each submitted field, validates the sanitized value, then runs the save through `LegacySaveHooks` so legacy listeners keep working:
+`AdminSettingsController::update_item()` sanitizes each submitted field, validates the sanitized value, then runs the save through `LegacyMirror` so legacy listeners keep working:
 
 ```php
-$before = $legacy_save_hooks->before_save( $sanitized ); // dokan_before_saving_settings per legacy section; WP_Error stops the save
+$before = $legacy_mirror->before_save( $sanitized ); // dokan_before_saving_settings per legacy section; WP_Error stops the save
 do_action( 'dokan_rest_before_saving_settings', $page_id, $sanitized, 'dokan_admin_settings' );
 $settings_repo->update( $sanitized );
-$legacy_save_hooks->after_save( $before );               // dokan_after_saving_settings per legacy section
+$legacy_mirror->after_save( $before );               // dokan_after_saving_settings per legacy section
 do_action( 'dokan_rest_after_saving_settings', $page_id, $sanitized, 'dokan_admin_settings', $merged );
 ```
 
@@ -181,7 +181,7 @@ do_action( 'dokan_rest_after_saving_settings', $page_id, $sanitized, 'dokan_admi
 |---|---|---|
 | "Unsupported field type: X" fallback shows despite registration | `hookPrefix` produces wrong filter name. With `hookPrefix="dokan_settings"` plugin-ui fires `dokan_settings_settings_X_field` (note doubled `_settings_`). | Use `hookPrefix="dokan"` on `<Settings>`. |
 | "useSettings must be used within a `<Settings>` component" error | Pro's bundle has its own plugin-ui instance and React context. | Pass `onChange` from `defaultComponent.props.onChange` as a prop instead of calling `useSettings()` in Pro. |
-| Legacy listener (capability grant, cron, validation) does nothing after a new-UI save | It hooks `dokan_rest_*_saving_settings` or gates on a new page id. | Hook `dokan_before/after_saving_settings` and gate on the legacy option name; `LegacySaveHooks` fires them per legacy section. |
+| Legacy listener (capability grant, cron, validation) does nothing after a new-UI save | It hooks `dokan_rest_*_saving_settings` or gates on a new page id. | Hook `dokan_before/after_saving_settings` and gate on the legacy option name; `LegacyMirror` fires them per legacy section; `Admin\Settings` (loaded for REST saves too) hooks the core listeners. |
 | Save payload sends dot-path keys (`marketplace.foo.bar`), controller can't find field | Plugin-ui's `formatSettingsData` rebuilds `dependency_key` as a dot-path, ignoring what backend sent. | Controller falls back to last-segment of dot-path when direct lookup misses. Done in `AdminSettingsController::update_item()`. |
 | Field id collision silently overwrites another field | Two `type === 'field'` elements with the same `id` in the merged schema. | `SchemaValidator::check_unique_field_ids()` hard-fails the build with a clear error message. Rename one. |
 | Schema build returns errors after `dokan_get_admin_settings_schema` filter | A Pro/3rd-party callback returned a malformed shape. | Validator runs after the filter; it surfaces the malformed element. Fix the callback. |

@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Test\REST;
 
+use WeDevs\Dokan\Admin\Settings as AdminSettings;
 use WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap;
 use WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
@@ -17,7 +18,7 @@ use WP_REST_Response;
  * @group rest-api
  * @group rest-api-admin-settings
  *
- * @covers \WeDevs\Dokan\Admin\Settings\Migration\LegacySaveHooks
+ * @covers \WeDevs\Dokan\Admin\Settings\Migration\LegacyMirror
  * @covers \WeDevs\Dokan\REST\AdminSettingsController
  */
 class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
@@ -37,6 +38,9 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
         // Overlay filters register on `init`, which has already fired here.
         $this->test_bootstrap = new BridgeBootstrap( new LegacySettingsBridge() );
         $this->test_bootstrap->register_overlay_filters();
+
+        // The container keeps one Admin\Settings across tests, but each test resets hooks; re-add its listeners.
+        new AdminSettings();
     }
 
     public function tear_down() {
