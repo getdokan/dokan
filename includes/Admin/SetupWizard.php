@@ -911,7 +911,7 @@ class SetupWizard {
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
                 <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-dashboard' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
-                <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php esc_html_e( 'More Settings', 'dokan-lite' ); ?></a>
+                <a class="button" href="<?php echo esc_url( dokan_get_admin_page_url( 'settings' ) ); ?>"><?php esc_html_e( 'More Settings', 'dokan-lite' ); ?></a>
             </p>
         </div>
         <?php
