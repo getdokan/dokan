@@ -229,22 +229,9 @@ class AdminSettingsController extends DokanBaseAdminController {
         }
 
         // Legacy listeners (validation, capabilities, crons) still hook the per-section save actions.
-        $legacy_before = $this->legacy_save_hooks->snapshot( $sanitized );
-        $legacy_errors = $this->legacy_save_hooks->run_before( $sanitized, $legacy_before );
-
-        if ( is_wp_error( $legacy_errors ) ) {
-            return $legacy_errors;
-        }
-
-        if ( ! empty( $legacy_errors ) ) {
-            return new WP_Error(
-                'dokan_rest_validation_failed',
-                implode( ' ', array_merge( ...array_values( $legacy_errors ) ) ),
-                [
-                    'status' => 400,
-                    'errors' => $legacy_errors,
-                ]
-            );
+        $legacy_before = $this->legacy_save_hooks->before_save( $sanitized );
+        if ( is_wp_error( $legacy_before ) ) {
+            return $legacy_before;
         }
 
         /**
@@ -261,7 +248,7 @@ class AdminSettingsController extends DokanBaseAdminController {
         $this->settings_repo->update( $sanitized );
         $merged = $this->settings_repo->all();
 
-        $this->legacy_save_hooks->run_after( $legacy_before );
+        $this->legacy_save_hooks->after_save( $legacy_before );
 
         /**
          * Fired after saving admin settings.

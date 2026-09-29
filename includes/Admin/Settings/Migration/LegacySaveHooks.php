@@ -41,38 +41,22 @@ class LegacySaveHooks implements Hookable {
     }
 
     /**
-     * Legacy sections a new-option slice maps to, as they are before the save.
+     * Fire `dokan_before_saving_settings` for every legacy section the slice maps to.
      *
      * @since DOKAN_SINCE
      *
      * @param array<string,mixed> $new_slice New-option keys and values about to be saved.
      *
-     * @return array<string,array> Legacy rows keyed by option name.
+     * @return array<string,array>|WP_Error Legacy rows before the save keyed by option name,
+     *                                      or the error raised by the first listener that stopped the save.
      */
-    public function snapshot( array $new_slice ): array {
+    public function before_save( array $new_slice ) {
         $before = [];
-        foreach ( $this->bridge()->legacy_options_for( array_keys( $new_slice ) ) as $section ) {
+        foreach ( array_keys( $this->bridge()->project_new_onto_legacy( $new_slice, [] ) ) as $section ) {
             $before[ $section ] = $this->legacy_repo()->all( $section );
         }
-        return $before;
-    }
-
-    /**
-     * Fire `dokan_before_saving_settings` per section and collect legacy validation errors.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array<string,mixed> $new_slice New-option keys and values about to be saved.
-     * @param array<string,array> $before    Result of {@see snapshot()}.
-     *
-     * @return array<string,string[]>|WP_Error Error messages keyed by new-option key (empty when valid),
-     *                                         or WP_Error when a listener stopped the request for another reason.
-     */
-    public function run_before( array $new_slice, array $before ) {
         $projected = $this->bridge()->project_new_onto_legacy( $new_slice, $before );
-        $errors    = [];
 
-        // Validate every section so one save reports all legacy validation errors.
         foreach ( $before as $section => $old_value ) {
             $halt = $this->catch_json_error(
                 static function () use ( $section, $projected, $old_value ) {
@@ -80,22 +64,12 @@ class LegacySaveHooks implements Hookable {
                 }
             );
 
-            if ( null === $halt ) {
-                continue;
+            if ( null !== $halt ) {
+                return $this->halt_to_error( $section, $halt );
             }
-
-            if ( false !== ( $halt['payload']['success'] ?? null ) ) {
-                return new WP_Error(
-                    'dokan_rest_settings_save_halted',
-                    '' !== $halt['message'] ? $halt['message'] : __( 'Saving the settings was stopped unexpectedly.', 'dokan-lite' ),
-                    [ 'status' => 500 ]
-                );
-            }
-
-            $errors = array_merge_recursive( $errors, $this->map_errors( $section, $halt['payload'] ) );
         }
 
-        return $errors;
+        return $before;
     }
 
     /**
@@ -103,11 +77,11 @@ class LegacySaveHooks implements Hookable {
      *
      * @since DOKAN_SINCE
      *
-     * @param array<string,array> $before Result of {@see snapshot()}.
+     * @param array<string,array> $before Result of {@see before_save()}.
      *
      * @return void
      */
-    public function run_after( array $before ): void {
+    public function after_save( array $before ): void {
         foreach ( $before as $section => $old_value ) {
             $this->legacy_repo()->flush_cache( $section );
             do_action( 'dokan_after_saving_settings', $section, $this->legacy_repo()->all( $section ), $old_value );
@@ -224,6 +198,35 @@ class LegacySaveHooks implements Hookable {
             'payload' => json_decode( $output, true ),
             'message' => $message,
         ];
+    }
+
+    /**
+     * Turn a captured listener exit into the REST error to return.
+     *
+     * @param string                               $section Legacy option name whose listener stopped the save.
+     * @param array{payload:mixed,message:string} $halt    Result of {@see catch_json_error()}.
+     *
+     * @return WP_Error 400 with errors keyed by field id for a `wp_send_json_error()` payload, 500 for any other `wp_die()`.
+     */
+    private function halt_to_error( string $section, array $halt ): WP_Error {
+        if ( false !== ( $halt['payload']['success'] ?? null ) ) {
+            return new WP_Error(
+                'dokan_rest_settings_save_halted',
+                '' !== $halt['message'] ? $halt['message'] : __( 'Saving the settings was stopped unexpectedly.', 'dokan-lite' ),
+                [ 'status' => 500 ]
+            );
+        }
+
+        $errors = $this->map_errors( $section, $halt['payload'] );
+
+        return new WP_Error(
+            'dokan_rest_validation_failed',
+            implode( ' ', array_merge( ...array_values( $errors ) ) ),
+            [
+                'status' => 400,
+                'errors' => $errors,
+            ]
+        );
     }
 
     /**

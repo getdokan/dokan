@@ -489,31 +489,6 @@ class LegacySettingsBridge {
     }
 
     /**
-     * Legacy option names that the given new-option keys map to.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string[] $new_keys New-option keys.
-     *
-     * @return string[]
-     */
-    public function legacy_options_for( array $new_keys ): array {
-        $this->build_map();
-        $options = [];
-        foreach ( $new_keys as $new_key ) {
-            $entry = $this->map[ $new_key ] ?? null;
-            if ( $entry instanceof LegacyAddress ) {
-                $options[ $entry->option() ] = true;
-                continue;
-            }
-            foreach ( is_array( $entry ) ? $entry : [] as $address ) {
-                $options[ $address->option() ] = true;
-            }
-        }
-        return array_keys( $options );
-    }
-
-    /**
      * Apply a new-option slice onto legacy rows without persisting them.
      *
      * @since DOKAN_SINCE

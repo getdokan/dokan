@@ -164,16 +164,15 @@ The SettingsPage syncs `page_id`, `subpage_id`, `tab_id` query params to/from pl
 `AdminSettingsController::update_item()` sanitizes each submitted field, validates the sanitized value, then runs the save through `LegacySaveHooks` so legacy listeners keep working:
 
 ```php
-$before = $legacy_save_hooks->snapshot( $sanitized );          // legacy sections the fields map to
-$errors = $legacy_save_hooks->run_before( $sanitized, $before ); // dokan_before_saving_settings per section
+$before = $legacy_save_hooks->before_save( $sanitized ); // dokan_before_saving_settings per legacy section; WP_Error stops the save
 do_action( 'dokan_rest_before_saving_settings', $page_id, $sanitized, 'dokan_admin_settings' );
 $settings_repo->update( $sanitized );
-$legacy_save_hooks->run_after( $before );                        // dokan_after_saving_settings per section
+$legacy_save_hooks->after_save( $before );               // dokan_after_saving_settings per legacy section
 do_action( 'dokan_rest_after_saving_settings', $page_id, $sanitized, 'dokan_admin_settings', $merged );
 ```
 
 - `dokan_before/after_saving_settings` fire once per legacy section the saved fields map to (via `legacy_key`), with the legacy option name (e.g. `dokan_selling`), the legacy-shaped value and the old value — the same arguments as the legacy AJAX save.
-- Legacy validators that exit with `wp_send_json_error()` are caught and returned as a REST 400, errors keyed by field id under `data.errors`.
+- A legacy validator that exits with `wp_send_json_error()` is caught and returned as a REST 400 with errors keyed by field id under `data.errors`; the first failing section stops the save, like the classic per-section save.
 - Hook side effects on `dokan_before/after_saving_settings`, not on the `dokan_rest_*` actions, so both settings UIs trigger them.
 
 ## Pitfalls (Don't Repeat These)

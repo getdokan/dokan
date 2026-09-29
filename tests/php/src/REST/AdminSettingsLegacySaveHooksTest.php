@@ -93,7 +93,7 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
         $this->assertSame( 50, ( new SettingsRepository() )->get( 'minimum_withdraw_limit' ), 'A rejected save must not be stored.' );
     }
 
-    public function test_errors_from_every_legacy_section_are_returned_together(): void {
+    public function test_first_failing_legacy_section_rejects_the_whole_save(): void {
         $response = $this->put(
             'transaction',
             [
@@ -105,7 +105,7 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
 
         $this->assertSame( 400, $response->get_status() );
         $this->assertArrayHasKey( 'minimum_withdraw_limit', $errors, 'dokan_withdraw validator error missing.' );
-        $this->assertArrayHasKey( 'reverse_withdrawal_due_period', $errors, 'dokan_reverse_withdrawal validator error missing.' );
+        $this->assertNull( ( new SettingsRepository() )->get( 'reverse_withdrawal_due_period' ), 'Fields of other sections must not be stored either.' );
     }
 
     public function test_unexpected_wp_die_is_not_reported_as_validation_error(): void {
