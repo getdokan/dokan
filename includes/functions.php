@@ -1043,6 +1043,19 @@ function dokan_edit_product_url( $product, bool $is_new_product = false ) {
 }
 
 /**
+ * Get the admin URL of a Dokan page on the screen (classic or new) the site uses.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $route Hash route, e.g. `settings` or `withdraw`. Empty for the dashboard.
+ *
+ * @return string
+ */
+function dokan_get_admin_page_url( string $route = '' ): string {
+    return dokan_get_container()->get( \WeDevs\Dokan\Admin\Dashboard\LegacySwitcher::class )->get_admin_page_url( $route );
+}
+
+/**
  * Ads additional columns to admin user table
  *
  * @param array $columns
