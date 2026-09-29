@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.1.2\n"
+"Project-Id-Version: Dokan 5.1.3\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-17T10:24:46+00:00\n"
+"POT-Creation-Date: 2026-09-24T07:02:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -3047,37 +3047,37 @@ msgstr ""
 msgid "id param is required"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:87
+#: includes/Analytics/VendorDashboardManager.php:74
 msgid "Seller Totals."
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:98
+#: includes/Analytics/VendorDashboardManager.php:85
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Total Earning"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:99
+#: includes/Analytics/VendorDashboardManager.php:86
 msgid "Total Vendor Earning"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:108
+#: includes/Analytics/VendorDashboardManager.php:95
 msgid "Marketplace Discount"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:118
+#: includes/Analytics/VendorDashboardManager.php:105
 msgid "Store Discount"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:119
+#: includes/Analytics/VendorDashboardManager.php:106
 msgid "Total Vendor Discount"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:129
+#: includes/Analytics/VendorDashboardManager.php:116
 msgid "Marketplace Commission"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:130
+#: includes/Analytics/VendorDashboardManager.php:117
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Total Commission"
 msgstr ""
@@ -4818,7 +4818,7 @@ msgid "Edit Account"
 msgstr ""
 
 #: includes/functions-dashboard-navigation.php:315
-#: includes/Shortcodes/FullWidthVendorLayout.php:140
+#: includes/Shortcodes/FullWidthVendorLayout.php:147
 msgid "Log out"
 msgstr ""
 
@@ -8458,16 +8458,16 @@ msgid "Order status"
 msgstr ""
 
 #. translators: numeric number of files
-#: includes/REST/OrderControllerV2.php:315
+#: includes/REST/OrderControllerV2.php:319
 msgid "File %d"
 msgstr ""
 
-#: includes/REST/OrderControllerV2.php:341
+#: includes/REST/OrderControllerV2.php:345
 msgid "Download permission not found."
 msgstr ""
 
-#: includes/REST/OrderControllerV2.php:351
-#: includes/REST/OrderControllerV2.php:410
+#: includes/REST/OrderControllerV2.php:355
+#: includes/REST/OrderControllerV2.php:414
 msgid "Download permission does not belong to this order."
 msgstr ""
 
@@ -9703,16 +9703,16 @@ msgstr ""
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
-#: includes/Shortcodes/FullWidthVendorLayout.php:135
+#: includes/Shortcodes/FullWidthVendorLayout.php:142
 #: templates/global/header-menu.php:53
 msgid "My Account"
 msgstr ""
 
-#: includes/Shortcodes/FullWidthVendorLayout.php:154
+#: includes/Shortcodes/FullWidthVendorLayout.php:161
 msgid "Back to WP Panel"
 msgstr ""
 
-#: includes/Shortcodes/FullWidthVendorLayout.php:169
+#: includes/Shortcodes/FullWidthVendorLayout.php:176
 msgid "Access Admin Panel"
 msgstr ""
 
@@ -12875,20 +12875,6 @@ msgstr ""
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
 #: assets/js/product-editor-utils.js:2
-msgid "Enter Date"
-msgstr ""
-
-#: assets/js/components.js:2
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/frontend.js:2
-#: assets/js/product-editor-utils.js:2
-msgid "Ok"
-msgstr ""
-
-#: assets/js/components.js:2
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/frontend.js:2
-#: assets/js/product-editor-utils.js:2
 #: assets/js/vendor-dashboard/layout/index.js:2
 msgid "No data found"
 msgstr ""
@@ -12957,6 +12943,20 @@ msgstr ""
 #: assets/js/frontend.js:2
 #: assets/js/product-editor-utils.js:2
 msgid "No options"
+msgstr ""
+
+#: assets/js/components.js:2
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+#: assets/js/product-editor-utils.js:2
+msgid "Enter Date"
+msgstr ""
+
+#: assets/js/components.js:2
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+#: assets/js/product-editor-utils.js:2
+msgid "Ok"
 msgstr ""
 
 #: assets/js/components.js:2

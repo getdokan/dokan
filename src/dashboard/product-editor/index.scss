@@ -154,3 +154,11 @@
         }
     }
 }
+
+// SortableList sets an inline `touch-action: none`, which blocks page scrolling
+// on touch devices; the touch sensor's long press works with `manipulation`.
+.dokan-sortable-image {
+    touch-action: manipulation !important;
+    -webkit-touch-callout: none;
+    user-select: none;
+}

@@ -27,7 +27,10 @@ class FullWidthVendorLayout implements Hookable {
      */
     public function register_hooks(): void {
         add_action( 'dokan_setup_wizard_styles', [ $this, 'update_layout_style' ] );
-        add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ], 99 );
+        // On wp_enqueue_scripts (not init): it only fires on front-end page
+        // renders — never for cron, Action Scheduler, AJAX, REST or admin —
+        // and the seller-dashboard check inside needs the parsed query.
+        add_action( 'wp_enqueue_scripts', [ $this, 'register_vendor_dashboard_assets' ], 5 );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
         add_filter( 'template_include', [ $this, 'rewrite_vendor_dashboard_template' ] );
     }
@@ -115,6 +118,10 @@ class FullWidthVendorLayout implements Hookable {
      */
     public function register_vendor_dashboard_assets() {
         if ( ! $this->is_latest_layout() ) {
+            return;
+        }
+
+        if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
             return;
         }
 
