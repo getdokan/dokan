@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Admin\Settings\Migration\LegacyMirror;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
@@ -42,14 +43,23 @@ class AdminSettingsController extends DokanBaseAdminController {
     protected SettingsRepositoryInterface $settings_repo;
 
     /**
+     * Legacy mirror, which fires the legacy save hooks.
+     *
+     * @var LegacyMirror
+     */
+    protected LegacyMirror $legacy_mirror;
+
+    /**
      * Constructor.
      *
      * @param SettingsRegistry|null            $registry      Optional registry instance (for testing).
      * @param SettingsRepositoryInterface|null $settings_repo Optional repository instance (for testing).
+     * @param LegacyMirror|null                $legacy_mirror Optional legacy mirror (for testing).
      */
-    public function __construct( ?SettingsRegistry $registry = null, ?SettingsRepositoryInterface $settings_repo = null ) {
+    public function __construct( ?SettingsRegistry $registry = null, ?SettingsRepositoryInterface $settings_repo = null, ?LegacyMirror $legacy_mirror = null ) {
         $this->registry      = $registry ?? new SettingsRegistry();
         $this->settings_repo = $settings_repo ?? new SettingsRepository();
+        $this->legacy_mirror = $legacy_mirror ?? dokan_get_container()->get( LegacyMirror::class );
     }
 
     /**
@@ -138,7 +148,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * The keys in `values` are field ids (globally unique per SchemaValidator).
      * Unknown keys are silently ignored. Values are merged into the single
-     * `dokan_settings` wp_option.
+     * `dokan_admin_settings` wp_option.
      *
      * @since DOKAN_SINCE
      *
@@ -196,6 +206,8 @@ class AdminSettingsController extends DokanBaseAdminController {
                 continue;
             }
 
+            // Validate the sanitized value so rules see what will actually be stored.
+            $value  = $this->sanitize_field_value( $field, $value );
             $errors = $this->validate_field_value( $field, $value );
             if ( ! empty( $errors ) ) {
                 // A hidden field is not on the form: keep what is stored instead of blocking the save.
@@ -205,7 +217,7 @@ class AdminSettingsController extends DokanBaseAdminController {
                 continue;
             }
 
-            $sanitized[ $leaf_id ] = $this->sanitize_field_value( $field, $value );
+            $sanitized[ $leaf_id ] = $value;
         }
 
         if ( ! empty( $validation_errors ) ) {
@@ -217,6 +229,12 @@ class AdminSettingsController extends DokanBaseAdminController {
                     'errors' => $validation_errors,
                 ]
             );
+        }
+
+        // Legacy listeners (validation, capabilities, crons) still hook the per-section save actions.
+        $legacy_before = $this->legacy_mirror->before_save( $sanitized );
+        if ( is_wp_error( $legacy_before ) ) {
+            return $legacy_before;
         }
 
         /**
@@ -232,6 +250,8 @@ class AdminSettingsController extends DokanBaseAdminController {
 
         $this->settings_repo->update( $sanitized );
         $merged = $this->settings_repo->all();
+
+        $this->legacy_mirror->after_save( $legacy_before );
 
         /**
          * Fired after saving admin settings.

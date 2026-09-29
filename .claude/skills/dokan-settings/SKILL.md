@@ -16,7 +16,7 @@ The new admin settings system has three layers. Knowing which layer owns what sa
 │  • SchemaValidator               → check structure + unique │
 │                                    field ids                │
 │  • AdminSettingsController       → REST GET/PUT             │
-│  • Storage: single `dokan_settings` wp_option, keyed by id  │
+│  • Storage: one `dokan_admin_settings` option, keyed by id  │
 └─────────────────────────────────────────────────────────────┘
                               ↕  REST: /dokan/v1/admin/settings
 ┌─────────────────────────────────────────────────────────────┐
@@ -40,7 +40,7 @@ The new admin settings system has three layers. Knowing which layer owns what sa
 
 ## Storage Model
 
-- **One wp_option:** `dokan_settings`, autoloaded.
+- **One wp_option:** `dokan_admin_settings`, autoloaded.
 - **Shape:** `array<string, mixed>` keyed by field `id`. NOT nested. NOT per-page.
 - Moving a field between pages/sections requires zero data migration — only a schema edit.
 - Field IDs MUST be globally unique. `SchemaValidator::check_unique_field_ids()` enforces this hard.
@@ -161,15 +161,19 @@ The SettingsPage syncs `page_id`, `subpage_id`, `tab_id` query params to/from pl
 
 ## Hook Lifecycle on Save
 
-`AdminSettingsController::update_item()` fires two actions for backwards compatibility with Pro listeners that registered `accepted_args=3` (before) and `accepted_args=4` (after):
+`AdminSettingsController::update_item()` sanitizes each submitted field, validates the sanitized value, then runs the save through `LegacyMirror` so legacy listeners keep working:
 
 ```php
-do_action( 'dokan_before_saving_settings', $page_id, $sanitized, 'dokan_settings' );
-// ... update_option( 'dokan_settings', $merged, true ) ...
-do_action( 'dokan_after_saving_settings', $page_id, $sanitized, 'dokan_settings', $merged );
+$before = $legacy_mirror->before_save( $sanitized ); // dokan_before_saving_settings per legacy section; WP_Error stops the save
+do_action( 'dokan_rest_before_saving_settings', $page_id, $sanitized, 'dokan_admin_settings' );
+$settings_repo->update( $sanitized );
+$legacy_mirror->after_save( $before );               // dokan_after_saving_settings per legacy section
+do_action( 'dokan_rest_after_saving_settings', $page_id, $sanitized, 'dokan_admin_settings', $merged );
 ```
 
-`'dokan_settings'` is the literal storage key (preserves the old `$storage_key` slot). Listeners that gate on `$option_name === 'dokan_general'` (or similar legacy keys) silently no-op — they only ever fired for the old Vue/AJAX save path.
+- `dokan_before/after_saving_settings` fire once per legacy section the saved fields map to (via `legacy_key`), with the legacy option name (e.g. `dokan_selling`), the legacy-shaped value and the old value — the same arguments as the legacy AJAX save.
+- A before-save listener that throws an `Exception` stops the save with a generic REST 400 (`dokan_rest_validation_failed`). A legacy validator that exits with `wp_send_json_error()` ends the request with its own legacy JSON 400; the save is still blocked, but the new UI only shows a generic toast.
+- Hook side effects on `dokan_before/after_saving_settings`, not on the `dokan_rest_*` actions, so both settings UIs trigger them.
 
 ## Pitfalls (Don't Repeat These)
 
@@ -177,10 +181,10 @@ do_action( 'dokan_after_saving_settings', $page_id, $sanitized, 'dokan_settings'
 |---|---|---|
 | "Unsupported field type: X" fallback shows despite registration | `hookPrefix` produces wrong filter name. With `hookPrefix="dokan_settings"` plugin-ui fires `dokan_settings_settings_X_field` (note doubled `_settings_`). | Use `hookPrefix="dokan"` on `<Settings>`. |
 | "useSettings must be used within a `<Settings>` component" error | Pro's bundle has its own plugin-ui instance and React context. | Pass `onChange` from `defaultComponent.props.onChange` as a prop instead of calling `useSettings()` in Pro. |
-| PUT save returns 500 with `ArgumentCountError` | Action hook signature changed from 3/4 args to 2/3 args. Pro listeners with `accepted_args=3` fatal. | Keep `dokan_before/after_saving_settings` at 3/4 args. Pass `'dokan_settings'` as the storage-key arg. |
+| Legacy listener (capability grant, cron, validation) does nothing after a new-UI save | It hooks `dokan_rest_*_saving_settings` or gates on a new page id. | Hook `dokan_before/after_saving_settings` and gate on the legacy option name; `LegacyMirror` fires them per legacy section; `Admin\Settings` (loaded for REST saves too) hooks the core listeners. |
 | Save payload sends dot-path keys (`marketplace.foo.bar`), controller can't find field | Plugin-ui's `formatSettingsData` rebuilds `dependency_key` as a dot-path, ignoring what backend sent. | Controller falls back to last-segment of dot-path when direct lookup misses. Done in `AdminSettingsController::update_item()`. |
 | Field id collision silently overwrites another field | Two `type === 'field'` elements with the same `id` in the merged schema. | `SchemaValidator::check_unique_field_ids()` hard-fails the build with a clear error message. Rename one. |
-| Schema build returns errors after `dokan_settings_fields` filter | A Pro/3rd-party callback returned a malformed shape. | Validator runs after the filter; it surfaces the malformed element. Fix the callback. |
+| Schema build returns errors after `dokan_get_admin_settings_schema` filter | A Pro/3rd-party callback returned a malformed shape. | Validator runs after the filter; it surfaces the malformed element. Fix the callback. |
 | Stale Pro bundle loaded in browser despite `npm run build` | WordPress enqueue uses the `version` from `*.asset.php`. New bundle = new version = new `?ver=` query → forces cache bust. | If the URL still shows the old `?ver=`, hard-refresh (Cmd-Shift-R) or check that PHP enqueue reads the latest `.asset.php`. |
 | Edits to plugin-ui source don't show up | Pro/Lite consume `dist/index.js`. Source changes need `cd /plugin-ui && npm run build` to refresh dist, then `rsync` to consumer's `node_modules/@wedevs/plugin-ui/dist/`. | Use `rsync -a --delete /plugin-ui/dist/ <consumer>/node_modules/@wedevs/plugin-ui/dist/` after each plugin-ui rebuild. `npm link` is uncooperative because the package was installed from GitHub. |
 

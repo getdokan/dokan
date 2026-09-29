@@ -29,6 +29,7 @@ class Settings {
         add_action( 'wp_ajax_dokan_get_setting_values', [ $this, 'get_settings_value' ], 10 );
         add_action( 'wp_ajax_dokan_save_settings', [ $this, 'save_settings_value' ], 10 );
         add_action( 'dokan_before_saving_settings', [ $this, 'set_withdraw_limit_value_validation' ], 10, 2 );
+        add_action( 'dokan_after_saving_settings', [ $this, 'flush_store_url_rewrites' ], 10, 3 );
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_save_settings_value', [ $this, 'validate_fixed_price_values' ], 12, 2 );
@@ -185,12 +186,6 @@ class Settings {
              * @since 3.5.1 added $old_options parameter
              */
             do_action( 'dokan_after_saving_settings', $option_name, $option_value, $old_options );
-
-            // only flush rewrite rules if store url has been changed
-            if ( 'dokan_general' === $option_name && isset( $old_options['custom_store_url'] ) && $old_options['custom_store_url'] !== $option_value['custom_store_url'] ) {
-                dokan()->rewrite->register_rule();
-                flush_rewrite_rules();
-            }
 
             wp_send_json_success(
                 [
@@ -1134,6 +1129,30 @@ class Settings {
                 400
             );
         }
+    }
+
+    /**
+     * Flush rewrite rules when the vendor store URL slug changes.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $option_name  Legacy option name.
+     * @param array  $option_value Legacy option value after the save.
+     * @param array  $old_options  Legacy option value before the save.
+     *
+     * @return void
+     */
+    public function flush_store_url_rewrites( $option_name, $option_value, $old_options ) {
+        if (
+            'dokan_general' !== $option_name
+            || ! isset( $old_options['custom_store_url'] )
+            || $old_options['custom_store_url'] === ( $option_value['custom_store_url'] ?? null )
+        ) {
+            return;
+        }
+
+        dokan()->rewrite->register_rule();
+        flush_rewrite_rules();
     }
 
     /**

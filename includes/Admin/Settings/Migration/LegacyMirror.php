@@ -2,9 +2,14 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Migration;
 
+use Exception;
+use WeDevs\Dokan\Admin\Settings as AdminSettings;
+use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository;
+use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepositoryInterface;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 use WeDevs\Dokan\Contracts\Hookable;
+use WP_Error;
 
 /**
  * Legacy Mirror.
@@ -68,12 +73,21 @@ class LegacyMirror implements Hookable {
     private ?SettingsRepositoryInterface $settings_repo;
 
     /**
-     * @param LegacySettingsBridge|null        $bridge        Optional bridge for testing.
-     * @param SettingsRepositoryInterface|null $settings_repo Optional repo for testing.
+     * Legacy-section repository. Lazily resolved like the bridge.
+     *
+     * @var LegacySettingsRepositoryInterface|null
      */
-    public function __construct( ?LegacySettingsBridge $bridge = null, ?SettingsRepositoryInterface $settings_repo = null ) {
+    private ?LegacySettingsRepositoryInterface $legacy_repo;
+
+    /**
+     * @param LegacySettingsBridge|null              $bridge        Optional bridge for testing.
+     * @param SettingsRepositoryInterface|null       $settings_repo Optional repo for testing.
+     * @param LegacySettingsRepositoryInterface|null $legacy_repo   Optional legacy repo for testing.
+     */
+    public function __construct( ?LegacySettingsBridge $bridge = null, ?SettingsRepositoryInterface $settings_repo = null, ?LegacySettingsRepositoryInterface $legacy_repo = null ) {
         $this->bridge        = $bridge;
         $this->settings_repo = $settings_repo;
+        $this->legacy_repo   = $legacy_repo;
     }
 
     /**
@@ -354,6 +368,73 @@ class LegacyMirror implements Hookable {
         );
         ksort( $snapshot );
         return $snapshot;
+    }
+
+    /**
+     * Fire `dokan_before_saving_settings` for every legacy section a new-settings save maps to.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values about to be saved.
+     *
+     * @return array<string,array>|WP_Error Legacy rows before the save keyed by option name,
+     *                                      or a validation error when a listener stopped the save.
+     */
+    public function before_save( array $new_slice ) {
+        $bridge = $this->resolve_bridge();
+        if ( ! $bridge instanceof LegacySettingsBridge ) {
+            return [];
+        }
+
+        $before = [];
+        foreach ( $bridge->legacy_options_for( $new_slice ) as $section ) {
+            $before[ $section ] = $this->resolve_legacy_repo()->all( $section );
+        }
+        $new_values = $bridge->apply_new_to_legacy( $new_slice, $before );
+
+        // Admin\Settings hooks the legacy save listeners but only loads in wp-admin; REST saves need it too.
+        dokan_get_container()->get( AdminSettings::class );
+
+        try {
+            foreach ( $before as $section => $old_value ) {
+                do_action( 'dokan_before_saving_settings', $section, $new_values[ $section ], $old_value );
+            }
+        } catch ( Exception $e ) {
+            return new WP_Error(
+                'dokan_rest_validation_failed',
+                __( 'Validation failed for one or more fields.', 'dokan-lite' ),
+                [ 'status' => 400 ]
+            );
+        }
+
+        return $before;
+    }
+
+    /**
+     * Fire `dokan_after_saving_settings` per legacy section once a new-settings save is stored.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,array> $before Result of {@see before_save()}.
+     *
+     * @return void
+     */
+    public function after_save( array $before ): void {
+        foreach ( $before as $section => $old_value ) {
+            $this->resolve_legacy_repo()->flush_cache( $section );
+            do_action( 'dokan_after_saving_settings', $section, $this->resolve_legacy_repo()->all( $section ), $old_value );
+        }
+    }
+
+    /**
+     * Lazily resolve the legacy-section repository.
+     *
+     * @return LegacySettingsRepositoryInterface
+     */
+    private function resolve_legacy_repo(): LegacySettingsRepositoryInterface {
+        $this->legacy_repo ??= dokan_get_container()->get( LegacySettingsRepository::class );
+
+        return $this->legacy_repo;
     }
 
     /**

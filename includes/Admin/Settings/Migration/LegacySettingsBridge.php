@@ -485,6 +485,60 @@ class LegacySettingsBridge {
      * @return array<int,string> Legacy option names that were updated.
      */
     public function write_new_to_legacy( array $new_slice ): array {
+        $written = [];
+        foreach ( $this->group_legacy_writes( $new_slice ) as $option_name => $entries ) {
+            $legacy = $this->read_option( $option_name );
+            foreach ( $entries as [ $address, $legacy_value, $new_key ] ) {
+                $this->write_address( $new_key, $address, $legacy, $legacy_value );
+            }
+            update_option( $option_name, $legacy );
+            $written[] = $option_name;
+        }
+        return $written;
+    }
+
+    /**
+     * Apply a new-option slice onto legacy rows without persisting them.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values.
+     * @param array<string,array> $legacy    Legacy rows keyed by option name.
+     *
+     * @return array<string,array> The legacy rows with the slice applied.
+     */
+    public function apply_new_to_legacy( array $new_slice, array $legacy ): array {
+        foreach ( $this->group_legacy_writes( $new_slice ) as $option_name => $entries ) {
+            $row = $legacy[ $option_name ] ?? [];
+            foreach ( $entries as [ $address, $legacy_value, $new_key ] ) {
+                $this->write_address( $new_key, $address, $row, $legacy_value );
+            }
+            $legacy[ $option_name ] = $row;
+        }
+        return $legacy;
+    }
+
+    /**
+     * Legacy option names a new-option slice maps to.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values.
+     *
+     * @return array<int,string>
+     */
+    public function legacy_options_for( array $new_slice ): array {
+        return array_keys( $this->group_legacy_writes( $new_slice ) );
+    }
+
+    /**
+     * Transform a new-option slice into legacy writes grouped by option name.
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values.
+     *
+     * @return array<string,array<int,array{0:LegacyAddress,1:mixed,2:string}>>
+     */
+    private function group_legacy_writes( array $new_slice ): array {
         $this->build_map();
         $changes_by_option = [];
         foreach ( $new_slice as $new_key => $value ) {
@@ -510,16 +564,7 @@ class LegacySettingsBridge {
                 $changes_by_option[ $address->option() ][] = [ $address, $multi_result[ $slot ], $new_key ];
             }
         }
-        $written = [];
-        foreach ( $changes_by_option as $option_name => $entries ) {
-            $legacy = $this->read_option( $option_name );
-            foreach ( $entries as [ $address, $legacy_value, $new_key ] ) {
-                $this->write_address( $new_key, $address, $legacy, $legacy_value );
-            }
-            update_option( $option_name, $legacy );
-            $written[] = $option_name;
-        }
-        return $written;
+        return $changes_by_option;
     }
 
     /**
