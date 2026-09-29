@@ -193,6 +193,41 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
+     * Whether the classic screen is active for a Dokan admin page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $key Page key, e.g. `settings`, `withdraw` or `dashboard`.
+     *
+     * @return bool
+     */
+    public function is_legacy_page( string $key ): bool {
+        if ( 'settings' === $key ) {
+            return $this->is_legacy_settings_page();
+        }
+
+        return (bool) get_transient( $this->get_custom_transient_key( $key ) );
+    }
+
+    /**
+     * Get the admin URL of a Dokan page on the screen (classic or new) the site uses.
+     *
+     * Only for pages that exist on both screens.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $route Hash route, e.g. `settings` or `vendors?status=pending`. Empty for the dashboard.
+     *
+     * @return string
+     */
+    public function get_admin_page_url( string $route = '' ): string {
+        $key  = strtok( $route, '/?' );
+        $page = $this->is_legacy_page( $key ? $key : 'dashboard' ) ? 'dokan' : 'dokan-dashboard';
+
+        return admin_url( 'admin.php?page=' . $page . '#/' . $route );
+    }
+
+    /**
      * Get admin menu transient key.
      *
      * @since 4.1.3
