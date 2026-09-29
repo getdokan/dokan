@@ -172,7 +172,7 @@ do_action( 'dokan_rest_after_saving_settings', $page_id, $sanitized, 'dokan_admi
 ```
 
 - `dokan_before/after_saving_settings` fire once per legacy section the saved fields map to (via `legacy_key`), with the legacy option name (e.g. `dokan_selling`), the legacy-shaped value and the old value — the same arguments as the legacy AJAX save.
-- A legacy validator that exits with `wp_send_json_error()` is caught and returned as a REST 400 with errors keyed by field id under `data.errors`; the first failing section stops the save, like the classic per-section save.
+- A before-save listener that throws an `Exception` stops the save with a generic REST 400 (`dokan_rest_validation_failed`). A legacy validator that exits with `wp_send_json_error()` ends the request with its own legacy JSON 400; the save is still blocked, but the new UI only shows a generic toast.
 - Hook side effects on `dokan_before/after_saving_settings`, not on the `dokan_rest_*` actions, so both settings UIs trigger them.
 
 ## Pitfalls (Don't Repeat These)

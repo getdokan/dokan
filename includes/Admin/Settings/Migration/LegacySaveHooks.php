@@ -2,7 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Migration;
 
-use RuntimeException;
+use Exception;
+use WeDevs\Dokan\Admin\Settings as AdminSettings;
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepositoryInterface;
 use WeDevs\Dokan\Contracts\Hookable;
@@ -36,7 +37,6 @@ class LegacySaveHooks implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        add_action( 'dokan_before_saving_settings', [ $this, 'validate_withdraw_limit' ], 10, 2 );
         add_action( 'dokan_after_saving_settings', [ $this, 'flush_store_url_rewrites' ], 10, 3 );
     }
 
@@ -48,25 +48,28 @@ class LegacySaveHooks implements Hookable {
      * @param array<string,mixed> $new_slice New-option keys and values about to be saved.
      *
      * @return array<string,array>|WP_Error Legacy rows before the save keyed by option name,
-     *                                      or the error raised by the first listener that stopped the save.
+     *                                      or a validation error when a listener stopped the save.
      */
     public function before_save( array $new_slice ) {
         $before = [];
-        foreach ( array_keys( $this->bridge()->project_new_onto_legacy( $new_slice, [] ) ) as $section ) {
+        foreach ( $this->bridge()->legacy_options_for( $new_slice ) as $section ) {
             $before[ $section ] = $this->legacy_repo()->all( $section );
         }
-        $projected = $this->bridge()->project_new_onto_legacy( $new_slice, $before );
+        $new_values = $this->bridge()->apply_new_to_legacy( $new_slice, $before );
 
-        foreach ( $before as $section => $old_value ) {
-            $halt = $this->catch_json_error(
-                static function () use ( $section, $projected, $old_value ) {
-                    do_action( 'dokan_before_saving_settings', $section, $projected[ $section ], $old_value );
-                }
-            );
+        // Admin\Settings hooks the legacy validators but only loads in wp-admin; REST saves need it too.
+        dokan_get_container()->get( AdminSettings::class );
 
-            if ( null !== $halt ) {
-                return $this->halt_to_error( $section, $halt );
+        try {
+            foreach ( $before as $section => $old_value ) {
+                do_action( 'dokan_before_saving_settings', $section, $new_values[ $section ], $old_value );
             }
+        } catch ( Exception $e ) {
+            return new WP_Error(
+                'dokan_rest_validation_failed',
+                __( 'Validation failed for one or more fields.', 'dokan-lite' ),
+                [ 'status' => 400 ]
+            );
         }
 
         return $before;
@@ -89,45 +92,6 @@ class LegacySaveHooks implements Hookable {
     }
 
     /**
-     * Reject a negative minimum withdraw limit.
-     *
-     * @since DOKAN_SINCE Moved from `WeDevs\Dokan\Admin\Settings`, which only loads in wp-admin.
-     *
-     * @param string $option_name  Legacy option name.
-     * @param array  $option_value Legacy option value.
-     *
-     * @return void
-     */
-    public function validate_withdraw_limit( $option_name, $option_value ) {
-        if ( 'dokan_withdraw' !== $option_name ) {
-            return;
-        }
-
-        $errors = [];
-
-        if ( ! empty( $option_value['withdraw_limit'] ) && $option_value['withdraw_limit'] < 0 ) {
-            $errors[] = [
-                'name'  => 'withdraw_limit',
-                'error' => __( 'Minimum Withdraw Limit can\'t be negative value.', 'dokan-lite' ),
-            ];
-        }
-
-        if ( ! empty( $errors ) ) {
-            wp_send_json_error(
-                [
-                    'settings' => [
-                        'name'  => $option_name,
-                        'value' => $option_value,
-                    ],
-                    'message'  => __( 'Validation error', 'dokan-lite' ),
-                    'errors'   => $errors,
-                ],
-                400
-            );
-        }
-    }
-
-    /**
      * Flush rewrite rules when the vendor store URL slug changes.
      *
      * @since DOKAN_SINCE
@@ -139,126 +103,16 @@ class LegacySaveHooks implements Hookable {
      * @return void
      */
     public function flush_store_url_rewrites( $option_name, $option_value, $old_options ) {
-        if ( 'dokan_general' !== $option_name || ! isset( $old_options['custom_store_url'] ) ) {
-            return;
-        }
-
-        if ( $old_options['custom_store_url'] === ( $option_value['custom_store_url'] ?? null ) ) {
+        if (
+            'dokan_general' !== $option_name
+            || ! isset( $old_options['custom_store_url'] )
+            || $old_options['custom_store_url'] === ( $option_value['custom_store_url'] ?? null )
+        ) {
             return;
         }
 
         dokan()->rewrite->register_rule();
         flush_rewrite_rules();
-    }
-
-    /**
-     * Run a callback and capture a `wp_die()` exit instead of ending the request.
-     *
-     * @param callable $callback Callback that may call `wp_send_json_error()` or `wp_die()`.
-     *
-     * @return array{payload:mixed,message:string}|null Decoded JSON output and wp_die() message, or null when the callback returned normally.
-     */
-    private function catch_json_error( callable $callback ): ?array {
-        $halted      = false;
-        $message     = '';
-        $doing_ajax  = static fn() => true;
-        $die_handler = static function () use ( &$halted, &$message ) {
-            return static function ( $die_message = '' ) use ( &$halted, &$message ) {
-                $halted  = true;
-                $message = is_wp_error( $die_message ) ? $die_message->get_error_message() : wp_strip_all_tags( (string) $die_message );
-                throw new RuntimeException( 'dokan_legacy_settings_validation_halt' );
-            };
-        };
-        $quiet       = static fn( $trigger, $function_name ) => 'wp_send_json' === $function_name ? false : $trigger;
-
-        // Legacy validators exit via wp_send_json_error(); route that exit through a throwing wp_die handler.
-        add_filter( 'wp_doing_ajax', $doing_ajax, PHP_INT_MAX );
-        add_filter( 'wp_die_ajax_handler', $die_handler, PHP_INT_MAX );
-        add_filter( 'doing_it_wrong_trigger_error', $quiet, 10, 2 );
-        ob_start();
-
-        try {
-            $callback();
-        } catch ( RuntimeException $e ) {
-            if ( ! $halted ) {
-                throw $e;
-            }
-        } finally {
-            $output = (string) ob_get_clean();
-            remove_filter( 'wp_doing_ajax', $doing_ajax, PHP_INT_MAX );
-            remove_filter( 'wp_die_ajax_handler', $die_handler, PHP_INT_MAX );
-            remove_filter( 'doing_it_wrong_trigger_error', $quiet, 10 );
-        }
-
-        if ( ! $halted ) {
-            return null;
-        }
-
-        return [
-            'payload' => json_decode( $output, true ),
-            'message' => $message,
-        ];
-    }
-
-    /**
-     * Turn a captured listener exit into the REST error to return.
-     *
-     * @param string                               $section Legacy option name whose listener stopped the save.
-     * @param array{payload:mixed,message:string} $halt    Result of {@see catch_json_error()}.
-     *
-     * @return WP_Error 400 with errors keyed by field id for a `wp_send_json_error()` payload, 500 for any other `wp_die()`.
-     */
-    private function halt_to_error( string $section, array $halt ): WP_Error {
-        if ( false !== ( $halt['payload']['success'] ?? null ) ) {
-            return new WP_Error(
-                'dokan_rest_settings_save_halted',
-                '' !== $halt['message'] ? $halt['message'] : __( 'Saving the settings was stopped unexpectedly.', 'dokan-lite' ),
-                [ 'status' => 500 ]
-            );
-        }
-
-        $errors = $this->map_errors( $section, $halt['payload'] );
-
-        return new WP_Error(
-            'dokan_rest_validation_failed',
-            implode( ' ', array_merge( ...array_values( $errors ) ) ),
-            [
-                'status' => 400,
-                'errors' => $errors,
-            ]
-        );
-    }
-
-    /**
-     * Key a legacy validation payload's errors by new-option key.
-     *
-     * @param string $section  Legacy option name the errors belong to.
-     * @param array  $response Decoded `wp_send_json_error()` payload.
-     *
-     * @return array<string,string[]>
-     */
-    private function map_errors( string $section, array $response ): array {
-        $data     = is_array( $response['data'] ?? null ) ? $response['data'] : [];
-        $messages = $data['errors'] ?? $data['message'] ?? __( 'Validation failed for one or more fields.', 'dokan-lite' );
-
-        $keys = [];
-        foreach ( $this->bridge()->get_mapping() as $new_key => $entry ) {
-            foreach ( isset( $entry['option'] ) ? [ $entry ] : $entry as $address ) {
-                if ( $section === $address['option'] ) {
-                    $keys[ explode( '.', $address['field'] )[0] ] ??= $new_key;
-                }
-            }
-        }
-
-        $errors = [];
-        foreach ( (array) $messages as $error ) {
-            $name    = is_array( $error ) ? (string) ( $error['name'] ?? '' ) : '';
-            $message = is_array( $error ) ? (string) ( $error['error'] ?? '' ) : (string) $error;
-
-            $errors[ $keys[ $name ] ?? ( '' !== $name ? $name : $section ) ][] = $message;
-        }
-
-        return $errors;
     }
 
     /**

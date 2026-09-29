@@ -81,34 +81,33 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
         $this->assertSame( [ [ 'dokan_general', 'new-slug', 'old-slug' ] ], $calls );
     }
 
-    public function test_legacy_validator_error_is_returned_as_rest_error_keyed_by_field(): void {
+    public function test_exception_in_listener_rejects_the_whole_save(): void {
         ( new SettingsRepository() )->update( [ 'minimum_withdraw_limit' => 50 ] );
 
-        $response = $this->put( 'transaction', [ 'minimum_withdraw_limit' => -100 ] );
-        $data     = $response->get_data();
+        $reject = static function ( $option_name ) {
+            if ( 'dokan_withdraw' === $option_name ) {
+                throw new \Exception( 'Invalid withdraw settings.' );
+            }
+        };
+        add_action( 'dokan_before_saving_settings', $reject, 5 );
 
-        $this->assertSame( 400, $response->get_status() );
-        $this->assertSame( 'dokan_rest_validation_failed', $data['code'] );
-        $this->assertArrayHasKey( 'minimum_withdraw_limit', $data['data']['errors'] );
-        $this->assertSame( 50, ( new SettingsRepository() )->get( 'minimum_withdraw_limit' ), 'A rejected save must not be stored.' );
-    }
-
-    public function test_first_failing_legacy_section_rejects_the_whole_save(): void {
         $response = $this->put(
             'transaction',
             [
-                'minimum_withdraw_limit'        => -100,
+                'minimum_withdraw_limit'        => 100,
                 'reverse_withdrawal_due_period' => 99,
             ]
         );
-        $errors   = $response->get_data()['data']['errors'] ?? [];
+
+        remove_action( 'dokan_before_saving_settings', $reject, 5 );
 
         $this->assertSame( 400, $response->get_status() );
-        $this->assertArrayHasKey( 'minimum_withdraw_limit', $errors, 'dokan_withdraw validator error missing.' );
+        $this->assertSame( 'dokan_rest_validation_failed', $response->get_data()['code'] );
+        $this->assertSame( 50, ( new SettingsRepository() )->get( 'minimum_withdraw_limit' ), 'A rejected save must not be stored.' );
         $this->assertNull( ( new SettingsRepository() )->get( 'reverse_withdrawal_due_period' ), 'Fields of other sections must not be stored either.' );
     }
 
-    public function test_unexpected_wp_die_is_not_reported_as_validation_error(): void {
+    public function test_wp_die_in_listener_rejects_the_save(): void {
         ( new SettingsRepository() )->update( [ 'vendor_store_url_slug' => 'old-slug' ] );
 
         $halt = static function ( $option_name ) {
@@ -122,9 +121,8 @@ class AdminSettingsLegacySaveHooksTest extends DokanTestCase {
 
         remove_action( 'dokan_before_saving_settings', $halt, 5 );
 
-        $this->assertSame( 500, $response->get_status() );
-        $this->assertSame( 'dokan_rest_settings_save_halted', $response->get_data()['code'] );
-        $this->assertSame( 'Nonce check failed.', $response->get_data()['message'] );
+        $this->assertSame( 400, $response->get_status() );
+        $this->assertSame( 'dokan_rest_validation_failed', $response->get_data()['code'] );
         $this->assertSame( 'old-slug', ( new SettingsRepository() )->get( 'vendor_store_url_slug' ), 'A halted save must not be stored.' );
     }
 

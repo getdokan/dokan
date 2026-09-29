@@ -507,7 +507,7 @@ class LegacySettingsBridge {
      *
      * @return array<string,array> The legacy rows with the slice applied.
      */
-    public function project_new_onto_legacy( array $new_slice, array $legacy ): array {
+    public function apply_new_to_legacy( array $new_slice, array $legacy ): array {
         foreach ( $this->group_legacy_writes( $new_slice ) as $option_name => $entries ) {
             $row = $legacy[ $option_name ] ?? [];
             foreach ( $entries as [ $address, $legacy_value, $new_key ] ) {
@@ -516,6 +516,19 @@ class LegacySettingsBridge {
             $legacy[ $option_name ] = $row;
         }
         return $legacy;
+    }
+
+    /**
+     * Legacy option names a new-option slice maps to.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values.
+     *
+     * @return array<int,string>
+     */
+    public function legacy_options_for( array $new_slice ): array {
+        return array_keys( $this->group_legacy_writes( $new_slice ) );
     }
 
     /**
