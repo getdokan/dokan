@@ -21,13 +21,19 @@ use WeDevs\Dokan\Contracts\Hookable;
  *    values out to the legacy rows via
  *    {@see LegacySettingsBridge::write_new_to_legacy()}, so an OLD plugin
  *    version reading raw `dokan_general` etc. sees current data.
- * 2. Reconciliation: a baseline snapshot of the mapped legacy values (in
+ * 2. Direct-write adoption: a plain `update_option( 'dokan_<section>' )`
+ *    from CLI, cron or third-party code is adopted into
+ *    `dokan_admin_settings` as soon as it happens. Without this the overlay
+ *    keeps serving the stale flat value, so the write has no effect.
+ * 3. Reconciliation: a baseline snapshot of the mapped legacy values (in
  *    new-key space) is stored after every mirror write. On `admin_init`
  *    the raw rows are compared against that baseline; keys that changed
  *    while the bridge was not watching are adopted into
  *    `dokan_admin_settings` — last write wins, so settings saved on an old
  *    plugin version survive the re-upgrade instead of being shadowed by a
- *    stale flat-option snapshot.
+ *    stale flat-option snapshot. Baseline entries for fields that are not
+ *    mapped right now (e.g. a deactivated module) are kept, so an edit made
+ *    while the module was off is still adopted when it comes back.
  *
  * All raw row reads/writes run inside
  * {@see BridgeBootstrap::without_overlay()} — with the overlay active,
@@ -76,9 +82,94 @@ class LegacyMirror implements Hookable {
     public function register_hooks(): void {
         add_action( 'dokan_admin_settings_changed', [ $this, 'mirror_changes' ] );
         // After BridgeBootstrap's overlay wiring (init@999) so the mapping is
-        // complete; admin-only because divergence can only be observed and
-        // fixed when someone is managing the site anyway.
+        // complete. Direct writes in the current request are adopted by the
+        // write listeners; reconciliation only has to catch edits made while
+        // this code was not loaded (downgrade window), so admin-only is enough.
+        add_action( 'init', [ $this, 'register_write_listeners' ], 1000 );
         add_action( 'admin_init', [ $this, 'maybe_reconcile' ], 5 );
+    }
+
+    /**
+     * Attach the direct-write filter to every mapped legacy row.
+     *
+     * `pre_update_option_{section}` runs for every `update_option()` call,
+     * before WordPress decides to update or add the row. A plain
+     * `add_option()` is not adopted: it has no previous value to diff, and an
+     * installer's default payload would otherwise overwrite the flat option.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function register_write_listeners(): void {
+        $bridge = $this->resolve_bridge();
+        if ( ! $bridge instanceof LegacySettingsBridge ) {
+            return;
+        }
+        foreach ( $bridge->known_sections() as $section ) {
+            if ( ! has_filter( "pre_update_option_{$section}", [ $this, 'adopt_direct_write' ] ) ) {
+                add_filter( "pre_update_option_{$section}", [ $this, 'adopt_direct_write' ], PHP_INT_MAX, 3 );
+            }
+        }
+    }
+
+    /**
+     * Adopt a direct write to a legacy row into `dokan_admin_settings`.
+     *
+     * The old value is the overlay-projected view the writer read and edited.
+     * Both values are transformed into new-key space and only fields whose
+     * value changed are adopted, so untouched (possibly stale) fields never
+     * overwrite the flat option. The write-through is switched off for this
+     * adoption: the caller's own `update_option()` writes the row right after.
+     * The bridge's own mirror writes run with the overlay suppressed and are
+     * ignored. Filter callback; returns the value unchanged.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $value     New value being written to the row.
+     * @param mixed  $old_value Previous (overlay-projected) value.
+     * @param string $option    Legacy option name.
+     *
+     * @return mixed
+     */
+    public function adopt_direct_write( $value, $old_value, $option ) {
+        if ( BridgeBootstrap::is_overlay_suppressed() || ! is_array( $value ) ) {
+            return $value;
+        }
+        $bridge = $this->resolve_bridge();
+        $repo   = $this->resolve_settings_repo();
+        if ( ! $bridge instanceof LegacySettingsBridge || null === $repo ) {
+            return $value;
+        }
+
+        try {
+            $before = $bridge->transform_legacy_payload_to_new( (string) $option, is_array( $old_value ) ? $old_value : [] );
+            $after  = $bridge->transform_legacy_payload_to_new( (string) $option, $value );
+            $adopt  = [];
+            foreach ( $after as $key => $new_value ) {
+                if ( ! array_key_exists( $key, $before ) || $before[ $key ] !== $new_value ) {
+                    $adopt[ $key ] = $new_value;
+                }
+            }
+            if ( ! empty( $adopt ) ) {
+                // Own closure, so a site's `__return_false` on this filter is never removed.
+                $no_mirror = static function () {
+                    return false;
+                };
+                add_filter( 'dokan_admin_settings_legacy_mirror', $no_mirror, PHP_INT_MAX );
+                try {
+                    $repo->update( $adopt );
+                } finally {
+                    remove_filter( 'dokan_admin_settings_legacy_mirror', $no_mirror, PHP_INT_MAX );
+                }
+            }
+        } catch ( \Throwable $e ) {
+            if ( function_exists( 'dokan_log' ) ) {
+                dokan_log( '[LegacyMirror] direct-write adoption failed for ' . $option . ': ' . $e->getMessage() );
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -174,7 +265,8 @@ class LegacyMirror implements Hookable {
                 return;
             }
 
-            if ( $stored === $current ) {
+            // Retained entries for currently-unmapped fields stay out of the comparison.
+            if ( array_intersect_key( $stored, $current ) === $current ) {
                 return;
             }
 
@@ -205,6 +297,13 @@ class LegacyMirror implements Hookable {
     /**
      * Store the baseline snapshot of the mapped legacy values.
      *
+     * Entries of the previous baseline whose field is not mapped right now
+     * are carried over. A deactivated module drops its fields from the
+     * schema; without this, the next save would erase their baseline, and an
+     * edit made to its legacy row while it was off would never be adopted on
+     * reactivation. Entries for fields removed for good stay behind as inert
+     * data — reconciliation only walks currently-mapped fields.
+     *
      * @since DOKAN_SINCE
      *
      * @param array<string,mixed>|null $snapshot Precomputed snapshot, or null to recompute.
@@ -212,7 +311,16 @@ class LegacyMirror implements Hookable {
      * @return void
      */
     public function stamp( ?array $snapshot = null ): void {
-        update_option( self::SNAPSHOT_KEY, $snapshot ?? $this->snapshot_legacy_as_new(), true );
+        $snapshot = $snapshot ?? $this->snapshot_legacy_as_new();
+        $previous = get_option( self::SNAPSHOT_KEY, null );
+        $bridge   = $this->resolve_bridge();
+
+        if ( is_array( $previous ) && $bridge instanceof LegacySettingsBridge ) {
+            $snapshot += array_diff_key( $previous, $bridge->get_mapping() );
+            ksort( $snapshot );
+        }
+
+        update_option( self::SNAPSHOT_KEY, $snapshot, true );
     }
 
     /**

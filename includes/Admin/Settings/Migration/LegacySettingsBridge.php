@@ -64,6 +64,15 @@ class LegacySettingsBridge {
     private ?array $transformers = null;
 
     /**
+     * New-flat ids whose schema entry sets `legacy_merge => true`. For these
+     * the transformed value is merged over the stored legacy array instead of
+     * replacing it. See {@see write_address()}.
+     *
+     * @var array<string,bool>|null
+     */
+    private ?array $merge_keys = null;
+
+    /**
      * Cached resolved transformer instances keyed by FQCN (for class specs)
      * or by `callable:<new_key>` (for callable-pair specs).
      *
@@ -170,6 +179,7 @@ class LegacySettingsBridge {
         $this->map                 = null;
         $this->defaults            = null;
         $this->transformers        = null;
+        $this->merge_keys          = null;
         $this->by_option           = null;
         $this->cached_filter_count = null;
         $this->settings_repo->flush_cache();
@@ -337,7 +347,7 @@ class LegacySettingsBridge {
             }
             if ( $entry instanceof LegacyAddress ) {
                 $legacy_value = $this->resolve_transformer( $new_key )->to_legacy( $new_option[ $new_key ] );
-                $entry->write_to( $legacy_option, $legacy_value );
+                $this->write_address( $new_key, $entry, $legacy_option, $legacy_value );
                 continue;
             }
             // Multi-mapped: transform once, then write only the slots whose
@@ -480,8 +490,8 @@ class LegacySettingsBridge {
         foreach ( $new_slice as $new_key => $value ) {
             $entry = $this->map[ $new_key ] ?? null;
             if ( $entry instanceof LegacyAddress ) {
-                $legacy_value                              = $this->resolve_transformer( $new_key )->to_legacy( $value );
-                $changes_by_option[ $entry->option() ][]   = [ $entry, $legacy_value ];
+                $legacy_value                            = $this->resolve_transformer( $new_key )->to_legacy( $value );
+                $changes_by_option[ $entry->option() ][] = [ $entry, $legacy_value, $new_key ];
                 continue;
             }
             if ( ! is_array( $entry ) ) {
@@ -497,20 +507,46 @@ class LegacySettingsBridge {
                 if ( ! array_key_exists( $slot, $multi_result ) ) {
                     continue;
                 }
-                $changes_by_option[ $address->option() ][] = [ $address, $multi_result[ $slot ] ];
+                $changes_by_option[ $address->option() ][] = [ $address, $multi_result[ $slot ], $new_key ];
             }
         }
         $written = [];
         foreach ( $changes_by_option as $option_name => $entries ) {
             $legacy = $this->read_option( $option_name );
-            foreach ( $entries as $pair ) {
-                [ $address, $legacy_value ] = $pair;
-                $address->write_to( $legacy, $legacy_value );
+            foreach ( $entries as [ $address, $legacy_value, $new_key ] ) {
+                $this->write_address( $new_key, $address, $legacy, $legacy_value );
             }
             update_option( $option_name, $legacy );
             $written[] = $option_name;
         }
         return $written;
+    }
+
+    /**
+     * Write a transformed value into a 1:1 legacy address.
+     *
+     * For a field whose schema entry sets `legacy_merge => true` the value is
+     * merged over the existing array leaf, so keys the field does not own
+     * (e.g. Germanized hide flags in `hide_vendor_info`) are kept. Every other
+     * field replaces the leaf.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string              $new_key      New-flat field id.
+     * @param LegacyAddress       $address      Target legacy address.
+     * @param array<string,mixed> $legacy       By-reference legacy option value.
+     * @param mixed               $legacy_value Transformed value to write.
+     *
+     * @return void
+     */
+    private function write_address( string $new_key, LegacyAddress $address, array &$legacy, $legacy_value ): void {
+        if ( is_array( $legacy_value ) && ! empty( $this->merge_keys[ $new_key ] ) ) {
+            $existing = $address->read_from( $legacy );
+            if ( is_array( $existing ) ) {
+                $legacy_value = array_merge( $existing, $legacy_value );
+            }
+        }
+        $address->write_to( $legacy, $legacy_value );
     }
 
     /**
@@ -655,7 +691,7 @@ class LegacySettingsBridge {
 
         $this->building_map = true;
         try {
-            [ $map, $defaults, $transformers ] = $this->harvest_from_schema();
+            [ $map, $defaults, $transformers, $merge_keys ] = $this->harvest_from_schema();
 
             /**
              * Filter the legacy-to-new key mapping.
@@ -673,6 +709,7 @@ class LegacySettingsBridge {
             [ $this->map, $this->by_option ] = $this->normalize( $map );
             $this->defaults                  = $defaults;
             $this->transformers              = $transformers;
+            $this->merge_keys                = $merge_keys;
             $this->cached_filter_count       = $filter_count;
         } finally {
             $this->building_map = false;
@@ -688,12 +725,13 @@ class LegacySettingsBridge {
      * Bridge-only fields participate in mapping but are not emitted by the
      * new UI; they still round-trip through the bridge.
      *
-     * @return array{0: array<string,string|array{option:string,field:string}>, 1: array<string,mixed>, 2: array<string,string|array{to_new:mixed,to_legacy:mixed}>}
+     * @return array{0: array<string,string|array{option:string,field:string}>, 1: array<string,mixed>, 2: array<string,string|array{to_new:mixed,to_legacy:mixed}>, 3: array<string,bool>}
      */
     private function harvest_from_schema(): array {
         $map          = [];
         $defaults     = [];
         $transformers = [];
+        $merge_keys   = [];
 
         foreach ( SettingsSchema::get_schema() as $element ) {
             $is_field       = ( $element['type'] ?? '' ) === 'field';
@@ -713,6 +751,10 @@ class LegacySettingsBridge {
             }
             $map[ $id ] = $legacy;
 
+            if ( ! empty( $element['legacy_merge'] ) ) {
+                $merge_keys[ $id ] = true;
+            }
+
             $transformer = $element['legacy_transformer'] ?? null;
             if ( is_string( $transformer ) && '' !== $transformer ) {
                 $transformers[ $id ] = $transformer;
@@ -728,7 +770,7 @@ class LegacySettingsBridge {
             }
         }
 
-        return [ $map, $defaults, $transformers ];
+        return [ $map, $defaults, $transformers, $merge_keys ];
     }
 
     /**

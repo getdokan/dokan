@@ -1889,6 +1889,8 @@ class SettingsSchema {
                     'field'  => 'hide_vendor_info',
                 ],
                 'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\HideVendorInfoTransformer::class,
+                // Germanized stores its own hide flags in the same array; merge, don't replace.
+                'legacy_merge'       => true,
             ],
 
             // Dokan Font
