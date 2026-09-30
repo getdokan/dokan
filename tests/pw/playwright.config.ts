@@ -155,6 +155,7 @@ export default defineConfig({
             dependencies: parseBoolean(NO_SETUP) ? [] : ['e2e_setup'],
             /* whether not to run teardown tests after running actual tests */
             // teardown: NO_SETUP ? undefined : 'coverage_report',
+            retries: parseBoolean(CI) ? 2 : 0,
         },
 
         // coverage_report
