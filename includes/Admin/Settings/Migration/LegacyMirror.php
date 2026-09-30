@@ -80,6 +80,14 @@ class LegacyMirror implements Hookable {
     private ?LegacySettingsRepositoryInterface $legacy_repo;
 
     /**
+     * In-flight direct writes, keyed by legacy option name: `old` (overlay-projected) and `value`.
+     *
+     * @var array<string,array{old:array,value:array}>
+     */
+    private array $pending_writes = [];
+
+
+    /**
      * @param LegacySettingsBridge|null              $bridge        Optional bridge for testing.
      * @param SettingsRepositoryInterface|null       $settings_repo Optional repo for testing.
      * @param LegacySettingsRepositoryInterface|null $legacy_repo   Optional legacy repo for testing.
@@ -104,12 +112,15 @@ class LegacyMirror implements Hookable {
     }
 
     /**
-     * Attach the direct-write filter to every mapped legacy row.
+     * Attach the direct-write listeners for every mapped legacy row.
      *
-     * `pre_update_option_{section}` runs for every `update_option()` call,
-     * before WordPress decides to update or add the row. A plain
-     * `add_option()` is not adopted: it has no previous value to diff, and an
-     * installer's default payload would otherwise overwrite the flat option.
+     * `pre_update_option_{section}` records the write; adoption runs on the `update_option`
+     * / `add_option` actions. Both fire after WordPress picks update vs insert and
+     * before the row is written, so the pick is unaffected (adopting earlier made
+     * update_option() return false on a missing row), a zero-row update is still
+     * adopted, and `update_option_{section}` listeners already see the new value.
+     * A plain `add_option()` is not adopted: it has no previous value to diff, and
+     * an installer's default payload would otherwise overwrite the flat option.
      *
      * @since DOKAN_SINCE
      *
@@ -121,44 +132,102 @@ class LegacyMirror implements Hookable {
             return;
         }
         foreach ( $bridge->known_sections() as $section ) {
-            if ( ! has_filter( "pre_update_option_{$section}", [ $this, 'adopt_direct_write' ] ) ) {
-                add_filter( "pre_update_option_{$section}", [ $this, 'adopt_direct_write' ], PHP_INT_MAX, 3 );
+            if ( ! has_filter( "pre_update_option_{$section}", [ $this, 'capture_direct_write' ] ) ) {
+                add_filter( "pre_update_option_{$section}", [ $this, 'capture_direct_write' ], PHP_INT_MAX, 3 );
             }
+        }
+        if ( ! has_action( 'update_option', [ $this, 'adopt_before_update' ] ) ) {
+            add_action( 'update_option', [ $this, 'adopt_before_update' ], PHP_INT_MIN, 3 );
+            add_action( 'add_option', [ $this, 'adopt_before_add' ], PHP_INT_MIN, 2 );
         }
     }
 
     /**
-     * Adopt a direct write to a legacy row into `dokan_admin_settings`.
-     *
-     * The old value is the overlay-projected view the writer read and edited.
-     * Both values are transformed into new-key space and only fields whose
-     * value changed are adopted, so untouched (possibly stale) fields never
-     * overwrite the flat option. The write-through is switched off for this
-     * adoption: the caller's own `update_option()` writes the row right after.
-     * The bridge's own mirror writes run with the overlay suppressed and are
-     * ignored. Filter callback; returns the value unchanged.
+     * Record a direct write to a legacy row: its overlay-projected old value and new value.
      *
      * @since DOKAN_SINCE
      *
-     * @param mixed  $value     New value being written to the row.
+     * @param mixed  $value     Value being written.
      * @param mixed  $old_value Previous (overlay-projected) value.
      * @param string $option    Legacy option name.
      *
-     * @return mixed
+     * @return mixed Unchanged value.
      */
-    public function adopt_direct_write( $value, $old_value, $option ) {
+    public function capture_direct_write( $value, $old_value, $option ) {
+        unset( $this->pending_writes[ $option ] );
+        // The bridge's own mirror writes run with the overlay suppressed.
         if ( BridgeBootstrap::is_overlay_suppressed() || ! is_array( $value ) ) {
             return $value;
+        }
+        $this->pending_writes[ $option ] = [
+            'old'   => is_array( $old_value ) ? $old_value : [],
+            'value' => $value,
+        ];
+
+        return $value;
+    }
+
+    /**
+     * Adopt a direct write just before WordPress updates the existing row.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $option    Option name.
+     * @param mixed  $old_value Previous value.
+     * @param mixed  $value     Value being written.
+     *
+     * @return void
+     */
+    public function adopt_before_update( $option, $old_value, $value ): void {
+        $this->adopt_direct_write( (string) $option, $value );
+    }
+
+    /**
+     * Adopt a direct write just before WordPress inserts the missing row.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $option Option name.
+     * @param mixed  $value  Value being written.
+     *
+     * @return void
+     */
+    public function adopt_before_add( $option, $value ): void {
+        $this->adopt_direct_write( (string) $option, $value );
+    }
+
+    /**
+     * Adopt the changed fields of a recorded direct write into `dokan_admin_settings`.
+     *
+     * Only fields whose value differs from the recorded old value are adopted,
+     * so untouched (possibly stale) fields never overwrite the flat option.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $option Legacy option name.
+     * @param mixed  $value  Value being written to the row.
+     *
+     * @return void
+     */
+    private function adopt_direct_write( string $option, $value ): void {
+        if ( ! isset( $this->pending_writes[ $option ] ) ) {
+            return;
+        }
+        $pending = $this->pending_writes[ $option ];
+        unset( $this->pending_writes[ $option ] );
+        // Only the write that was recorded: a later plain add_option() never matches a stale entry.
+        if ( BridgeBootstrap::is_overlay_suppressed() || $pending['value'] !== $value ) {
+            return;
         }
         $bridge = $this->resolve_bridge();
         $repo   = $this->resolve_settings_repo();
         if ( ! $bridge instanceof LegacySettingsBridge || null === $repo ) {
-            return $value;
+            return;
         }
 
         try {
-            $before = $bridge->transform_legacy_payload_to_new( (string) $option, is_array( $old_value ) ? $old_value : [] );
-            $after  = $bridge->transform_legacy_payload_to_new( (string) $option, $value );
+            $before = $bridge->transform_legacy_payload_to_new( $option, $pending['old'] );
+            $after  = $bridge->transform_legacy_payload_to_new( $option, $value );
             $adopt  = [];
             foreach ( $after as $key => $new_value ) {
                 if ( ! array_key_exists( $key, $before ) || $before[ $key ] !== $new_value ) {
@@ -166,6 +235,7 @@ class LegacyMirror implements Hookable {
                 }
             }
             if ( ! empty( $adopt ) ) {
+                // No write-through: the caller's own write stores the row right after.
                 // Own closure, so a site's `__return_false` on this filter is never removed.
                 $no_mirror = static function () {
                     return false;
@@ -182,8 +252,6 @@ class LegacyMirror implements Hookable {
                 dokan_log( '[LegacyMirror] direct-write adoption failed for ' . $option . ': ' . $e->getMessage() );
             }
         }
-
-        return $value;
     }
 
     /**
@@ -334,7 +402,12 @@ class LegacyMirror implements Hookable {
             ksort( $snapshot );
         }
 
-        update_option( self::SNAPSHOT_KEY, $snapshot, true );
+        // Read only in wp-admin (reconcile) and on settings saves, so keep it out of alloptions.
+        update_option( self::SNAPSHOT_KEY, $snapshot, false );
+        // update_option() skips the autoload change when the value is unchanged; fix rows stamped before.
+        if ( function_exists( 'wp_set_option_autoload' ) ) {
+            wp_set_option_autoload( self::SNAPSHOT_KEY, false );
+        }
     }
 
     /**
