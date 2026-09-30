@@ -29,6 +29,7 @@ class Settings {
         add_action( 'wp_ajax_dokan_get_setting_values', [ $this, 'get_settings_value' ], 10 );
         add_action( 'wp_ajax_dokan_save_settings', [ $this, 'save_settings_value' ], 10 );
         add_action( 'dokan_before_saving_settings', [ $this, 'set_withdraw_limit_value_validation' ], 10, 2 );
+        add_action( 'dokan_after_saving_settings', [ $this, 'flush_store_url_rewrites' ], 10, 3 );
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_admin_settings_nonce' ] );
         add_action( 'wp_ajax_dokan_refresh_admin_settings_field_options', [ $this, 'refresh_admin_settings_field_options' ] );
         add_filter( 'dokan_save_settings_value', [ $this, 'validate_fixed_price_values' ], 12, 2 );
@@ -175,18 +176,16 @@ class Settings {
              */
             do_action( 'dokan_before_saving_settings', $option_name, $option_value, $old_options );
 
-            update_option( $option_name, $option_value );
+            // Route through the legacy settings repository: mapped keys are
+            // mirrored into the new flat option (the canonical source of
+            // truth) and stripped from the legacy row, which receives the
+            // unmapped subset only.
+            dokan_save_legacy_settings_section( $option_name, $option_value );
 
             /**
              * @since 3.5.1 added $old_options parameter
              */
             do_action( 'dokan_after_saving_settings', $option_name, $option_value, $old_options );
-
-            // only flush rewrite rules if store url has been changed
-            if ( 'dokan_general' === $option_name && isset( $old_options['custom_store_url'] ) && $old_options['custom_store_url'] !== $option_value['custom_store_url'] ) {
-                dokan()->rewrite->register_rule();
-                flush_rewrite_rules();
-            }
 
             wp_send_json_success(
                 [
@@ -409,14 +408,7 @@ class Settings {
         $pages_array = $this->get_post_type( 'page' );
 
         $commission_types              = dokan_commission_types();
-        $withdraw_order_status_options = apply_filters(
-            'dokan_settings_withdraw_order_status_options',
-            [
-                'wc-completed'  => __( 'Completed', 'dokan-lite' ),
-                'wc-processing' => __( 'Processing', 'dokan-lite' ),
-                'wc-on-hold'    => __( 'On-hold', 'dokan-lite' ),
-            ]
-        );
+        $withdraw_order_status_options = \WeDevs\Dokan\Utilities\AdminSettings::withdraw_order_status_options();
 
         $general_site_options = apply_filters(
             'dokan_settings_general_site_options', [
@@ -679,7 +671,7 @@ class Settings {
                     'type'    => 'switcher',
                     'default' => 'off',
                     'show_if' => [
-                        'dokan_selling.one_step_product_create' => [ 'equal' => 'off' ],
+                        'one_step_product_create' => [ 'equal' => 'off' ],
                     ],
                     'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],
@@ -1137,6 +1129,33 @@ class Settings {
                 400
             );
         }
+    }
+
+    /**
+     * Flush rewrite rules when the vendor store URL slug changes.
+     *
+     * @since 5.2.0
+     *
+     * @param string $option_name  Legacy option name.
+     * @param array  $option_value Legacy option value after the save.
+     * @param array  $old_options  Legacy option value before the save.
+     *
+     * @return void
+     */
+    public function flush_store_url_rewrites( $option_name, $option_value, $old_options ) {
+        if ( 'dokan_general' !== $option_name ) {
+            return;
+        }
+
+        // A missing slug on either side means the rewrites use the default `store`.
+        $old_slug = $old_options['custom_store_url'] ?? 'store';
+        $new_slug = $option_value['custom_store_url'] ?? 'store';
+        if ( $old_slug === $new_slug ) {
+            return;
+        }
+
+        dokan()->rewrite->register_rule();
+        flush_rewrite_rules();
     }
 
     /**
