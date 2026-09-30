@@ -101,6 +101,14 @@ export const dbUtils = {
         return [currentMetaValue, newMetaValue];
     },
 
+    // Raw option rows matching a SQL LIKE pattern. Values stay serialized so
+    // callers can diff the stored strings directly.
+    async getOptionRows(likePattern: string): Promise<Record<string, string>> {
+        const query = `SELECT option_name, option_value FROM ${dbPrefix}_options WHERE option_name LIKE ?;`;
+        const rows = await dbUtils.dbQuery(query, [likePattern]);
+        return Object.fromEntries(rows.map((row: any) => [row.option_name, row.option_value]));
+    },
+
     // get option value
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;

@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
+use WeDevs\Dokan\Admin\OnboardingSetup\Steps\AbstractStep;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
@@ -140,7 +141,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          * @since 4.0.0
          *
          * @param array  $step_array The populated step data.
-         * @param object $step       The step object.
+         * @param AbstractStep $step       The step object.
          */
         $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
 
@@ -175,8 +176,22 @@ class AdminSetupGuideController extends DokanBaseAdminController {
 
         $step = $steps[ $step_index ];
 
+        $params = $request->get_params();
+        $values = isset( $params['values'] ) && is_array( $params['values'] ) ? $params['values'] : [];
+
+        // The plugin-ui form emits keys as the field id, or as a dot-path
+        // (`page.section.field_id`) reflecting its internal tree state. Normalize
+        // to the leaf id — which is what the step whitelists against — and
+        // sanitize recursively (wc_clean keeps array-valued fields intact).
+        $normalized = [];
+        foreach ( $values as $key => $value ) {
+            $key                 = (string) $key;
+            $leaf                = false !== strpos( $key, '.' ) ? substr( $key, strrpos( $key, '.' ) + 1 ) : $key;
+            $normalized[ $leaf ] = wc_clean( wp_unslash( $value ) );
+        }
+
         try {
-            $step->save( $this->parse_settings_data( $request->get_params() ) );
+            $step->save( $normalized );
         } catch ( \Exception $e ) {
             return new \WP_Error( 'dokan_rest_invalid_step', $e->getMessage(), [ 'status' => 400 ] );
         }
@@ -193,7 +208,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          *
          * @return array The modified step response data.
          */
-        $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
+        $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate_children_only(), $step );
         return rest_ensure_response( $step_array );
     }
 
@@ -218,31 +233,5 @@ class AdminSetupGuideController extends DokanBaseAdminController {
                 'success' => $request->get_param( 'setup_completed' ),
             ]
         );
-    }
-
-    /**
-     * Parse settings for storage.
-     *
-     * @param array $settings_data Settings data for parsing.
-     *
-     * @return array
-     */
-    private function parse_settings_data( array $settings_data ): array {
-        $settings_parsed_data = array();
-        foreach ( $settings_data as $settings_element ) {
-            if ( ! isset( $settings_element['id'] ) ) {
-                continue;
-            }
-
-            if ( isset( $settings_element['type'] ) && 'field' === $settings_element['type'] ) {
-                $settings_parsed_data[ $settings_element['id'] ] = $settings_element['value'];
-            } elseif ( ! empty( $settings_element['children'] ) ) {
-                $settings_parsed_data[ $settings_element['id'] ] = $this->parse_settings_data( $settings_element['children'] );
-            } else {
-                $settings_parsed_data[ $settings_element['id'] ] = array();
-            }
-        }
-
-        return $settings_parsed_data;
     }
 }

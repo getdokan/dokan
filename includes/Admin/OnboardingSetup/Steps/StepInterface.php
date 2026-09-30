@@ -19,13 +19,26 @@ interface StepInterface {
     public function get_id(): string;
 
     /**
-     * Get settings options to check for.
+     * Get the step title.
      *
-     * @since 4.0.0
+     * @since DOKAN_SINCE
      *
-     * @return string[] The settings options.
+     * @return string The step title.
      */
-    public function get_settings_options(): array;
+    public function get_title(): string;
+
+    /**
+     * Canonical SettingsSchema field ids this step exposes, in display order.
+     *
+     * The step harvests these fields from the shared admin settings schema and
+     * saves their values into the single `dokan_admin_settings` option, so the
+     * wizard and the settings page stay one source of truth.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string[] The canonical field ids.
+     */
+    public function get_field_ids(): array;
 
     /**
      * Get the step priority.
@@ -71,22 +84,4 @@ interface StepInterface {
      * @return array The step styles.
      */
     public function styles(): array;
-
-    /**
-     * Pass the settings options to frontend.
-     *
-     * @since 4.0.0
-     *
-     * @return array The settings options.
-     */
-    public function settings(): array;
-
-    /**
-     * Describe the settings options.
-     *
-     * @since 4.0.0
-     *
-     * @return void
-     */
-    public function option_dispatcher( $data ): void;
 }
