@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.2.0
+Stable tag: 5.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -375,6 +375,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.2.1 ( Sep 30, 2026 ) =
+- **fix:** Fixed the setup wizard failing to load due to an outdated UI package.
+
 = v5.2.0 ( Sep 30, 2026 ) =
 - **new:** Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.
 - **new:** The revamped settings screen is opt-in: your existing settings carry over and stay in sync, and you can switch back to the classic screen at any time.
@@ -403,8 +406,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** The store sidebar no longer collapses to a narrow column on the Storefront theme when the theme's store sidebar is enabled.
 - **fix:** The admin Status and Pro Features pages now load their translations instead of always showing English.
 - **fix:** The admin settings "Choose File" button and the vendor form's "Last Name" label are now translatable.
-
-= v5.1.0 ( Sep 07, 2026 ) =
-- **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

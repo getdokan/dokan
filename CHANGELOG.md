@@ -1,3 +1,7 @@
+### v5.2.1 ( Sep 30, 2026 ) ###
+
+- **fix:** Fixed the setup wizard failing to load due to an outdated UI package.
+
 ### v5.2.0 ( Sep 30, 2026 ) ###
 
 - **new:** Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.
