@@ -21,7 +21,7 @@ interface StepInterface {
     /**
      * Get the step title.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return string The step title.
      */
@@ -34,7 +34,7 @@ interface StepInterface {
      * saves their values into the single `dokan_admin_settings` option, so the
      * wizard and the settings page stay one source of truth.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return string[] The canonical field ids.
      */

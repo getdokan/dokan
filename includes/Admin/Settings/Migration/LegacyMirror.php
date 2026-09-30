@@ -46,7 +46,7 @@ use WP_Error;
  * option, a stale row looks current, and the physical write silently
  * no-ops.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class LegacyMirror implements Hookable {
 
@@ -122,7 +122,7 @@ class LegacyMirror implements Hookable {
      * A plain `add_option()` is not adopted: it has no previous value to diff, and
      * an installer's default payload would otherwise overwrite the flat option.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return void
      */
@@ -145,7 +145,7 @@ class LegacyMirror implements Hookable {
     /**
      * Record a direct write to a legacy row: its overlay-projected old value and new value.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param mixed  $value     Value being written.
      * @param mixed  $old_value Previous (overlay-projected) value.
@@ -170,7 +170,7 @@ class LegacyMirror implements Hookable {
     /**
      * Adopt a direct write just before WordPress updates the existing row.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $option    Option name.
      * @param mixed  $old_value Previous value.
@@ -185,7 +185,7 @@ class LegacyMirror implements Hookable {
     /**
      * Adopt a direct write just before WordPress inserts the missing row.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $option Option name.
      * @param mixed  $value  Value being written.
@@ -202,7 +202,7 @@ class LegacyMirror implements Hookable {
      * Only fields whose value differs from the recorded old value are adopted,
      * so untouched (possibly stale) fields never overwrite the flat option.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $option Legacy option name.
      * @param mixed  $value  Value being written to the row.
@@ -263,7 +263,7 @@ class LegacyMirror implements Hookable {
      * skipped — the stale legacy leaf is harmless because reads stay
      * overlay-projected.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,mixed> $changed Added/modified flat-option entries.
      *
@@ -315,7 +315,7 @@ class LegacyMirror implements Hookable {
      * newly-mapped schema fields (where the flat option may hold the newer
      * value) or rows the lazy read-time hydration already serves live.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return void
      */
@@ -386,7 +386,7 @@ class LegacyMirror implements Hookable {
      * reactivation. Entries for fields removed for good stay behind as inert
      * data — reconciliation only walks currently-mapped fields.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,mixed>|null $snapshot Precomputed snapshot, or null to recompute.
      *
@@ -417,7 +417,7 @@ class LegacyMirror implements Hookable {
      * the mapped values through the bridge, producing a deterministic
      * `field_id => value` map suitable for baseline comparison and adoption.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array<string,mixed>
      */
@@ -446,7 +446,7 @@ class LegacyMirror implements Hookable {
     /**
      * Fire `dokan_before_saving_settings` for every legacy section a new-settings save maps to.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,mixed> $new_slice New-option keys and values about to be saved.
      *
@@ -486,7 +486,7 @@ class LegacyMirror implements Hookable {
     /**
      * Fire `dokan_after_saving_settings` per legacy section once a new-settings save is stored.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,array> $before Result of {@see before_save()}.
      *

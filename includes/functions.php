@@ -1045,7 +1045,7 @@ function dokan_edit_product_url( $product, bool $is_new_product = false ) {
 /**
  * Get the admin URL of a Dokan page on the screen (classic or new) the site uses.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  *
  * @param string $route Hash route, e.g. `settings` or `withdraw`. Empty for the dashboard.
  *
@@ -1121,7 +1121,7 @@ function dokan_get_option( $option, $section, $default_value = '' ) {
  * bootstrap, isolated tests), this falls back to a raw `update_option` so
  * legacy writes still succeed without the source-of-truth guarantee.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  *
  * @param string              $option_name Legacy wp_option name (e.g. `dokan_general`).
  * @param array<string,mixed> $payload     Legacy-shaped payload to persist.

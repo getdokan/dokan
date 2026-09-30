@@ -24,7 +24,7 @@ use Closure;
  * Closures are filter-safe in the current pipeline (no schema persistence);
  * swap to a dedicated class if the schema ever gets cached to a transient.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class MulticheckArrayBooleanTransformer {
 

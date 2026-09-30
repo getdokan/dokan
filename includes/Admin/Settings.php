@@ -1134,7 +1134,7 @@ class Settings {
     /**
      * Flush rewrite rules when the vendor store URL slug changes.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $option_name  Legacy option name.
      * @param array  $option_value Legacy option value after the save.

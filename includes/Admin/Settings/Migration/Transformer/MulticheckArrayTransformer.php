@@ -29,7 +29,7 @@ use Closure;
  * Companion to {@see MulticheckSlotTransformer}, which serves the
  * `Record<key, bool>` shape used by `info_preview` / `multi_switch`-style fields.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class MulticheckArrayTransformer {
 

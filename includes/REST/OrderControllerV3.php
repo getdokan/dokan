@@ -24,7 +24,7 @@ class OrderControllerV3 extends OrderControllerV2 {
      * Attach product and file details to each download permission.
      *
      * @since 4.0.0
-     * @since DOKAN_SINCE Skips permissions whose product or file is gone instead of fataling.
+     * @since 5.2.0 Skips permissions whose product or file is gone instead of fataling.
      *
      * @param \stdClass[]   $downloads Permissions already run through prepare_download_for_response(), so `product_id` lives in `product['id']`.
      * @param \WC_Product[] $products  Keyed by product ID.

@@ -89,7 +89,7 @@ class CommissionControllerV1 extends DokanRESTController {
      * Checking if have any permission.
      *
      * @since 3.14.0
-     * @since DOKAN_SINCE Vendors need a product capability and may only calculate against their own vendor ID and products.
+     * @since 5.2.0 Vendors need a product capability and may only calculate against their own vendor ID and products.
      *
      * @param WP_REST_Request $request
      *

@@ -23,7 +23,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * this transformer does not own. The schema field sets `legacy_merge => true`,
  * so the bridge merges this output over the stored leaf and keeps those flags.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class HideVendorInfoTransformer implements TransformerInterface {
 

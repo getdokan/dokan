@@ -13,7 +13,7 @@ namespace WeDevs\Dokan\Admin\Settings\Repository;
  * Writes persist to the legacy section option AND mirror mapped keys to the
  * new flat option via {@see SettingsRepositoryInterface}.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 interface LegacySettingsRepositoryInterface {
 

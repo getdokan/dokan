@@ -7,28 +7,28 @@ use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 /**
  * Nudges admins on the classic settings screen toward the new settings.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class NewSettingsNotice {
 
     /**
      * Notice scope, rendered only on the classic settings screen.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      */
     public const SCOPE = 'legacy_settings';
 
     /**
      * Transient set while the notice is postponed.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      */
     public const POSTPONED_TRANSIENT = 'dokan_new_settings_notice_postponed';
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      */
     public function __construct() {
         add_filter( 'dokan_admin_notices', [ $this, 'show_notice' ] );
@@ -38,7 +38,7 @@ class NewSettingsNotice {
     /**
      * Add the new settings notice.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $notices
      *
@@ -97,7 +97,7 @@ class NewSettingsNotice {
     /**
      * Hide the notice site-wide for a while.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return void
      */
@@ -113,7 +113,7 @@ class NewSettingsNotice {
         /**
          * Filter the number of days the new settings notice stays hidden after "Maybe later".
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param int $days Number of days.
          */

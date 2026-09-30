@@ -29,7 +29,7 @@ use Closure;
  * the current pipeline (no schema persistence); switch to a dedicated class
  * per method if the schema ever gets cached to a transient.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class WithdrawMethodToggleTransformer {
 

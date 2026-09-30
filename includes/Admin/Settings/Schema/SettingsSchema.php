@@ -13,7 +13,7 @@ use WeDevs\Dokan\Utilities\AdminSettings;
  *
  * Extension point: `apply_filters( 'dokan_get_admin_settings_schema', $elements )`
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class SettingsSchema {
 
@@ -71,7 +71,7 @@ class SettingsSchema {
          *
          * Pro and extensions append their elements to this array.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array $elements Flat array of settings elements.
          */
@@ -1976,7 +1976,7 @@ class SettingsSchema {
      * without losing the option order or having to repeat the icon-lookup
      * boilerplate at every call site.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,string> $options Associative map of `option_value => display_label`.
      *                                      Keys become the field value; values become the visible title.
