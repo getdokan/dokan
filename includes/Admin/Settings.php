@@ -1143,11 +1143,14 @@ class Settings {
      * @return void
      */
     public function flush_store_url_rewrites( $option_name, $option_value, $old_options ) {
-        if (
-            'dokan_general' !== $option_name
-            || ! isset( $old_options['custom_store_url'] )
-            || $old_options['custom_store_url'] === ( $option_value['custom_store_url'] ?? null )
-        ) {
+        if ( 'dokan_general' !== $option_name ) {
+            return;
+        }
+
+        // A missing slug on either side means the rewrites use the default `store`.
+        $old_slug = $old_options['custom_store_url'] ?? 'store';
+        $new_slug = $option_value['custom_store_url'] ?? 'store';
+        if ( $old_slug === $new_slug ) {
             return;
         }
 
