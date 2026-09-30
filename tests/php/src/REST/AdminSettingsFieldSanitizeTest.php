@@ -48,6 +48,39 @@ class AdminSettingsFieldSanitizeTest extends DokanTestCase {
         );
     }
 
+    public function test_number_field_rejects_an_infinite_value(): void {
+        ( new SettingsRepository() )->update( [ 'store_products_per_page' => 12 ] );
+
+        $response = $this->save( 'store', [ 'store_products_per_page' => '1e400' ] );
+
+        $this->assertSame( 400, $response->get_status() );
+        $this->assertSame( [ 'Please enter a valid number.' ], $response->get_data()['data']['errors']['store_products_per_page'] );
+        $this->assertSame( 12, ( new SettingsRepository() )->get( 'store_products_per_page' ) );
+    }
+
+    public function test_text_field_accepts_a_value_that_looks_like_a_huge_number(): void {
+        $response = $this->save( 'marketplace', [ 'vendor_store_url_slug' => '1e400' ] );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( '1e400', ( new SettingsRepository() )->get( 'vendor_store_url_slug' ) );
+    }
+
+    public function test_charge_field_rejects_an_infinite_numeric_string(): void {
+        $response = $this->save(
+            'commission',
+            [
+                'commission_type'  => 'fixed',
+                'admin_commission' => [
+                    'admin_percentage' => '10',
+                    'additional_fee'   => '1e400',
+                ],
+            ]
+        );
+
+        $this->assertSame( 400, $response->get_status() );
+        $this->assertArrayHasKey( 'admin_commission', $response->get_data()['data']['errors'] );
+    }
+
     public function test_option_field_rejects_a_value_outside_its_options(): void {
         ( new SettingsRepository() )->update( [ 'map_api_source' => 'google_maps' ] );
 

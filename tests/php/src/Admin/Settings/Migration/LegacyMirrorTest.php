@@ -298,6 +298,81 @@ class LegacyMirrorTest extends DokanTestCase {
     }
 
     /**
+     * A direct update_option() on a never-saved row creates the row and is adopted.
+     */
+    public function test_direct_update_of_missing_row_creates_row(): void {
+        $container = dokan_get_container();
+        $container->get( LegacyMirror::class )->register_write_listeners();
+        $container->get( SettingsRepository::class )->update( [ 'banner_width' => 111 ] );
+        delete_option( 'dokan_appearance' );
+        $this->assertNull( $this->raw_row( 'dokan_appearance' ) );
+
+        $this->assertTrue( update_option( 'dokan_appearance', [ 'store_banner_width' => 444 ] ) );
+
+        $this->assertSame( 444, $this->raw_row( 'dokan_appearance' )['store_banner_width'] );
+        $this->assertSame( 444, get_option( 'dokan_admin_settings' )['banner_width'] );
+    }
+
+    /**
+     * Listeners on update_option_{section} already read the adopted value.
+     */
+    public function test_update_listeners_see_the_adopted_value(): void {
+        $container = dokan_get_container();
+        $seen      = null;
+        add_action(
+            'update_option_dokan_appearance',
+            function () use ( $container, &$seen ) {
+                $container->get( LegacySettingsRepository::class )->flush_cache( null );
+                $seen = dokan_get_option( 'store_banner_width', 'dokan_appearance' );
+            }
+        );
+        $container->get( LegacyMirror::class )->register_write_listeners();
+        $container->get( SettingsRepository::class )->update( [ 'banner_width' => 111 ] );
+        $row                  = (array) $this->raw_row( 'dokan_appearance' );
+        $row['unmapped_flag'] = 'x';
+        $this->write_raw_row( 'dokan_appearance', $row );
+
+        $row                       = get_option( 'dokan_appearance', [] );
+        $row['store_banner_width'] = 555;
+        update_option( 'dokan_appearance', $row );
+
+        $this->assertSame( 555, $seen );
+    }
+
+    /**
+     * A stale row that already holds the new value writes zero rows; the value is still adopted.
+     */
+    public function test_zero_row_update_is_adopted(): void {
+        $container = dokan_get_container();
+        $container->get( LegacyMirror::class )->register_write_listeners();
+        $container->get( SettingsRepository::class )->update( [ 'banner_width' => 111 ] );
+        $row                       = (array) $this->raw_row( 'dokan_appearance' );
+        $row['unmapped_flag']      = 'x';
+        $row['store_banner_width'] = 666;
+        $this->write_raw_row( 'dokan_appearance', $row );
+
+        update_option( 'dokan_appearance', $row );
+
+        $this->assertSame( 666, get_option( 'dokan_admin_settings' )['banner_width'] );
+    }
+
+    /**
+     * A recorded write that WordPress dropped is never adopted by a later plain add_option().
+     */
+    public function test_stale_recorded_write_is_not_adopted_by_add_option(): void {
+        $container = dokan_get_container();
+        $container->get( LegacyMirror::class )->register_write_listeners();
+        $container->get( SettingsRepository::class )->update( [ 'banner_width' => 111 ] );
+        // An unchanged value is recorded, then WordPress exits before writing.
+        $this->assertFalse( update_option( 'dokan_appearance', get_option( 'dokan_appearance', [] ) ) );
+        delete_option( 'dokan_appearance' );
+
+        add_option( 'dokan_appearance', [ 'store_banner_width' => 888 ] );
+
+        $this->assertSame( 111, get_option( 'dokan_admin_settings' )['banner_width'] );
+    }
+
+    /**
      * QA-08: a plain add_option() (e.g. an installer writing defaults) has no
      * previous value and must not overwrite the flat option.
      */

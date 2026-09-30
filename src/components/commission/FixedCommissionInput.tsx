@@ -187,6 +187,8 @@ const FixedCommissionInput = ( {
                             onChange={ ( e ) =>
                                 debouncedPercentageChange( e.target.value )
                             }
+                            // Commit the pending value before Save reads the form.
+                            onBlur={ () => debouncedPercentageChange.flush() }
                             maskRule={ {
                                 numeral: true,
                                 delimiter: currency?.thousand ?? ',',
@@ -209,6 +211,7 @@ const FixedCommissionInput = ( {
                             onChange={ ( e ) =>
                                 debouncedFixedChange( e.target.value )
                             }
+                            onBlur={ () => debouncedFixedChange.flush() }
                             maskRule={ {
                                 numeral: true,
                                 delimiter: currency?.thousand ?? ',',
