@@ -373,6 +373,11 @@ class AdminSettingsController extends DokanBaseAdminController {
      * @return string[] Array of error messages (empty if valid).
      */
     protected function validate_field_value( array $field, $value ): array {
+        // INF/NaN can't be JSON-encoded and break later maths; report it alone, not beside range errors.
+        if ( $this->has_non_finite_number( $value ) ) {
+            return [ __( 'Please enter a valid number.', 'dokan-lite' ) ];
+        }
+
         $errors      = [];
         $validations = $field['validations'] ?? [];
         $variant     = $field['variant'] ?? $field['field_type'] ?? '';
@@ -631,6 +636,30 @@ class AdminSettingsController extends DokanBaseAdminController {
                  */
                 return apply_filters( 'dokan_rest_admin_settings_sanitize_field', $value, $field, $variant );
         }
+    }
+
+    /**
+     * Whether a value is, or contains, an infinite or NaN number (float or numeric string like '1e400').
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $value Sanitized field value.
+     *
+     * @return bool
+     */
+    protected function has_non_finite_number( $value ): bool {
+        if ( is_float( $value ) || ( is_string( $value ) && is_numeric( $value ) ) ) {
+            return ! is_finite( (float) $value );
+        }
+        if ( is_array( $value ) ) {
+            foreach ( $value as $item ) {
+                if ( $this->has_non_finite_number( $item ) ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
