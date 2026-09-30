@@ -113,9 +113,10 @@ class CombineInput extends Field {
      *
      * @param mixed $data Data for display.
      *
-     * @return string
+     * @return string|array
      */
-    public function escape_element( $data ): string {
-	    return esc_html( $data );
+    public function escape_element( $data ) {
+        // The value is a percentage/fee pair, so escape each part.
+        return is_array( $data ) ? array_map( 'esc_html', $data ) : esc_html( $data );
     }
 }

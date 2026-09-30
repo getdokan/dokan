@@ -38,4 +38,25 @@ class AdminSetupGuideControllerTest extends DokanTestCase {
         $this->assertSame( 'section', $data[0]['type'] );
         $this->assertContains( 'withdraw_limit', wp_list_pluck( $data[0]['children'], 'id' ) );
     }
+
+    public function test_step_dependencies_point_to_fields_in_the_step(): void {
+        $data = $this->get_request( 'setup-guide/commission' )->get_data();
+
+        $ids  = [];
+        $keys = [];
+        $walk = function ( array $elements ) use ( &$walk, &$ids, &$keys ) {
+            foreach ( $elements as $element ) {
+                $ids[] = $element['id'];
+                foreach ( $element['dependencies'] ?? [] as $dependency ) {
+                    $keys[] = $dependency['key'];
+                }
+                $walk( $element['children'] ?? [] );
+            }
+        };
+        $walk( $data );
+
+        $this->assertNotEmpty( $keys );
+        // The screen matches a dependency key against element ids.
+        $this->assertSame( [], array_values( array_diff( array_unique( $keys ), $ids ) ) );
+    }
 }
