@@ -16,6 +16,12 @@ use WeDevs\Dokan\Test\DokanTestCase;
  */
 class AdminPageUrlTest extends DokanTestCase {
 
+    public function set_up() {
+        parent::set_up();
+        // The installer opts fresh sites into the new screen; start from the classic default.
+        delete_option( LegacySwitcher::NEW_SETTINGS_OPTION );
+    }
+
     public function tear_down() {
         delete_option( LegacySwitcher::NEW_SETTINGS_OPTION );
         delete_transient( 'dokan_legacy_withdraw_page' );
