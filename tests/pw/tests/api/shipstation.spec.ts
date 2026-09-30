@@ -14,7 +14,7 @@ import { schemas } from '@utils/schemas';
 const { VENDOR_ID } = process.env;
 
 test.describe('ShipStation api test', () => {
-    test.skip(true, 'remove after pr is merged');
+    // [investigating] block skip removed
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {

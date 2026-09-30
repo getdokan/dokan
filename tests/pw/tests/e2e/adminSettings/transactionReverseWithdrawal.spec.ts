@@ -9,13 +9,13 @@ const oldDataset = [
         url: 'wp-admin/admin.php?page=dokan#/settings',
         selector: '//div[@class="nav-title" and contains(text(),"Reverse Withdrawal")]',
         fields: [
-            // Enable Reverse Withdrawal
-            // {
-            //     selector: '//label[@for="dokan_reverse_withdrawal[enabled]"]//label[@class="switch tips"]',
-            //     type: 'checkbox',
-            //     value: true,
-            // },
-            
+            // Set first: the legacy section gates the fields below it on this too.
+            {
+                selector: '//label[@for="dokan_reverse_withdrawal[enabled]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+
             // // Enable Reverse Withdrawal for Gateway - Cash on delivery
             // ToDo: Those fields will be vary based on enabled payment gateways in the site.
             // {
@@ -86,33 +86,33 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Transaction -> Reverse Withdrawal',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_transaction >> #dokan_settings_transaction_reverse_withdrawal',
+    selector: '[data-testid="settings-menu-transaction"] >> [data-testid="settings-menu-reverse_withdrawal"]',
     fields: [
-        // Activate Reverse Withdrawal (Cash On Delivery) - Switch
-        // Those fields will be vary based on enabled payment gateways in the site.
-        // {
-        //     selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_enabled button[role="switch"]',
-        //     type: 'switch',
-        //     value: true,
-        // },
-        
+        // Set first: everything below is dependency-gated on it. The control is
+        // a `span[role="switch"]`, not a button.
+        {
+            selector: '[data-testid="settings-field-reverse_withdrawal_enabled"] [role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+
         // Billing Type - Radio Group
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_billing_type button[name="by_amount"]',
-            type: 'radio',
-            value: 'true', // Options: 'by_amount', 'by_month'
+            selector: '[data-testid="settings-field-reverse_withdrawal_billing_type"]',
+            type: 'radio-capsule',
+            value: 'By Amount Limit', // Options: 'by_amount', 'by_month'
         },
         
         // Reverse Balance Threshold (USD)
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_reverse_balance_threshold input[type="number"]',
+            selector: '[data-testid="settings-field-reverse_withdrawal_balance_threshold"] input[type="number"]',
             type: 'number',
             value: '150',
         },
         
         // Grace Period (Days)
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_due_period input[type="number"]',
+            selector: '[data-testid="settings-field-reverse_withdrawal_due_period"] input[type="number"]',
             type: 'number',
             value: '7',
         },
@@ -140,14 +140,14 @@ const newDataset = {
         
         // Display Notice During Grace Period - Switch
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_reverse_withdrawal_grace_period_notice button[role="switch"]',
+            selector: '[data-testid="settings-field-reverse_withdrawal_grace_period_notice"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Send Announcement - Switch
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_send_announcement button[role="switch"]',
+            selector: '[data-testid="settings-field-send_announcement"] [role="switch"]',
             type: 'switch',
             value: false,
         },

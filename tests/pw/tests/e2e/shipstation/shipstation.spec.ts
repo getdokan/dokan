@@ -22,6 +22,10 @@ test.describe('ShipStation test', () => {
         vPage = await vendorContext.newPage();
         vendor = new ShipStationPage(vPage);
         apiUtils = new ApiUtils(null);
+        // Deterministic start state: ensure the ShipStation module is active so
+        // the first test ("admin can enable …") reliably sees the nav sub-item,
+        // regardless of how a prior (possibly interrupted) run left the option.
+        await apiUtils.activateModules(payloads.moduleIds.shipStation, payloads.adminAuth);
     });
 
     test.afterAll(async () => {

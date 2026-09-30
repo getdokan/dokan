@@ -62,8 +62,8 @@ const urls = {
 // ============================================
 const vendorDashboard = {
     menus: {
-        menus: '#primary ul.dokan-dashboard-menu',
-        activeMenu: '#primary .dokan-dashboard-menu li.active',
+        menus: 'ul.dokan-dashboard-menu',
+        activeMenu: '.dokan-dashboard-menu li.active',
         primary: {
             dashboard: 'ul.dokan-dashboard-menu li.dashboard a',
             products: 'ul.dokan-dashboard-menu li.products a',

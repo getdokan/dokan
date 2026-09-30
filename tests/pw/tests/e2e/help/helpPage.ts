@@ -60,18 +60,20 @@ const selectors = {
         },
     },
     dashboard: {
+        // Redesigned in 5.0.x: the header help menu is an icon fly-out with a
+        // `.cursor-pointer` trigger inside the help-menu container; items are
+        // aria-labelled links ('What's New'->'Changelog', 'Get Support' removed).
         header: {
-            getHelpMenu: '.dokan-admin-header-menu .menu-icon',
+            getHelpMenu: '[data-test-id="dokan-dashboard-header-help-menu-container"] .cursor-pointer',
         },
         getHelp: {
-            whatsNew: '//div[@class="list-item"]//a[normalize-space()="What’s New"]',
-            getSupport: '//div[@class="list-item"]//a[normalize-space()="Get Support"]',
-            community: '//div[@class="list-item"]//a[normalize-space()="Community"]',
-            documentation: '//div[@class="list-item"]//a[normalize-space()="Documentation"]',
-            faq: '//div[@class="list-item"]//a[normalize-space()="FAQ"]',
-            basicAndFundamental: '//div[@class="list-item"]//a[normalize-space()="Basic & Fundamental"]',
-            requestAFeature: '//div[@class="list-item"]//a[normalize-space()="Request a Feature"]',
-            importDummyData: '//div[@class="list-item"]//a[normalize-space()="Import dummy data"]',
+            changelog: '[data-test-id="dokan-dashboard-header-help-menu-container"] a[aria-label="Changelog"]',
+            community: '[data-test-id="dokan-dashboard-header-help-menu-container"] a[aria-label="Community"]',
+            documentation: '[data-test-id="dokan-dashboard-header-help-menu-container"] a[aria-label="Documentation"]',
+            faq: '[data-test-id="dokan-dashboard-header-help-menu-container"] a[aria-label="FAQ"]',
+            basicAndFundamental: '[data-test-id="dokan-dashboard-header-help-menu-container"] a[aria-label="Basic & Fundamental"]',
+            requestAFeature: '[data-test-id="dokan-dashboard-header-help-menu-container"] a[aria-label="Request a Feature"]',
+            importDummyData: '[data-test-id="dokan-dashboard-header-help-menu-container"] a[aria-label="Import dummy data"]',
         },
     },
 };

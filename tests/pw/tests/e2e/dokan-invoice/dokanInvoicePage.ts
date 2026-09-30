@@ -7,7 +7,7 @@ declare const Buffer: {
     from(input: string | Uint8Array, encoding?: string): { toString(encoding: string): string };
 };
 
-import { toPath, SERVER_URL } from '@utils/helpers';
+import { toPath, SERVER_URL, closeAnnouncementModal } from '@utils/helpers';
 
 /**
  * Page object for the Dokan Invoice add-on UI surfaces.
@@ -33,6 +33,14 @@ export class DokanInvoicePage {
 
     constructor(page: Page) {
         this.page = page;
+        // The Dokan Pro vendor dashboard (/dashboard/new/) shows an announcement
+        // modal whose .components-modal__screen-overlay intercepts pointer events
+        // and blocks the order row-action clicks the NewDash tests perform. Auto-
+        // dismiss it (no-op on the customer/admin surfaces, where it never shows).
+        // Without this, NewDash passed only by luck — when a co-located spec
+        // dismissed the modal first; balanced sharding moving this spec to a shard
+        // where it runs first exposed the latent order-dependence.
+        void closeAnnouncementModal(this.page);
     }
 
     // ============================================

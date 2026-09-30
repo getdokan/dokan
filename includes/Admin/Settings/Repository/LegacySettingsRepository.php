@@ -31,19 +31,30 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
         $this->new_repo = $new_repo ?? new SettingsRepository();
         $this->bridge   = $bridge ?? new LegacySettingsBridge();
 
-        foreach ( $this->known_sections() as $section ) {
-            add_action( "update_option_{$section}", [ $this, 'on_section_changed' ] );
-            add_action( "add_option_{$section}", [ $this, 'on_section_changed' ] );
-            add_action( "delete_option_{$section}", [ $this, 'on_section_changed' ] );
-        }
-
-        // The new flat option participates in every overlay — its writes invalidate
-        // every snapshot. Use named callbacks so the same listener isn't bound twice
-        // if the repository is instantiated more than once in a request.
-        $new_option = SettingsRepository::OPTION_KEY;
-        add_action( "update_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
-        add_action( "add_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
-        add_action( "delete_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
+        // Section invalidation uses WordPress' generic option hooks, all of
+        // which pass the changed option name as their first argument.
+        //
+        // Binding the per-section `{add,update,delete}_option_{$section}`
+        // variants instead would mean enumerating the bridge mapping here, and
+        // that builds the whole admin settings schema during construction.
+        // `dokan_get_option()` resolves this repository as early as
+        // `plugins_loaded`, so that would (a) run the schema's `esc_html__()`
+        // calls before `init` (WP 6.7+ `_load_textdomain_just_in_time` notice)
+        // and (b) recurse without bound: a schema callback that itself calls
+        // `dokan_get_option()` re-enters the container before the shared
+        // instance is registered, so every nested call builds *another*
+        // repository and bridge — the bridge's own re-entry latch is
+        // per-instance and cannot see the outer build.
+        //
+        // Deferring the binding to `init` is not a way out either: a repository
+        // first constructed after `init` has already fired would never bind at
+        // all and would serve stale snapshots for the rest of the request.
+        //
+        // Snapshots only exist for sections that were read, so `flush_cache()`
+        // is a no-op for every unrelated option.
+        add_action( 'added_option', [ $this, 'on_section_changed' ] );
+        add_action( 'updated_option', [ $this, 'on_section_changed' ] );
+        add_action( 'deleted_option', [ $this, 'on_section_changed' ] );
     }
 
     public function all( string $section ): array {
@@ -84,17 +95,21 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             return [];
         }
 
-        // Route the incoming slice through the bridge: mapped keys go to the
-        // new flat option only; the legacy row holds unmapped keys only.
-        $stripped_slice = $this->bridge->persist_legacy_section( $section, $slice );
+        // Route the incoming slice through the bridge: mapped keys are
+        // mirrored into the new flat option; with the legacy mirror enabled
+        // (default) they also stay in the legacy row so a downgraded plugin
+        // still reads current data, otherwise they are stripped out.
+        $persistable_slice = $this->bridge->persist_legacy_section( $section, $slice );
 
-        $raw    = get_option( $section, [] );
-        $raw    = is_array( $raw ) ? $raw : [];
-        // Defensive: a previously-stored legacy row may still hold mapped keys
-        // (lazy migration policy — we never backfill on read). Strip them on
-        // every write so the saved row converges on the invariant.
-        $raw    = $this->bridge->strip_mapped_keys( $section, $raw );
-        $merged = array_merge( $raw, $stripped_slice );
+        $raw = get_option( $section, [] );
+        $raw = is_array( $raw ) ? $raw : [];
+        if ( ! LegacySettingsBridge::is_legacy_mirror_enabled() ) {
+            // Strict mode: a previously-stored legacy row may still hold mapped
+            // keys. Strip them on every write so the row converges on the
+            // mapped-keys-live-only-in-the-flat-option invariant.
+            $raw = $this->bridge->strip_mapped_keys( $section, $raw );
+        }
+        $merged = array_merge( $raw, $persistable_slice );
 
         update_option( $section, $merged, true );
         // Refresh our snapshot now — the WP hook already flushed it, but we want
@@ -129,13 +144,13 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             }
         }
 
-        // `replace` is a full-row write, so mapped keys must be peeled off
-        // before we land the legacy option. The bridge mirrors them into the
-        // new flat option as a side effect.
-        $stripped_payload = $this->bridge->persist_legacy_section( $section, $payload );
+        // `replace` is a full-row write. The bridge mirrors mapped keys into
+        // the new flat option as a side effect; with the legacy mirror enabled
+        // (default) they also stay in the row, otherwise they are peeled off.
+        $persistable_payload = $this->bridge->persist_legacy_section( $section, $payload );
 
-        update_option( $section, $stripped_payload, true );
-        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $stripped_payload );
+        update_option( $section, $persistable_payload, true );
+        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $persistable_payload );
 
         if ( ! empty( $diff ) ) {
             /** This action is documented in includes/Admin/Settings/Repository/LegacySettingsRepository.php */
@@ -154,20 +169,24 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
     }
 
     /**
-     * WP hook listener — receives `($option, …)` from add_option / `($old, $new, $option)` from update_option.
-     * We only need the option name, which we derive from the current filter name.
+     * WP hook listener for `added_option` / `updated_option` / `deleted_option`.
+     * All three pass the changed option name as their first argument.
+     *
+     * @param string $option Option name that changed.
      *
      * @return void
      */
-    public function on_section_changed(): void {
-        $option = current_action();
-        foreach ( [ 'update_option_', 'add_option_' ] as $prefix ) {
-            if ( 0 === strpos( $option, $prefix ) ) {
-                $section = substr( $option, strlen( $prefix ) );
-                $this->flush_cache( $section );
-                return;
-            }
+    public function on_section_changed( $option = '' ): void {
+        $option = (string) $option;
+
+        // The new flat option is the overlay source for *every* section, so its
+        // writes invalidate all snapshots, not just one.
+        if ( SettingsRepository::OPTION_KEY === $option ) {
+            $this->flush_all_snapshots();
+            return;
         }
+
+        $this->flush_cache( $option );
     }
 
     /**
@@ -178,22 +197,6 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
      */
     public function flush_all_snapshots(): void {
         $this->flush_cache( null );
-    }
-
-    /**
-     * Unique legacy wp_option names that the bridge currently knows about.
-     *
-     * @return array<int,string>
-     */
-    private function known_sections(): array {
-        $map      = $this->bridge->get_mapping();
-        $sections = [];
-        foreach ( $map as $entry ) {
-            if ( is_array( $entry ) && isset( $entry['option'] ) && is_string( $entry['option'] ) ) {
-                $sections[ $entry['option'] ] = true;
-            }
-        }
-        return array_keys( $sections );
     }
 
     /**

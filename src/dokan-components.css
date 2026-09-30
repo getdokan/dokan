@@ -85,6 +85,27 @@ input[type="radio"]:focus {
     @apply -translate-x-2;
 }
 
+/* RTL: mirror the whole toggle so the knob lands correctly regardless of each page's button padding. */
+button[role="switch"]:not([data-slot]):where([dir="rtl"], [dir="rtl"] *) {
+    direction: ltr;
+    transform: scaleX(-1);
+}
+
+/* RTL: re-center the checkmark and radio dot, which WordPress positions for LTR only. */
+svg.components-checkbox-control__checked:where([dir="rtl"], [dir="rtl"] *),
+svg.components-checkbox-control__indeterminate:where([dir="rtl"], [dir="rtl"] *),
+.components-radio-control__input[type="radio"]:checked:where([dir="rtl"], [dir="rtl"] *)::before {
+    right: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Logical margin on the checkbox input so the box stays centered under its checkmark in RTL too. */
+.components-checkbox-control__input[type="checkbox"] {
+    margin: 0 !important;
+    margin-inline-end: 4px !important;
+}
+
 /* ========== Link Styles ========== */
 a:not(.dokan-btn):not([class*="dokan-btn-"]):not(.skip-color-module) {
     color: var(--color-primary);

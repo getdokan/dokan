@@ -2190,11 +2190,12 @@ export const dbData = {
             // 'moip', // Deprecated - removed in Dokan Pro 4.2+
             'order_min_max',
             'paypal_marketplace',
+            'paystack',
             'printful',
             'product_addon',
             'product_advertising',
+            'product_editor', // Product Form Manager — required by the Rank Math new product-editor SEO card
             'product_enquiry',
-            // 'product_form_customization', // todo: enable after PR is merged
             'product_qa',
             'product_subscription',
             'rank_math',
@@ -2213,6 +2214,7 @@ export const dbData = {
             'table_rate_shipping',
             'vendor_analytics',
             'vendor_staff',
+            'vendor_support',
             'vendor_verification',
             'vsp',
             'wholesale',

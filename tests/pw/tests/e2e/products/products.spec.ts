@@ -1,5 +1,6 @@
 import { test, Page } from '@utils/test';
 import { ProductsPage, api, productData, predefined } from './productsPage';
+import { dbUtils } from '@utils/dbUtils';
 import path from 'path';
 
 // ============================================
@@ -8,14 +9,43 @@ import path from 'path';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
-test.describe.skip('Product functionality test', () => {
+test.describe('Product functionality test', () => {
     let admin: ProductsPage;
     let vendor: ProductsPage;
     let aPage: Page, vPage: Page;
     let productName: string;
+    let originalProductEditor: string;
 
     test.beforeAll(async ({ browser }) => {
+        // Catalog Mode vendor controls only render on the add-product page when the admin has enabled them.
+        await dbUtils.updateOptionValue('dokan_selling', { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        // Ensure the vendor's own catalog-mode toggles are off so enabling the admin feature above does not
+        // hide price/add-to-cart on the vendor's storefront products (asserted by the view-product test).
+        const dbPrefix = process.env.DB_PREFIX;
+        const [vendorRow] = await dbUtils.dbQuery(`SELECT ID FROM ${dbPrefix}_users WHERE user_login = ?`, [process.env.VENDOR]);
+        await dbUtils.updateUserMeta(String(vendorRow.ID), 'dokan_profile_settings', { catalog_mode: { hide_add_to_cart_button: 'off', hide_product_price: 'off' } });
+
+        // On a fresh env the auth stage sets dokan_appearance.vendor_product_editor='latest', which routes the
+        // vendor "Add/Edit product" page to the React editor. This whole spec drives the CLASSIC editor
+        // (#post_title, #_regular_price, #product_type, ...), so flip to the legacy editor and restore in afterAll.
+        const [originalAppearance] = await dbUtils.updateOptionValue('dokan_appearance', { vendor_product_editor: 'legacy' });
+        originalProductEditor = originalAppearance?.vendor_product_editor ?? 'latest';
+
         await api.init();
+
+        // The e2e setup deletes the default WC "Uncategorized" term and reseeds a custom category set, which
+        // leaves two gaps this spec depends on:
+        //   1. The admin add-product tests tick productData.category in the WC editor's category metabox — the
+        //      term must exist for that checkbox to be present.
+        //   2. The vendor classic add-product form auto-fills the required chosen_product_cat[] hidden input
+        //      from the site's `default_product_cat` (see dokan-category-header-ui.php). That option still
+        //      points at the deleted "Uncategorized" term, so it resolves to an invalid term, the hidden input
+        //      is never rendered, and every vendor save fails with "Please select a category". Re-create the
+        //      category and repoint default_product_cat at it so the vendor forms get a valid default again.
+        const categoryId = await api.ensureCategory(productData.simple.category);
+        if (categoryId) {
+            await dbUtils.setOptionValue('default_product_cat', categoryId, false);
+        }
 
         const adminContext = await browser.newContext({ storageState: a1 });
         aPage = await adminContext.newPage();
@@ -29,6 +59,8 @@ test.describe.skip('Product functionality test', () => {
     });
 
     test.afterAll(async () => {
+        // Restore the vendor product editor mode captured before the spec flipped it to legacy.
+        await dbUtils.updateOptionValue('dokan_appearance', { vendor_product_editor: originalProductEditor });
         await aPage?.close();
         await vPage?.close();
         await api.dispose();

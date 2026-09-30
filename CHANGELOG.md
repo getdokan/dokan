@@ -1,14 +1,138 @@
-### Unreleased — refactor/simplify-settings-to-flat-array (dev branch only)
+### v5.1.3 ( Sep 24, 2026 ) ###
 
-**Breaking changes (dev/QA installs only)**
+- **fix:** The vendor dashboard navigation is no longer rebuilt on every request, so cron, Action Scheduler, and other background requests no longer do that work on each hit.
+- **fix:** The vendor product list now shows each product's real type instead of labeling unrecognized types as Simple.
+- **fix:** Prices on the vendor dashboard now follow the store's configured number of decimals, so a zero-decimal currency no longer shows trailing decimals.
+- **fix:** Vendors can now reorder product gallery images by dragging them in the new product editor.
+- **fix:** REST pagination links now point at the endpoint that actually served the request instead of the controller's shared base route.
+- **fix:** Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.
 
-The following admin settings field ids were renamed to be globally unique
-across the flat `dokan_settings` storage. Dev/QA installs running this
-branch must re-save the affected tabs to restore their values:
+### v5.1.2 ( Sep 17, 2026 ) ###
 
-- `dokan_reverse_withdrawal.enabled` → `dokan_settings.reverse_withdrawal_enabled`
-- `dokan_appearance.google_map_api_key` (fieldgroup id) → `google_map_api_key_group`
-- `dokan_appearance.mapbox_api_key` (fieldgroup id) → `mapbox_api_key_group`
+- **update:** Added FlyCRM to the setup wizard's recommended add-ons and removed Texty from that step.
+- **update:** Added FlyCRM to the admin Extensions page as an installable add-on.
+- **fix:** Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.
+- **fix:** The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.
+
+### v5.1.1 ( Sep 09, 2026 ) ###
+
+- **fix:** The Vendors screen's Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.
+- **fix:** The Pending vendors filter now runs as a single keyed subquery instead of stacked meta queries, so the Vendors screen stays fast on sites with many users.
+- **fix:** The new product editor now shows the category the vendor actually picked instead of its top-level parent.
+- **fix:** The store sidebar no longer collapses to a narrow column on the Storefront theme when the theme's store sidebar is enabled.
+- **fix:** The admin Status and Pro Features pages now load their translations instead of always showing English.
+- **fix:** The admin settings "Choose File" button and the vendor form's "Last Name" label are now translatable.
+
+### v5.1.0 ( Sep 07, 2026 ) ###
+
+- **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
+
+### v5.0.19 ( Sep 03, 2026 ) ###
+
+- **update:** Declared compatibility with WooCommerce 11.0.1 so the outdated compatibility notice no longer appears on the Plugins screen.
+- **fix:** In the new product editor, saving a product that has gallery images but no featured image no longer moves the first gallery image into the featured slot, so all gallery photos are kept.
+- **fix:** The vendor dashboard now shows an error message instead of loading forever when it can't load the current user.
+- **fix:** Turning off the "Register as a Vendor" option now blocks vendor sign-ups on the server, not just in the form, so a crafted request can no longer register a vendor while the option is disabled.
+
+### v5.0.18 ( Sep 01, 2026 ) ###
+
+- **new:** Dokan now owns the `wp dokan` WP-CLI namespace and exposes a `dokan_cli_commands` filter, so Dokan and its extensions can register CLI commands from a single place.
+
+### v5.0.17 ( Aug 25, 2026 ) ###
+
+- **fix:** Fixed a loading error that could break the vendor dashboard, product editor, or admin dashboard when a shared UI component was read before it finished loading.
+- **fix:** In the new product editor, searchable dropdowns such as Tags now load and search all options instead of being limited to the first 20.
+
+### v5.0.16 ( Aug 21, 2026 ) ###
+
+- **fix:** The vendor order CSV export now respects the Hide Customer Info setting, hiding the customer's name, phone, and billing and shipping address instead of only the email and IP address.
+- **fix:** Removed a redundant cache flush that could significantly slow checkout on stores using a persistent object cache such as Redis.
+- **fix:** The product editor now enforces the required Downloadable Files field, so a downloadable product can no longer be saved without an attached file when the field is marked required.
+- **fix:** Vendor dashboard list labels such as "No data found" are now translatable through Dokan's language files.
+
+### v5.0.15 ( Aug 19, 2026 ) ###
+
+- **new:** Added multivendor-aware support for the WooCommerce Abilities (MCP) API so AI assistants and connected tools only access a vendor's own products and orders, plus new Dokan-native abilities for marketplace-specific data WooCommerce doesn't provide on its own.
+- **fix:** The product editor's Attributes field now honors the placeholder text configured in the Product Form Manager.
+- **fix:** Vendor dashboard menu labels with special characters such as ampersands (&) now display correctly instead of showing raw HTML entities.
+
+### v5.0.14 ( Aug 17, 2026 ) ###
+
+- **fix:** Prevented unauthenticated visitors from reading a vendor's commission settings through the public store-categories endpoint.
+- **fix:** Prevented Shop Managers from installing or activating arbitrary plugins through Dokan's admin endpoints and setup wizard by requiring the proper plugin capabilities.
+- **fix:** Prevented vendors from clearing their reverse-withdrawal balance with an arbitrary payment amount by reconciling it against their actual outstanding debt.
+
+### v5.0.13 ( Aug 12, 2026 ) ###
+
+- **new:** The admin menu now shows pending-count badges on the Vendors and Withdraw items, so admins can see at a glance how many vendors and withdrawal requests need review.
+- **fix:** A store's public product listing now returns only that store's products instead of the entire catalogue.
+
+### v5.0.12 ( Aug 03, 2026 ) ###
+
+- **fix:** Stopped the vendor dashboard landing page from loading twice and removed duplicated shared UI libraries, so the dashboard loads faster.
+
+### v5.0.11 ( Jul 27, 2026 ) ###
+
+- **update:** Vendors can now search for products by SKU as well as by name.
+- **fix:** Store-page buttons now respect the Astra theme's global button styling.
+- **fix:** Downloadable files from the new product editor are now saved to WooCommerce's approved uploads directory.
+- **fix:** Prevented vendors from changing the status of another vendor's orders through dashboard bulk actions.
+- **fix:** Prevented vendors from granting download access to another vendor's files.
+- **fix:** Prevented vendors from revoking download permissions on another vendor's orders.
+- **fix:** Prevented vendors from toggling Catalog Mode on another vendor's products.
+
+### v5.0.10 ( Jul 21, 2026 ) ###
+
+- **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
+- **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
+- **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
+
+### v5.0.9 ( Jul 14, 2026 ) ###
+
+- **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
+- **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
+- **fix:** Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.
+- **fix:** Vendors can no longer give their customers download access to another vendor's downloadable files.
+- **fix:** Vendors can no longer change another vendor's product attributes.
+- **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
+- **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
+
+### v5.0.8 ( Jul 06, 2026 ) ###
+
+- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
+
+### v5.0.7 ( Jun 29, 2026 ) ###
+
+- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
+- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
+
+### v5.0.6 ( Jun 26, 2026 ) ###
+
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
+
+### v5.0.5 ( Jun 19, 2026 ) ###
+
+- **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
+- **update:** Updated price formatting in the product editor to use locale-specific display.
+- **fix:** Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.
+- **fix:** Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.
+- **fix:** Restricted the Products REST endpoint so vendors can no longer access other vendors' products via the id parameter.
+- **fix:** Decoded HTML entities in product category labels for correct rendering.
+- **fix:** Corrected the product edit URL and improved dashboard navigation for the new product UI.
+
+### v5.0.4 ( Jun 08, 2026 ) ###
+
+- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
+- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
+- **fix:** Allowed vendors to create new product tags inline from the new product editor.
+- **fix:** Resolved withdraw approval failing on an exact fractional balance.
+- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
 
 ### v5.0.3 ( May 21, 2026 ) ###
 

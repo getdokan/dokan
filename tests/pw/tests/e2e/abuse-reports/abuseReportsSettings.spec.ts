@@ -238,6 +238,23 @@ test.describe('Abuse Reports — Admin Settings @pro', () => {
         // not a word-count one, so we can detect a true length cap.
         const longReason = `${REASON_BASE}-` + 'x'.repeat(300);
 
+        // POSITIVE CONTROL. The "rejected" branch below concludes that the
+        // settings layer refused an over-length reason — but "nothing was
+        // stored" is also what a totally broken add/save path looks like, and
+        // readReasonValues() degrades a failed option read to []. Persist a
+        // normal-length reason FIRST, in its own save cycle, so the rejection
+        // branch can prove the path was healthy rather than assert a constant.
+        const controlReason = `${REASON_BASE} Ctrl ${faker.string.nanoid(6)}`;
+        await abuseReportsPage.goToSettingsPage();
+        await abuseReportsPage.searchSettings(abuseReportsPage.testData.abuseReports.settingsSearchKeyword);
+        await abuseReportsPage.fillNewAbuseReason(controlReason);
+        await abuseReportsPage.clickAddReasonPlusButton();
+        await abuseReportsPage.clickSaveChanges();
+        expect(
+            await readReasonValues(),
+            'Control: a normal-length reason must persist, proving the add/save path works',
+        ).toContain(controlReason);
+
         await abuseReportsPage.goToSettingsPage();
         await abuseReportsPage.searchSettings(abuseReportsPage.testData.abuseReports.settingsSearchKeyword);
 
@@ -261,8 +278,14 @@ test.describe('Abuse Reports — Admin Settings @pro', () => {
         // the known gap (a >191-char reason can be selected on the form but is
         // truncated to 191 when a report is created).
         if (stored === undefined) {
-            // Reason was rejected outright — that satisfies the case.
-            expect(true, 'Over-length reason was rejected at the settings layer').toBe(true);
+            // Reason was rejected outright — that satisfies the case, but ONLY
+            // if the save path itself still works. Without this the branch was
+            // `expect(true).toBe(true)` and a total regression of the reason-add
+            // path (or a failed option read) reported green.
+            expect(
+                after,
+                'Over-length reason was rejected at the settings layer (control reason still persisted, so the save path is healthy)',
+            ).toContain(controlReason);
         } else {
             const noteGap = stored.length > REASON_TABLE_VARCHAR_LIMIT;
             // Assert the real, observable behaviour rather than weaken it: the
@@ -395,7 +418,14 @@ test.describe('Abuse Reports — Admin Settings @pro', () => {
         expect(await readSettingA(), 'Setting A should be ON for this guest-block test').toBe('on');
 
         // Baseline DB row count before the guest attempt.
-        const beforeRows = await dbUtils.getMaxId('id', 'dokan_report_abuse_reports').catch(() => 0);
+        // No `.catch(() => 0)` fallback on either read. Both sides used to
+        // collapse to the same literal 0 on a DB error, so a missing/renamed
+        // abuse-reports table turned the "no new row" assertion below into
+        // expect(0).toBe(0) — green exactly when the probe was broken. An
+        // un-guarded read is the established pattern (abuseReportsList.spec.ts:77)
+        // and the happy path is unaffected: an empty table yields null on both
+        // reads, which still compares equal.
+        const beforeRows = await dbUtils.getMaxId('id', 'dokan_report_abuse_reports');
 
         // Guest context.
         const guestCtx = await browser.newContext();
@@ -438,7 +468,7 @@ test.describe('Abuse Reports — Admin Settings @pro', () => {
         await guestCtx.close();
 
         // No new report row should have been created by the blocked guest.
-        const afterRows = await dbUtils.getMaxId('id', 'dokan_report_abuse_reports').catch(() => 0);
+        const afterRows = await dbUtils.getMaxId('id', 'dokan_report_abuse_reports');
         expect(
             afterRows,
             'A blocked guest must not create a new abuse-report row',
@@ -485,29 +515,30 @@ test.describe('Abuse Reports — Admin Settings @pro', () => {
         await abuseReportsPage.clickAddReasonPlusButton();
         await abuseReportsPage.clickSaveChanges();
 
-        // Success feedback: Dokan settings render a "Setting has been saved
-        // successfully." toast/notice. Match permissively (toast OR notice OR
-        // the canonical text), and treat the persisted change as the
-        // load-bearing success signal so a re-styled toast doesn't flake.
+        // Persistence — the change actually reached the option.
         const persisted = await readReasonValues();
         expect(
             persisted,
             'The saved reason should be present in the option (save succeeded)',
         ).toContain(feedbackReason);
 
-        const feedbackVisible = await adminPage
-            .locator(
-                "//*[contains(translate(normalize-space(.), 'SAVED', 'saved'), 'saved successfully') or contains(normalize-space(.), 'Setting has been saved')]",
-            )
-            .first()
-            .isVisible()
-            .catch(() => false);
-        // The toast is transient; persistence above is the hard assertion,
-        // this is a soft confirmation that the UI surfaced feedback at all.
-        expect(
-            feedbackVisible || persisted.includes(feedbackReason),
-            'Save should surface success feedback (toast/notice) or at minimum persist the change',
-        ).toBe(true);
+        // Success feedback — the behaviour this case is named for. Asserted
+        // hard, against the real element: src/admin/pages/Settings.vue:8 renders
+        // `#setting-message_updated` with `v-if="isSaved"` and the `updated`
+        // class when `isUpdated`. It is NOT transient — `isSaved` is only
+        // cleared by the user clicking dismiss (Settings.vue:10) — so waiting on
+        // it cannot flake.
+        //
+        // This previously read `expect(feedbackVisible || persisted.includes(...))`,
+        // whose right-hand side was already proven true by the assertion above,
+        // making the whole disjunction constant. Deleting the notice entirely
+        // still left this test green.
+        const saveNotice = adminPage.locator('#setting-message_updated.updated');
+        await expect(saveNotice, 'Save should surface the success notice').toBeVisible({ timeout: 15000 });
+        await expect(
+            saveNotice,
+            'Success notice should carry the "saved successfully" message',
+        ).toContainText(/saved successfully/i);
 
         // No console errors during the settings save flow.
         expect(

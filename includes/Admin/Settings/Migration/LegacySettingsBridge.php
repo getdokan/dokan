@@ -64,6 +64,15 @@ class LegacySettingsBridge {
     private ?array $transformers = null;
 
     /**
+     * New-flat ids whose schema entry sets `legacy_merge => true`. For these
+     * the transformed value is merged over the stored legacy array instead of
+     * replacing it. See {@see write_address()}.
+     *
+     * @var array<string,bool>|null
+     */
+    private ?array $merge_keys = null;
+
+    /**
      * Cached resolved transformer instances keyed by FQCN (for class specs)
      * or by `callable:<new_key>` (for callable-pair specs).
      *
@@ -114,6 +123,47 @@ class LegacySettingsBridge {
     }
 
     /**
+     * Whether legacy rows are kept as a full, downgrade-safe mirror.
+     *
+     * Enabled (default): mapped values are written through to the legacy
+     * `dokan_*` rows on every save ({@see LegacyMirror}), legacy payloads are
+     * NOT stripped of mapped keys, and edits made by an older plugin version
+     * (which knows nothing about `dokan_admin_settings`) are reconciled back
+     * into the flat option on re-upgrade. Disabled: the pre-mirror strict
+     * model — mapped keys live only in `dokan_admin_settings` and legacy rows
+     * hold the unmapped remainder.
+     *
+     * Single-line switch: `add_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );`
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_legacy_mirror_enabled(): bool {
+        /**
+         * Filter whether the downgrade-safe legacy mirror is enabled.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $enabled Default true.
+         */
+        return (bool) apply_filters( 'dokan_admin_settings_legacy_mirror', true );
+    }
+
+    /**
+     * Unique legacy wp_option names the current mapping refers to, including
+     * options reached only through multi-slot (1:N) mappings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<int,string>
+     */
+    public function known_sections(): array {
+        $this->build_map();
+        return array_keys( $this->by_option ?? [] );
+    }
+
+    /**
      * Flush the in-request caches held by this bridge and its collaborators.
      *
      * Drops the mapping memo, the defaults/transformers indices, and asks the
@@ -129,6 +179,7 @@ class LegacySettingsBridge {
         $this->map                 = null;
         $this->defaults            = null;
         $this->transformers        = null;
+        $this->merge_keys          = null;
         $this->by_option           = null;
         $this->cached_filter_count = null;
         $this->settings_repo->flush_cache();
@@ -296,7 +347,7 @@ class LegacySettingsBridge {
             }
             if ( $entry instanceof LegacyAddress ) {
                 $legacy_value = $this->resolve_transformer( $new_key )->to_legacy( $new_option[ $new_key ] );
-                $entry->write_to( $legacy_option, $legacy_value );
+                $this->write_address( $new_key, $entry, $legacy_option, $legacy_value );
                 continue;
             }
             // Multi-mapped: transform once, then write only the slots whose
@@ -354,24 +405,24 @@ class LegacySettingsBridge {
     /**
      * Persist a legacy section payload through the bridge:
      *   1. Mirror mapped keys into the new flat option.
-     *   2. Strip those mapped keys from the payload.
+     *   2. When the legacy mirror is disabled, strip those mapped keys
+     *      from the payload; when enabled (default), keep them so the
+     *      legacy row stays a downgrade-safe physical copy.
      *
-     * Returns the stripped payload; the caller is responsible for the
+     * Returns the payload to write; the caller is responsible for the
      * `update_option( $option_name, ... )` write. The split keeps callers
      * in control of side effects (do_action hooks, cache flushes, etc.)
-     * while centralizing the strip + mirror logic.
+     * while centralizing the mirror logic.
      *
-     * Strict mode: stripping happens unconditionally. If the new-option
-     * write throws, we log and continue — the mapped values are lost from
-     * this save, but the legacy row never holds mapped data. Source of
-     * truth stays single.
+     * If the new-option write throws, we log and continue — the legacy row
+     * write still proceeds so the save is not lost entirely.
      *
      * @since DOKAN_SINCE
      *
      * @param string              $option_name Legacy wp_option name.
      * @param array<string,mixed> $payload     Legacy-shaped payload.
      *
-     * @return array<string,mixed> Stripped payload, safe to `update_option`.
+     * @return array<string,mixed> Payload safe to `update_option`.
      */
     public function persist_legacy_section( string $option_name, array $payload ): array {
         try {
@@ -384,7 +435,7 @@ class LegacySettingsBridge {
                 dokan_log( '[LegacySettingsBridge] persist_legacy_section new-write failed: ' . $e->getMessage() );
             }
         }
-        return $this->strip_mapped_keys( $option_name, $payload );
+        return self::is_legacy_mirror_enabled() ? $payload : $this->strip_mapped_keys( $option_name, $payload );
     }
 
     /**
@@ -434,13 +485,67 @@ class LegacySettingsBridge {
      * @return array<int,string> Legacy option names that were updated.
      */
     public function write_new_to_legacy( array $new_slice ): array {
+        $written = [];
+        foreach ( $this->group_legacy_writes( $new_slice ) as $option_name => $entries ) {
+            $legacy = $this->read_option( $option_name );
+            foreach ( $entries as [ $address, $legacy_value, $new_key ] ) {
+                $this->write_address( $new_key, $address, $legacy, $legacy_value );
+            }
+            update_option( $option_name, $legacy );
+            $written[] = $option_name;
+        }
+        return $written;
+    }
+
+    /**
+     * Apply a new-option slice onto legacy rows without persisting them.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values.
+     * @param array<string,array> $legacy    Legacy rows keyed by option name.
+     *
+     * @return array<string,array> The legacy rows with the slice applied.
+     */
+    public function apply_new_to_legacy( array $new_slice, array $legacy ): array {
+        foreach ( $this->group_legacy_writes( $new_slice ) as $option_name => $entries ) {
+            $row = $legacy[ $option_name ] ?? [];
+            foreach ( $entries as [ $address, $legacy_value, $new_key ] ) {
+                $this->write_address( $new_key, $address, $row, $legacy_value );
+            }
+            $legacy[ $option_name ] = $row;
+        }
+        return $legacy;
+    }
+
+    /**
+     * Legacy option names a new-option slice maps to.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values.
+     *
+     * @return array<int,string>
+     */
+    public function legacy_options_for( array $new_slice ): array {
+        return array_keys( $this->group_legacy_writes( $new_slice ) );
+    }
+
+    /**
+     * Transform a new-option slice into legacy writes grouped by option name.
+     *
+     * @param array<string,mixed> $new_slice New-option keys and values.
+     *
+     * @return array<string,array<int,array{0:LegacyAddress,1:mixed,2:string}>>
+     */
+    private function group_legacy_writes( array $new_slice ): array {
         $this->build_map();
         $changes_by_option = [];
         foreach ( $new_slice as $new_key => $value ) {
             $entry = $this->map[ $new_key ] ?? null;
             if ( $entry instanceof LegacyAddress ) {
-                $legacy_value                              = $this->resolve_transformer( $new_key )->to_legacy( $value );
-                $changes_by_option[ $entry->option() ][]   = [ $entry, $legacy_value ];
+                $legacy_value                            = $this->resolve_transformer( $new_key )->to_legacy( $value );
+                $changes_by_option[ $entry->option() ][] = [ $entry, $legacy_value, $new_key ];
                 continue;
             }
             if ( ! is_array( $entry ) ) {
@@ -456,20 +561,37 @@ class LegacySettingsBridge {
                 if ( ! array_key_exists( $slot, $multi_result ) ) {
                     continue;
                 }
-                $changes_by_option[ $address->option() ][] = [ $address, $multi_result[ $slot ] ];
+                $changes_by_option[ $address->option() ][] = [ $address, $multi_result[ $slot ], $new_key ];
             }
         }
-        $written = [];
-        foreach ( $changes_by_option as $option_name => $entries ) {
-            $legacy = $this->read_option( $option_name );
-            foreach ( $entries as $pair ) {
-                [ $address, $legacy_value ] = $pair;
-                $address->write_to( $legacy, $legacy_value );
+        return $changes_by_option;
+    }
+
+    /**
+     * Write a transformed value into a 1:1 legacy address.
+     *
+     * For a field whose schema entry sets `legacy_merge => true` the value is
+     * merged over the existing array leaf, so keys the field does not own
+     * (e.g. Germanized hide flags in `hide_vendor_info`) are kept. Every other
+     * field replaces the leaf.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string              $new_key      New-flat field id.
+     * @param LegacyAddress       $address      Target legacy address.
+     * @param array<string,mixed> $legacy       By-reference legacy option value.
+     * @param mixed               $legacy_value Transformed value to write.
+     *
+     * @return void
+     */
+    private function write_address( string $new_key, LegacyAddress $address, array &$legacy, $legacy_value ): void {
+        if ( is_array( $legacy_value ) && ! empty( $this->merge_keys[ $new_key ] ) ) {
+            $existing = $address->read_from( $legacy );
+            if ( is_array( $existing ) ) {
+                $legacy_value = array_merge( $existing, $legacy_value );
             }
-            update_option( $option_name, $legacy );
-            $written[] = $option_name;
         }
-        return $written;
+        $address->write_to( $legacy, $legacy_value );
     }
 
     /**
@@ -583,11 +705,12 @@ class LegacySettingsBridge {
     /**
      * Build (and cache) the mapping, defaults index, and reverse-by-option index.
      *
-     * The map is memoized but keyed on the current callback count of
-     * `dokan_get_admin_settings_schema`. Pro modules register their
-     * filter callbacks during `init` at varying priorities; if a bridge
-     * caller fires before all are registered, the count grows on the next
-     * call and the memo invalidates automatically.
+     * The map is memoized but keyed on the combined callback count of
+     * `dokan_get_admin_settings_schema` and `dokan_intelligence_providers`
+     * (the latter drives the dynamic AI api_key/model fields). Contributors
+     * register at varying priorities during boot; if a bridge caller fires
+     * before all are registered, the count grows on the next call and the
+     * memo invalidates automatically.
      *
      * Recursion safety: see `$building_map`.
      *
@@ -599,9 +722,13 @@ class LegacySettingsBridge {
         }
 
         global $wp_filter;
-        $filter_count = ( isset( $wp_filter['dokan_get_admin_settings_schema'] ) && ! empty( $wp_filter['dokan_get_admin_settings_schema']->callbacks ) )
-            ? count( $wp_filter['dokan_get_admin_settings_schema']->callbacks, COUNT_RECURSIVE )
-            : 0;
+
+        $filter_count = 0;
+        foreach ( [ 'dokan_get_admin_settings_schema', 'dokan_intelligence_providers' ] as $hook ) {
+            if ( isset( $wp_filter[ $hook ] ) && ! empty( $wp_filter[ $hook ]->callbacks ) ) {
+                $filter_count += count( $wp_filter[ $hook ]->callbacks, COUNT_RECURSIVE );
+            }
+        }
 
         if ( $this->map !== null && $this->cached_filter_count === $filter_count ) {
             return $this->map;
@@ -609,7 +736,7 @@ class LegacySettingsBridge {
 
         $this->building_map = true;
         try {
-            [ $map, $defaults, $transformers ] = $this->harvest_from_schema();
+            [ $map, $defaults, $transformers, $merge_keys ] = $this->harvest_from_schema();
 
             /**
              * Filter the legacy-to-new key mapping.
@@ -627,6 +754,7 @@ class LegacySettingsBridge {
             [ $this->map, $this->by_option ] = $this->normalize( $map );
             $this->defaults                  = $defaults;
             $this->transformers              = $transformers;
+            $this->merge_keys                = $merge_keys;
             $this->cached_filter_count       = $filter_count;
         } finally {
             $this->building_map = false;
@@ -642,12 +770,13 @@ class LegacySettingsBridge {
      * Bridge-only fields participate in mapping but are not emitted by the
      * new UI; they still round-trip through the bridge.
      *
-     * @return array{0: array<string,string|array{option:string,field:string}>, 1: array<string,mixed>, 2: array<string,string|array{to_new:mixed,to_legacy:mixed}>}
+     * @return array{0: array<string,string|array{option:string,field:string}>, 1: array<string,mixed>, 2: array<string,string|array{to_new:mixed,to_legacy:mixed}>, 3: array<string,bool>}
      */
     private function harvest_from_schema(): array {
         $map          = [];
         $defaults     = [];
         $transformers = [];
+        $merge_keys   = [];
 
         foreach ( SettingsSchema::get_schema() as $element ) {
             $is_field       = ( $element['type'] ?? '' ) === 'field';
@@ -667,6 +796,10 @@ class LegacySettingsBridge {
             }
             $map[ $id ] = $legacy;
 
+            if ( ! empty( $element['legacy_merge'] ) ) {
+                $merge_keys[ $id ] = true;
+            }
+
             $transformer = $element['legacy_transformer'] ?? null;
             if ( is_string( $transformer ) && '' !== $transformer ) {
                 $transformers[ $id ] = $transformer;
@@ -682,7 +815,7 @@ class LegacySettingsBridge {
             }
         }
 
-        return [ $map, $defaults, $transformers ];
+        return [ $map, $defaults, $transformers, $merge_keys ];
     }
 
     /**

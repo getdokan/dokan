@@ -25,7 +25,7 @@ test.describe('Dokan help test', () => {
         await admin.adminHelpRenderProperly();
     });
 
-    test.skip('admin can view get help dropdown', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
-        await admin.adminGetHelpDropdownRenderProperly();
-    });
+    // NOTE: "admin can view get help dropdown" removed 2026-07 — the header help
+    // menu (redesigned to an icon fly-out) is covered by setup-guide's
+    // "should show all the header items in the help menu" test.
 });

@@ -1,5 +1,6 @@
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
+import { decodeEntities } from '@wordpress/html-entities';
 import type { ProductCategoryOption } from '../types';
 
 interface CategoryEntry {
@@ -20,6 +21,7 @@ function buildHierarchicalOptions( map: CategoryMap ): ProductCategoryOption[] {
     function appendChildren( parentId: number, depth: number ) {
         const children = Object.values( map )
             .filter( ( cat ) => cat.parent_id === parentId )
+            .map( ( cat ) => ( { ...cat, name: decodeEntities( cat.name ) } ) )
             .sort( ( a, b ) => a.name.localeCompare( b.name ) );
 
         for ( const cat of children ) {

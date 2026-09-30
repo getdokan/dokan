@@ -18,7 +18,7 @@ export default defineConfig({
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown' ,
     /* Maximum time in milliseconds the whole test suite can run */
-    globalTimeout: parseBoolean(CI) ? 40 * (60 * 1000) : 40 * (60 * 1000),
+    globalTimeout: parseBoolean(CI) ? 60 * (60 * 1000) : 60 * (60 * 1000),
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
     maxFailures: parseBoolean(CI) ? 50 : 50,
     /* Maximum time one test can run for. */

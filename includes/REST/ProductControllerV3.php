@@ -7,6 +7,7 @@ use WC_Product_Simple;
 use WC_REST_Products_Controller;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\Model;
+use WeDevs\Dokan\ProductEditor\Elements;
 use WeDevs\Dokan\ProductEditor\FormSchema;
 use WeDevs\Dokan\ProductEditor\PayloadResolver;
 use WeDevs\Dokan\Traits\VendorAuthorizable;
@@ -68,13 +69,30 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return new WP_Error( 'dokan_rest_cannot_edit', __( 'You do not have permission to edit products.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
-        $product_id = $request->get_param( 'id' );
-
-        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
+        if ( ! $this->check_ownership( $request ) ) {
             return new WP_Error( 'dokan_rest_cannot_view', __( 'You do not have permission to view/edit this product.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
         return true;
+    }
+
+    /**
+     * Whether the current user owns the product targeted by the request.
+     *
+     * Centralizes the per-product authorship gate shared by the update and delete
+     * permission checks. A request without an `id` has no product to own, so it
+     * passes here and the capability check stays the gate.
+     *
+     * @since 5.0.7
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return bool
+     */
+    protected function check_ownership( $request ): bool {
+        $product_id = $request->get_param( 'id' );
+
+        return ! $product_id || dokan_is_product_author( $product_id );
     }
 
     /**
@@ -89,6 +107,47 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     public function batch_items_permissions_check( $request ) {
         if ( ! current_user_can( 'dokan_edit_product' ) ) {
             return new WP_Error( 'dokan_rest_cannot_batch', __( 'You do not have permission to batch update products.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        return true;
+    }
+
+    /**
+     * Check ownership before a batched product update.
+     *
+     * WooCommerce's WC_REST_Controller::batch_items() calls this once per "update"
+     * item, so this — not the route-level batch_items_permissions_check() — is where
+     * a vendor is stopped from editing another vendor's product.
+     *
+     * @since 5.0.7
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error
+     */
+    public function update_item_permissions_check( $request ) {
+        return $this->check_permission( $request );
+    }
+
+    /**
+     * Check ownership before a batched product delete.
+     *
+     * Mirrors update_item_permissions_check(); the batch route is the only delete
+     * path the v3 controller exposes, so the ownership gate must live here.
+     *
+     * @since 5.0.7
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error
+     */
+    public function delete_item_permissions_check( $request ) {
+        if ( ! current_user_can( 'dokan_delete_product' ) ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete products.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        if ( ! $this->check_ownership( $request ) ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete this product.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
         return true;
@@ -224,7 +283,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product = parent::create_item( $request );
 
         if ( is_wp_error( $product ) ) {
-            return $product;
+            return $this->clarify_download_error( $product );
         }
 
         $product_id = (int) $product->data['id'];
@@ -249,7 +308,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product = parent::update_item( $request );
 
         if ( is_wp_error( $product ) ) {
-            return $product;
+            return $this->clarify_download_error( $product );
         }
 
         $product_id = (int) $product->data['id'];
@@ -259,6 +318,199 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         do_action( 'dokan_product_updated', $product_id, $params );
 
         return $product;
+    }
+
+    /**
+     * Prepare a single product for create or update.
+     *
+     * Every save funnels through here - WooCommerce routes create, update and batch alike through
+     * save_object() - so form-level validation runs once here instead of per endpoint, and it judges
+     * the product WooCommerce assembled rather than the raw payload. The product itself is not written
+     * until save_object() calls save() on what this returns, though the parent call can already have
+     * created attachment records when a payload sends images by URL; the vendor form only ever sends
+     * attachment ids.
+     *
+     * @since 5.0.16
+     *
+     * @param WP_REST_Request $request  Full details about the request.
+     * @param bool            $creating Whether a new product is being created.
+     *
+     * @return WC_Data|WP_Error
+     */
+    protected function prepare_object_for_database( $request, $creating = false ) {
+        $product = parent::prepare_object_for_database( $request, $creating );
+
+        if ( is_wp_error( $product ) ) {
+            return $product;
+        }
+
+        $invalid = $this->validate_required_downloads( $request, $product );
+
+        if ( is_wp_error( $invalid ) ) {
+            return $invalid;
+        }
+
+        $product = $this->apply_image_positions( $product, $request );
+
+        /**
+         * Filters a vendor product prepared for the database, before it is saved.
+         *
+         * Scoped to vendor dashboard saves, unlike WooCommerce's own
+         * `woocommerce_rest_pre_insert_product_object`. Return a WP_Error to reject the save, which
+         * is how extensions enforce required fields they add to the product form.
+         *
+         * @since 5.0.16
+         *
+         * @param WC_Data         $product  Product assembled from the request, not yet saved.
+         * @param WP_REST_Request $request  Full details about the request.
+         * @param bool            $creating Whether a new product is being created.
+         */
+        return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
+    }
+
+    /**
+     * Restore the vendor's featured/gallery split after WooCommerce has consumed `images`.
+     *
+     * WooCommerce takes the featured image from array index 0, and its v3 images schema has no
+     * `position` at all, so a product saved with gallery images but no featured image loses its
+     * first gallery image to the featured slot — with a single gallery image the gallery ends up
+     * empty. PayloadResolver::resolve_images() tags every entry with the position the vendor
+     * actually chose, so the split is reapplied here.
+     *
+     * Payloads this plugin did not resolve carry no positions and are left to WooCommerce.
+     *
+     * @since 5.0.19
+     *
+     * @param WC_Data|WC_Product $product Product assembled from the request, not yet saved.
+     * @param WP_REST_Request    $request Full details about the request.
+     *
+     * @return WC_Data|WC_Product
+     */
+    protected function apply_image_positions( $product, $request ) {
+        $images = $request['images'];
+
+        // Nothing to restore: not a product, no images in the request, or an empty array WooCommerce already cleared.
+        if ( ! $product instanceof WC_Product || ! is_array( $images ) || empty( $images ) ) {
+            return $product;
+        }
+
+        $featured = 0;
+        $gallery  = [];
+
+        foreach ( $images as $image ) {
+            if ( ! is_array( $image ) || ! isset( $image['id'], $image['position'] ) ) {
+                return $product;
+            }
+
+            $id = absint( $image['id'] );
+
+            if ( 0 === absint( $image['position'] ) ) {
+                $featured = $id;
+                continue;
+            }
+
+            $gallery[] = $id;
+        }
+
+        $product->set_image_id( $featured > 0 ? $featured : '' );
+        $product->set_gallery_image_ids( $gallery );
+
+        return $product;
+    }
+
+    /**
+     * Reject a downloadable product saved without a file while the form marks "Downloadable Files" as required.
+     *
+     * The required flag lives in the form schema, where Dokan Pro's Product Form Manager writes it, so it is
+     * read back from the schema rather than hard-coded. Browser-side validation alone can be bypassed, which
+     * is how incomplete downloadable products reach the review queue.
+     *
+     * Judged on the assembled product rather than on the payload, because the payload can be shaped to dodge
+     * the rule: WooCommerce turns a product downloadable from `downloadable` alone and only reads `downloads`
+     * when that key is sent, and it drops file-less rows in save_downloadable_files(). A save that leaves
+     * both fields alone, such as quick edit, stays out of scope.
+     *
+     * Deliberately scoped to this one field: the schema marks several fields required that a partial form
+     * never renders yet still submits empty - the quick-create modal omits the required Description - so
+     * enforcing every required field here would reject those saves outright. Extensions that need their own
+     * rules can hook `dokan_rest_pre_insert_product_object`.
+     *
+     * Product variations are out of reach here: WooCommerce saves them through WC_REST_Product_Variations_Controller,
+     * which never enters this controller, so a downloadable variation is guarded in the browser only.
+     *
+     * @since 5.0.16
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     * @param WC_Data         $product Product assembled from the request, not yet saved.
+     *
+     * @return WP_Error|null Error when the required file is missing, null otherwise.
+     */
+    protected function validate_required_downloads( $request, $product ) {
+        $touches_downloads = null !== $request->get_param( Elements::DOWNLOADS )
+            || null !== $request->get_param( Elements::DOWNLOADABLE );
+
+        if ( ! $touches_downloads || ! $product instanceof WC_Product ) {
+            return null;
+        }
+
+        if ( ! $product->is_downloadable() ) {
+            return null;
+        }
+
+        // WooCommerce drops rows on empty() alone, so a whitespace-only file still arrives here - and still saves when the field is optional.
+        foreach ( $product->get_downloads() as $download ) {
+            if ( '' !== trim( (string) $download->get_file() ) ) {
+                return null;
+            }
+        }
+
+        // Only a save with nothing attached needs the schema, which is expensive to build - and never its resolved values.
+        $product_type = $product->get_type();
+        $field        = FormSchema::get_field( dokan()->product_editor->get_schema(), Elements::DOWNLOADS );
+
+        if ( ! $field || ! FormSchema::is_required( $field, $product_type ) || ! FormSchema::is_visible( $field, $product_type ) ) {
+            return null;
+        }
+
+        $label = FormSchema::get_label( $field, $product_type );
+        $label = '' !== $label ? $label : __( 'Downloadable Files', 'dokan-lite' );
+
+        return new WP_Error(
+            'dokan_rest_product_download_required',
+            sprintf(
+                /* translators: %s: label of the downloadable files field. */
+                __( '%s is required. Please attach at least one downloadable file.', 'dokan-lite' ),
+                $label
+            ),
+            [ 'status' => 400 ]
+        );
+    }
+
+    /**
+     * Replace WooCommerce's admin-oriented "approved download directory" rejection with vendor-friendly guidance.
+     *
+     * WooCommerce raises product_invalid_download whenever a downloadable file can't be used — most often because
+     * its folder isn't an approved download directory — and tells the user to "contact a site administrator,"
+     * which a vendor can't act on. The specific cause isn't exposed (the error code and data are generic) and
+     * WooCommerce has already run the directory check, so rather than re-deriving it we simply restate the
+     * message; the field's tooltip explains the approved-directory requirement up front.
+     *
+     * @since 5.0.6
+     *
+     * @param WP_Error $error Error returned from the parent WooCommerce REST save.
+     *
+     * @return WP_Error
+     */
+    protected function clarify_download_error( WP_Error $error ): WP_Error {
+        if ( 'product_invalid_download' !== $error->get_error_code() ) {
+            return $error;
+        }
+
+        return new WP_Error(
+            $error->get_error_code(),
+            __( 'The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin.', 'dokan-lite' ),
+            $error->get_error_data()
+        );
     }
 
     /**
@@ -342,6 +594,19 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 
         $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
         $fields = dokan()->product_editor->get_schema( $product_id );
+
+        // Preselect the requested product type on a brand-new product, e.g. the
+        // "Add New Auction Product" button opens ...#/products/create?type=auction.
+        $requested_type = (string) $request->get_param( 'type' );
+        if ( $is_new_product && array_key_exists( $requested_type, wc_get_product_types() ) ) {
+            foreach ( $fields as &$field ) {
+                if ( Elements::TYPE === ( $field['id'] ?? '' ) ) {
+                    $field['value'] = $requested_type;
+                    break;
+                }
+            }
+            unset( $field );
+        }
         $layouts = FormSchema::get_layouts();
         $is_enabled = dokan_get_option( 'dokan_ai_image_gen_availability', 'dokan_ai', 'off' ) === 'on';
         $manager = dokan()->get_container()->get( Manager::class );

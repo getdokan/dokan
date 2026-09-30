@@ -8,83 +8,66 @@ const oldDataset = {
     url: 'wp-admin/admin.php?page=dokan#/settings',
     selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Printful")]',
     fields: [
-        {
-            selector: '//h3[contains(text(),"Client ID")]/ancestor::fieldset//input[@class="secret-input"]',
-            type: 'text',
-            value: 'test-client-id-123',
-        },
-        {
-            selector: '//h3[contains(text(),"Secret key")]/ancestor::fieldset//input[@class="secret-input"]',
-            type: 'text',
-            value: 'test-secret-key-456',
-        },
     ],
 };
 
 const newDataset = {
     title: 'Admin Setting: Printful Integration',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_product >> #dokan_settings_product_printful_integration',
+    selector: '[data-testid="settings-menu-product"] >> [data-testid="settings-menu-printful_integration"]',
     fields: [
+        // The Printful app enable toggle and app-name field were dropped from the
+        // schema; the integration is now driven by the Client ID / Secret Key pair.
         {
-            selector: '#dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_enable button[role="switch"]',
-            type: 'toggle',
-        },
-        {
-            selector: '#dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_app_name input[placeholder="Enter your app name"]',
-            type: 'text',
-            value: 'Test Printful App',
-        },
-        {
-            selector: 'input[placeholder="Enter your Client ID"]',
+            selector: '[data-testid="settings-field-printful_client_id"] input[type="password"]',
             type: 'text',
             value: 'test-client-id-123',
         },
         {
-            selector: 'input[placeholder="Enter your Secret Key"]',
+            selector: '[data-testid="settings-field-printful_secret_key"] input[type="password"]',
             type: 'text',
             value: 'test-secret-key-456',
         },
         {
-            selector: '#dokan_settings_product_printful_integration_size_guide_settings_size_guide_popup_title input',
+            selector: '[data-testid="settings-field-size_guide_popup_title"] input',
             type: 'text',
             value: 'Size Guide',
         },
         {
-            selector: '#dokan_settings_product_printful_integration_size_guide_settings_size_guide_button_text input',
+            selector: '[data-testid="settings-field-size_guide_button_text"] input',
             type: 'text',
             value: 'Size Guide',
         },
-        // Color Picker Fields
+        // Colour fields: popover trigger + WP ColorPicker hex input.
         {
-            selector: 'label:has-text("Size guide popup text color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_popup_text_color"]',
             type: 'color-picker',
-            value: 'rgb(37, 37, 45)',
+            value: '#25252d',
         },
         {
-            selector: 'label:has-text("Size Guide Popup Background Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_popup_background_color"]',
             type: 'color-picker',
-            value: 'rgb(255, 255, 255)',
+            value: '#ffffff',
         },
         {
-            selector: 'label:has-text("Size Guide Tab Background Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_tab_background_color"]',
             type: 'color-picker',
-            value: 'rgb(255, 255, 255)',
+            value: '#f5f5f5',
         },
         {
-            selector: 'label:has-text("Size Guide Active Tab Background Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_active_tab_background_color"]',
             type: 'color-picker',
-            value: 'rgb(112, 71, 235)',
+            value: '#7047eb',
         },
         {
-            selector: 'label:has-text("Size Guide Button Text Color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
+            selector: '[data-testid="settings-field-size_guide_button_text_color"]',
             type: 'color-picker',
-            value: 'rgb(255, 255, 255)',
+            value: '#ffffff',
         },
         {
-            selector: '#dokan_settings_product_printful_integration_size_guide_settings_size_guide_measurement_unit button[name="inches"][role="radio"]',
-            type: 'radio',
-            value: 'inches',
+            selector: '[data-testid="settings-field-size_guide_measurement_unit"]',
+            type: 'radio-capsule',
+            value: 'Inches',
         },
     ],
 };

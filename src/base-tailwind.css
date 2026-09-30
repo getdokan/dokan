@@ -3,6 +3,7 @@
 
 /* import other libraries' CSS here, if needed */
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
+@import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
 
 @source "../src/";
 @source "../node_modules/@wedevs/plugin-ui/dist";
@@ -133,14 +134,14 @@
     --color-muted-foreground: var(--muted-foreground);
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-    --color-success: var(--success);
-    --color-success-foreground: var(--success-foreground);
-    --color-warning: var(--warning);
-    --color-warning-foreground: var(--warning-foreground);
-    --color-info: var(--info);
-    --color-info-foreground: var(--info-foreground);
+    --color-destructive: var(--destructive, #e7000b);
+    --color-destructive-foreground: var(--destructive-foreground, #ffffff);
+    --color-success: var(--success, #32a941);
+    --color-success-foreground: var(--success-foreground, #ffffff);
+    --color-warning: var(--warning, #fe9a00);
+    --color-warning-foreground: var(--warning-foreground, #26120e);
+    --color-info: var(--info, #0083ff);
+    --color-info-foreground: var(--info-foreground, #ffffff);
     --color-border: var(--border, #e5e7eb);
     --color-input: var(--input);
     --color-ring: var(--ring);
@@ -213,17 +214,7 @@
     -webkit-tap-highlight-color: transparent;
     border-color: var(--color-border) !important;
 }
-/*
- * TODO: Temporary scope for Plugin UI WordPress styles.
- * Remove this #dokan-vendor-dashboard-root wrapper after both legacy vendor
- * dashboard tables are migrated to Plugin UI DataViews and no vendor-dashboard
- * prefix compatibility is required.
- */
- #dokan-vendor-dashboard-root,
-.dokan-admin-dashboard-layout,
-.dokan-vendor-support-list-container {
-    @import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
-}
+
 
 body:has(.dokan-layout) {
     /* If .dokan-layout is present, hide the preflight styles on :root to prevent conflicts */

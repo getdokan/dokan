@@ -114,7 +114,11 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                                                             item?.icon
                                                         )
                                                     ) }
-                                                    <span>{ item?.label }</span>
+                                                    <span>
+                                                        { decodeEntities(
+                                                            item?.label
+                                                        ) }
+                                                    </span>
                                                 </a>
                                             </li>
                                         )

@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use WC_Customer_Download;
 use WC_Data_Store;
 use WC_Product;
+use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Error;
 use WP_REST_Server;
 
@@ -202,7 +203,7 @@ class OrderControllerV2 extends OrderController {
             $product_id = intval( $download->product_id );
             if ( isset( $products[ $product_id ] ) ) {
                 $download->product = $products[ $product_id ];
-                $downloads[] = $this->prepare_data_for_response( $download, $request );
+                $downloads[] = $this->prepare_download_for_response( $download, $request );
             }
         }
 
@@ -237,16 +238,20 @@ class OrderControllerV2 extends OrderController {
     }
 
     /**
-     * Prepare data for response.
+     * Prepare a download permission for response.
+     *
+     * Named apart from the parent's prepare_data_for_response(), which serializes orders
+     * for the inherited get_items()/get_item() routes; overriding it broke those routes.
      *
      * @since 4.0.0
+     * @since 5.1.3 Renamed from prepare_data_for_response().
      *
      * @param \stdClass        $download
      * @param \WP_REST_Request $request
      *
      * @return \stdClass
      */
-    public function prepare_data_for_response( $download, $request ) {
+    public function prepare_download_for_response( $download, $request ) {
         $product = $download->product;
         /** @var WC_Product $product */
         unset( $download->product );
@@ -281,7 +286,9 @@ class OrderControllerV2 extends OrderController {
 
         foreach ( $product_ids as $product_id ) {
             $product = dokan()->product->get( $product_id );
-            if ( ! $product ) {
+
+            // Only grant downloads for the vendor's own products, never another vendor's files (admins/shop managers exempt).
+            if ( ! $product || ( ! current_user_can( 'manage_woocommerce' ) && ! dokan_is_product_author( $product_id ) ) ) {
                 continue;
             }
 
@@ -390,8 +397,24 @@ class OrderControllerV2 extends OrderController {
     public function revoke_order_downloads( $requests ) {
         $download_id   = $requests->get_param( 'download_id' );
         $product_id    = $requests->get_param( 'product_id' );
-        $order_id      = $requests->get_param( 'id' );
-        $permission_id = $requests->get_param( 'permission_id' );
+        $order_id      = absint( $requests->get_param( 'id' ) );
+        $permission_id = absint( $requests->get_param( 'permission_id' ) );
+
+        // Only this order's own permission may be revoked; a foreign or unknown id is rejected (WC throws on an unknown id, caught here).
+        try {
+            $download         = new WC_Customer_Download( $permission_id );
+            $belongs_to_order = $download->get_id() && $download->get_order_id() === $order_id;
+        } catch ( \Exception $e ) {
+            $belongs_to_order = false;
+        }
+
+        if ( ! $belongs_to_order ) {
+            return new WP_Error(
+                'dokan_rest_download_permission_invalid_order',
+                esc_html__( 'Download permission does not belong to this order.', 'dokan-lite' ),
+                [ 'status' => 400 ]
+            );
+        }
 
         try {
             $data_store = WC_Data_Store::load( 'customer-download' );
@@ -414,8 +437,11 @@ class OrderControllerV2 extends OrderController {
      * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function process_orders_bulk_action( $requests ) {
+        // A vendor may only bulk-update their own orders; admins/shop managers are exempt.
+        $order_ids = array_filter( (array) $requests->get_param( 'order_ids' ), [ OrderUtil::class, 'current_user_can_manage_order' ] );
+
         $data = [
-            'bulk_orders' => $requests->get_param( 'order_ids' ),
+            'bulk_orders' => $order_ids,
             'status'      => $requests->get_param( 'status' ),
         ];
 

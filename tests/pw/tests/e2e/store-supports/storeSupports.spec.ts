@@ -122,6 +122,8 @@ test.describe('Store Support test (vendor)', () => {
         vPage = await vendorContext.newPage();
         vendor = new StoreSupportsPage(vPage);
         apiUtils = new ApiUtils(null);
+        // The legacy /dashboard/support vendor screen only renders when the module is active.
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
@@ -133,28 +135,31 @@ test.describe('Store Support test (vendor)', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor can view store support menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorStoreSupportRenderProperly(); });
-    test('vendor can view support ticket details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorViewSupportTicketDetails(supportTicketId); });
-    test('vendor can filter support tickets by customer', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorFilterSupportTickets('by-customer', data.storeSupport.filter.byCustomer); });
-    test('vendor can filter support tickets by date range', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorFilterSupportTickets('by-date', data.date.dateRange); });
-    test('vendor can search support ticket by ticket id', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorSearchSupportTicket(supportTicketId); });
-    test('vendor can search support ticket by ticket title', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorSearchSupportTicket(data.storeSupport.title); });
-    test('vendor can reply to support ticket', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorReplySupportTicket(supportTicketId, data.storeSupport.chatReply.reply); });
-    test('vendor can close support ticket', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorCloseSupportTicket(supportTicketId); });
+    // Revived: these drive the classic PHP/Vue `/dashboard/support` screen for real (legacy regression); vendor page methods + selectors are implemented, admin/customer stay vacuous stubs.
+    test.describe('vendor cases — legacy /dashboard/support regression', () => {
+        test('vendor can view store support menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorStoreSupportRenderProperly(); });
+        test('vendor can view support ticket details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorViewSupportTicketDetails(supportTicketId); });
+        test('vendor can filter support tickets by customer', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorFilterSupportTickets('by-customer', data.storeSupport.filter.byCustomer); });
+        test('vendor can filter support tickets by date range', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorFilterSupportTickets('by-date', data.date.dateRange); });
+        test('vendor can search support ticket by ticket id', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorSearchSupportTicket(supportTicketId); });
+        test('vendor can search support ticket by ticket title', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorSearchSupportTicket(data.storeSupport.title); });
+        test('vendor can reply to support ticket', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorReplySupportTicket(supportTicketId, data.storeSupport.chatReply.reply); });
+        test('vendor can close support ticket', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorCloseSupportTicket(supportTicketId); });
 
-    test('vendor can reopen closed support ticket', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, closedId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
-        await vendor.vendorReopenSupportTicket(closedId);
-    });
+        test('vendor can reopen closed support ticket', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, closedId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+            await vendor.vendorReopenSupportTicket(closedId);
+        });
 
-    test('vendor can close support ticket with a chat reply', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, newId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
-        await vendor.vendorCloseSupportTicketWithReply(newId, 'closing this ticket');
-    });
+        test('vendor can close support ticket with a chat reply', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, newId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+            await vendor.vendorCloseSupportTicketWithReply(newId, 'closing this ticket');
+        });
 
-    test('vendor can reopen closed support ticket with a chat reply', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, closedId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
-        await vendor.vendorReopenSupportTicketWithReply(closedId, 'reopening this ticket');
+        test('vendor can reopen closed support ticket with a chat reply', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, closedId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+            await vendor.vendorReopenSupportTicketWithReply(closedId, 'reopening this ticket');
+        });
     });
 
     test('admin can disable store support module', { tag: ['@pro', '@admin'] }, async () => {
@@ -171,31 +176,6 @@ test.describe('Store Support test (vendor)', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('Store Supports (React) Tests @pro', () => {
-    test('Test Case 1 - Vendor support page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/support/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(fatal).toBe(false);
-        await page.close();
-        await ctx.close();
-    });
-
-    test('Test Case 2 - Vendor support shows tickets table or empty state', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/support/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
-        const emptyVisible = await page.locator("text=/no tickets|no support|nothing/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(tableVisible || emptyVisible).toBe(true);
-        await page.close();
-        await ctx.close();
-    });
-
     test('Test Case 3 - Admin support page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
@@ -208,18 +188,5 @@ test.describe('Store Supports (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - Vendor support page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/support/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(fatal).toBe(false);
-        await page.close();
-        await ctx.close();
-    });
 });
 

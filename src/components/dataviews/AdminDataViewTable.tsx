@@ -9,7 +9,6 @@ import type {
 } from '@wordpress/dataviews/src/types';
 import { kebabCase, snakeCase } from '@dokan/utilities';
 import { useEffect, useState } from '@wordpress/element';
-import './style.scss';
 import { AdminFilterProps } from '@src/components/AdminFilter';
 import { AdminTabProps } from '@src/components/AdminTab';
 import { AdminTab, AdminFilter } from '@src/components';
@@ -18,7 +17,7 @@ import { twMerge } from 'tailwind-merge';
 import { Funnel } from 'lucide-react';
 import { Item } from '@wordpress/components/build-types/navigation/types';
 import ListEmpty from '@src/components/dataviews/ListEmpty';
-import { getTranslatedStrings } from './DataViewTable';
+import { getTranslatedStrings } from '@src/utilities/getTranslatedStrings';
 
 type ItemWithId = { id: string };
 

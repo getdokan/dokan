@@ -484,13 +484,16 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 					'commission' => 20 + 3.5 - 3, // Shipping fee + Admin Net Commission
 					'vendor_earnings' => 31.5, // 13.5 + 18
 					'vendor_net_earnings' => 31.5,
+					// The admin's share of the refund is rounded to the currency's precision
+					// and the vendor is refunded the remainder, so the balances left behind
+					// move by exactly the figures the refund records.
 					'refund' => [ // Refund amount = 5
-						'commission_in_refund' => number_format( ( 5 / 12 * -1.5 ), 2 ), // Sum of ( Item wise net commission in refund = commission before refund * refund amount / paid amount ).
-						'vendor_earning_in_refund' => number_format( 5 / 12 * 13.5, 2 ), // Sum of ( Item wise net earning in refund  = earning before refund * refund amount / paid amount ).
-						'net_commission' => number_format( 0.5 - ( -1.5 / 12 * 5 ), 2 ), // Net commission after refund =  (Net commission before refund - Net commission in refund),
-						'commission' => number_format( 20 + 0.5 - ( -1.5 / 12 * 5 ), 2 ), // Admin Shipping Fee + Net commission after refund
-						'vendor_earnings' => number_format( 31.5 - ( 13.5 / 12 * 5 ), 2 ), // Item wise Vendor earning in refund = earning_before_refund / paid_amount * refund_amount
-						'vendor_net_earnings' => number_format( 31.5 - ( 13.5 / 12 * 5 ), 2 ), // Item wise Vendor earning in refund = earning_before_refund / paid_amount * refund_amount
+						'commission_in_refund' => number_format( ( 5 / 12 * -1.5 ), 2 ), // -0.63, the admin's rounded share.
+						'vendor_earning_in_refund' => number_format( 5 - -0.63, 2 ), // 5.63, the remainder of the refund.
+						'net_commission' => number_format( 0.5 - -0.63, 2 ), // Net commission before refund - net commission in refund.
+						'commission' => number_format( 20 + 0.5 - -0.63, 2 ), // Admin Shipping Fee + Net commission after refund
+						'vendor_earnings' => number_format( 31.5 - 5.63, 2 ), // Vendor earning before refund - vendor earning in refund.
+						'vendor_net_earnings' => number_format( 31.5 - 5.63, 2 ),
 					],
 				],
 			],
@@ -652,13 +655,16 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 					'vendor_earnings' => 28.98, // ( 35 - (3+4) ) + 0.98  line_item_total - coupon - commission (12.42 + 16.56)
 					'vendor_net_earnings' => 28.98, // vendor_earnings
 
+                    // The admin's share of the refund is rounded to the currency's precision
+                    // and the vendor is refunded the remainder, so the balances left behind
+                    // move by exactly the figures the refund records.
                     'refund' => [
-                        'commission_in_refund' => number_format( ( 5 / 12 * -0.42 ), 2 ), // Sum of (Item wise net commission in refund = commission before refund * refund amount / paid amount ).
-                        'vendor_earning_in_refund' => number_format( 5 / 12 * 12.42, 2 ), // Sum of (Item wise net earning in refund = earning before refund * refund amount / paid amount ).
-                        'net_commission' => number_format( -0.98 - ( 5 / 12 * -0.42 ), 2 ), // Net commission after refund =  (Net commission before refund - Net commission in refund),
-                        'commission' => number_format( 20 - 0.98 - ( 5 / 12 * -0.42 ), 2 ), // Admin Shipping Fee + Net commission after refund
-                        'vendor_earnings' => number_format( 28.98 - ( 12.42 / 12 * 5 ), 2 ), // Item wise Vendor earning in refund = earning_before_refund / paid_amount * refund_amount
-                        'vendor_net_earnings' => number_format( 28.98 - ( 12.42 / 12 * 5 ), 2 ), // Item wise Vendor earning in refund = earning_before_refund / paid_amount * refund_amount
+                        'commission_in_refund' => number_format( ( 5 / 12 * -0.42 ), 2 ), // -0.18, the admin's rounded share.
+                        'vendor_earning_in_refund' => number_format( 5 - -0.18, 2 ), // 5.18, the remainder of the refund.
+                        'net_commission' => number_format( -0.98 - -0.18, 2 ), // Net commission before refund - net commission in refund.
+                        'commission' => number_format( 20 - 0.98 - -0.18, 2 ), // Admin Shipping Fee + Net commission after refund
+                        'vendor_earnings' => number_format( 28.98 - 5.18, 2 ), // Vendor earning before refund - vendor earning in refund.
+                        'vendor_net_earnings' => number_format( 28.98 - 5.18, 2 ),
                     ],
 				],
 			],

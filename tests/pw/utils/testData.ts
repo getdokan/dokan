@@ -7,6 +7,7 @@ const {
     ADMIN_PASSWORD,
     VENDOR,
     VENDOR2,
+    VENDOR3,
     CUSTOMER,
     CUSTOMER2,
     USER_PASSWORD,
@@ -49,6 +50,7 @@ const {
     ADMIN_PASSWORD: string;
     VENDOR: string;
     VENDOR2: string;
+    VENDOR3: string;
     CUSTOMER: string;
     CUSTOMER2: string;
     USER_PASSWORD: string;
@@ -113,6 +115,7 @@ export const data = {
         adminAuth: { extraHTTPHeaders: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) } },
         vendorAuth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR, ADMIN_PASSWORD) } },
         vendor2Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR2, ADMIN_PASSWORD) } },
+        vendor3Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR3, ADMIN_PASSWORD) } },
         customerAuth: { extraHTTPHeaders: { Authorization: basicAuth(CUSTOMER, ADMIN_PASSWORD) } },
     },
 
@@ -120,6 +123,7 @@ export const data = {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
         vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
+        vendor3AuthFile: 'playwright/.auth/vendor3StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
         customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
@@ -133,6 +137,10 @@ export const data = {
 
         vendor2Auth: {
             storageState: 'playwright/.auth/vendor2StorageState.json',
+        },
+
+        vendor3Auth: {
+            storageState: 'playwright/.auth/vendor3StorageState.json',
         },
 
         customerAuth: {
@@ -1120,7 +1128,8 @@ export const data = {
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
-                subscriptions: 'wp-admin/admin.php?page=dokan#/subscriptions',
+                // migrated DataViews page is on page=dokan-dashboard (page=dokan is the legacy list)
+                subscriptions: 'wp-admin/admin.php?page=dokan-dashboard#/subscriptions',
                 verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
@@ -1390,22 +1399,41 @@ export const data = {
                 vendorSetupWizardMessageField: '.setup_wizard_message textarea',
             },
 
+            // React settings UI (Dokan 5.0.0+). Sidebar entries are role=button
+            // matched by accessible name; fields carry data-testid="settings-field-<id>".
             newUI: {
-                generalButton: '#dokan_settings_general button',
-                marketplaceLink: '#dokan_settings_general_marketplace',
-                vendorStoreUrlField: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url_slug input',
-                singleSellerModeField: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode',
-                saveButton: '#dokan-admin-settings-save-btn button',
+                // Sidebar navigation (accessible names for getByRole)
+                generalNav: 'General',
+                marketplaceNav: 'Marketplace',
+                vendorsNav: 'Vendors',
+                vendorOnboardingNav: 'Vendor Onboarding',
+                socialOnboardingNav: 'Social Onboarding',
+                vendorCapabilitiesNav: 'Vendor Capabilities',
+                vendorSubscriptionNav: 'Vendor Subscription',
+                storeStatsNav: 'Store Stats',
+                saveButtonName: 'Save Changes',
+                // "Content loaded" marker: every field subpage renders at least one
+                // settings-field-* node (the settings-section-content-* wrapper is not
+                // present on all subpages, e.g. Vendor Onboarding).
+                sectionContent: '[data-testid^="settings-field-"]',
                 successMessage: '.notice-success, .updated',
-                clickHereLink: 'a[contains(text(),"Click Here")]',
-                storeCategoryField: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode',
-                vendorButton: '#dokan_settings_vendor button',
-                vendorOnboardingLink: '#dokan_settings_vendor_vendor_onboarding',
-                socialOnboardingLink: '#dokan_settings_vendor_social_onboarding',
-                vendorCapabilitiesLink: '#dokan_settings_vendor_vendor_capabilities',
-                vendorSubscriptionLink: '#dokan_settings_vendor_vendor_subscription',
-                soteStatsLink: '#dokan_settings_vendor_store_state',
-                singleProductMultiVendorLink: '#dokan_settings_vendor_single_product_multi_vendor',
+
+                // Marketplace fields
+                vendorStoreUrlField: '[data-testid="settings-field-vendor_store_url_slug"]',
+                singleSellerModeField: '[data-testid="settings-field-enable_single_seller_mode"]',
+                storeCategoryField: '[data-testid="settings-field-store_category_mode"]',
+                showCustomerDetailsField: '[data-testid="settings-field-show_customer_details_to_vendors"]',
+                guestProductEnquiryField: '[data-testid="settings-field-guest_product_enquiry"]',
+                addToCartVisibilityField: '[data-testid="settings-field-catalog_mode_add_to_cart_button_visibility"]',
+                liveSearchOptionField: '[data-testid="settings-field-live_search_option"]',
+
+                // Vendor onboarding fields
+                enableSellingField: '[data-testid="settings-field-vendor_auto_enable_selling"]',
+                addressFieldsField: '[data-testid="settings-field-vendor_registration_address_fields"]',
+                termsConditionsField: '[data-testid="settings-field-terms_conditions"]',
+                welcomeWizardField: '[data-testid="settings-field-vendor_welcome_wizard_enabled"]',
+                setupWizardMessageField: '[data-testid="settings-field-vendor_setup_wizard_message"]',
+                setupWizardLogoField: '[data-testid="settings-field-vendor_setup_wizard_logo"]',
             },
         },
 
@@ -1429,6 +1457,14 @@ export const data = {
 
         vendor2: {
             username: VENDOR2,
+            password: USER_PASSWORD,
+        },
+
+        // The permanent NON-CONNECTED Stripe Express vendor: never seeded with an
+        // Express account, so "not connected" is a stable property of this vendor
+        // instead of a per-spec mutation of vendor2.
+        vendor3: {
+            username: VENDOR3,
             password: USER_PASSWORD,
         },
 
@@ -2411,13 +2447,12 @@ export const data = {
                 'Reverse Withdrawal',
                 'Badge',
                 'Product Q&A',
-                'Return Request',
-                'Staff',
+                'Return Requests',
                 'Followers',
                 // 'Subscription',
                 'Booking',
                 'Announcements',
-                'Analytics',
+                'Store Stats',
                 'Tools',
                 'Auction',
                 'Support',
@@ -2507,8 +2542,8 @@ export const data = {
             settingTitle: 'Social Settings',
             platform: 'facebook',
             facebook: {
-                appId: FB_APP_ID,
-                appSecret: FB_APP_SECRET,
+                appId: FB_APP_ID || 'test-fb-app-id',
+                appSecret: FB_APP_SECRET || 'test-fb-app-secret',
             },
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2603,8 +2638,11 @@ export const data = {
             smsSentError: 'Unable to send sms. Contact admin',
             activeGateway: 'nexmo', // nexmo, twilio
             vonage: {
-                apiKey: VONAGE_API_KEY,
-                apiSecret: VONAGE_API_SECRET,
+                // Default to placeholders when the env vars are unset (e.g. CI has no Vonage secrets):
+                // this test only verifies the SMS-gateway settings form saves, not real Vonage delivery,
+                // so a non-empty string is enough. Without the fallback, fill(undefined) throws.
+                apiKey: VONAGE_API_KEY || 'test-vonage-api-key',
+                apiSecret: VONAGE_API_SECRET || 'test-vonage-api-secret',
             },
 
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2622,8 +2660,8 @@ export const data = {
         liveChat: {
             settingTitle: 'Live Chat Settings',
             chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
-            talkJsAppId: TALKJS_APP_ID,
-            talkJsAppSecret: TALKJS_APP_SECRET,
+            talkJsAppId: TALKJS_APP_ID || 'test-talkjs-app-id',
+            talkJsAppSecret: TALKJS_APP_SECRET || 'test-talkjs-app-secret',
             chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2707,8 +2745,8 @@ export const data = {
         // Printful Settings
         printful: {
             settingTitle: 'Printful Settings',
-            clientId: PRINTFUL_APP_ID,
-            secretKey: PRINTFUL_APP_SECRET,
+            clientId: PRINTFUL_APP_ID || 'test-printful-client-id',
+            secretKey: PRINTFUL_APP_SECRET || 'test-printful-secret-key',
             popupTitle: 'Size Guide',
             popupTextColor: '#000000',
             popupBackgroundColor: '#FFFFFF',
@@ -2821,8 +2859,10 @@ export const data = {
     },
 
     bookings: {
-        startDate: new Date(),
-        endDate: helpers.futureDate(new Date(), 1), // future date must be less than maximum duration
+        // Site time, not runner time: the site is seeded UTC+6, so a UTC runner past 18:00 picks a
+        // day the calendar already renders `not-bookable` and the day cell can never match.
+        startDate: helpers.siteToday(),
+        endDate: helpers.futureDate(helpers.siteToday(), 1), // future date must be less than maximum duration
     },
 
     uniqueId: {
@@ -2838,6 +2878,15 @@ export const data = {
                 product1: {
                     name: 'p1_v2 (simple)',
                     productName: () => 'p1_v2 (simple)',
+                },
+            },
+        },
+
+        vendor3: {
+            simpleProduct: {
+                product1: {
+                    name: 'p1_v3 (simple)',
+                    productName: () => 'p1_v3 (simple)',
                 },
             },
         },
@@ -2905,6 +2954,7 @@ export const data = {
             followFromSingleStore: 'singleStore',
             vendor1: `${VENDOR}store`,
             vendor2: `${VENDOR2}store`,
+            vendor3: `${VENDOR3}store`,
             vendor1FullName: `${VENDOR} v1`,
             shopUrl: `${VENDOR}store`,
         },
@@ -2996,6 +3046,7 @@ export const data = {
             woocommerceProductAddons: 'woocommerce-product-addons',
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
             woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips',
+            rankMath: 'seo-by-rank-math',
             emailLog: 'email-log',
         },
     },
@@ -3019,6 +3070,7 @@ export const data = {
             installPlugin: (plugin: string) => `wp plugin install ${plugin} --activate --force`,
             activatePlugin: (plugin: string) => `wp plugin activate ${plugin}`,
             activateTheme: (theme: string) => `wp theme activate ${theme}`,
+            updateOption: (name: string, value: string) => `wp option update ${name} ${value}`,
             rewritePermalink: `wp rewrite structure /%postname%/`,
             flushRewrite: `wp rewrite flush --hard`,
         },

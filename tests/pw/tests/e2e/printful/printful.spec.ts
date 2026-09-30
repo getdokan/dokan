@@ -1,5 +1,6 @@
 import { Page, expect, test } from '@utils/test';
 import { PrintfulPage, ApiUtils, payloads } from './printfulPage';
+import { dbUtils } from '@utils/dbUtils';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
@@ -7,7 +8,7 @@ import { toPath } from '@utils/helpers';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
-test.describe.skip('Printful module functionality test', () => {
+test.describe('Printful module functionality test', () => {
     let admin: PrintfulPage;
     let vendor: PrintfulPage;
     let aPage: Page, vPage: Page;
@@ -24,10 +25,23 @@ test.describe.skip('Printful module functionality test', () => {
 
         apiUtils = new ApiUtils(null);
         await apiUtils.activateModules(payloads.moduleIds.printful, payloads.adminAuth);
+
+        // Deterministic state: the vendor Printful settings screen (connect
+        // button + shipping toggles) only registers/renders when the module
+        // reports is_printful_ready(). That requires non-empty app_id/app_secret
+        // in the dokan_printful option, 'seller' as both the shipping-fee and
+        // shipping-tax-fee recipient (dokan_selling), and a Printful-supported
+        // store currency (USD is supported by default). Seed the OAuth client
+        // creds + recipients so the classic settings surface renders.
+        await dbUtils.updateOptionValue('dokan_printful', { app_id: 'dokan-e2e-printful-client-id', app_secret: 'dokan-e2e-printful-client-secret' });
+        await dbUtils.updateOptionValue('dokan_selling', { shipping_fee_recipient: 'seller', shipping_tax_fee_recipient: 'seller' });
     });
 
     test.afterAll(async () => {
         await apiUtils.activateModules(payloads.moduleIds.printful, payloads.adminAuth);
+        // Restore the seeded OAuth client creds to their default-empty state so
+        // is_printful_ready() returns to its original value for other suites.
+        await dbUtils.updateOptionValue('dokan_printful', { app_id: '', app_secret: '' });
         await aPage?.close();
         await vPage?.close();
         await apiUtils.dispose();

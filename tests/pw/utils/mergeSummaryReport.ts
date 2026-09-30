@@ -16,6 +16,9 @@ interface TestReport {
     suite_duration: number;
     suite_duration_formatted?: string;
     all_suite_durations: number[];
+    merged_reports?: number;
+    expected_reports?: number | null;
+    missing_reports?: number;
     tests: string[];
     passed_tests: string[];
     failed_tests: string[];
@@ -104,8 +107,16 @@ const findReports = (dir: string): void => {
         if (isDirectory) {
             findReports(fullPath); // Recurse into all directories
         } else if (file === 'results.json') {
-            // Push the file path if it matches REPORT_TYPE
-            if (fullPath.includes(`${path.sep}${REPORT_TYPE}${path.sep}`)) {
+            // Only consume summaries from this suite's own shard artifacts
+            // (all-reports/test-artifact-<REPORT_TYPE>*). Matching any path that
+            // contains the report type is not enough: every job (including the
+            // api job) runs the site/auth/env setup projects via
+            // playwright.config.ts, whose summary reporter writes to
+            // playwright-report/e2e/summary-report/results.json. The e2e shard
+            // run overwrites that file, but the api job never does — so its
+            // setup-run summary ships inside test-artifact-api and used to be
+            // merged as a 13th e2e shard, inflating the merged totals.
+            if (fullPath.includes(`test-artifact-${REPORT_TYPE}`) && fullPath.includes(`${path.sep}${REPORT_TYPE}${path.sep}`)) {
                 console.log(`Matched file: ${fullPath}`);
                 reportPaths.push(fullPath);
             }
@@ -120,8 +131,40 @@ if (reportPaths.length === 0) {
     process.exit(1);
 }
 
+// Detect shards that never reported. Every shard writes
+// playwright/shard-features.json (with shardTotal) BEFORE its tests start,
+// and results.json only AFTER they finish — so when a shard job dies early
+// (e.g. wp-env never starts), the surviving manifests still tell us how many
+// reports to expect. Without this check a dead shard silently shrinks the
+// merged totals while the report stays green.
+const findExpectedShards = (dir: string): number => {
+    let expected = 0;
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            expected = Math.max(expected, findExpectedShards(fullPath));
+        } else if (file === 'shard-features.json' && fullPath.includes(`test-artifact-${REPORT_TYPE}`)) {
+            try {
+                const manifest = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
+                expected = Math.max(expected, Number(manifest.shardTotal) || 0);
+            } catch (e) {
+                console.warn(`Could not parse ${fullPath}: ${e.message}`);
+            }
+        }
+    });
+    return expected;
+};
+const expectedReports = findExpectedShards(reportsFolder) || Number(process.env.EXPECTED_SHARDS) || 0;
+
 // Merge reports
 const mergedReport = mergeReports(reportPaths);
+mergedReport.merged_reports = reportPaths.length;
+mergedReport.expected_reports = expectedReports > 0 ? expectedReports : null;
+mergedReport.missing_reports = expectedReports > 0 ? Math.max(0, expectedReports - reportPaths.length) : 0;
+if (mergedReport.missing_reports > 0) {
+    console.warn(`WARNING: only ${reportPaths.length} of ${expectedReports} ${REPORT_TYPE} shard reports found — merged totals under-count the suite.`);
+}
 
 // Save the merged report
 const outputPath = './all-reports/merged-summary.json';

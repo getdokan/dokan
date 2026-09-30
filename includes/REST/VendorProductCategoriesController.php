@@ -7,6 +7,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WC_REST_Product_Categories_Controller;
 use WP_REST_Server;
+use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
 
 class VendorProductCategoriesController extends WC_REST_Product_Categories_Controller {
     /**
@@ -32,6 +33,19 @@ class VendorProductCategoriesController extends WC_REST_Product_Categories_Contr
                     'args'                => $this->get_collection_params(),
                 ),
                 'schema' => array( $this, 'get_public_item_schema' ),
+            )
+        );
+
+        // Nested category tree for the product editor's hierarchical category picker.
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/tree',
+            array(
+                array(
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => array( $this, 'get_tree' ),
+                    'permission_callback' => array( $this, 'get_items_permissions_check' ),
+                ),
             )
         );
 
@@ -104,4 +118,26 @@ class VendorProductCategoriesController extends WC_REST_Product_Categories_Contr
         return parent::get_item( $request );
     }
 
+    /**
+     * Get the full nested product category tree.
+     *
+     * Returns the hierarchy as [ { value, label, children: [...] }, ... ] so the
+     * product editor can render an indented category picker without embedding the
+     * tree in the form schema.
+     *
+     * @since 5.0.5
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_REST_Response
+     */
+    public function get_tree( $request ) {
+        $tree = apply_filters(
+            'dokan_rest_product_categories_tree',
+            ProductCategoryHelper::get_product_categories_tree( true ),
+            $request
+        );
+
+        return rest_ensure_response( $tree );
+    }
 }

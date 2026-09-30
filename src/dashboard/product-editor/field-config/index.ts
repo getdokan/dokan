@@ -92,7 +92,11 @@ const asyncSelectHandler: FieldHandler = ( field ) => {
         multiple: false,
     };
 
-    if ( Array.isArray( field?.value ) ) {
+    // Prefer the explicit schema flag (e.g. single vs. multiple category selection);
+    // fall back to inferring from an array default value.
+    if ( typeof field?.multiple === 'boolean' ) {
+        config.multiple = field.multiple;
+    } else if ( Array.isArray( field?.value ) ) {
         config.multiple = true;
     }
     return config;

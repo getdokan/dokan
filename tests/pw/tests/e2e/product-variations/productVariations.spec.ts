@@ -7,7 +7,7 @@ import { toPath } from '@utils/helpers';
 // Product Variations Editor (React) — vendor-side React surface in Dokan 5.0.0+. Mount URL: /dashboard/new/#/products/create
 
 test.describe('Product Variations Editor (React) Tests @pro', () => {
-    test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/new/#/products/create`));
@@ -19,7 +19,7 @@ test.describe('Product Variations Editor (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 2 - Page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 2 - Page renders content', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/new/#/products/create`));

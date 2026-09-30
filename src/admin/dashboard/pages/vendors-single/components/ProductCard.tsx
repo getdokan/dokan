@@ -1,4 +1,5 @@
 import { truncate } from '@dokan/utilities';
+import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 
 interface Product {
@@ -23,27 +24,18 @@ const ProductCard = ( { product }: ProductCardProps ) => (
             loading="lazy"
         />
         <div className="flex-1 min-w-0 space-y-1.5">
-            <h4
-                className="text-gray-900 truncate text-base font-medium mt-1"
-                dangerouslySetInnerHTML={ {
-                    __html: truncate( product.name, 30 ),
-                } }
-            />
+            {/* decodeEntities restores the display text (e.g. &amp; -> &) while JSX still escapes any markup, so vendor-controlled names render correctly without XSS. */}
+            <h4 className="text-gray-900 truncate text-base font-medium mt-1">
+                { truncate( decodeEntities( product.name ), 30 ) }
+            </h4>
             <div className="flex items-center gap-4">
-                <p
-                    className="text-sm border-r text-[#828282] pr-4"
-                    dangerouslySetInnerHTML={ {
-                        __html: truncate( product.category, 20 ),
-                    } }
-                />
+                <p className="text-sm border-r text-[#828282] pr-4">
+                    { truncate( decodeEntities( product.category ), 20 ) }
+                </p>
                 <div className="flex gap-3">
-                    <div
-                        className="font-bold text-gray-900 text-xl"
-                        dangerouslySetInnerHTML={ {
-                            // @ts-ignore
-                            __html: product.sold,
-                        } }
-                    />
+                    <div className="font-bold text-gray-900 text-xl">
+                        { product.sold }
+                    </div>
                     <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-[#EFEAFF] text-[#7047EB]">
                         { __( 'Sold', 'dokan-lite' ) }
                     </span>

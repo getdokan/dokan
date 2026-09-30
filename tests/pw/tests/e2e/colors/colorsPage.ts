@@ -74,8 +74,8 @@ const settingsVendor = {
 
 const dashboardVendor = {
     menus: {
-        menus: '#primary ul.dokan-dashboard-menu',
-        activeMenu: '#primary .dokan-dashboard-menu li.active',
+        menus: 'ul.dokan-dashboard-menu',
+        activeMenu: '.dokan-dashboard-menu li.active',
         primary: {
             dashboard: 'ul.dokan-dashboard-menu li.dashboard a',
             settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',

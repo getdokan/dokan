@@ -504,6 +504,11 @@ class LegacySettingsBridgeTest extends DokanTestCase {
             return $map;
         };
         add_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
+        // Disable the downgrade-safe mirror for this test: its write-through
+        // and baseline stamping perform additional legitimate top-level
+        // `get_option( 'dokan_general' )` reads after the save, which would
+        // skew the counter that this test uses to detect overlay REENTRY.
+        add_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );
 
         delete_option( 'dokan_general' );
         delete_option( 'dokan_admin_settings' );
@@ -538,6 +543,7 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         remove_filter( 'option_dokan_general', [ $bootstrap, 'apply_overlay' ], 10 );
         remove_filter( 'default_option_dokan_general', [ $bootstrap, 'apply_overlay' ], 10 );
         remove_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
+        remove_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );
         delete_option( 'dokan_general' );
         delete_option( 'dokan_admin_settings' );
 

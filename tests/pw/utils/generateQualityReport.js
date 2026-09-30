@@ -122,6 +122,11 @@ const suiteShape = report => {
         passRate,
         durationMs: num(report.suite_duration),
         durationFormatted: report.suite_duration_formatted || formatDuration(report.suite_duration),
+        // Shard accounting from mergeSummaryReport — a shard that died before
+        // uploading its results makes the suite incomplete, not green.
+        mergedReports: num(report.merged_reports),
+        expectedReports: num(report.expected_reports),
+        missingReports: num(report.missing_reports),
     };
 };
 
@@ -130,10 +135,15 @@ const coverageShape = (raw) => {
     if (!raw) return { pct: null, total: 0, covered: 0 };
     const pctRaw = String(raw.coverage ?? '').replace('%', '').trim();
     const pct = Number.isFinite(Number(pctRaw)) ? Number(pctRaw) : null;
+    // Coverage files differ by suite: the API report counts REST endpoints
+    // (total_endpoints / covered_endpoints); a feature-based report would use
+    // total_features / total_covered_features. Accept either so the weighted
+    // combine below has real counts to work with instead of silently falling
+    // back to averaging the pre-rounded percentages.
     return {
         pct,
-        total: num(raw.total_features),
-        covered: num(raw.total_covered_features),
+        total: num(raw.total_features) || num(raw.total_endpoints),
+        covered: num(raw.total_covered_features) || num(raw.covered_endpoints),
     };
 };
 
@@ -155,17 +165,37 @@ const totals = {
 totals.ran = totals.passed + totals.failed;
 totals.passRate = totals.ran > 0 ? Math.round((totals.passed / totals.ran) * 1000) / 10 : 0;
 
-// Combined coverage: weight by feature counts when available; else average pct.
+// Test NAMES, not just counts. Both summaries already carry `failed_tests` / `flaky_tests`
+// (mergeSummaryReport writes them); the report only ever read the numbers, so it could say
+// "2 failed" without saying which two. Tolerate a missing or non-array field so an older
+// summary shape degrades to an empty list instead of throwing.
+const namesOf = (/** @type {any} */ report, /** @type {string} */ key) => (Array.isArray(report?.[key]) ? report[key].filter(Boolean).map(String) : []);
+const failedTestNames = [...namesOf(apiResult, 'failed_tests'), ...namesOf(e2eResult, 'failed_tests')];
+const flakyTestNames = [...namesOf(apiResult, 'flaky_tests'), ...namesOf(e2eResult, 'flaky_tests')];
+
+// Combined coverage: weight by endpoint/feature counts when available; else
+// average the percentages. Keep 2-decimal precision so this reconciles with the
+// per-suite figures (which display .toFixed(2)) instead of drifting by rounding
+// — e.g. 268/592 must read 45.27%, not a 1-dp-rounded 45.30%.
 let totalCoveragePct = null;
 const combinedTotal = apiCov.total + e2eCov.total;
 if (combinedTotal > 0) {
-    totalCoveragePct = Math.round(((apiCov.covered + e2eCov.covered) / combinedTotal) * 1000) / 10;
+    totalCoveragePct = Math.round(((apiCov.covered + e2eCov.covered) / combinedTotal) * 10000) / 100;
 } else if (apiCov.pct !== null || e2eCov.pct !== null) {
     const vals = [apiCov.pct, e2eCov.pct].filter(v => v !== null);
-    totalCoveragePct = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
+    totalCoveragePct = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100;
 }
 
 const overallFailed = totals.failed > 0;
+const missingReports = num(api?.missingReports) + num(e2e?.missingReports);
+const overallIncomplete = !overallFailed && missingReports > 0;
+const overallStatus = overallFailed ? 'failed' : overallIncomplete ? 'incomplete' : 'passed';
+const incompleteDescription = () => {
+    const parts = [];
+    if (num(api?.missingReports) > 0) parts.push(`API: ${api.mergedReports} of ${api.expectedReports} shard reports`);
+    if (num(e2e?.missingReports) > 0) parts.push(`E2E: ${e2e.mergedReports} of ${e2e.expectedReports} shard reports`);
+    return `Incomplete run — only ${parts.join(', ')} uploaded; totals under-count the suite`;
+};
 
 // ----------------------------------------------------------------------------
 // Artifacts (best-effort: list immediate subdirs under ARTIFACTS_DIR)
@@ -206,6 +236,10 @@ const today = new Date().toISOString().slice(0, 10);
 
 /** @param {*} v */
 const fmtPct = v => v === null || v === undefined ? '—' : `${num(v).toFixed(1)}`;
+// Coverage is reported to 2 decimals everywhere else (the step-summary and the
+// Playwright report both use .toFixed(2)); use a matching formatter here so the
+// HTML template doesn't show a 1-dp value that disagrees with them.
+const fmtCoverage = v => v === null || v === undefined ? '—' : `${num(v).toFixed(2)}`;
 /** @param {*} v */
 const fmtCount = v => v === null || v === undefined ? '—' : String(num(v));
 
@@ -217,12 +251,14 @@ const placeholders = {
     DURATION: formatDuration(totals.durationMs),
     RUN_ID: runId,
 
-    STATUS_CLASS: overallFailed ? 'failed' : '',
-    STATUS_ICON: overallFailed ? '✕' : '✓',
-    STATUS_MESSAGE: overallFailed ? 'Tests failed' : 'All tests passed',
+    STATUS_CLASS: overallFailed || overallIncomplete ? 'failed' : '',
+    STATUS_ICON: overallFailed ? '✕' : overallIncomplete ? '!' : '✓',
+    STATUS_MESSAGE: overallFailed ? 'Tests failed' : overallIncomplete ? 'Incomplete run' : 'All tests passed',
     STATUS_DESCRIPTION: overallFailed
         ? `${totals.failed} failure${totals.failed === 1 ? '' : 's'} across the suite`
-        : 'Build is green and ready for review',
+        : overallIncomplete
+          ? incompleteDescription()
+          : 'Build is green and ready for review',
     PASS_RATE: fmtPct(totals.passRate),
 
     TOTAL_TESTS: fmtCount(totals.total),
@@ -231,30 +267,30 @@ const placeholders = {
     FAILED_CLASS: totals.failed > 0 ? 'danger' : 'success',
     SKIPPED_TESTS: fmtCount(totals.skipped),
     TOTAL_DURATION: formatDuration(totals.durationMs),
-    TOTAL_COVERAGE: fmtPct(totalCoveragePct),
+    TOTAL_COVERAGE: fmtCoverage(totalCoveragePct),
 
-    API_STATUS: api ? (api.failed > 0 ? 'Failed' : 'Passed') : 'No data',
-    API_STATUS_CLASS: api && api.failed > 0 ? 'failed' : '',
+    API_STATUS: api ? (api.failed > 0 ? 'Failed' : api.missingReports > 0 ? 'Incomplete' : 'Passed') : 'No data',
+    API_STATUS_CLASS: api && (api.failed > 0 || api.missingReports > 0) ? 'failed' : '',
     API_TOTAL: api ? fmtCount(api.total) : '—',
     API_PASSED: api ? fmtCount(api.passed) : '—',
     API_FAILED: api ? fmtCount(api.failed) : '—',
     API_FAILED_CLASS: api && api.failed > 0 ? 'failed' : '',
     API_SKIPPED: api ? fmtCount(api.skipped) : '—',
     API_DURATION: api ? formatDuration(api.durationMs) : '—',
-    API_COVERAGE: fmtPct(apiCov.pct),
+    API_COVERAGE: fmtCoverage(apiCov.pct),
     API_PASS_RATE: api ? fmtPct(api.passRate) : '0',
     API_PROGRESS_CLASS: api && api.failed > 0 ? 'failed' : '',
     API_TOTAL_RUN: api ? fmtCount(api.ran) : '—',
 
-    E2E_STATUS: e2e ? (e2e.failed > 0 ? 'Failed' : 'Passed') : 'No data',
-    E2E_STATUS_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
+    E2E_STATUS: e2e ? (e2e.failed > 0 ? 'Failed' : e2e.missingReports > 0 ? 'Incomplete' : 'Passed') : 'No data',
+    E2E_STATUS_CLASS: e2e && (e2e.failed > 0 || e2e.missingReports > 0) ? 'failed' : '',
     E2E_TOTAL: e2e ? fmtCount(e2e.total) : '—',
     E2E_PASSED: e2e ? fmtCount(e2e.passed) : '—',
     E2E_FAILED: e2e ? fmtCount(e2e.failed) : '—',
     E2E_FAILED_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
     E2E_SKIPPED: e2e ? fmtCount(e2e.skipped) : '—',
     E2E_DURATION: e2e ? formatDuration(e2e.durationMs) : '—',
-    E2E_COVERAGE: fmtPct(e2eCov.pct),
+    E2E_COVERAGE: fmtCoverage(e2eCov.pct),
     E2E_PASS_RATE: e2e ? fmtPct(e2e.passRate) : '0',
     E2E_PROGRESS_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
     E2E_TOTAL_RUN: e2e ? fmtCount(e2e.ran) : '—',
@@ -328,12 +364,15 @@ if (SUMMARY_FILE) {
 
     const statusBadge = overallFailed
         ? badge('✕  Tests failed', `${totals.failed} failure${totals.failed === 1 ? '' : 's'} · ${totals.passRate.toFixed(1)}% pass rate`, C.red, { labelColor: C.purplePrimary })
-        : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
+        : overallIncomplete
+          ? badge('⚠  Incomplete run', `${missingReports} shard report${missingReports === 1 ? '' : 's'} missing · totals under-count the suite`, C.amber, { labelColor: C.purplePrimary })
+          : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
 
     /** @param {any} s */
     const suiteStatusBadge = (s) => {
-        if (!s)            return badge('No data', '—', C.gray);
-        if (s.failed > 0)  return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
+        if (!s)                    return badge('No data', '—', C.gray);
+        if (s.failed > 0)          return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
+        if (s.missingReports > 0)  return badge('Incomplete', `${s.mergedReports} of ${s.expectedReports} shards reported`, C.amber);
         return badge('Passed', `${s.passRate.toFixed(1)}% pass rate`, C.green);
     };
 
@@ -403,8 +442,19 @@ if (SUMMARY_FILE) {
     lines.push('</table>');
     lines.push('');
 
-    // --- Outcomes pie chart ---------------------------------------------
-    if (totals.ran > 0) {
+    // --- Outcomes -------------------------------------------------------
+    // A pie is only drawn when it can tell the truth, i.e. when the run is green.
+    //
+    // Mermaid renders every pie slice label as an INTEGER-rounded percentage and offers no
+    // precision setting. With 2537 passed against 2 failed the failing share is 0.08%, so the
+    // chart printed a full green circle labelled "100%" on a run that had two real failures, and
+    // the red slice was smaller than a pixel. That is the exact fake-green this suite exists to
+    // catch, produced by our own report — the status badge said "2 failures" while the graph next
+    // to it said 100%.
+    //
+    // No chart type fixes this: any proportional visual of 2 against 2537 is unreadable. So on a
+    // failing run the pie is replaced by the thing a reader actually needs — WHICH tests failed.
+    if (totals.ran > 0 && totals.failed === 0) {
         lines.push('```mermaid');
         lines.push(mermaidTheme);
         lines.push('pie showData');
@@ -412,6 +462,33 @@ if (SUMMARY_FILE) {
         lines.push(`  "Passed" : ${totals.passed}`);
         lines.push(`  "Failed" : ${totals.failed}`);
         lines.push('```');
+        lines.push('');
+    }
+
+    // --- Failures ---------------------------------------------------------
+    // Named, not counted. `failed_tests` has always been present in the merged summary and was
+    // never surfaced, so reading the report told you two tests failed but never which two.
+    if (failedTestNames.length) {
+        lines.push('<h2>❌ Failed Tests</h2>');
+        lines.push('');
+        // Computed here from the raw counts rather than reusing the rounded 1-decimal `passRate`:
+        // this section exists because rounding is what produced the "100%" lie in the first place.
+        const ran = totals.passed + totals.failed;
+        const exactRate = ran > 0 ? ((totals.passed / ran) * 100).toFixed(2) : '0.00';
+        lines.push(`Pass rate **${exactRate}%** — ${fmtNum(totals.passed)} passed, ${fmtNum(totals.failed)} failed.`);
+        lines.push('');
+        failedTestNames.forEach(name => lines.push(`- ❌ ${escape(name)}`));
+        lines.push('');
+    }
+
+    // Flaky = passed only on a retry. Not a failure, but not a pass either: it is the category a
+    // green run hides, so it is named whenever it occurs.
+    if (flakyTestNames.length) {
+        lines.push('<h2>⚠️ Flaky Tests</h2>');
+        lines.push('');
+        lines.push('Passed on retry — a green run here is retry-masked, not clean.');
+        lines.push('');
+        flakyTestNames.forEach(name => lines.push(`- ⚠️ ${escape(name)}`));
         lines.push('');
     }
 

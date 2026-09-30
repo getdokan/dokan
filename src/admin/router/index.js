@@ -9,6 +9,7 @@ import DummyData from 'admin/pages/DummyData.vue';
 import VendorCapabilities from 'admin/pages/VendorCapabilities.vue';
 import ReverseWithdrawal from 'admin/pages/ReverseWithdrawal.vue';
 import ReverseWithdrawalTransactions from 'admin/pages/ReverseWithdrawalTransactions.vue';
+import Tools from 'admin/pages/Tools.vue';
 
 const Vue = dokan_get_lib( 'Vue' );
 const Router = dokan_get_lib( 'Router' );
@@ -27,6 +28,7 @@ dokan_add_route( ReverseWithdrawal );
 dokan_add_route( ReverseWithdrawalTransactions );
 dokan_add_route( Vendors );
 dokan_add_route( VendorSingle );
+dokan_add_route( Tools );
 
 /**
  * Parse the route array and bind required components

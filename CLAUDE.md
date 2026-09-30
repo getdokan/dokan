@@ -4,6 +4,12 @@
 
 Dokan Lite is a multi-vendor e-commerce marketplace plugin for WordPress, powered by WooCommerce. Version 4.2.8. Requires PHP 7.4+ and WooCommerce 8.5.0+.
 
+## Domain Model
+
+- **`CONTEXT.md`** — the canonical ubiquitous-language glossary for the whole Dokan bounded context (Lite **and** Pro). Read it before naming things or discussing domain concepts; use its canonical terms (e.g. Vendor not seller, Suborder vs Vendor order, Commission = admin's share) and respect its _Avoid_ lists.
+- **`docs/adr/`** — Architecture Decision Records. Check here before "fixing" surprising behavior (e.g. parent orders ignoring refunds/stock is deliberate — ADR-0004). Cross-cutting Lite+Pro decisions live here; Pro-only decisions live in dokan-pro's `docs/adr/`.
+- New root-level files must be added to `.distignore` or they ship in the release zip.
+
 ## Available Skills
 
 The `.claude/skills/` directory contains procedural HOW-TO instructions:
@@ -152,6 +158,7 @@ Then `git reflog expire --expire=now --all && git gc --prune=now`. Re-run the `g
 - **JS/TS**: ESLint with `@wordpress/scripts` config
 - **CSS**: Stylelint
 - **TypeScript**: Strict mode, ESNext target, React-JSX
+- **`@since` for new code**: use the literal placeholder token `@since DOKAN_SINCE` (and `@deprecated DOKAN_SINCE` / `@version DOKAN_SINCE`) — the release tooling replaces it with the real version at tag time. Never hardcode or guess a version number (e.g. `@since 5.1.0`) for unreleased code.
 
 ## Key Patterns
 

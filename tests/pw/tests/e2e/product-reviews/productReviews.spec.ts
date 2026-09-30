@@ -8,7 +8,7 @@ const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.js
 
 const { PRODUCT_ID } = process.env;
 
-test.describe.skip('Product Reviews test', () => {
+test.describe('Product Reviews test', () => {
     let vendor: ProductReviewsPage;
     let vPage: Page;
     let apiUtils: ApiUtils;

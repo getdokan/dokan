@@ -63,7 +63,7 @@ class CommissionControllerV1 extends DokanRESTController {
                         'category_ids' => [
                             'description'       => __( 'Category ids', 'dokan-lite' ),
                             'type'              => 'array',
-                            'sanitize_callback' => 'wc_clean',
+                            'sanitize_callback' => [ $this, 'sanitize_category_ids' ],
                             'items'             => array(
                                 'type' => 'integer',
                             ),
@@ -140,5 +140,33 @@ class CommissionControllerV1 extends DokanRESTController {
         }
 
         return rest_ensure_response( wc_format_decimal( $data, wc_get_price_decimals() ) );
+    }
+
+    /**
+     * Normalize the `category_ids` request param to a flat list of term IDs.
+     *
+     * The product editor's category field is an async-select that submits option
+     * objects ([ { value, label }, ... ]); the commission lookup only needs the
+     * integer term IDs, so reduce any object shape to its `value` before use.
+     *
+     * @since 5.0.6
+     *
+     * @param mixed $value Raw `category_ids` value from the request.
+     *
+     * @return int[]
+     */
+    public function sanitize_category_ids( $value ): array {
+        $category_ids = [];
+
+        foreach ( (array) $value as $category ) {
+            // Async-select options arrive as { value, label }; flat IDs pass through unchanged.
+            $term_id = absint( is_array( $category ) ? ( $category['value'] ?? 0 ) : $category );
+
+            if ( $term_id ) {
+                $category_ids[] = $term_id;
+            }
+        }
+
+        return $category_ids;
     }
 }

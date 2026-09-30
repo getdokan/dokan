@@ -184,6 +184,10 @@ visual.spec.ts-snapshots/
 wp-data/debug.log
 wp-data/*.log
 
+# python bytecode from the coverage reconcilers
+__pycache__/
+*.pyc
+
 # vscode
 .vscode/
 

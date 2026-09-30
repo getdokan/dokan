@@ -3,15 +3,22 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import {
-    AdminDataViews as DataViews,
-    DokanLink,
+    DataViews,
     DateTimeHtml,
     DokanButton,
     SearchInput,
+    getActionLabel,
 } from '@dokan/components';
-import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
-import * as LucideIcons from 'lucide-react';
+import {
+    Plus,
+    Pencil,
+    Box,
+    ShoppingBag,
+    ArrowLeftRight,
+    Check,
+    Ban,
+} from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { applyFilters } from '@wordpress/hooks';
 import UserCard from '@src/components/UserCard';
@@ -123,22 +130,6 @@ const VendorsPage = ( props ) => {
         pending: 0,
     } );
 
-    // Confirmation modal state for single and bulk actions
-    const [ confirmState, setConfirmState ] = useState<
-        | null
-        | {
-              mode: 'single';
-              action: 'approve' | 'disable';
-              vendor: Vendor;
-          }
-        | {
-              mode: 'bulk';
-              action: 'approve' | 'disable';
-              vendorIds: number[];
-          }
-    >( null );
-    const [ isConfirmLoading, setIsConfirmLoading ] = useState( false );
-
     const fetchVendors = async (
         args?: Partial< {
             page: number;
@@ -224,43 +215,22 @@ const VendorsPage = ( props ) => {
         setView( ( prev: any ) => ( { ...prev, ...newView } ) );
     };
 
-    const tabs = useMemo(
+    const tabItems = useMemo(
         () => [
             {
-                name: 'all',
-                icon: (
-                    <div className="flex items-center gap-1.5 px-2">
-                        { __( 'All', 'dokan-lite' ) }
-                        <span className="text-xs font-light text-[#A5A5AA]">
-                            ({ counts.all || 0 })
-                        </span>
-                    </div>
-                ),
-                title: __( 'All', 'dokan-lite' ),
+                value: 'all',
+                label: __( 'All', 'dokan-lite' ),
+                count: counts.all || 0,
             },
             {
-                name: 'approved',
-                icon: (
-                    <div className="flex items-center gap-1.5 px-2">
-                        { __( 'Approved', 'dokan-lite' ) }
-                        <span className="text-xs font-light text-[#A5A5AA]">
-                            ({ counts.approved || 0 })
-                        </span>
-                    </div>
-                ),
-                title: __( 'Approved', 'dokan-lite' ),
+                value: 'approved',
+                label: __( 'Approved', 'dokan-lite' ),
+                count: counts.approved || 0,
             },
             {
-                name: 'pending',
-                icon: (
-                    <div className="flex items-center gap-1.5 px-2">
-                        { __( 'Pending', 'dokan-lite' ) }
-                        <span className="text-xs font-light text-[#A5A5AA]">
-                            ({ counts.pending || 0 })
-                        </span>
-                    </div>
-                ),
-                title: __( 'Pending', 'dokan-lite' ),
+                value: 'pending',
+                label: __( 'Pending', 'dokan-lite' ),
+                count: counts.pending || 0,
             },
         ],
         [ counts ]
@@ -268,7 +238,7 @@ const VendorsPage = ( props ) => {
 
     // Fields for DataViews
     const loadingClass = twMerge(
-        '!bg-neutral-200 !rounded !animate-pulse !text-transparent'
+        'bg-neutral-200! rounded! animate-pulse! text-transparent!'
     );
     const fields = applyFilters(
         'dokan-admin-vendors-list-column-fields',
@@ -388,82 +358,40 @@ const VendorsPage = ( props ) => {
         }
         return [];
     };
-    const extractSingleFromArgs = ( args: any ): Vendor | null => {
-        if ( args?.item ) {
-            return args.item as Vendor;
-        }
-        if ( Array.isArray( args ) && args.length ) {
-            return args[ 0 ] as Vendor;
-        }
-        return null;
-    };
-    const openConfirmFor = ( action: 'approve' | 'disable', args: any ) => {
-        const ids = extractIdsFromArgs( args );
-        if ( ids.length > 1 ) {
-            setConfirmState( { mode: 'bulk', action, vendorIds: ids } );
+    const runVendorStatusAction = async (
+        action: 'approve' | 'disable',
+        ids: number[],
+        isBulk: boolean
+    ) => {
+        if ( ! ids.length ) {
             return;
         }
-        const v = extractSingleFromArgs( args );
-        if ( v ) {
-            setConfirmState( { mode: 'single', action, vendor: v } );
+        if ( ! isBulk ) {
+            await apiFetch( {
+                path: `/dokan/v1/stores/${ ids[ 0 ] }/status`,
+                method: 'PUT',
+                data: {
+                    status: action === 'approve' ? 'active' : 'inactive',
+                },
+            } as any );
+        } else {
+            await apiFetch( {
+                path: `/dokan/v1/stores/batch`,
+                method: 'POST',
+                data:
+                    action === 'approve' ? { approved: ids } : { pending: ids },
+            } as any );
         }
+        await fetchVendors();
+        // Clear any row selection regardless of bulk/single so a single
+        // selected row doesn't stay highlighted after the action.
+        setSelection( [] );
     };
-    const getConfirmConfig = ( state: NonNullable< typeof confirmState > ) => {
-        const isApprove = state.action === 'approve';
-        const isBulk = state.mode === 'bulk';
-        return {
-            title: isApprove
-                ? __( 'Approve Vendor', 'dokan-lite' )
-                : __( 'Disable Vendor', 'dokan-lite' ),
-            // @ts-ignore
-            // eslint-disable-next-line no-nested-ternary
-            description: isBulk
-                ? isApprove
-                    ? __(
-                          'Are you sure you want to approve the selected vendors?',
-                          'dokan-lite'
-                      )
-                    : __(
-                          'Are you sure you want to disable the selected vendors from selling?',
-                          'dokan-lite'
-                      )
-                : isApprove
-                ? __(
-                      'Are you sure you want to approve this vendor?',
-                      'dokan-lite'
-                  )
-                : __(
-                      'Are you sure you want to disable this vendor from selling?',
-                      'dokan-lite'
-                  ),
-            confirmText: isApprove
-                ? __( 'Yes, Approve', 'dokan-lite' )
-                : __( 'Yes, Disable', 'dokan-lite' ),
-            variant: isApprove ? 'primary' : ( 'danger' as const ),
-        };
-    };
-
-    const getActionLabel = ( iconName, label ) => {
-        if ( ! ( iconName && label ) ) {
-            return <></>;
-        }
-
-        const Icon = LucideIcons[ iconName ];
-        return (
-            <div className="dokan-layout">
-                <span className="inline-flex items-center gap-2.5">
-                    <Icon size={ 16 } className="!fill-none" />
-                    { label }
-                </span>
-            </div>
-        );
-    };
-
     // Handle tab selection for status filtering
     const handleTabSelect = ( tabName ) => {
+        // Updating status + resetting the page drives a single refetch via the
+        // effect above; calling fetchVendors() here too would double-fetch.
         setStatus( tabName );
-        // also refresh current page with new status
-        fetchVendors( { status: tabName, page: 1 } );
         setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
     };
 
@@ -484,7 +412,7 @@ const VendorsPage = ( props ) => {
                         variant="primary"
                         onClick={ () => navigate( '/vendors/create' ) }
                     >
-                        <LucideIcons.Plus size={ 16 } />
+                        <Plus size={ 16 } />
                         { __( 'Add Vendor', 'dokan-lite' ) }
                     </DokanButton>
 
@@ -497,298 +425,244 @@ const VendorsPage = ( props ) => {
 
             { /* Table */ }
             <div>
-                { /* Confirmation Modal */ }
-                { confirmState &&
-                    ( () => {
-                        const cfg = getConfirmConfig( confirmState );
-                        return (
-                            <DokanModal
-                                isOpen={ !! confirmState }
-                                onClose={ () => setConfirmState( null ) }
-                                namespace="dokan-admin-vendors-confirm"
-                                dialogTitle={ __(
-                                    'Confirmation',
-                                    'dokan-lite'
-                                ) }
-                                confirmationTitle={ cfg.title }
-                                confirmationDescription={ cfg.description }
-                                confirmButtonText={ cfg.confirmText }
-                                // @ts-ignore
-                                confirmButtonVariant={ cfg.variant }
-                                loading={ isConfirmLoading }
-                                onConfirm={ async () => {
-                                    setIsConfirmLoading( true );
-                                    try {
-                                        if ( confirmState.mode === 'single' ) {
-                                            await apiFetch( {
-                                                path: `/dokan/v1/stores/${ confirmState.vendor.id }/status`,
-                                                method: 'PUT',
-                                                data: {
-                                                    status:
-                                                        confirmState.action ===
-                                                        'approve'
-                                                            ? 'active'
-                                                            : 'inactive',
-                                                },
-                                            } as any );
-                                        } else {
-                                            const ids = confirmState.vendorIds;
-                                            if (
-                                                confirmState.action ===
-                                                'approve'
-                                            ) {
-                                                await apiFetch( {
-                                                    path: `/dokan/v1/stores/batch`,
-                                                    method: 'POST',
-                                                    data: { approved: ids },
-                                                } as any );
-                                            } else {
-                                                await apiFetch( {
-                                                    path: `/dokan/v1/stores/batch`,
-                                                    method: 'POST',
-                                                    data: { pending: ids },
-                                                } as any );
-                                            }
+                <div className="dokan-admin-dashboard-datatable">
+                    <DataViews
+                        data={ data }
+                        namespace="dokan-admin-vendors-table"
+                        defaultLayouts={ { ...defaultLayouts } }
+                        fields={ fields as any }
+                        getItemId={ ( item: Vendor ) => item.id }
+                        onChangeView={ handleChangeView }
+                        selection={ selection }
+                        onChangeSelection={ ( ids: string[] ) =>
+                            setSelection( ids )
+                        }
+                        actions={
+                            [
+                                {
+                                    id: 'edit',
+                                    label: () =>
+                                        getActionLabel(
+                                            <Pencil size={ 16 } className="fill-none!" />,
+                                            __( 'Edit', 'dokan-lite' )
+                                        ),
+                                    icon: (
+                                        <Pencil
+                                            size={ 16 }
+                                            className="fill-none!"
+                                        />
+                                    ),
+                                    isPrimary: false,
+                                    supportsBulk: false,
+                                    callback: ( item ) => {
+                                        const vendor: Vendor =
+                                            item[ 0 ] as Vendor;
+                                        if ( vendor?.id ) {
+                                            navigate(
+                                                `/vendors/edit/${ vendor.id }`
+                                            );
                                         }
-                                        await fetchVendors();
-                                        // Clear selection after bulk actions
-                                        if ( confirmState.mode === 'bulk' ) {
-                                            setSelection( [] );
+                                    },
+                                },
+                                {
+                                    id: 'see-products',
+                                    label: () =>
+                                        getActionLabel(
+                                            <Box size={ 16 } className="fill-none!" />,
+                                            __( 'See Products', 'dokan-lite' )
+                                        ),
+                                    icon: (
+                                        <Box
+                                            size={ 16 }
+                                            className="fill-none!"
+                                        />
+                                    ),
+                                    supportsBulk: false,
+                                    isPrimary: false,
+                                    callback: ( item ) => {
+                                        const vendor: Vendor =
+                                            item[ 0 ] as Vendor;
+                                        window.location.href =
+                                            // @ts-ignore
+                                            dokanAdminDashboard.urls.adminRoot +
+                                            'edit.php?post_type=product&author=' +
+                                            vendor?.id;
+                                    },
+                                },
+                                {
+                                    id: 'see-orders',
+                                    label: () =>
+                                        getActionLabel(
+                                            <ShoppingBag size={ 16 } className="fill-none!" />,
+                                            __( 'See Orders', 'dokan-lite' )
+                                        ),
+                                    icon: (
+                                        <ShoppingBag
+                                            size={ 16 }
+                                            className="fill-none!"
+                                        />
+                                    ),
+                                    isPrimary: false,
+                                    supportsBulk: false,
+                                    callback: ( item ) => {
+                                        const vendor: Vendor =
+                                            item[ 0 ] as Vendor;
+                                        window.location.href =
+                                            // @ts-ignore
+                                            dokanAdminDashboard.urls
+                                                .adminOrderListUrl +
+                                            '&vendor_id=' +
+                                            vendor?.id;
+                                    },
+                                },
+                                {
+                                    id: 'switch-to',
+                                    label: () =>
+                                        getActionLabel(
+                                            <ArrowLeftRight size={ 16 } className="fill-none!" />,
+                                            __( 'Switch to', 'dokan-lite' )
+                                        ),
+                                    icon: (
+                                        <ArrowLeftRight
+                                            size={ 16 }
+                                            className="fill-none!"
+                                        />
+                                    ),
+                                    isPrimary: false,
+                                    supportsBulk: false,
+                                    isEligible: ( item: Vendor ) =>
+                                        item?.switch_url &&
+                                        item?.switch_url.length &&
+                                        dokanAdminDashboardSettings?.vendors
+                                            ?.is_vendor_switching_enabled,
+                                    callback: ( item ) => {
+                                        const vendor: Vendor =
+                                            item[ 0 ] as Vendor;
+                                        window.location.href =
+                                            vendor?.switch_url;
+                                    },
+                                },
+                                {
+                                    id: 'approve-vendor',
+                                    label: () =>
+                                        getActionLabel(
+                                            <Check size={ 16 } className="fill-none!" />,
+                                            __( 'Approve Vendors', 'dokan-lite' )
+                                        ),
+                                    icon: (
+                                        <Check
+                                            size={ 16 }
+                                            className="fill-none!"
+                                        />
+                                    ),
+                                    supportsBulk: true,
+                                    isPrimary: false,
+                                    isDestructive: true,
+                                    confirmTone: 'positive',
+                                    confirmTitle: __( 'Approve Vendor', 'dokan-lite' ),
+                                    confirmMessage: __(
+                                        'Are you sure you want to approve the selected vendor(s)?',
+                                        'dokan-lite'
+                                    ),
+                                    confirmButtonLabel: __( 'Yes, Approve', 'dokan-lite' ),
+                                    isEligible: ( item: Vendor ) =>
+                                        ! item.enabled,
+                                    callback: async ( args: any ) => {
+                                        try {
+                                            const ids =
+                                                extractIdsFromArgs( args );
+                                            await runVendorStatusAction(
+                                                'approve',
+                                                ids,
+                                                ids.length > 1
+                                            );
+                                        } catch ( e ) {
+                                            // eslint-disable-next-line no-console
+                                            console.error(
+                                                'Failed to approve vendor(s)',
+                                                e
+                                            );
                                         }
-                                    } finally {
-                                        setIsConfirmLoading( false );
-                                    }
-                                } }
-                            />
-                        );
-                    } )() }
-
-                <DataViews
-                    data={ data }
-                    namespace="dokan-admin-vendors-table"
-                    defaultLayouts={ { ...defaultLayouts } }
-                    fields={ fields as any }
-                    getItemId={ ( item: Vendor ) => item.id }
-                    onChangeView={ handleChangeView }
-                    search={ true }
-                    selection={ selection }
-                    onChangeSelection={ ( ids: string[] ) =>
-                        setSelection( ids )
-                    }
-                    actions={
-                        [
-                            {
-                                id: 'edit',
-                                label: () =>
-                                    getActionLabel(
-                                        'Pencil',
-                                        __( 'Edit', 'dokan-lite' )
+                                    },
+                                },
+                                {
+                                    id: 'disable-selling',
+                                    label: () =>
+                                        getActionLabel(
+                                            <Ban size={ 16 } className="fill-none!" />,
+                                            __( 'Disable Selling', 'dokan-lite' )
+                                        ),
+                                    icon: (
+                                        <Ban
+                                            size={ 16 }
+                                            className="fill-none!"
+                                        />
                                     ),
-                                icon: () => {
-                                    return (
-                                        <span
-                                            className={
-                                                'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
-                                            }
-                                        >
-                                            { __( 'Edit', 'dokan-lite' ) }
-                                        </span>
-                                    );
-                                },
-                                isPrimary: false,
-                                supportsBulk: false,
-                                callback: ( item ) => {
-                                    const vendor: Vendor = item[ 0 ] as Vendor;
-                                    if ( vendor?.id ) {
-                                        navigate(
-                                            `/vendors/edit/${ vendor.id }`
-                                        );
-                                    }
-                                },
-                            },
-                            {
-                                id: 'see-products',
-                                label: () =>
-                                    getActionLabel(
-                                        'Box',
-                                        __( 'See Products', 'dokan-lite' )
+                                    supportsBulk: true,
+                                    isPrimary: false,
+                                    isDestructive: true,
+                                    confirmTitle: __( 'Disable Vendor', 'dokan-lite' ),
+                                    confirmMessage: __(
+                                        'Are you sure you want to disable the selected vendor(s) from selling?',
+                                        'dokan-lite'
                                     ),
-                                icon: () => {
-                                    return (
-                                        <span
-                                            className={
-                                                'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
-                                            }
-                                        >
-                                            { __(
-                                                'See Products',
-                                                'dokan-lite'
-                                            ) }
-                                        </span>
-                                    );
+                                    confirmButtonLabel: __( 'Yes, Disable', 'dokan-lite' ),
+                                    isEligible: ( item: Vendor ) =>
+                                        !! item.enabled,
+                                    callback: async ( args: any ) => {
+                                        try {
+                                            const ids =
+                                                extractIdsFromArgs( args );
+                                            await runVendorStatusAction(
+                                                'disable',
+                                                ids,
+                                                ids.length > 1
+                                            );
+                                        } catch ( e ) {
+                                            // eslint-disable-next-line no-console
+                                            console.error(
+                                                'Failed to disable vendor(s)',
+                                                e
+                                            );
+                                        }
+                                    },
                                 },
-                                supportsBulk: false,
-                                isPrimary: false,
-                                callback: ( item ) => {
-                                    const vendor: Vendor = item[ 0 ] as Vendor;
-                                    window.location.href =
-                                        // @ts-ignore
-                                        dokanAdminDashboard.urls.adminRoot +
-                                        'edit.php?post_type=product&author=' +
-                                        vendor?.id;
-                                },
+                            ] as any
+                        }
+                        paginationInfo={ {
+                            totalItems,
+                            totalPages: Math.max(
+                                1,
+                                Math.ceil( totalItems / ( view.perPage || 10 ) )
+                            ),
+                        } }
+                        view={ applyFilters(
+                            'dokan-admin-vendors-list-view',
+                            view
+                        ) }
+                        isLoading={ isLoading }
+                        tabs={ {
+                            items: tabItems,
+                            onSelect: ( name ) => {
+                                setSelection( [] );
+                                handleTabSelect( name );
                             },
-                            {
-                                id: 'see-orders',
-                                label: () =>
-                                    getActionLabel(
-                                        'ShoppingBag',
-                                        __( 'See Orders', 'dokan-lite' )
-                                    ),
-                                icon: () => {
-                                    return (
-                                        <span
-                                            className={
-                                                'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
-                                            }
-                                        >
-                                            { __( 'See Orders', 'dokan-lite' ) }
-                                        </span>
-                                    );
-                                },
-                                isPrimary: false,
-                                supportsBulk: false,
-                                callback: ( item ) => {
-                                    const vendor: Vendor = item[ 0 ] as Vendor;
-                                    window.location.href =
-                                        // @ts-ignore
-                                        dokanAdminDashboard.urls
-                                            .adminOrderListUrl +
-                                        '&vendor_id=' +
-                                        vendor?.id;
-                                },
-                            },
-                            {
-                                id: 'switch-to',
-                                label: () =>
-                                    getActionLabel(
-                                        'ArrowLeftRight',
-                                        __( 'Switch to', 'dokan-lite' )
-                                    ),
-                                icon: () => {
-                                    return (
-                                        <span
-                                            className={
-                                                'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
-                                            }
-                                        >
-                                            { __( 'Switch to', 'dokan-lite' ) }
-                                        </span>
-                                    );
-                                },
-                                isPrimary: false,
-                                supportsBulk: false,
-                                isEligible: ( item: Vendor ) =>
-                                    item?.switch_url &&
-                                    item?.switch_url.length &&
-                                    dokanAdminDashboardSettings?.vendors
-                                        ?.is_vendor_switching_enabled,
-                                callback: ( item ) => {
-                                    const vendor: Vendor = item[ 0 ] as Vendor;
-                                    window.location.href = vendor?.switch_url;
-                                },
-                            },
-                            // Show Approve Vendor when enabled is false
-                            {
-                                id: 'approve-vendor',
-                                label: () =>
-                                    getActionLabel(
-                                        'Check',
-                                        __( 'Approve Vendors', 'dokan-lite' )
-                                    ),
-                                icon: () => {
-                                    return (
-                                        <span
-                                            className={
-                                                'px-3 py-2 inline-flex items-center rounded-[5px] text-[12px] font-medium border border-[#E9E9E9] h-[28px] text-[#25252D]'
-                                            }
-                                        >
-                                            { __(
-                                                'Approve Vendors',
-                                                'dokan-lite'
-                                            ) }
-                                        </span>
-                                    );
-                                },
-                                supportsBulk: true,
-                                isPrimary: false,
-                                isEligible: ( item: Vendor ) => ! item.enabled,
-                                callback: ( args: any ) => {
-                                    openConfirmFor( 'approve', args );
-                                },
-                            },
-                            // Show Disable Selling when enabled is true
-                            {
-                                id: 'disable-selling',
-                                label: () =>
-                                    getActionLabel(
-                                        'Ban',
-                                        __( 'Disable Selling', 'dokan-lite' )
-                                    ),
-                                icon: () => {
-                                    return (
-                                        <span
-                                            className={
-                                                'px-3 py-2 inline-flex items-center rounded-[5px] text-[12px] font-medium border border-[#E9E9E9] h-[28px] text-[#25252D]'
-                                            }
-                                        >
-                                            { __(
-                                                'Disable Selling',
-                                                'dokan-lite'
-                                            ) }
-                                        </span>
-                                    );
-                                },
-                                isDestructive: true,
-                                supportsBulk: true,
-                                isPrimary: false,
-                                isEligible: ( item: Vendor ) => !! item.enabled,
-                                callback: ( args: any ) => {
-                                    openConfirmFor( 'disable', args );
-                                },
-                            },
-                        ] as any
-                    }
-                    paginationInfo={ {
-                        totalItems,
-                        totalPages: Math.max(
-                            1,
-                            Math.ceil( totalItems / ( view.perPage || 10 ) )
-                        ),
-                    } }
-                    view={ applyFilters(
-                        'dokan-admin-vendors-list-view',
-                        view
-                    ) }
-                    isLoading={ isLoading }
-                    tabs={ {
-                        tabs,
-                        onSelect: handleTabSelect,
-                        initialTabName: status,
-                        additionalComponents: [
-                            <SearchInput
-                                key="vendors-search"
-                                value={ search }
-                                onChange={ setSearch }
-                            />,
-                        ],
-                    } }
-                    filter={ {
-                        fields: getListFilterFields(),
-                        onFilterRemove: clearSingleFilter,
-                        onReset: () => clearFilter(),
-                    } }
-                />
+                            defaultValue: status,
+                            headerContent: [
+                                <SearchInput
+                                    key="vendors-search"
+                                    value={ search }
+                                    onChange={ setSearch }
+                                />,
+                            ],
+                        } }
+                        filter={ {
+                            fields: getListFilterFields(),
+                            onFilterRemove: clearSingleFilter,
+                            onReset: () => clearFilter(),
+                        } }
+                    />
+                </div>
             </div>
 
             { /* Plugin Area for Extensions */ }

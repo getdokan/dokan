@@ -41,7 +41,11 @@ class Manager {
             return new WP_Error( 'dokan_withdraw_empty', __( 'Withdraw amount required ', 'dokan-lite' ) );
         }
 
-        if ( $amount > $balance ) {
+        // Compare in integer cents so an exact-balance withdrawal is not rejected by IEEE-754 drift.
+        $balance_cents = (int) round( (float) $balance * 100 );
+        $amount_cents  = (int) round( (float) $amount * 100 );
+
+        if ( $amount_cents > $balance_cents ) {
             return new WP_Error( 'dokan_withdraw_not_enough_balance', __( 'You don\'t have enough balance for this request', 'dokan-lite' ) );
         }
 

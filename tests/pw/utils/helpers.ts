@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
+import { log } from '@utils/logger';
 
 const { CI, SITE_PATH } = process.env;
 
@@ -156,6 +157,26 @@ export const helpers = {
         const result = date ? new Date(date) : new Date();
         result.setDate(result.getDate() + days);
         return result;
+    },
+
+    /**
+     * "Today" as the SITE sees it, not as the runner's clock sees it.
+     *
+     * The site is seeded to `Asia/Dhaka` (`dbData.ts` → `timezone_string`), i.e. UTC+6, while CI
+     * runners are UTC. Any run started after 18:00 UTC is therefore already the NEXT day on the
+     * site, so a date built from the runner's `new Date()` names a day the site considers past.
+     * WooCommerce Bookings renders past days with `class="not-bookable"`, and the booking specs
+     * select a day with `not(contains(@class,"not-bookable"))` — so the cell can never match and
+     * the click times out. That is a guaranteed failure for the 6h window before UTC midnight,
+     * not a flake.
+     *
+     * Returns a LOCAL Date carrying the site's calendar Y/M/D, which is what `getMonth()` /
+     * `getDate()` callers need. Override the zone with SITE_TIMEZONE if the seed ever changes.
+     */
+    siteToday(timeZone: string = process.env.SITE_TIMEZONE || 'Asia/Dhaka'): Date {
+        const parts = new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+        const part = (type: string) => Number(parts.find(p => p.type === type)?.value);
+        return new Date(part('year'), part('month') - 1, part('day'));
     },
 
     // round to two decimal
@@ -461,11 +482,14 @@ export const helpers = {
         process.chdir(directoryPath);
         try {
             const output = execSync(command, { encoding: 'utf-8' });
-            console.log(output);
+            log.output(output);
             return output;
         } catch (error: any) {
-            console.log(error);
-            return error;
+            // Surface only the meaningful CLI message (stderr/stdout) instead of
+            // dumping the full Node error object (status, pid, output[], …).
+            const message = String(error?.stderr || error?.stdout || error?.message || error).trim();
+            log.warn(`command failed: ${command}`, message);
+            return new Error(message);
         }
     },
 
@@ -475,7 +499,7 @@ export const helpers = {
         command = CI ? `npm run wp-env run tests-cli -- ${command}` : `cd ${SITE_PATH} && ${command}`;
         const result = await this.exeCommand(command);
         // Rethrow so callers can catch (e.g. storefront activate → try install → fallback link)
-        if (result instanceof Error || (result && typeof result === 'object' && 'status' in (result as object))) {
+        if (result instanceof Error) {
             throw result;
         }
     },

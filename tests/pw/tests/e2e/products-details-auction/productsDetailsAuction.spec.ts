@@ -37,7 +37,13 @@ test.describe('Auction Product details functionality test', () => {
 
     test('vendor can add auction product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'multiple' });
-        await vendor.addProductCategory(productIdBasic, data.product.category.categories, true);
+        // Seed a product whose only existing category (Uncategorized) does NOT overlap with the
+        // categories being added; otherwise re-adding an already-assigned category (productIdBasic
+        // ships with CATEGORY_ID = clothings) trips the "duplicate category" guard, which leaves an
+        // empty category box behind and makes the next "- Select a category -" click ambiguous.
+        const uncategorizedId = await apiUtils.getCategoryId('Uncategorized', payloads.adminAuth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createAuctionProductRequiredFields(), categories: [{ id: uncategorizedId }] }, payloads.vendorAuth);
+        await vendor.addProductCategory(productId, data.product.category.categories, true);
     });
 
     test('vendor can remove auction product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
@@ -68,7 +74,16 @@ test.describe('Auction Product details functionality test', () => {
     });
 
     test('vendor can remove auction product tags', { tag: ['@pro', '@vendor'] }, async () => { await vendor.removeProductTags(productIdFull, data.product.productInfo.tags.tags); });
-    test('vendor can create auction product tags', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductTags(productIdFull, data.product.productInfo.tags.randomTags); });
+    test('vendor can create auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
+        // Ensure vendors are allowed to create tags (drives the select2 `tags:true` create path).
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_vendors_can_create_tags: 'on' });
+        // The auction save handler runs the submitted tags through array_map('intval', …) (Dokan Pro
+        // simple-auction bug): a brand-new tag whose name STARTS WITH A DIGIT is intval'd to a wrong
+        // term id and never persists, so a raw nanoid (~15% start with a digit) makes this flaky.
+        // Prefix with a letter so intval() -> 0 and the new tag is created/persisted deterministically.
+        const newTags = data.product.productInfo.tags.randomTags.map(tag => `t${tag}`);
+        await vendor.addProductTags(productIdFull, newTags);
+    });
 
     test.skip('vendor can add auction product cover image', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductCoverImage(productIdBasic, data.product.productInfo.images.cover); });
 

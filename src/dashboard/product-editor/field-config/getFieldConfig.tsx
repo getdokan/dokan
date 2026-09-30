@@ -4,11 +4,18 @@ import { __experimentalInputControlPrefixWrapper as InputControlPrefixWrapper } 
 import { Info } from 'lucide-react';
 import { getFieldConfigFrom } from './index';
 import { FormItem } from '../types';
-import { resolveDependency } from '../utils';
-import { isEmpty, runSchemaValidations } from './validations';
+import { isEmpty, resolveDependency } from '../utils';
+import { runSchemaValidations } from './validations';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { RawHTML } from '@wordpress/element';
+
+// A select option; tree fields (e.g. categories) nest deeper options under `children`.
+type FieldOption = {
+    label: string;
+    value?: string | number;
+    children?: FieldOption[];
+};
 
 export const getFieldConfig = ( field: FormItem ) => {
     /**
@@ -21,18 +28,23 @@ export const getFieldConfig = ( field: FormItem ) => {
             return [];
         }
 
-        let normalizedOptions = [];
+        // Term names arrive HTML-encoded from the schema; decode the whole tree so options and chips read naturally.
+        const decodeOption = ( option: FieldOption ): FieldOption => ( {
+            ...option,
+            label: decodeEntities( option.label ),
+            ...( Array.isArray( option.children )
+                ? { children: option.children.map( decodeOption ) }
+                : {} ),
+        } );
+
         if ( Array.isArray( options ) ) {
-            normalizedOptions = [ ...options ]; // Clone to prevent mutation of the original array
-        } else {
-            normalizedOptions = Object.entries( options ).map(
-                ( [ value, label ] ) => ( {
-                    label,
-                    value,
-                } )
-            );
+            return options.map( decodeOption );
         }
-        return normalizedOptions;
+
+        return Object.entries( options ).map( ( [ value, label ] ) => ( {
+            label: decodeEntities( label ),
+            value,
+        } ) );
     };
     const mappedField = {
         ...field,

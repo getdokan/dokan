@@ -8,8 +8,8 @@ use Closure;
  * Builds a callable transformer pair for a `multicheck` variant that bridges to
  * a WordPress multicheck legacy option.
  *
- *   legacy: [ 'wc-completed' => 'wc-completed', 'wc-processing' => '', ... ]
- *   new:    [ 'wc-completed', ... ]   // string[] of enabled keys (multicheck shape)
+ *   Legacy: [ 'wc-completed' => 'wc-completed', 'wc-processing' => '', ... ]
+ *   New:    [ 'wc-completed', ... ]   // string[] of enabled keys (multicheck shape)
  *
  * Plugin-ui's `multicheck` field stores enabled keys as an array, not as a
  * `Record<key, bool>`. So `to_legacy` cannot infer the disabled set from the

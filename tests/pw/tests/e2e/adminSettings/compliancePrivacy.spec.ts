@@ -17,7 +17,7 @@ const oldDataset = [
             {
                 selector: '//select[@id="dokan_privacy[privacy_page]"]',
                 type: 'select',
-                value: '12' // Dashboard page for safe side
+                value: 'Dashboard' // matches the new UI's page selection
             },
             {
                 selector: '//div[@class="privacy_policy dokan-settings-field-type-wpeditor"]//iframe[contains(@id,"dokan-tinymce") and contains(@id,"_ifr")]',
@@ -26,32 +26,63 @@ const oldDataset = [
             },
         ],
     },
+    {
+        // Privacy owns two `dokan_general` switches that the legacy page keeps
+        // on its General section.
+        title: 'Admin Old Setting: General (privacy-owned fields)',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"General")]',
+        fields: [
+            {
+                selector: '//label[@for="dokan_general[seller_enable_terms_and_conditions]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                selector: '//label[@for="dokan_general[admin_access]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+        ],
+    },
 ];
 
 const newDataset = {
     title: 'Admin Setting: Compliance -> Privacy',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_compliance >> #dokan_settings_compliance_privacy',
+    selector: '[data-testid="settings-menu-compliance"] >> [data-testid="settings-menu-privacy"]',
     fields: [
         // Privacy Policy Display - Switch
         {
-            selector: '#dokan_settings_compliance_privacy_privacy_settings_privacy_policy_display button[role="switch"]',
+            selector: '[data-testid="settings-field-privacy_policy_visibility"] [role="switch"]',
             type: 'switch',
             value: true,
         },
 
         // Privacy Policy Page - Dropdown
         {
-            selector: '#privacy_policy_page',
-            type: 'dropdown',
+            selector: '[data-testid="settings-field-privacy_policy_page"] button[role="combobox"]',
+            type: 'radix-dropdown',
             value: 'Dashboard', // Dashboard page for safe side
         },
 
         // Privacy Policy Content - Textarea (Quill Editor)
         {
-            selector: '#dokan_settings_compliance_privacy_privacy_policy_content_privacy_policy_content .ql-editor',
-            type: 'textarea',
+            selector: '[data-testid="settings-field-privacy_policy_content"] [contenteditable="true"]',
+            type: 'richtext',
             value: 'newTest',
+        },
+
+        {
+            selector: '[data-testid="settings-field-seller_enable_terms_and_conditions"] [role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+
+        {
+            selector: '[data-testid="settings-field-admin_access_for_vendors"] [role="switch"]',
+            type: 'switch',
+            value: true,
         },
     ],
 };

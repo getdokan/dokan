@@ -51,12 +51,20 @@ test.describe('Vendor staff test (vendorStaff)', () => {
         aPage = await adminContext.newPage();
         admin = new VendorStaffPage(aPage);
         apiUtils = new ApiUtils(null);
-        const [, staffId] = await apiUtils.createVendorStaff(payloads.createStaff(), payloads.vendorAuth);
+        // Deterministic setup: the block's own disable test deactivates the vendor_staff
+        // module and never re-enables it, so ensure it is active before the staff REST
+        // endpoints (create/capabilities) are exercised on a repeat run.
+        await apiUtils.activateModules(payloads.moduleIds.vendorStaff, payloads.adminAuth);
+        const staffPayload = payloads.createStaff();
+        const [, staffId, staffName] = await apiUtils.createVendorStaff(staffPayload, payloads.vendorAuth);
+        const payload = createPayload(data.vendorStaff.basicMenu);
+        await apiUtils.updateStaffCapabilities(staffId, payload, payloads.vendorAuth);
         const staffContext = await browser.newContext();
         sPage = await staffContext.newPage();
         staff = new VendorStaffPage(sPage);
-        const payload = createPayload(data.vendorStaff.basicMenu);
-        await apiUtils.updateStaffCapabilities(staffId, payload, payloads.vendorAuth);
+        // The staff has no stored auth; sign in through the my-account form so the
+        // permitted vendor-dashboard menus render for the "view allowed menus" test.
+        await staff.frontendLogin(staffName, staffPayload.password);
     });
 
     test.afterAll(async () => { await sPage?.close(); });

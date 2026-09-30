@@ -133,7 +133,7 @@ class StripMappedKeysTest extends DokanTestCase {
         $this->assertSame( $payload, $result );
     }
 
-    public function test_persist_legacy_section_writes_to_new_and_returns_stripped(): void {
+    public function test_persist_legacy_section_writes_to_new_and_keeps_mapped_keys_by_default(): void {
         $cb = static function (): array {
             return [
                 [
@@ -145,6 +145,42 @@ class StripMappedKeysTest extends DokanTestCase {
             ];
         };
         add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        delete_option( 'dokan_admin_settings' );
+        $bridge      = new LegacySettingsBridge();
+        $persistable = $bridge->persist_legacy_section(
+            'dokan_appearance',
+            [
+                'store_banner_width' => 1280,
+                'site_layout'        => 'full-width',
+            ]
+        );
+
+        $new_option = get_option( 'dokan_admin_settings', [] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_admin_settings' );
+
+        $this->assertSame( 1280, $new_option['banner_width'] );
+        // Legacy mirror is on by default: the row keeps a physical copy of the
+        // mapped key so a downgraded plugin version still reads current data.
+        $this->assertSame( 1280, $persistable['store_banner_width'] );
+        $this->assertSame( 'full-width', $persistable['site_layout'] );
+    }
+
+    public function test_persist_legacy_section_strips_mapped_keys_when_mirror_disabled(): void {
+        $cb = static function (): array {
+            return [
+                [
+                    'id'         => 'banner_width',
+                    'type'       => 'field',
+                    'legacy_key' => 'dokan_appearance.store_banner_width',
+                    'default'    => 400,
+                ],
+            ];
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+        add_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );
 
         delete_option( 'dokan_admin_settings' );
         $bridge   = new LegacySettingsBridge();
@@ -159,6 +195,7 @@ class StripMappedKeysTest extends DokanTestCase {
         $new_option = get_option( 'dokan_admin_settings', [] );
 
         remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        remove_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );
         delete_option( 'dokan_admin_settings' );
 
         $this->assertSame( 1280, $new_option['banner_width'] );

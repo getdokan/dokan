@@ -26,17 +26,20 @@ const ImageEdit = ( { data, field, onChange, validity }: any ) => {
         setImage( null );
     };
 
-    const className = `dokan-product-image_id ${ field.is_custom ? 'is-custom' : '' }`;
+    const className = `dokan-product-image_id ${
+        field.is_custom ? 'is-custom' : ''
+    }`;
 
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             { image?.url ? (
-                <ImagePreview itemClassName={className} images={ image } onRemove={ onRemove } />
+                <ImagePreview
+                    itemClassName={ className }
+                    images={ image }
+                    onRemove={ onRemove }
+                />
             ) : (
-                <MediaUploader
-                    onSelect={ onSelect }
-                    className={ className }
-                >
+                <MediaUploader onSelect={ onSelect } className={ className }>
                     <DokanButton variant="secondary" className="uppercase">
                         <Upload size={ 16 } />
                         { __( 'Upload', 'dokan-lite' ) }

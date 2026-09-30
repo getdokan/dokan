@@ -11,16 +11,20 @@ const oldColorDataset = {
     url: 'wp-admin/admin.php?page=dokan#/settings',
     selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Colors")]',
     fields: [
+        // The legacy colors UI renders no inputs — the selected mode/palette is
+        // marked by an `active-pallete` class on the wrapper. The selector
+        // therefore encodes the expected state and only has to resolve, so
+        // these use `visible` rather than an input-backed radio type.
         {
             // Targets the <div> with class 'color_option' and ensures it contains the required title text.
             selector: '.color_option.active-pallete .color-option-title:has-text("Pre-defined Color Palette")',
-            type: 'customize-radio',
-            value: 'true',
+            type: 'visible',
         },
         {
-            selector: '.color-pallete-contents.active-pallete label:has-text("purple pulse")',
-            type: 'customize-radio',
-            value: 'true',
+            // Palettes are plain radios keyed by name - there is no wrapping
+            // <label>, so target the input and set/assert its checked state.
+            selector: 'input[name="store_color_pallete"][value="purple pulse"]',
+            type: 'radio-input',
         },
     ],
 };
@@ -31,17 +35,21 @@ const oldColorDataset = {
 const newColorDataset = {
     title: 'Admin Setting: Appearance → Dashboard Color Customizer',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_appearance >> #dokan_settings_appearance_dashboard-color-customizer-page',
+    selector: '[data-testid="settings-menu-appearance"] >> [data-testid="settings-menu-dashboard-color-customizer-page"]',
     fields: [
+        // The Pro color customizer renders no `settings-field-*` wrapper, so
+        // both radio groups are scoped to the section instead. Option values
+        // live on the hidden inputs: 'template'/'custom' for the mode and the
+        // lowercase palette slug for the palette.
         {
-            selector: 'div[role="radio"]:has-text("Pre-defined Color Palette")',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-section-dokan-store-colors"]',
+            type: 'customize-radio',
+            value: 'template', // Pre-defined Color Palette
         },
         {
-            selector: 'div[role="radio"][aria-label="Purple Pulse"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-section-dokan-store-colors"]',
+            type: 'customize-radio',
+            value: 'purple pulse',
         },
     ],
 };

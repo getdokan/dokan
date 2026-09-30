@@ -1,6 +1,12 @@
 import { Badge, MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
-import { RawHTML, useCallback, useMemo, useState } from '@wordpress/element';
+import {
+    RawHTML,
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+} from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { CombineInputProps, FixedCommissionInputValues } from './types';
 import { twMerge } from 'tailwind-merge';
@@ -19,6 +25,8 @@ const FixedCommissionInput = ( {
 }: CombineInputProps ) => {
     const [ localValues, setLocalValues ] =
         useState< FixedCommissionInputValues >( values );
+    // Read when a debounced change fires, so it never commits a stale sibling value.
+    const latestValues = useRef< FixedCommissionInputValues >( values );
 
     // Utility functions
     const unFormatValue = useCallback(
@@ -80,13 +88,14 @@ const FixedCommissionInput = ( {
             }
 
             const newValues = {
-                ...localValues,
+                ...latestValues.current,
                 admin_percentage: validatedValue,
             };
+            latestValues.current = newValues;
             setLocalValues( newValues );
             onValueChange( newValues );
         },
-        [ localValues, unFormatValue, onValueChange ]
+        [ unFormatValue, onValueChange ]
     );
 
     // Handle fixed amount change
@@ -95,13 +104,14 @@ const FixedCommissionInput = ( {
             const unformatted = unFormatValue( value );
 
             const newValues = {
-                ...localValues,
+                ...latestValues.current,
                 additional_fee: unformatted,
             };
+            latestValues.current = newValues;
             setLocalValues( newValues );
             onValueChange( newValues );
         },
-        [ localValues, unFormatValue, onValueChange ]
+        [ unFormatValue, onValueChange ]
     );
 
     // Debounced handlers
@@ -117,6 +127,7 @@ const FixedCommissionInput = ( {
 
     // Update local values when props change
     useMemo( () => {
+        latestValues.current = values;
         setLocalValues( values );
     }, [ values ] );
 
@@ -130,7 +141,7 @@ const FixedCommissionInput = ( {
     return (
         <div
             id={ hookKey }
-            className="@container/combine grid grid-cols-12 p-4 gap-2"
+            className="@container/combine grid grid-cols-12 p-4 gap-2 w-full"
         >
             { hasContent && (
                 <div className="flex flex-col justify-center @xl/combine:col-span-7 col-span-12 gap-1">
@@ -176,13 +187,18 @@ const FixedCommissionInput = ( {
                             onChange={ ( e ) =>
                                 debouncedPercentageChange( e.target.value )
                             }
+                            // Commit the pending value before Save reads the form.
+                            onBlur={ () => debouncedPercentageChange.flush() }
                             maskRule={ {
                                 numeral: true,
                                 delimiter: currency?.thousand ?? ',',
                                 numeralDecimalMark: currency?.decimal ?? '.',
                                 numeralDecimalScale: currency?.precision ?? 2,
                             } }
-                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !border-r-0 !rounded-r-none` }
+                            // `!m-0` kills WordPress admin's `input { margin: 0 1px }`,
+                            // which otherwise pushes a 1px gap into the seam with
+                            // the addon and breaks the shared frame.
+                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !border-r-0 !rounded-r-none` }
                         />
 
                         <div className="text-gray-500 text-lg">
@@ -195,13 +211,18 @@ const FixedCommissionInput = ( {
                             onChange={ ( e ) =>
                                 debouncedFixedChange( e.target.value )
                             }
+                            onBlur={ () => debouncedFixedChange.flush() }
                             maskRule={ {
                                 numeral: true,
                                 delimiter: currency?.thousand ?? ',',
                                 numeralDecimalMark: currency?.decimal ?? '.',
                                 numeralDecimalScale: currency?.precision ?? 2,
                             } }
-                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !border-l-0 !rounded-l-none` }
+                            // Keep the left border — dokan-ui's addOnLeft span ships
+                            // `border-r-0`, so the input has to draw the seam — and
+                            // `!m-0` removes WP admin's 1px input margin that would
+                            // otherwise hold the two halves apart.
+                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !rounded-l-none` }
                         />
                     </>
                 ) }

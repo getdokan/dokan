@@ -126,15 +126,15 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'add_to_cart' ],
-                    'permission_callback' => [ $this, 'get_vendor_due_status_permissions_check' ],
+                    'permission_callback' => [ $this, 'add_to_cart_permissions_check' ],
                     'args'                => [
                         'amount' => [
                             'description'       => __( 'Payable amount', 'dokan-lite' ),
                             'type'              => 'string',
                             'required'          => true,
+                            // The upper and lower bounds live in Helper::add_payment_to_cart(), so both callers get them.
                             'sanitize_callback' => 'sanitize_text_field',
                             'validate_callback' => 'rest_validate_request_arg',
-                            'minimum'           => 1,
                         ],
                     ],
                 ],
@@ -233,7 +233,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         $manager                  = new Manager();
         $items                    = [];
 
-        if ( ! current_user_can( dokana_admin_menu_capability() ) || ! isset( $request_params['vendor_id'] ) ) {
+        if ( ! current_user_can( dokan_admin_menu_capability() ) || ! isset( $request_params['vendor_id'] ) ) {
             $request_params['vendor_id'] = dokan_get_current_user_id();
         }
 
@@ -282,6 +282,34 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     }
 
     /**
+     * Checks if a given request can put a reverse withdrawal payment into the cart.
+     *
+     * @since 5.0.14
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return bool|WP_Error
+     */
+    public function add_to_cart_permissions_check( $request ) {
+        /*
+         * Deliberately stricter than the read routes: `dokan_is_user_seller()` resolves vendor staff to their parent,
+         * so staff would pass while the order lands under their own customer id and credits the wrong ledger. The
+         * AJAX caller already gates on `dokandar`, which staff do not have — match it so both callers agree.
+         */
+        if ( ! is_user_logged_in() || ! current_user_can( 'dokandar' ) ) {
+            // Named rather than a bare false: this route deliberately turns away vendor staff, who would otherwise
+            // get a generic forbidden with no clue that it is policy.
+            return new WP_Error(
+                'dokan_rest_cannot_add_to_cart',
+                __( 'Only vendors can make a reverse withdrawal payment.', 'dokan-lite' ),
+                [ 'status' => rest_authorization_required_code() ]
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * This method will return due status of a single vendor
      *
      * @since 3.7.16
@@ -293,7 +321,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     public function get_vendor_due_status( $request ) {
         $request_params = $request->get_params();
 
-        if ( ! current_user_can( dokana_admin_menu_capability() ) || ! isset( $request_params['vendor_id'] ) ) {
+        if ( ! current_user_can( dokan_admin_menu_capability() ) || ! isset( $request_params['vendor_id'] ) ) {
             $request_params['vendor_id'] = dokan_get_current_user_id();
         }
 
@@ -498,7 +526,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function prepare_transaction_for_response( $item, $request, &$current_balance ) {
-        $context = current_user_can( dokana_admin_menu_capability() ) ? 'admin' : 'seller';
+        $context = current_user_can( dokan_admin_menu_capability() ) ? 'admin' : 'seller';
         $data = Helper::get_formated_transaction_data( $item, $current_balance, $context );
 
         // Decode HTML entities in URL (wp_nonce_url encodes & as &amp; which breaks in JSON/React context).

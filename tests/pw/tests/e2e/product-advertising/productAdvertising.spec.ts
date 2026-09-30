@@ -1,5 +1,5 @@
 import { Page, expect, test } from '@utils/test';
-import { ProductAdvertisingPage, VendorPage, AuctionsPage, BookingPage, ApiUtils, data, payloads } from './productAdvertisingPage';
+import { ProductAdvertisingPage, VendorPage, AuctionsPage, BookingPage, ApiUtils, data, payloads, dbUtils } from './productAdvertisingPage';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
@@ -12,16 +12,25 @@ test.describe('Product Advertising test (admin)', () => {
     let aPage: Page;
     let apiUtils: ApiUtils;
     let advertisedProduct: string;
+    let originalProductEditor: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext({ storageState: a1 });
         aPage = await adminContext.newPage();
         admin = new ProductAdvertisingPage(aPage);
         apiUtils = new ApiUtils(null);
+        // The advertisement section on the vendor product-edit page is a CLASSIC
+        // template feature (dokan_product_edit_after_options -> product-advertisement-content.php).
+        // On a fresh env the auth stage sets dokan_appearance.vendor_product_editor='latest',
+        // which routes "Add new product" to the React editor (no classic section).
+        // Flip to the legacy editor so the classic advertisement section renders; restore after.
+        const [original] = await dbUtils.updateOptionValue('dokan_appearance', { vendor_product_editor: 'legacy' });
+        originalProductEditor = original?.vendor_product_editor ?? 'latest';
         [, , advertisedProduct] = await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
+        await dbUtils.updateOptionValue('dokan_appearance', { vendor_product_editor: originalProductEditor });
         await apiUtils.activateModules(payloads.moduleIds.productAdvertising, payloads.adminAuth);
         await aPage?.close();
         await apiUtils.dispose();

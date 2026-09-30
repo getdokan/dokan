@@ -19,9 +19,13 @@ function dokan_admin_menu_position() {
  *
  * @since 3.0.0
  *
+ * @deprecated 5.0.5 Misspelled name; use dokan_admin_menu_capability() instead.
+ *
  * @return string
  */
 function dokana_admin_menu_capability() {
+    wc_deprecated_function( 'dokana_admin_menu_capability', '5.0.5', 'dokan_admin_menu_capability()' );
+
     return dokan_admin_menu_capability();
 }
 
@@ -1039,6 +1043,19 @@ function dokan_edit_product_url( $product, bool $is_new_product = false ) {
 }
 
 /**
+ * Get the admin URL of a Dokan page on the screen (classic or new) the site uses.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $route Hash route, e.g. `settings` or `withdraw`. Empty for the dashboard.
+ *
+ * @return string
+ */
+function dokan_get_admin_page_url( string $route = '' ): string {
+    return dokan_get_container()->get( \WeDevs\Dokan\Admin\Dashboard\LegacySwitcher::class )->get_admin_page_url( $route );
+}
+
+/**
  * Ads additional columns to admin user table
  *
  * @param array $columns
@@ -1093,9 +1110,11 @@ function dokan_get_option( $option, $section, $default_value = '' ) {
  * which:
  *   1. Mirrors mapped keys into the new flat `dokan_admin_settings` option
  *      (the canonical source of truth).
- *   2. Strips those mapped keys from the payload.
- *   3. Persists the unmapped remainder under the legacy `$option_name` row.
- *   4. Fires `dokan_legacy_settings_changed` and refreshes the in-request snapshot.
+ *   2. Persists the payload under the legacy `$option_name` row. With the
+ *      legacy mirror enabled (default) mapped keys stay in the row so a
+ *      downgraded plugin still reads current data; with it disabled they
+ *      are stripped and only the unmapped remainder is stored.
+ *   3. Fires `dokan_legacy_settings_changed` and refreshes the in-request snapshot.
  *
  * Callers should NOT also call `update_option( $option_name, ... )` — the
  * repository owns that write. If the DI container is unavailable (early
@@ -1545,7 +1564,7 @@ function dokan_get_seller_count( $from = null, $to = null ) {
     $now              = dokan_current_datetime();
     $inactive_sellers = dokan_get_sellers(
         [
-            'number' => - 1,
+            'number' => 1, // Only the total is read; one row keeps this from building a Vendor object per pending seller.
             'status' => 'pending',
         ]
     );
@@ -3527,8 +3546,65 @@ if ( ! function_exists( 'dokan_get_seller_status_count' ) ) {
     }
 }
 
+if ( ! function_exists( 'dokan_get_pending_vendor_count' ) ) {
+    /**
+     * Count the vendors that are waiting for admin approval.
+     *
+     * Delegates to the very query the Vendors list is built from, so the badge can never
+     * claim a count the Pending tab is unable to show. Both read a missing
+     * `dokan_enable_selling` flag as pending, as `dokan_is_seller_enabled()`,
+     * `dokan_get_seller_status_count()` and the Users-screen "Pending Vendors" filter all
+     * do. That includes an administrator who never touched the seller fields, since
+     * `dokan_admin_user_register()` only writes the flag for the `seller` role.
+     *
+     * Cached in the shared `vendors` group, which VendorCache already invalidates on
+     * vendor create/update/delete and on enable/disable.
+     *
+     * @since 5.0.13
+     *
+     * @return int
+     */
+    function dokan_get_pending_vendor_count() {
+        $cache_group = 'vendors';
+        $cache_key   = 'pending_vendor_count';
+        $count       = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $count ) {
+            // Only the total is needed; `fields` and `number` keep this to a count query.
+            dokan()->vendor->get_vendors(
+                [
+                    'status' => 'pending',
+                    'fields' => 'ID',
+                    'number' => 1,
+                ]
+            );
+
+            $count = absint( dokan()->vendor->get_total() );
+
+            Cache::set( $cache_key, $count, $cache_group );
+        }
+
+        /**
+         * Filters the number of vendors awaiting approval.
+         *
+         * @since 5.0.13
+         *
+         * @param int $count Number of vendors awaiting approval.
+         */
+        return absint( apply_filters( 'dokan_get_pending_vendor_count', $count ) );
+    }
+}
+
 /**
  * Install a plugin from wp.org
+ *
+ * Installs *and activates* the plugin, despite the name.
+ *
+ * Performs no capability check by design, so that non-request callers such as WP-CLI and
+ * cron keep working. Installing and activating arbitrary code is a full-trust action, so
+ * any caller reachable from a request MUST gate itself on `install_plugins` and
+ * `activate_plugins` first — `manage_woocommerce` is not sufficient, since a Shop Manager
+ * holds it without holding either plugin capability.
  *
  * Example:
  * To download WooCommerce `dokan_install_wp_org_plugin( 'woocommerce' )`
