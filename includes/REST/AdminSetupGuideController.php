@@ -143,7 +143,7 @@ class AdminSetupGuideController extends DokanBaseAdminController {
          * @param array  $step_array The populated step data.
          * @param AbstractStep $step       The step object.
          */
-        $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate_children_only(), $step );
+        $step_array = apply_filters( 'dokan_admin_setup_guide_step_response', $step->populate(), $step );
 
         return rest_ensure_response( $step_array );
     }
