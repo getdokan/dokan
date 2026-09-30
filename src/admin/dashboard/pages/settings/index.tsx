@@ -31,13 +31,21 @@ const URL_PARAM_PAGE = 'page_id';
 const URL_PARAM_SUBPAGE = 'subpage_id';
 const URL_PARAM_TAB = 'tab_id';
 
+// Legacy validators answer with wp_send_json_error(): `data.errors` is [ { name, error } ].
+type LegacyFieldError = { name?: string; error?: string };
+
 type RestSaveError = {
-    data?: { errors?: Record< string, string | string[] > };
+    data?: {
+        errors?: Record< string, string | string[] > | LegacyFieldError[];
+    };
 };
 
 // REST sends `data.errors` as { fieldId: string[] }; plugin-ui reads `errors` as { fieldId: string }.
 const getFieldErrors = ( error: unknown ): Record< string, string > => {
     const errors = ( error as RestSaveError )?.data?.errors ?? {};
+    if ( Array.isArray( errors ) ) {
+        return {};
+    }
 
     return Object.fromEntries(
         Object.entries( errors ).map( ( [ id, messages ] ) => [
@@ -47,6 +55,19 @@ const getFieldErrors = ( error: unknown ): Record< string, string > => {
                 : String( messages ),
         ] )
     );
+};
+
+// Reasons from a legacy validator, which keys errors by legacy name, not field id.
+const getLegacyErrorMessage = ( error: unknown ): string => {
+    const errors = ( error as RestSaveError )?.data?.errors;
+    if ( ! Array.isArray( errors ) ) {
+        return '';
+    }
+
+    // One validator can repeat the same message per slot; show it once.
+    return [
+        ...new Set( errors.map( ( item ) => item?.error ).filter( Boolean ) ),
+    ].join( ' ' );
 };
 
 const hasElement = (
@@ -197,6 +218,7 @@ export default function SettingsPage() {
             // eslint-disable-next-line no-console
             console.error( 'Failed to save settings:', error );
             const message =
+                getLegacyErrorMessage( error ) ||
                 ( error as { message?: string } )?.message ||
                 __( 'Failed to save settings.', 'dokan-lite' );
             toast.error( message );
