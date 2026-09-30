@@ -16,7 +16,7 @@ use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
  * 5. Fill default properties (display, dependencies, validations, etc.).
  * 6. Run SchemaValidator in debug/dev mode.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class SettingsRegistry {
 
@@ -49,7 +49,7 @@ class SettingsRegistry {
      * Returns the flat array with all values populated, defaults filled,
      * hook_key filters fired, and validation run (in debug mode).
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param bool $force_refresh Force rebuild even if cached.
      *
@@ -98,7 +98,7 @@ class SettingsRegistry {
      * UI/REST. The front-end legacy-settings bridge harvests SettingsSchema
      * directly and never reads `options`, so it never invokes these closures.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat schema elements.
      *
@@ -125,7 +125,7 @@ class SettingsRegistry {
      * invoke this after a save. WordPress's get_option() caches within a request,
      * so no separate options cache is needed here.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      */
     public function clear_cache(): void {
         $this->cache = null;
@@ -136,7 +136,7 @@ class SettingsRegistry {
      *
      * Hook_key format: `dokan_settings_{page}_{subpage}_{section}_{field}_children`.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      *
@@ -217,7 +217,7 @@ class SettingsRegistry {
      * elements that have this node as their parent. This allows Pro and extensions
      * to inject additional elements at specific tree positions.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      *
@@ -262,7 +262,7 @@ class SettingsRegistry {
              * The hook name is dynamic, built from the element's position in the tree.
              * For example: `dokan_settings_general_marketplace_marketplace_settings_children`
              *
-             * @since DOKAN_SINCE
+             * @since 5.2.0
              *
              * @param array $children Current child elements of this node.
              * @param array $node     The structural node element.
@@ -293,7 +293,7 @@ class SettingsRegistry {
      * Ensures every element has consistent properties for the frontend,
      * even if they weren't explicitly set in the schema definition.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      *
@@ -334,7 +334,7 @@ class SettingsRegistry {
      * Reads `dokan_settings` once and looks up each field's value by its id.
      * Falls back to the field's `default` when the id is absent from storage.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      *
@@ -377,7 +377,7 @@ class SettingsRegistry {
      * Only runs when WP_DEBUG is true and DOKAN_DISABLE_SCHEMA_VALIDATION is not set.
      * Logs errors and warnings to the PHP error log.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements The processed schema elements.
      */

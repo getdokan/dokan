@@ -18,7 +18,7 @@ use WeDevs\Dokan\Admin\Settings\Schema\SettingsSchema;
  *
  * See docs/superpowers/specs/2026-05-15-legacy-settings-bridge-design.md.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class LegacySettingsBridge {
 
@@ -135,7 +135,7 @@ class LegacySettingsBridge {
      *
      * Single-line switch: `add_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' );`
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return bool
      */
@@ -143,7 +143,7 @@ class LegacySettingsBridge {
         /**
          * Filter whether the downgrade-safe legacy mirror is enabled.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param bool $enabled Default true.
          */
@@ -154,7 +154,7 @@ class LegacySettingsBridge {
      * Unique legacy wp_option names the current mapping refers to, including
      * options reached only through multi-slot (1:N) mappings.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array<int,string>
      */
@@ -171,7 +171,7 @@ class LegacySettingsBridge {
      * tests where the DB is rolled back between cases without firing the
      * option hooks (a `delete_option` on an already-empty row is a no-op).
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return void
      */
@@ -376,7 +376,7 @@ class LegacySettingsBridge {
      * parent arrays produced by leaf removal are pruned so the section row
      * doesn't accumulate dead structure.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string              $option_name Legacy wp_option name.
      * @param array<string,mixed> $payload     Legacy-shaped payload.
@@ -417,7 +417,7 @@ class LegacySettingsBridge {
      * If the new-option write throws, we log and continue — the legacy row
      * write still proceeds so the save is not lost entirely.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string              $option_name Legacy wp_option name.
      * @param array<string,mixed> $payload     Legacy-shaped payload.
@@ -500,7 +500,7 @@ class LegacySettingsBridge {
     /**
      * Apply a new-option slice onto legacy rows without persisting them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,mixed> $new_slice New-option keys and values.
      * @param array<string,array> $legacy    Legacy rows keyed by option name.
@@ -521,7 +521,7 @@ class LegacySettingsBridge {
     /**
      * Legacy option names a new-option slice maps to.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,mixed> $new_slice New-option keys and values.
      *
@@ -575,7 +575,7 @@ class LegacySettingsBridge {
      * (e.g. Germanized hide flags in `hide_vendor_info`) are kept. Every other
      * field replaces the leaf.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string              $new_key      New-flat field id.
      * @param LegacyAddress       $address      Target legacy address.
@@ -745,7 +745,7 @@ class LegacySettingsBridge {
              * attribute cannot express (legacy-only fields, bulk additions,
              * non-`dokan_*` source options).
              *
-             * @since DOKAN_SINCE
+             * @since 5.2.0
              *
              * @param array<string,string|array{option:string,field:string}> $map
              */

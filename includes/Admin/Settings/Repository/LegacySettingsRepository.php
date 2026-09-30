@@ -9,7 +9,7 @@ use WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge;
  *
  * Reads/writes legacy per-section `dokan_*` wp_options with overlay + mirror.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class LegacySettingsRepository implements LegacySettingsRepositoryInterface {
 
@@ -82,7 +82,7 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
          * array effectively blocks the write (the diff becomes empty and
          * neither the legacy option nor the new-flat mirror is touched).
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array<string,mixed> $slice   Incoming change set.
          * @param string              $section Legacy wp_option name.
@@ -119,7 +119,7 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
         /**
          * Fired after a successful write to a legacy section option.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string              $section Legacy wp_option name.
          * @param array<string,mixed> $changed Added/changed entries.

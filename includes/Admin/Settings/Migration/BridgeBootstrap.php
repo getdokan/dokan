@@ -27,7 +27,7 @@ use WeDevs\Dokan\Contracts\Hookable;
  * must see raw legacy data, not the overlay; the static guard short-
  * circuits the filter while bridge work is in flight.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class BridgeBootstrap implements Hookable {
 
@@ -71,7 +71,7 @@ class BridgeBootstrap implements Hookable {
      * write silently no-ops. The latch is saved/restored so nested calls are
      * safe.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param callable $callback Callback to run without the overlay.
      *
@@ -94,7 +94,7 @@ class BridgeBootstrap implements Hookable {
      * writes). Write listeners use it to ignore the bridge's own writes to
      * the legacy rows.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return bool
      */

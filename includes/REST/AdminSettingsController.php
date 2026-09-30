@@ -17,7 +17,7 @@ use WP_REST_Server;
  * GET  /dokan/v1/admin/settings          — Returns the full flat array schema with values.
  * PUT  /dokan/v1/admin/settings/{page_id} — Saves flat values for a specific page.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class AdminSettingsController extends DokanBaseAdminController {
 
@@ -65,7 +65,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Register REST routes.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      */
     public function register_routes() {
         // GET /dokan/v1/admin/settings — full schema with values.
@@ -111,7 +111,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * GET handler — returns the full flat array schema with populated values.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -123,7 +123,7 @@ class AdminSettingsController extends DokanBaseAdminController {
         /**
          * Filter the admin settings REST response.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array $schema The full flat array schema with values.
          */
@@ -150,7 +150,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      * Unknown keys are silently ignored. Values are merged into the single
      * `dokan_admin_settings` wp_option.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -240,7 +240,7 @@ class AdminSettingsController extends DokanBaseAdminController {
         /**
          * Fired before saving admin settings.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string $page_id     The page being saved.
          * @param array  $sanitized   Sanitized values keyed by field id.
@@ -256,7 +256,7 @@ class AdminSettingsController extends DokanBaseAdminController {
         /**
          * Fired after saving admin settings.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string $page_id     The page that was saved.
          * @param array  $sanitized   Sanitized values that were saved.
@@ -273,7 +273,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Get all field elements belonging to a specific page.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array  $schema  The full schema.
      * @param string $page_id The page ID.
@@ -293,7 +293,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Recursively collect all descendant element IDs for a page.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array  $schema  The full schema.
      * @param string $page_id The page ID.
@@ -327,7 +327,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Check whether the submitted values hide a field through its dependencies.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $field  The field schema element.
      * @param array $values The submitted values.
@@ -365,7 +365,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      * `dokan_admin_settings_validate_field` filter so addons can layer
      * variant-specific or cross-field validation on top.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $field The field schema element.
      * @param mixed $value The submitted value.
@@ -459,7 +459,7 @@ class AdminSettingsController extends DokanBaseAdminController {
          * non-empty string adds one. Returning an empty array marks the field
          * as valid.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string[] $errors  Accumulated error messages (may be empty).
          * @param array    $field   The field schema element being validated.
@@ -472,7 +472,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Range errors for percentage / fixed-fee pairs, including nested per-category values.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $value Field value.
      *
@@ -505,7 +505,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Allowed option values of a select/radio field, or null when the field has no fixed option list.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $field The field schema element.
      *
@@ -541,7 +541,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Sanitize a field value based on its variant.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $field The field schema element.
      * @param mixed $value The submitted value.
@@ -630,7 +630,7 @@ class AdminSettingsController extends DokanBaseAdminController {
                 /**
                  * Filter to sanitize custom field variants.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.2.0
                  *
                  * @param mixed  $value   The raw value.
                  * @param array  $field   The field schema element.
@@ -643,7 +643,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Whether a value is, or contains, an infinite or NaN number.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param mixed $value           Sanitized field value.
      * @param bool  $numeric_strings Also treat numeric strings like '1e400' as numbers.
@@ -671,7 +671,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Recursively sanitize an array/object value.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param mixed $value The value to sanitize.
      *
@@ -700,7 +700,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * REST schema for the settings endpoint.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array
      */

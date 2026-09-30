@@ -23,7 +23,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Option that stores the site-wide opt-in to the new settings screen.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      */
     public const NEW_SETTINGS_OPTION = 'dokan_new_settings_page_enabled';
 
@@ -163,7 +163,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Whether the site uses the classic (legacy) settings screen.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return bool
      */
@@ -174,7 +174,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Switch the site-wide settings screen to classic or new.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $switch_to `legacy` or `new`; anything else toggles the current screen.
      *
@@ -195,7 +195,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Whether the classic screen is active for a Dokan admin page.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $key Page key, e.g. `settings`, `withdraw` or `dashboard`.
      *
@@ -214,7 +214,7 @@ class LegacySwitcher implements Hookable {
      *
      * Only for pages that exist on both screens.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $route Hash route, e.g. `settings` or `vendors?status=pending`. Empty for the dashboard.
      *

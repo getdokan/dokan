@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.1.3
+Stable tag: 5.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -375,6 +375,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.2.0 ( Sep 30, 2026 ) =
+- **new:** Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.
+- **new:** The revamped settings screen is opt-in: your existing settings carry over and stay in sync, and you can switch back to the classic screen at any time.
+- **new:** Extensions can add their own settings to the new settings screen through the `dokan_get_admin_settings_schema` filter.
+- **fix:** Prevented vendors from using the commission calculator to read another vendor's commission or earnings, and limited it to accounts that can manage products.
+- **fix:** The v3 order downloads REST endpoint no longer throws a fatal error for orders that grant download access to existing products.
+
 = v5.1.3 ( Sep 24, 2026 ) =
 - **fix:** The vendor dashboard navigation is no longer rebuilt on every request, so cron, Action Scheduler, and other background requests no longer do that work on each hit.
 - **fix:** The vendor product list now shows each product's real type instead of labeling unrecognized types as Simple.
@@ -399,11 +406,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 = v5.1.0 ( Sep 07, 2026 ) =
 - **fix:** The admin Add Vendor form now shows all its required fields again, including vendor picture, store URL, username, and password, so admins can create vendors from the Vendors screen.
-
-= v5.0.19 ( Sep 03, 2026 ) =
-- **update:** Declared compatibility with WooCommerce 11.0.1 so the outdated compatibility notice no longer appears on the Plugins screen.
-- **fix:** In the new product editor, saving a product that has gallery images but no featured image no longer moves the first gallery image into the featured slot, so all gallery photos are kept.
-- **fix:** The vendor dashboard now shows an error message instead of loading forever when it can't load the current user.
-- **fix:** Turning off the "Register as a Vendor" option now blocks vendor sign-ups on the server, not just in the form, so a crafted request can no longer register a vendor while the option is disabled.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

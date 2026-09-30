@@ -155,7 +155,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Canonical SettingsSchema field ids this step exposes, in display order.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return string[]
      */
@@ -180,7 +180,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
      * plugin-ui Onboarding component. Fields are re-parented under one section and
      * carry their current values (populated by {@see SettingsRegistry}).
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array
      */
@@ -236,7 +236,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     /**
      * Return only the field elements (used by the REST update response).
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array
      */
