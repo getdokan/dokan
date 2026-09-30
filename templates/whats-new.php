@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.2.1',
+        'released' => '2026-09-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed the setup wizard failing to load due to an outdated UI package.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.2.0',
         'released' => '2026-09-30',
         'changes'  => [
