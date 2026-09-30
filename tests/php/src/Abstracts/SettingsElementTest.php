@@ -5,6 +5,8 @@ namespace WeDevs\Dokan\Test\Abstracts;
 use WeDevs\Dokan\Abstracts\SettingsElement;
 use WeDevs\Dokan\Test\DokanTestCase;
 
+// phpcs:disable Generic.Files.OneObjectStructurePerFile.MultipleFound -- The doubles below only serve this test.
+
 /**
  * Minimal concrete `page` element for exercising the abstract.
  */
@@ -105,7 +107,7 @@ class SettingsElementTest extends DokanTestCase {
     }
 
     /**
-     * populate() output must omit the legacy `dependency_key` field — it was
+     * The populate() output must omit the legacy `dependency_key` field — it was
      * deleted from the schema in the dependency_key cleanup.
      */
     public function test_populate_omits_dependency_key() {

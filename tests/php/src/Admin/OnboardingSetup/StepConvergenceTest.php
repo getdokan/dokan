@@ -65,7 +65,7 @@ class StepConvergenceTest extends DokanTestCase {
     }
 
     /**
-     * populate() returns a page subtree (hide_save) plus the harvested fields.
+     * Step populate() returns a page subtree (hide_save) plus the harvested fields.
      *
      * @return void
      */
@@ -92,7 +92,7 @@ class StepConvergenceTest extends DokanTestCase {
     }
 
     /**
-     * save() writes canonical ids into the single dokan_admin_settings option
+     * Step save() writes canonical ids into the single dokan_admin_settings option
      * and ignores keys the step does not declare.
      *
      * @return void
@@ -130,7 +130,7 @@ class StepConvergenceTest extends DokanTestCase {
     }
 
     /**
-     * save() marks the step completed; the flag is decoupled from setting values.
+     * Step save() marks the step completed; the flag is decoupled from setting values.
      *
      * @return void
      */
