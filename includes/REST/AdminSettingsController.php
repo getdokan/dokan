@@ -374,7 +374,9 @@ class AdminSettingsController extends DokanBaseAdminController {
      */
     protected function validate_field_value( array $field, $value ): array {
         // INF/NaN can't be JSON-encoded and break later maths; report it alone, not beside range errors.
-        if ( $this->has_non_finite_number( $value ) ) {
+        // Numeric-looking strings count only for numeric fields, so a text value like '123e4567' stays valid.
+        $numeric_field = in_array( $field['variant'] ?? '', [ 'number', 'currency', 'combine_input', 'category_based_commission' ], true );
+        if ( $this->has_non_finite_number( $value, $numeric_field ) ) {
             return [ __( 'Please enter a valid number.', 'dokan-lite' ) ];
         }
 
@@ -639,21 +641,25 @@ class AdminSettingsController extends DokanBaseAdminController {
     }
 
     /**
-     * Whether a value is, or contains, an infinite or NaN number (float or numeric string like '1e400').
+     * Whether a value is, or contains, an infinite or NaN number.
      *
      * @since DOKAN_SINCE
      *
-     * @param mixed $value Sanitized field value.
+     * @param mixed $value           Sanitized field value.
+     * @param bool  $numeric_strings Also treat numeric strings like '1e400' as numbers.
      *
      * @return bool
      */
-    protected function has_non_finite_number( $value ): bool {
-        if ( is_float( $value ) || ( is_string( $value ) && is_numeric( $value ) ) ) {
+    protected function has_non_finite_number( $value, bool $numeric_strings = false ): bool {
+        if ( is_float( $value ) ) {
+            return ! is_finite( $value );
+        }
+        if ( $numeric_strings && is_string( $value ) && is_numeric( $value ) ) {
             return ! is_finite( (float) $value );
         }
         if ( is_array( $value ) ) {
             foreach ( $value as $item ) {
-                if ( $this->has_non_finite_number( $item ) ) {
+                if ( $this->has_non_finite_number( $item, $numeric_strings ) ) {
                     return true;
                 }
             }

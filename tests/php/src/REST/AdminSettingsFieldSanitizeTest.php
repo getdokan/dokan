@@ -58,6 +58,13 @@ class AdminSettingsFieldSanitizeTest extends DokanTestCase {
         $this->assertSame( 12, ( new SettingsRepository() )->get( 'store_products_per_page' ) );
     }
 
+    public function test_text_field_accepts_a_value_that_looks_like_a_huge_number(): void {
+        $response = $this->save( 'marketplace', [ 'vendor_store_url_slug' => '1e400' ] );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( '1e400', ( new SettingsRepository() )->get( 'vendor_store_url_slug' ) );
+    }
+
     public function test_charge_field_rejects_an_infinite_numeric_string(): void {
         $response = $this->save(
             'commission',
