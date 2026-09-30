@@ -272,6 +272,9 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
             ->get( SettingsRepository::class )
             ->update( $slice );
 
+        // The registry caches field values per request; drop it so the response carries what was saved.
+        dokan_get_container()->get( SettingsRegistry::class )->clear_cache();
+
         $this->mark_as_complete();
 
         return true;

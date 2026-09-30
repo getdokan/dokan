@@ -61,15 +61,25 @@ const SetupGuide = () => {
         _treeValues: Record< string, unknown >,
         flatValues: Record< string, unknown >
     ): Promise< void > => {
-        await apiFetch( {
+        const fields = await apiFetch< SettingsElement[] >( {
             path: `/dokan/v1/admin/setup-guide/${ stepId }`,
             method: 'POST',
             data: { values: flatValues },
         } );
+        const saved = new Map( fields.map( ( field ) => [ field.id, field ] ) );
 
+        // Changing `steps` rebuilds the form from the schema, so the schema must carry the saved values.
         setSteps( ( prev ) =>
             prev.map( ( step ) =>
-                step.id === stepId ? { ...step, completed: true } : step
+                step.id === stepId
+                    ? {
+                          ...step,
+                          completed: true,
+                          schema: step.schema.map(
+                              ( element ) => saved.get( element.id ) ?? element
+                          ),
+                      }
+                    : step
             )
         );
     };

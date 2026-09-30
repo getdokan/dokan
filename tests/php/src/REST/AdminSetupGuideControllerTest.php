@@ -84,4 +84,43 @@ class AdminSetupGuideControllerTest extends DokanTestCase {
         $response = $this->server->dispatch( $request );
         $this->assertSame( 404, $response->get_status() );
     }
+
+    /**
+     * A step GET returns the page subtree the Onboarding component renders:
+     * the step page, its section, then the step's fields.
+     *
+     * @return void
+     */
+    public function test_get_step_returns_page_subtree(): void {
+        $response = $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/withdraw' ) );
+        $this->assertSame( 200, $response->get_status() );
+
+        $data = $response->get_data();
+        $this->assertTrue( wp_is_numeric_array( $data ) );
+        $this->assertSame( 'page', $data[0]['type'] );
+        $this->assertSame( 'withdraw', $data[0]['id'] );
+        $this->assertSame( 'section', $data[1]['type'] );
+        $this->assertContains( 'minimum_withdraw_limit', wp_list_pluck( $data, 'id' ) );
+    }
+
+    /**
+     * A step POST responds with the step's fields carrying the saved values.
+     *
+     * @return void
+     */
+    public function test_post_step_responds_with_saved_values(): void {
+        // Prime the per-request registry cache with the values before the save.
+        $this->server->dispatch( new WP_REST_Request( 'GET', $this->route . '/basic' ) );
+
+        $request = new WP_REST_Request( 'POST', $this->route . '/basic' );
+        $request->set_body_params( [ 'values' => [ 'shipping_fee_recipient' => 'admin' ] ] );
+
+        $fields = wp_list_pluck( $this->server->dispatch( $request )->get_data(), 'value', 'id' );
+        $this->assertSame( 'admin', $fields['shipping_fee_recipient'] );
+
+        $request->set_body_params( [ 'values' => [ 'shipping_fee_recipient' => 'seller' ] ] );
+
+        $fields = wp_list_pluck( $this->server->dispatch( $request )->get_data(), 'value', 'id' );
+        $this->assertSame( 'seller', $fields['shipping_fee_recipient'] );
+    }
 }
