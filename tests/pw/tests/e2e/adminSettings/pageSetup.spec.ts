@@ -2,6 +2,8 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { ApiUtils } from '@utils/apiUtils';
+import { payloads } from '@utils/payloads';
 
 const oldDataset = {
     title: 'Admin Old Setting: General -> Page Setup',
@@ -62,6 +64,11 @@ const newDataset = {
 test.describe('Admin Setting: General -> Page Setup', () => {
     let loginPage: LoginPage;
     let adminSettingsPage: AdminSettingsPage;
+
+    // The T&C page is a fixture, not created by the plugin; createPage is a no-op when it exists.
+    test.beforeAll(async () => {
+        await new ApiUtils(null).createPage(payloads.tocPage, payloads.adminAuth);
+    });
 
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
