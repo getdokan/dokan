@@ -31,6 +31,56 @@ const URL_PARAM_PAGE = 'page_id';
 const URL_PARAM_SUBPAGE = 'subpage_id';
 const URL_PARAM_TAB = 'tab_id';
 
+// Legacy validators answer with wp_send_json_error(): `data.errors` is [ { name, error } ].
+type LegacyFieldError = { name?: string; error?: string };
+
+type RestSaveError = {
+    data?: {
+        errors?: Record< string, string | string[] > | LegacyFieldError[];
+    };
+};
+
+// REST sends `data.errors` as { fieldId: string[] }; plugin-ui reads `errors` as { fieldId: string }.
+const getFieldErrors = ( error: unknown ): Record< string, string > => {
+    const errors = ( error as RestSaveError )?.data?.errors ?? {};
+    if ( Array.isArray( errors ) ) {
+        return {};
+    }
+
+    return Object.fromEntries(
+        Object.entries( errors ).map( ( [ id, messages ] ) => [
+            id,
+            Array.isArray( messages )
+                ? messages.join( ' ' )
+                : String( messages ),
+        ] )
+    );
+};
+
+// Reasons from a legacy validator, which keys errors by legacy name, not field id.
+const getLegacyErrorMessage = ( error: unknown ): string => {
+    const errors = ( error as RestSaveError )?.data?.errors;
+    if ( ! Array.isArray( errors ) ) {
+        return '';
+    }
+
+    // One validator can repeat the same message per slot; show it once.
+    return [
+        ...new Set( errors.map( ( item ) => item?.error ).filter( Boolean ) ),
+    ].join( ' ' );
+};
+
+const hasElement = (
+    elements: SettingsElement[],
+    id: string,
+    type: string
+): boolean =>
+    elements.some(
+        ( el ) =>
+            ( el.id === id && el.type === type ) ||
+            hasElement( el.children || [], id, type )
+    );
+
 /**
  * Mounts inside the SettingsProvider tree (via renderSaveButton) and binds
  * the active subpage/tab to URL query params. Plugin-ui only exposes the
@@ -39,6 +89,7 @@ const URL_PARAM_TAB = 'tab_id';
  */
 const UrlSync = (): null => {
     const {
+        schema,
         activePage,
         activeSubpage,
         activeTab,
@@ -56,14 +107,24 @@ const UrlSync = (): null => {
         }
         const urlSub = searchParams.get( URL_PARAM_SUBPAGE );
         const urlTab = searchParams.get( URL_PARAM_TAB );
-        if ( urlSub && urlSub !== activeSubpage ) {
+        // Ignore ids that don't exist, so a stale or edited URL can't open a blank page.
+        if (
+            urlSub &&
+            urlSub !== activeSubpage &&
+            hasElement( schema, urlSub, 'subpage' )
+        ) {
             setActiveSubpage( urlSub );
         }
-        if ( urlTab && urlTab !== activeTab ) {
+        if (
+            urlTab &&
+            urlTab !== activeTab &&
+            hasElement( schema, urlTab, 'tab' )
+        ) {
             setActiveTab( urlTab );
         }
         setRestored( true );
     }, [
+        schema,
         activePage,
         activeSubpage,
         activeTab,
@@ -83,6 +144,10 @@ const UrlSync = (): null => {
         setSearchParams(
             ( prev ) => {
                 const next = new URLSearchParams( prev );
+                // Keep page_id in step with the page that owns the active subpage.
+                if ( activePage ) {
+                    next.set( URL_PARAM_PAGE, activePage );
+                }
                 if ( activeSubpage ) {
                     next.set( URL_PARAM_SUBPAGE, activeSubpage );
                 } else {
@@ -97,7 +162,7 @@ const UrlSync = (): null => {
             },
             { replace: true }
         );
-    }, [ activeSubpage, activeTab, restored, setSearchParams ] );
+    }, [ activePage, activeSubpage, activeTab, restored, setSearchParams ] );
 
     return null;
 };
@@ -152,10 +217,15 @@ export default function SettingsPage() {
         } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Failed to save settings:', error );
-            toast.error(
+            const message =
+                getLegacyErrorMessage( error ) ||
                 ( error as { message?: string } )?.message ||
-                    __( 'Failed to save settings.', 'dokan-lite' )
-            );
+                __( 'Failed to save settings.', 'dokan-lite' );
+            toast.error( message );
+            // Rethrow so plugin-ui keeps the page dirty and shows the field errors.
+            throw Object.assign( new Error( message ), {
+                errors: getFieldErrors( error ),
+            } );
         } finally {
             setSaving( false );
         }

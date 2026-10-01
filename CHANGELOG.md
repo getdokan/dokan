@@ -1,3 +1,15 @@
+### v5.2.1 ( Sep 30, 2026 ) ###
+
+- **fix:** Fixed the setup wizard failing to load due to an outdated UI package.
+
+### v5.2.0 ( Sep 30, 2026 ) ###
+
+- **new:** Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.
+- **new:** The revamped settings screen is opt-in: your existing settings carry over and stay in sync, and you can switch back to the classic screen at any time.
+- **new:** Extensions can add their own settings to the new settings screen through the `dokan_get_admin_settings_schema` filter.
+- **fix:** Prevented vendors from using the commission calculator to read another vendor's commission or earnings, and limited it to accounts that can manage products.
+- **fix:** The v3 order downloads REST endpoint no longer throws a fatal error for orders that grant download access to existing products.
+
 ### v5.1.3 ( Sep 24, 2026 ) ###
 
 - **fix:** The vendor dashboard navigation is no longer rebuilt on every request, so cron, Action Scheduler, and other background requests no longer do that work on each hit.

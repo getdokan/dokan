@@ -18,7 +18,12 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * checked, empty string when unchecked. We normalize anything truthy on the
  * legacy side to "hidden" so partial / pre-filtered payloads still round-trip.
  *
- * @since DOKAN_SINCE
+ * `to_legacy()` returns only the three keys above. The legacy leaf can also
+ * hold Germanized flags (`dokan_vat_number`, `dokan_bank_iban`, ...), which
+ * this transformer does not own. The schema field sets `legacy_merge => true`,
+ * so the bridge merges this output over the stored leaf and keeps those flags.
+ *
+ * @since 5.2.0
  */
 final class HideVendorInfoTransformer implements TransformerInterface {
 

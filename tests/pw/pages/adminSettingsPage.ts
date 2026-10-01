@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { data } from '@utils/testData';
 
@@ -115,14 +115,19 @@ export class AdminSettingsPage extends BasePage {
         return this.page.getByRole('button', { name: this.nu.saveButtonName });
     }
 
-    // Save is only clickable once a change makes it dirty; skip otherwise.
+    // Save enables asynchronously after a change; a snapshot isEnabled() races the
+    // React state and skips the save, leaving the page dirty ("Unsaved changes"
+    // dialog blocks the next navigation). Wait for it, then wait for it to clear.
     private async saveNewSettings() {
         const save = this.newSaveButton();
-        if (await save.isEnabled().catch(() => false)) {
-            await save.click();
-            await this.waitForLoadState();
-            await this.page.waitForTimeout(1000);
+        // No-op edits (value unchanged) never enable Save; don't fail on those.
+        const dirty = await expect(save).toBeEnabled({ timeout: 5000 }).then(() => true, () => false);
+        if (!dirty) {
+            return;
         }
+        await save.click();
+        await expect(save).toBeDisabled({ timeout: 15000 });
+        await this.waitForLoadState();
     }
 
     // Open a settings subpage by its sidebar section + subpage accessible names.

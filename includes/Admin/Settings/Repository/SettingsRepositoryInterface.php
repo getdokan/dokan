@@ -10,7 +10,7 @@ namespace WeDevs\Dokan\Admin\Settings\Repository;
  * through an implementation so that custom events fire consistently and
  * the in-request snapshot stays coherent.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 interface SettingsRepositoryInterface {
 

@@ -25,7 +25,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * inputs), so this transformer doesn't coerce types and leaves rounding /
  * formatting to the consumer.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class WithdrawChargeTransformer implements TransformerInterface {
 

@@ -1,6 +1,12 @@
 import { Badge, MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
-import { RawHTML, useCallback, useMemo, useState } from '@wordpress/element';
+import {
+    RawHTML,
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+} from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { CombineInputProps, FixedCommissionInputValues } from './types';
 import { twMerge } from 'tailwind-merge';
@@ -19,6 +25,8 @@ const FixedCommissionInput = ( {
 }: CombineInputProps ) => {
     const [ localValues, setLocalValues ] =
         useState< FixedCommissionInputValues >( values );
+    // Read when a debounced change fires, so it never commits a stale sibling value.
+    const latestValues = useRef< FixedCommissionInputValues >( values );
 
     // Utility functions
     const unFormatValue = useCallback(
@@ -80,13 +88,14 @@ const FixedCommissionInput = ( {
             }
 
             const newValues = {
-                ...localValues,
+                ...latestValues.current,
                 admin_percentage: validatedValue,
             };
+            latestValues.current = newValues;
             setLocalValues( newValues );
             onValueChange( newValues );
         },
-        [ localValues, unFormatValue, onValueChange ]
+        [ unFormatValue, onValueChange ]
     );
 
     // Handle fixed amount change
@@ -95,13 +104,14 @@ const FixedCommissionInput = ( {
             const unformatted = unFormatValue( value );
 
             const newValues = {
-                ...localValues,
+                ...latestValues.current,
                 additional_fee: unformatted,
             };
+            latestValues.current = newValues;
             setLocalValues( newValues );
             onValueChange( newValues );
         },
-        [ localValues, unFormatValue, onValueChange ]
+        [ unFormatValue, onValueChange ]
     );
 
     // Debounced handlers
@@ -117,6 +127,7 @@ const FixedCommissionInput = ( {
 
     // Update local values when props change
     useMemo( () => {
+        latestValues.current = values;
         setLocalValues( values );
     }, [ values ] );
 
@@ -176,6 +187,8 @@ const FixedCommissionInput = ( {
                             onChange={ ( e ) =>
                                 debouncedPercentageChange( e.target.value )
                             }
+                            // Commit the pending value before Save reads the form.
+                            onBlur={ () => debouncedPercentageChange.flush() }
                             maskRule={ {
                                 numeral: true,
                                 delimiter: currency?.thousand ?? ',',
@@ -198,6 +211,7 @@ const FixedCommissionInput = ( {
                             onChange={ ( e ) =>
                                 debouncedFixedChange( e.target.value )
                             }
+                            onBlur={ () => debouncedFixedChange.flush() }
                             maskRule={ {
                                 numeral: true,
                                 delimiter: currency?.thousand ?? ',',

@@ -13,7 +13,7 @@ use WeDevs\Dokan\Utilities\AdminSettings;
  *
  * Extension point: `apply_filters( 'dokan_get_admin_settings_schema', $elements )`
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class SettingsSchema {
 
@@ -71,7 +71,7 @@ class SettingsSchema {
          *
          * Pro and extensions append their elements to this array.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array $elements Flat array of settings elements.
          */
@@ -222,7 +222,7 @@ class SettingsSchema {
 				'variant'       => 'switch',
 				'section_id'    => 'marketplace_settings',
                 'title'   => __( 'Product Price Visibility', 'dokan-lite' ),
-                'description'    => __( 'Check to hide product price.', 'dokan-lite' ),
+                'description'    => __( 'Show or hide the product price on product pages.', 'dokan-lite' ),
                 'default' => 'on',
 				'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
@@ -532,12 +532,6 @@ class SettingsSchema {
      * @return array
      */
     private static function transaction_page(): array {
-        $default_settings = [
-            'commission_type'    => 'fixed',
-            'admin_percentage'   => '10',
-            'additional_fee'     => '10',
-        ];
-
         return [
             // Page
             [
@@ -665,7 +659,7 @@ class SettingsSchema {
                 'title'       => esc_html__( 'Commission Type', 'dokan-lite' ),
                 'tooltip'     => esc_html__( 'Select a commission type', 'dokan-lite' ),
                 'description' => esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ),
-                'default'     => $default_settings['commission_type'],
+                'default'     => 'fixed',
                 'options'     => [
                     [
 						'title' => esc_html__( 'Fixed', 'dokan-lite' ),
@@ -686,8 +680,6 @@ class SettingsSchema {
                 'section_id'       => 'commission',
                 'title'            => esc_html__( 'Commission Amount', 'dokan-lite' ),
                 'description'      => esc_html__( 'Amount you will get from sales in both percentage and fixed fee.', 'dokan-lite' ),
-                'admin_percentage' => $default_settings['admin_percentage'],
-                'additional_fee'   => $default_settings['additional_fee'],
                 'dependencies'     => [
                     [
 						'key' => 'commission_type',
@@ -857,8 +849,10 @@ class SettingsSchema {
                 'field_group_id'   => 'withdraw_methods_group_paypal',
                 'title'            => esc_html__( 'Withdraw charges', 'dokan-lite' ),
                 'tooltip'          => esc_html__( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ),
-                'admin_percentage' => '0.00',
-                'additional_fee'   => '0.00',
+                'default'          => [
+                    'admin_percentage' => '0.00',
+                    'additional_fee'   => '0.00',
+                ],
                 'dependencies'     => [
                     [
 						'key' => 'paypal_withdraw',
@@ -916,8 +910,10 @@ class SettingsSchema {
                 'field_group_id'   => 'withdraw_methods_group_bank',
                 'title'            => esc_html__( 'Withdraw charges', 'dokan-lite' ),
                 'tooltip'          => esc_html__( 'Set withdrawal charges for Bank Transfer method.', 'dokan-lite' ),
-                'admin_percentage' => '0.00',
-                'additional_fee'   => '0.00',
+                'default'          => [
+                    'admin_percentage' => '0.00',
+                    'additional_fee'   => '0.00',
+                ],
                 'dependencies'     => [
                     [
 						'key' => 'bank_transfer_withdraw',
@@ -1916,6 +1912,8 @@ class SettingsSchema {
                     'field'  => 'hide_vendor_info',
                 ],
                 'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\HideVendorInfoTransformer::class,
+                // Germanized stores its own hide flags in the same array; merge, don't replace.
+                'legacy_merge'       => true,
             ],
 
             // Dokan Font
@@ -2001,7 +1999,7 @@ class SettingsSchema {
      * without losing the option order or having to repeat the icon-lookup
      * boilerplate at every call site.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,string> $options Associative map of `option_value => display_label`.
      *                                      Keys become the field value; values become the visible title.

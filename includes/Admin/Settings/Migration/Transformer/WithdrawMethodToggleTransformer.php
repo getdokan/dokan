@@ -9,8 +9,8 @@ use Closure;
  * legacy option (e.g. `dokan_withdraw.withdraw_methods`,
  * `dokan_withdraw.withdraw_order_status`).
  *
- *   legacy: [ '<slot_key>' => '<slot_key>', ... ]   // enabled = key as value
- *   new:    one boolean switch per slot, value "on" | "off"
+ *   Legacy: [ '<slot_key>' => '<slot_key>', ... ]   // enabled = key as value
+ *   New:    one boolean switch per slot, value "on" | "off"
  *
  * Each new switch field is one boolean toggle, but the legacy parent array
  * uses the WordPress multicheck convention where an enabled method stores
@@ -29,7 +29,7 @@ use Closure;
  * the current pipeline (no schema persistence); switch to a dedicated class
  * per method if the schema ever gets cached to a transient.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class WithdrawMethodToggleTransformer {
 

@@ -21,7 +21,7 @@ use InvalidArgumentException;
  * transient or other persistent store, use a string callable, a
  * `[Class, method]` pair, or a dedicated transformer class instead.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class CallableTransformer implements TransformerInterface {
 

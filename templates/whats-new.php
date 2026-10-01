@@ -4,6 +4,50 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.2.1',
+        'released' => '2026-09-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed the setup wizard failing to load due to an outdated UI package.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.2.0',
+        'released' => '2026-09-30',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The revamped settings screen is opt-in: your existing settings carry over and stay in sync, and you can switch back to the classic screen at any time.',
+                    'description' => '',
+                ],
+            ],
+            'New' => [
+                [
+                    'title'       => 'Extensions can add their own settings to the new settings screen through the `dokan_get_admin_settings_schema` filter.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Prevented vendors from using the commission calculator to read another vendor\'s commission or earnings, and limited it to accounts that can manage products.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The v3 order downloads REST endpoint no longer throws a fatal error for orders that grant download access to existing products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.1.3',
         'released' => '2026-09-24',
         'changes'  => [

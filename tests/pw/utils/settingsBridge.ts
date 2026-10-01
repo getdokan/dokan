@@ -17,6 +17,7 @@ export type SchemaEntry = {
     enable_state?: { value: unknown };
     disable_state?: { value: unknown };
     legacy_key?: LegacyKey;
+    validations?: Array<{ rules?: string }>;
     section_id?: string;
     field_group_id?: string;
     subpage_id?: string;
@@ -91,11 +92,12 @@ function structuredPair(field: SchemaEntry): [unknown, unknown] | null {
 
     // { admin_percentage, additional_fee } — a percentage/flat-fee pair.
     if (variant === 'combine_input' || variant === 'category_based_commission') {
-        if (!isRecord(current)) {
-            return null;
-        }
+        // A fresh install stores no commission and the schema ships no default,
+        // so seed the empty shape the product itself would write.
+        const seed = variant === 'combine_input' ? { admin_percentage: '', additional_fee: '' } : { all: {} };
+        const base = isRecord(current) ? current : seed;
         const perturb = (percentage: string, flat: string): unknown => {
-            const clone = JSON.parse(JSON.stringify(current)) as Record<string, unknown>;
+            const clone = JSON.parse(JSON.stringify(base)) as Record<string, unknown>;
             if ('admin_percentage' in clone) {
                 clone.admin_percentage = percentage;
                 clone.additional_fee = flat;
@@ -191,7 +193,10 @@ export function valuePair(field: SchemaEntry): [unknown, unknown] | null {
         return options.length >= 2 ? [options[0], options[1]] : null;
     }
     if (variant === 'number') {
-        return ['11', '22'];
+        // `sum_max` ties two fields together (billing day + grace period <= 28),
+        // so the usual 11/22 pair overflows it. Stay small enough for any cap.
+        const summed = field.validations?.some(rule => rule.rules?.split('|').includes('sum_max'));
+        return summed ? ['2', '3'] : ['11', '22'];
     }
     if (variant === 'select_color_picker') {
         return ['#112233', '#445566'];

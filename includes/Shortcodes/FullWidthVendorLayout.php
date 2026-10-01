@@ -47,7 +47,7 @@ class FullWidthVendorLayout implements Hookable {
      * below fires on `init` or later, and the repository memoizes the section
      * snapshot, so the deferred read costs nothing.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return bool
      */

@@ -8,8 +8,8 @@ use Closure;
  * Builds a callable transformer pair for a `multicheck` variant whose option
  * slots each bridge to an independent legacy `'on'`/`'off'` switch.
  *
- *   legacy: per-slot key holds 'on' (checked) or 'off' (unchecked)
- *   new:    [ 'slot_a', 'slot_c', ... ]   // string[] of enabled slot keys
+ *   Legacy: per-slot key holds 'on' (checked) or 'off' (unchecked)
+ *   New:    [ 'slot_a', 'slot_c', ... ]   // string[] of enabled slot keys
  *
  * Use this when each `multicheck` option owns its own legacy boolean address
  * (e.g. `dokan_appearance.store_map`) rather than living under a shared
@@ -24,7 +24,7 @@ use Closure;
  * Closures are filter-safe in the current pipeline (no schema persistence);
  * swap to a dedicated class if the schema ever gets cached to a transient.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class MulticheckArrayBooleanTransformer {
 
