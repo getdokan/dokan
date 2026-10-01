@@ -46,6 +46,13 @@ class ProductAttributeObjectTest extends DokanTestCase {
 		$this->assertFalse( ProductAttribute::contains_php_object( 'red|blue' ) );
 		$this->assertFalse( ProductAttribute::contains_php_object( '' ) );
 		$this->assertFalse( ProductAttribute::contains_php_object( serialize( 42 ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
-		$this->assertFalse( ProductAttribute::contains_php_object( [ 'a' => 1, 'b' => [ 2, 3 ] ] ) );
+		$this->assertFalse(
+			ProductAttribute::contains_php_object(
+				[
+					'a' => 1,
+					'b' => [ 2, 3 ],
+				]
+			)
+		);
 	}
 }
