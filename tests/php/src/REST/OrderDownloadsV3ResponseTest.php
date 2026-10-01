@@ -3,9 +3,11 @@
 namespace WeDevs\Dokan\Test\REST;
 
 use Automattic\WooCommerce\Internal\ProductDownloads\ApprovedDirectories\Register as DownloadApprovedDirectories;
+use WeDevs\Dokan\REST\OrderControllerV2;
 use WeDevs\Dokan\REST\OrderControllerV3;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WC_Product_Download;
+use WP_REST_Request;
 
 /**
  * Response test for `GET dokan/v3/orders/{id}/downloads`.
@@ -102,6 +104,45 @@ class OrderDownloadsV3ResponseTest extends DokanTestCase {
         $product->save();
 
         $this->assertSame( [], $this->request_downloads() );
+    }
+
+    /**
+     * A permission on a downloadable variation is listed like any other product's.
+     *
+     * @covers \WeDevs\Dokan\REST\OrderControllerV2::get_order_downloads
+     */
+    public function test_permission_on_a_variation_is_listed() {
+        $download = new WC_Product_Download();
+        $download->set_name( 'Variation File' );
+        $download->set_id( wp_generate_uuid4() );
+        $download->set_file( 'https://example.com/variation-file.pdf' );
+
+        $variation = wc_get_product( $this->factory()->product->create_variation_product()->get_children()[0] );
+        $variation->set_downloadable( true );
+        $variation->set_downloads( [ $download ] );
+        $variation->save();
+
+        wc_downloadable_file_permission( $download->get_id(), $variation->get_id(), wc_get_order( $this->order_id ) );
+
+        $data = $this->request_downloads();
+
+        $this->assertCount( 2, $data );
+        $this->assertContains( 'Variation File', wp_list_pluck( wp_list_pluck( $data, 'file_data' ), 'name' ) );
+    }
+
+    /**
+     * An order without permissions lists no products, rather than every product in the store.
+     *
+     * @covers \WeDevs\Dokan\REST\OrderControllerV2::get_order_downloads
+     */
+    public function test_order_without_permissions_lists_no_products() {
+        $request = new WP_REST_Request( 'GET' );
+        $request->set_param( 'id', $this->create_single_vendor_order( $this->seller_id1 ) );
+
+        $data = ( new OrderControllerV2() )->get_order_downloads( $request )->get_data();
+
+        $this->assertSame( [], $data['downloads'] );
+        $this->assertSame( [], $data['products'] );
     }
 
     /**
