@@ -514,6 +514,34 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
+     * Keep each still-attached file on its stored download id.
+     *
+     * The product editor sends a file's attachment id as `id`; an unchanged URL keeps its stored id so buyers' permissions stay valid.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Product $product    Product being saved, still holding its stored downloads.
+     * @param array      $downloads  Downloads from the request.
+     * @param int        $deprecated Deprecated variation id, passed through to WooCommerce.
+     *
+     * @return WC_Product
+     */
+    protected function save_downloadable_files( $product, $downloads, $deprecated = 0 ) {
+        $stored_ids = [];
+        foreach ( $product->get_downloads() as $download_id => $download ) {
+            $stored_ids[ $download->get_file() ] = $download_id;
+        }
+
+        foreach ( $downloads as $key => $file ) {
+            if ( isset( $file['file'], $stored_ids[ $file['file'] ] ) ) {
+                $downloads[ $key ]['id'] = $stored_ids[ $file['file'] ];
+            }
+        }
+
+        return parent::save_downloadable_files( $product, $downloads, $deprecated );
+    }
+
+    /**
      * Populate $_POST with resolved request params so legacy hooks
      * (e.g. dokan_new_product_added, dokan_product_updated consumers)
      * that read from $_POST continue to work.
