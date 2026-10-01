@@ -4350,6 +4350,40 @@ function dokan_sanitize_phone_number( $phone ) {
 }
 
 /**
+ * Detect whether a value (or its serialized form, at any depth) carries a PHP object.
+ *
+ * Request-supplied meta is stored verbatim, so a serialized PHP object sitting in meta becomes
+ * object injection the moment a later maybe_unserialize() revives it (CVE-2026-89433). Every value
+ * Dokan stores serialized is plain array/scalar data, so an object is always hostile and should
+ * never be persisted. Decoding with `allowed_classes => false` keeps the probe itself safe.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param mixed $value Value to inspect.
+ *
+ * @return bool
+ */
+function dokan_data_has_object( $value ) {
+	if ( is_string( $value ) && is_serialized( $value ) ) {
+		$value = unserialize( $value, [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+	}
+
+	if ( is_object( $value ) ) {
+		return true;
+	}
+
+	if ( is_array( $value ) ) {
+		foreach ( $value as $item ) {
+			if ( dokan_data_has_object( $item ) ) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+/**
  * Dokan override author ID from admin
  *
  * @since  2.6.2
