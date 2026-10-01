@@ -58,3 +58,29 @@ strategy in `test-cases/admin-dashboard-seeding-strategy.md`.
 - Security: unauthenticated PUT/POST to stores endpoints; XSS in search; IDOR on `:id` status PUT.
 - a11y: keyboard operation of tabs/row actions; focus-trap in the confirm modal; ARIA table roles.
 - Phone column em-dash for a vendor with no phone; Registered back-dated sort order (DB-seeded via `dbUtils.setUserRegisteredDate`).
+
+---
+
+## Feature: Vendor Store Settings Migration
+
+- Slug: vendor-store-settings
+- Files: `tests/e2e/vendorStoreSettings/vendorStoreSettingsMigration.spec.ts` + `pages/vendorStoreSettingsPage.ts` (page object lives in the shared `pages/` dir like `adminSettingsPage.ts` — mirrors the Admin Settings Migration suite, by choice)
+- Type: e2e
+- Plugin gate: lite (with `@pro` cases for Pro-only fields)
+- Roles: vendor
+- REST seed: no (drives both UIs directly; no seeded state needed)
+- Surface: new React vendor Store Settings `dashboard/new/#settings/store` ⇄ legacy vendor dashboard `dashboard/settings/store`. Both persist to the same `dokan_profile_settings` user meta, so edits must round-trip either direction.
+- Status: done
+- Notes: bi-directional 5-step sync per field (mirrors `adminSettingsMigration`): set on new → read on legacy → set on legacy + reload → read on legacy → read on new → set on new + reload → read on new. Plus a defaults check via `GET /dokan/v1/vendor-settings/store`. New-page fields mount per tab (click the tab first); new-page Save button is disabled until a change; legacy save is AJAX with a success toast.
+
+### Happy Paths
+
+- vendor: Store Title (`store_name`, text) stays in sync both directions between the new General tab and the legacy Store Name field. `@lite`
+- vendor: Phone (`phone`, text) stays in sync both directions (new General ⇄ legacy). `@lite`
+- vendor: Show email address (`show_email`, switch ⇄ legacy checkbox) toggles in sync both directions. `@lite`
+- vendor: Terms & Conditions toggle (`enable_tnc`, new Policies switch ⇄ legacy checkbox) syncs both directions. `@lite`
+- vendor: Support button name (`support_btn_name`, text, new Business tab ⇄ legacy) syncs both directions. `@pro`
+
+### Edge Cases
+
+- vendor: the store settings schema (`GET /dokan/v1/vendor-settings/store`) exposes the documented defaults — `store_name=''`, `phone=''`, `show_email='no'`, `enable_tnc='off'`. `@lite`
