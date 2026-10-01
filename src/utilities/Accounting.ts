@@ -27,9 +27,10 @@ export const formatPrice = (
             window?.dokanAdminDashboard?.currency.symbol;
     }
 
-    if ( ! precision ) {
+    // Precision can legitimately be 0, so only fall back when it is not set.
+    if ( precision === null || precision === undefined ) {
         precision =
-            window?.dokanFrontend?.currency.precision ||
+            window?.dokanFrontend?.currency.precision ??
             window?.dokanAdminDashboard?.currency.precision;
     }
 
@@ -82,7 +83,7 @@ export const formatNumber = ( value ) => {
     return window.accounting.formatNumber(
         value,
         // @ts-ignore
-        window?.dokanFrontend?.currency.precision ||
+        window?.dokanFrontend?.currency.precision ??
             window?.dokanAdminDashboard?.currency.precision,
         window?.dokanFrontend?.currency.thousand ||
             window?.dokanAdminDashboard?.currency.thousand,

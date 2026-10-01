@@ -262,7 +262,8 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         let mapInstance: any = null;
         let markerInstance: any = null;
 
-        // Google reports invalid keys through this global instead of onerror.
+        // Google reports invalid keys through this global instead of onerror; remember any other script's handler to hand back on unmount.
+        const previousAuthFailure = window.gm_authFailure;
         window.gm_authFailure = () => setMapFailed( true );
 
         loadGoogleMaps( apiKey )
@@ -335,6 +336,7 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         return () => {
             cancelled = true;
             recenterRef.current = null;
+            window.gm_authFailure = previousAuthFailure;
             // The page remounts on every save/cancel — drop listeners so instances don't pile up.
             if ( markerInstance ) {
                 window.google?.maps?.event?.clearInstanceListeners(

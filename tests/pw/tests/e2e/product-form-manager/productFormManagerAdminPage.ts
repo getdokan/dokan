@@ -377,10 +377,12 @@ export const api = {
             name: `PW PFM ${type} ${faker.string.nanoid(6)}`,
             type,
             status: 'publish',
-            // `description` and `purchase_note` are required+visible default
-            // fields; populate them so the editor's save button (gated by
-            // FORM-level validity) is held only by the field under test.
+            // `description`, `short_description` and `purchase_note` are
+            // required+visible default fields; populate them all so the editor's
+            // save button (gated by FORM-level validity) is held only by the
+            // field under test.
             description: 'PW autotest product description.',
+            short_description: 'PW autotest short description.',
             purchase_note: 'PW autotest purchase note.',
             categories: [{ id: categoryId }],
         };

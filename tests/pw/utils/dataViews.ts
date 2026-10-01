@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 // ============================================================================
 // Shared @wedevs/plugin-ui DataViews helpers (NEW_UI_HOUSE_STYLE.md §5).
@@ -46,8 +46,41 @@ export const DATA_ROW_SETTLED = 'table tbody tr:not(:has([data-slot="skeleton"])
 /** Per-row 3-dot actions button (scoped to tbody — the toolbar also has one). */
 export const ROW_ACTIONS_BTN = "//tbody//tr//button[@aria-label='Actions']";
 
+/**
+ * XPath predicate excluding anything inside the WordPress admin bar.
+ *
+ * The admin bar is itself a menu: on WordPress 7.0 it contributes ~10 nodes with
+ * `role="menuitem"` to every admin page — 'About WordPress', the site name, 'Live',
+ * 'N updates available', 'N Comments in moderation', 'New', 'Dokan', 'Howdy, …' and
+ * the new Command Palette ('⌘K Open command palette'). A DataViews action menu
+ * renders in a portal (`div[id^="portal/"]`) far away from it, so excluding the bar
+ * is unambiguous and keys only on a WordPress-core id.
+ *
+ * Without this, two different failures appear, and the quiet one is worse:
+ *   - a substring name regex like /Open/i resolves to the Command Palette and the
+ *     click times out (adminStoreSupport 'status flips to Open');
+ *   - an unscoped `getByRole('menuitem').first()` is *satisfied* by an admin-bar
+ *     item, so the assertion passes while proving nothing about the row menu.
+ */
+export const NOT_IN_ADMIN_BAR = "[not(ancestor-or-self::*[@id='wpadminbar'])]";
+
 /** An action-menu item rendered by DataViews, matched by exact visible label. */
-export const actionMenuItem = (label: string): string => `//*[@role='menuitem'][normalize-space()='${label}']`;
+export const actionMenuItem = (label: string): string => `//*[@role='menuitem'][normalize-space()='${label}']${NOT_IN_ADMIN_BAR}`;
+
+/**
+ * An action-menu item matched by accessible name (string or regex), excluding the
+ * admin bar's own menuitems. Use this instead of a bare
+ * `page.getByRole('menuitem', { name })` — substring and case-insensitive matches
+ * collide with the admin bar, see NOT_IN_ADMIN_BAR.
+ */
+export function actionMenuItemByName(page: Page, name: string | RegExp): Locator {
+    return page.getByRole('menuitem', { name }).and(page.locator(`xpath=//*${NOT_IN_ADMIN_BAR}`));
+}
+
+/** Every action-menu item currently rendered, excluding the admin bar's. */
+export function actionMenuItems(page: Page): Locator {
+    return page.getByRole('menuitem').and(page.locator(`xpath=//*${NOT_IN_ADMIN_BAR}`));
+}
 
 /** A status tab (role=tab button whose accessible name starts with the label). */
 export const statusTab = (label: string): string => `[role="tab"]:has-text("${label}")`;
@@ -179,6 +212,23 @@ export async function isEmptyStateVisible(page: Page, empty: string | RegExp = D
 export function parseTabCount(text: string | null | undefined): number {
     const match = (text ?? '').match(TAB_COUNT_RE);
     return match ? Number(match[1]) : 0;
+}
+
+/**
+ * Web-first "this tab reports at least N" assertion.
+ *
+ * `parseTabCount` cannot distinguish a real zero from a not-rendered-yet tab: DataViews paints the
+ * label ("All") before the counted label ("All (3)"), and both a missing `(n)` and a genuine `(0)`
+ * come back as 0. A single `expect(await getTabCount('all')).toBeGreaterThanOrEqual(1)` therefore
+ * races the count in — the shape behind the intermittent CI failure "All tab count >= 1 after
+ * seeding / Received: 0".
+ *
+ * Polling fixes the race without weakening anything: the assertion still fails if the count never
+ * reaches `min`. Use this wherever a count is expected to be non-zero. An expected-zero assertion
+ * (`toBe(0)`) must NOT use this — poll there would just wait out the timeout.
+ */
+export async function expectTabCountAtLeast(getCount: () => Promise<number>, min: number, message: string, timeout = 15000): Promise<void> {
+    await expect.poll(getCount, { message, timeout }).toBeGreaterThanOrEqual(min);
 }
 
 // ---- Interactions -----------------------------------------------------------

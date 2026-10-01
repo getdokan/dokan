@@ -1,0 +1,178 @@
+# Dokan Marketplace
+
+The ubiquitous language for the Dokan multi-vendor marketplace. This is the canonical
+glossary for **both dokan-lite and dokan-pro** — the two repos form a single bounded
+context, with Pro extending Lite's language rather than redefining it. Pro-only terms
+live in dokan-pro's `CONTEXT.md`.
+
+## Language
+
+### Actors
+
+**Vendor**:
+A user account that sells through the marketplace. The canonical term for all new
+code, docs, and conversation.
+_Avoid_: Seller (legacy alias — survives only as the WordPress role name `seller`
+and in old function names), merchant, shop owner
+
+**Store**:
+The public-facing presentation of a Vendor: storefront page, store URL, store
+settings, the REST `/stores` resource. Exactly one Store per Vendor — a facet of
+the Vendor, not a separate entity.
+_Avoid_: Shop, storefront
+
+**Store Admin**:
+An operator of the marketplace: may read and write any Vendor's data and set the
+Operating Terms Vendors are subject to. The canonical admin of the authorization
+model — where the model says "admin" unqualified, it means this.
+_Avoid_: admin, shop manager, store manager
+
+**Site Admin**:
+A WordPress-level administrator. Every Site Admin is also a Store Admin, and the
+term draws no boundary of its own in the marketplace model; it survives because
+parts of the REST surface still gate on it.
+_Avoid_: super admin, administrator (as a marketplace-authorization term)
+
+**Vendor Staff**:
+A user acting on behalf of exactly one Vendor, sharing that Vendor's data
+boundary while holding their own, narrower set of permitted actions. Sharing the
+boundary is not the same as sharing the permissions.
+_Avoid_: staff, sub-vendor, employee
+
+**Customer**:
+A buyer. Holds no vendor-facing permission and sees only public catalogue data
+and their own purchases.
+_Avoid_: client, user, account
+
+### Authorization
+
+**Ownership**:
+The relationship between a Vendor and a record belonging to their Store. The unit
+of authorization for vendor data: a capability decides whether an actor may
+perform a kind of action at all, Ownership decides whether they may perform it on
+a given record. Both must pass.
+
+**Vendor Scope**:
+The set of records an actor may act on, resolved from the acting Vendor — their
+own Store for a Vendor, their Vendor's Store for Vendor Staff. A caller-supplied
+identifier may narrow a Vendor Scope but never widen it.
+
+**Operating Terms**:
+The terms a Vendor is subject to but may never set for themselves — Commission,
+Selling Activation, Direct Publishing and featured status. The line they draw is
+between the marketplace and its Vendors, not between admin tiers.
+_Avoid_: admin settings, vendor settings
+
+**Ability Context**:
+Any execution of a registered WordPress Ability, whatever invoked it — an MCP
+client, another plugin in-process, or WP-CLI. Vendor Scope applies throughout an
+Ability Context, because an Ability is machine-facing wherever it runs; the
+transport that reached it is not the boundary.
+_Avoid_: MCP request, MCP context
+
+**Selling Activation**:
+Whether a Vendor's Store is live and may transact, independent of whether the
+Vendor role is held.
+_Avoid_: enabled, selling mode, active
+
+**Direct Publishing**:
+Whether a Vendor's products go live without marketplace review.
+_Avoid_: trusted, publishing, auto-publish
+
+**Approved Vendor**:
+A Vendor the marketplace has accepted, and the only kind that appears in public
+listings. A Vendor awaiting that decision is *Pending*, and is not public
+information.
+_Avoid_: active vendor, live vendor
+
+### Orders
+
+**Order**:
+A WooCommerce order as the customer sees it — what was placed at checkout,
+possibly containing products from several Vendors. A customer-facing mirror:
+operational effects (stock, commission, vendor balance, refund accounting)
+never happen here, only on Vendor orders.
+_Avoid_: Purchase, parent order (say "Order" when you mean the customer-facing
+whole; qualify as "parent" only when contrasting with its Suborders)
+
+**Suborder**:
+A per-vendor order split off a multi-vendor Order. Created only when the Order
+spans more than one Vendor; a single-vendor Order has no Suborders.
+_Avoid_: Child order, sub-order
+
+**Vendor order**:
+The order a Vendor processes and earns commission on: the Suborder when the
+Order spanned multiple Vendors, or the Order itself when it was single-vendor.
+One Order from Vendor A and Vendor B = one Order, two Suborders, two Vendor
+orders. From Vendor A alone = one Order, zero Suborders, one Vendor order.
+
+**Refund**:
+A return of money to the customer, recorded against a Vendor order and mirrored
+up to its Order. A refund created directly on a parent Order is outside the
+model: vendor accounting does not see it.
+
+### Money
+
+**Commission**:
+The admin's (marketplace operator's) share of a Vendor order, computed by a
+Commission formula. Never the Vendor's share.
+_Avoid_: Admin earning, admin fee
+
+**Earning**:
+The Vendor's share of a Vendor order after Commission — what accrues to their
+balance.
+_Avoid_: Vendor commission, net amount, payout (a payout is a Withdraw)
+
+**Commission formula**:
+The strategy that splits a line item between admin and Vendor: Fixed, Flat,
+Percentage, Combine (percentage + flat), or Category-based.
+_Avoid_: Commission type, rate
+
+**Fee recipient**:
+Whether admin or the Vendor receives a non-product amount of a Vendor order —
+shipping, tax, or shipping-tax. Respected everywhere money is computed,
+including Refunds.
+
+**Balance**:
+The running ledger of a Vendor's money — credited by Earnings, debited by
+Withdraws and Refunds.
+_Avoid_: Wallet, funds
+
+**Withdraw** _(noun — Dokan idiom)_:
+A Vendor's request to be paid out from their Balance via a withdraw method,
+subject to a minimum threshold and approval.
+_Avoid_: Withdrawal, payout, disbursement
+
+**Reverse withdrawal**:
+A debt owed by the Vendor to the admin, arising when the Vendor received the
+full order payment directly (e.g. cash on delivery) including the admin's
+Commission. Never a "negative Withdraw" — a Reverse withdrawal is a receivable,
+not a Balance entry; the two concepts never mix. The differing spellings
+(Withdraw vs Reverse withdrawal) are deliberate and match the code's module
+names.
+
+### Admin settings
+
+**Canonical setting**:
+A setting stored under its canonical id in the flat `dokan_admin_settings`
+store — the single source of truth for admin configuration.
+_Avoid_: New setting, migrated setting
+
+**Legacy key**:
+The old `wp_options` row (and sub-key) where a setting lived before migration.
+Meaningful only through the Legacy bridge and Legacy mirror.
+
+**Legacy bridge**:
+The per-module declaration mapping a canonical id to its Legacy key, with
+Transformers. Serves readers and writers at runtime: unmigrated code keeps
+working during the migration series.
+_Avoid_: Compat layer, shim
+
+**Legacy mirror**:
+The mode in which Legacy keys are kept physically populated with mapped values,
+so a plugin downgrade finds real data at rest. The bridge is about code paths;
+the mirror is about rows in the database.
+
+**Transformer**:
+The pair of value conversions between the canonical and legacy representations
+of one setting (e.g. `'on'`/`'off'` ↔ boolean).

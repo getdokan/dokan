@@ -174,6 +174,10 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
         } ) );
     }, [] );
 
+    const placeholder =
+        field.placeholder ||
+        __( 'Add existing attribute or custom', 'dokan-lite' );
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             <div className="flex flex-col gap-4">
@@ -215,10 +219,7 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                             onChange={ ( val: any ) =>
                                 setSelectedAttrAdd( val )
                             }
-                            placeholder={ __(
-                                'Add existing attribute or custom',
-                                'dokan-lite'
-                            ) }
+                            placeholder={ placeholder }
                             isClearable={ false }
                         />
                     </div>

@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Admin\Settings\Migration\LegacyMirror;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
@@ -16,7 +17,7 @@ use WP_REST_Server;
  * GET  /dokan/v1/admin/settings          — Returns the full flat array schema with values.
  * PUT  /dokan/v1/admin/settings/{page_id} — Saves flat values for a specific page.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class AdminSettingsController extends DokanBaseAdminController {
 
@@ -42,20 +43,29 @@ class AdminSettingsController extends DokanBaseAdminController {
     protected SettingsRepositoryInterface $settings_repo;
 
     /**
+     * Legacy mirror, which fires the legacy save hooks.
+     *
+     * @var LegacyMirror
+     */
+    protected LegacyMirror $legacy_mirror;
+
+    /**
      * Constructor.
      *
      * @param SettingsRegistry|null            $registry      Optional registry instance (for testing).
      * @param SettingsRepositoryInterface|null $settings_repo Optional repository instance (for testing).
+     * @param LegacyMirror|null                $legacy_mirror Optional legacy mirror (for testing).
      */
-    public function __construct( ?SettingsRegistry $registry = null, ?SettingsRepositoryInterface $settings_repo = null ) {
+    public function __construct( ?SettingsRegistry $registry = null, ?SettingsRepositoryInterface $settings_repo = null, ?LegacyMirror $legacy_mirror = null ) {
         $this->registry      = $registry ?? new SettingsRegistry();
         $this->settings_repo = $settings_repo ?? new SettingsRepository();
+        $this->legacy_mirror = $legacy_mirror ?? dokan_get_container()->get( LegacyMirror::class );
     }
 
     /**
      * Register REST routes.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      */
     public function register_routes() {
         // GET /dokan/v1/admin/settings — full schema with values.
@@ -101,7 +111,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * GET handler — returns the full flat array schema with populated values.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -113,7 +123,7 @@ class AdminSettingsController extends DokanBaseAdminController {
         /**
          * Filter the admin settings REST response.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array $schema The full flat array schema with values.
          */
@@ -138,9 +148,9 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * The keys in `values` are field ids (globally unique per SchemaValidator).
      * Unknown keys are silently ignored. Values are merged into the single
-     * `dokan_settings` wp_option.
+     * `dokan_admin_settings` wp_option.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -196,13 +206,18 @@ class AdminSettingsController extends DokanBaseAdminController {
                 continue;
             }
 
+            // Validate the sanitized value so rules see what will actually be stored.
+            $value  = $this->sanitize_field_value( $field, $value );
             $errors = $this->validate_field_value( $field, $value );
             if ( ! empty( $errors ) ) {
-                $validation_errors[ $leaf_id ] = $errors;
+                // A hidden field is not on the form: keep what is stored instead of blocking the save.
+                if ( ! $this->is_field_hidden( $field, $flat_values ) ) {
+                    $validation_errors[ $leaf_id ] = $errors;
+                }
                 continue;
             }
 
-            $sanitized[ $leaf_id ] = $this->sanitize_field_value( $field, $value );
+            $sanitized[ $leaf_id ] = $value;
         }
 
         if ( ! empty( $validation_errors ) ) {
@@ -216,10 +231,16 @@ class AdminSettingsController extends DokanBaseAdminController {
             );
         }
 
+        // Legacy listeners (validation, capabilities, crons) still hook the per-section save actions.
+        $legacy_before = $this->legacy_mirror->before_save( $sanitized );
+        if ( is_wp_error( $legacy_before ) ) {
+            return $legacy_before;
+        }
+
         /**
          * Fired before saving admin settings.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string $page_id     The page being saved.
          * @param array  $sanitized   Sanitized values keyed by field id.
@@ -230,10 +251,12 @@ class AdminSettingsController extends DokanBaseAdminController {
         $this->settings_repo->update( $sanitized );
         $merged = $this->settings_repo->all();
 
+        $this->legacy_mirror->after_save( $legacy_before );
+
         /**
          * Fired after saving admin settings.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string $page_id     The page that was saved.
          * @param array  $sanitized   Sanitized values that were saved.
@@ -250,7 +273,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Get all field elements belonging to a specific page.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array  $schema  The full schema.
      * @param string $page_id The page ID.
@@ -270,7 +293,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Recursively collect all descendant element IDs for a page.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array  $schema  The full schema.
      * @param string $page_id The page ID.
@@ -302,6 +325,38 @@ class AdminSettingsController extends DokanBaseAdminController {
     }
 
     /**
+     * Check whether the submitted values hide a field through its dependencies.
+     *
+     * @since 5.2.0
+     *
+     * @param array $field  The field schema element.
+     * @param array $values The submitted values.
+     *
+     * @return bool
+     */
+    protected function is_field_hidden( array $field, array $values ): bool {
+        foreach ( $field['dependencies'] ?? [] as $dependency ) {
+            $actual     = $values[ $dependency['key'] ?? '' ] ?? null;
+            $expected   = $dependency['value'] ?? null;
+            $comparison = $dependency['comparison'] ?? '==';
+
+            // Without both values, or with another operator, the field counts as shown.
+            if ( ! is_scalar( $actual ) || ! is_scalar( $expected ) || ! in_array( $comparison, [ '==', '===', '!=', '!==' ], true ) ) {
+                continue;
+            }
+
+            $equal   = (string) $actual === (string) $expected;
+            $matched = '!' === $comparison[0] ? ! $equal : $equal;
+
+            if ( 'hide' === ( $dependency['effect'] ?? 'show' ) ? $matched : ! $matched ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Validate a field value against the field's validation rules.
      *
      * Applies declarative rules from `$field['validations']` (required,
@@ -310,7 +365,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      * `dokan_admin_settings_validate_field` filter so addons can layer
      * variant-specific or cross-field validation on top.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $field The field schema element.
      * @param mixed $value The submitted value.
@@ -318,6 +373,13 @@ class AdminSettingsController extends DokanBaseAdminController {
      * @return string[] Array of error messages (empty if valid).
      */
     protected function validate_field_value( array $field, $value ): array {
+        // INF/NaN can't be JSON-encoded and break later maths; report it alone, not beside range errors.
+        // Numeric-looking strings count only for numeric fields, so a text value like '123e4567' stays valid.
+        $numeric_field = in_array( $field['variant'] ?? '', [ 'number', 'currency', 'combine_input', 'category_based_commission' ], true );
+        if ( $this->has_non_finite_number( $value, $numeric_field ) ) {
+            return [ __( 'Please enter a valid number.', 'dokan-lite' ) ];
+        }
+
         $errors      = [];
         $validations = $field['validations'] ?? [];
         $variant     = $field['variant'] ?? $field['field_type'] ?? '';
@@ -357,6 +419,22 @@ class AdminSettingsController extends DokanBaseAdminController {
             }
         }
 
+        // Commission and withdraw charge fields: a percentage stays within 0–100 and a fixed fee is never negative.
+        if ( in_array( $variant, [ 'combine_input', 'category_based_commission' ], true ) && is_array( $value ) ) {
+            $errors = array_merge( $errors, $this->get_charge_errors( $value ) );
+        }
+
+        // Option-list fields only accept one of their declared options; empty means nothing selected.
+        $allowed = $this->get_option_values( $field );
+        if ( null !== $allowed && '' !== $value && null !== $value ) {
+            foreach ( (array) $value as $selected ) {
+                if ( ! is_scalar( $selected ) || ! in_array( (string) $selected, $allowed, true ) ) {
+                    $errors[] = __( 'Please select a valid option.', 'dokan-lite' );
+                    break;
+                }
+            }
+        }
+
         // Run custom validation_func if present.
         if ( ! empty( $field['validation_func'] ) && is_callable( $field['validation_func'] ) ) {
             $result = call_user_func( $field['validation_func'], $value );
@@ -381,7 +459,7 @@ class AdminSettingsController extends DokanBaseAdminController {
          * non-empty string adds one. Returning an empty array marks the field
          * as valid.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string[] $errors  Accumulated error messages (may be empty).
          * @param array    $field   The field schema element being validated.
@@ -392,9 +470,78 @@ class AdminSettingsController extends DokanBaseAdminController {
     }
 
     /**
+     * Range errors for percentage / fixed-fee pairs, including nested per-category values.
+     *
+     * @since 5.2.0
+     *
+     * @param array $value Field value.
+     *
+     * @return string[]
+     */
+    protected function get_charge_errors( array $value ): array {
+        $percentage_keys = [ 'admin_percentage', 'percentage' ];
+        $fixed_keys      = [ 'additional_fee', 'flat', 'fixed' ];
+        $errors          = [];
+
+        array_walk_recursive(
+            $value,
+            static function ( $amount, $key ) use ( $percentage_keys, $fixed_keys, &$errors ) {
+                // Empty means "not set"; the field's required rules decide whether that is allowed.
+                if ( '' === $amount || null === $amount ) {
+                    return;
+                }
+
+                if ( in_array( $key, $percentage_keys, true ) && ( ! is_numeric( $amount ) || $amount < 0 || $amount > 100 ) ) {
+                    $errors['percentage'] = __( 'Percentage must be between 0 and 100.', 'dokan-lite' );
+                } elseif ( in_array( $key, $fixed_keys, true ) && ( ! is_numeric( $amount ) || $amount < 0 ) ) {
+                    $errors['fixed'] = __( 'Fixed fee must be 0 or more.', 'dokan-lite' );
+                }
+            }
+        );
+
+        return array_values( $errors );
+    }
+
+    /**
+     * Allowed option values of a select/radio field, or null when the field has no fixed option list.
+     *
+     * @since 5.2.0
+     *
+     * @param array $field The field schema element.
+     *
+     * @return string[]|null
+     */
+    protected function get_option_values( array $field ): ?array {
+        $variants = [ 'select', 'radio', 'radio_capsule', 'radio_box', 'customize_radio' ];
+        $options  = $field['options'] ?? null;
+
+        if ( ! in_array( $field['variant'] ?? '', $variants, true ) || ! is_array( $options ) || empty( $options ) ) {
+            return null;
+        }
+
+        $is_list = array_keys( $options ) === range( 0, count( $options ) - 1 );
+        $values  = [];
+        foreach ( $options as $key => $option ) {
+            if ( is_array( $option ) ) {
+                // [ 'value' => …, 'title' => … ] row.
+                $values[] = (string) ( $option['value'] ?? '' );
+            } elseif ( $is_list ) {
+                // A plain list is either the values themselves or index => label, so accept both.
+                $values[] = (string) $option;
+                $values[] = (string) $key;
+            } else {
+                // A value => label map.
+                $values[] = (string) $key;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
      * Sanitize a field value based on its variant.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $field The field schema element.
      * @param mixed $value The submitted value.
@@ -466,6 +613,13 @@ class AdminSettingsController extends DokanBaseAdminController {
                 // Complex types — sanitize recursively.
                 return $this->sanitize_recursive( $value );
 
+            case 'wp_media_upload':
+                // Media fields hold an attachment URL; esc_url_raw() drops unsafe schemes such as javascript:.
+                if ( is_numeric( $value ) ) {
+                    return absint( $value );
+                }
+                return is_string( $value ) ? esc_url_raw( $value ) : '';
+
             case 'html':
             case 'notice':
             case 'info':
@@ -476,7 +630,7 @@ class AdminSettingsController extends DokanBaseAdminController {
                 /**
                  * Filter to sanitize custom field variants.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.2.0
                  *
                  * @param mixed  $value   The raw value.
                  * @param array  $field   The field schema element.
@@ -487,9 +641,37 @@ class AdminSettingsController extends DokanBaseAdminController {
     }
 
     /**
+     * Whether a value is, or contains, an infinite or NaN number.
+     *
+     * @since 5.2.0
+     *
+     * @param mixed $value           Sanitized field value.
+     * @param bool  $numeric_strings Also treat numeric strings like '1e400' as numbers.
+     *
+     * @return bool
+     */
+    protected function has_non_finite_number( $value, bool $numeric_strings = false ): bool {
+        if ( is_float( $value ) ) {
+            return ! is_finite( $value );
+        }
+        if ( $numeric_strings && is_string( $value ) && is_numeric( $value ) ) {
+            return ! is_finite( (float) $value );
+        }
+        if ( is_array( $value ) ) {
+            foreach ( $value as $item ) {
+                if ( $this->has_non_finite_number( $item, $numeric_strings ) ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Recursively sanitize an array/object value.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param mixed $value The value to sanitize.
      *
@@ -518,7 +700,7 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * REST schema for the settings endpoint.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array
      */

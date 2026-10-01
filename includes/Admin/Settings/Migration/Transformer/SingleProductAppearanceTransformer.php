@@ -18,7 +18,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * the tab is hidden, so the new schema value (which means "show") is the
  * negation. The first two slots are direct ("on" ⇔ true).
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class SingleProductAppearanceTransformer implements TransformerInterface {
 

@@ -13,7 +13,7 @@ use WeDevs\Dokan\Utilities\AdminSettings;
  *
  * Extension point: `apply_filters( 'dokan_get_admin_settings_schema', $elements )`
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class SettingsSchema {
 
@@ -71,7 +71,7 @@ class SettingsSchema {
          *
          * Pro and extensions append their elements to this array.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array $elements Flat array of settings elements.
          */
@@ -222,7 +222,7 @@ class SettingsSchema {
 				'variant'       => 'switch',
 				'section_id'    => 'marketplace_settings',
                 'title'   => __( 'Product Price Visibility', 'dokan-lite' ),
-                'description'    => __( 'Check to hide product price.', 'dokan-lite' ),
+                'description'    => __( 'Show or hide the product price on product pages.', 'dokan-lite' ),
                 'default' => 'on',
 				'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
@@ -503,20 +503,25 @@ class SettingsSchema {
 				'type'               => 'field',
 				'variant'            => 'multicheck',
 				'section_id'         => 'map_placement',
-				'title'              => esc_html__( 'Map Placement Locations', 'dokan-lite' ),
+				'title'              => esc_html__( 'Map Placement', 'dokan-lite' ),
 				'description'        => esc_html__( 'Choose where the store location map appears', 'dokan-lite' ),
 				'tooltip'            => esc_html__( 'Select the pages where you want to display the store location map.', 'dokan-lite' ),
-				'default'            => [ 'store_listing' ],
+				// Lite's only placement is the single-store-page sidebar map
+				// (dokan_appearance.store_map, module-independent). The Pro
+				// geolocation module extends this field with its Store Listing /
+				// Shop Page / product location-tab placements via the
+				// `dokan_get_admin_settings_schema` filter.
+				'default'            => [ 'store_map' ],
 				'options'            => [
 					[
-						'title' => esc_html__( 'Store Listing', 'dokan-lite' ),
-						'value' => 'store_listing',
+						'title' => esc_html__( 'Show map on Store Page', 'dokan-lite' ),
+						'value' => 'store_map',
 					],
 				],
 				'legacy_key'         => [
-					'store_listing' => 'dokan_appearance.store_map',
+					'store_map' => 'dokan_appearance.store_map',
 				],
-				'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayBooleanTransformer::for_slots( [ 'store_listing' ] ),
+				'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayBooleanTransformer::for_slots( [ 'store_map' ] ),
 			],
 		];
     }
@@ -527,12 +532,6 @@ class SettingsSchema {
      * @return array
      */
     private static function transaction_page(): array {
-        $default_settings = [
-            'commission_type'    => 'fixed',
-            'admin_percentage'   => '10',
-            'additional_fee'     => '10',
-        ];
-
         return [
             // Page
             [
@@ -660,7 +659,7 @@ class SettingsSchema {
                 'title'       => esc_html__( 'Commission Type', 'dokan-lite' ),
                 'tooltip'     => esc_html__( 'Select a commission type', 'dokan-lite' ),
                 'description' => esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ),
-                'default'     => $default_settings['commission_type'],
+                'default'     => 'fixed',
                 'options'     => [
                     [
 						'title' => esc_html__( 'Fixed', 'dokan-lite' ),
@@ -681,8 +680,6 @@ class SettingsSchema {
                 'section_id'       => 'commission',
                 'title'            => esc_html__( 'Commission Amount', 'dokan-lite' ),
                 'description'      => esc_html__( 'Amount you will get from sales in both percentage and fixed fee.', 'dokan-lite' ),
-                'admin_percentage' => $default_settings['admin_percentage'],
-                'additional_fee'   => $default_settings['additional_fee'],
                 'dependencies'     => [
                     [
 						'key' => 'commission_type',
@@ -852,8 +849,10 @@ class SettingsSchema {
                 'field_group_id'   => 'withdraw_methods_group_paypal',
                 'title'            => esc_html__( 'Withdraw charges', 'dokan-lite' ),
                 'tooltip'          => esc_html__( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ),
-                'admin_percentage' => '0.00',
-                'additional_fee'   => '0.00',
+                'default'          => [
+                    'admin_percentage' => '0.00',
+                    'additional_fee'   => '0.00',
+                ],
                 'dependencies'     => [
                     [
 						'key' => 'paypal_withdraw',
@@ -911,8 +910,10 @@ class SettingsSchema {
                 'field_group_id'   => 'withdraw_methods_group_bank',
                 'title'            => esc_html__( 'Withdraw charges', 'dokan-lite' ),
                 'tooltip'          => esc_html__( 'Set withdrawal charges for Bank Transfer method.', 'dokan-lite' ),
-                'admin_percentage' => '0.00',
-                'additional_fee'   => '0.00',
+                'default'          => [
+                    'admin_percentage' => '0.00',
+                    'additional_fee'   => '0.00',
+                ],
                 'dependencies'     => [
                     [
 						'key' => 'bank_transfer_withdraw',
@@ -981,7 +982,10 @@ class SettingsSchema {
                 'section_id'  => 'cod_payments_section',
                 'title'       => esc_html__( 'COD Payments', 'dokan-lite' ),
                 'description' => esc_html__( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
-                'default'     => 'include',
+                // 'on' (Include) is the mirror of the legacy `exclude_cod_payment`
+                // default of 'off' through InvertOnOffTransformer, so an unsaved
+                // site reads the same either side of the bridge.
+                'default'     => 'on',
                 'options'     => [
                     [
 						'title' => esc_html__( 'Include', 'dokan-lite' ),
@@ -1338,7 +1342,7 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Address Fields', 'dokan-lite' ),
                 'description'   => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
-                'default'       => 'on',
+                'default'       => 'off',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
 					'value' => 'on',
@@ -1394,6 +1398,10 @@ class SettingsSchema {
                 'subpage_id'  => 'vendor_onboarding',
                 'title'       => esc_html__( 'Vendor Setup Wizard Message', 'dokan-lite' ),
                 'description' => esc_html__( 'Welcome message shown to vendors during setup.', 'dokan-lite' ),
+                // Carries the legacy default verbatim: with no default the field
+                // rendered empty and the first save of an untouched page replaced
+                // the shipped welcome copy with a blank string.
+                'default'     => __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ),
                 'legacy_key'    => [
                     'option' => 'dokan_general',
                     'field'  => 'setup_wizard_message',
@@ -1444,7 +1452,7 @@ class SettingsSchema {
                 'title'         => esc_html__( 'One Page Product Creation', 'dokan-lite' ),
                 'description'   => esc_html__( 'Add new product in single page view.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ),
-                'default'       => 'off',
+                'default'       => 'on',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
 					'value' => 'on',
@@ -1640,13 +1648,13 @@ class SettingsSchema {
                 'default'     => 'legacy',
                 'options'     => [
                     [
-						'title' => esc_html__( 'New UI', 'dokan-lite' ),
-						'value' => 'latest',
-					],
+                        'title' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'value' => 'latest',
+                    ],
                     [
-						'title' => esc_html__( 'Legacy UI', 'dokan-lite' ),
-						'value' => 'legacy',
-					],
+                        'title' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                        'value' => 'legacy',
+                    ],
                 ],
                 'legacy_key'  => [
                     'option' => 'dokan_appearance',
@@ -1904,6 +1912,8 @@ class SettingsSchema {
                     'field'  => 'hide_vendor_info',
                 ],
                 'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\HideVendorInfoTransformer::class,
+                // Germanized stores its own hide flags in the same array; merge, don't replace.
+                'legacy_merge'       => true,
             ],
 
             // Dokan Font
@@ -1919,7 +1929,7 @@ class SettingsSchema {
                 'section_id'    => 'dokan_font_section',
                 'title'         => esc_html__( 'Dokan font-awesome Functionality', 'dokan-lite' ),
                 'description'   => esc_html__( "If disabled then Dokan font-awesome library won't be loaded in frontend.", 'dokan-lite' ),
-                'default'       => 'off',
+                'default'       => 'on',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enable', 'dokan-lite' ),
 					'value' => 'on',
@@ -1989,7 +1999,7 @@ class SettingsSchema {
      * without losing the option order or having to repeat the icon-lookup
      * boilerplate at every call site.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array<string,string> $options Associative map of `option_value => display_label`.
      *                                      Keys become the field value; values become the visible title.
@@ -2070,6 +2080,7 @@ class SettingsSchema {
                 'section_id' => 'privacy_settings',
                 'title'      => esc_html__( 'Privacy Policy Page', 'dokan-lite' ),
                 'description' => esc_html__( 'Choose which page displays your privacy policy.', 'dokan-lite' ),
+                'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
                 'options'    => self::get_lazy_page_options(),
                 'legacy_key' => [
 					'option' => 'dokan_privacy',
@@ -2109,6 +2120,10 @@ class SettingsSchema {
                 'section_id' => 'privacy_policy_section',
                 'title'      => esc_html__( 'Privacy Policy Content', 'dokan-lite' ),
                 'description' => esc_html__( 'Create or edit your privacy policy text that will be displayed to users.', 'dokan-lite' ),
+                // Carries the legacy default verbatim: with no default the field
+                // rendered empty and the first save of an untouched page replaced
+                // the shipped policy text with a blank string.
+                'default'    => __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ),
                 'legacy_key' => [
 					'option' => 'dokan_privacy',
 					'field' => 'privacy_policy',
@@ -2144,6 +2159,10 @@ class SettingsSchema {
                 'id'         => 'data_clear_section',
                 'type'       => 'section',
                 'subpage_id' => 'privacy',
+                // Renders the section card itself in destructive tones. The
+                // danger_switch field inside draws no card of its own, so this
+                // is what gives the block its red border and background.
+                'is_danger'  => true,
             ],
             [
                 'id'             => 'data_clear_on_uninstall',
@@ -2352,24 +2371,37 @@ class SettingsSchema {
 
         // Build model options + default model id defensively — providers may
         // not implement get_models_by_type / get_default_model_id.
+        $model_const   = 'image' === ( $cfg['model_kind'] ?? '' )
+            ? '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_IMAGE'
+            : '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_TEXT';
         $model_options = [];
-        if ( method_exists( $provider, 'get_models_by_type' ) ) {
-            $model_const = 'image' === ( $cfg['model_kind'] ?? '' )
-                ? '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_IMAGE'
-                : '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_TEXT';
-            try {
-                $models = $provider->get_models_by_type( constant( $model_const ) );
+        $default_model = '';
+
+        try {
+            $model_type = constant( $model_const );
+
+            if ( method_exists( $provider, 'get_models_by_type' ) ) {
+                $models = $provider->get_models_by_type( $model_type );
                 foreach ( $models as $model_id => $model ) {
                     $model_options[] = [
 						'title' => $model->get_title(),
 						'value' => (string) $model_id,
 					];
                 }
-            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-                unset( $e );
             }
+
+            // Resolve the default against this field's generation type. A provider
+            // serving both text and image cannot express one default valid for
+            // both, so the untyped getter is only a fallback for providers that
+            // predate the typed one.
+            if ( method_exists( $provider, 'get_default_model_id_by_type' ) ) {
+                $default_model = (string) $provider->get_default_model_id_by_type( $model_type );
+            } elseif ( method_exists( $provider, 'get_default_model_id' ) ) {
+                $default_model = (string) $provider->get_default_model_id();
+            }
+        } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+            unset( $e );
         }
-        $default_model = method_exists( $provider, 'get_default_model_id' ) ? (string) $provider->get_default_model_id() : '';
 
         $api_key_url = method_exists( $provider, 'get_api_key_url' ) ? (string) $provider->get_api_key_url() : '';
         $image_url   = method_exists( $provider, 'get_image_url' ) ? (string) $provider->get_image_url() : '';

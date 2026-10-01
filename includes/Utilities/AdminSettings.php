@@ -55,7 +55,7 @@ class AdminSettings {
      * made by Pro / extensions show up on both UIs and in the bridge mapping
      * with one declaration.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array<string,string> Map of `wc-<status>` slug => translated label.
      */

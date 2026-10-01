@@ -206,6 +206,10 @@
 
 // The modal renders outside plugin-ui's theme provider, so Input/SmartSelect border-input/ring-ring fall back to currentColor (black); pin the light admin look here in real CSS.
 .dokan-location-form {
+    // Hand the theme tokens back: `.border-input`/`.border-ring`, so a textarea inheriting dark label text was drawing a near-black border at rest.
+    --input: #d1d5db;
+    --ring: #9ca3af;
+
     input[data-slot='input'],
     textarea,
     [data-slot='smart-select-trigger'] {

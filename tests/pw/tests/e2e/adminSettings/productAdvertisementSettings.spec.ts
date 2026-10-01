@@ -49,40 +49,40 @@ const oldDataset = {
 const newDataset = {
     title: 'Admin Setting: Product -> Product Advertisement',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_product >> #dokan_settings_product_product_advertisement',
+    selector: '[data-testid="settings-menu-product"] >> [data-testid="settings-menu-product_advertisement"]',
     fields: [
         {
-            selector: '#dokan_settings_product_product_advertisement_advertisement_available_slots input[type="number"]',
+            selector: '[data-testid="settings-field-advertisement_available_slots"] input[type="number"]',
             type: 'number',
             value: '6',
         },
         {
-            selector: '#dokan_settings_product_product_advertisement_advertisement_expire_days input[type="number"]',
+            selector: '[data-testid="settings-field-advertisement_expire_days"] input[type="number"]',
             type: 'number',
             value: '21',
         },
         {
-            selector: '#dokan_settings_product_product_advertisement_vendor_can_purchase_advertisement button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_can_purchase_advertisement"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_product_product_advertisement_advertisement_in_subscription button[role="switch"]',
+            selector: '[data-testid="settings-field-advertisement_in_subscription"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_product_product_advertisement_mark_advertised_as_featured button[role="switch"]',
+            selector: '[data-testid="settings-field-mark_advertised_as_featured"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_product_product_advertisement_display_advertised_on_top button[role="switch"]',
+            selector: '[data-testid="settings-field-display_advertised_on_top"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_product_product_advertisement_out_of_stock_visibility button[role="switch"]',
+            selector: '[data-testid="settings-field-out_of_stock_visibility"] [role="switch"]',
             type: 'switch',
             value: true,
         },

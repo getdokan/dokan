@@ -414,3 +414,14 @@
     padding-bottom: 0.5rem;
     font-size: 13px;
 }
+
+/**
+ * Keep the Dokan admin menu pending-count badges readable in every state.
+ */
+#adminmenu #toplevel_page_dokan .wp-submenu .awaiting-mod,
+#adminmenu #toplevel_page_dokan .wp-submenu li a:hover .awaiting-mod,
+#adminmenu #toplevel_page_dokan .wp-submenu li a:focus .awaiting-mod,
+#adminmenu #toplevel_page_dokan .wp-submenu li.current a .awaiting-mod {
+    background-color: #3858e9;
+    color: #fff;
+}

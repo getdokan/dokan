@@ -11,5 +11,6 @@ const AUTH_DIR = path.resolve(__dirname, '../playwright/.auth');
 export const ADMIN_STORAGE_STATE = path.join(AUTH_DIR, 'adminStorageState.json');
 export const VENDOR_STORAGE_STATE = path.join(AUTH_DIR, 'vendorStorageState.json');
 export const VENDOR2_STORAGE_STATE = path.join(AUTH_DIR, 'vendor2StorageState.json');
+export const VENDOR3_STORAGE_STATE = path.join(AUTH_DIR, 'vendor3StorageState.json');
 export const CUSTOMER_STORAGE_STATE = path.join(AUTH_DIR, 'customerStorageState.json');
 export const CUSTOMER2_STORAGE_STATE = path.join(AUTH_DIR, 'customer2StorageState.json');

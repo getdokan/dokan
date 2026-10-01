@@ -2,6 +2,8 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { ApiUtils } from '@utils/apiUtils';
+import { payloads } from '@utils/payloads';
 
 const oldDataset = {
     title: 'Admin Old Setting: General -> Page Setup',
@@ -34,25 +36,25 @@ const oldDataset = {
 const newDataset = {
     title: 'Admin Setting: General -> Page Setup',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_general >> #dokan_settings_general_dokan_pages',
+    selector: '[data-testid="settings-menu-general"] >> [data-testid="settings-menu-dokan_pages"]',
     fields: [
         {
-            selector: '#dokan_settings_general_dokan_pages_dashboard_section_dashboard button[role="combobox"]',
+            selector: '[data-testid="settings-field-vendor_dashboard_page"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'Dashboard',
         },
         {
-            selector: '#dokan_settings_general_dokan_pages_my_orders_section_my_orders button[role="combobox"]',
+            selector: '[data-testid="settings-field-my_orders_page"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'My Orders',
         },
         {
-            selector: '#dokan_settings_general_dokan_pages_store_listing_section_store_listing button[role="combobox"]',
+            selector: '[data-testid="settings-field-store_listing_page"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'Store List',
         },
         {
-            selector: '#dokan_settings_general_dokan_pages_reg_tc_page_section_reg_tc_page button[role="combobox"]',
+            selector: '[data-testid="settings-field-reg_tc_page"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'Terms And Conditions',
         },
@@ -62,6 +64,11 @@ const newDataset = {
 test.describe('Admin Setting: General -> Page Setup', () => {
     let loginPage: LoginPage;
     let adminSettingsPage: AdminSettingsPage;
+
+    // The T&C page is a fixture, not created by the plugin; createPage is a no-op when it exists.
+    test.beforeAll(async () => {
+        await new ApiUtils(null).createPage(payloads.tocPage, payloads.adminAuth);
+    });
 
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);

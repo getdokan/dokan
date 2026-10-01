@@ -219,7 +219,7 @@ test.describe('Admin Vendor Create functionality', () => {
             const posted = await createVendor.submitAndDetectPost();
             expect(posted, 'client-side validateForm must block the create POST').toBe(false);
             await expect(page).toHaveURL(/#\/vendors\/create/);
-            expect(await createVendor.hasFieldError(/Store Name is required|required/i), 'a required-field error renders').toBe(true);
+            expect(await createVendor.hasFieldError(/Store Name is required/i), 'a required-field error renders').toBe(true);
         });
 
         test('a logged-in vendor cannot access the admin Vendor Create page', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {

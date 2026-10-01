@@ -24,6 +24,15 @@ class RecommendedPlugins {
     public function __construct() {
         $this->plugins = [
             [
+                'type'        => 'flycrm',
+                'title'       => fn() => __( 'FlyCRM', 'dokan-lite' ),
+                'description' => fn() => __( 'Track leads, contacts and deals for your marketplace inside WordPress', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/flycrm.svg',
+                'img_alt'     => fn() => __( 'FlyCRM logo', 'dokan-lite' ),
+                'slug'        => 'flycrm',
+                'basename'    => 'flycrm/flycrm.php',
+            ],
+            [
                 'type'        => 'wepos',
                 'title'       => fn() => __( 'wePos', 'dokan-lite' ),
                 'description' => fn() => __( 'Run your counter and online store from one fast POS system', 'dokan-lite' ),
@@ -49,15 +58,6 @@ class RecommendedPlugins {
                 'img_alt'     => fn() => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
                 'slug'        => 'woocommerce-conversion-tracking',
                 'basename'    => 'woocommerce-conversion-tracking/conversion-tracking.php',
-            ],
-            [
-                'type'        => 'texty',
-                'title'       => fn() => __( 'Texty', 'dokan-lite' ),
-                'description' => fn() => __( 'Keep buyers updated with instant SMS for every order and alert', 'dokan-lite' ),
-                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
-                'img_alt'     => fn() => __( 'Texty logo', 'dokan-lite' ),
-                'slug'        => 'texty',
-                'basename'    => 'texty/texty.php',
             ],
             [
                 'type'        => 'store_growth',

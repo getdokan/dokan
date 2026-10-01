@@ -21,6 +21,13 @@ class LegacySwitcher implements Hookable {
     public const PRODUCT_EDITOR_SWITCH_ACTION = 'switch_product_editor';
 
     /**
+     * Option that stores the site-wide opt-in to the new settings screen.
+     *
+     * @since 5.2.0
+     */
+    public const NEW_SETTINGS_OPTION = 'dokan_new_settings_page_enabled';
+
+    /**
      * Default transient expiration time in seconds (15 days)
      *
      * @since 4.1.3
@@ -61,7 +68,8 @@ class LegacySwitcher implements Hookable {
             $submenu['dokan'], function ( $filtered, $menu_item ) {
                 $menu_title       = explode( ' <', $menu_item[0] );
                 $title            = sanitize_title_with_dashes( $menu_title[0] );
-				$is_legacy        = get_transient( 'dokan_legacy_' . $title . '_page' );
+                $is_settings      = (bool) preg_match( '~#/settings(?:[/?]|$)~', $menu_item[2] );
+				$is_legacy        = $is_settings ? $this->is_legacy_settings_page() : get_transient( 'dokan_legacy_' . $title . '_page' );
                 $is_new_dashboard = strpos( $menu_item[2], 'dokan-dashboard' ) !== false;
 
 				// Handle the admin dashboard menu item based on legacy dashboard preference.
@@ -118,15 +126,21 @@ class LegacySwitcher implements Hookable {
             return;
         }
 
-        $legacy_key          = sanitize_key( wp_unslash( $_GET['legacy_key'] ?? 'dashboard' ) );
-        $filtered_legacy_key = $this->get_custom_transient_key( $legacy_key );
-        $current_is_legacy   = get_transient( $filtered_legacy_key );
-        $new_legacy_state    = ! $current_is_legacy;
+        $legacy_key = sanitize_key( wp_unslash( $_GET['legacy_key'] ?? 'dashboard' ) );
 
-        if ( $current_is_legacy ) {
-            delete_transient( $filtered_legacy_key );
+        if ( 'settings' === $legacy_key ) {
+            $switch_to        = sanitize_key( wp_unslash( $_GET['switch_to'] ?? '' ) );
+            $new_legacy_state = $this->switch_settings_page( $switch_to );
         } else {
-            set_transient( $filtered_legacy_key, $new_legacy_state, $this->transient_expiration );
+            $filtered_legacy_key = $this->get_custom_transient_key( $legacy_key );
+            $current_is_legacy   = get_transient( $filtered_legacy_key );
+            $new_legacy_state    = ! $current_is_legacy;
+
+            if ( $current_is_legacy ) {
+                delete_transient( $filtered_legacy_key );
+            } else {
+                set_transient( $filtered_legacy_key, $new_legacy_state, $this->transient_expiration );
+            }
         }
 
         // Redirect to the new admin page, if needed.
@@ -144,6 +158,73 @@ class LegacySwitcher implements Hookable {
 
         wp_safe_redirect( $redirect_url );
         exit;
+    }
+
+    /**
+     * Whether the site uses the classic (legacy) settings screen.
+     *
+     * @since 5.2.0
+     *
+     * @return bool
+     */
+    public function is_legacy_settings_page(): bool {
+        return 'yes' !== get_option( self::NEW_SETTINGS_OPTION, 'no' );
+    }
+
+    /**
+     * Switch the site-wide settings screen to classic or new.
+     *
+     * @since 5.2.0
+     *
+     * @param string $switch_to `legacy` or `new`; anything else toggles the current screen.
+     *
+     * @return bool Whether the classic screen is active after the switch.
+     */
+    protected function switch_settings_page( string $switch_to ): bool {
+        $use_legacy = in_array( $switch_to, [ 'legacy', 'new' ], true ) ? 'legacy' === $switch_to : ! $this->is_legacy_settings_page();
+
+        if ( $use_legacy ) {
+            delete_option( self::NEW_SETTINGS_OPTION );
+        } else {
+            update_option( self::NEW_SETTINGS_OPTION, 'yes' );
+        }
+
+        return $use_legacy;
+    }
+
+    /**
+     * Whether the classic screen is active for a Dokan admin page.
+     *
+     * @since 5.2.0
+     *
+     * @param string $key Page key, e.g. `settings`, `withdraw` or `dashboard`.
+     *
+     * @return bool
+     */
+    public function is_legacy_page( string $key ): bool {
+        if ( 'settings' === $key ) {
+            return $this->is_legacy_settings_page();
+        }
+
+        return (bool) get_transient( $this->get_custom_transient_key( $key ) );
+    }
+
+    /**
+     * Get the admin URL of a Dokan page on the screen (classic or new) the site uses.
+     *
+     * Only for pages that exist on both screens.
+     *
+     * @since 5.2.0
+     *
+     * @param string $route Hash route, e.g. `settings` or `vendors?status=pending`. Empty for the dashboard.
+     *
+     * @return string
+     */
+    public function get_admin_page_url( string $route = '' ): string {
+        $key  = strtok( $route, '/?' );
+        $page = $this->is_legacy_page( $key ? $key : 'dashboard' ) ? 'dokan' : 'dokan-dashboard';
+
+        return admin_url( 'admin.php?page=' . $page . '#/' . $route );
     }
 
     /**
@@ -205,11 +286,13 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
-     * Whether the given user prefers the legacy vendor store settings page.
+     * Whether the legacy vendor store settings page is preferred.
      *
-     * Mirrors {@see self::is_product_editor_legacy_preferred()} — the stored
-     * default is legacy, and the admin setup wizard flips it to latest, so an
-     * upgraded site keeps the legacy form until an admin opts in.
+     * The preference is the site-wide `dokan_appearance` admin option, not a
+     * per-user setting — `$user_id` only guards anonymous contexts, mirroring
+     * {@see self::is_product_editor_legacy_preferred()}. The stored default is
+     * legacy, and the admin setup wizard flips it to latest, so an upgraded
+     * site keeps the legacy form until an admin opts in.
      *
      * @since DOKAN_SINCE
      *

@@ -177,7 +177,11 @@ const WeeklyTimeSlots = ( {
                 return next;
             } );
         }
-        commit( dayKey, { ...day, slots: nextSlots } );
+        // Single mode edits only the visible range, so drop any hidden extras rather than saving ranges the vendor can't see.
+        commit( dayKey, {
+            ...day,
+            slots: multiple ? nextSlots : nextSlots.slice( 0, 1 ),
+        } );
     };
 
     const handleAddSlot = ( dayKey: string ) => {
@@ -363,10 +367,12 @@ const WeeklyTimeSlots = ( {
                 { dayMessages.length > 0 && renderDayMessages( dayMessages ) }
             </div>
         );
+        // Single mode shows one range per day even when the stored value carries extra slots (data written while multi-slot was available).
+        const visibleSlots = multiple ? day.slots : day.slots.slice( 0, 1 );
         const slotsBlock = ( wrapCls: string ) =>
             hasSlots && (
                 <div className={ twMerge( wrapCls, slotsOverlay ) }>
-                    { day.slots.map( ( slot, index ) =>
+                    { visibleSlots.map( ( slot, index ) =>
                         renderSlotRow( dayKey, day, slot, index )
                     ) }
                 </div>
