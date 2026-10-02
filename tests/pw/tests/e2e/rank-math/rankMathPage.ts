@@ -98,7 +98,11 @@ export class RankMathPage {
 
     // Open a seeded product in the vendor product editor.
     async gotoVendorProductEditor(productId: string): Promise<void> {
-        await this.page.goto(toPath(`dashboard/new/#products/${productId}/edit`));
+        // Canonical HashRouter form is `#/products/:id/edit` (see
+        // product-form-manager/newProductFormPage.ts). This used to omit the
+        // leading slash (`#products/...`); every other spec uses the canonical
+        // form, so match it rather than rely on router normalisation.
+        await this.page.goto(toPath(`dashboard/new/#/products/${productId}/edit`));
         // The vendor dashboard is a hash-routed SPA: navigating to the same
         // `dashboard/new/` base with only a different #hash does NOT trigger a
         // server reload, so the server-rendered Rank Math markup (which depends on

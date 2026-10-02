@@ -58,13 +58,13 @@ test.describe('Rank Math SEO module functionality', () => {
             expect(await api.isRankMathActive()).toBe(true);
         });
 
-        test('vendor product editor renders without fatal error', { tag: ['@pro', '@vendor'] }, async () => {
+        test('vendor product editor renders without fatal error', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await vendor.gotoVendorProductEditor(productId);
             await vendor.assertNoFatal();
             await vendor.assertRendersContent();
         });
 
-        test('vendor sees the Rank Math SEO card on the product editor', { tag: ['@pro', '@vendor'] }, async () => {
+        test('vendor sees the Rank Math SEO card on the product editor', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await vendor.gotoVendorProductEditor(productId);
             await vendor.assertSeoCardPresent();
         });
@@ -73,7 +73,7 @@ test.describe('Rank Math SEO module functionality', () => {
         // (not just the empty card header). This is what breaks when Dokan's
         // hardcoded CMB2 bootstrap class no longer matches the bundled CMB2.
         //TODO - Needs Fix
-        test('vendor sees the Rank Math SEO fields rendered in the panel', { tag: ['@pro', '@vendor'] }, async () => {
+        test('vendor sees the Rank Math SEO fields rendered in the panel', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await vendor.gotoVendorProductEditor(productId);
             await vendor.assertSeoPanelRendersFields();
         });
@@ -119,7 +119,7 @@ test.describe('Rank Math SEO module functionality', () => {
             expect(response.ok()).toBeFalsy();
         });
 
-        test('Rank Math SEO section is absent when the module is disabled', { tag: ['@pro', '@vendor'] }, async () => {
+        test('Rank Math SEO section is absent when the module is disabled', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await api.deactivateRankMath();
             try {
                 await vendor.gotoVendorProductEditor(productId);

@@ -31,7 +31,7 @@ const REVIEW_NANO = Math.random().toString(36).slice(2, 8); // unique per run
 // reviews with the SAME body (so the matchText assertions stay deterministic),
 // so we vary author AND email per call to avoid the 409 "duplicate" rejection.
 let __reviewSeq = 0;
-export const newStoreReviewData = {
+export const newProductReviewData = {
     // Kept for backwards-compat with the spec's text assertions.
     title: 'pw-new-ui review',
     // The review body shown in the DataViews "Review" column (kept <= 20 chars
@@ -49,16 +49,16 @@ export const newStoreReviewData = {
         __reviewSeq += 1;
         const u = `${REVIEW_NANO}-${__reviewSeq}`;
         return {
-            review: newStoreReviewData.content,
-            reviewer: `${newStoreReviewData.reviewer} ${u}`,
+            review: newProductReviewData.content,
+            reviewer: `${newProductReviewData.reviewer} ${u}`,
             reviewer_email: `pwrev-${u}@example.com`,
-            rating: newStoreReviewData.rating,
+            rating: newProductReviewData.rating,
             status: 'approved' as const,
         };
     },
 } as const;
 
-export type StoreReviewPayload = ReturnType<typeof newStoreReviewData.review>;
+export type StoreReviewPayload = ReturnType<typeof newProductReviewData.review>;
 
 // ============================================
 // SELECTORS — verified against the live /dashboard/new/#/reviews render.
@@ -66,7 +66,7 @@ export type StoreReviewPayload = ReturnType<typeof newStoreReviewData.review>;
 // <button role="tab"> whose text carries a count, e.g. "Approved (0)".
 // Empty-state copy on a fresh list is exactly "No data found".
 // ============================================
-export const newStoreReviewsSelectors = {
+export const newProductReviewsSelectors = {
     reactRoot: REACT_ROOT,
     heading: 'text=/^Reviews$/',
     // Status tabs are role=tab buttons; the count is part of the text but NOT
@@ -98,7 +98,7 @@ export const newStoreReviewsSelectors = {
 // each other; shared DataViews primitives come from @utils/dataViews). The
 // skeleton-aware settle loop is reviews-specific and stays local.
 // ============================================
-export class NewStoreReviewsPage {
+export class NewProductReviewsPage {
     readonly page: Page;
     readonly url = toPath('dashboard/new/#/reviews');
 
@@ -108,22 +108,22 @@ export class NewStoreReviewsPage {
     }
 
     // ---- Locators ----
-    get heading(): Locator { return this.page.locator(newStoreReviewsSelectors.heading).first(); }
-    get approvedTab(): Locator { return this.page.locator(newStoreReviewsSelectors.approvedTab).first(); }
-    get pendingTab(): Locator { return this.page.locator(newStoreReviewsSelectors.pendingTab).first(); }
-    get spamTab(): Locator { return this.page.locator(newStoreReviewsSelectors.spamTab).first(); }
-    get trashTab(): Locator { return this.page.locator(newStoreReviewsSelectors.trashTab).first(); }
-    get table(): Locator { return this.page.locator(newStoreReviewsSelectors.table).first(); }
+    get heading(): Locator { return this.page.locator(newProductReviewsSelectors.heading).first(); }
+    get approvedTab(): Locator { return this.page.locator(newProductReviewsSelectors.approvedTab).first(); }
+    get pendingTab(): Locator { return this.page.locator(newProductReviewsSelectors.pendingTab).first(); }
+    get spamTab(): Locator { return this.page.locator(newProductReviewsSelectors.spamTab).first(); }
+    get trashTab(): Locator { return this.page.locator(newProductReviewsSelectors.trashTab).first(); }
+    get table(): Locator { return this.page.locator(newProductReviewsSelectors.table).first(); }
     /** All body rows, including loading skeleton placeholder rows. */
-    get rows(): Locator { return this.page.locator(newStoreReviewsSelectors.dataRow); }
+    get rows(): Locator { return this.page.locator(newProductReviewsSelectors.dataRow); }
     /** Body rows that have finished loading (carry no skeleton placeholder). */
-    get settledRows(): Locator { return this.page.locator(newStoreReviewsSelectors.settledRow); }
+    get settledRows(): Locator { return this.page.locator(newProductReviewsSelectors.settledRow); }
     /** Loading skeleton placeholder bars (present only while a tab is fetching). */
-    get skeletons(): Locator { return this.page.locator(newStoreReviewsSelectors.skeleton); }
-    get emptyState(): Locator { return this.page.locator(newStoreReviewsSelectors.emptyState).first(); }
+    get skeletons(): Locator { return this.page.locator(newProductReviewsSelectors.skeleton); }
+    get emptyState(): Locator { return this.page.locator(newProductReviewsSelectors.emptyState).first(); }
 
     /** A status tab by visible label ("Approved" | "Pending" | "Spam" | "Trash"). */
-    tab(name: string): Locator { return this.page.locator(newStoreReviewsSelectors.tab(name)).first(); }
+    tab(name: string): Locator { return this.page.locator(newProductReviewsSelectors.tab(name)).first(); }
 
     // ---- Navigation ----
     async goto(): Promise<void> {
@@ -197,7 +197,7 @@ export class NewStoreReviewsPage {
         await tab.click();
         // Wait until this tab is marked selected so the re-filter has begun.
         await tab.evaluate((el) => el.getAttribute('aria-selected') === 'true').catch(() => undefined);
-        await this.page.locator(`${newStoreReviewsSelectors.tab(name)}[aria-selected="true"]`)
+        await this.page.locator(`${newProductReviewsSelectors.tab(name)}[aria-selected="true"]`)
             .first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
         await this.waitForSettle(8000);
     }

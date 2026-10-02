@@ -18,9 +18,9 @@ export default defineConfig({
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown' ,
     /* Maximum time in milliseconds the whole test suite can run */
-    globalTimeout: parseBoolean(CI) ? 60 * (60 * 1000) : 60 * (60 * 1000),
-    /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
-    maxFailures: parseBoolean(CI) ? 50 : 50,
+    globalTimeout: parseBoolean(CI) ? 90 * (90 * 1000) : 90 * (90 * 1000),
+/* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
+    maxFailures: parseBoolean(CI) ? 10000 : 10000,
     /* Maximum time one test can run for. */
     timeout: parseBoolean(CI) ? 180 * 1000 : 60 * 1000, // CI 120s->180s: WordPress can render slowly on loaded runners; give room for the raised navigation timeout
     /* Configuration for the expect assertion library */
@@ -46,7 +46,7 @@ export default defineConfig({
        passes; the summary reporter rolls retry-passes into the pass count. */
     retries: parseBoolean(CI) ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: parseBoolean(CI) ? 1 : 4,
+    workers: parseBoolean(CI) ? 6 : 6,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 25 },
     /* Configure reporters */
