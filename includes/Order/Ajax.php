@@ -50,6 +50,8 @@ class Ajax {
         $args = [
             'status'       => 'publish',
             'downloadable' => true,
+            // Files can live on variations, which the default product types leave out.
+            'type'         => array_merge( array_keys( wc_get_product_types() ), [ 'variation' ] ),
             'author'       => dokan_get_current_user_id(),
             'page'         => $page,
             'limit'        => $limit,

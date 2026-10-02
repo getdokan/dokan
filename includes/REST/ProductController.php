@@ -954,8 +954,8 @@ class ProductController extends DokanRESTController {
             $args[ $on_sale_key ] = ! empty( $args[ $on_sale_key ] ) && is_array( $args[ $on_sale_key ] ) ? array_merge( $args[ $on_sale_key ], $on_sale_ids ) : $on_sale_ids;
         }
 
-        // Force the post_type argument, since it's not a user input variable.
-        if ( ! empty( $request['sku'] ) ) {
+        // Force the post_type argument, since it's not a user input variable. Downloadable files can live on variations, so the downloadable picker lists those too.
+        if ( ! empty( $request['sku'] ) || true === dokan_string_to_bool( $request->get_param( 'only_downloadable' ) ) ) {
             $args['post_type'] = [ 'product', 'product_variation' ];
         } else {
             $args['post_type'] = $this->post_type;
