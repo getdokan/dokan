@@ -191,7 +191,7 @@ class OrderControllerV2 extends OrderController {
 
         $product_ids = array_unique( array_map( 'intval', wp_list_pluck( $download_permissions, 'product_id' ) ) );
 
-        // Load the permitted ids directly (a type-filtered catalog query drops variations); priming keeps the reads batched.
+        // Look up each permitted id directly so permissions on variations aren't dropped.
         _prime_post_caches( $product_ids );
         $products = [];
         foreach ( array_filter( array_map( 'wc_get_product', $product_ids ) ) as $product ) {

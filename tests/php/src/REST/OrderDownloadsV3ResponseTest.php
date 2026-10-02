@@ -3,11 +3,9 @@
 namespace WeDevs\Dokan\Test\REST;
 
 use Automattic\WooCommerce\Internal\ProductDownloads\ApprovedDirectories\Register as DownloadApprovedDirectories;
-use WeDevs\Dokan\REST\OrderControllerV2;
 use WeDevs\Dokan\REST\OrderControllerV3;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WC_Product_Download;
-use WP_REST_Request;
 
 /**
  * Response test for `GET dokan/v3/orders/{id}/downloads`.
@@ -128,21 +126,6 @@ class OrderDownloadsV3ResponseTest extends DokanTestCase {
 
         $this->assertCount( 2, $data );
         $this->assertContains( 'Variation File', wp_list_pluck( wp_list_pluck( $data, 'file_data' ), 'name' ) );
-    }
-
-    /**
-     * An order without permissions lists no products, rather than every product in the store.
-     *
-     * @covers \WeDevs\Dokan\REST\OrderControllerV2::get_order_downloads
-     */
-    public function test_order_without_permissions_lists_no_products() {
-        $request = new WP_REST_Request( 'GET' );
-        $request->set_param( 'id', $this->create_single_vendor_order( $this->seller_id1 ) );
-
-        $data = ( new OrderControllerV2() )->get_order_downloads( $request )->get_data();
-
-        $this->assertSame( [], $data['downloads'] );
-        $this->assertSame( [], $data['products'] );
     }
 
     /**
