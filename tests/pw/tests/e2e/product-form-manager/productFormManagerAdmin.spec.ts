@@ -24,6 +24,12 @@ import path from 'path';
 // worker and run serially — so they never race each other on that shared option
 // (splitting them across files flakes under multi-worker local runs).
 //
+// The whole describe is tagged `@serial` so it is grep-inverted out of the
+// parallel e2e run and executed in the dedicated serial pass instead. That is
+// what keeps it from racing the SIBLING vendor specs (newProductForm*.spec):
+// they render the same schema-driven form, so a field this spec transiently
+// marks required would disable their Save button mid-run on another worker.
+//
 // Coverage: admin authoring (UI → verified via REST), all 11 field variants,
 // field config, default-field toggles, per-product-type overrides, the
 // mandatory-field UI contract, validation negatives, permission negatives
@@ -71,7 +77,7 @@ const ALL_VARIANTS: FieldVariant[] = [
 const PLACEHOLDER_VARIANTS: ReadonlySet<FieldVariant> = new Set(['text', 'textarea']);
 const PRODUCT_TYPES = ['simple', 'variable', 'grouped', 'external'] as const;
 
-test.describe('Product Form Manager', () => {
+test.describe('Product Form Manager', { tag: '@serial' }, () => {
     let admin: ProductFormManager;
     let aPage: Page;
 
