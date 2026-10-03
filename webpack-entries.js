@@ -3,6 +3,7 @@ const entryPoints = {
     'dokan-tailwind': './src/base-tailwind.css',
 
     frontend: './src/dashboard/index.tsx',
+    'vendor-setup-wizard': './src/vendor-dashboard/setup-wizard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
     'dokan-admin-switching': './src/admin/panel-switcher/index.tsx',
     'dokan-admin-panel-header': './src/admin/header/index.tsx',
