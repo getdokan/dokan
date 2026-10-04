@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Page, APIRequestContext, request } from '@playwright/test';
 import mysql from 'mysql2/promise';
-import { isSerialized, serialize, unserialize } from 'php-serialize';
 import { toPath, SERVER_URL } from '@utils/helpers';
+import { dbUtils } from '@utils/dbUtils';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -39,13 +39,11 @@ const {
     DB_USER_PASSWORD,
     DATABASE,
     DB_PORT,
-    DB_PREFIX,
     ADMIN,
     ADMIN_PASSWORD,
     VENDOR,
     CUSTOMER,
 } = process.env;
-const dbPrefix = DB_PREFIX || 'wp';
 
 // ============================================
 // AUTH UTILITY
@@ -200,6 +198,7 @@ const pool = mysql.createPool({
     queueLimit: 0,
 });
 
+// Dokan settings go through dbUtils, which writes dokan_* options via update_option() (see utils/dbUtils.ts).
 export const db = {
     async dbQuery(query: string, params?: any[]): Promise<any> {
         let connection: mysql.PoolConnection | undefined;
@@ -216,14 +215,7 @@ export const db = {
     },
 
     async getOptionValue(optionName: string): Promise<any> {
-        const rows: any = await db.dbQuery(`SELECT option_value FROM ${dbPrefix}_options WHERE option_name = ?`, [optionName]);
-        if (!rows || !rows.length) return null;
-        const raw = rows[0].option_value;
-        try {
-            return isSerialized(raw) ? unserialize(raw) : raw;
-        } catch {
-            return raw;
-        }
+        return dbUtils.getOptionValue(optionName);
     },
 
     async updateOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
@@ -235,13 +227,7 @@ export const db = {
                 finalValue = { ...existing, ...optionValue };
             }
         }
-        const value = serializeData && typeof finalValue !== 'string' ? serialize(finalValue) : finalValue;
-        const query = `
-            INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
-            VALUES (NULL, ?, ?, 'yes')
-            ON DUPLICATE KEY UPDATE option_value = ?;
-        `;
-        return await db.dbQuery(query, [optionName, value, value]);
+        return dbUtils.setOptionValue(optionName, finalValue, serializeData);
     },
 
     async dispose(): Promise<void> {
