@@ -383,11 +383,18 @@ jobs:
                   # WordPress and WooCommerce are current. The pinned reference lane
                   # (14:00) is untouched and keeps the committed versions.
                   if [ "$WP_STACK" = "latest" ]; then
-                    jq '.env.tests.core = null
-                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                    # The unversioned woocommerce.zip on wordpress.org serves WooCommerce's development
+                    # build (11.2.0-beta.2 on 2026-10-04), so pin the current stable release instead.
+                    WC_STABLE=$(curl -fsSL https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r .version)
+                    if [ -z "$WC_STABLE" ] || [ "$WC_STABLE" = "null" ]; then
+                      echo "::error::Could not resolve the current stable WooCommerce version from wordpress.org"
+                      exit 1
+                    fi
+                    jq --arg wc "$WC_STABLE" '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.\($wc).zip"))' \
                        .wp-env.override.json > .wp-env.override.json.tmp
                     mv .wp-env.override.json.tmp .wp-env.override.json
-                    echo "WP_STACK=latest — core and WooCommerce unpinned"
+                    echo "WP_STACK=latest — WordPress unpinned, WooCommerce $WC_STABLE (current stable)"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
@@ -825,11 +832,18 @@ jobs:
                   # Canary lane: drop the version pins so wp-env resolves whatever
                   # WordPress and WooCommerce are current. Gating lane is untouched.
                   if [ "$WP_STACK" = "latest" ]; then
-                    jq '.env.tests.core = null
-                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                    # The unversioned woocommerce.zip on wordpress.org serves WooCommerce's development
+                    # build (11.2.0-beta.2 on 2026-10-04), so pin the current stable release instead.
+                    WC_STABLE=$(curl -fsSL https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r .version)
+                    if [ -z "$WC_STABLE" ] || [ "$WC_STABLE" = "null" ]; then
+                      echo "::error::Could not resolve the current stable WooCommerce version from wordpress.org"
+                      exit 1
+                    fi
+                    jq --arg wc "$WC_STABLE" '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.\($wc).zip"))' \
                        .wp-env.override.json > .wp-env.override.json.tmp
                     mv .wp-env.override.json.tmp .wp-env.override.json
-                    echo "WP_STACK=latest — core and WooCommerce unpinned"
+                    echo "WP_STACK=latest — WordPress unpinned, WooCommerce $WC_STABLE (current stable)"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
