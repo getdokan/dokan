@@ -304,7 +304,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         $stock_amount = isset( $data['_stock'] ) ? wc_clean( $data['_stock'] ) : '';
         $stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $stock_amount ) ) : '';
         // Only update the stock amount if it has changed
-        if ( $original_stock != $stock_amount ) {
+        if ( $original_stock !== $stock_amount ) {
             if ( 'variable' === $product_type ) {
                 update_post_meta( $post_id, '_stock', $stock_amount );
             } else {
@@ -333,7 +333,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $_download_expiry = ''; // 0 or blank = unlimited
         }
 
-        // file paths will be stored in an array keyed off md5(file path)
+        // An unchanged file keeps its stored id so buyers' permissions (limit, expiry, count) survive the save; a new file is keyed by md5( url ).
         if ( isset( $data['_wc_file_urls'] ) ) {
             $files = [];
 
@@ -341,9 +341,14 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $file_urls     = array_map( 'esc_url_raw', array_map( 'trim', $data['_wc_file_urls'] ) );
             $file_url_size = count( $file_urls );
 
+            $stored_ids = [];
+            foreach ( wc_get_product( $post_id )->get_downloads() as $download_id => $download ) {
+                $stored_ids[ esc_url_raw( trim( $download->get_file() ) ) ] = $download_id;
+            }
+
             for ( $i = 0; $i < $file_url_size; $i++ ) {
                 if ( ! empty( $file_urls[ $i ] ) ) {
-                    $files[ md5( $file_urls[ $i ] ) ] = [
+                    $files[ $stored_ids[ $file_urls[ $i ] ] ?? md5( $file_urls[ $i ] ) ] = [
                         'name' => $file_names[ $i ],
                         'file' => $file_urls[ $i ],
                     ];
