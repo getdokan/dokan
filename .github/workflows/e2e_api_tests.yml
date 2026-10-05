@@ -4,10 +4,34 @@ name: E2E_API Tests
 run-name: ${{ inputs.pro_sha && format('E2E_API Tests (pro {0}, lite {1})', inputs.pro_ref, inputs.lite_ref || github.ref_name) || github.workflow }}
 
 on:
-    # Runs once a day only, to keep Actions cost down. Pull requests and pushes
-    # to develop no longer trigger this suite -- use the "Run workflow" button
-    # (workflow_dispatch) below to test a branch on demand.
-    # Target start time is 9:00 AM BDT. GitHub queues scheduled runs and
+    # Every pushed commit runs the suite, on any branch, like the PHPUnit workflow.
+    # Commits that only touch the files in paths-ignore are skipped. A commit on a pull
+    # request branch in this repository is tested by its push run, whose checks also show
+    # on the PR, so the pull_request trigger only does work for PRs from forks (see the
+    # `if` on build_lite and merge-reports). The two lists below must be kept in sync by
+    # hand: GitHub Actions does not support YAML anchors.
+    push:
+        branches: ['**']
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
+    pull_request:
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
+    # Scheduled runs. Target start time is 9:00 AM BDT. GitHub queues scheduled runs and
     # releases them once capacity frees up: on this repository that delay has
     # been roughly 70 minutes every day, so 02:00 UTC (nominally 8:00 AM BDT)
     # is what actually starts the run near 9:00 AM BDT. Check the real start
@@ -54,14 +78,18 @@ on:
                 default: ''
                 type: string
 
-# Cancels all previous workflow runs for pull requests that have not completed.
+# One group per commit: a newer commit never cancels the run of an older one, on any
+# branch. Only a second run of the same commit, event and stack replaces the first.
 concurrency:
-    # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
-    # The stack is part of the group so the latest run and the pinned reference never cancel
+    # The event is part of the group because a push to a pull request branch also fires
+    # pull_request for the same commit; without it the (skipped) PR run would cancel the push
+    # run. The stack is part of it so the latest run and the pinned reference never cancel
     # each other on the same commit.
-    # A run started by a dokan-pro PR is keyed on the pro branch instead, so a new push to that
-    # branch cancels its older run and different pro branches never cancel each other.
-    group: ${{ github.workflow }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || (github.event_name == 'pull_request' && github.head_ref || github.sha) }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
+    # Exception: a run started by a dokan-pro PR (pro_sha set) is keyed on the pro branch, not on
+    # this commit. Those runs all dispatch on the same develop commit, so per-commit keys would
+    # make different pro branches cancel each other; per-branch keys let a new push to a pro
+    # branch cancel only that branch's older run.
+    group: ${{ github.workflow }}-${{ github.event_name }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || github.event.pull_request.head.sha || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -138,6 +166,8 @@ jobs:
     # Each consumer job downloads the tar artifacts and skips its own build steps.
     build_lite:
         name: build dokan-lite
+        # Pull requests from this repository are already tested by their push run.
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
         runs-on: ubuntu-latest
         timeout-minutes: 15
         steps:
@@ -202,8 +232,9 @@ jobs:
         name: build dokan-pro
         runs-on: ubuntu-latest
         timeout-minutes: 15
-        # Only run when secrets are available (i.e. not a fork PR). Same gate as today.
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        # Never on pull_request: fork PRs have no secrets, and PRs from this repository are
+        # tested by their push run, so build_lite skips them.
+        if: github.event_name != 'pull_request'
         steps:
             # Pro's webpack.config.js calls getDokanLitePath() which resolves
             # ../dokan-lite from inside the pro folder, and also requires
@@ -406,11 +437,18 @@ jobs:
                   # WordPress and WooCommerce are current. The pinned reference lane
                   # (14:00) is untouched and keeps the committed versions.
                   if [ "$WP_STACK" = "latest" ]; then
-                    jq '.env.tests.core = null
-                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                    # The unversioned woocommerce.zip on wordpress.org serves WooCommerce's development
+                    # build (11.2.0-beta.2 on 2026-10-04), so pin the current stable release instead.
+                    WC_STABLE=$(curl -fsSL https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r .version)
+                    if [ -z "$WC_STABLE" ] || [ "$WC_STABLE" = "null" ]; then
+                      echo "::error::Could not resolve the current stable WooCommerce version from wordpress.org"
+                      exit 1
+                    fi
+                    jq --arg wc "$WC_STABLE" '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.\($wc).zip"))' \
                        .wp-env.override.json > .wp-env.override.json.tmp
                     mv .wp-env.override.json.tmp .wp-env.override.json
-                    echo "WP_STACK=latest — core and WooCommerce unpinned"
+                    echo "WP_STACK=latest — WordPress unpinned, WooCommerce $WC_STABLE (current stable)"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
@@ -578,6 +616,19 @@ jobs:
               working-directory: tests/pw
               run: npm run docker:setup
 
+            # Every run and shard charges through the same Stripe test account, where idempotency keys
+            # live for 24 hours, and Dokan Pro keys subscription renewals by order id
+            # (`dokan_pe_renewal_<order>_<attempt>` in modules/stripe RenewalProcessor). A fresh database
+            # hands out the same order ids every run, so a later run's renewal reused an earlier run's key
+            # and failed (SCSUB-02, run 37270644560). Start post ids, which HPOS order ids come from, at a
+            # random offset per shard and attempt so each run acts like a separate site. The offset stays
+            # under 2^31 because Dokan's own tables store order ids as INT.
+            - name: Offset post and order ids for this shard
+              working-directory: tests/pw
+              run: |
+                  OFFSET=$(( 1000000 + ( ((RANDOM << 15) | RANDOM) % 1000000000 ) ))
+                  npm run wp-env run tests-cli wp eval "global \$wpdb; \$wpdb->query( \"ALTER TABLE {\$wpdb->posts} AUTO_INCREMENT = $OFFSET\" ); echo 'next post id: ', \$wpdb->get_var( \"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{\$wpdb->posts}'\" ), PHP_EOL;"
+
             # Resolve the spec list for this shard from the committed duration baseline.
             # Falls back to alphabetical sharding if the baseline is missing.
             - name: Resolve balanced shard spec list
@@ -730,13 +781,15 @@ jobs:
                          playwright-report/e2e/summary-report/results.e2e.bak.json
                   fi
 
-            # Coverage walks the suite a second time. Skip on PRs to halve the
-            # per-shard test runtime; develop pushes still compute it.
+            # Coverage walks the suite a second time. Skip on PRs and on pushes to
+            # branches other than develop to halve the per-shard test runtime; develop
+            # pushes, scheduled and manual runs still compute it.
             - name: 🧪 Run e2e coverage
               if: |
                 always()
                 && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
                 && github.event_name != 'pull_request'
+                && (github.event_name != 'push' || github.ref == 'refs/heads/develop')
               working-directory: tests/pw
               run: |
                   npm run test:e2e:coverage
@@ -848,11 +901,18 @@ jobs:
                   # Canary lane: drop the version pins so wp-env resolves whatever
                   # WordPress and WooCommerce are current. Gating lane is untouched.
                   if [ "$WP_STACK" = "latest" ]; then
-                    jq '.env.tests.core = null
-                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.zip"))' \
+                    # The unversioned woocommerce.zip on wordpress.org serves WooCommerce's development
+                    # build (11.2.0-beta.2 on 2026-10-04), so pin the current stable release instead.
+                    WC_STABLE=$(curl -fsSL https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r .version)
+                    if [ -z "$WC_STABLE" ] || [ "$WC_STABLE" = "null" ]; then
+                      echo "::error::Could not resolve the current stable WooCommerce version from wordpress.org"
+                      exit 1
+                    fi
+                    jq --arg wc "$WC_STABLE" '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.\($wc).zip"))' \
                        .wp-env.override.json > .wp-env.override.json.tmp
                     mv .wp-env.override.json.tmp .wp-env.override.json
-                    echo "WP_STACK=latest — core and WooCommerce unpinned"
+                    echo "WP_STACK=latest — WordPress unpinned, WooCommerce $WC_STABLE (current stable)"
                   fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
@@ -1054,8 +1114,9 @@ jobs:
                   retention-days: 1
 
     merge-reports:
-        # Merge reports after playwright-tests, even if some shards have failed
-        if: ${{ !cancelled() }}
+        # Merge reports after playwright-tests, even if some shards have failed. Skipped with
+        # build_lite on pull requests from this repository (their push run does the work).
+        if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository) }}
         needs: [e2e_tests, api_tests]
         runs-on: ubuntu-24.04
         timeout-minutes: 5
@@ -1169,14 +1230,15 @@ jobs:
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeSummaryReport.ts
 
-            # No coverage on PR runs (skipped per-shard above), so the merge
-            # would exit 1 on missing inputs. Quality report handles missing
-            # E2E_COVERAGE via an existsSync guard.
+            # No coverage on PR runs or on pushes to branches other than develop (skipped
+            # per-shard above), so the merge would exit 1 on missing inputs. Quality report
+            # handles missing E2E_COVERAGE via an existsSync guard.
             - name: Generate merged coverage report
               id: merge-coverage-report
               if: |
                 steps.download-test-artifacts.outcome == 'success'
                 && github.event_name != 'pull_request'
+                && (github.event_name != 'push' || github.ref == 'refs/heads/develop')
               working-directory: tests/pw
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeCoverageSummary.ts

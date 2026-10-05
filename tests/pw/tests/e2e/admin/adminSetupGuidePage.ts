@@ -49,7 +49,7 @@ export const adminSetupGuideData = {
     // A namespaced sentinel value we save into the Basic radio_box to prove
     // persistence survives reload. radio_box option values are admin|seller.
     basic: {
-        recipientField: 'Shipping Fee Recipient',
+        recipientField: 'Shipping Fee',
         recipientValue: 'Admin', // visible SelectorCard label -> persists 'admin'
         persistedKey: 'shipping_fee_recipient',
         persistedValue: 'admin',
@@ -61,11 +61,13 @@ export const adminSetupGuideData = {
 // ============================================
 export const adminSetupGuideSelectors = {
     reactRoot: '#dokan-admin-dashboard',
-    // StepComponent left panel heading.
-    stepperHeading: 'text="Setup Guide"',
-    // Stepper list + items (StepComponent renders <ol> -> <li><h4>title</h4>).
-    stepperList: 'ol',
-    stepTitle: 'ol li h4',
+    // Since 5.2.0 the wizard is plugin-ui's <Onboarding>: the stepper is
+    // `ol[data-testid="onboarding-step-indicator"]` holding one
+    // `button[data-testid="onboarding-step-<id>"]` per step, title in `span.truncate`;
+    // the active one carries aria-current="step".
+    stepper: '[data-testid="onboarding-step-indicator"]',
+    stepTitle: 'button[data-testid^="onboarding-step-"] span.truncate',
+    activeStepTitle: 'button[data-testid^="onboarding-step-"][aria-current="step"] span.truncate',
     // Error / loading states.
     failedToLoad: 'text=/Failed to load settings/i',
     retryButton: 'role=button[name="Retry Loading"]',
@@ -95,8 +97,8 @@ export class AdminSetupGuidePage {
         return this.page.locator(adminSetupGuideSelectors.reactRoot).first();
     }
 
-    get stepperHeading(): Locator {
-        return this.page.getByRole('heading', { name: 'Setup Guide' }).first();
+    get stepper(): Locator {
+        return this.page.locator(adminSetupGuideSelectors.stepper).first();
     }
 
     get stepTitles(): Locator {
@@ -104,8 +106,8 @@ export class AdminSetupGuidePage {
     }
 
     get nextButton(): Locator {
-        // Label is "Next" or "Saving…" while a save is in flight.
-        return this.page.getByRole('button', { name: /^(Next|Saving)/ }).first();
+        // The 5.2.0 Onboarding footer labels it "Continue".
+        return this.page.getByRole('button', { name: /^(Continue|Saving)/ }).first();
     }
 
     get backButton(): Locator {
@@ -155,13 +157,15 @@ export class AdminSetupGuidePage {
         await this.waitForReady();
     }
 
-    /** Ready when the React root is visible AND either the stepper heading or the
-     * first step body has painted (or the completed screen, if all steps done). */
+    /** Ready when the React root is visible AND the steps have loaded, i.e. a step is active
+     * (or the completed screen, if all steps are done, or the load-error screen). The stepper
+     * <ol> and a placeholder Back/Continue footer paint before the step REST calls resolve,
+     * so neither is a readiness signal. */
     async waitForReady(timeoutMs = 30000): Promise<void> {
         await this.reactRoot.waitFor({ state: 'visible', timeout: timeoutMs });
         const start = Date.now();
         while (Date.now() - start < 20000) {
-            if (await this.stepperHeading.isVisible().catch(() => false)) return;
+            if (await this.page.locator(adminSetupGuideSelectors.activeStepTitle).first().isVisible().catch(() => false)) return;
             if (await this.completedHeading.isVisible().catch(() => false)) return;
             if (await this.failedToLoad.isVisible().catch(() => false)) return;
             await this.page.waitForTimeout(250);
@@ -186,14 +190,13 @@ export class AdminSetupGuidePage {
     // ---- Reads ----
     /** Visible stepper titles in DOM (priority) order. */
     async getStepTitles(): Promise<string[]> {
-        await this.stepperHeading.waitFor({ state: 'visible', timeout: 15000 });
+        await this.stepTitles.first().waitFor({ state: 'visible', timeout: 15000 });
         return (await this.stepTitles.allInnerTexts()).map(t => t.trim()).filter(Boolean);
     }
 
-    /** The title of the currently-active step — its <h4> is coloured purple
-     * (#7047EB). We read it by the inline style/class the active item carries. */
+    /** The title of the currently-active step (the stepper button with aria-current="step"). */
     async getActiveStepTitle(): Promise<string> {
-        const active = this.page.locator('ol li h4.text-\\[\\#7047EB\\]').first();
+        const active = this.page.locator(adminSetupGuideSelectors.activeStepTitle).first();
         await active.waitFor({ state: 'visible', timeout: 15000 });
         return (await active.innerText()).trim();
     }
@@ -232,18 +235,9 @@ export class AdminSetupGuidePage {
         await opt.click();
     }
 
-    /** Choose a value in the Commission Type select dropdown. */
+    /** Choose a Commission Type. Since 5.2.0 it is a radio_capsule (Fixed / Category Based). */
     async selectCommissionType(optionLabel: string): Promise<void> {
-        // The Commission Type control is a dokan-ui/Radix Select rendered as a
-        // <button role="combobox"> — NOT a native <select> nor an
-        // #commission_type input. Click the trigger to open the portalled
-        // listbox, then pick the option (role=option, portalled to <body>).
-        // The commission step has exactly one combobox, so .first() is the
-        // Commission Type trigger.
-        const trigger = this.page.locator('button[role="combobox"]').first();
-        await trigger.waitFor({ state: 'visible', timeout: 10000 });
-        await trigger.click();
-        const option = this.page.getByRole('option', { name: optionLabel, exact: true }).first();
+        const option = this.page.getByRole('button', { name: optionLabel, exact: true }).first();
         await option.waitFor({ state: 'visible', timeout: 10000 });
         await option.click();
         await this.page.waitForTimeout(500); // dependency engine re-evaluates show/hide.
@@ -312,7 +306,7 @@ export class AdminSetupGuidePage {
     /** True when the admin Setup Guide UI is NOT reachable for the current user. */
     async isAccessDenied(): Promise<boolean> {
         const rootVisible = await this.reactRoot.isVisible({ timeout: 5000 }).catch(() => false);
-        const stepperVisible = await this.stepperHeading.isVisible({ timeout: 2000 }).catch(() => false);
+        const stepperVisible = await this.stepper.isVisible({ timeout: 2000 }).catch(() => false);
         return !rootVisible && !stepperVisible;
     }
 }
