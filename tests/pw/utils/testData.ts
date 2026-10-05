@@ -1475,10 +1475,33 @@ export const data = {
                 // plugin-ui's rich_text editor is a custom contentEditable div.
                 fieldRichText: (id: string) => `#${id} [contenteditable]`,
                 saveButtonName: /save changes/i,
+                cancelButtonName: /^cancel$/i,
+                savedToast: 'Store settings saved.',
+                scheduleField: '.dokan-vendor-store-schedule-field',
+                opensAtPlaceholder: 'Opens at',
+                addTimeSlot: 'Add time slot',
+                imageField: '.dokan-vendor-image-field',
+                mediaModal: '.media-modal',
+                mediaFileInput: '.media-modal input[type="file"]',
+                selectAndCrop: 'Select and Crop',
+                cropImage: 'Crop image',
+                removeImage: 'Remove image',
+                vacationStyle: (style: string) => `input[type="radio"][value="${style}"]`,
+                addVacation: 'Add New Vacation',
+                vacationDialogTitle: 'Add Vacation Schedule',
+                selectDateRange: 'Select date range',
+                applyRange: 'Apply',
+                vacationMessage: 'Vacation Message',
+                deleteConfirm: 'Yes, Delete',
+                mapSearch: 'Search your store address…',
             },
             legacyUI: {
                 saveButton: 'button.dokan-update-setting-top-button',
                 saveSuccessMessage: 'Your information has been saved successfully',
+                timeInput: (kind: 'opening' | 'closing', day: string) => `input[name="${kind}_time[${day}][]"]`,
+                imageInput: (name: string) => `input[name="${name}"]`,
+                mapAddress: 'input[name="find_address"]',
+                storeSettingsMenuLink: 'a.submenu-link[href$="/dashboard/settings/store/"]',
                 // TinyMCE iframe body for a legacy rich-text editor id.
                 tinymceBody: (editorId: string) => `iframe#${editorId}_ifr`,
             },
@@ -1541,6 +1564,14 @@ export const data = {
                 invalidMessage: /can't be less than the minimum/i,
             },
         },
+
+        images: [
+            { id: 'banner', index: 0, file: 'utils/sampleData/banner.png', legacyInput: 'dokan_banner' },
+            { id: 'gravatar', index: 1, file: 'utils/sampleData/avatar.png', legacyInput: 'dokan_gravatar' },
+        ],
+
+        // Legacy-saved schedule the old page accepted (open == close); seeded with store hours off.
+        legacySchedule: { monday: { status: 'open', opening_time: ['9:00 am'], closing_time: ['9:00 am'] } },
 
         // store_name is required — clearing it must block the save with this message.
         requiredField: {
