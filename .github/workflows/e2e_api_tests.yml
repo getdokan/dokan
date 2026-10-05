@@ -1203,14 +1203,15 @@ jobs:
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeSummaryReport.ts
 
-            # No coverage on PR runs (skipped per-shard above), so the merge
-            # would exit 1 on missing inputs. Quality report handles missing
-            # E2E_COVERAGE via an existsSync guard.
+            # No coverage on PR runs or on pushes to branches other than develop (skipped
+            # per-shard above), so the merge would exit 1 on missing inputs. Quality report
+            # handles missing E2E_COVERAGE via an existsSync guard.
             - name: Generate merged coverage report
               id: merge-coverage-report
               if: |
                 steps.download-test-artifacts.outcome == 'success'
                 && github.event_name != 'pull_request'
+                && (github.event_name != 'push' || github.ref == 'refs/heads/develop')
               working-directory: tests/pw
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeCoverageSummary.ts
