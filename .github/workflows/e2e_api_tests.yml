@@ -591,6 +591,19 @@ jobs:
               working-directory: tests/pw
               run: npm run docker:setup
 
+            # Every run and shard charges through the same Stripe test account, where idempotency keys
+            # live for 24 hours, and Dokan Pro keys subscription renewals by order id
+            # (`dokan_pe_renewal_<order>_<attempt>` in modules/stripe RenewalProcessor). A fresh database
+            # hands out the same order ids every run, so a later run's renewal reused an earlier run's key
+            # and failed (SCSUB-02, run 37270644560). Start post ids, which HPOS order ids come from, at a
+            # random offset per shard and attempt so each run acts like a separate site. The offset stays
+            # under 2^31 because Dokan's own tables store order ids as INT.
+            - name: Offset post and order ids for this shard
+              working-directory: tests/pw
+              run: |
+                  OFFSET=$(( 1000000 + ( ((RANDOM << 15) | RANDOM) % 1000000000 ) ))
+                  npm run wp-env run tests-cli wp eval "global \$wpdb; \$wpdb->query( \"ALTER TABLE {\$wpdb->posts} AUTO_INCREMENT = $OFFSET\" ); echo 'next post id: ', \$wpdb->get_var( \"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{\$wpdb->posts}'\" ), PHP_EOL;"
+
             # Resolve the spec list for this shard from the committed duration baseline.
             # Falls back to alphabetical sharding if the baseline is missing.
             - name: Resolve balanced shard spec list
