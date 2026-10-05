@@ -351,6 +351,10 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 = Q. How to upgrade to the Pro version?
 A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://dokan.co/contact/) staff first.
 
+= Q. Where do I report security bugs found in this plugin? =
+
+A. Please report security bugs found in the source code of the plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/b5c1bc9d-d476-434a-a833-9e06895dab7a). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. Dokan Install
