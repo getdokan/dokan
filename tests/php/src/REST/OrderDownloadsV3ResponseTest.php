@@ -105,6 +105,30 @@ class OrderDownloadsV3ResponseTest extends DokanTestCase {
     }
 
     /**
+     * A permission on a downloadable variation is listed like any other product's.
+     *
+     * @covers \WeDevs\Dokan\REST\OrderControllerV2::get_order_downloads
+     */
+    public function test_permission_on_a_variation_is_listed() {
+        $download = new WC_Product_Download();
+        $download->set_name( 'Variation File' );
+        $download->set_id( wp_generate_uuid4() );
+        $download->set_file( 'https://example.com/variation-file.pdf' );
+
+        $variation = wc_get_product( $this->factory()->product->create_variation_product()->get_children()[0] );
+        $variation->set_downloadable( true );
+        $variation->set_downloads( [ $download ] );
+        $variation->save();
+
+        wc_downloadable_file_permission( $download->get_id(), $variation->get_id(), wc_get_order( $this->order_id ) );
+
+        $data = $this->request_downloads();
+
+        $this->assertCount( 2, $data );
+        $this->assertContains( 'Variation File', wp_list_pluck( wp_list_pluck( $data, 'file_data' ), 'name' ) );
+    }
+
+    /**
      * Dispatch the v3 downloads route as the order's vendor and return the decoded list.
      */
     protected function request_downloads(): array {

@@ -191,9 +191,10 @@ class OrderControllerV2 extends OrderController {
 
         $product_ids = array_unique( array_map( 'intval', wp_list_pluck( $download_permissions, 'product_id' ) ) );
 
-        // Batch-fetch products in a single query and create a lookup map by ID.
+        // Look up each permitted id directly so permissions on variations aren't dropped.
+        _prime_post_caches( $product_ids );
         $products = [];
-        foreach ( wc_get_products( [ 'include' => $product_ids, 'limit' => -1 ] ) as $product ) {
+        foreach ( array_filter( array_map( 'wc_get_product', $product_ids ) ) as $product ) {
             $products[ $product->get_id() ] = $product;
         }
 
