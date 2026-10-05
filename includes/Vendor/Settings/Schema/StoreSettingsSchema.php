@@ -326,6 +326,9 @@ class StoreSettingsSchema {
                 // The picker crops to the admin dimension via the legacy custom-header-crop ajax.
                 'crop'            => self::crop_config( $banner_width, $banner_height ),
                 'legacy_key'      => 'banner',
+                'validation_func' => static function ( $value, array $all_values, int $vendor_id ) use ( $banner_id ) {
+                    return self::validate_image( absint( $value ), $banner_id, $vendor_id );
+                },
             ],
             [
                 'id'          => 'gravatar',
@@ -339,10 +342,44 @@ class StoreSettingsSchema {
                 'crop'        => self::crop_config( 150, 150 ),
                 'value'       => $gravatar_id,
                 'default'     => 0,
-                'image_url'   => $gravatar_id ? (string) wp_get_attachment_url( $gravatar_id ) : '',
-                'legacy_key'  => 'gravatar',
+                'image_url'       => $gravatar_id ? (string) wp_get_attachment_url( $gravatar_id ) : '',
+                'legacy_key'      => 'gravatar',
+                'validation_func' => static function ( $value, array $all_values, int $vendor_id ) use ( $gravatar_id ) {
+                    return self::validate_image( absint( $value ), $gravatar_id, $vendor_id );
+                },
             ],
         ];
+    }
+
+    /**
+     * Validate a banner/logo pick: an existing image the vendor may use.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $attachment_id Submitted attachment id.
+     * @param int $stored_id     Attachment id saved today.
+     * @param int $vendor_id     Vendor user ID.
+     *
+     * @return true|string True when valid, otherwise the error message.
+     */
+    protected static function validate_image( int $attachment_id, int $stored_id, int $vendor_id ) {
+        // Removing the image, or keeping the one already saved, never blocks an unrelated save.
+        if ( 0 === $attachment_id || $attachment_id === $stored_id ) {
+            return true;
+        }
+
+        if ( ! wp_attachment_is_image( $attachment_id ) ) {
+            return __( 'Please choose an image from your media library.', 'dokan-lite' );
+        }
+
+        // Same boundary as the vendor media library: own uploads only (a staff member's own uploads count), store admins exempt.
+        $author = (int) get_post_field( 'post_author', $attachment_id );
+
+        if ( ! current_user_can( 'manage_woocommerce' ) && ! in_array( $author, [ $vendor_id, get_current_user_id() ], true ) ) {
+            return __( 'Please choose an image from your media library.', 'dokan-lite' );
+        }
+
+        return true;
     }
 
     /**

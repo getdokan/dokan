@@ -149,27 +149,45 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
         $fields_by_id = $this->get_fields_by_id( StoreSettingsSchema::get_schema( $vendor_id ) );
 
         // Sanitize every recognized field up front so cross-field validators (e.g. min ≤ max) see the full submitted set.
-        $sanitized = [];
+        $sanitized         = [];
+        $validation_errors = [];
 
         foreach ( $flat_values as $key => $value ) {
             $field = $fields_by_id[ $this->normalize_field_key( $key ) ] ?? null;
 
-            if ( $field ) {
-                $sanitized[ $field['id'] ] = $this->sanitize_field_value( $field, $value );
+            if ( ! $field ) {
+                continue;
             }
+
+            $clean = $this->sanitize_field_value( $field, $value );
+
+            // A value with no safe reading is refused: guessing one would silently change the vendor's setting.
+            if ( is_wp_error( $clean ) ) {
+                $validation_errors[ $field['id'] ] = [ $clean->get_error_message() ];
+                continue;
+            }
+
+            $sanitized[ $field['id'] ] = $clean;
         }
 
         // Validate the record the save would produce (submitted values over current ones) so a partial payload can't slip past rules owned by omitted fields.
         $record = array_merge( array_column( $fields_by_id, 'value', 'id' ), $sanitized );
 
-        $validation_errors = [];
-
         foreach ( $fields_by_id as $field_id => $field ) {
             $errors = $this->validate_field_value( $field, $record[ $field_id ] ?? null, $record, $vendor_id );
 
-            if ( ! empty( $errors ) ) {
-                $validation_errors[ $field_id ] = $errors;
+            if ( empty( $errors ) ) {
+                continue;
             }
+
+            // A hidden field is not on the form (e.g. legacy hours behind a switched-off schedule): keep what is stored instead of blocking the save.
+            if ( $this->is_field_hidden( $field, $record ) ) {
+                unset( $sanitized[ $field_id ] );
+                $record[ $field_id ] = $field['value'] ?? null;
+                continue;
+            }
+
+            $validation_errors[ $field_id ] = array_merge( $validation_errors[ $field_id ] ?? [], $errors );
         }
 
         // Whole-payload seam for section-level rules owned by no single field (e.g. the vacation style/message/date-range trio); $record supplies the merged view so consumers don't rebuild it.
@@ -268,8 +286,8 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Reduce a submitted key to its schema field id.
      *
-     * plugin-ui emits dot-path keys (`page.subpage.field_id`) that mirror its
-     * internal tree; the schema is keyed by the leaf id alone.
+     * The plugin-ui engine emits dot-path keys (`page.subpage.field_id`) that
+     * mirror its internal tree; the schema is keyed by the leaf id alone.
      *
      * @since DOKAN_SINCE
      *
@@ -303,6 +321,40 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
         }
 
         return $by_id;
+    }
+
+    /**
+     * Check whether the record hides a field through its dependencies — the
+     * same rule AdminSettingsController applies, read against the merged record
+     * so a partial payload that omits the controlling switch still counts.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $field  The field schema element.
+     * @param array $record Stored values overlaid with the submitted ones, keyed by field id.
+     *
+     * @return bool
+     */
+    protected function is_field_hidden( array $field, array $record ): bool {
+        foreach ( $field['dependencies'] ?? [] as $dependency ) {
+            $actual     = $record[ $dependency['key'] ?? '' ] ?? null;
+            $expected   = $dependency['value'] ?? null;
+            $comparison = $dependency['comparison'] ?? '==';
+
+            // Without both values, or with another operator, the field counts as shown.
+            if ( ! is_scalar( $actual ) || ! is_scalar( $expected ) || ! in_array( $comparison, [ '==', '===', '!=', '!==' ], true ) ) {
+                continue;
+            }
+
+            $equal   = (string) $actual === (string) $expected;
+            $matched = '!' === $comparison[0] ? ! $equal : $equal;
+
+            if ( 'hide' === ( $dependency['effect'] ?? 'show' ) ? $matched : ! $matched ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -425,7 +477,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * @param array $field The field schema element.
      * @param mixed $value The raw submitted value.
      *
-     * @return mixed Sanitized value.
+     * @return mixed|WP_Error Sanitized value, or an error when the value has no safe reading.
      */
     protected function sanitize_field_value( array $field, $value ) {
         // A per-field sanitize_callback wins (mirrors admin): phone, schedule and ToC rules live on the field, not in a switch here.
@@ -448,7 +500,22 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 $enabled  = $field['enable_state']['value'] ?? 'on';
                 $disabled = $field['disable_state']['value'] ?? 'off';
 
-                return in_array( $value, [ $enabled, $disabled ], true ) ? $value : $disabled;
+                if ( in_array( $value, [ $enabled, $disabled ], true ) ) {
+                    return $value;
+                }
+
+                // API clients send booleans and on/yes-style flags; they mean the switch position, not a literal to store.
+                $flag = is_array( $value ) ? null : filter_var( $value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+
+                if ( null === $flag ) {
+                    return new WP_Error(
+                        'dokan_rest_invalid_switch_value',
+                        /* translators: 1: enabled value, 2: disabled value */
+                        sprintf( __( 'Invalid value. Use "%1$s" or "%2$s".', 'dokan-lite' ), $enabled, $disabled )
+                    );
+                }
+
+                return $flag ? $enabled : $disabled;
 
             case 'number':
                 return is_numeric( $value ) ? $value + 0 : 0;
@@ -459,27 +526,18 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 return sanitize_text_field( (string) $value );
 
             case 'vendor_image':
+                // absint() would turn -5 into attachment 5 — a negative id is refused, not re-pointed at another file.
+                if ( is_numeric( $value ) && $value < 0 ) {
+                    return new WP_Error( 'dokan_rest_invalid_image', __( 'Please choose an image from your media library.', 'dokan-lite' ) );
+                }
+
                 return absint( $value );
 
             case 'vendor_address':
-                $value = (array) $value;
-
-                return [
-                    'street_1' => sanitize_text_field( (string) ( $value['street_1'] ?? '' ) ),
-                    'street_2' => sanitize_text_field( (string) ( $value['street_2'] ?? '' ) ),
-                    'city'     => sanitize_text_field( (string) ( $value['city'] ?? '' ) ),
-                    'zip'      => sanitize_text_field( (string) ( $value['zip'] ?? '' ) ),
-                    'country'  => sanitize_text_field( (string) ( $value['country'] ?? '' ) ),
-                    'state'    => sanitize_text_field( (string) ( $value['state'] ?? '' ) ),
-                ];
+                return $this->sanitize_composite_value( $field, $value, [ 'street_1', 'street_2', 'city', 'zip', 'country', 'state' ] );
 
             case 'vendor_map':
-                $value = (array) $value;
-
-                return [
-                    'location'     => sanitize_text_field( (string) ( $value['location'] ?? '' ) ),
-                    'find_address' => sanitize_text_field( (string) ( $value['find_address'] ?? '' ) ),
-                ];
+                return $this->sanitize_composite_value( $field, $value, [ 'location', 'find_address' ] );
 
             default:
                 // Strings only (map_deep reaches bare scalars too) — a blanket sanitize_text_field would stringify the booleans/ints structured Pro values carry.
@@ -504,5 +562,30 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                  */
                 return apply_filters( 'dokan_rest_vendor_settings_sanitize_field', $value, $field, $variant );
         }
+    }
+
+    /**
+     * Sanitize a fixed-key composite value (address, map).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array    $field The field schema element.
+     * @param mixed    $value The raw submitted value.
+     * @param string[] $keys  Sub-keys the composite stores.
+     *
+     * @return array Every sub-key, sanitized.
+     */
+    protected function sanitize_composite_value( array $field, $value, array $keys ): array {
+        $value   = (array) $value;
+        $current = (array) ( $field['value'] ?? [] );
+        $clean   = [];
+
+        foreach ( $keys as $key ) {
+            // A partial payload keeps the sub-keys it never mentioned; only an explicit empty string clears one.
+            $source        = isset( $value[ $key ] ) && is_scalar( $value[ $key ] ) ? $value[ $key ] : ( $current[ $key ] ?? '' );
+            $clean[ $key ] = sanitize_text_field( (string) $source );
+        }
+
+        return $clean;
     }
 }
