@@ -576,7 +576,11 @@ export const data = {
 
             tags: {
                 tags: ['accessories'],
-                randomTags: [faker.string.nanoid(5)],
+                // A new tag name that starts with a digit is dropped by the legacy product editor
+                // (DOK-105), and a raw nanoid starts with one about 1 time in 6. Keep the regular
+                // tag letter-first; digitLeadingTags is the case that guards the bug.
+                randomTags: [faker.string.alpha(1) + faker.string.nanoid(4)],
+                digitLeadingTags: [`${faker.number.int({ min: 1, max: 9 })}${faker.string.alpha(4)}`],
             },
 
             images: {

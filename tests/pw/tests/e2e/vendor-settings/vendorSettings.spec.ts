@@ -36,6 +36,10 @@ test.describe('Vendor settings test', () => {
     test.afterAll(async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, originalSellingKeys);
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        // The catalog test turns vendor1's own catalog mode on and nothing turns it off. With the
+        // seeded admin catalog gate on, that hides vendor1's prices and add-to-cart for every later
+        // spec on the stack, so put back the product defaults.
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { catalog_mode: { hide_add_to_cart_button: 'off', hide_product_price: 'off', request_a_quote_enabled: 'off' } });
         if (DOKAN_PRO) await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
         await vPage?.close();
         await apiUtils?.dispose();

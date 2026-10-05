@@ -66,7 +66,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
         test('admin can open the Setup Guide wizard mounted at #/setup', { tag: ['@lite', '@admin'] }, async () => {
             await setup.goto();
             await expect(setup.reactRoot).toBeVisible();
-            await expect(setup.stepperHeading).toBeVisible();
+            await expect(setup.stepper).toBeVisible();
             await expect(page).toHaveURL(/#\/setup/);
             expect(await setup.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
@@ -131,7 +131,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 15000 }).toBe('Commission');
             await setup.clickBack();
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 15000 }).toBe('Basic');
-            await expect(setup.stepperHeading).toBeVisible();
+            await expect(setup.stepper).toBeVisible();
         });
 
         test('Commission step: switching type to Category Based toggles the dependent fields', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
@@ -140,8 +140,8 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await setup.selectRadioBox(adminSetupGuideData.basic.recipientValue);
             await setup.clickNext();
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 15000 }).toBe('Commission');
-            // Fixed (default) shows the combine_input "Admin Commission".
-            expect(await setup.isFieldVisible('Admin Commission'), 'Admin Commission visible on Fixed').toBe(true);
+            // Fixed (default) shows the combine_input "Commission Amount".
+            expect(await setup.isFieldVisible('Commission Amount'), 'Commission Amount visible on Fixed').toBe(true);
             // Switching to Category Based reveals the parent-category switch field
             // (full label: "Apply Parent Category Commission to All Subcategories").
             await setup.selectCommissionType('Category Based');
@@ -185,7 +185,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await setup.reload();
             await expect(page).toHaveURL(/#\/setup/);
             await expect(setup.reactRoot).toBeVisible();
-            await expect(setup.stepperHeading).toBeVisible();
+            await expect(setup.stepper).toBeVisible();
         });
 
         test('a slow step GET shows the "Failed to load settings" error with a working Retry', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
@@ -202,6 +202,11 @@ test.describe('Admin Setup Guide wizard functionality', () => {
                 await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
             });
             await setup.goto();
+            // Known bug: since 5.2.0 a failed step GET leaves an empty wizard with no error or Retry
+            // (DOK-102, https://github.com/getdokan/plugin-internal-tasks/issues/2432). The assertion
+            // below is the correct behaviour; when the bug is fixed this test passes, the marker fails
+            // the run, and the marker is what gets deleted.
+            test.fail();
             await expect(setup.failedToLoad).toBeVisible({ timeout: 40000 });
             await expect(setup.retryButton).toBeVisible();
             await setup.retryButton.click();
@@ -221,6 +226,11 @@ test.describe('Admin Setup Guide wizard functionality', () => {
                 await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
             });
             await setup.goto();
+            // Known bug: since 5.2.0 a failed step GET leaves an empty wizard with no error or Retry
+            // (DOK-102, https://github.com/getdokan/plugin-internal-tasks/issues/2432). The assertion
+            // below is the correct behaviour; when the bug is fixed this test passes, the marker fails
+            // the run, and the marker is what gets deleted.
+            test.fail();
             await expect(setup.failedToLoad).toBeVisible({ timeout: 20000 });
             await page.unroute(/\/dokan\/v1\/admin\/setup-guide\/basic/);
         });
@@ -238,6 +248,11 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             });
             await setup.selectRadioBox(adminSetupGuideData.basic.recipientValue);
             await setup.clickNext();
+            // Known bug: since 5.2.0 a failed step save still advances the wizard, with no error
+            // (DOK-103, https://github.com/getdokan/plugin-internal-tasks/issues/2433). Everything above
+            // is a control that must pass on its own; when the bug is fixed this marker fails the run
+            // and is what gets deleted.
+            test.fail();
             // Still on Basic after a failed save.
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 10000 }).toBe('Basic');
             await page.unroute(/\/dokan\/v1\/admin\/setup-guide\/basic/);
