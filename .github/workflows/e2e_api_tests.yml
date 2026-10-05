@@ -1,5 +1,8 @@
 name: E2E_API Tests
 
+# Runs started by a dokan-pro PR (pro_sha set) are named after both branches so they can be found.
+run-name: ${{ inputs.pro_sha && format('E2E_API Tests (pro {0}, lite {1})', inputs.pro_ref, inputs.lite_ref || github.ref_name) || github.workflow }}
+
 on:
     # Runs once a day only, to keep Actions cost down. Pull requests and pushes
     # to develop no longer trigger this suite -- use the "Run workflow" button
@@ -36,13 +39,29 @@ on:
                 options:
                     - pinned
                     - latest
+            # The three inputs below are set by dokan-pro's e2e-on-lite.yml when a dokan-pro PR
+            # opens or gets a push. Leave them at their defaults for a normal manual run.
+            pro_ref:
+                description: dokan-pro branch to build
+                default: develop
+                type: string
+            lite_ref:
+                description: dokan-lite branch to test (empty = the branch picked in "Use workflow from")
+                default: ''
+                type: string
+            pro_sha:
+                description: dokan-pro commit that gets the "e2e" check (empty = no check)
+                default: ''
+                type: string
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
     # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
     # The stack is part of the group so the latest run and the pinned reference never cancel
     # each other on the same commit.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
+    # A run started by a dokan-pro PR is keyed on the pro branch instead, so a new push to that
+    # branch cancels its older run and different pro branches never cancel each other.
+    group: ${{ github.workflow }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || (github.event_name == 'pull_request' && github.head_ref || github.sha) }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -124,6 +143,8 @@ jobs:
         steps:
             - name: Checkout testing repo
               uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.lite_ref }}
 
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
@@ -193,6 +214,8 @@ jobs:
             # a self-symlink, pro as sibling.
             - name: Checkout dokan-lite source (for pro webpack path resolution)
               uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.lite_ref }}
 
             - name: Prepare dokan-lite folder
               run: |
@@ -202,7 +225,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: develop
+                  ref: ${{ inputs.pro_ref || 'develop' }}
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
@@ -1049,6 +1072,8 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.lite_ref }}
 
             - name: Prepare dokan-lite folder
               run: |
@@ -1059,7 +1084,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: develop
+                  ref: ${{ inputs.pro_ref || 'develop' }}
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
@@ -1268,3 +1293,24 @@ jobs:
                   path: tests/pw/all-reports
                   if-no-files-found: ignore
                   retention-days: 7
+
+    # Report the result back to the dokan-pro PR that started this run (pro_sha set).
+    # DOKAN_PRO_TOKEN needs "Commit statuses: Read and write" on dokan-pro for this step.
+    pro_pr_status:
+        name: e2e check on dokan-pro PR
+        if: always() && inputs.pro_sha != ''
+        needs: [build_lite, build_pro, e2e_tests, api_tests]
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        steps:
+            - name: Set the e2e check on the dokan-pro commit
+              env:
+                  GH_TOKEN: ${{ secrets.DOKAN_PRO_TOKEN }}
+                  PRO_SHA: ${{ inputs.pro_sha }}
+                  STATE: ${{ needs.e2e_tests.result == 'success' && needs.api_tests.result == 'success' && 'success' || 'failure' }}
+                  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  LITE_REF: ${{ inputs.lite_ref || github.ref_name }}
+              run: |
+                  gh api "repos/getdokan/dokan-pro/statuses/$PRO_SHA" \
+                      -f state="$STATE" -f context=e2e -f target_url="$RUN_URL" \
+                      -f description="lite ${LITE_REF:0:100}: $STATE"
