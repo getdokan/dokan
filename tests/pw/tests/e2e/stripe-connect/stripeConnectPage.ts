@@ -526,10 +526,18 @@ export class StripeConnectPage {
                         // `_stripe_intent_id` is CONNECT_INTENT_META_KEY in ./helpers (not imported: helpers imports this file).
                         const intentId = (found.meta_data || []).find(m => m.key === '_stripe_intent_id')?.value;
                         if (!serverConfirmTried && intentId && stripeConnectApi.hasSecretKey()) {
-                            serverConfirmTried = true;
-                            const confirmed = await stripeConnectApi.confirmPaymentIntent(intentId).catch(() => undefined);
-                            if (confirmed?.id) {
-                                await ctx.post(`${SERVER_URL}/dokan-test-connect/v1/connect-webhook`, { data: { type: 'payment_intent.succeeded', data_object: confirmed } }).catch(() => undefined);
+                            // Act ONLY on the hCaptcha signature: no card ever reached the intent and no attempt
+                            // failed on it. An intent in requires_action already holds the card and is mid 3D
+                            // Secure; confirming it again restarts the challenge the test is completing (SCPE-04 /
+                            // SCSUB-12 broke that way). A declined card or an abandoned challenge also returns to
+                            // requires_payment_method, but with last_payment_error set, and must stay unpaid.
+                            const pi = await stripeConnectApi.getPaymentIntent(intentId).catch(() => undefined);
+                            if (pi?.status === 'requires_payment_method' && !pi.payment_method && !pi.last_payment_error) {
+                                serverConfirmTried = true;
+                                const confirmed = await stripeConnectApi.confirmPaymentIntent(intentId).catch(() => undefined);
+                                if (confirmed?.status === 'succeeded') {
+                                    await ctx.post(`${SERVER_URL}/dokan-test-connect/v1/connect-webhook`, { data: { type: 'payment_intent.succeeded', data_object: confirmed } }).catch(() => undefined);
+                                }
                             }
                         }
                         return found.status;
