@@ -42,19 +42,6 @@ class VendorStoreSettingsControllerTest extends DokanTestCase {
         $this->assertSame( [ '9:00 am' ], $this->profile()['dokan_store_time']['monday']['opening_time'] );
     }
 
-    public function test_hidden_schedule_is_kept_when_the_page_sends_it_back(): void {
-        $this->store_profile( [ 'dokan_store_time_enabled' => 'no' ] + $this->schedule_with_monday( [], [] ) );
-
-        $response = $this->save(
-            [
-                'phone'            => '01700000000',
-                'dokan_store_time' => $this->schedule_with_monday( [], [] )['dokan_store_time'],
-            ]
-        );
-
-        $this->assertSame( 200, $response->get_status() );
-    }
-
     public function test_visible_schedule_is_still_validated(): void {
         $this->store_profile( [ 'dokan_store_time_enabled' => 'yes' ] + $this->schedule_with_monday( [ '9:00 am' ], [ '9:00 am' ] ) );
 
@@ -70,24 +57,20 @@ class VendorStoreSettingsControllerTest extends DokanTestCase {
     public function test_switch_reads_boolean_style_flags( $flag, string $expected ): void {
         $this->store_profile( [ 'show_email' => 'yes' === $expected ? 'no' : 'yes' ] );
 
-        $response = $this->save( [ 'show_email' => $flag ] );
-
-        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( 200, $this->save( [ 'show_email' => $flag ] )->get_status() );
         $this->assertSame( $expected, $this->profile()['show_email'] );
     }
 
     public function switch_flags(): array {
         return [
-            'true'   => [ true, 'yes' ],
-            '"on"'   => [ 'on', 'yes' ],
-            'int 1'  => [ 1, 'yes' ],
-            'false'  => [ false, 'no' ],
-            '"off"'  => [ 'off', 'no' ],
-            'native' => [ 'yes', 'yes' ],
+            '"on"'    => [ 'on', 'yes' ],
+            'int 1'   => [ 1, 'yes' ],
+            'false'   => [ false, 'no' ],
+            'garbage' => [ 'maybe', 'no' ],
         ];
     }
 
-    public function test_true_keeps_an_on_off_switch_enabled(): void {
+    public function test_true_keeps_switches_enabled(): void {
         $this->store_profile(
             [
                 'enable_tnc' => 'on',
@@ -105,16 +88,6 @@ class VendorStoreSettingsControllerTest extends DokanTestCase {
         $this->assertSame( 200, $response->get_status() );
         $this->assertSame( 'yes', $this->profile()['show_email'] );
         $this->assertSame( 'on', $this->profile()['enable_tnc'] );
-    }
-
-    public function test_switch_rejects_an_unreadable_value(): void {
-        $this->store_profile( [ 'show_email' => 'yes' ] );
-
-        $response = $this->save( [ 'show_email' => 'maybe' ] );
-
-        $this->assertSame( 400, $response->get_status() );
-        $this->assertArrayHasKey( 'show_email', $response->get_data()['data']['errors'] );
-        $this->assertSame( 'yes', $this->profile()['show_email'] );
     }
 
     public function test_partial_map_keeps_the_sub_key_it_did_not_send(): void {

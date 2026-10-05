@@ -56,11 +56,17 @@ class StoreScheduleValidator {
      *
      * @since DOKAN_SINCE
      *
-     * @param mixed $value Normalized schedule keyed by day.
+     * @param mixed $value      Normalized schedule keyed by day.
+     * @param array $all_values Every field value keyed by id (stored values overlaid with the submitted ones).
      *
      * @return string[] Error messages (empty when valid).
      */
-    public static function validate( $value ): array {
+    public static function validate( $value, array $all_values = [] ): array {
+        // Hours behind a switched-off schedule aren't on the form; stale legacy data there must not block an unrelated save.
+        if ( 'yes' !== ( $all_values['dokan_store_time_enabled'] ?? 'yes' ) ) {
+            return [];
+        }
+
         $errors = [];
         // One lookup for all days — each dokan_get_translated_days( $day ) call rebuilds the full week.
         $day_labels = dokan_get_translated_days();
