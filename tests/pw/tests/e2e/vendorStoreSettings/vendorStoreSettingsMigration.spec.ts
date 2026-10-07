@@ -15,6 +15,7 @@ const nextMonthDay = (day: number): Date => {
 };
 const ymd = (date: Date): string => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 const PROFILE_META = 'dokan_profile_settings';
+const ADMIN_SETTINGS = 'dokan_admin_settings';
 
 // New React vendor Store Settings page <-> legacy vendor dashboard settings form.
 // Both persist to the same `dokan_profile_settings` meta, so every setting must
@@ -173,11 +174,21 @@ test.describe('Vendor Store Settings Migration', () => {
         expect(await store.getStoredPhone()).toBe(before);
     });
 
-    // Pro keeps vendors on the legacy page until the Vendor Discount section is ported.
-    test('pro menu keeps store settings on the legacy page', { tag: ['@pro', '@vendor', '@migration'] }, async () => {
-        const links = await store.legacyMenuLinkCount();
-        expect(links.legacy).toBeGreaterThan(0);
-        expect(links.react).toBe(0);
+    // The admin "Vendor Store Settings" switcher picks the menu target. Written to the flat
+    // dokan_admin_settings option: reads of dokan_appearance are overlaid from it, so a raw
+    // write to dokan_appearance alone is ignored.
+    test('store settings menu follows the vendor store settings switcher', { tag: ['@lite', '@vendor', '@migration'] }, async () => {
+        const [original] = await dbUtils.updateOptionValue(ADMIN_SETTINGS, { vendor_store_settings: 'legacy' });
+        try {
+            const legacy = await store.legacyMenuLinkCount();
+            expect(legacy.legacy).toBeGreaterThan(0);
+            expect(legacy.react).toBe(0);
+
+            await dbUtils.updateOptionValue(ADMIN_SETTINGS, { vendor_store_settings: 'latest' });
+            expect((await store.legacyMenuLinkCount()).react).toBeGreaterThan(0);
+        } finally {
+            await dbUtils.setOptionValue(ADMIN_SETTINGS, original);
+        }
     });
 
     test('vendor staff with store settings access sees the vendor store', { tag: ['@pro', '@vendor', '@migration'] }, async ({ browser }) => {

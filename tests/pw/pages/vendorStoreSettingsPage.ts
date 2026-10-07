@@ -580,6 +580,8 @@ export class VendorStoreSettingsPage extends BasePage {
 
     async legacyMenuLinkCount(): Promise<{ legacy: number; react: number }> {
         await this.page.goto('dashboard/', { waitUntil: 'domcontentloaded' });
+        // The sidebar renders after DOMContentLoaded — wait for it before counting.
+        await this.page.locator(`${legacyUI.storeSettingsMenuLink}, a[href*="#settings/store"]`).first().waitFor({ state: 'attached', timeout: 15000 });
         return {
             legacy: await this.page.locator(legacyUI.storeSettingsMenuLink).count(),
             react: await this.page.locator('a[href*="#settings/store"]').count(),
