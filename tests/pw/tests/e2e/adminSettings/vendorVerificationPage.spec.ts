@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 // Both UIs expose the same two things for vendor verification: the verified
 // icon and the list of verification methods. The Social Connect credentials
@@ -59,6 +60,9 @@ const newDataset = {
         })),
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Verification -> Vendor Verification', () => {
     let loginPage: LoginPage;

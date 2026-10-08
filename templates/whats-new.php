@@ -4,6 +4,52 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.0',
+        'released' => '2026-10-08',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Introduced a redesigned vendor Store Settings page in the new vendor dashboard.',
+                    'description' => '',
+                ],
+            ],
+            'New' => [
+                [
+                    'title'       => 'Add-ons and extensions can now show their own options on the new vendor Store Settings page.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Admins can switch vendors between the new and classic Store Settings page from the Appearance settings, and existing sites stay on the classic page by default.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a `dokan_product_editor_after_save` action so features can save their own data right after a product is saved in the new product editor.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Prevented vendors from changing a customer\'s password or login email through the customers REST endpoint.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from storing serialized PHP objects in product meta through the products REST endpoint, closing a PHP object injection vulnerability.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor store maps now open on the default location set in the Geolocation settings, and saving store settings no longer removes a vendor from geolocation search results.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The setup guide now shows an error with a retry option when a step fails to load or save instead of silently moving on, and stops you from continuing while the required admin commission is empty.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.2.1',
         'released' => '2026-09-30',
         'changes'  => [

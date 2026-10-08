@@ -296,6 +296,10 @@ jobs:
               with:
                   report_paths: phpunit-junit.xml
                   check_name: PHPUnit results (PHP ${{ matrix.php }})
+                  # Annotations and the job summary only, no separate check run. An API-created
+                  # check lands in whichever github-actions check suite GitHub picks for the commit,
+                  # which since the E2E suite runs on every push is often the E2E run.
+                  annotate_only: true
                   # The `Run PHPUnit` step above already carries the pass/fail
                   # signal; this step exists purely to surface failures inline
                   # on the PR, so it must not fail the job a second time.

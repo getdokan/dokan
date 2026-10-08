@@ -1,0 +1,185 @@
+import { __ } from '@wordpress/i18n';
+import { useSettings, Input, type SettingsElement } from '@wedevs/plugin-ui';
+import { fieldKeyOf, useCountries } from './shared';
+
+type AddressValue = {
+    street_1: string;
+    street_2: string;
+    city: string;
+    zip: string;
+    country: string;
+    state: string;
+};
+
+const EMPTY_ADDRESS: AddressValue = {
+    street_1: '',
+    street_2: '',
+    city: '',
+    zip: '',
+    country: '',
+    state: '',
+};
+
+const TEXT_PARTS: Array< {
+    part: keyof AddressValue;
+    label: string;
+    placeholder: string;
+} > = [
+    {
+        part: 'street_1',
+        label: __( 'Street', 'dokan-lite' ),
+        placeholder: __( 'Street address', 'dokan-lite' ),
+    },
+    {
+        part: 'street_2',
+        label: __( 'Street 2', 'dokan-lite' ),
+        placeholder: __(
+            'Apartment, suite, unit etc. (optional)',
+            'dokan-lite'
+        ),
+    },
+    {
+        part: 'city',
+        label: __( 'City', 'dokan-lite' ),
+        placeholder: __( 'Town / City', 'dokan-lite' ),
+    },
+    {
+        part: 'zip',
+        label: __( 'Post/ZIP Code', 'dokan-lite' ),
+        placeholder: __( 'Postcode / Zip', 'dokan-lite' ),
+    },
+];
+
+// Text subfields render through plugin-ui's <Input> so they match the default
+// text fields (e.g. Store Name); only the native country/state selects keep a
+// hand-styled class.
+const selectClass =
+    'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-dokan-btn focus:outline-none';
+
+// `vendor_address` variant — the six legacy address subkeys with a WC-backed
+// country → state cascade (falls back to free text when the country list is
+// unavailable or the selected country has no registered states).
+const AddressFields = ( { element }: { element: SettingsElement } ) => {
+    const { updateValue } = useSettings();
+    const fieldKey = fieldKeyOf( element );
+    const value: AddressValue = {
+        ...EMPTY_ADDRESS,
+        ...( ( element.value as Partial< AddressValue > ) || {} ),
+    };
+    const countries = useCountries();
+
+    const update = ( part: keyof AddressValue, partValue: string ) => {
+        const next: AddressValue = { ...value, [ part ]: partValue };
+
+        // A country change invalidates the previously selected state.
+        if ( 'country' === part ) {
+            next.state = '';
+        }
+
+        updateValue( fieldKey, next );
+    };
+
+    const selectedCountry = countries.find(
+        ( country ) => country.code === value.country
+    );
+    const states = selectedCountry?.states || [];
+
+    return (
+        <div className="dokan-vendor-address-field flex w-full flex-col gap-3 p-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                { TEXT_PARTS.map( ( { part, label, placeholder } ) => (
+                    <label
+                        key={ part }
+                        htmlFor={ `${ fieldKey }-${ part }` }
+                        className="flex flex-col gap-1 text-xs text-gray-600"
+                    >
+                        { label }
+                        <Input
+                            id={ `${ fieldKey }-${ part }` }
+                            placeholder={ placeholder }
+                            value={ value[ part ] }
+                            onChange={ ( event ) =>
+                                update( part, event.target.value )
+                            }
+                        />
+                    </label>
+                ) ) }
+
+                <label
+                    htmlFor={ `${ fieldKey }-country` }
+                    className="flex flex-col gap-1 text-xs text-gray-600"
+                >
+                    { __( 'Country', 'dokan-lite' ) }
+                    { countries.length ? (
+                        <select
+                            id={ `${ fieldKey }-country` }
+                            className={ selectClass }
+                            value={ value.country }
+                            onChange={ ( event ) =>
+                                update( 'country', event.target.value )
+                            }
+                        >
+                            <option value="">
+                                { __( 'Select a country…', 'dokan-lite' ) }
+                            </option>
+                            { countries.map( ( country ) => (
+                                <option
+                                    key={ country.code }
+                                    value={ country.code }
+                                >
+                                    { country.name }
+                                </option>
+                            ) ) }
+                        </select>
+                    ) : (
+                        <Input
+                            id={ `${ fieldKey }-country` }
+                            placeholder={ __( 'Country code', 'dokan-lite' ) }
+                            value={ value.country }
+                            onChange={ ( event ) =>
+                                update( 'country', event.target.value )
+                            }
+                        />
+                    ) }
+                </label>
+
+                <label
+                    htmlFor={ `${ fieldKey }-state` }
+                    className="flex flex-col gap-1 text-xs text-gray-600"
+                >
+                    { __( 'State', 'dokan-lite' ) }
+                    { states.length ? (
+                        <select
+                            id={ `${ fieldKey }-state` }
+                            className={ selectClass }
+                            value={ value.state }
+                            onChange={ ( event ) =>
+                                update( 'state', event.target.value )
+                            }
+                        >
+                            <option value="">
+                                { __( 'Select a state…', 'dokan-lite' ) }
+                            </option>
+                            { states.map( ( state ) => (
+                                <option key={ state.code } value={ state.code }>
+                                    { state.name }
+                                </option>
+                            ) ) }
+                        </select>
+                    ) : (
+                        <Input
+                            id={ `${ fieldKey }-state` }
+                            placeholder={ __( 'State', 'dokan-lite' ) }
+                            value={ value.state }
+                            onChange={ ( event ) =>
+                                update( 'state', event.target.value )
+                            }
+                        />
+                    ) }
+                </label>
+            </div>
+        </div>
+    );
+};
+
+export default AddressFields;

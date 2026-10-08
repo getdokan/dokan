@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.2.1
+Stable tag: 5.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -351,6 +351,10 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 = Q. How to upgrade to the Pro version?
 A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://dokan.co/contact/) staff first.
 
+= Q. Where do I report security bugs found in this plugin? =
+
+A. Please report security bugs found in the source code of the plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/b5c1bc9d-d476-434a-a833-9e06895dab7a). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. Dokan Install
@@ -375,6 +379,16 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.3.0 ( Oct 08, 2026 ) =
+- **new:** Introduced a redesigned vendor Store Settings page in the new vendor dashboard.
+- **new:** Add-ons and extensions can now show their own options on the new vendor Store Settings page.
+- **update:** Admins can switch vendors between the new and classic Store Settings page from the Appearance settings, and existing sites stay on the classic page by default.
+- **update:** Added a `dokan_product_editor_after_save` action so features can save their own data right after a product is saved in the new product editor.
+- **fix:** Prevented vendors from changing a customer's password or login email through the customers REST endpoint.
+- **fix:** Prevented vendors from storing serialized PHP objects in product meta through the products REST endpoint, closing a PHP object injection vulnerability.
+- **fix:** Vendor store maps now open on the default location set in the Geolocation settings, and saving store settings no longer removes a vendor from geolocation search results.
+- **fix:** The setup guide now shows an error with a retry option when a step fails to load or save instead of silently moving on, and stops you from continuing while the required admin commission is empty.
+
 = v5.2.1 ( Sep 30, 2026 ) =
 - **fix:** Fixed the setup wizard failing to load due to an outdated UI package.
 
@@ -398,13 +412,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Added FlyCRM to the admin Extensions page as an installable add-on.
 - **fix:** Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.
 - **fix:** The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.
-
-= v5.1.1 ( Sep 09, 2026 ) =
-- **fix:** The Vendors screen's Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.
-- **fix:** The Pending vendors filter now runs as a single keyed subquery instead of stacked meta queries, so the Vendors screen stays fast on sites with many users.
-- **fix:** The new product editor now shows the category the vendor actually picked instead of its top-level parent.
-- **fix:** The store sidebar no longer collapses to a narrow column on the Storefront theme when the theme's store sidebar is enabled.
-- **fix:** The admin Status and Pro Features pages now load their translations instead of always showing English.
-- **fix:** The admin settings "Choose File" button and the vendor form's "Last Name" label are now translatable.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

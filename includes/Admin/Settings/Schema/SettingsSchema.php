@@ -1332,7 +1332,7 @@ class SettingsSchema {
 					'option' => 'dokan_selling',
 					'field' => 'new_seller_enable_selling',
 				],
-
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\EnableSellingStatusTransformer::class,
             ],
             [
                 'id'            => 'vendor_registration_address_fields',
@@ -1636,6 +1636,29 @@ class SettingsSchema {
                 'legacy_key'  => [
                     'option' => 'dokan_appearance',
                     'field'  => 'vendor_product_editor',
+                ],
+            ],
+            [
+                'id'          => 'vendor_store_settings',
+                'type'        => 'field',
+                'variant'     => 'radio_capsule',
+                'section_id'  => 'vendor_dashboard_section',
+                'title'       => esc_html__( 'Vendor Store Settings', 'dokan-lite' ),
+                'description' => esc_html__( 'Select the user interface for the vendor store settings.', 'dokan-lite' ),
+                'default'     => 'legacy',
+                'options'     => [
+                    [
+                        'title' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'value' => 'latest',
+                    ],
+                    [
+                        'title' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                        'value' => 'legacy',
+                    ],
+                ],
+                'legacy_key'  => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'vendor_store_settings',
                 ],
             ],
 

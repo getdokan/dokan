@@ -55,6 +55,29 @@ class Hooks {
         add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
+
+        add_filter( 'woocommerce_new_product_variation_data', [ $this, 'set_new_variation_author_to_vendor' ] );
+    }
+
+    /**
+     * Give a new variation its product's vendor as author.
+     *
+     * WooCommerce stamps whoever creates it, so a variation an admin adds would fall outside the vendor's scope.
+     *
+     * @since 5.3.0
+     *
+     * @param array $data Post data WooCommerce inserts for the variation.
+     *
+     * @return array
+     */
+    public function set_new_variation_author_to_vendor( $data ) {
+        $vendor_id = empty( $data['post_parent'] ) ? 0 : dokan_get_vendor_by_product( $data['post_parent'], true );
+
+        if ( $vendor_id ) {
+            $data['post_author'] = $vendor_id;
+        }
+
+        return $data;
     }
 
     /**

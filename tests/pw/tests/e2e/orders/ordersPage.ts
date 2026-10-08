@@ -1,7 +1,7 @@
 import { Page, expect, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { createHash } from 'crypto';
-import { isSerialized, serialize, unserialize } from 'php-serialize';
+import { serialize } from 'php-serialize';
 
 // closeAnnouncementModal is inlined per CONVENTIONS.md §4 (self-contained).
 async function closeAnnouncementModal(page: Page): Promise<void> {
@@ -28,6 +28,7 @@ async function closeAnnouncementModal(page: Page): Promise<void> {
 
 import { toPath, SERVER_URL } from '@utils/helpers';
 import { MOBILE_TEST_PHONE } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 const DOKAN_PRO = process.env.DOKAN_PRO;
 
 const { VENDOR, ADMIN, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
@@ -61,41 +62,6 @@ async function dbQuery(query: string, params?: unknown[]): Promise<unknown[]> {
     } finally {
         connection.release();
     }
-}
-
-function deepMerge(target: Record<string, unknown>, source: Record<string, unknown>): Record<string, unknown> {
-    const result = { ...target };
-    for (const key of Object.keys(source)) {
-        const s = source[key];
-        const t = target[key];
-        if (s !== null && typeof s === 'object' && !Array.isArray(s) && t !== null && typeof t === 'object' && !Array.isArray(t)) {
-            result[key] = deepMerge(t as Record<string, unknown>, s as Record<string, unknown>);
-        } else {
-            result[key] = s;
-        }
-    }
-    return result;
-}
-
-async function getOptionValue(optionName: string): Promise<Record<string, unknown>> {
-    const prefix = DB_PREFIX ?? 'wp';
-    const res = await dbQuery(`SELECT option_value FROM ${prefix}_options WHERE option_name = ?`, [optionName]) as Array<{ option_value: string }>;
-    return unserialize(res[0]?.option_value ?? '') as Record<string, unknown>;
-}
-
-async function setOptionValue(optionName: string, optionValue: unknown): Promise<void> {
-    const prefix = DB_PREFIX ?? 'wp';
-    const serialized = !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
-    await dbQuery(
-        `INSERT INTO ${prefix}_options (option_id, option_name, option_value, autoload) VALUES (NULL, ?, ?, 'yes') ON DUPLICATE KEY UPDATE option_value = ?`,
-        [optionName, serialized, serialized]
-    );
-}
-
-async function updateOptionValue(optionName: string, updatedSettings: Record<string, unknown>): Promise<void> {
-    const current = await getOptionValue(optionName);
-    const merged = deepMerge(current, updatedSettings);
-    await setOptionValue(optionName, merged);
 }
 
 // Seed a product's _downloadable_files meta directly (WC's Approved Download
@@ -418,11 +384,11 @@ export class OrdersPage {
     }
 
     static async enableShippingStatus(): Promise<void> {
-        await updateOptionValue(shippingStatusOptionName, { enabled: 'on' });
+        await dbUtils.updateOptionValue(shippingStatusOptionName, { enabled: 'on' });
     }
 
     static async disableShippingStatus(): Promise<void> {
-        await updateOptionValue(shippingStatusOptionName, { enabled: 'off' });
+        await dbUtils.updateOptionValue(shippingStatusOptionName, { enabled: 'off' });
     }
 
     // ============================================

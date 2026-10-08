@@ -46,8 +46,9 @@ test.describe('Settings test', () => {
         // the #tc_agree checkbox only renders when a Terms & Conditions page is
         // configured (seller-registration-form.php gates on
         // dokan_get_terms_condition_url()). Point reg_tc_page at the published
-        // "Terms And Conditions" page (id 22).
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.page, { reg_tc_page: '22' });
+        // "Terms And Conditions" page, resolved by title: its id differs between sites.
+        const [, tocPageId] = await apiUtils.createPage(payloads.tocPage, payloads.adminAuth);
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.page, { reg_tc_page: tocPageId });
 
         // These tests drive the CLASSIC vendor dashboard (they assert legacy
         // markers like `ul.dokan-dashboard-menu` and the classic seller-warning
