@@ -201,7 +201,7 @@ test.describe('Admin Modules (pro-modules) functionality', () => {
         // deactivate / getAllModuleIds via the admin REST API — and RESETS the
         // module it toggles so the suite stays idempotent. It does NOT depend on
         // the read-only Lite advertise UI.
-        test('admin can activate then deactivate a module via the REST module API (and reset)', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test('admin can activate then deactivate a module via the REST module API (and reset)', { tag: ['@pro', '@admin', '@exploratory', '@module-store_reviews'] }, async () => {
             const moduleId = payloads.moduleIds.storeReviews;
 
             // Discover the catalogue; skip cleanly if this module is not present

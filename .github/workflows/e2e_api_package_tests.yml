@@ -1,0 +1,945 @@
+name: E2E_API Package Tests
+
+# Tests Dokan the way each customer gets it: the Free lite zip, and the Starter, Professional, Business and
+# Enterprise Pro packages, each activated with its real lifetime key. A lane runs only the specs its
+# package offers (tests/pw/utils/planFilter.js); the rest are listed as Blocked (not in plan).
+#
+# Sources:
+#   build   -- develop: lite packaged like deploy.yml (rsync minus .distignore), pro packaged by its own
+#              release script (dist/zip.js) into one zip per plan.
+#   release -- the zips attached to the GitHub releases, byte for byte what customers download.
+#
+# Started by: a push to develop here; deploy.yml finishing a lite release (a release made with
+# GITHUB_TOKEN never fires `release: published`); dokan-pro's package-e2e-on-lite.yml on a pro develop
+# push or a pro release; or by hand.
+run-name: ${{ github.event_name == 'workflow_run' && format('Package tests (lite release {0})', github.event.workflow_run.head_branch) || inputs.pro_tag && format('Package tests (pro release {0})', inputs.pro_tag) || inputs.pro_ref && format('Package tests (pro {0})', inputs.pro_ref) || github.workflow }}
+
+on:
+    push:
+        branches: [develop]
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
+    workflow_run:
+        workflows: ['Deploy and Release Plugin to WP.org']
+        types: [completed]
+    workflow_dispatch:
+        inputs:
+            source:
+                description: 'build = package develop code here; release = download the release zips'
+                default: build
+                type: choice
+                options:
+                    - build
+                    - release
+            plans:
+                description: Comma-separated lanes
+                default: free,starter,professional,business,enterprise
+                type: string
+            lite_ref:
+                description: 'build: dokan-lite ref to package and test (empty = the branch picked in "Use workflow from")'
+                default: ''
+                type: string
+            pro_ref:
+                description: 'build: dokan-pro ref to package'
+                default: develop
+                type: string
+            lite_tag:
+                description: 'release: dokan-lite release tag (empty = newest release)'
+                default: ''
+                type: string
+            pro_tag:
+                description: 'release: dokan-pro release tag (empty = newest release)'
+                default: ''
+                type: string
+            issue_repo:
+                description: 'Repo that gets an issue when a lane is red (set by release triggers; empty = no issue)'
+                default: ''
+                type: string
+
+# A newer push to a branch replaces that branch's older run. Release, pro and manual runs are never cancelled.
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event_name == 'push' && github.ref || github.run_id }}
+    cancel-in-progress: ${{ github.event_name == 'push' }}
+
+permissions:
+    contents: read
+    actions: read
+    issues: write
+
+env:
+    ADMIN: admin
+    ADMIN_PASSWORD: password
+    VENDOR: vendor1
+    VENDOR2: vendor2
+    VENDOR3: vendor3
+    CUSTOMER: customer1
+    CUSTOMER2: customer2
+    USER_PASSWORD: 01dokan01
+    GMAP: ${{secrets.GMAP}}
+    MAPBOX: ${{secrets.MAPBOX}}
+    TEST_PUBLISH_KEY_STRIPE_EXPRESS: ${{secrets.TEST_PUBLISH_KEY_STRIPE_EXPRESS}}
+    TEST_SECRET_KEY_STRIPE_EXPRESS: ${{secrets.TEST_SECRET_KEY_STRIPE_EXPRESS}}
+    STRIPE_EXPRESS_VENDOR1_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR1_ACCT}}
+    STRIPE_EXPRESS_VENDOR2_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR2_ACCT}}
+    STRIPE_EXPRESS_REQUIRED: true
+    TEST_PUBLISH_KEY_STRIPE_CONNECT: ${{secrets.TEST_PUBLISH_KEY_STRIPE_CONNECT}}
+    TEST_SECRET_KEY_STRIPE_CONNECT: ${{secrets.TEST_SECRET_KEY_STRIPE_CONNECT}}
+    TEST_CLIENT_ID_STRIPE_CONNECT: ${{secrets.TEST_CLIENT_ID_STRIPE_CONNECT}}
+    STRIPE_VENDOR1_ACCT: ${{secrets.STRIPE_VENDOR1_ACCT}}
+    STRIPE_VENDOR2_ACCT: ${{secrets.STRIPE_VENDOR2_ACCT}}
+    STRIPE_CONNECT_REQUIRED: true
+    BASE_URL: http://localhost:9999
+    CI: true
+    HEADLESS: true
+    NO_SETUP: false
+    FORCE_COLOR: 1
+    DB_HOST_NAME: localhost
+    DB_USER_NAME: root
+    DB_USER_PASSWORD: password
+    DB_PORT: 9998
+    DATABASE: tests-wordpress
+    DB_PREFIX: wp
+    SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
+
+jobs:
+    resolve:
+        name: resolve packages and lanes
+        # A lite release counts only once deploy.yml has published it.
+        if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        outputs:
+            source: ${{ steps.r.outputs.source }}
+            lite_ref: ${{ steps.r.outputs.lite_ref }}
+            pro_ref: ${{ steps.r.outputs.pro_ref }}
+            lite_tag: ${{ steps.r.outputs.lite_tag }}
+            pro_tag: ${{ steps.r.outputs.pro_tag }}
+            paid: ${{ steps.r.outputs.paid }}
+            matrix: ${{ steps.r.outputs.matrix }}
+            counts: ${{ steps.r.outputs.counts }}
+            issue_repo: ${{ steps.r.outputs.issue_repo }}
+        steps:
+            - name: Resolve source, refs, lanes and the test matrix
+              id: r
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  PRO_TOKEN: ${{ secrets.DOKAN_PRO_TOKEN }}
+                  EVENT: ${{ github.event_name }}
+                  WR_TAG: ${{ github.event.workflow_run.head_branch }}
+                  IN_SOURCE: ${{ inputs.source }}
+                  IN_PLANS: ${{ inputs.plans }}
+                  IN_LITE_REF: ${{ inputs.lite_ref }}
+                  IN_PRO_REF: ${{ inputs.pro_ref }}
+                  IN_LITE_TAG: ${{ inputs.lite_tag }}
+                  IN_PRO_TAG: ${{ inputs.pro_tag }}
+                  IN_ISSUE_REPO: ${{ inputs.issue_repo }}
+              run: |
+                  set -euo pipefail
+                  ALL=free,starter,professional,business,enterprise
+                  # e2e shards per lane, sized from tests/pw/utils/shard-durations.json after the plan filter
+                  # (about 20 minutes of specs each). Retune when a lane's shards drift far from that.
+                  SHARDS='{"free":6,"starter":6,"professional":10,"business":12,"enterprise":12}'
+
+                  SOURCE=build PLANS=$ALL LITE_TAG='' PRO_TAG='' ISSUE_REPO=''
+                  case "$EVENT" in
+                      workflow_run) SOURCE=release LITE_TAG=$WR_TAG ISSUE_REPO=$GITHUB_REPOSITORY ;;
+                      workflow_dispatch) SOURCE=$IN_SOURCE PLANS=${IN_PLANS:-$ALL} LITE_TAG=$IN_LITE_TAG PRO_TAG=$IN_PRO_TAG ISSUE_REPO=$IN_ISSUE_REPO ;;
+                  esac
+                  PLANS=$(tr -d ' ' <<<"$PLANS")
+
+                  if [ "$SOURCE" = release ]; then
+                      LITE_TAG=${LITE_TAG:-$(gh release view -R getdokan/dokan --json tagName -q .tagName)}
+                      PRO_TAG=${PRO_TAG:-$(GH_TOKEN=$PRO_TOKEN gh release view -R getdokan/dokan-pro --json tagName -q .tagName)}
+                      LITE_REF=$LITE_TAG PRO_REF=$PRO_TAG
+                  else
+                      LITE_REF=${IN_LITE_REF:-$GITHUB_SHA} PRO_REF=${IN_PRO_REF:-develop}
+                  fi
+
+                  for p in ${PLANS//,/ }; do
+                      jq -e --arg p "$p" 'has($p)' <<<"$SHARDS" >/dev/null || { echo "::error::Unknown lane '$p' (known: $ALL)"; exit 1; }
+                  done
+                  PAID=false
+                  [[ ",$PLANS," =~ ,(starter|professional|business|enterprise), ]] && PAID=true
+
+                  # Each paid lane must unlock exactly as many modules as plans.json in the pro code under test lists.
+                  COUNTS=$(GH_TOKEN=$PRO_TOKEN gh api "repos/getdokan/dokan-pro/contents/plans.json?ref=$PRO_REF" \
+                      -H 'Accept: application/vnd.github.raw' | jq -c 'map_values(length) + {free: 0}')
+
+                  MATRIX=$(jq -cn --arg plans "$PLANS" --argjson shards "$SHARDS" '[ $plans | split(",")[] | select(length > 0) as $p
+                      | (range(1; $shards[$p] + 1) | {plan: $p, suite: "e2e", shard: ., total: $shards[$p]}),
+                        {plan: $p, suite: "api", shard: 1, total: 1} ]')
+
+                  {
+                      echo "source=$SOURCE"
+                      echo "lite_ref=$LITE_REF"
+                      echo "pro_ref=$PRO_REF"
+                      echo "lite_tag=$LITE_TAG"
+                      echo "pro_tag=$PRO_TAG"
+                      echo "paid=$PAID"
+                      echo "matrix=$MATRIX"
+                      echo "counts=$COUNTS"
+                      echo "issue_repo=$ISSUE_REPO"
+                  } >> "$GITHUB_OUTPUT"
+                  echo "source=$SOURCE lite=$LITE_REF pro=$PRO_REF lanes=$PLANS modules=$COUNTS"
+
+    build_lite:
+        name: build dokan-lite package
+        needs: resolve
+        if: needs.resolve.outputs.source == 'build'
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - name: Checkout dokan-lite
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ needs.resolve.outputs.lite_ref }}
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+
+            - name: Composer install and build (Dokan-lite)
+              run: |
+                  composer i || composer update
+                  composer i --no-dev -o || composer update --no-dev -o
+
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Npm install (Dokan-lite)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
+              run: |
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Npm build (Dokan-lite)
+              run: |
+                  npm run build
+
+            # The release recipe of deploy.yml's 10up action: rsync minus .distignore, zipped in a dokan-lite folder.
+            - name: Package dokan-lite like the release
+              run: |
+                  mkdir -p /tmp/pkg/dokan-lite
+                  rsync -rc --exclude-from=.distignore ./ /tmp/pkg/dokan-lite/
+                  (cd /tmp/pkg && zip -qr /tmp/dokan-lite.zip dokan-lite)
+                  ls -la /tmp/dokan-lite.zip
+
+            - name: Upload dokan-lite package
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-lite
+                  path: /tmp/dokan-lite.zip
+                  retention-days: 1
+                  compression-level: 0
+
+    build_pro_packages:
+        name: build dokan-pro plan packages
+        needs: resolve
+        if: needs.resolve.outputs.source == 'build' && needs.resolve.outputs.paid == 'true'
+        runs-on: ubuntu-latest
+        timeout-minutes: 25
+        steps:
+            # Pro's webpack.config.js resolves ../dokan-lite and requires lite-root helpers, so lite source and
+            # node_modules sit at the runner root with a self-symlink, pro as a sibling (as in e2e_api_tests.yml).
+            - name: Checkout dokan-lite source (for pro webpack path resolution)
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ needs.resolve.outputs.lite_ref }}
+
+            - name: Prepare dokan-lite folder
+              run: |
+                  ln -s . dokan-lite
+
+            - name: Checkout Dokan Pro
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  ref: ${{ needs.resolve.outputs.pro_ref }}
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: |
+                      package-lock.json
+                      dokan-pro/package-lock.json
+
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Install dokan-lite npm deps (no build, skip on cache hit)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
+              run: |
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Cache pro node_modules
+              id: pro-nm
+              uses: actions/cache@v4
+              with:
+                  path: dokan-pro/node_modules
+                  key: pro-nm-${{ runner.os }}-${{ hashFiles('dokan-pro/package-lock.json') }}
+
+            - name: Build Dokan Pro
+              working-directory: dokan-pro
+              run: |
+                  composer i --no-dev -o
+                  if [ "${{ steps.pro-nm.outputs.cache-hit }}" != "true" ]; then
+                      npm ci --prefer-offline --no-audit --no-fund || npm i
+                  fi
+                  npm run build
+
+            # dist/zip.js is pro's release script: one folder per plans.json plan holding only that plan's
+            # modules, zipped, then a lifetime copy with the lifetime Appsero id. The lane keys are lifetime
+            # keys, so the lanes test the lifetime zips. zip.js logs a failure without failing, hence the check.
+            - name: Make the per-plan release zips (dist/zip.js)
+              working-directory: dokan-pro
+              run: |
+                  npm run zip
+                  VERSION=$(jq -r .version package.json)
+                  mkdir -p /tmp/pkg-pro
+                  for p in starter professional business enterprise; do
+                      zip="dist/dokan-lifetime-$p-$VERSION.zip"
+                      [ -s "$zip" ] || { echo "::error::dist/zip.js did not produce $zip"; ls -la dist; exit 1; }
+                      cp "$zip" /tmp/pkg-pro/
+                  done
+                  ls -la /tmp/pkg-pro
+
+            - name: Upload dokan-pro plan packages
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-pro
+                  path: /tmp/pkg-pro/*.zip
+                  retention-days: 1
+                  compression-level: 0
+
+    fetch_release:
+        name: download release packages
+        needs: resolve
+        if: needs.resolve.outputs.source == 'release'
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+        steps:
+            - name: Download the zips customers get
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  PRO_TOKEN: ${{ secrets.DOKAN_PRO_TOKEN }}
+                  LITE_TAG: ${{ needs.resolve.outputs.lite_tag }}
+                  PRO_TAG: ${{ needs.resolve.outputs.pro_tag }}
+              run: |
+                  set -euo pipefail
+                  mkdir -p /tmp/pkg-lite /tmp/pkg-pro
+                  gh release download "$LITE_TAG" -R getdokan/dokan -p dokan-lite.zip -D /tmp/pkg-lite
+                  # Pro assets are uploaded by hand; give a release published mid-upload a few minutes.
+                  for attempt in 1 2 3 4 5 6; do
+                      GH_TOKEN=$PRO_TOKEN gh release download "$PRO_TAG" -R getdokan/dokan-pro -p 'dokan-lifetime-*.zip' -D /tmp/pkg-pro --clobber
+                      missing=''
+                      for p in starter professional business enterprise; do
+                          ls /tmp/pkg-pro/dokan-lifetime-$p-*.zip >/dev/null 2>&1 || missing="$missing $p"
+                      done
+                      [ -z "$missing" ] && break
+                      echo "pro $PRO_TAG has no lifetime zip yet for:$missing (attempt $attempt)"
+                      [ "$attempt" = 6 ] && { echo "::error::pro release $PRO_TAG has no dokan-lifetime zip for:$missing"; exit 1; }
+                      sleep 60
+                  done
+                  ls -la /tmp/pkg-lite /tmp/pkg-pro
+
+            - name: Upload dokan-lite package
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-lite
+                  path: /tmp/pkg-lite/dokan-lite.zip
+                  retention-days: 1
+                  compression-level: 0
+
+            - name: Upload dokan-pro plan packages
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-pro
+                  path: /tmp/pkg-pro/*.zip
+                  retention-days: 1
+                  compression-level: 0
+
+    # The premium WooCommerce plugins some modules need (bookings, auctions, subscriptions, add-ons, PDF
+    # invoices) and dokan-invoice. Every paid lane installs the same set, so only the Dokan package differs.
+    premium_plugins:
+        name: collect premium plugins
+        needs: resolve
+        if: needs.resolve.outputs.paid == 'true'
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Checkout WooCommerce premium plugins (dokan-pro test_utils)
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  ref: test_utils
+                  path: premium-src
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+                  sparse-checkout: tests/plugins
+                  sparse-checkout-cone-mode: false
+
+            - name: Checkout Dokan Invoice
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-invoice
+                  ref: develop
+                  path: dokan-invoice
+
+            - name: Pack premium plugins and dokan-invoice
+              run: |
+                  mkdir -p /tmp/pkg/premium-plugins
+                  for zip in premium-src/tests/plugins/*.zip; do
+                      [ -f "$zip" ] && unzip -q -o "$zip" -d /tmp/pkg/premium-plugins
+                  done
+                  find premium-src/tests/plugins -mindepth 1 -maxdepth 1 -type d -exec cp -R {} /tmp/pkg/premium-plugins/ \;
+                  rm -rf dokan-invoice/.git && cp -R dokan-invoice /tmp/pkg/
+                  tar -czf /tmp/premium.tar.gz -C /tmp/pkg premium-plugins dokan-invoice
+                  ls /tmp/pkg/premium-plugins
+
+            - name: Upload premium plugins
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-premium
+                  path: /tmp/premium.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    test:
+        name: ${{ matrix.plan }} ${{ matrix.suite }} ${{ matrix.shard }}/${{ matrix.total }}
+        needs: [resolve, build_lite, build_pro_packages, fetch_release, premium_plugins]
+        if: |
+            always()
+            && needs.resolve.result == 'success'
+            && (needs.build_lite.result == 'success' || needs.fetch_release.result == 'success')
+            && needs.build_pro_packages.result != 'failure' && needs.build_pro_packages.result != 'cancelled'
+            && needs.premium_plugins.result != 'failure' && needs.premium_plugins.result != 'cancelled'
+        runs-on: ubuntu-latest
+        timeout-minutes: 75
+        strategy:
+            fail-fast: false
+            matrix:
+                include: ${{ fromJSON(needs.resolve.outputs.matrix) }}
+        env:
+            DOKAN_PLAN: ${{ matrix.plan }}
+            DOKAN_PRO: ${{ matrix.plan != 'free' }}
+            EXPECTED_MODULE_COUNT: ${{ fromJSON(needs.resolve.outputs.counts)[matrix.plan] }}
+            LICENSE_KEY: ${{ (matrix.plan == 'starter' && secrets.DOKAN_PRO_STARTER_LIFETIME) || (matrix.plan == 'professional' && secrets.DOKAN_PRO_PROFESSIONAL_LIFETIME) || (matrix.plan == 'business' && secrets.DOKAN_PRO_BUSINESS_LIFETIME) || (matrix.plan == 'enterprise' && secrets.DOKAN_PRO_ENTERPRISE_LIFETIME) || '' }}
+        steps:
+            # Tests and test infra come from the same lite ref as the lite code under test.
+            - name: Checkout dokan-lite (tests)
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ needs.resolve.outputs.lite_ref }}
+
+            - name: Download dokan-lite package
+              uses: actions/download-artifact@v4
+              with:
+                  name: pkg-lite
+                  path: /tmp/pkg
+
+            - name: Download dokan-pro plan packages
+              if: matrix.plan != 'free'
+              uses: actions/download-artifact@v4
+              with:
+                  name: pkg-pro
+                  path: /tmp/pkg
+
+            - name: Download premium plugins
+              if: matrix.plan != 'free'
+              uses: actions/download-artifact@v4
+              with:
+                  name: pkg-premium
+                  path: /tmp/pkg
+
+            - name: Unpack the packages under test into pkg/
+              run: |
+                  mkdir -p pkg/lite-zip
+                  unzip -q /tmp/pkg/dokan-lite.zip -d pkg/lite-zip
+                  # The release zip holds a dokan-lite/ folder; accept a flat zip too.
+                  if [ -d pkg/lite-zip/dokan-lite ]; then mv pkg/lite-zip/dokan-lite pkg/dokan-lite; rm -rf pkg/lite-zip; else mv pkg/lite-zip pkg/dokan-lite; fi
+                  if [ "$DOKAN_PLAN" != free ]; then
+                      unzip -q /tmp/pkg/dokan-lifetime-"$DOKAN_PLAN"-*.zip -d pkg
+                      tar -xzf /tmp/pkg/premium.tar.gz -C pkg
+                      echo "dokan-pro $DOKAN_PLAN package: $(find pkg/dokan-pro/modules -mindepth 1 -maxdepth 1 -type d | wc -l) module folders"
+                  fi
+                  ls pkg
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
+              working-directory: tests/pw
+              run: |
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Create wp debuglog file
+              id: debug-log
+              working-directory: tests/pw
+              run: |
+                  mkdir -p wp-data && touch wp-data/debug.log
+
+            # Mount the unpacked packages instead of the source trees. The premium WC plugins get their own
+            # folder, because a customer's dokan-pro has no tests/. Then the stack of the gating lane in
+            # e2e_api_tests.yml: current WordPress, current stable WooCommerce.
+            - name: Prepare wp-env config for the package under test
+              working-directory: tests/pw
+              run: |
+                  if [ "$DOKAN_PLAN" = free ]; then
+                      jq -n '{env: {tests: {mappings: {"wp-data": "./wp-data", "wp-content/mu-plugins": "./mu-plugins", "wp-content/plugins/dokan-lite": "../../pkg/dokan-lite"}}}}' > .wp-env.override.json
+                  else
+                      jq '.env.tests.plugins |= map(sub("^\\.\\./\\.\\./dokan-(?<n>lite|pro)$"; "../../pkg/dokan-\(.n)"))
+                          | .env.tests.mappings |= with_entries(.value |= (sub("^\\.\\./\\.\\./dokan-pro/tests/plugins/"; "../../pkg/premium-plugins/")
+                              | sub("^\\.\\./\\.\\./dokan-(?<n>lite|pro|invoice)$"; "../../pkg/dokan-\(.n)")))' \
+                          .wp-env.ci.json > .wp-env.override.json
+                  fi
+                  WC_STABLE=$(curl -fsSL https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r .version)
+                  if [ -z "$WC_STABLE" ] || [ "$WC_STABLE" = "null" ]; then
+                    echo "::error::Could not resolve the current stable WooCommerce version from wordpress.org"
+                    exit 1
+                  fi
+                  for f in .wp-env.json .wp-env.override.json; do
+                      jq --arg wc "$WC_STABLE" '(.env.tests.core |= null)
+                          | (if .env.tests.plugins then .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.\($wc).zip")) else . end)' \
+                          "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+                  done
+                  cat .wp-env.override.json
+
+            - name: Route Docker Hub pulls through a mirror (avoids anonymous rate-limit/timeouts)
+              run: |
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
+            - name: Compute wp-env image list and cache key
+              id: wp-env-images
+              working-directory: tests/pw
+              run: |
+                  PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.override.json)
+                  if [ -z "$PHP" ]; then PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.json); fi
+                  IMAGES="mariadb:lts phpmyadmin:latest wordpress${PHP:+:php$PHP} wordpress:cli${PHP:+-php$PHP}"
+                  echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
+                  echo "key=wp-env-images-v1-php${PHP:-default}-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+
+            - name: Restore wp-env docker images from cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/wp-env-images
+                  key: ${{ steps.wp-env-images.outputs.key }}
+
+            - name: Pre-seed wp-env docker images
+              run: |
+                  IMAGES="${{ steps.wp-env-images.outputs.list }}"
+                  TAR="$HOME/.cache/wp-env-images/images.tar"
+                  if [ -f "$TAR" ]; then
+                      docker load -i "$TAR"
+                  else
+                      mkdir -p "$(dirname "$TAR")"
+                      complete=true
+                      for img in $IMAGES; do
+                          pulled=false
+                          for attempt in 1 2 3; do
+                              if docker pull "public.ecr.aws/docker/library/$img"; then pulled=true; break; fi
+                              sleep 15
+                          done
+                          if [ "$pulled" = true ]; then
+                              docker tag "public.ecr.aws/docker/library/$img" "$img"
+                              docker rmi "public.ecr.aws/docker/library/$img" >/dev/null
+                          else
+                              echo "::warning::could not pre-seed $img from the ECR mirror; wp-env will pull it from Docker Hub"
+                              complete=false
+                          fi
+                      done
+                      if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
+                  fi
+
+            - name: Start WordPress Env
+              id: wp-env
+              uses: nick-fields/retry@v3
+              with:
+                  timeout_minutes: 6
+                  max_attempts: 3
+                  retry_wait_seconds: 90
+                  retry_on: error
+                  command: |
+                      cd tests/pw
+                      npm run start:env
+
+            - name: Activate WooCommerce premium plugins and the Dokan Pro package
+              if: matrix.plan != 'free'
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp plugin activate \
+                      woocommerce-bookings \
+                      woocommerce-subscriptions \
+                      woocommerce-product-addons \
+                      woocommerce-simple-auctions \
+                      woocommerce-pdf-invoices-packing-slips \
+                      dokan-pro \
+                      dokan-invoice
+
+            # What actually got installed. merge time reads it back from the artifact.
+            - name: Record the stack and packages under test
+              working-directory: tests/pw
+              run: |
+                  ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  WP=$(ver wp core version)
+                  WC=$(ver wp plugin get woocommerce --field=version)
+                  LITE=$(ver wp plugin get dokan-lite --field=version)
+                  PRO=none
+                  if [ "$DOKAN_PLAN" != free ]; then PRO=$(ver wp plugin get dokan-pro --field=version); fi
+                  mkdir -p playwright
+                  printf '{"plan":"%s","source":"%s","wordpress":"%s","woocommerce":"%s","dokan_lite":"%s","dokan_pro":"%s"}\n' \
+                      "$DOKAN_PLAN" "${{ needs.resolve.outputs.source }}" "${WP:-unknown}" "${WC:-unknown}" "${LITE:-unknown}" "${PRO:-unknown}" \
+                      | tee playwright/resolved-versions.json
+
+            - name: Enable Dokan New React UI (vendor dashboard + product editor)
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp eval '
+                      $appearance = get_option("dokan_appearance", []);
+                      $appearance["vendor_layout_style"]   = "latest";
+                      $appearance["vendor_product_editor"] = "latest";
+                      update_option("dokan_appearance", $appearance);
+                      echo "Dokan appearance set to latest UI" . PHP_EOL;
+                  '
+
+            - name: Get installed Playwright version
+              working-directory: tests/pw
+              run: |
+                  echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
+
+            - name: Cache playwright binaries
+              id: playwright-cache
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+                  restore-keys: |
+                      ${{ runner.os }}-playwright-
+
+            - name: Install Playwright browser binaries & OS dependencies
+              if: steps.playwright-cache.outputs.cache-hit != 'true'
+              working-directory: tests/pw
+              run: |
+                  npx playwright install --with-deps chromium
+
+            # With DOKAN_PLAN set, setup activates the lane's real key and exactly the modules it unlocks, and
+            # fails when either is off (tests/pw/utils/planSetup.ts). It writes playwright/available-modules.json.
+            - name: Run docker setup (license and modules for the plan)
+              working-directory: tests/pw
+              run: npm run docker:setup
+
+            - name: Offset post and order ids for this shard
+              if: matrix.suite == 'e2e'
+              working-directory: tests/pw
+              run: |
+                  OFFSET=$(( 1000000 + ( ((RANDOM << 15) | RANDOM) % 1000000000 ) ))
+                  npm run wp-env run tests-cli wp eval "global \$wpdb; \$wpdb->query( \"ALTER TABLE {\$wpdb->posts} AUTO_INCREMENT = $OFFSET\" ); echo 'next post id: ', \$wpdb->get_var( \"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{\$wpdb->posts}'\" ), PHP_EOL;"
+
+            # Leaves out the specs the plan does not offer and writes them to playwright/blocked-specs.json.
+            - name: Resolve balanced shard spec list for the plan
+              if: matrix.suite == 'e2e'
+              working-directory: tests/pw
+              run: |
+                  node ./utils/getShardSpecs.js ${{ matrix.shard }} ${{ matrix.total }} > /tmp/shard-specs.txt
+                  echo "spec count: $(wc -l < /tmp/shard-specs.txt), blocked for $DOKAN_PLAN: $(jq length playwright/blocked-specs.json 2>/dev/null || echo 0)"
+                  # Shard 1 also lists the single tests the plan drops by their @module-<id> tag (in specs that run).
+                  if [ "${{ matrix.shard }}" = 1 ]; then
+                      PATTERN=$(node -e "const p = require('./utils/planFilter').blockedTagPattern(); process.stdout.write(p ? p.source : '')")
+                      : > playwright/blocked-tests.txt
+                      if [ -n "$PATTERN" ]; then
+                          env -u DOKAN_PLAN NO_SETUP=true npx playwright test --project=e2e_tests --list --grep "$PATTERN" 2>/dev/null | grep -F '[e2e_tests] › ' \
+                              | grep -v -F -f <(jq -r '.[].file' playwright/blocked-specs.json) > playwright/blocked-tests.txt || true
+                      fi
+                      echo "single tests blocked for $DOKAN_PLAN: $(wc -l < playwright/blocked-tests.txt)"
+                  fi
+
+            - name: 🧪 Run e2e tests
+              id: e2e-test
+              if: matrix.suite == 'e2e'
+              continue-on-error: true
+              timeout-minutes: 60
+              working-directory: tests/pw
+              run: |
+                  if [ -s /tmp/shard-specs.txt ]; then
+                      xargs -a /tmp/shard-specs.txt -d '\n' npm run test:e2e --
+                  else
+                      npm run test:e2e -- --shard=${{ matrix.shard }}/${{ matrix.total }}
+                  fi
+
+            - name: 🧾 Preserve first-pass traces before the re-run wipes them
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  if [ -d playwright/e2e/test-artifacts ]; then
+                      mkdir -p playwright/e2e/first-pass-artifacts
+                      cp -R playwright/e2e/test-artifacts/. playwright/e2e/first-pass-artifacts/ || true
+                  fi
+
+            # Same gate as e2e_api_tests.yml: failures re-run alone after the shard, and the shard is red unless
+            # that clears every one. No recorded failures (a crash or timeout) means no re-run and a red shard.
+            - name: 🔁 Re-run shard failures in isolation
+              id: e2e-recheck
+              if: always() && steps.e2e-test.outcome == 'failure'
+              timeout-minutes: 30
+              working-directory: tests/pw
+              run: |
+                  LAST_RUN=playwright/e2e/test-artifacts/.last-run.json
+                  if [ ! -f "$LAST_RUN" ] || [ "$(node -e "try{process.stdout.write(String((require('./'+process.argv[1]).failedTests||[]).length))}catch(e){process.stdout.write('0')}" "$LAST_RUN")" = "0" ]; then
+                      echo "::warning::No recorded test failures — the first pass failed for another reason (crash/timeout). Not re-running."
+                      exit 1
+                  fi
+                  set -o pipefail
+                  NO_SETUP=true npx playwright test --project=e2e_tests --last-failed \
+                      --reporter=list 2>&1 | tee /tmp/recheck.log
+
+            - name: 📋 Report isolation re-run outcome
+              if: always() && steps.e2e-test.outcome == 'failure'
+              run: |
+                  if [ "${{ steps.e2e-recheck.outcome }}" = "success" ]; then
+                      echo "These tests failed alongside their shard-mates but passed alone: suspected shard-state pollution."
+                  else
+                      echo "The re-run failed too: reproducible failures, not flakes."
+                  fi
+                  if [ -f /tmp/recheck.log ]; then grep -E '^[[:space:]]+(✓|✘|×)' /tmp/recheck.log | head -50 || true; fi
+
+            - name: Fail the shard when the isolation re-run did not clear
+              if: always() && steps.e2e-test.outcome == 'failure' && steps.e2e-recheck.outcome != 'success'
+              run: |
+                  echo "::error::$DOKAN_PLAN shard ${{ matrix.shard }} failed and the isolation re-run did not clear it."
+                  exit 1
+
+            - name: Record API specs the plan leaves out
+              if: matrix.suite == 'api'
+              working-directory: tests/pw
+              run: |
+                  node -e "require('fs').writeFileSync('playwright/blocked-api-specs.json', JSON.stringify(require('./utils/planFilter').blockedSpecs('api'), null, 2))"
+                  echo "blocked API specs for $DOKAN_PLAN: $(jq length playwright/blocked-api-specs.json)"
+                  PATTERN=$(node -e "const p = require('./utils/planFilter').blockedTagPattern(); process.stdout.write(p ? p.source : '')")
+                  : > playwright/blocked-api-tests.txt
+                  if [ -n "$PATTERN" ]; then
+                      env -u DOKAN_PLAN NO_SETUP=true npx playwright test --config=api.config.ts --project=api_tests --list --grep "$PATTERN" 2>/dev/null | grep -F '[api_tests] › ' \
+                          | grep -v -F -f <(jq -r '.[].file' playwright/blocked-api-specs.json) > playwright/blocked-api-tests.txt || true
+                  fi
+
+            - name: 🧪 Run api tests
+              if: matrix.suite == 'api' && steps.wp-env.outcome == 'success'
+              timeout-minutes: 15
+              working-directory: tests/pw
+              run: |
+                  npm run test:api
+
+            - name: Backup Database
+              if: always() && steps.wp-env.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp db export wp-data/db.sql
+
+            - name: Archive e2e results
+              if: always() && steps.debug-log.outcome == 'success' && matrix.suite == 'e2e'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-result-${{ matrix.plan }}-e2e-${{ matrix.shard }}
+                  path: |
+                      tests/pw/wp-data
+                      tests/pw/playwright
+                      tests/pw/playwright-report
+                  if-no-files-found: ignore
+                  retention-days: 7
+
+            # playwright-report/e2e is left out: docker:setup writes a setup-run e2e summary there.
+            - name: Archive api results
+              if: always() && steps.debug-log.outcome == 'success' && matrix.suite == 'api'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-result-${{ matrix.plan }}-api-1
+                  path: |
+                      tests/pw/wp-data
+                      tests/pw/playwright
+                      tests/pw/playwright-report
+                      !tests/pw/playwright-report/e2e/**
+                  if-no-files-found: ignore
+                  retention-days: 7
+
+    summary:
+        name: plan summary
+        needs: [resolve, test]
+        if: ${{ !cancelled() && needs.resolve.result == 'success' }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        steps:
+            - name: Checkout dokan-lite (tests)
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ needs.resolve.outputs.lite_ref }}
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
+            - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
+              working-directory: tests/pw
+              run: |
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Download all lane results
+              uses: actions/download-artifact@v4
+              with:
+                  path: tests/pw/all-results
+                  pattern: pkg-result-*
+
+            - name: List this run's jobs
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs" \
+                      --jq '.jobs[] | {name, conclusion}' | jq -s . > /tmp/jobs.json
+
+            # One table for the run page. A lane is red when any of its jobs did not succeed or left no results.
+            # Counts are first-pass, as in e2e_api_tests.yml; the isolation re-run only decides a shard's colour.
+            - name: Plan-by-plan table
+              id: table
+              working-directory: tests/pw
+              env:
+                  MATRIX: ${{ needs.resolve.outputs.matrix }}
+                  SOURCE: ${{ needs.resolve.outputs.source }}
+                  LITE: ${{ needs.resolve.outputs.lite_tag || needs.resolve.outputs.lite_ref }}
+                  PRO: ${{ needs.resolve.outputs.pro_tag || needs.resolve.outputs.pro_ref }}
+              run: |
+                  node - <<'EOF'
+                  const fs = require('fs');
+                  const path = require('path');
+                  const matrix = JSON.parse(process.env.MATRIX);
+                  const jobs = JSON.parse(fs.readFileSync('/tmp/jobs.json', 'utf8'));
+                  const read = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
+                  const dir = m => path.join('all-results', `pkg-result-${m.plan}-${m.suite}-${m.shard}`);
+                  const out = [`### Package tests (${process.env.SOURCE}): lite \`${process.env.LITE}\`, pro \`${process.env.PRO}\``, ''];
+                  const stack = matrix.map(m => read(path.join(dir(m), 'playwright', 'resolved-versions.json'))).find(Boolean);
+                  if (stack) out.push(`WordPress ${stack.wordpress}, WooCommerce ${stack.woocommerce}`, '');
+                  out.push('| Lane | Result | Passed | Failed | Flaky | Skipped | Blocked (not in plan) | Jobs not green |', '|---|---|---|---|---|---|---|---|');
+                  const red = [];
+                  const details = [];
+                  for (const plan of [...new Set(matrix.map(m => m.plan))]) {
+                      const t = { passed: 0, failed: 0, flaky: 0, skipped: 0 };
+                      let missing = 0;
+                      for (const m of matrix.filter(m => m.plan === plan)) {
+                          const r = read(path.join(dir(m), 'playwright-report', m.suite, 'summary-report', 'results.json'));
+                          if (!r) { missing++; continue; }
+                          for (const k of Object.keys(t)) t[k] += r[k] || 0;
+                      }
+                      const notGreen = jobs.filter(j => j.name.startsWith(`${plan} `) && j.conclusion !== 'success').length;
+                      const lines = f => { try { return fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(l => l.replace(/^\s*\[[^\]]+\] › /, '')); } catch { return []; } };
+                      const e2e = path.join('all-results', `pkg-result-${plan}-e2e-1`, 'playwright');
+                      const api = path.join('all-results', `pkg-result-${plan}-api-1`, 'playwright');
+                      const blockedSpecs = [
+                          ...(read(path.join(e2e, 'blocked-specs.json')) || []).map(s => `e2e/${s.file} (${s.modules.join(', ')})`),
+                          ...(read(path.join(api, 'blocked-api-specs.json')) || []).map(s => `api/${s.file} (${s.modules.join(', ')})`),
+                      ];
+                      const blockedTests = [...lines(path.join(e2e, 'blocked-tests.txt')).map(t => `e2e/${t}`), ...lines(path.join(api, 'blocked-api-tests.txt')).map(t => `api/${t}`)];
+                      const blocked = [...blockedSpecs.map(b => `spec ${b}`), ...blockedTests.map(b => `test ${b}`)];
+                      const isRed = notGreen > 0 || missing > 0;
+                      if (isRed) red.push(plan);
+                      out.push(`| ${plan} | ${isRed ? '❌' : '✅'} | ${t.passed} | ${t.failed} | ${t.flaky} | ${t.skipped} | ${blockedSpecs.length} specs, ${blockedTests.length} tests | ${notGreen}${missing ? ` (${missing} without results)` : ''} |`);
+                      if (blocked.length) details.push(`<details><summary>${plan}: ${blockedSpecs.length} specs and ${blockedTests.length} tests blocked (not in plan)</summary>`, '', ...blocked.map(b => `- ${b}`), '', '</details>');
+                  }
+                  out.push('', 'Free also leaves out every `@pro` test, because the Free package has no Dokan Pro.', '', ...details, '');
+                  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, out.join('\n'));
+                  fs.writeFileSync('/tmp/summary.md', out.join('\n'));
+                  fs.appendFileSync(process.env.GITHUB_OUTPUT, `red=${red.join(',')}\n`);
+                  EOF
+
+            - name: Merge the HTML report per lane
+              if: always()
+              working-directory: tests/pw
+              env:
+                  MATRIX: ${{ needs.resolve.outputs.matrix }}
+              run: |
+                  for plan in $(jq -r '[.[].plan] | unique | .[]' <<<"$MATRIX"); do
+                      mkdir -p "blobs/$plan"
+                      find all-results -path "*/pkg-result-$plan-e2e-*/playwright-report/e2e/blob-report/*" -type f -exec cp {} "blobs/$plan/" \;
+                      if [ -n "$(ls -A "blobs/$plan")" ]; then
+                          PLAYWRIGHT_HTML_REPORT="reports/$plan" npx playwright merge-reports --reporter html "blobs/$plan" || true
+                      fi
+                  done
+
+            - name: Upload lane reports
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pkg-reports
+                  path: tests/pw/reports
+                  if-no-files-found: ignore
+                  retention-days: 30
+
+            - name: Open an issue for a red release run
+              if: steps.table.outputs.red != '' && needs.resolve.outputs.issue_repo != ''
+              env:
+                  GH_TOKEN: ${{ needs.resolve.outputs.issue_repo == github.repository && github.token || secrets.DOKAN_PRO_TOKEN }}
+                  ISSUE_REPO: ${{ needs.resolve.outputs.issue_repo }}
+                  RED: ${{ steps.table.outputs.red }}
+                  RELEASE: ${{ needs.resolve.outputs.issue_repo == github.repository && needs.resolve.outputs.lite_tag || needs.resolve.outputs.pro_tag }}
+                  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+              run: |
+                  {
+                      echo "The package tests for release \`$RELEASE\` failed for: **$RED**."
+                      echo
+                      echo "Run: $RUN_URL (per-lane HTML reports in the \`pkg-reports\` artifact)"
+                      echo
+                      cat /tmp/summary.md
+                  } > /tmp/issue.md
+                  gh issue create -R "$ISSUE_REPO" --title "Package tests failed for $RELEASE: $RED" --body-file /tmp/issue.md
+
+            - name: Fail when a lane is red
+              if: steps.table.outputs.red != ''
+              run: |
+                  echo "::error::Red lanes: ${{ steps.table.outputs.red }}"
+                  exit 1
