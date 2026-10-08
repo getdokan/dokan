@@ -660,3 +660,16 @@ dokan-dashboard-header.dokan-ai-prompt #ai-prompt-app {
     margin-top: 1rem !important;
 }
 /*** End of Menu Manager Style Fixing ***/
+
+/* Soft-primary hover: mirrors the delete action's treatment — a light tint of its own colour with a matching border and text — on the brand colour. The grey is only a fallback: the brand token is a CSS var, so Tailwind's /alpha modifier can't touch it and a bare color-mix() is downlevelled by the CSS build to the solid colour. The @supports guard keeps the real tint intact. */
+.dokan-soft-primary:hover:not(:disabled) {
+    border-color: var(--color-dokan-btn, #7047eb) !important;
+    color: var(--color-dokan-btn, #7047eb) !important;
+    background-color: #f9fafb !important;
+}
+
+@supports (background-color: color-mix(in srgb, red 8%, white)) {
+    .dokan-soft-primary:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--color-dokan-btn, #7047eb) 8%, #fff) !important;
+    }
+}
