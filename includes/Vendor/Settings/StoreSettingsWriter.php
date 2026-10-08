@@ -22,10 +22,20 @@ class StoreSettingsWriter {
      *
      * @param int   $vendor_id Vendor user ID.
      * @param array $slice     Legacy-keyed values to merge in.
+     * @param array $options   {
+     *     Optional save-pipeline switches.
+     *
+     *     @type bool $apply_settings_args_filter Whether to run the `dokan_store_profile_settings_args`
+     *                                            filter (Seam A). That seam's implicit contract is "the
+     *                                            dashboard Store form ran" — surfaces owning a different
+     *                                            field set (the setup wizard) must pass false, or Pro's
+     *                                            delivery-time handler reverts their address edits.
+     *                                            Default true.
+     * }
      *
      * @return array The full merged `dokan_profile_settings` array.
      */
-    public function save( int $vendor_id, array $slice ): array {
+    public function save( int $vendor_id, array $slice, array $options = [] ): array {
         $prev = get_user_meta( $vendor_id, 'dokan_profile_settings', true );
         $prev = is_array( $prev ) ? $prev : [];
 
@@ -36,8 +46,10 @@ class StoreSettingsWriter {
             update_user_meta( $vendor_id, 'dokan_store_name', $merged['store_name'] );
         }
 
-        // The slice already carries the final dokan_store_time array, so the legacy POST-parsing filter must never run here.
-        $merged = apply_filters( 'dokan_store_profile_settings_args', $merged, $vendor_id );
+        if ( false !== ( $options['apply_settings_args_filter'] ?? true ) ) {
+            // The slice already carries the final dokan_store_time array, so the legacy POST-parsing filter must never run here.
+            $merged = apply_filters( 'dokan_store_profile_settings_args', $merged, $vendor_id );
+        }
 
         update_user_meta( $vendor_id, 'dokan_profile_settings', $merged );
 

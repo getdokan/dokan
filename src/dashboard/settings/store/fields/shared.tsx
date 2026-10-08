@@ -19,6 +19,13 @@ export const RequiredMark = () => (
     </span>
 );
 
+// The spelled-out variant, for labels that read better with a word than an asterisk.
+export const RequiredBadge = () => (
+    <span className="text-xs font-normal text-red-500">
+        { __( '(Required)', 'dokan-lite' ) }
+    </span>
+);
+
 // Chrome shared by the DataViews row-action buttons (edit/delete) across the tables.
 export const actionButtonBase =
     'inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50';

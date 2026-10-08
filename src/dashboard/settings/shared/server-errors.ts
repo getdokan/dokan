@@ -85,8 +85,9 @@ export function rekeyServerErrors(
 
     for ( const [ fieldId, messages ] of Object.entries( fieldErrors ) ) {
         const key = keyMap.get( fieldId ) ?? fieldId;
+        // Newline-joined so `whitespace-pre-line` renderers stack the messages; HTML collapses it back to a space everywhere else.
         rekeyed[ key ] = Array.isArray( messages )
-            ? messages.join( ' ' )
+            ? messages.join( '\n' )
             : String( messages );
     }
 

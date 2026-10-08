@@ -77,7 +77,10 @@ class ValueMapper {
 
         // Merge over the previous subkeys so extras like the store-pickup `location_name` survive a React save.
         if ( 'address' === $id ) {
-            return [ 'address' => array_merge( (array) ( $prev['address'] ?? [] ), (array) $value ) ];
+            // Registration seeds address as '' — casting that would inject a stray [0 => ''] into the row.
+            $prev_address = isset( $prev['address'] ) && is_array( $prev['address'] ) ? $prev['address'] : [];
+
+            return [ 'address' => array_merge( $prev_address, (array) $value ) ];
         }
 
         $legacy_key = isset( $field['legacy_key'] ) && is_string( $field['legacy_key'] ) ? $field['legacy_key'] : $id;
