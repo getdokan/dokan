@@ -64,7 +64,7 @@ class Hooks {
      *
      * WooCommerce stamps whoever creates it, so a variation an admin adds would fall outside the vendor's scope.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $data Post data WooCommerce inserts for the variation.
      *

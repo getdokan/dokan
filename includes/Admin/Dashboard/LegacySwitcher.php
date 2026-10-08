@@ -294,7 +294,7 @@ class LegacySwitcher implements Hookable {
      * legacy, and the admin setup wizard flips it to latest, so an upgraded
      * site keeps the legacy form until an admin opts in.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param int $user_id Optional. Defaults to current user.
      *

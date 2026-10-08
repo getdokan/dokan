@@ -44,7 +44,7 @@ class ProductAttribute {
      * only ever plain arrays and scalars, so an object is always unwanted and must not be persisted.
      * Decoding with `allowed_classes => false` keeps this check itself safe.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param mixed $value Value to inspect.
      *

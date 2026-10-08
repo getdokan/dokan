@@ -12,7 +12,7 @@ use DateTime;
  * variant-agnostic and the schedule rules live next to the field that owns
  * them.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.0
  */
 class StoreScheduleValidator {
 
@@ -21,7 +21,7 @@ class StoreScheduleValidator {
      * `{ status: 'open'|'close', opening_time: string[], closing_time: string[] }`
      * with canonical `g:i a` strings. Closed days carry empty time arrays.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param mixed $value Submitted schedule keyed by day.
      *
@@ -54,7 +54,7 @@ class StoreScheduleValidator {
      * in `g:i a` format with the opening time before the closing time (the
      * full-day `12:00 am`–`11:59 pm` pair satisfies this).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param mixed $value      Normalized schedule keyed by day.
      * @param array $all_values Every field value keyed by id (stored values overlaid with the submitted ones).
@@ -85,7 +85,7 @@ class StoreScheduleValidator {
     /**
      * Validate the opening/closing time pairs of a single open day.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param string $day_label Translated day name for messages.
      * @param array  $day_data  Normalized day entry.
