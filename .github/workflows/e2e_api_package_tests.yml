@@ -16,7 +16,8 @@ run-name: ${{ github.event_name == 'workflow_run' && format('Package tests (lite
 
 on:
     push:
-        branches: [develop]
+        # TEMPORARY: ci/package-e2e-workflow runs the workflow before merge. Revert this commit before merging.
+        branches: [develop, ci/package-e2e-workflow]
         paths-ignore:
             - '**.md'
             - '**.txt'
