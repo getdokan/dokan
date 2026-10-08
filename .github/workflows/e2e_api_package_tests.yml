@@ -311,10 +311,28 @@ jobs:
             # dist/zip.js is pro's release script: one folder per plans.json plan holding only that plan's
             # modules, zipped, then a lifetime copy with the lifetime Appsero id. The lane keys are lifetime
             # keys, so the lanes test the lifetime zips. zip.js logs a failure without failing, hence the check.
+            #
+            # zip.js copies composer.json but not composer.lock into each plan folder, so its `composer install`
+            # resolves fresh, and on 2026-10-08 that failed on a clean runner (google/gax wants PHP ^8.2 against
+            # the PHP 7.4 platform pin; run 37745339480). The preload below copies the repo's lock into each plan
+            # folder just before that install, leaving zip.js untouched. Ceiling: plans with their own composer
+            # file (starter, professional, liquidweb) install every locked package, a superset of what they need.
             - name: Make the per-plan release zips (dist/zip.js)
               working-directory: dokan-pro
               run: |
-                  npm run zip
+                  cat > /tmp/zip-lock-shim.js <<'EOF'
+                  const cp = require('child_process');
+                  const fs = require('fs');
+                  const path = require('path');
+                  const exec = cp.exec;
+                  cp.exec = function (cmd, opts) {
+                      if (/^composer install/.test(cmd) && opts && opts.cwd) {
+                          fs.copyFileSync(path.resolve('composer.lock'), path.join(opts.cwd, 'composer.lock'));
+                      }
+                      return exec.apply(this, arguments);
+                  };
+                  EOF
+                  NODE_OPTIONS="--require /tmp/zip-lock-shim.js" npm run zip
                   VERSION=$(jq -r .version package.json)
                   mkdir -p /tmp/pkg-pro
                   for p in starter professional business enterprise; do
@@ -904,6 +922,7 @@ jobs:
               env:
                   MATRIX: ${{ needs.resolve.outputs.matrix }}
               run: |
+                  [ -d all-results ] || { echo "no lane results to merge"; exit 0; }
                   for plan in $(jq -r '[.[].plan] | unique | .[]' <<<"$MATRIX"); do
                       mkdir -p "blobs/$plan"
                       find all-results -path "*/pkg-result-$plan-e2e-*/playwright-report/e2e/blob-report/*" -type f -exec cp {} "blobs/$plan/" \;
