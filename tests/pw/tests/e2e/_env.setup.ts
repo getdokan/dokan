@@ -6,6 +6,7 @@ import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers, parseBoolean } from '@utils/helpers';
 import { ensureStripeExpressConfigured } from './stripe-express/helpers';
+import { planOffers } from '@utils/planFilter';
 
 const { DOKAN_PRO } = process.env;
 const isPro = parseBoolean(DOKAN_PRO);
@@ -55,8 +56,11 @@ setup.describe('setup woocommerce settings', () => {
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
         if (isPro) {
-            await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
-            await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
+            // Table rate and distance rate shipping come from the table_rate_shipping module (not in every plan).
+            if (planOffers('table_rate_shipping')) {
+                await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
+                await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
+            }
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
         }
 

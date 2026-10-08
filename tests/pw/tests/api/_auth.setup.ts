@@ -4,6 +4,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { helpers, parseBoolean } from '@utils/helpers';
+import { planOffers } from '@utils/planFilter';
 
 const { DOKAN_PRO } = process.env;
 const isPro = parseBoolean(DOKAN_PRO);
@@ -82,7 +83,7 @@ setup.describe('add users', () => {
         // add open-close time
         await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
         // add review
-        if (isPro) {
+        if (isPro && planOffers('store_reviews')) {
             await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location
@@ -101,7 +102,7 @@ setup.describe('add users', () => {
         // add open-close time
         await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
         // add review
-        if (isPro) {
+        if (isPro && planOffers('store_reviews')) {
             await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location
@@ -117,7 +118,7 @@ setup.describe('add users', () => {
         // add open-close time
         await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
         // add review
-        if (isPro) {
+        if (isPro && planOffers('store_reviews')) {
             await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location

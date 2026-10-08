@@ -220,6 +220,8 @@ export const endPoints = {
     getAllModules: `${SERVER_URL}/dokan/v1/admin/modules`,
     activateModule: `${SERVER_URL}/dokan/v1/admin/modules/activate`, // put
     deactivateModule: `${SERVER_URL}/dokan/v1/admin/modules/deactivate`, // put
+    activateLicense: `${SERVER_URL}/dokan-pro/v1/license/activate`, // post
+    getLicenseStatus: `${SERVER_URL}/dokan-pro/v1/license/status`,
 
     // support tickets
     getAllSupportTicketCustomers: `${SERVER_URL}/dokan/v1/admin/support-ticket/customers`,
