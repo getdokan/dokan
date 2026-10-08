@@ -268,8 +268,8 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Reduce a submitted key to its schema field id.
      *
-     * plugin-ui emits dot-path keys (`page.subpage.field_id`) that mirror its
-     * internal tree; the schema is keyed by the leaf id alone.
+     * The plugin-ui engine emits dot-path keys (`page.subpage.field_id`) that
+     * mirror its internal tree; the schema is keyed by the leaf id alone.
      *
      * @since DOKAN_SINCE
      *
@@ -356,6 +356,15 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 $errors[] = $result;
             } elseif ( false === $result ) {
                 $errors[] = __( 'This field is invalid.', 'dokan-lite' );
+            }
+        }
+
+        // A new banner/logo must be an image this vendor (or the acting staff member) uploaded; keeping the saved one never blocks a save.
+        if ( 'vendor_image' === $variant && $value && (int) $value !== (int) ( $field['value'] ?? 0 ) ) {
+            $owned = current_user_can( 'manage_woocommerce' ) || dokan_is_valid_owner( (int) $value, $vendor_id ) || dokan_is_valid_owner( (int) $value, get_current_user_id() );
+
+            if ( ! $owned || ! wp_attachment_is_image( (int) $value ) ) {
+                $errors[] = __( 'Please choose an image from your media library.', 'dokan-lite' );
             }
         }
 
@@ -448,7 +457,12 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 $enabled  = $field['enable_state']['value'] ?? 'on';
                 $disabled = $field['disable_state']['value'] ?? 'off';
 
-                return in_array( $value, [ $enabled, $disabled ], true ) ? $value : $disabled;
+                if ( in_array( $value, [ $enabled, $disabled ], true ) ) {
+                    return $value;
+                }
+
+                // API clients send booleans and on/yes-style flags; they mean the switch position, not a literal to store.
+                return filter_var( $value, FILTER_VALIDATE_BOOLEAN ) ? $enabled : $disabled;
 
             case 'number':
                 return is_numeric( $value ) ? $value + 0 : 0;
@@ -459,10 +473,12 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 return sanitize_text_field( (string) $value );
 
             case 'vendor_image':
-                return absint( $value );
+                // Not absint(): -5 must reach validation as invalid, not become attachment 5.
+                return (int) $value;
 
             case 'vendor_address':
-                $value = (array) $value;
+                // A partial payload keeps the sub-keys it never sent.
+                $value = (array) $value + (array) ( $field['value'] ?? [] );
 
                 return [
                     'street_1' => sanitize_text_field( (string) ( $value['street_1'] ?? '' ) ),
@@ -474,7 +490,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 ];
 
             case 'vendor_map':
-                $value = (array) $value;
+                $value = (array) $value + (array) ( $field['value'] ?? [] );
 
                 return [
                     'location'     => sanitize_text_field( (string) ( $value['location'] ?? '' ) ),

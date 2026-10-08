@@ -639,6 +639,13 @@ class Settings {
             $find_address     = ! empty( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : $default_locations['address'];
             $default_location = $default_locations['latitude'] . ',' . $default_locations['longitude'];
             $location         = ! empty( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : $default_location;
+
+            // Without a map API key the form has no map inputs, so a save must keep the vendor's own location, not reset it to the admin default.
+            if ( ! isset( $_POST['location'] ) && ! empty( $prev_dokan_settings['location'] ) ) {
+                $location     = $prev_dokan_settings['location'];
+                $find_address = $prev_dokan_settings['find_address'] ?? '';
+            }
+
             $dokan_days       = dokan_get_translated_days();
             $dokan_store_time = [];
 
