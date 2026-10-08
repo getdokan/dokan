@@ -431,17 +431,10 @@ class Vendor {
     /**
      * Get the shop location
      *
-     * @return array
+     * @return string|null
      */
     public function get_location() {
-        $default  = array( 'lat' => 0, 'long' => 0 );
-        $location = $this->get_info_part( 'location' );
-
-        if ( $location ) {
-            [ $default['lat'], $default['long'] ] = explode( ',', $location );
-        }
-
-        return $location;
+        return $this->get_info_part( 'location' );
     }
 
     /**
