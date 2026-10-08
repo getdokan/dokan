@@ -202,28 +202,21 @@ jobs:
               with:
                   ref: ${{ needs.resolve.outputs.lite_ref }}
 
+            # No npm or composer cache in the zip-building jobs: every package is built from a clean install,
+            # the way a release is.
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  cache: npm
 
             - name: Composer install and build (Dokan-lite)
               run: |
                   composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
-            - name: Cache lite node_modules
-              id: lite-nm
-              uses: actions/cache@v4
-              with:
-                  path: node_modules
-                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
             - name: Npm install (Dokan-lite)
-              if: steps.lite-nm.outputs.cache-hit != 'true'
               run: |
-                  npm ci --prefer-offline --no-audit --no-fund || npm i
+                  npm ci --no-audit --no-fund
 
             - name: Npm build (Dokan-lite)
               run: |
@@ -271,41 +264,21 @@ jobs:
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
+            # No npm or composer cache here either (see build_lite).
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
-                  cache: npm
-                  cache-dependency-path: |
-                      package-lock.json
-                      dokan-pro/package-lock.json
 
-            - name: Cache lite node_modules
-              id: lite-nm
-              uses: actions/cache@v4
-              with:
-                  path: node_modules
-                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-            - name: Install dokan-lite npm deps (no build, skip on cache hit)
-              if: steps.lite-nm.outputs.cache-hit != 'true'
+            - name: Install dokan-lite npm deps (no build)
               run: |
-                  npm ci --prefer-offline --no-audit --no-fund || npm i
-
-            - name: Cache pro node_modules
-              id: pro-nm
-              uses: actions/cache@v4
-              with:
-                  path: dokan-pro/node_modules
-                  key: pro-nm-${{ runner.os }}-${{ hashFiles('dokan-pro/package-lock.json') }}
+                  npm ci --no-audit --no-fund
 
             - name: Build Dokan Pro
               working-directory: dokan-pro
               run: |
                   composer i --no-dev -o
-                  if [ "${{ steps.pro-nm.outputs.cache-hit }}" != "true" ]; then
-                      npm ci --prefer-offline --no-audit --no-fund || npm i
-                  fi
+                  npm ci --no-audit --no-fund
                   npm run build
 
             # dist/zip.js is pro's release script: one folder per plans.json plan holding only that plan's
