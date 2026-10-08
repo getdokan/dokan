@@ -1332,7 +1332,7 @@ class SettingsSchema {
 					'option' => 'dokan_selling',
 					'field' => 'new_seller_enable_selling',
 				],
-
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\EnableSellingStatusTransformer::class,
             ],
             [
                 'id'            => 'vendor_registration_address_fields',
