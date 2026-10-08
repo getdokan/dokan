@@ -10,7 +10,7 @@ class MapUtil {
      * Values such as an empty string or a bare `,` separator mean "no location",
      * so callers can fall back to their own default instead of a hardcoded one.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param string $map_location Comma separated latitude, longitude pair.
      *

@@ -163,7 +163,7 @@ class FullWidthVendorLayout implements Hookable {
      * its assets at `init` 99. Building the nav there hands the app the
      * pre-overlay (legacy) URLs.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @return void
      */

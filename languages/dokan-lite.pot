@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.2.1\n"
+"Project-Id-Version: Dokan 5.3.0\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-30T17:10:27+00:00\n"
+"POT-Creation-Date: 2026-10-08T09:43:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -56,7 +56,7 @@ msgstr ""
 #: includes/Admin/Menu.php:97
 #: includes/Dashboard/Templates/Settings.php:62
 #: includes/Dashboard/Templates/Settings.php:69
-#: includes/functions-dashboard-navigation.php:73
+#: includes/functions-dashboard-navigation.php:75
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Settings"
@@ -253,7 +253,7 @@ msgstr ""
 #: includes/Admin/Settings.php:775
 #: includes/Admin/Settings/Schema/SettingsSchema.php:283
 #: includes/Admin/Tools/ToolsActions.php:25
-#: includes/functions-dashboard-navigation.php:39
+#: includes/functions-dashboard-navigation.php:41
 #: includes/Install/Installer.php:238
 #: assets/js/components.js:2
 #: assets/js/dokan-admin-dashboard.js:2
@@ -269,7 +269,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:37
 #: includes/Admin/Settings/Schema/SettingsSchema.php:807
 #: includes/Admin/SetupWizard.php:287
-#: includes/functions-dashboard-navigation.php:64
+#: includes/functions-dashboard-navigation.php:66
 #: includes/functions.php:2917
 #: templates/withdraw/header.php:11
 #: assets/js/dokan-admin-dashboard.js:2
@@ -1391,7 +1391,7 @@ msgid "You have no permission to get settings value"
 msgstr ""
 
 #: includes/Admin/Settings.php:154
-#: includes/Admin/Settings.php:1063
+#: includes/Admin/Settings.php:1074
 msgid "You are not authorized to perform this action."
 msgstr ""
 
@@ -1410,6 +1410,7 @@ msgstr ""
 #: includes/Admin/Settings.php:335
 #: includes/Admin/Settings/Schema/SettingsSchema.php:155
 #: includes/ProductEditor/FormSchema.php:530
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:196
 #: includes/Vendor/SettingsApi/Settings/Pages/Payments/Payments.php:60
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:48
 #: assets/js/dokan-admin-dashboard.js:2
@@ -1489,8 +1490,8 @@ msgid "You can configure your store appearance settings, configure map API, Goog
 msgstr ""
 
 #: includes/Admin/Settings.php:389
-#: includes/Admin/Settings.php:999
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2037
+#: includes/Admin/Settings.php:1010
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2060
 msgid "Privacy Policy"
 msgstr ""
 
@@ -1515,7 +1516,7 @@ msgid "Configure your site settings and control access to your site."
 msgstr ""
 
 #: includes/Admin/Settings.php:423
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2123
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2146
 msgid "Admin Area Access"
 msgstr ""
 
@@ -1566,6 +1567,8 @@ msgid "If checked, vendors will not be prompted through a guided setup process b
 msgstr ""
 
 #: includes/Admin/Settings.php:465
+#: includes/Admin/Settings.php:846
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1646
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:31
 msgid "Vendor Store Settings"
 msgstr ""
@@ -1575,22 +1578,22 @@ msgid "Configure your vendor store settings and setup your store policy for vend
 msgstr ""
 
 #: includes/Admin/Settings.php:471
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2072
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2095
 msgid "Store Terms and Conditions"
 msgstr ""
 
 #: includes/Admin/Settings.php:472
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2073
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2096
 msgid "Enable terms and conditions for vendor stores"
 msgstr ""
 
 #: includes/Admin/Settings.php:478
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1653
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1676
 msgid "Store Products Per Page"
 msgstr ""
 
 #: includes/Admin/Settings.php:479
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1654
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1677
 msgid "Set how many products to display per page on the vendor store page."
 msgstr ""
 
@@ -1637,7 +1640,7 @@ msgstr ""
 
 #: includes/Admin/Settings.php:531
 #: includes/Admin/Settings.php:584
-#: includes/Product/Hooks.php:494
+#: includes/Product/Hooks.php:517
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -1880,13 +1883,13 @@ msgstr ""
 #: includes/Admin/Settings.php:794
 #: includes/Admin/Settings.php:804
 #: includes/Admin/Settings.php:811
-#: includes/Admin/Settings.php:994
+#: includes/Admin/Settings.php:1005
 #: includes/Admin/Settings/Schema/SettingsSchema.php:285
 #: includes/Admin/Settings/Schema/SettingsSchema.php:304
 #: includes/Admin/Settings/Schema/SettingsSchema.php:323
 #: includes/Admin/Settings/Schema/SettingsSchema.php:342
 #: includes/Admin/Settings/Schema/SettingsSchema.php:362
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2060
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2083
 msgid "Select page"
 msgstr ""
 
@@ -1963,15 +1966,19 @@ msgstr ""
 
 #: includes/Admin/Settings.php:829
 #: includes/Admin/Settings.php:840
+#: includes/Admin/Settings.php:851
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1605
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1628
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1651
 msgid "New UI"
 msgstr ""
 
 #: includes/Admin/Settings.php:830
 #: includes/Admin/Settings.php:841
+#: includes/Admin/Settings.php:852
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1609
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1632
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1655
 msgid "Legacy UI"
 msgstr ""
 
@@ -1985,147 +1992,152 @@ msgstr ""
 msgid "Select the user interface for the vendor product editor."
 msgstr ""
 
-#: includes/Admin/Settings.php:846
+#: includes/Admin/Settings.php:847
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1647
+msgid "Select the user interface for the vendor store settings."
+msgstr ""
+
+#: includes/Admin/Settings.php:857
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1364
 msgid "Show \"Register as a Vendor\" in Sign Up Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:847
+#: includes/Admin/Settings.php:858
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1365
 msgid "Adds the \"I am a customer / I am a vendor\" role toggle to the WooCommerce My Account sign-up form."
 msgstr ""
 
-#: includes/Admin/Settings.php:854
+#: includes/Admin/Settings.php:865
 msgid "Store Appearance"
 msgstr ""
 
-#: includes/Admin/Settings.php:855
+#: includes/Admin/Settings.php:866
 msgid "Configure your site appearances."
 msgstr ""
 
-#: includes/Admin/Settings.php:860
+#: includes/Admin/Settings.php:871
 #: includes/Admin/Settings/Schema/SettingsSchema.php:517
 msgid "Show map on Store Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:861
+#: includes/Admin/Settings.php:872
 msgid "Enable map of the store location in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:867
+#: includes/Admin/Settings.php:878
 #: includes/Admin/Settings/Schema/SettingsSchema.php:390
 #: templates/admin-setup-wizard/step-store.php:55
 msgid "Map API Source"
 msgstr ""
 
-#: includes/Admin/Settings.php:868
+#: includes/Admin/Settings.php:879
 #: includes/Admin/Settings/Schema/SettingsSchema.php:391
 msgid "Which map API source you want to use in your site?"
 msgstr ""
 
-#: includes/Admin/Settings.php:873
+#: includes/Admin/Settings.php:884
 #: includes/Admin/Settings/Schema/SettingsSchema.php:395
 #: includes/Admin/SetupWizard.php:506
 msgid "Google Maps"
 msgstr ""
 
-#: includes/Admin/Settings.php:874
+#: includes/Admin/Settings.php:885
 #: includes/Admin/Settings/Schema/SettingsSchema.php:399
 #: includes/Admin/SetupWizard.php:507
 msgid "Mapbox"
 msgstr ""
 
-#: includes/Admin/Settings.php:879
+#: includes/Admin/Settings.php:890
 #: includes/Admin/Settings/Schema/SettingsSchema.php:432
 #: templates/admin-setup-wizard/step-store.php:68
 msgid "Google Map API Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:880
+#: includes/Admin/Settings.php:891
 msgid "<a href=\"https://developers.google.com/maps/documentation/javascript/\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:883
+#: includes/Admin/Settings.php:894
 #: includes/Admin/Settings/Schema/SettingsSchema.php:438
 msgid "Insert Google API Key (with hyperlink) to display store map."
 msgstr ""
 
-#: includes/Admin/Settings.php:892
+#: includes/Admin/Settings.php:903
 #: templates/admin-setup-wizard/step-store.php:84
 msgid "Mapbox Access Token"
 msgstr ""
 
-#: includes/Admin/Settings.php:893
+#: includes/Admin/Settings.php:904
 msgid "<a href=\"https://docs.mapbox.com/help/how-mapbox-works/access-tokens/\" target=\"_blank\" rel=\"noopener noreferrer\">Access Token</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:896
+#: includes/Admin/Settings.php:907
 msgid "Insert Mapbox Access Token (with hyperlink) to display store map."
 msgstr ""
 
-#: includes/Admin/Settings.php:905
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1677
+#: includes/Admin/Settings.php:916
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1700
 msgid "Show Contact Form on Store Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:906
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1678
+#: includes/Admin/Settings.php:917
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1701
 msgid "Display a vendor contact form in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:913
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1767
+#: includes/Admin/Settings.php:924
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1790
 msgid "Select a store header for your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:914
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1766
+#: includes/Admin/Settings.php:925
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1789
 msgid "Store Header Template"
 msgstr ""
 
-#: includes/Admin/Settings.php:925
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1705
+#: includes/Admin/Settings.php:936
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1728
 msgid "Default Store Banner"
 msgstr ""
 
-#: includes/Admin/Settings.php:935
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1718
+#: includes/Admin/Settings.php:946
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1741
 msgid "Default Store Profile Picture"
 msgstr ""
 
-#: includes/Admin/Settings.php:945
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1810
+#: includes/Admin/Settings.php:956
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1833
 msgid "Store Opening Closing Time Widget"
 msgstr ""
 
-#: includes/Admin/Settings.php:946
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1811
+#: includes/Admin/Settings.php:957
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1834
 msgid "Enable store opening & closing time widget in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:952
+#: includes/Admin/Settings.php:963
 msgid "Enable Store Sidebar From Theme"
 msgstr ""
 
-#: includes/Admin/Settings.php:953
+#: includes/Admin/Settings.php:964
 msgid "Enable showing store sidebar from your theme."
 msgstr ""
 
-#: includes/Admin/Settings.php:959
+#: includes/Admin/Settings.php:970
 msgid "Hide Vendor Info"
 msgstr ""
 
-#: includes/Admin/Settings.php:960
+#: includes/Admin/Settings.php:971
 msgid "Hide vendor contact info from single store page."
 msgstr ""
 
-#: includes/Admin/Settings.php:968
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1871
+#: includes/Admin/Settings.php:979
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1894
 msgid "Email Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:969
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1875
+#: includes/Admin/Settings.php:980
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1898
 #: includes/Admin/UserProfile.php:218
 #: templates/account/update-customer-to-vendor.php:48
 #: templates/account/vendor-registration.php:45
@@ -2135,78 +2147,78 @@ msgstr ""
 msgid "Phone Number"
 msgstr ""
 
-#: includes/Admin/Settings.php:970
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1879
+#: includes/Admin/Settings.php:981
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1902
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:249
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:250
 msgid "Store Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:975
+#: includes/Admin/Settings.php:986
 msgid "Disable Dokan FontAwesome"
 msgstr ""
 
-#: includes/Admin/Settings.php:976
+#: includes/Admin/Settings.php:987
 msgid "If disabled then dokan fontawesome library won't be loaded in frontend"
 msgstr ""
 
-#: includes/Admin/Settings.php:984
+#: includes/Admin/Settings.php:995
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:986
+#: includes/Admin/Settings.php:997
 msgid "Enable privacy policy for vendor store contact form"
 msgstr ""
 
-#: includes/Admin/Settings.php:991
+#: includes/Admin/Settings.php:1002
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:993
+#: includes/Admin/Settings.php:1004
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:1001
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2103
+#: includes/Admin/Settings.php:1012
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2126
 #: includes/functions.php:3385
 msgid "Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]"
 msgstr ""
 
-#: includes/Admin/Settings.php:1002
+#: includes/Admin/Settings.php:1013
 msgid "Customize the Privacy Policy text that will be displayed on your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:1074
+#: includes/Admin/Settings.php:1085
 msgid "Both section and field params are required."
 msgstr ""
 
-#: includes/Admin/Settings.php:1083
+#: includes/Admin/Settings.php:1094
 msgid "No filter found to refresh the setting options"
 msgstr ""
 
-#: includes/Admin/Settings.php:1115
+#: includes/Admin/Settings.php:1126
 msgid "Minimum Withdraw Limit can't be negative value."
 msgstr ""
 
-#: includes/Admin/Settings.php:1126
+#: includes/Admin/Settings.php:1137
 #: includes/ReverseWithdrawal/Admin/Settings.php:216
 msgid "Validation error"
 msgstr ""
 
-#: includes/Admin/Settings.php:1171
+#: includes/Admin/Settings.php:1182
 msgid "Data Clear"
 msgstr ""
 
-#: includes/Admin/Settings.php:1172
+#: includes/Admin/Settings.php:1183
 msgid "Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin."
 msgstr ""
 
-#: includes/Admin/Settings.php:1175
+#: includes/Admin/Settings.php:1186
 msgid "Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won't happen when the plugins are deactivated.."
 msgstr ""
 
 #. translators: %s: the reserved slug
-#: includes/Admin/Settings.php:1207
+#: includes/Admin/Settings.php:1218
 #: includes/REST/AdminOnboardingController.php:181
 #: assets/js/dokan-admin-onboard.js:1
 #: assets/js/vue-admin.js:2
@@ -2215,6 +2227,7 @@ msgstr ""
 
 #: includes/Admin/Settings/Migration/LegacyMirror.php:478
 #: includes/REST/AdminSettingsController.php:226
+#: includes/REST/VendorStoreSettingsController.php:181
 msgid "Validation failed for one or more fields."
 msgstr ""
 
@@ -2238,7 +2251,9 @@ msgstr ""
 #: includes/Admin/Settings/Schema/SettingsSchema.php:187
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1575
 #: includes/Admin/SetupWizard.php:272
-#: includes/functions-dashboard-navigation.php:83
+#: includes/functions-dashboard-navigation.php:85
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:125
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:131
 #: includes/Vendor/SetupWizard.php:708
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
@@ -2267,13 +2282,17 @@ msgstr ""
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1479
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1524
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1541
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2041
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2076
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2127
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2496
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2567
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2708
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2064
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2099
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2150
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2519
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2590
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2731
 #: includes/ProductEditor/FormSchema.php:575
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:568
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:659
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:737
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:758
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Enabled"
@@ -2293,13 +2312,17 @@ msgstr ""
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1483
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1528
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1545
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2045
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2080
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2131
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2162
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2500
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2571
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2712
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2068
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2103
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2154
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2185
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2523
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2594
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2735
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:572
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:663
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:741
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:762
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Disabled"
@@ -2330,6 +2353,7 @@ msgid "Vendor Onboarding Page"
 msgstr ""
 
 #: includes/Admin/Settings/Schema/SettingsSchema.php:371
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:197
 msgid "Location"
 msgstr ""
 
@@ -2510,7 +2534,7 @@ msgid "Set up commission collection from vendors on Cash on Delivery orders. Con
 msgstr ""
 
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1015
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2480
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2503
 msgid "Doc"
 msgstr ""
 
@@ -2679,165 +2703,165 @@ msgstr ""
 msgid "Manage Vendor Panel appearance settings and modifications"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1655
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1678
 msgid "Set the number of products to display per page on the vendor store page."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1656
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1679
 msgid "Products Per Page"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1681
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1814
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1842
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1911
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1704
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1837
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1865
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1934
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 msgid "Enable"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1685
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1818
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1846
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1915
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1708
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1841
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1869
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1938
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 msgid "Disable"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1738
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1761
 msgid "Store Banner Dimension"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1739
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1762
 #: includes/Product/functions.php:235
 msgid "Width"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1740
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1763
 #: includes/Product/functions.php:236
 msgid "Height"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1772
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1795
 msgid "Template 1"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1777
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1800
 msgid "Template 2"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1782
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1805
 msgid "Template 3"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1787
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1810
 msgid "Template 4"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1838
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1861
 msgid "Store Sidebar From Theme"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1839
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1862
 msgid "Apply main theme's sidebar styling to vendor stores for a consistent look"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1866
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1889
 msgid "Vendor Info Visibility"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1867
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1890
 msgid "Choose what vendor details to show customers in single store page."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1907
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1930
 msgid "Dokan font-awesome Functionality"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1908
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1931
 msgid "If disabled then Dokan font-awesome library won't be loaded in frontend."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1936
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1959
 msgid "Single Product Page Appearance"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1937
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1960
 msgid "Choose which sections to show when customers view individual products."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1941
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1964
 #: includes/Customizer.php:185
 #: includes/wc-template.php:41
 msgid "Vendor Info"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:1945
+#: includes/Admin/Settings/Schema/SettingsSchema.php:1968
 msgid "More products tab"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2015
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2038
 msgid "Compliance"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2017
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2040
 msgid "Configure privacy, data handling, and regulatory compliance settings."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2024
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2047
 msgid "Privacy"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2038
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2061
 msgid "Show privacy policy link on vendor store contact forms."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2058
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2081
 msgid "Privacy Policy Page"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2059
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2082
 msgid "Choose which page displays your privacy policy."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2098
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2121
 msgid "Privacy Policy Content"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2099
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2122
 msgid "Create or edit your privacy policy text that will be displayed to users."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2124
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2147
 msgid "Prevent vendors from accessing the WordPress admin dashboard."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2153
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2176
 msgid "Data Clear Consent"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2154
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2177
 msgid "Permanently delete all data and database tables related to Dokan and Dokan Pro plugins. This action cannot be undone."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2158
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2181
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Clear Data"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2166
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2167
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2189
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2190
 msgid "Are you sure to delete all data?"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2168
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2191
 msgid "All data and tables related to Dokan and Dokan Pro will be deleted permanently. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2169
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2192
 #: assets/js/components.js:2
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
@@ -2845,7 +2869,7 @@ msgstr ""
 msgid "Yes, Delete"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2170
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2193
 #: includes/Assets.php:1084
 #: includes/Assets.php:1368
 #: includes/Product/functions.php:310
@@ -2874,210 +2898,210 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2171
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2194
 msgid "Yes, I understand."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2229
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2252
 #: includes/Intelligence/Admin/Settings.php:66
 msgid "AI Assist"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2230
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2253
 msgid "Configure AI-powered features to enhance your marketplace experience."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2238
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2261
 msgid "Content Generation"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2239
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2262
 #: includes/Intelligence/Admin/Settings.php:71
 msgid "Set up AI to elevate your platform with enhanced capabilities."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2250
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2273
 #: includes/Intelligence/Admin/Settings.php:90
 msgid "AI Product Info Generator"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2251
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2274
 #: includes/Intelligence/Admin/Settings.php:91
 msgid "Let vendors generate product info by AI"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2258
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2281
 #: includes/Intelligence/Admin/Settings.php:96
 msgid "Engine"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2259
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2282
 #: includes/Intelligence/Admin/Settings.php:102
 msgid "Select which AI provider to use for generating content."
 msgstr ""
 
 #. translators: %s: Provider title
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2393
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2416
 msgid "%s API"
 msgstr ""
 
 #. translators: %s: Provider title
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2396
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2419
 msgid "Connect to your %s account with your website."
 msgstr ""
 
 #. translators: %s: Provider title
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2405
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2428
 msgid "You can get your API Keys in your %s Account."
 msgstr ""
 
 #. translators: %s: Provider title
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2407
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2430
 msgid "%s Account"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2416
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2439
 msgid "API Key"
 msgstr ""
 
 #. translators: %s: Provider title
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2418
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2441
 msgid "Enter your %s API key."
 msgstr ""
 
 #. translators: %s: Provider title
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2420
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2443
 msgid "Enter your %s API key"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2445
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2468
 #: includes/Intelligence/Admin/Settings.php:128
 msgid "Model"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2446
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2469
 #: includes/Intelligence/Admin/Settings.php:131
 msgid "More advanced models provide higher quality output but may cost more per generation."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2465
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2488
 msgid "Moderation"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2466
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2489
 msgid "Configure moderation settings, return policies, and customer request management."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2476
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2499
 msgid "Captcha"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2477
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2500
 msgid "Add bot and spam protection to the forms across your store."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2492
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2515
 msgid "Captcha Service"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2493
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2516
 msgid "Activate captcha on every form that supports it."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2513
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2536
 #: includes/Captcha/Manager.php:249
 msgid "Captcha Provider"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2514
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2537
 msgid "Select the captcha provider to use for this marketplace"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2518
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2541
 #: includes/Captcha/Providers/GoogleRecaptchaV3Provider.php:30
 msgid "Google reCAPTCHA v3"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2522
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2545
 #: includes/Captcha/Providers/CloudflareTurnstileProvider.php:30
 msgid "Cloudflare Turnstile"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2556
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2579
 #: includes/Captcha/Providers/GoogleRecaptchaV3Provider.php:139
 msgid "Google reCAPTCHA v3 Validation"
 msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2559
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2582
 msgid "Google reCAPTCHA v3 credentials are required to enable captcha for supported forms. %1$sGet Help%2$s"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2656
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2679
 msgid "You can get your Site Key and Secret Key from your reCAPTCHA admin console."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2657
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2680
 msgid "Admin Console"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2665
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2666
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2806
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2807
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2688
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2689
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2829
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2830
 #: includes/Captcha/Providers/CloudflareTurnstileProvider.php:141
 #: includes/Captcha/Providers/GoogleRecaptchaV3Provider.php:151
 msgid "Site Key"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2667
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2690
 #: includes/Captcha/Providers/GoogleRecaptchaV3Provider.php:152
 msgid "Insert Google reCAPTCHA v3 site key."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2679
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2680
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2820
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2821
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2702
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2703
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2843
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2844
 #: includes/Captcha/Providers/CloudflareTurnstileProvider.php:149
 #: includes/Captcha/Providers/GoogleRecaptchaV3Provider.php:159
 msgid "Secret Key"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2681
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2704
 #: includes/Captcha/Providers/GoogleRecaptchaV3Provider.php:160
 msgid "Insert Google reCAPTCHA v3 secret key."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2697
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2720
 #: includes/Captcha/Providers/CloudflareTurnstileProvider.php:129
 msgid "Cloudflare Turnstile Validation"
 msgstr ""
 
 #. translators: 1: opening anchor tag, 2: closing anchor tag
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2700
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2723
 msgid "Cloudflare Turnstile credentials are required to enable captcha for supported forms. %1$sGet Help%2$s"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2797
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2820
 msgid "You can get your Site Key and Secret Key from your Cloudflare Turnstile dashboard."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2798
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2821
 msgid "Turnstile Dashboard"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2808
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2831
 #: includes/Captcha/Providers/CloudflareTurnstileProvider.php:142
 msgid "Insert Cloudflare Turnstile site key."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2822
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2845
 #: includes/Captcha/Providers/CloudflareTurnstileProvider.php:150
 msgid "Insert Cloudflare Turnstile secret key."
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2842
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2865
 #: includes/functions.php:2918
 #: templates/emails/vendor-completed-order.php:54
 #: templates/emails/vendor-new-order.php:53
@@ -3088,7 +3112,7 @@ msgstr ""
 msgid "Product"
 msgstr ""
 
-#: includes/Admin/Settings/Schema/SettingsSchema.php:2843
+#: includes/Admin/Settings/Schema/SettingsSchema.php:2866
 msgid "Configure product-related settings for your marketplace."
 msgstr ""
 
@@ -3232,6 +3256,7 @@ msgstr ""
 #: templates/admin-setup-wizard/step-commission.php:12
 #: templates/admin-setup-wizard/step-selling.php:34
 #: templates/admin-setup-wizard/step-store.php:153
+#: assets/js/dokan-admin-dashboard.js:2
 msgid "Continue"
 msgstr ""
 
@@ -3283,7 +3308,7 @@ msgid "Error installing WooCommerce plugin"
 msgstr ""
 
 #: includes/Admin/SetupWizardNoWC.php:187
-#: includes/functions-dashboard-navigation.php:90
+#: includes/functions-dashboard-navigation.php:92
 #: includes/ReverseWithdrawal/Helper.php:70
 #: includes/Vendor/SetupWizard.php:718
 msgid "Payment"
@@ -3408,6 +3433,7 @@ msgstr ""
 #: includes/Vendor/SetupWizard.php:280
 #: templates/admin-setup-wizard/step-store-wc-fields.php:24
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Country"
@@ -3795,12 +3821,13 @@ msgstr ""
 #: includes/Ajax.php:598
 #: includes/woo-views/html-product-download.php:14
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:651
-#: includes/Product/Hooks.php:68
+#: includes/Product/Hooks.php:91
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -3968,6 +3995,8 @@ msgstr ""
 #: templates/orders/listing.php:20
 #: templates/products/products-listing.php:108
 #: templates/store-lists-filter.php:84
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 msgid "Apply"
 msgstr ""
@@ -4307,10 +4336,14 @@ msgid "This action cannot be reversed. Are you sure you wish to erase personal d
 msgstr ""
 
 #: includes/Assets.php:1345
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Select and Crop"
 msgstr ""
 
 #: includes/Assets.php:1346
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Choose Image"
 msgstr ""
 
@@ -4497,6 +4530,7 @@ msgstr ""
 
 #: includes/CatalogMode/Admin/Settings.php:46
 #: includes/CatalogMode/Dashboard/Settings.php:62
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:732
 msgid "Remove Add to Cart Button"
 msgstr ""
 
@@ -4506,6 +4540,7 @@ msgstr ""
 
 #: includes/CatalogMode/Admin/Settings.php:53
 #: includes/CatalogMode/Dashboard/Settings.php:74
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:753
 msgid "Hide Product Price"
 msgstr ""
 
@@ -4533,11 +4568,13 @@ msgid "No product data has been updated."
 msgstr ""
 
 #: includes/CatalogMode/Dashboard/Settings.php:67
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:733
 #: templates/products/catalog-mode-content.php:38
 msgid "Check to remove Add to Cart option from your products."
 msgstr ""
 
 #: includes/CatalogMode/Dashboard/Settings.php:79
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:754
 #: templates/products/catalog-mode-content.php:45
 msgid "Check to hide product price from your products."
 msgstr ""
@@ -4923,6 +4960,7 @@ msgid "Store name required"
 msgstr ""
 
 #: includes/Dashboard/Templates/Settings.php:525
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:689
 msgid "Please add Terms & Conditions content before saving the settings."
 msgstr ""
 
@@ -4934,23 +4972,23 @@ msgstr ""
 msgid "You must attest that the bank account is yours."
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:773
+#: includes/Dashboard/Templates/Settings.php:786
 msgid "Book"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:774
+#: includes/Dashboard/Templates/Settings.php:787
 msgid "Dress"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:775
+#: includes/Dashboard/Templates/Settings.php:788
 msgid "Electronic"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:795
+#: includes/Dashboard/Templates/Settings.php:808
 msgid "Bank Account Settings"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:800
+#: includes/Dashboard/Templates/Settings.php:813
 msgid "Paypal Settings"
 msgstr ""
 
@@ -5484,7 +5522,7 @@ msgstr ""
 msgid "You are an administrator. Please use dokan admin settings to enable your selling capabilities."
 msgstr ""
 
-#: includes/functions-dashboard-navigation.php:47
+#: includes/functions-dashboard-navigation.php:49
 #: includes/functions.php:1334
 #: templates/dashboard/products-widget.php:22
 #: assets/js/dokan-admin-dashboard.js:2
@@ -5493,7 +5531,7 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: includes/functions-dashboard-navigation.php:55
+#: includes/functions-dashboard-navigation.php:57
 #: includes/REST/AdminReportController.php:153
 #: templates/dashboard/orders-widget.php:22
 #: assets/js/dashboard-charts.js:1
@@ -5504,12 +5542,12 @@ msgstr ""
 msgid "Orders"
 msgstr ""
 
-#: includes/functions-dashboard-navigation.php:236
-#: includes/functions-dashboard-navigation.php:270
+#: includes/functions-dashboard-navigation.php:238
+#: includes/functions-dashboard-navigation.php:272
 msgid "No Title"
 msgstr ""
 
-#: includes/functions-dashboard-navigation.php:313
+#: includes/functions-dashboard-navigation.php:315
 #: templates/settings/header.php:14
 #: templates/store-lists-loop.php:107
 #: assets/js/components.js:2
@@ -5519,13 +5557,13 @@ msgstr ""
 msgid "Visit Store"
 msgstr ""
 
-#: includes/functions-dashboard-navigation.php:314
+#: includes/functions-dashboard-navigation.php:316
 #: templates/global/header-menu.php:54
 msgid "Edit Account"
 msgstr ""
 
-#: includes/functions-dashboard-navigation.php:315
-#: includes/Shortcodes/FullWidthVendorLayout.php:171
+#: includes/functions-dashboard-navigation.php:317
+#: includes/Shortcodes/FullWidthVendorLayout.php:192
 msgid "Log out"
 msgstr ""
 
@@ -6712,6 +6750,7 @@ msgid "Social"
 msgstr ""
 
 #: includes/Privacy.php:180
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:416
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:165
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
@@ -6724,6 +6763,7 @@ msgstr ""
 #: templates/maps/mapbox-with-search.php:5
 #: templates/settings/address-form.php:26
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Address"
@@ -6753,6 +6793,7 @@ msgstr ""
 #: templates/admin-setup-wizard/step-store-wc-fields.php:51
 #: templates/settings/address-form.php:75
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "City"
@@ -6768,6 +6809,7 @@ msgstr ""
 #: templates/admin-setup-wizard/step-store-wc-fields.php:58
 #: templates/admin-setup-wizard/step-store-wc-fields.php:59
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "State"
@@ -6980,6 +7022,7 @@ msgid "Go to the last page"
 msgstr ""
 
 #: includes/Product/functions.php:361
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:401
 msgid "Visible"
 msgstr ""
 
@@ -6988,7 +7031,7 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:206
+#: includes/Product/Hooks.php:229
 #: templates/products/listing-filter.php:110
 #: assets/js/components.js:2
 #: assets/js/dashboard-charts.js:1
@@ -6997,12 +7040,14 @@ msgid "Search"
 msgstr ""
 
 #: includes/Product/functions.php:364
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:405
 #: templates/products/edit-product-single.php:198
 msgid "Hidden"
 msgstr ""
 
 #: includes/Product/functions.php:486
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 msgid "Edit"
 msgstr ""
@@ -7044,30 +7089,30 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:75
+#: includes/Product/Hooks.php:98
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:165
+#: includes/Product/Hooks.php:188
 #: templates/orders/commission-meta-box-html.php:85
 #: assets/js/frontend.js:2
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:202
+#: includes/Product/Hooks.php:225
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:210
+#: includes/Product/Hooks.php:233
 msgid "Shop order"
 msgstr ""
 
-#: includes/Product/Hooks.php:428
+#: includes/Product/Hooks.php:451
 msgid "As this is your own product, the \"Add to Cart\" button has been removed. Please visit as a guest to view it."
 msgstr ""
 
-#: includes/Product/Hooks.php:498
-#: includes/Product/Hooks.php:499
+#: includes/Product/Hooks.php:521
+#: includes/Product/Hooks.php:522
 #: assets/js/vue-admin.js:2
 msgid "When the value is 0, no commissions will be deducted from this vendor."
 msgstr ""
@@ -7292,7 +7337,7 @@ msgstr ""
 
 #: includes/ProductEditor/FormSchema.php:795
 #: includes/REST/DummyDataController.php:444
-#: includes/REST/ProductController.php:2224
+#: includes/REST/ProductController.php:2228
 msgid "Controls whether or not the product is listed as \"in stock\" or \"out of stock\" on the frontend."
 msgstr ""
 
@@ -7355,7 +7400,7 @@ msgid "Configure your downloadable product settings"
 msgstr ""
 
 #: includes/ProductEditor/FormSchema.php:896
-#: includes/REST/ProductControllerV3.php:476
+#: includes/REST/ProductControllerV3.php:483
 msgid "Downloadable Files"
 msgstr ""
 
@@ -7908,6 +7953,7 @@ msgid "Flat key-value map of field values."
 msgstr ""
 
 #: includes/REST/AdminSettingsController.php:166
+#: includes/REST/VendorStoreSettingsController.php:144
 msgid "Values must be an object."
 msgstr ""
 
@@ -7917,17 +7963,20 @@ msgid "No fields found for page \"%s\"."
 msgstr ""
 
 #: includes/REST/AdminSettingsController.php:394
+#: includes/REST/VendorStoreSettingsController.php:405
 #: includes/Withdraw/functions.php:243
 msgid "This field is required."
 msgstr ""
 
 #. translators: %s: minimum value
 #: includes/REST/AdminSettingsController.php:401
+#: includes/REST/VendorStoreSettingsController.php:413
 msgid "Value must be at least %s."
 msgstr ""
 
 #. translators: %s: maximum value
 #: includes/REST/AdminSettingsController.php:408
+#: includes/REST/VendorStoreSettingsController.php:421
 msgid "Value must be at most %s."
 msgstr ""
 
@@ -8030,32 +8079,40 @@ msgstr ""
 msgid "Sorry, you are not allowed to search customers."
 msgstr ""
 
-#: includes/REST/CustomersController.php:101
+#: includes/REST/CustomersController.php:90
+msgid "You are not allowed to change this customer's password."
+msgstr ""
+
+#: includes/REST/CustomersController.php:94
+msgid "You are not allowed to change this customer's email address."
+msgstr ""
+
+#: includes/REST/CustomersController.php:114
 msgid "Invalid user."
 msgstr ""
 
-#: includes/REST/CustomersController.php:119
-#: includes/REST/CustomersController.php:124
+#: includes/REST/CustomersController.php:132
+#: includes/REST/CustomersController.php:137
 msgid "You cannot operate on this user."
 msgstr ""
 
-#: includes/REST/CustomersController.php:128
+#: includes/REST/CustomersController.php:141
 msgid "You cannot operate on this customer."
 msgstr ""
 
-#: includes/REST/CustomersController.php:267
+#: includes/REST/CustomersController.php:306
 msgid "You do not have permission to search customers."
 msgstr ""
 
-#: includes/REST/CustomersController.php:275
+#: includes/REST/CustomersController.php:314
 msgid "Search term is required."
 msgstr ""
 
-#: includes/REST/CustomersController.php:355
+#: includes/REST/CustomersController.php:394
 msgid "You cannot modify the role of a user."
 msgstr ""
 
-#: includes/REST/CustomersController.php:365
+#: includes/REST/CustomersController.php:404
 msgid "Invalid customer."
 msgstr ""
 
@@ -8070,403 +8127,403 @@ msgstr ""
 
 #: includes/REST/DummyDataController.php:181
 #: includes/REST/OrderController.php:927
-#: includes/REST/ProductController.php:1991
+#: includes/REST/ProductController.php:1995
 #: includes/REST/VendorProductCategoriesController.php:58
 msgid "Unique identifier for the resource."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:187
 #: includes/REST/OrderController.php:1283
-#: includes/REST/ProductController.php:1997
+#: includes/REST/ProductController.php:2001
 msgid "Product name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:193
-#: includes/REST/ProductController.php:2002
+#: includes/REST/ProductController.php:2006
 msgid "Product slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:199
-#: includes/REST/ProductController.php:2007
+#: includes/REST/ProductController.php:2011
 msgid "Product URL."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:207
-#: includes/REST/ProductController.php:2014
+#: includes/REST/ProductController.php:2018
 msgid "The date the product was created, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:214
-#: includes/REST/ProductController.php:2020
+#: includes/REST/ProductController.php:2024
 msgid "The date the product was created, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:221
-#: includes/REST/ProductController.php:2026
+#: includes/REST/ProductController.php:2030
 msgid "The date the product was last modified, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:228
-#: includes/REST/ProductController.php:2032
+#: includes/REST/ProductController.php:2036
 msgid "The date the product was last modified, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:235
-#: includes/REST/ProductController.php:2038
+#: includes/REST/ProductController.php:2042
 msgid "Product type."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:244
-#: includes/REST/ProductController.php:2045
+#: includes/REST/ProductController.php:2049
 msgid "Product status (post status)."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:253
-#: includes/REST/ProductController.php:2052
+#: includes/REST/ProductController.php:2056
 msgid "Featured product."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:259
-#: includes/REST/ProductController.php:2058
+#: includes/REST/ProductController.php:2062
 msgid "Catalog visibility."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:267
-#: includes/REST/ProductController.php:2065
+#: includes/REST/ProductController.php:2069
 msgid "Product description."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:273
-#: includes/REST/ProductController.php:2070
+#: includes/REST/ProductController.php:2074
 msgid "Product short description."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:279
-#: includes/REST/ProductController.php:2075
+#: includes/REST/ProductController.php:2079
 msgid "Unique identifier."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:285
-#: includes/REST/ProductController.php:2080
+#: includes/REST/ProductController.php:2084
 msgid "Current product price."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:291
-#: includes/REST/ProductController.php:2086
+#: includes/REST/ProductController.php:2090
 msgid "Product regular price."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:297
-#: includes/REST/ProductController.php:2091
+#: includes/REST/ProductController.php:2095
 msgid "Product sale price."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:304
-#: includes/REST/ProductController.php:2096
+#: includes/REST/ProductController.php:2100
 msgid "Start date of sale price, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:310
-#: includes/REST/ProductController.php:2101
+#: includes/REST/ProductController.php:2105
 msgid "Start date of sale price, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:316
-#: includes/REST/ProductController.php:2106
+#: includes/REST/ProductController.php:2110
 msgid "End date of sale price, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:322
-#: includes/REST/ProductController.php:2111
+#: includes/REST/ProductController.php:2115
 msgid "End date of sale price, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:328
-#: includes/REST/ProductController.php:2122
+#: includes/REST/ProductController.php:2126
 msgid "Shows if the product is on sale."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:334
-#: includes/REST/ProductController.php:2128
+#: includes/REST/ProductController.php:2132
 msgid "Shows if the product can be bought."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:340
-#: includes/REST/ProductController.php:2134
+#: includes/REST/ProductController.php:2138
 msgid "Amount of sales."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:347
-#: includes/REST/ProductController.php:2140
+#: includes/REST/ProductController.php:2144
 msgid "If the product is virtual."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:354
-#: includes/REST/ProductController.php:2146
+#: includes/REST/ProductController.php:2150
 msgid "If the product is downloadable."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:361
-#: includes/REST/ProductController.php:2152
+#: includes/REST/ProductController.php:2156
 msgid "List of downloadable files."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:368
-#: includes/REST/ProductController.php:2159
+#: includes/REST/ProductController.php:2163
 msgid "File MD5 hash."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:375
-#: includes/REST/ProductController.php:2165
+#: includes/REST/ProductController.php:2169
 msgid "File name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:381
-#: includes/REST/ProductController.php:2170
+#: includes/REST/ProductController.php:2174
 msgid "File URL."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:390
-#: includes/REST/ProductController.php:2178
+#: includes/REST/ProductController.php:2182
 msgid "Number of times downloadable files can be downloaded after purchase."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:397
-#: includes/REST/ProductController.php:2184
+#: includes/REST/ProductController.php:2188
 msgid "Number of days until access to downloadable files expires."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:404
-#: includes/REST/ProductController.php:2190
+#: includes/REST/ProductController.php:2194
 msgid "Product external URL. Only for external products."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:411
-#: includes/REST/ProductController.php:2196
+#: includes/REST/ProductController.php:2200
 msgid "Product external button text. Only for external products."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:417
-#: includes/REST/ProductController.php:2201
+#: includes/REST/ProductController.php:2205
 msgid "Tax status."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:425
-#: includes/REST/ProductController.php:2208
+#: includes/REST/ProductController.php:2212
 msgid "Tax class."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:431
-#: includes/REST/ProductController.php:2213
+#: includes/REST/ProductController.php:2217
 msgid "Stock management at product level."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:437
-#: includes/REST/ProductController.php:2219
+#: includes/REST/ProductController.php:2223
 msgid "Stock quantity."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:450
-#: includes/REST/ProductController.php:2230
+#: includes/REST/ProductController.php:2234
 msgid "If managing stock, this controls if backorders are allowed."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:457
-#: includes/REST/ProductController.php:2237
+#: includes/REST/ProductController.php:2241
 msgid "Shows if backorders are allowed."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:463
-#: includes/REST/ProductController.php:2243
+#: includes/REST/ProductController.php:2247
 msgid "Shows if the product is on backordered."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:469
-#: includes/REST/ProductController.php:2249
+#: includes/REST/ProductController.php:2253
 msgid "Allow one item to be bought in a single order."
 msgstr ""
 
 #. translators: %s: weight unit
 #: includes/REST/DummyDataController.php:477
-#: includes/REST/ProductController.php:2256
+#: includes/REST/ProductController.php:2260
 msgid "Product weight (%s)."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:483
-#: includes/REST/ProductController.php:2261
+#: includes/REST/ProductController.php:2265
 msgid "Product dimensions."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:489
-#: includes/REST/ProductController.php:2267
+#: includes/REST/ProductController.php:2271
 msgid "Product length (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:496
-#: includes/REST/ProductController.php:2273
+#: includes/REST/ProductController.php:2277
 msgid "Product width (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:503
-#: includes/REST/ProductController.php:2279
+#: includes/REST/ProductController.php:2283
 msgid "Product height (%s)."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:511
-#: includes/REST/ProductController.php:2286
+#: includes/REST/ProductController.php:2290
 msgid "Shows if the product need to be shipped."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:517
-#: includes/REST/ProductController.php:2292
+#: includes/REST/ProductController.php:2296
 msgid "Shows whether or not the product shipping is taxable."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:523
-#: includes/REST/ProductController.php:2298
+#: includes/REST/ProductController.php:2302
 msgid "Shipping class slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:529
-#: includes/REST/ProductController.php:2303
+#: includes/REST/ProductController.php:2307
 msgid "Shipping class ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:536
-#: includes/REST/ProductController.php:2309
+#: includes/REST/ProductController.php:2313
 msgid "Allow reviews."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:542
-#: includes/REST/ProductController.php:2315
+#: includes/REST/ProductController.php:2319
 msgid "Reviews average rating."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:549
-#: includes/REST/ProductController.php:2321
+#: includes/REST/ProductController.php:2325
 msgid "Amount of reviews that the product have."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:556
-#: includes/REST/ProductController.php:2327
+#: includes/REST/ProductController.php:2331
 msgid "List of related products IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:565
-#: includes/REST/ProductController.php:2336
+#: includes/REST/ProductController.php:2340
 msgid "List of up-sell products IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:573
-#: includes/REST/ProductController.php:2344
+#: includes/REST/ProductController.php:2348
 msgid "List of cross-sell products IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:581
-#: includes/REST/ProductController.php:2352
+#: includes/REST/ProductController.php:2356
 msgid "Product parent ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:588
-#: includes/REST/ProductController.php:2357
+#: includes/REST/ProductController.php:2361
 msgid "Optional note to send the customer after purchase."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:594
-#: includes/REST/ProductController.php:2362
+#: includes/REST/ProductController.php:2366
 msgid "List of categories."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:601
-#: includes/REST/ProductController.php:2369
+#: includes/REST/ProductController.php:2373
 msgid "Category ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:607
-#: includes/REST/ProductController.php:2374
+#: includes/REST/ProductController.php:2378
 msgid "Category name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:614
-#: includes/REST/ProductController.php:2380
+#: includes/REST/ProductController.php:2384
 msgid "Category slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:624
-#: includes/REST/ProductController.php:2389
+#: includes/REST/ProductController.php:2393
 msgid "List of tags."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:631
-#: includes/REST/ProductController.php:2396
+#: includes/REST/ProductController.php:2400
 msgid "Tag ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:637
-#: includes/REST/ProductController.php:2401
+#: includes/REST/ProductController.php:2405
 msgid "Tag name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:644
-#: includes/REST/ProductController.php:2407
+#: includes/REST/ProductController.php:2411
 msgid "Tag slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:654
-#: includes/REST/ProductController.php:2416
+#: includes/REST/ProductController.php:2420
 msgid "List of images."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:661
-#: includes/REST/ProductController.php:2423
+#: includes/REST/ProductController.php:2427
 msgid "Image ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:667
-#: includes/REST/ProductController.php:2428
+#: includes/REST/ProductController.php:2432
 msgid "The date the image was created, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:675
-#: includes/REST/ProductController.php:2434
+#: includes/REST/ProductController.php:2438
 msgid "The date the image was created, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:683
-#: includes/REST/ProductController.php:2440
+#: includes/REST/ProductController.php:2444
 msgid "The date the image was last modified, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:691
-#: includes/REST/ProductController.php:2446
+#: includes/REST/ProductController.php:2450
 msgid "The date the image was last modified, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:699
-#: includes/REST/ProductController.php:2452
+#: includes/REST/ProductController.php:2456
 msgid "Image URL."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:706
-#: includes/REST/ProductController.php:2458
+#: includes/REST/ProductController.php:2462
 msgid "Image name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:712
-#: includes/REST/ProductController.php:2463
+#: includes/REST/ProductController.php:2467
 msgid "Image alternative text."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:718
-#: includes/REST/ProductController.php:2468
+#: includes/REST/ProductController.php:2472
 msgid "Image position. 0 means that the image is featured."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:728
-#: includes/REST/ProductController.php:2476
+#: includes/REST/ProductController.php:2480
 msgid "List of attributes."
 msgstr ""
 
@@ -8474,61 +8531,61 @@ msgstr ""
 #: includes/REST/DummyDataController.php:785
 #: includes/REST/ProductAttributeController.php:77
 #: includes/REST/ProductAttributeController.php:103
-#: includes/REST/ProductController.php:2483
-#: includes/REST/ProductController.php:2528
+#: includes/REST/ProductController.php:2487
+#: includes/REST/ProductController.php:2532
 msgid "Attribute ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:741
 #: includes/REST/DummyDataController.php:791
 #: includes/REST/ProductAttributeController.php:265
-#: includes/REST/ProductController.php:2488
-#: includes/REST/ProductController.php:2533
+#: includes/REST/ProductController.php:2492
+#: includes/REST/ProductController.php:2537
 msgid "Attribute name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:747
-#: includes/REST/ProductController.php:2493
+#: includes/REST/ProductController.php:2497
 msgid "Attribute position."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:754
-#: includes/REST/ProductController.php:2498
+#: includes/REST/ProductController.php:2502
 msgid "Define if the attribute is visible on the \"Additional information\" tab in the product's page."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:760
-#: includes/REST/ProductController.php:2504
+#: includes/REST/ProductController.php:2508
 msgid "Define if the attribute can be used as variation."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:766
-#: includes/REST/ProductController.php:2510
+#: includes/REST/ProductController.php:2514
 msgid "List of available term names of the attribute."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:778
-#: includes/REST/ProductController.php:2521
+#: includes/REST/ProductController.php:2525
 msgid "Defaults variation attributes."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:797
-#: includes/REST/ProductController.php:2538
+#: includes/REST/ProductController.php:2542
 msgid "Selected attribute term name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:806
-#: includes/REST/ProductController.php:2546
+#: includes/REST/ProductController.php:2550
 msgid "List of variations IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:816
-#: includes/REST/ProductController.php:2555
+#: includes/REST/ProductController.php:2559
 msgid "List of grouped products ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:825
-#: includes/REST/ProductController.php:2563
+#: includes/REST/ProductController.php:2567
 msgid "Menu order, used to custom sort products."
 msgstr ""
 
@@ -8539,7 +8596,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1533
 #: includes/REST/OrderController.php:1631
 #: includes/REST/OrderController.php:1689
-#: includes/REST/ProductController.php:2568
+#: includes/REST/ProductController.php:2572
 msgid "Meta data."
 msgstr ""
 
@@ -8550,7 +8607,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1540
 #: includes/REST/OrderController.php:1638
 #: includes/REST/OrderController.php:1696
-#: includes/REST/ProductController.php:2575
+#: includes/REST/ProductController.php:2579
 msgid "Meta ID."
 msgstr ""
 
@@ -8561,7 +8618,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1546
 #: includes/REST/OrderController.php:1644
 #: includes/REST/OrderController.php:1702
-#: includes/REST/ProductController.php:2581
+#: includes/REST/ProductController.php:2585
 msgid "Meta key."
 msgstr ""
 
@@ -8572,7 +8629,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1551
 #: includes/REST/OrderController.php:1649
 #: includes/REST/OrderController.php:1707
-#: includes/REST/ProductController.php:2586
+#: includes/REST/ProductController.php:2590
 msgid "Meta value."
 msgstr ""
 
@@ -9338,29 +9395,29 @@ msgstr ""
 msgid "Product type slugs to exclude from the vendor listing (e.g. booking)."
 msgstr ""
 
-#: includes/REST/ProductController.php:1588
-#: includes/REST/ProductController.php:1589
+#: includes/REST/ProductController.php:1592
+#: includes/REST/ProductController.php:1593
 msgid "Placeholder"
 msgstr ""
 
 #. translators: %s: attachment id
-#: includes/REST/ProductController.php:1806
+#: includes/REST/ProductController.php:1810
 msgid "#%s is an invalid image ID."
 msgstr ""
 
-#: includes/REST/ProductController.php:2116
+#: includes/REST/ProductController.php:2120
 msgid "Price formatted in HTML."
 msgstr ""
 
-#: includes/REST/ProductController.php:2594
+#: includes/REST/ProductController.php:2598
 msgid "Minimum price for variable product, null for other product types."
 msgstr ""
 
-#: includes/REST/ProductController.php:2600
+#: includes/REST/ProductController.php:2604
 msgid "Maximum price for variable product, null for other product types."
 msgstr ""
 
-#: includes/REST/ProductController.php:2606
+#: includes/REST/ProductController.php:2610
 msgid "Product edit URL."
 msgstr ""
 
@@ -9445,17 +9502,17 @@ msgid "You do not have permission to delete this product."
 msgstr ""
 
 #. translators: %s: label of the downloadable files field.
-#: includes/REST/ProductControllerV3.php:482
+#: includes/REST/ProductControllerV3.php:489
 msgid "%s is required. Please attach at least one downloadable file."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:511
+#: includes/REST/ProductControllerV3.php:518
 msgid "The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:561
-#: includes/REST/ProductControllerV3.php:590
-#: includes/REST/ProductControllerV3.php:650
+#: includes/REST/ProductControllerV3.php:568
+#: includes/REST/ProductControllerV3.php:597
+#: includes/REST/ProductControllerV3.php:657
 msgid "Invalid product ID."
 msgstr ""
 
@@ -9962,6 +10019,24 @@ msgstr ""
 msgid "End date to show orders"
 msgstr ""
 
+#: includes/REST/VendorStoreSettingsController.php:79
+msgid "Flat key-value map of field values keyed by field id."
+msgstr ""
+
+#: includes/REST/VendorStoreSettingsController.php:260
+msgid "No vendor found for the current user."
+msgstr ""
+
+#: includes/REST/VendorStoreSettingsController.php:358
+#: assets/js/frontend.js:2
+#: assets/js/product-editor-utils.js:2
+msgid "This field is invalid."
+msgstr ""
+
+#: includes/REST/VendorStoreSettingsController.php:367
+msgid "Please choose an image from your media library."
+msgstr ""
+
 #: includes/REST/WithdrawController.php:51
 msgid "IDs of withdraws"
 msgstr ""
@@ -10383,16 +10458,16 @@ msgstr ""
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
-#: includes/Shortcodes/FullWidthVendorLayout.php:166
+#: includes/Shortcodes/FullWidthVendorLayout.php:187
 #: templates/global/header-menu.php:53
 msgid "My Account"
 msgstr ""
 
-#: includes/Shortcodes/FullWidthVendorLayout.php:185
+#: includes/Shortcodes/FullWidthVendorLayout.php:206
 msgid "Back to WP Panel"
 msgstr ""
 
-#: includes/Shortcodes/FullWidthVendorLayout.php:200
+#: includes/Shortcodes/FullWidthVendorLayout.php:221
 msgid "Access Admin Panel"
 msgstr ""
 
@@ -10439,8 +10514,8 @@ msgstr ""
 
 #: includes/template-tags.php:559
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:238
-#: includes/Widgets/StoreLocation.php:40
-#: includes/Widgets/StoreLocation.php:101
+#: includes/Widgets/StoreLocation.php:41
+#: includes/Widgets/StoreLocation.php:102
 msgid "Store Location"
 msgstr ""
 
@@ -10528,6 +10603,217 @@ msgstr ""
 #: includes/Vendor/Manager.php:606
 #: includes/Vendor/Manager.php:625
 msgid "Invalid vendor ID."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:198
+#: templates/products/edit-product-single.php:345
+#: templates/products/new-product.php:231
+#: templates/products/tmpl-add-product-popup.php:66
+msgid "Schedule"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:199
+#: templates/settings/bank-payment-method-settings.php:46
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/vue-admin.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Business"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:200
+msgid "Policies"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:285
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:59
+msgid "Branding"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:286
+msgid "Oversee your store's branding elements: title, banner, logo, and contact number."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:295
+msgid "Store Title"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:296
+msgid "ex - Fashion Store"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:305
+msgid "Store title is required."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:314
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:70
+msgid "Store Banner"
+msgstr ""
+
+#. translators: 1) store banner width 2) store banner height
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:317
+msgid "Specification - %1$s X %2$s pixels, Format JPG or Png and file size 5mb max"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:335
+#: assets/js/dokan-admin-dashboard.js:2
+msgid "Logo"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:336
+msgid "Specification - 150 X 150 pixels, file size 5mb max"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:381
+#: assets/js/dokan-admin-dashboard.js:2
+msgid "Store Information"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:382
+msgid "These information can increase trust layers to your customers."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:395
+#: includes/Vendor/SetupWizard.php:344
+#: templates/settings/store-form.php:156
+msgid "Show email address in store"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:396
+msgid "Display your account email on the store page so customers can reach you directly."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:417
+msgid "e.g 206-555-0122"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:454
+msgid "Store Locations"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:455
+msgid "Please enter the address of your store where you conduct your business."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:504
+msgid "Store Map"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:505
+msgid "Kindly provide the location of the store address from which you ship your products."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:514
+#: templates/maps/google-maps-with-search.php:6
+#: templates/maps/mapbox-with-search.php:6
+msgid "Find Address"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:552
+#: templates/settings/store-form.php:225
+msgid "Store Schedule"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:553
+msgid "Set the daily open and close time your store follows."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:562
+#: templates/settings/store-form.php:232
+msgid "Store has open close time"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:563
+msgid "Show your daily opening and closing hours on the store page."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:596
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:360
+#: templates/settings/store-form.php:247
+msgid "Store Open Notice"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:597
+msgid "Message customers see on your store page during open hours."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:598
+#: includes/Vendor/Vendor.php:1091
+#: templates/settings/store-form.php:250
+msgid "Store is open"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:610
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:371
+#: templates/settings/store-form.php:255
+msgid "Store Close Notice"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:611
+msgid "Message customers see on your store page outside open hours."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:612
+#: includes/Vendor/Vendor.php:1105
+#: templates/settings/store-form.php:258
+msgid "Store is closed"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:643
+msgid "Terms & Conditions"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:644
+msgid "Clearly define store policies to ensure a smooth shopping experience."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:653
+#: templates/settings/store-form.php:197
+msgid "Show terms and conditions in store page"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:654
+msgid "Publish your store terms and conditions on the store page so customers know your policies before they buy."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:672
+#: templates/settings/store-form.php:203
+msgid "TOC Details"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:673
+msgid "Spell out your store policies — returns, shipping, and warranties — that customers agree to when they order."
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:722
+#: templates/products/catalog-mode-content.php:24
+msgid "Catalog Mode"
+msgstr ""
+
+#: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:723
+msgid "Control how customers can purchase products from your store."
+msgstr ""
+
+#. translators: %s: day name
+#: includes/Vendor/Settings/StoreScheduleValidator.php:102
+msgid "%s: opening and closing times are required for open days."
+msgstr ""
+
+#. translators: %s: day name
+#: includes/Vendor/Settings/StoreScheduleValidator.php:114
+msgid "%s: times must use the h:mm am/pm format."
+msgstr ""
+
+#. translators: %s: day name
+#: includes/Vendor/Settings/StoreScheduleValidator.php:123
+msgid "%s: the opening time must be earlier than the closing time."
+msgstr ""
+
+#. translators: %s: day name
+#: includes/Vendor/Settings/StoreScheduleValidator.php:144
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "%s time ranges can not overlap."
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Processor.php:115
@@ -10626,19 +10912,13 @@ msgid "The general Payment settings."
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:30
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Store Settings"
-msgstr ""
-
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:59
-msgid "Branding"
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:60
 msgid "Set the overall appearance of your store by setting banner image, logo and more"
-msgstr ""
-
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:70
-msgid "Store Banner"
 msgstr ""
 
 #. translators: 1) store banner width, 2) store banner height.
@@ -10696,12 +10976,15 @@ msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:186
 #: includes/Vendor/SetupWizard.php:210
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Street"
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:187
 #: templates/settings/address-form.php:44
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Street address"
 msgstr ""
 
@@ -10730,6 +11013,8 @@ msgid "State or state code"
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:231
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Select a state"
 msgstr ""
 
@@ -10798,22 +11083,12 @@ msgstr ""
 msgid "Sunday Schedule"
 msgstr ""
 
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:360
-#: templates/settings/store-form.php:247
-msgid "Store Open Notice"
-msgstr ""
-
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:361
 msgid "Store open notice for store visitors"
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:363
 msgid "Store is open and taking orders"
-msgstr ""
-
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:371
-#: templates/settings/store-form.php:255
-msgid "Store Close Notice"
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:372
@@ -10953,12 +11228,16 @@ msgstr ""
 
 #: includes/Vendor/SetupWizard.php:229
 #: templates/settings/address-form.php:52
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Street 2"
 msgstr ""
 
 #: includes/Vendor/SetupWizard.php:263
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Post/Zip Code"
 msgstr ""
 
@@ -10969,11 +11248,6 @@ msgstr ""
 #: includes/Vendor/SetupWizard.php:322
 #: templates/settings/store-form.php:171
 msgid "Map"
-msgstr ""
-
-#: includes/Vendor/SetupWizard.php:344
-#: templates/settings/store-form.php:156
-msgid "Show email address in store"
 msgstr ""
 
 #: includes/Vendor/SetupWizard.php:376
@@ -11020,76 +11294,66 @@ msgstr ""
 msgid "Switched back to %1$s (%2$s)."
 msgstr ""
 
-#: includes/Vendor/Vendor.php:964
+#: includes/Vendor/Vendor.php:957
 msgid "No ratings found yet!"
 msgstr ""
 
-#: includes/Vendor/Vendor.php:966
+#: includes/Vendor/Vendor.php:959
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Vendor/Vendor.php:967
+#: includes/Vendor/Vendor.php:960
 msgid "Rated %s out of %d"
 msgstr ""
 
-#: includes/Vendor/Vendor.php:1098
-#: templates/settings/store-form.php:250
-msgid "Store is open"
-msgstr ""
-
-#: includes/Vendor/Vendor.php:1112
-#: templates/settings/store-form.php:258
-msgid "Store is closed"
-msgstr ""
-
-#: includes/VendorNavMenuChecker.php:304
+#: includes/VendorNavMenuChecker.php:310
 msgid "Some of Dokan Templates or functionalities are overridden which limit new features."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:305
+#: includes/VendorNavMenuChecker.php:311
 msgid "Some of the Dokan templates or routes are overridden, which can prevent new features and intended functionalities from working correctly."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:309
+#: includes/VendorNavMenuChecker.php:315
 msgid "Learn More"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:337
-#: includes/VendorNavMenuChecker.php:364
+#: includes/VendorNavMenuChecker.php:343
+#: includes/VendorNavMenuChecker.php:370
 msgid "Overridden Template Table"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:340
+#: includes/VendorNavMenuChecker.php:346
 msgid "Template"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:355
+#: includes/VendorNavMenuChecker.php:361
 msgid "Please Remove the above file to enable new features."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:367
+#: includes/VendorNavMenuChecker.php:373
 msgid "Route"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:368
+#: includes/VendorNavMenuChecker.php:374
 msgid "Override Status"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:386
+#: includes/VendorNavMenuChecker.php:392
 msgid "Forcefully enabled new feature."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:386
+#: includes/VendorNavMenuChecker.php:392
 msgid "Forcefully disabled new feature."
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:394
+#: includes/VendorNavMenuChecker.php:400
 msgid "Overridden Templates or Routes"
 msgstr ""
 
-#: includes/VendorNavMenuChecker.php:395
+#: includes/VendorNavMenuChecker.php:401
 msgid "The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features."
 msgstr ""
 
@@ -11189,7 +11453,7 @@ msgstr ""
 #: includes/Widgets/ProductCategoryMenu.php:96
 #: includes/Widgets/StoreCategoryMenu.php:88
 #: includes/Widgets/StoreContactForm.php:124
-#: includes/Widgets/StoreLocation.php:108
+#: includes/Widgets/StoreLocation.php:109
 #: includes/Widgets/StoreOpenClose.php:117
 #: includes/Widgets/TopratedProducts.php:75
 #: assets/js/dokan-intelligence.js:1
@@ -11263,11 +11527,11 @@ msgstr ""
 msgid "Dokan: Store Contact Form"
 msgstr ""
 
-#: includes/Widgets/StoreLocation.php:24
+#: includes/Widgets/StoreLocation.php:25
 msgid "Dokan Vendor Store Location"
 msgstr ""
 
-#: includes/Widgets/StoreLocation.php:26
+#: includes/Widgets/StoreLocation.php:27
 msgid "Dokan: Store Location"
 msgstr ""
 
@@ -11303,6 +11567,8 @@ msgid "Disconnect"
 msgstr ""
 
 #: includes/Withdraw/functions.php:189
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 msgid "Save"
 msgstr ""
@@ -12317,18 +12583,13 @@ msgstr ""
 msgid "Create an account"
 msgstr ""
 
-#: templates/maps/dokan-maps-with-search.php:9
-#: templates/widgets/store-map.php:30
+#: templates/maps/dokan-maps-with-search.php:11
+#: templates/widgets/store-map.php:33
 msgid "Mapbox Access Token not found"
 msgstr ""
 
 #: templates/maps/google-maps-with-search.php:5
 msgid "Type an address to find"
-msgstr ""
-
-#: templates/maps/google-maps-with-search.php:6
-#: templates/maps/mapbox-with-search.php:6
-msgid "Find Address"
 msgstr ""
 
 #: templates/maps/mapbox-with-search.php:120
@@ -12726,10 +12987,6 @@ msgstr ""
 msgid "Add New Product"
 msgstr ""
 
-#: templates/products/catalog-mode-content.php:24
-msgid "Catalog Mode"
-msgstr ""
-
 #: templates/products/catalog-mode-content.php:26
 msgid "Enable/Disable Catalog Mode for this product"
 msgstr ""
@@ -12866,12 +13123,6 @@ msgstr ""
 #: templates/products/new-product.php:230
 #: templates/products/tmpl-add-product-popup.php:65
 msgid "Discounted Price"
-msgstr ""
-
-#: templates/products/edit-product-single.php:345
-#: templates/products/new-product.php:231
-#: templates/products/tmpl-add-product-popup.php:66
-msgid "Schedule"
 msgstr ""
 
 #: templates/products/edit-product-single.php:368
@@ -13155,18 +13406,26 @@ msgid "Street "
 msgstr ""
 
 #: templates/settings/address-form.php:65
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Apartment, suite, unit etc. (optional)"
 msgstr ""
 
 #: templates/settings/address-form.php:88
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Town / City"
 msgstr ""
 
 #: templates/settings/address-form.php:96
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Post/ZIP Code"
 msgstr ""
 
 #: templates/settings/address-form.php:109
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Postcode / Zip"
 msgstr ""
 
@@ -13189,13 +13448,6 @@ msgstr ""
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Personal"
-msgstr ""
-
-#: templates/settings/bank-payment-method-settings.php:46
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/vue-admin.js:2
-#: assets/js/vue-bootstrap.js:2
-msgid "Business"
 msgstr ""
 
 #: templates/settings/bank-payment-method-settings.php:167
@@ -13261,22 +13513,6 @@ msgstr ""
 
 #: templates/settings/store-form.php:141
 msgid "+123456.."
-msgstr ""
-
-#: templates/settings/store-form.php:197
-msgid "Show terms and conditions in store page"
-msgstr ""
-
-#: templates/settings/store-form.php:203
-msgid "TOC Details"
-msgstr ""
-
-#: templates/settings/store-form.php:225
-msgid "Store Schedule"
-msgstr ""
-
-#: templates/settings/store-form.php:232
-msgid "Store has open close time"
 msgstr ""
 
 #: templates/store-header.php:17
@@ -13747,6 +13983,8 @@ msgid "Add time slot"
 msgstr ""
 
 #: assets/js/components.js:2
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Coordinates (latitude,longitude)"
 msgstr ""
 
@@ -14541,6 +14779,235 @@ msgid "Approved"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Required"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "%s opening and closing time can not be empty."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "%s closing time must be later than the opening time."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+#: assets/js/vue-admin.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Street 1"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Street Address"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Apartment, suite, unit etc."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Town/City name"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Write here"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Select date range"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Change"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+#: assets/js/product-editor-utils.js:2
+msgid "Upload"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Remove image"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Select a country…"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Country code"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Select a state…"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Search your store address…"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Location Name"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Add New Address"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Edit Location Details"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Adding Location Details"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Select a country"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Search country"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "No countries found."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Search state"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "No states found."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Delete Location"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Delete this location?"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "This store location will be removed. This action cannot be undone."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+#: assets/js/vue-admin.js:2
+msgid "Message"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Add New Vacation"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "No vacation is set"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Edit Vacation Schedule"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Add Vacation Schedule"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Date Range"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Vacation Message"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Vacation Schedule"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Delete Vacation"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Delete this vacation schedule?"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "This scheduled vacation will be removed. This action cannot be undone."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Set Details"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Adding Details"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Edit Details"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Delete Details"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Delete these details?"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "All the saved details will be cleared after you save the settings."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
 msgid "Video"
 msgstr ""
 
@@ -14655,6 +15122,26 @@ msgid "Parent category commission changes will automatically update all subcateg
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
+msgid "Retry Loading"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+msgid "Failed to load settings"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+msgid "Failed to save settings."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+msgid "Skip"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+msgid "Finish"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
 msgid "Sorry, the page can't be found"
 msgstr ""
 
@@ -14733,20 +15220,11 @@ msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
-msgid "Date Range"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/frontend.js:2
 msgid "%s - %s"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Add note for this withdraw"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:2
-msgid "Write here"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
@@ -15010,10 +15488,6 @@ msgid "Enabling this will highlight the vendor as featured."
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
-msgid "Store Information"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:2
 msgid "Enter store name"
 msgstr ""
 
@@ -15025,20 +15499,6 @@ msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Enter store url"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:2
-msgid "Logo"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:2
-msgid "Change"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/frontend.js:2
-#: assets/js/product-editor-utils.js:2
-msgid "Upload"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
@@ -15226,10 +15686,6 @@ msgid "Settings saved."
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
-msgid "Failed to save settings."
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:2
 msgid "Unsaved changes"
 msgstr ""
 
@@ -15246,6 +15702,7 @@ msgid "Stay on this page"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
 msgid "Saving…"
 msgstr ""
 
@@ -16657,11 +17114,6 @@ msgstr ""
 
 #: assets/js/frontend.js:2
 #: assets/js/product-editor-utils.js:2
-msgid "This field is invalid."
-msgstr ""
-
-#: assets/js/frontend.js:2
-#: assets/js/product-editor-utils.js:2
 msgid "Please fill out this field."
 msgstr ""
 
@@ -16977,6 +17429,18 @@ msgstr ""
 
 #: assets/js/frontend.js:2
 msgid "Failed to add to cart"
+msgstr ""
+
+#: assets/js/frontend.js:2
+msgid "Failed to load store settings."
+msgstr ""
+
+#: assets/js/frontend.js:2
+msgid "Store settings saved."
+msgstr ""
+
+#: assets/js/frontend.js:2
+msgid "Failed to save store settings."
 msgstr ""
 
 #: assets/js/frontend.js:2
@@ -17390,11 +17854,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
-msgid "Street 1"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-#: assets/js/vue-bootstrap.js:2
 msgid "Select Country"
 msgstr ""
 
@@ -17493,10 +17952,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Reply-To"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Message"
 msgstr ""
 
 #: assets/js/vue-admin.js:2

@@ -9,7 +9,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * matches no option of the `vendor_auto_enable_selling` radio, so nothing showed
  * as selected. Mirrors {@see \WeDevs\Dokan\Utilities\AdminSettings::get_new_seller_enable_selling_status()}.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.0
  */
 final class EnableSellingStatusTransformer implements TransformerInterface {
 

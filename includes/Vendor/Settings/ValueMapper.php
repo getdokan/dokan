@@ -11,14 +11,14 @@ namespace WeDevs\Dokan\Vendor\Settings;
  * all existing readers (store templates, REST v1/v2, Pro read-modify-write
  * sites) keep working unchanged.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.0
  */
 class ValueMapper {
 
     /**
      * Convert sanitized flat values into a legacy profile-settings slice.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $sanitized    Sanitized values keyed by field id.
      * @param array $prev         The vendor's current `dokan_profile_settings` array.
@@ -58,7 +58,7 @@ class ValueMapper {
      * expands to two top-level keys and the address merges over its previous
      * subkeys.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param string $id    Field id.
      * @param mixed  $value Sanitized value.
@@ -90,7 +90,7 @@ class ValueMapper {
      * preserving keys other plugins own — they apply their own rules on the
      * `dokan_store_profile_settings_args` seam the writer fires.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $sanitized Sanitized values keyed by field id.
      * @param array $prev      The vendor's current profile settings.
