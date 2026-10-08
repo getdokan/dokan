@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, RawHTML } from '@wordpress/element';
+import { useMemo, useState, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useSettings, Textarea, type SettingsElement } from '@wedevs/plugin-ui';
 import { DataViews, DokanModal } from '@dokan/components';
@@ -7,6 +7,7 @@ import { RangeInput, formatRangeDate, type RangeValue } from './RangeInput';
 import {
     RequiredMark,
     fieldKeyOf,
+    nextTransientRowId,
     editButtonClass,
     deleteButtonClass,
 } from './shared';
@@ -57,7 +58,6 @@ const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
     const [ pendingDelete, setPendingDelete ] = useState< ScheduleRow | null >(
         null
     );
-    const newIdCounter = useRef( 0 );
 
     const error = element.validationError as string | undefined;
 
@@ -71,7 +71,7 @@ const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
         // A new schedule gets a transient client id; the server re-keys it on save.
         const row: ScheduleRow = draft.id
             ? draft
-            : { ...draft, id: `new-${ ++newIdCounter.current }` };
+            : { ...draft, id: nextTransientRowId( rows ) };
 
         const exists = rows.some( ( item ) => item.id === row.id );
         commit(

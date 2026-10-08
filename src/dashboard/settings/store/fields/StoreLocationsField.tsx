@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from '@wordpress/element';
+import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import {
     useSettings,
@@ -11,6 +11,7 @@ import { Pencil, Plus, Trash2 } from 'lucide-react';
 import {
     RequiredMark,
     fieldKeyOf,
+    nextTransientRowId,
     useCountries,
     actionButtonBase,
     editButtonClass,
@@ -141,7 +142,6 @@ const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
     const [ pendingDelete, setPendingDelete ] = useState< LocationRow | null >(
         null
     );
-    const newIdCounter = useRef( 0 );
 
     const commit = ( next: LocationRow[] ) => updateValue( fieldKey, next );
 
@@ -153,7 +153,7 @@ const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
         // A new row gets a transient client id; the server re-keys it on reload.
         const row: LocationRow = draft.id
             ? draft
-            : { ...draft, id: `new-${ ++newIdCounter.current }` };
+            : { ...draft, id: nextTransientRowId( rows ) };
 
         const exists = rows.some( ( item ) => item.id === row.id );
         commit(

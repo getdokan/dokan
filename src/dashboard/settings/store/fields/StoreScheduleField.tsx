@@ -149,6 +149,10 @@ const StoreScheduleField = ( { element }: { element: SettingsElement } ) => {
     const timeFormat = getSettings()?.formats?.time || '';
     const is12Hour = timeFormat ? /a/i.test( timeFormat ) : true;
 
+    // Server-side StoreScheduleValidator errors (merged by the engine on a 400);
+    // the engine drops it on the next edit of this field.
+    const serverError = element.validationError as string | undefined;
+
     const handleChange = ( next: WeeklyValue ) => {
         // Persist the legacy shape so the writer stays byte-identical; the
         // component renders its own per-row errors, and the server re-validates.
@@ -169,6 +173,11 @@ const StoreScheduleField = ( { element }: { element: SettingsElement } ) => {
                 messages={ SCHEDULE_MESSAGES }
                 onChange={ handleChange }
             />
+            { serverError && (
+                <p className="m-0 px-4 py-3 text-sm text-red-600" role="alert">
+                    { serverError }
+                </p>
+            ) }
         </div>
     );
 };
