@@ -12,12 +12,15 @@ name: E2E_API Package Tests
 # Started by: a push to develop here; deploy.yml finishing a lite release (a release made with
 # GITHUB_TOKEN never fires `release: published`); dokan-pro's package-e2e-on-lite.yml on a pro develop
 # push or a pro release; or by hand.
+#
+# Off switch: every automatic run is skipped unless the repository variable PACKAGE_TESTS_ENABLED is
+# "true" (Settings > Secrets and variables > Actions > Variables). A manual "Run workflow" always runs.
+# dokan-pro's dispatcher has the same switch in its own repository.
 run-name: ${{ github.event_name == 'workflow_run' && format('Package tests (lite release {0})', github.event.workflow_run.head_branch) || inputs.pro_tag && format('Package tests (pro release {0})', inputs.pro_tag) || inputs.pro_ref && format('Package tests (pro {0})', inputs.pro_ref) || github.workflow }}
 
 on:
     push:
-        # TEMPORARY: ci/package-e2e-workflow runs the workflow before merge. Revert this commit before merging.
-        branches: [develop, ci/package-e2e-workflow]
+        branches: [develop]
         paths-ignore:
             - '**.md'
             - '**.txt'
@@ -112,8 +115,11 @@ env:
 jobs:
     resolve:
         name: resolve packages and lanes
-        # A lite release counts only once deploy.yml has published it.
-        if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+        # Automatic runs wait for the switch (see the top of the file). A lite release counts only once
+        # deploy.yml has published it.
+        if: |
+            (vars.PACKAGE_TESTS_ENABLED == 'true' || github.event_name == 'workflow_dispatch')
+            && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
         runs-on: ubuntu-latest
         timeout-minutes: 5
         outputs:
