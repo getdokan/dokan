@@ -79,7 +79,10 @@ on:
                 type: string
 
 # One group per commit: a newer commit never cancels the run of an older one, on any
-# branch. Only a second run of the same commit, event and stack replaces the first.
+# branch except develop. Only a second run of the same commit, event and stack replaces the first.
+# Exception: pushes to develop share one group, so a newer develop push cancels the older develop
+# run, queued or running. The newest develop commit contains every earlier merge, so only its run
+# is worth finishing (release weeks merge many PRs back to back).
 concurrency:
     # The event is part of the group because a push to a pull request branch also fires
     # pull_request for the same commit; without it the (skipped) PR run would cancel the push
@@ -89,7 +92,7 @@ concurrency:
     # this commit. Those runs all dispatch on the same develop commit, so per-commit keys would
     # make different pro branches cancel each other; per-branch keys let a new push to a pro
     # branch cancel only that branch's older run.
-    group: ${{ github.workflow }}-${{ github.event_name }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || github.event.pull_request.head.sha || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
+    group: ${{ github.workflow }}-${{ github.event_name }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || github.event.pull_request.head.sha || (github.event_name == 'push' && github.ref == 'refs/heads/develop' && 'develop') || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -360,9 +363,11 @@ jobs:
         # from a job-level continue-on-error, so the schedule test is repeated here.
         continue-on-error: ${{ github.event.schedule == '0 14 * * *' }}
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
-        # `always() && build_lite succeeded` covers the fork-PR path too.
+        # `!cancelled() && build_lite succeeded` covers the fork-PR path too. It must not be
+        # `always()`: a job whose `if` uses always() ignores a run cancellation, so superseded
+        # runs kept all 12 shards going to the end (run 37594492571).
         needs: [build_lite, build_pro]
-        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
+        if: ${{ !cancelled() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped') }}
         strategy:
             fail-fast: false
             matrix:
@@ -828,7 +833,7 @@ jobs:
         # See e2e_tests: only the 14:00 pinned reference lane is allowed not to gate.
         continue-on-error: ${{ github.event.schedule == '0 14 * * *' }}
         needs: [build_lite, build_pro]
-        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
+        if: ${{ !cancelled() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped') }}
         strategy:
             fail-fast: false
             matrix:
