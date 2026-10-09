@@ -1358,6 +1358,9 @@ jobs:
 
     # Report the result back to the dokan-pro PR that started this run (pro_sha set).
     # DOKAN_PRO_TOKEN needs "Commit statuses: Read and write" on dokan-pro for this step.
+    # A run cancelled by a newer one on the same pro branch (cancel-in-progress) reports
+    # `error`, not `failure`: no test failed, the commit was simply superseded. Otherwise every
+    # older commit of a busy develop branch shows a red check that nobody can act on.
     pro_pr_status:
         name: e2e check on dokan-pro PR
         if: always() && inputs.pro_sha != ''
@@ -1369,13 +1372,19 @@ jobs:
               env:
                   GH_TOKEN: ${{ secrets.DOKAN_PRO_TOKEN }}
                   PRO_SHA: ${{ inputs.pro_sha }}
-                  STATE: ${{ needs.e2e_tests.result == 'success' && needs.api_tests.result == 'success' && 'success' || 'failure' }}
+                  CANCELLED: ${{ contains(needs.*.result, 'cancelled') }}
+                  STATE: ${{ contains(needs.*.result, 'cancelled') && 'error' || (needs.e2e_tests.result == 'success' && needs.api_tests.result == 'success' && 'success' || 'failure') }}
                   RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
                   LITE_REF: ${{ inputs.lite_ref || github.ref_name }}
               run: |
+                  if [ "$CANCELLED" = true ]; then
+                      desc="lite ${LITE_REF:0:100}: superseded by a newer run"
+                  else
+                      desc="lite ${LITE_REF:0:100}: $STATE"
+                  fi
                   gh api "repos/getdokan/dokan-pro/statuses/$PRO_SHA" \
                       -f state="$STATE" -f context=e2e -f target_url="$RUN_URL" \
-                      -f description="lite ${LITE_REF:0:100}: $STATE"
+                      -f description="$desc"
 
     # Starts with the run (no needs) and watches it from a spare runner.
     # - On a PR run it force-cancels every other unfinished E2E_API run on the PR's branch. The
