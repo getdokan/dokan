@@ -1408,6 +1408,14 @@ jobs:
                   while read -r id; do
                       echo "Force-cancelling run $id"
                       gh api -X POST "repos/${{ github.repository }}/actions/runs/$id/force-cancel" || echo "::warning::Could not force-cancel run $id"
+                      # A force-cancel skips always() jobs, so that run's delete_pro_artifact never
+                      # runs. Remove its dokan-pro tarball here instead (see delete_pro_artifact).
+                      gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts?name=dokan-pro-build" --jq '.artifacts[].id' |
+                      while read -r aid; do
+                          gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$aid" \
+                              && echo "Deleted dokan-pro-build artifact $aid of run $id" \
+                              || echo "::warning::Could not delete artifact $aid of run $id"
+                      done
                   done
 
             - name: Cancel the run 60 minutes after the first e2e shard starts
@@ -1426,4 +1434,29 @@ jobs:
                           gh api -X POST "$RUN_API/cancel"
                           exit 1
                       fi
+                  done
+
+    # dokan-pro is private but this repo is public, so any signed-in GitHub user can download this
+    # run's artifacts. Delete the pro source tarball once every shard has pulled it, instead of
+    # leaving it up until retention-days expires. always() so a failed or cancelled run cleans up too.
+    # A force-cancelled run never creates this job; run_guard deletes the tarball of the runs it
+    # force-cancels for that reason.
+    # Side effect: "Re-run failed jobs" on a shard can't find the artifact — use "Re-run all jobs".
+    delete_pro_artifact:
+        name: delete dokan-pro build artifact
+        if: always() && needs.build_pro.result == 'success'
+        needs: [build_pro, e2e_tests, api_tests]
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        permissions:
+            actions: write
+        steps:
+            - name: Delete dokan-pro-build
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  ids=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?name=dokan-pro-build" --jq '.artifacts[].id')
+                  for id in $ids; do
+                      gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+                      echo "deleted artifact $id"
                   done
