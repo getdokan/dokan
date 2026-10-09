@@ -39,7 +39,11 @@ test.describe('Vendor settings test', () => {
         // The catalog test turns vendor1's own catalog mode on and nothing turns it off. With the
         // seeded admin catalog gate on, that hides vendor1's prices and add-to-cart for every later
         // spec on the stack, so put back the product defaults.
-        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { catalog_mode: { hide_add_to_cart_button: 'off', hide_product_price: 'off', request_a_quote_enabled: 'off' } });
+        const [, profile] = await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { catalog_mode: { hide_add_to_cart_button: 'off', hide_product_price: 'off', request_a_quote_enabled: 'off' } });
+        // The vacation test saves a random 31-day range on vendor1. When that range covers the fixed
+        // days vendorStoreSettingsMigration's vacation test picks, those days render disabled and that
+        // test fails. updateUserMeta keeps existing array entries, so overwrite the schedules here.
+        await dbUtils.setUserMeta(VENDOR_ID, 'dokan_profile_settings', { ...profile, seller_vacation_schedules: [] }, true);
         if (DOKAN_PRO) await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
         await vPage?.close();
         await apiUtils?.dispose();
