@@ -1376,3 +1376,54 @@ jobs:
                   gh api "repos/getdokan/dokan-pro/statuses/$PRO_SHA" \
                       -f state="$STATE" -f context=e2e -f target_url="$RUN_URL" \
                       -f description="lite ${LITE_REF:0:100}: $STATE"
+
+    # Starts with the run (no needs) and watches it from a spare runner.
+    # - On a PR run it force-cancels every other unfinished E2E_API run on the PR's branch. The
+    #   concurrency group already cancels this PR's older run, but gracefully, and it never sees the
+    #   push runs that branches cut before this file changed still start from their own old copy.
+    # - On every run it cancels the run once 60 minutes have passed since the first e2e shard
+    #   started. A queued shard reports its creation time as started_at, so only running or finished
+    #   shards count. It exits once merge-reports and every other job are done, so it never holds a
+    #   finished run open. Fork PRs skip it: their token cannot cancel runs.
+    run_guard:
+        name: run guard
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+        # Backstop only: builds, the wait for shard runners and the 60-minute limit fit well inside.
+        timeout-minutes: 120
+        permissions:
+            actions: write
+        env:
+            GH_TOKEN: ${{ github.token }}
+            RUN_API: repos/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        steps:
+            - name: Force-cancel older runs on this PR branch
+              if: github.event_name == 'pull_request'
+              env:
+                  HEAD_REF: ${{ github.head_ref }}
+              run: |
+                  gh api -X GET "repos/${{ github.repository }}/actions/workflows/e2e_api_tests.yml/runs" \
+                      -f branch="$HEAD_REF" -f per_page=100 \
+                      --jq '.workflow_runs[] | select(.id < ${{ github.run_id }} and .status != "completed" and .head_repository.full_name == "${{ github.repository }}") | .id' |
+                  while read -r id; do
+                      echo "Force-cancelling run $id"
+                      gh api -X POST "repos/${{ github.repository }}/actions/runs/$id/force-cancel" || echo "::warning::Could not force-cancel run $id"
+                  done
+
+            - name: Cancel the run 60 minutes after the first e2e shard starts
+              run: |
+                  limit=$((60 * 60))
+                  while sleep 60; do
+                      state=$(gh api "$RUN_API/attempts/${{ github.run_attempt }}/jobs?per_page=100" --jq '[
+                          ([.jobs[] | select(.name != "run guard" and .status != "completed")] | length),
+                          ([.jobs[] | select(.name == "merge-reports" and .status == "completed")] | length),
+                          ([.jobs[] | select((.name | startswith("e2e tests")) and (.status == "in_progress" or .status == "completed") and .conclusion != "skipped") | .started_at] | min // "none")
+                      ] | @tsv') || continue
+                      read -r open merged first <<< "$state"
+                      if [ "$merged" -gt 0 ] && [ "$open" -eq 0 ]; then exit 0; fi
+                      if [ "$first" != none ] && [ $(( $(date +%s) - $(date -d "$first" +%s) )) -ge "$limit" ]; then
+                          echo "::error::60 minutes passed since the first e2e shard started at $first, so the run guard cancelled this run."
+                          gh api -X POST "$RUN_API/cancel"
+                          exit 1
+                      fi
+                  done
