@@ -67,8 +67,10 @@ if [[ -n "$other_num" ]]; then
 elif git ls-remote --exit-code --heads "https://github.com/${other_repo}.git" "$this_branch" >/dev/null 2>&1; then
   other_branch="$this_branch"
   echo "No companion PR in body; matched same branch name in $other_repo."
-else
+elif [[ "$this_side" == "lite" ]]; then
   echo "No companion PR and no matching branch in $other_repo — creating a lite-only env."
+else
+  echo "No companion PR and no matching branch in $LITE_REPO — lite will be checked out detached at origin/develop."
 fi
 
 # --- map to lite/pro branch names ---
@@ -78,10 +80,13 @@ else
   pro_branch="$this_branch";  lite_branch="$other_branch"
 fi
 
-# --- resolve main checkouts (dokan-pro expected next to dokan-lite) ---
+# --- resolve main checkouts (dokan-pro expected next to the lite main checkout) ---
 LITE_MAIN="$( git rev-parse --show-toplevel )"
 PLUGINS_DIR="$( dirname "$LITE_MAIN" )"
 PRO_MAIN="$PLUGINS_DIR/dokan-pro"
+if [[ "$this_side" == "pro" && ! -d "$PRO_MAIN/.git" ]]; then
+  echo "dokan-pro not found at $PRO_MAIN"; exit 1
+fi
 
 SLUG="${this_branch//\//-}"
 DEST="${DOKAN_WT_HOME:-$HOME/dokan-wt}/$SLUG"
@@ -101,23 +106,30 @@ add_worktree() {
   fi
 }
 
-[[ -n "$lite_branch" ]] && add_worktree "$LITE_MAIN" "$DEST/dokan-lite" "$lite_branch" "$this_base"
-
-if [[ -n "$pro_branch" && -d "$PRO_MAIN/.git" ]]; then
-  add_worktree "$PRO_MAIN" "$DEST/dokan-pro" "$pro_branch" develop
-  PRO_MOUNT="../dokan-pro"
+if [[ -n "$lite_branch" ]]; then
+  add_worktree "$LITE_MAIN" "$DEST/dokan" "$lite_branch" "$this_base"
 else
-  PRO_MOUNT="$PRO_MAIN"   # lite-only: mount the shared main pro checkout by absolute path
+  # Pro PR with no lite counterpart: run it against lite's develop, detached so
+  # the main checkout can keep develop checked out.
+  git -C "$LITE_MAIN" fetch --quiet origin develop
+  git -C "$LITE_MAIN" worktree add --detach "$DEST/dokan" origin/develop
 fi
 
-cat > "$DEST/dokan-lite/.wp-env.json" <<JSON
+PRO_ENTRY=""
+if [[ -n "$pro_branch" && -d "$PRO_MAIN/.git" ]]; then
+  add_worktree "$PRO_MAIN" "$DEST/dokan-pro" "$pro_branch" develop
+  PRO_ENTRY=$',\n    "../dokan-pro"'
+elif [[ -d "$PRO_MAIN" ]]; then
+  PRO_ENTRY=$',\n    "'"$PRO_MAIN"'"'   # lite-only: mount the shared main pro checkout by absolute path
+fi
+
+cat > "$DEST/dokan/.wp-env.json" <<JSON
 {
   "core": null,
   "phpVersion": "7.4",
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.zip",
-    ".",
-    "${PRO_MOUNT}"
+    "."${PRO_ENTRY}
   ],
   "lifecycleScripts": {
     "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive"
@@ -125,20 +137,28 @@ cat > "$DEST/dokan-lite/.wp-env.json" <<JSON
 }
 JSON
 
-cat > "$DEST/dokan-lite/.wp-env.override.json" <<JSON
+cat > "$DEST/dokan/.wp-env.override.json" <<JSON
 { "port": $PORT, "testsPort": $TESTS_PORT }
 JSON
+
+if [[ -d "$DEST/dokan-pro" ]]; then
+  PRO_LABEL="$DEST/dokan-pro  ($pro_branch)"
+elif [[ -n "$PRO_ENTRY" ]]; then
+  PRO_LABEL="mounted from $PRO_MAIN (shared main checkout)"
+else
+  PRO_LABEL="not mounted (no dokan-pro checkout at $PRO_MAIN)"
+fi
 
 cat <<EOF
 
 Worktree ready: $DEST
-  lite: $DEST/dokan-lite  (${lite_branch:-<none>})   ← runs wp-env on port $PORT
-  pro:  ${pro_branch:+$DEST/dokan-pro  ($pro_branch)}${pro_branch:-mounted from $PRO_MAIN (shared main checkout)}
+  lite: $DEST/dokan  (${lite_branch:-origin/develop, detached})   ← runs wp-env on port $PORT
+  pro:  $PRO_LABEL
 
-Next (build LITE first — pro's webpack.config.js requires ../dokan-lite/node_modules):
-  cd "$DEST/dokan-lite" && composer install && npm ci && npm run build
+Next (build LITE first — pro's webpack.config.js loads lite's webpack-dependency-mapping from ../dokan):
+  cd "$DEST/dokan" && composer install && npm ci && npm run build
   ${pro_branch:+cd "$DEST/dokan-pro"  && composer install && npm ci && npm run build}
-  cd "$DEST/dokan-lite" && npx wp-env start           # http://localhost:$PORT
-  # If npm ci fails on the @getdokan/dokan-ui git clone
-  # (code 128 / "destination path ... already exists"):  rm -rf ~/.npm/_cacache/tmp/git-clone*  and retry.
+  cd "$DEST/dokan" && npx wp-env start           # http://localhost:$PORT
+  # If npm ci fails on the @getdokan/dokan-ui git clone (code 128 / "destination path ... already exists"),
+  # see "npm ci in a worktree" in SKILL.md for workarounds.
 EOF

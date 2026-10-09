@@ -20,7 +20,7 @@ BASE="${2:-develop}"
 PORT="${3:-8890}"
 TESTS_PORT=$(( PORT + 1 ))
 
-# Resolve the two main checkouts. dokan-pro is expected next to dokan-lite.
+# Resolve the two main checkouts. dokan-pro is expected next to the lite main checkout.
 LITE_MAIN="$( git rev-parse --show-toplevel )"
 PLUGINS_DIR="$( dirname "$LITE_MAIN" )"
 PRO_MAIN="$PLUGINS_DIR/dokan-pro"
@@ -39,10 +39,10 @@ add_worktree() { # <repo> <path> <branch> <base>
   fi
 }
 
-add_worktree "$LITE_MAIN" "$DEST/dokan-lite" "$BRANCH" "$BASE"
+add_worktree "$LITE_MAIN" "$DEST/dokan" "$BRANCH" "$BASE"
 add_worktree "$PRO_MAIN"  "$DEST/dokan-pro"  "$BRANCH" "${PRO_BASE:-develop}"
 
-cat > "$DEST/dokan-lite/.wp-env.json" <<JSON
+cat > "$DEST/dokan/.wp-env.json" <<JSON
 {
   "core": null,
   "phpVersion": "7.4",
@@ -57,25 +57,25 @@ cat > "$DEST/dokan-lite/.wp-env.json" <<JSON
 }
 JSON
 
-cat > "$DEST/dokan-lite/.wp-env.override.json" <<JSON
+cat > "$DEST/dokan/.wp-env.override.json" <<JSON
 { "port": $PORT, "testsPort": $TESTS_PORT }
 JSON
 
 cat <<EOF
 
 Paired worktree ready: $DEST
-  lite: $DEST/dokan-lite  ($BRANCH)   ← runs wp-env on port $PORT
+  lite: $DEST/dokan  ($BRANCH)   ← runs wp-env on port $PORT
   pro:  $DEST/dokan-pro   ($BRANCH)   ← mounted via ../dokan-pro
 
-Next (build LITE first — pro's webpack.config.js requires ../dokan-lite/node_modules):
-  cd "$DEST/dokan-lite" && composer install && npm ci && npm run build
+Next (build LITE first — pro's webpack.config.js loads lite's webpack-dependency-mapping from ../dokan):
+  cd "$DEST/dokan" && composer install && npm ci && npm run build
   cd "$DEST/dokan-pro"  && composer install && npm ci && npm run build
-  cd "$DEST/dokan-lite" && npx wp-env start           # http://localhost:$PORT
-  # If npm ci fails on the @getdokan/dokan-ui git clone
-  # (code 128 / "destination path ... already exists"):  rm -rf ~/.npm/_cacache/tmp/git-clone*  and retry.
+  cd "$DEST/dokan" && npx wp-env start           # http://localhost:$PORT
+  # If npm ci fails on the @getdokan/dokan-ui git clone (code 128 / "destination path ... already exists"),
+  # see "npm ci in a worktree" in SKILL.md for workarounds.
 
 Tear down when merged:
-  git -C "$LITE_MAIN" worktree remove "$DEST/dokan-lite"
+  git -C "$LITE_MAIN" worktree remove "$DEST/dokan"
   git -C "$PRO_MAIN"  worktree remove "$DEST/dokan-pro"
-  (cd "$DEST/dokan-lite" && npx wp-env destroy)        # drop its DB volumes
+  (cd "$DEST/dokan" && npx wp-env destroy)        # drop its DB volumes
 EOF

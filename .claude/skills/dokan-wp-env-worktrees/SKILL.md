@@ -117,7 +117,7 @@ the matching pro branch:
 
 ```
 ~/dokan-wt/feat-x/
-├── dokan-lite/   ← worktree of lite @ feat-x   (runs wp-env, port 8890)
+├── dokan/        ← worktree of lite @ feat-x   (runs wp-env, port 8890)
 └── dokan-pro/    ← worktree of pro  @ feat-x   (mounted via ../dokan-pro)
 ```
 
@@ -128,9 +128,10 @@ New path → new `md5` → own isolated DB automatically; just bump ports.
 `worktree-from-pr.sh` takes **either** the lite PR **or** the pro PR, reads its
 body for the companion ("Related PR" / "Companion Pro PR" link to the other
 repo), and checks out the matching branch in **both** repos as paired worktrees.
-Falls back to the same branch name in the other repo if the body has no link,
-and to a lite-only env (pro mounted from the shared main checkout) if there is
-no companion at all.
+Falls back to the same branch name in the other repo if the body has no link.
+With no companion at all: a lite PR gets a lite-only env (pro mounted from the
+shared main checkout, if one exists); a pro PR gets lite checked out detached at
+`origin/develop`.
 
 ```bash
 .claude/skills/dokan-wp-env-worktrees/worktree-from-pr.sh https://github.com/getdokan/dokan/pull/3141
@@ -153,12 +154,13 @@ install or build — do that with the bootstrap sequence below.
 
 ## Bootstrap a paired worktree (install + build)
 
-> **Name the lite worktree folder `dokan`, not `dokan-lite`.** wp-env mounts a
-> local plugin at `/var/www/html/wp-content/plugins/<folder-basename>`, and
-> Dokan's `npm run phpunit` hardcodes `--env-cwd=wp-content/plugins/dokan`. A
-> folder named `dokan-lite` mounts at `.../plugins/dokan-lite`, so
-> `npm run phpunit` (and the Mode 2b seed paths below) break. The helper scripts
-> currently create `dokan-lite/` — rename to `dokan/` or adjust `--env-cwd`.
+> **Name the lite worktree folder `dokan`, not `dokan-lite`** (the helper scripts
+> do). wp-env mounts a local plugin at
+> `/var/www/html/wp-content/plugins/<folder-basename>`, and Dokan's
+> `npm run phpunit` hardcodes `--env-cwd=wp-content/plugins/dokan`, so a
+> `dokan-lite/` folder breaks `npm run phpunit` and the Mode 2b seed paths.
+> dokan-pro's build is fine either way — `src/utils/dokan-path.js` looks for
+> `../dokan-lite` and falls back to `../dokan`.
 
 A fresh worktree has no `node_modules`, `vendor`, or built `assets/` (worktrees
 don't share them with the main checkout). Run this order:
@@ -167,29 +169,29 @@ don't share them with the main checkout). Run this order:
 WT=~/dokan-wt/feat-x
 
 # 1. LITE first, fully (composer → npm → build)
-cd "$WT/dokan-lite" && composer install && npm ci && npm run build
+cd "$WT/dokan" && composer install && npm ci && npm run build
 
 # 2. THEN pro
 cd "$WT/dokan-pro" && composer install && npm ci && npm run build
 
 # 3. Start the env from the LITE worktree
-cd "$WT/dokan-lite" && npx wp-env start          # http://localhost:8890
+cd "$WT/dokan" && npx wp-env start               # http://localhost:8890
 ```
 
 Why the order matters:
 
-- **Lite before pro.** dokan-pro's `webpack.config.js` requires
-  `../dokan-lite/webpack-dependency-mapping.js`, which `require('lodash')` from
-  **dokan-lite's** `node_modules`. Build pro before lite is installed and it dies
+- **Lite before pro.** dokan-pro's `webpack.config.js` requires lite's
+  `webpack-dependency-mapping.js` (from `../dokan-lite` or `../dokan`), which
+  `require('lodash')` from **lite's** `node_modules`. Build pro before lite is installed and it dies
   with `[webpack-cli] Cannot find module 'lodash'`.
 - `composer install` pulls ~90 packages (Google/Stripe/Mangopay SDKs, Mozart) —
   no auth needed for the public deps. This part works reliably.
 
-> ⚠️ **UNRESOLVED BLOCKER — `npm ci`/`npm install` fails in a worktree.**
-> lite's `package.json` has a private git dep
-> `"@getdokan/dokan-ui": "github:getdokan/dokan-ui#dokan-plugin"` (cloned over
-> SSH). In a linked git worktree, both `npm ci` and `npm install` fail
-> **reproducibly** with:
+### npm ci in a worktree
+
+> ⚠️ **Intermittent — `npm ci` can fail on the `@getdokan/dokan-ui` git dep.**
+> lite's `package.json` has `"@getdokan/dokan-ui": "github:getdokan/dokan-ui#dokan-plugin"`
+> (cloned over SSH). It has failed with:
 > ```
 > npm error code 128
 > npm error command git ... clone --mirror -q ssh://git@github.com/getdokan/dokan-ui.git .../_cacache/tmp/git-clone…/.git
@@ -197,23 +199,19 @@ Why the order matters:
 > ```
 > It looks like npm cloning the same git dep twice concurrently into one temp path.
 >
-> **Verified this is NOT auth/network:** a raw
-> `git clone --mirror ssh://git@github.com/getdokan/dokan-ui.git <dir>/.git`
-> succeeds, and `ssh -T git@github.com` greets you.
+> **History:**
+> - 2026-07-07 (npm 11.17.0 / node 22.22.0): failed reproducibly in a fresh
+>   paired worktree. Not auth/network — a raw `git clone --mirror` of the repo
+>   and `ssh -T git@github.com` both succeeded. Did *not* help: clearing
+>   `~/.npm/_cacache/tmp/git-clone*`, a fresh `--cache <dir>`, a warmed cache,
+>   `npm install` instead of `npm ci`, `npm ci --maxsockets=1`.
+> - 2026-10-02 (same npm 11.17.0 / node 22.22.0): a plain `npm ci` in a lite
+>   worktree succeeded first try, `@getdokan/dokan-ui` included.
 >
-> **Tried and did NOT help** (2026-07-07, npm 11.17.0 / node 22.22.0):
-> `rm -rf ~/.npm/_cacache/tmp/git-clone*`, a fresh `--cache <dir>`, a warmed
-> cache, `npm install` instead of `npm ci`, and `npm ci --maxsockets=1`.
-> Pro's own `npm ci` sometimes succeeds (it runs second and reuses leftover
-> cache state), which is misleading — lite, running first against a cold state,
-> always fails.
->
-> **Untested leads / candidate workarounds** (confirm before trusting):
-> - Does `npm ci` work in a **non-worktree** checkout of the same branch? If so,
->   the bug is git-worktree-specific → install there and copy `node_modules` in.
-> - Try an older npm (`npm i -g npm@10`) — the concurrent-git-clone races differ
->   by npm major.
-> - Pre-seed `node_modules/@getdokan/dokan-ui` from a checkout where it installed.
+> **If it fails:** copy `node_modules` from a checkout where install succeeded
+> (e.g. the lite main checkout) into the worktree, then run `npm run build`.
+> Untested alternatives: an older npm (`npm i -g npm@10`), or pre-seeding just
+> `node_modules/@getdokan/dokan-ui`.
 
 Other notes:
 - **Lite-only change:** skip the pro worktree and point at the shared main pro
@@ -221,6 +219,39 @@ Other notes:
   branch at a time, which is fine when you aren't touching it.
 - If lite and pro versions are enforced (pro checks a minimum lite version),
   dev branches report dev versions and pass — no special handling needed.
+
+## Open the site from a phone (LAN access)
+
+wp-env publishes the dev port on all interfaces, so the site is reachable at
+`http://<mac-lan-ip>:<port>` — but WordPress redirects to its configured URL
+(`http://localhost:<port>` by default), which breaks on a phone. Point the
+**development** environment at the LAN IP in `.wp-env.override.json`:
+
+```jsonc
+{
+  "port": 8890,
+  "testsPort": 8891,
+  "env": {
+    "development": {
+      "config": {
+        "WP_HOME": "http://192.168.x.y",     // no port — wp-env appends it
+        "WP_SITEURL": "http://192.168.x.y"
+      }
+    }
+  }
+}
+```
+
+- Put it under `env.development`, **not** the root `config`. Root config is
+  copied to every environment, which would move the tests site off `localhost`
+  too.
+- Leave the port off. wp-env's `post-process-config.js` appends each
+  environment's own port to `WP_SITEURL` / `WP_HOME`.
+- These become `wp-config.php` constants, which win over the DB `siteurl` /
+  `home` options. When the IP changes, edit the override and re-run
+  `npx wp-env start` — no `search-replace` needed.
+- Get the IP with `ipconfig getifaddr en0` (Wi-Fi). Allow Docker through the
+  macOS firewall if prompted.
 
 ## Mode 1 — Isolated database (default, recommended)
 
@@ -288,6 +319,10 @@ Adjust the `search-replace` URLs to the source and target `port`. Add
     "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive"
   }
   ```
+- `https://downloads.wordpress.org/plugin/woocommerce.zip` is not guaranteed to
+  be a stable release — on 2026-10-02 it installed `11.2.0-beta.2`. Pin a
+  versioned zip (`woocommerce.<version>.zip`) in your local config when you need
+  a specific or stable WooCommerce.
 - Editing `~/.wp-env/<md5>/docker-compose.yml` by hand does not stick — wp-env
   regenerates it on every `start`. Configure via `.wp-env.json` /
   `.wp-env.override.json` instead.
