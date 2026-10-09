@@ -4,14 +4,13 @@ name: E2E_API Tests
 run-name: ${{ inputs.pro_sha && format('E2E_API Tests (pro {0}, lite {1})', inputs.pro_ref, inputs.lite_ref || github.ref_name) || github.workflow }}
 
 on:
-    # Every pushed commit runs the suite, on any branch, like the PHPUnit workflow.
-    # Commits that only touch the files in paths-ignore are skipped. A commit on a pull
-    # request branch in this repository is tested by its push run, whose checks also show
-    # on the PR, so the pull_request trigger only does work for PRs from forks (see the
-    # `if` on build_lite and merge-reports). The two lists below must be kept in sync by
-    # hand: GitHub Actions does not support YAML anchors.
+    # Like the PHPUnit workflow: pull requests run the suite when they open and on every push
+    # to them, and develop runs it on every push (merges). A branch with no pull request gets
+    # no run; start one by hand from "Run workflow" if needed. Commits that only touch the
+    # files in paths-ignore are skipped. The two lists below must be kept in sync by hand:
+    # GitHub Actions does not support YAML anchors.
     push:
-        branches: ['**']
+        branches: [develop]
         paths-ignore:
             - '**.md'
             - '**.txt'
@@ -78,21 +77,20 @@ on:
                 default: ''
                 type: string
 
-# One group per commit: a newer commit never cancels the run of an older one, on any
-# branch except develop. Only a second run of the same commit, event and stack replaces the first.
-# Exception: pushes to develop share one group, so a newer develop push cancels the older develop
-# run, queued or running. The newest develop commit contains every earlier merge, so only its run
-# is worth finishing (release weeks merge many PRs back to back).
+# A newer run cancels the older one, queued or running, in the same group:
+# - Pull requests: one group per PR, so a new push to a PR stops that PR's older run. Only the
+#   newest commit on the PR is worth finishing.
+# - Pushes to develop share one group. The newest develop commit contains every earlier merge,
+#   so only its run is worth finishing (release weeks merge many PRs back to back).
+# - A run started by a dokan-pro PR (pro_sha set) is keyed on the pro branch. Those runs all
+#   dispatch on the same develop commit, so per-commit keys would make different pro branches
+#   cancel each other; per-branch keys let a new push to a pro branch cancel only that branch's
+#   older run.
+# - Scheduled and other manual runs: one group per commit.
 concurrency:
-    # The event is part of the group because a push to a pull request branch also fires
-    # pull_request for the same commit; without it the (skipped) PR run would cancel the push
-    # run. The stack is part of it so the latest run and the pinned reference never cancel
+    # The stack is part of the group so the latest run and the pinned reference never cancel
     # each other on the same commit.
-    # Exception: a run started by a dokan-pro PR (pro_sha set) is keyed on the pro branch, not on
-    # this commit. Those runs all dispatch on the same develop commit, so per-commit keys would
-    # make different pro branches cancel each other; per-branch keys let a new push to a pro
-    # branch cancel only that branch's older run.
-    group: ${{ github.workflow }}-${{ github.event_name }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || github.event.pull_request.head.sha || (github.event_name == 'push' && github.ref == 'refs/heads/develop' && 'develop') || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
+    group: ${{ github.workflow }}-${{ github.event_name }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || (github.event_name == 'push' && github.ref == 'refs/heads/develop' && 'develop') || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -169,8 +167,6 @@ jobs:
     # Each consumer job downloads the tar artifacts and skips its own build steps.
     build_lite:
         name: build dokan-lite
-        # Pull requests from this repository are already tested by their push run.
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
         runs-on: ubuntu-latest
         timeout-minutes: 15
         steps:
@@ -235,9 +231,9 @@ jobs:
         name: build dokan-pro
         runs-on: ubuntu-latest
         timeout-minutes: 15
-        # Never on pull_request: fork PRs have no secrets, and PRs from this repository are
-        # tested by their push run, so build_lite skips them.
-        if: github.event_name != 'pull_request'
+        # Not on fork PRs: GitHub withholds secrets there, so DOKAN_PRO_TOKEN cannot check out
+        # dokan-pro. The test jobs then run lite only.
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         steps:
             # Pro's webpack.config.js calls getDokanLitePath() which resolves
             # ../dokan-lite from inside the pro folder, and also requires
@@ -1119,9 +1115,8 @@ jobs:
                   retention-days: 1
 
     merge-reports:
-        # Merge reports after playwright-tests, even if some shards have failed. Skipped with
-        # build_lite on pull requests from this repository (their push run does the work).
-        if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository) }}
+        # Merge reports after playwright-tests, even if some shards have failed.
+        if: ${{ !cancelled() }}
         needs: [e2e_tests, api_tests]
         runs-on: ubuntu-24.04
         timeout-minutes: 5
@@ -1381,3 +1376,54 @@ jobs:
                   gh api "repos/getdokan/dokan-pro/statuses/$PRO_SHA" \
                       -f state="$STATE" -f context=e2e -f target_url="$RUN_URL" \
                       -f description="lite ${LITE_REF:0:100}: $STATE"
+
+    # Starts with the run (no needs) and watches it from a spare runner.
+    # - On a PR run it force-cancels every other unfinished E2E_API run on the PR's branch. The
+    #   concurrency group already cancels this PR's older run, but gracefully, and it never sees the
+    #   push runs that branches cut before this file changed still start from their own old copy.
+    # - On every run it cancels the run once 60 minutes have passed since the first e2e shard
+    #   started. A queued shard reports its creation time as started_at, so only running or finished
+    #   shards count. It exits once merge-reports and every other job are done, so it never holds a
+    #   finished run open. Fork PRs skip it: their token cannot cancel runs.
+    run_guard:
+        name: run guard
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+        # Backstop only: builds, the wait for shard runners and the 60-minute limit fit well inside.
+        timeout-minutes: 120
+        permissions:
+            actions: write
+        env:
+            GH_TOKEN: ${{ github.token }}
+            RUN_API: repos/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        steps:
+            - name: Force-cancel older runs on this PR branch
+              if: github.event_name == 'pull_request'
+              env:
+                  HEAD_REF: ${{ github.head_ref }}
+              run: |
+                  gh api -X GET "repos/${{ github.repository }}/actions/workflows/e2e_api_tests.yml/runs" \
+                      -f branch="$HEAD_REF" -f per_page=100 \
+                      --jq '.workflow_runs[] | select(.id < ${{ github.run_id }} and .status != "completed" and .head_repository.full_name == "${{ github.repository }}") | .id' |
+                  while read -r id; do
+                      echo "Force-cancelling run $id"
+                      gh api -X POST "repos/${{ github.repository }}/actions/runs/$id/force-cancel" || echo "::warning::Could not force-cancel run $id"
+                  done
+
+            - name: Cancel the run 60 minutes after the first e2e shard starts
+              run: |
+                  limit=$((60 * 60))
+                  while sleep 60; do
+                      state=$(gh api "$RUN_API/attempts/${{ github.run_attempt }}/jobs?per_page=100" --jq '[
+                          ([.jobs[] | select(.name != "run guard" and .status != "completed")] | length),
+                          ([.jobs[] | select(.name == "merge-reports" and .status == "completed")] | length),
+                          ([.jobs[] | select((.name | startswith("e2e tests")) and (.status == "in_progress" or .status == "completed") and .conclusion != "skipped") | .started_at] | min // "none")
+                      ] | @tsv') || continue
+                      read -r open merged first <<< "$state"
+                      if [ "$merged" -gt 0 ] && [ "$open" -eq 0 ]; then exit 0; fi
+                      if [ "$first" != none ] && [ $(( $(date +%s) - $(date -d "$first" +%s) )) -ge "$limit" ]; then
+                          echo "::error::60 minutes passed since the first e2e shard started at $first, so the run guard cancelled this run."
+                          gh api -X POST "$RUN_API/cancel"
+                          exit 1
+                      fi
+                  done
