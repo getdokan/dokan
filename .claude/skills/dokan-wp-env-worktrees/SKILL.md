@@ -41,17 +41,13 @@ Two worktrees are isolated on disk but both default to `port: 8888` /
 clash. Give each worktree unique ports.
 
 Config precedence (later wins): `.wp-env.json` → `.wp-env.override.json`.
-Keep the live config **local/per-worktree** — only `.wp-env.json.example` is
-committed. Both `.wp-env.json` and `.wp-env.override.json` are gitignored.
+`.wp-env.json` is **committed and shared** — CI (`phpunit.yml`, the e2e pinned
+lane) reads it, so never edit it for local needs. Everything per-worktree goes
+in `.wp-env.override.json`, which is gitignored.
 
 ### New worktree setup
 
-```bash
-cp .wp-env.json.example .wp-env.json      # or edit an existing local copy
-```
-
-Then set ports unique to the worktree. Put ports in `.wp-env.override.json` so
-the base `.wp-env.json` (plugin mounts) stays uniform across worktrees:
+Create `.wp-env.override.json` with ports unique to the worktree:
 
 ```jsonc
 // .wp-env.override.json  (gitignored, per-worktree)
@@ -71,7 +67,8 @@ wp-env assigns a random free port when it is `null`.
 
 wp-env has **no dependency concept** — every entry in `plugins[]` is just mounted
 and activated. Dokan Pro requires Dokan Lite requires WooCommerce, so all three
-must be listed explicitly, ideally in dependency order:
+must be listed explicitly, ideally in dependency order. Put the list in
+`.wp-env.override.json`:
 
 ```jsonc
 "plugins": [
@@ -88,6 +85,9 @@ Two gotchas that bite in worktrees:
    (`shouldInferType: ! hasUserConfig` in `parse-config.js`). The moment a
    `.wp-env.json` exists, you must list `.` yourself. A config that lists
    `../dokan-pro` but forgets `.` activates Pro **without** Lite → broken env.
+   The same applies to the override: wp-env's `merge-configs.js` *replaces*
+   `plugins` wholesale (only `config`, `mappings`, `lifecycleScripts` and `env`
+   are merged), so an override that adds pro must repeat WooCommerce and `.`.
 
 2. **Relative sources resolve against the current working directory, not the
    config file.** `parse-source-string.js` does `path.resolve( sourceString )`,
@@ -95,7 +95,7 @@ Two gotchas that bite in worktrees:
    (the worktree root). This works only when the worktree sits under
    `wp-content/plugins/` next to `dokan-pro`. For a worktree created elsewhere
    (`git worktree add ~/wt/foo`), `../dokan-pro` won't resolve — use an
-   **absolute path** in that worktree's local config.
+   **absolute path** in that worktree's `.wp-env.override.json`.
 
 **Sharing a dependency across worktrees:** point every lite worktree at the
 **same** dokan-pro checkout (relative if co-located, absolute otherwise). You do
@@ -140,7 +140,7 @@ shared main checkout, if one exists); a pro PR gets lite checked out detached at
 ```
 
 It resolves branch + base per repo via `gh`, fast-forwards each worktree to the
-PR head, and writes `.wp-env.json` + `.wp-env.override.json` (ports). Requires an
+PR head, and writes `.wp-env.override.json` (ports, plugin list incl. pro, theme). Requires an
 authenticated `gh` and `jq`. Run it from inside the dokan-lite main checkout.
 
 ### From a branch name (when the branch already exists / no PR yet)
@@ -215,7 +215,7 @@ Why the order matters:
 
 Other notes:
 - **Lite-only change:** skip the pro worktree and point at the shared main pro
-  checkout (absolute path in `.wp-env.override.json`). The shared pro is on one
+  checkout (absolute path in the override's `plugins`). The shared pro is on one
   branch at a time, which is fine when you aren't touching it.
 - If lite and pro versions are enforced (pro checks a minimum lite version),
   dev branches report dev versions and pass — no special handling needed.
@@ -321,10 +321,10 @@ Adjust the `search-replace` URLs to the source and target `port`. Add
   ```
 - `https://downloads.wordpress.org/plugin/woocommerce.zip` is not guaranteed to
   be a stable release — on 2026-10-02 it installed `11.2.0-beta.2`. Pin a
-  versioned zip (`woocommerce.<version>.zip`) in your local config when you need
+  versioned zip (`woocommerce.<version>.zip`) in your override when you need
   a specific or stable WooCommerce.
 - Editing `~/.wp-env/<md5>/docker-compose.yml` by hand does not stick — wp-env
-  regenerates it on every `start`. Configure via `.wp-env.json` /
+  regenerates it on every `start`. Configure via
   `.wp-env.override.json` instead.
 - `npx wp-env destroy` removes **only the current worktree's** `<md5>` instance
   and volumes, not the others.

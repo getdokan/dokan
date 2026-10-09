@@ -45,17 +45,15 @@ npm run phpunit            # Run PHPUnit tests (via wp-env)
 npm run phpunit:coverage   # PHPUnit with coverage
 npm run test:phpunit       # Start env, run tests, stop env
 
-# Environment (first run: create your local wp-env config)
-cp .wp-env.json.example .wp-env.json   # one-time; .wp-env.json is gitignored (per-machine)
+# Environment
 npm run env:start          # Start wp-env
 npm run env:stop           # Stop wp-env
 ```
 
-> `.wp-env.json` is **not** committed — it is per-machine/per-worktree (local
-> ports, plugin mounts, dependency paths). Copy `.wp-env.json.example` to
-> `.wp-env.json` and adjust it locally. See the `dokan-wp-env-worktrees` skill
-> for worktree-specific setup. For overrides that shouldn't touch the base
-> config, use `.wp-env.override.json` (also gitignored).
+> `.wp-env.json` is the committed, shared base config (CI reads it — don't edit
+> it for local needs). Put per-machine/per-worktree settings (ports, a
+> `../dokan-pro` mount, LAN site URL) in `.wp-env.override.json`, which is
+> gitignored. See the `dokan-wp-env-worktrees` skill for worktree setup.
 
 ## Architecture
 

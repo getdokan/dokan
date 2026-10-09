@@ -123,10 +123,13 @@ elif [[ -d "$PRO_MAIN" ]]; then
   PRO_ENTRY=$',\n    "'"$PRO_MAIN"'"'   # lite-only: mount the shared main pro checkout by absolute path
 fi
 
-cat > "$DEST/dokan/.wp-env.json" <<JSON
+# The committed .wp-env.json stays untouched (CI reads it). Everything
+# worktree-specific goes in the gitignored override; its "plugins" list
+# replaces the base list wholesale, so it repeats WooCommerce and ".".
+cat > "$DEST/dokan/.wp-env.override.json" <<JSON
 {
-  "core": null,
-  "phpVersion": "7.4",
+  "port": $PORT,
+  "testsPort": $TESTS_PORT,
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.zip",
     "."${PRO_ENTRY}
@@ -135,10 +138,6 @@ cat > "$DEST/dokan/.wp-env.json" <<JSON
     "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive"
   }
 }
-JSON
-
-cat > "$DEST/dokan/.wp-env.override.json" <<JSON
-{ "port": $PORT, "testsPort": $TESTS_PORT }
 JSON
 
 if [[ -d "$DEST/dokan-pro" ]]; then
