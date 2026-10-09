@@ -1,4 +1,5 @@
 import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 interface UseApiDataOptions< T > {
     fetchFunction: ( params?: any ) => Promise< T >;
@@ -22,8 +23,10 @@ export const useDashboardApiData = < T >({
             const response = await fetchFunction( params || initialParams );
             setData( response );
         } catch ( err ) {
+            // apiFetch rejects with a plain { code, message } object, so show its message to let admins see why the request failed.
             setError(
-                err instanceof Error ? err.message : 'An error occurred'
+                ( err as { message?: string } )?.message ||
+                    __( 'An error occurred', 'dokan-lite' )
             );
             // eslint-disable-next-line no-console
             console.error( 'API fetch error:', err );
