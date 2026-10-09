@@ -73,7 +73,7 @@ test.describe('Rank Math SEO module functionality', () => {
         // (not just the empty card header). This is what breaks when Dokan's
         // hardcoded CMB2 bootstrap class no longer matches the bundled CMB2.
         //TODO - Needs Fix
-        test.skip('vendor sees the Rank Math SEO fields rendered in the panel', { tag: ['@pro', '@vendor'] }, async () => {
+        test('vendor sees the Rank Math SEO fields rendered in the panel', { tag: ['@pro', '@vendor'] }, async () => {
             await vendor.gotoVendorProductEditor(productId);
             await vendor.assertSeoPanelRendersFields();
         });

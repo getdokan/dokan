@@ -42,4 +42,5 @@ webpack-dependency-mapping.js
 webpack-entries.js
 base-tailwind.config.js
 CLAUDE.md
+CONTEXT.md
 /.claude

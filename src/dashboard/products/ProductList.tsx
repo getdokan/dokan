@@ -4,7 +4,17 @@ import { useToast } from '@getdokan/dokan-ui';
 import { addAction, applyFilters, removeAction } from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
 import { useNavigate } from 'react-router-dom';
-import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
+import {
+    Boxes,
+    Package,
+    ExternalLink,
+    LayoutGrid,
+    Plus,
+    RefreshCw,
+    Repeat,
+    Hammer,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import {
     DataViews,
     DokanBadge,
@@ -19,6 +29,7 @@ import PriceHtml from '../../components/PriceHtml';
 import { useProducts } from './hooks/useProducts';
 import { useProductCategories } from './hooks/useProductCategories';
 import { QuickViewModal } from './QuickViewModal';
+import QuickCreateModal from '../product-editor/QuickCreateModal';
 import type { ProductItem, ProductStatus, ProductFilterState } from './types';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -91,53 +102,80 @@ const getStatusLabel = ( status: string ) => {
     ) as string;
 };
 
+/**
+ * Product types the current vendor may use, as a `{ slug: label }` map.
+ *
+ * Localized from PHP through the `dokan_product_types` filter, so types that
+ * come from modules — subscriptions, auctions, … — carry their own translated
+ * label. Lite alone localizes a plain slug list, which yields an empty map.
+ */
+const getVendorProductTypes = (): Record< string, string > => {
+    const types = ( window as any ).dokan?.product_types;
+
+    return types && ! Array.isArray( types ) ? types : {};
+};
+
+const PRODUCT_TYPE_LABELS: Record< string, string > = {
+    simple: __( 'Simple', 'dokan-lite' ),
+    variable: __( 'Variable', 'dokan-lite' ),
+    grouped: __( 'Grouped', 'dokan-lite' ),
+    external: __( 'External/Affiliate', 'dokan-lite' ),
+};
+
+/**
+ * Icon per product type.
+ *
+ * Types owned by a module are listed too: the products keep their type when the
+ * module is deactivated, so this is the baseline that keeps such a row from
+ * looking like a simple product. A module that needs richer output (the auction
+ * one greys the icon for closed auctions) still overrides the whole cell
+ * through `dokan_product_list_table_fields`.
+ */
+const PRODUCT_TYPE_ICONS: Record< string, LucideIcon > = {
+    simple: Package,
+    variable: Boxes,
+    grouped: LayoutGrid,
+    external: ExternalLink,
+    subscription: RefreshCw,
+    'variable-subscription': Repeat,
+    // Matches the auction module's own icon, so toggling it doesn't change the
+    // glyph — only the extras the module layers on.
+    auction: Hammer,
+};
+
 const getProductTypeLabel = ( item: ProductItem ) => {
-    if ( item.type === 'grouped' ) {
-        return __( 'Grouped', 'dokan-lite' );
-    }
-    if ( item.type === 'external' ) {
-        return __( 'External/Affiliate', 'dokan-lite' );
-    }
-    if ( item.type === 'variable' ) {
-        return __( 'Variable', 'dokan-lite' );
-    }
-    return __( 'Simple', 'dokan-lite' );
+    // The REST payload is typed, not guaranteed: a row without a type must not
+    // take the whole listing down with it.
+    const type = item.type || 'simple';
+
+    const label =
+        PRODUCT_TYPE_LABELS[ type ] ??
+        getVendorProductTypes()[ type ] ??
+        // Unknown type: humanize the slug rather than mislabel it as Simple.
+        type.replace( /[-_]/g, ' ' ).replace( /^./, ( c ) => c.toUpperCase() );
+
+    /**
+     * Filter the human-readable label for a product type.
+     *
+     * @since 5.1.3
+     *
+     * @param {string} label Default label.
+     * @param {string} type  Product type slug.
+     */
+    return applyFilters( 'dokan_product_type_label', label, type ) as string;
 };
 
 const ProductTypeIcon = ( { item }: { item: ProductItem } ) => {
-    const cls = 'w-5 h-5 text-gray-500';
-    if ( item.type === 'variable' ) {
-        return <Boxes className={ cls } />;
-    }
-    if ( item.type === 'grouped' ) {
-        return <LayoutGrid className={ cls } />;
-    }
-    if ( item.type === 'external' ) {
-        return <ExternalLink className={ cls } />;
-    }
-    return <Package className={ cls } />;
+    const Icon = PRODUCT_TYPE_ICONS[ item.type ] ?? Package;
+
+    return <Icon className="w-5 h-5 text-gray-500" />;
 };
 
 // ── Product type options ──────────────────────────────────────────────────────
 
-const PRODUCT_TYPE_OPTIONS = [
-    {
-        value: 'simple',
-        label: __( 'Simple', 'dokan-lite' ),
-    },
-    {
-        value: 'variable',
-        label: __( 'Variable', 'dokan-lite' ),
-    },
-    {
-        value: 'grouped',
-        label: __( 'Grouped', 'dokan-lite' ),
-    },
-    {
-        value: 'external',
-        label: __( 'External/Affiliate', 'dokan-lite' ),
-    },
-];
+const PRODUCT_TYPE_OPTIONS = Object.entries( PRODUCT_TYPE_LABELS ).map(
+    ( [ value, label ] ) => ( { value, label } )
+);
 
 // ── Product listing localized data from PHP ───────────────────────────────────
 
@@ -151,6 +189,13 @@ interface ProductListingConfig {
     can_add_product?: boolean;
     new_product_url?: string;
     is_legacy_editor_preferred?: boolean;
+    /**
+     * When true, the "Add new product" button opens the lightweight
+     * schema-driven quick-create modal instead of navigating to the full
+     * create page. Localized from PHP (admin setting). Ignored when the legacy
+     * editor is preferred.
+     */
+    is_quick_create_enabled?: boolean;
     can_import?: boolean;
     can_export?: boolean;
     import_url?: string;
@@ -166,6 +211,7 @@ function ProductList() {
     const [ selection, setSelection ] = useState< string[] >( [] );
     const [ quickViewProduct, setQuickViewProduct ] =
         useState< ProductItem | null >( null );
+    const [ isQuickCreateOpen, setIsQuickCreateOpen ] = useState( false );
 
     const [ filterArgs, setFilterArgs ] = useState< ProductFilterState >( {
         page: 1,
@@ -257,13 +303,23 @@ function ProductList() {
             id: 'type',
             label: __( 'Type', 'dokan-lite' ),
             enableSorting: false,
-            render: ( { item }: { item: ProductItem } ) => (
-                <DokanTooltip content={ getProductTypeLabel( item ) }>
-                    <span className="inline-flex items-center">
-                        <ProductTypeIcon item={ item } />
-                    </span>
-                </DokanTooltip>
-            ),
+            render: ( { item }: { item: ProductItem } ) => {
+                const label = getProductTypeLabel( item );
+
+                // The glyph is the only content of this cell and its SVG is
+                // aria-hidden, so without a name here the column reads as empty.
+                return (
+                    <DokanTooltip content={ label }>
+                        <span
+                            className="inline-flex items-center"
+                            role="img"
+                            aria-label={ label }
+                        >
+                            <ProductTypeIcon item={ item } />
+                        </span>
+                    </DokanTooltip>
+                );
+            },
         },
         {
             id: 'stock',
@@ -360,7 +416,15 @@ function ProductList() {
         type: 'table',
         status: 'all',
         titleField: 'name',
-        fields: [ 'type', 'stock', 'status', 'price', 'earning', 'advertise', 'views' ],
+        fields: [
+            'type',
+            'stock',
+            'status',
+            'price',
+            'earning',
+            'advertise',
+            'views',
+        ],
     } );
 
     /**
@@ -461,6 +525,7 @@ function ProductList() {
         if ( config.can_add_product ) {
             const useLegacy =
                 config.is_legacy_editor_preferred && !! config.new_product_url;
+            const useQuickModal = ! useLegacy && config.is_quick_create_enabled;
             buttons.push(
                 <DokanButton
                     key="add-product"
@@ -468,6 +533,10 @@ function ProductList() {
                         if ( useLegacy ) {
                             window.location.href =
                                 config.new_product_url as string;
+                            return;
+                        }
+                        if ( useQuickModal ) {
+                            setIsQuickCreateOpen( true );
                             return;
                         }
                         navigate( '/products/create' );
@@ -550,6 +619,26 @@ function ProductList() {
 
     // ── Filter fields ─────────────────────────────────────────────────────────
 
+    /**
+     * Product type options for the listing's "Product Type" filter.
+     *
+     * Pro modules whose product type is revealed in this list (see
+     * `dokan_product_list_exclude_types`) add their type here so vendors can
+     * filter by it — e.g. the auction module appends 'auction'.
+     *
+     * @since 5.0.10
+     *
+     * @param {Array} options Default product type options ({ value, label }).
+     */
+    const productTypeOptions = useMemo(
+        () =>
+            applyFilters(
+                'dokan_product_list_type_options',
+                PRODUCT_TYPE_OPTIONS
+            ) as typeof PRODUCT_TYPE_OPTIONS,
+        []
+    );
+
     const filterFields = useMemo(
         () => [
             {
@@ -608,9 +697,9 @@ function ProductList() {
                         key="type-select"
                         isClearable
                         placeholder={ __( 'All types', 'dokan-lite' ) }
-                        options={ PRODUCT_TYPE_OPTIONS }
+                        options={ productTypeOptions }
                         value={
-                            PRODUCT_TYPE_OPTIONS.find(
+                            productTypeOptions.find(
                                 ( o ) => o.value === filterArgs.type
                             ) ?? null
                         }
@@ -628,6 +717,7 @@ function ProductList() {
         [
             monthOptions,
             categoryOptions,
+            productTypeOptions,
             filterArgs.year_month,
             filterArgs.category,
             filterArgs.type,
@@ -669,8 +759,6 @@ function ProductList() {
             {
                 id: 'view-in-site',
                 label: () => __( 'View in site', 'dokan-lite' ),
-                isEligible: ( item: ProductItem ) =>
-                    item.status === 'publish' && !! item.permalink,
                 callback: ( [ item ]: ProductItem[] ) => {
                     if ( item.permalink ) {
                         window.open( item.permalink, '_blank' );
@@ -833,7 +921,6 @@ function ProductList() {
             subscriptionInfo,
             effectiveRemaining,
             subscriptionLimitReached,
-            navigate,
         ]
     );
 
@@ -946,6 +1033,20 @@ function ProductList() {
                 product={ quickViewProduct }
                 onClose={ () => setQuickViewProduct( null ) }
             />
+
+            { /* Lightweight schema-driven create — mount only while open so a
+                 transient init failure resets on the next open. */ }
+            { isQuickCreateOpen && (
+                <QuickCreateModal
+                    isOpen
+                    onClose={ () => setIsQuickCreateOpen( false ) }
+                    onCreated={ () => {
+                        setIsQuickCreateOpen( false );
+                        fetchProducts();
+                        fetchStatusCounts();
+                    } }
+                />
+            ) }
 
             {
                 applyFilters( 'dokan_product_list_after_content', null, {

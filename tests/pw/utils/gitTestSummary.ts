@@ -64,7 +64,7 @@ const headerCell = label => ({ data: label, header: true });
 const buildSuiteRow = (suiteName, result, coverage) => {
     if (!result) return null;
     return [
-        cell(`**${suiteName}**`),
+        cell(`<strong>${suiteName}</strong>`),
         cell(verdictBadge(result)),
         cell(num(result.total_tests).toLocaleString()),
         cell(`✅ ${num(result.passed).toLocaleString()}`),
@@ -97,14 +97,17 @@ const buildHeader = core => {
     core.summary.addRaw(`<h1>${pwLogo}Playwright Test Report</h1>`).addEOL();
 
     const metaRows = [
-        SHA ? `**Commit:** [\`${shortSha}\`](${commitUrl})` : '',
-        branch ? `**Branch:** \`${branch}\`` : '',
-        PR_NUMBER ? `**PR:** [#${PR_NUMBER}](${prUrl})` : '',
-        runUrl ? `**Run:** [view logs](${runUrl})` : '',
+        SHA ? `<strong>Commit:</strong> <a href="${commitUrl}"><code>${shortSha}</code></a>` : '',
+        branch ? `<strong>Branch:</strong> <code>${branch}</code>` : '',
+        PR_NUMBER ? `<strong>PR:</strong> <a href="${prUrl}">#${PR_NUMBER}</a>` : '',
+        runUrl ? `<strong>Run:</strong> <a href="${runUrl}">view logs</a>` : '',
     ].filter(Boolean);
 
     if (metaRows.length) {
-        core.summary.addRaw(metaRows.join(' &nbsp;·&nbsp; ')).addEOL().addEOL();
+        // Emit HTML, not markdown: this line sits directly under the <h1> HTML
+        // block above, so GitHub treats it as raw HTML and would render markdown
+        // `**bold**` / `[text](url)` literally. <strong>/<a>/<code> render right.
+        core.summary.addRaw(`<p>${metaRows.join(' &nbsp;·&nbsp; ')}</p>`).addEOL().addEOL();
     }
 };
 
@@ -115,22 +118,27 @@ const buildOverallBanner = (core, results) => {
             acc.total += num(r.total_tests);
             acc.passed += num(r.passed);
             acc.failed += num(r.failed);
+            acc.flaky += num(r.flaky);
             acc.skipped += num(r.skipped);
             acc.missing += num(r.missing_reports);
             return acc;
         },
-        { total: 0, passed: 0, failed: 0, skipped: 0, missing: 0 },
+        { total: 0, passed: 0, failed: 0, flaky: 0, skipped: 0, missing: 0 },
     );
 
-    const status = totals.failed > 0 ? '🔴 **Failed**' : totals.missing > 0 ? '🟠 **Incomplete**' : '🟢 **Passed**';
+    const status = totals.failed > 0 ? '🔴 <strong>Failed</strong>' : totals.missing > 0 ? '🟠 <strong>Incomplete</strong>' : '🟢 <strong>Passed</strong>';
     const ran = totals.passed + totals.failed;
     const rate = ran === 0 ? '—' : `${((totals.passed / ran) * 100).toFixed(1)}%`;
+    // Flaky (passed-on-retry) is a subset of passed — surface it so a green build
+    // with hidden instability is still called out.
+    const flakyNote = totals.flaky > 0 ? `, ${totals.flaky.toLocaleString()} flaky ⚠️` : '';
 
-    // Spell the arithmetic out (total = passed + failed + skipped; pass rate is
-    // over the tests that ran) so the numbers reconcile at a glance.
+    // HTML, not markdown (see buildHeader): rendered as a raw-HTML block, so use
+    // <strong> — `**` would show literally. Spell the arithmetic out (total =
+    // passed + failed + skipped; pass rate is over the tests that ran).
     core.summary
         .addRaw(
-            `> ${status} &nbsp;·&nbsp; **${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}** tests passed (${totals.failed.toLocaleString()} failed, ${totals.skipped.toLocaleString()} skipped) &nbsp;·&nbsp; pass rate **${rate}** of the ${ran.toLocaleString()} tests run`,
+            `<blockquote>${status} &nbsp;·&nbsp; <strong>${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}</strong> tests passed (${totals.failed.toLocaleString()} failed, ${totals.skipped.toLocaleString()} skipped${flakyNote}) &nbsp;·&nbsp; pass rate <strong>${rate}</strong> of the ${ran.toLocaleString()} tests run</blockquote>`,
         )
         .addEOL()
         .addEOL();
@@ -141,7 +149,7 @@ const buildOverallBanner = (core, results) => {
         if (!r || num(r.missing_reports) === 0) return;
         core.summary
             .addRaw(
-                `> ⚠️ **${r.suite_name || 'Suite'} results are incomplete:** only ${num(r.merged_reports)} of ${num(r.expected_reports)} shard reports were uploaded — a shard job died before finishing (e.g. environment start failure), so the totals above under-count the suite. Check the failed jobs on this run.`,
+                `<blockquote>⚠️ <strong>${r.suite_name || 'Suite'} results are incomplete:</strong> only ${num(r.merged_reports)} of ${num(r.expected_reports)} shard reports were uploaded — a shard job died before finishing (e.g. environment start failure), so the totals above under-count the suite. Check the failed jobs on this run.</blockquote>`,
             )
             .addEOL()
             .addEOL();

@@ -5,7 +5,6 @@ import {
     StoresPage,
     VendorSettingsPage,
     VendorPage,
-    ProductsPage,
     CustomerPage,
     api,
     db,
@@ -26,11 +25,8 @@ const { VENDOR_ID } = process.env;
 test.describe('EU Compliance test', () => {
     let admin: EuCompliancePage;
     let vendor: VendorSettingsPage;
-    let productsPage: ProductsPage;
     let customer: EuCompliancePage;
     let aPage: Page, vPage: Page, cPage: Page;
-    let productName: string;
-    let euProductName: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext({ storageState: a1 });
@@ -40,15 +36,12 @@ test.describe('EU Compliance test', () => {
         const vendorContext = await browser.newContext({ storageState: v1 });
         vPage = await vendorContext.newPage();
         vendor = new VendorSettingsPage(vPage);
-        productsPage = new ProductsPage(vPage);
 
         const customerContext = await browser.newContext({ storageState: c1 });
         cPage = await customerContext.newPage();
         customer = new EuCompliancePage(cPage);
 
         await api.init();
-        [, , productName] = await api.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        [, , euProductName] = await api.createProduct(payloads.createProductEuCompliance(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -139,17 +132,12 @@ test.describe('EU Compliance test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'company-info');
     });
 
-    test.skip('vendor can add product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
-        await productsPage.addProductEuCompliance(productName, data.product.productInfo.euCompliance);
-    });
-
-    test.skip('vendor can update product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
-        await productsPage.addProductEuCompliance(euProductName, data.product.productInfo.euCompliance);
-    });
-
-    test.skip('vendor can remove product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
-        await productsPage.addProductEuCompliance(productName, { ...data.product.productInfo.euCompliance, productUnits: '', basePriceUnits: '', freeShipping: false, regularUnitPrice: '', saleUnitPrice: '', optionalMiniDescription: '' });
-    });
+    // NOTE: the germanized EU-compliance PRODUCT tests (add/update/remove product
+    // unit/base-price data + the customer single-product display) were DELETED
+    // 2026-07-10 — that feature is non-functional in 5.0.8: there is no vendor UI
+    // to set it (the germanized fields were dropped from the React product editor;
+    // the legacy edit form is orphaned) and woocommerce-germanized (the display
+    // plugin) is not active. Nothing real to drive or assert. Product gap.
 
     // customer
 
@@ -170,12 +158,6 @@ test.describe('EU Compliance test', () => {
     test('customer can view vendor EU compliance data on single store page', { tag: ['@pro', '@customer'] }, async () => {
         await customer.viewVendorEuComplianceData(data.predefined.vendorStores.vendor1);
     });
-
-    test.skip('customer can view product EU compliance data on single product page', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.viewProductEuComplianceData(euProductName);
-    });
-
-    // todo: has more tests with product eu compliance data
 
     // admin
 

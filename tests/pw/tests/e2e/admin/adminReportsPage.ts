@@ -1,38 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { DATA_ROW, SKELETON } from './adminDataViews';
 
-// ============================================
-// TEST DATA — namespaced with the "ARPT" area prefix.
-// ============================================
-// The admin Reports page (Dokan Pro 5.0.0+ React admin dashboard) is a TABBED
-// reports surface mounted at admin.php?page=dokan-dashboard#/reports via the
-// `dokan-admin-dashboard-routes` filter (path '/reports'). It is ADMIN-only and
-// READ-only: every report row / chart is computed server-side from the orders
-// already in the marketplace. To guarantee at least one commission/earning row
-// this folder seeds — over REST, never the vendor/customer UI — a vendor store +
-// a product + a customer + ONE completed order (apiUtils.createOrderWithStatus,
-// 'wc-completed', admin auth).
-//
-// The page has TWO tab levels, BOTH rendered as role=tab:
-//   - Top-level HeaderCard buttons (role="tab"): "Reports" (the active default,
-//     the overview/charts panel), "All Logs" (commission-log DataViews table),
-//     "Admin Earnings" (earnings DataViews table + summary cards).
-//   - Inside the "Reports" overview, an AdminTab (WP TabPanel -> role=tab) with
-//     the sub-tabs "By Month" (by-day), "By Year" (by-year), "By Vendor"
-//     (by-vendor). These sub-tabs only exist while the "Reports" card is active;
-//     switching to All Logs / Admin Earnings unmounts them.
-// So the five named tabs from the brief — All Logs, Admin Earnings, By Month,
-// By Year, By Vendor — are all role=tab.
-//
-// REST endpoints each panel fires (verified against the React source):
-//   - Reports overview  -> GET /dokan/v1/admin/report-stats/summary  (ReportStats)
-//                          GET /dokan/v1/admin/report-stats/overview  (ReportsSalesChart, D3 chart)
-//   - All Logs          -> GET /dokan/v1/admin/report-logs           (AllLogs DataViews)
-//   - Admin Earnings    -> GET /dokan/v1/admin/report-earnings       (AdminEarnings DataViews)
-//                          GET /dokan/v1/admin/report-earnings/summary (EarningStats cards)
-// (The brief mentioned report/summary + report/overview; the new dashboard's
-// actual paths are the report-stats/* + report-logs + report-earnings ones above,
-// which is what these tests assert.)
 export const adminReportsData = {
     // The vendor store every seeded order targets (idempotent + re-runnable).
     vendor: { storeName: 'ARPT Reports Vendor', userLogin: 'arpt_reports_vendor', email: 'arpt_reports_vendor@example.test' },
@@ -60,39 +29,38 @@ export const adminReportsData = {
         earnings: '/dokan/v1/admin/report-earnings',
         earningsSummary: '/dokan/v1/admin/report-earnings/summary',
     },
+
+    // Neither table has a standalone search box — free-text search is the "Order Search" filter field.
+    allLogs: {
+        // The fields the "Filter" toolbar button exposes for All Logs.
+        filterFields: ['Vendor', 'Order Status', 'Date Range', 'Order Search'],
+        // Export downloads a CSV named report-logs_<YYYY-MM-DD>.csv.
+        exportFilename: /report-logs.*\.csv$/i,
+    },
+    adminEarnings: {
+        filterFields: ['Earning Type', 'Vendor', 'Date Range', 'Order Search'],
+        // Export downloads a CSV named earning-reports_<YYYY-MM-DD>.csv.
+        exportFilename: /earning-reports.*\.csv$/i,
+    },
 } as const;
 
-// ============================================
-// SELECTORS — verified against
-// dokan-pro/src/admin/reports/components/reports/index.tsx (ReportsAdmin),
-// ReportsOverview.tsx + ReportsSalesChart.tsx (overview + D3 chart),
-// logs/AllLogs.tsx + earnings/AdminEarnings.tsx (AdminDataViews tables),
-// HeaderCard.tsx (role="tab" cards) and dokan-lite AdminHeader.tsx (the h1
-// "Reports") / AdminTab.tsx (WP TabPanel -> role=tab sub-tabs).
-// ============================================
 export const adminReportsSelectors = {
     reactRoot: '#dokan-admin-dashboard',
-    // The reports panel wrapper class (index.tsx outer div).
     panel: '.dokan-reports-admin',
     table: 'table',
-    dataRow: 'table tbody tr',
+    // Real (non-skeleton) DataViews rows.
+    dataRow: DATA_ROW,
     // The D3 chart renders an <svg> inside the ReportsSalesChart card.
     chartSvg: 'svg',
-    // DataViews empty state (AllLogs "No logs found" / AdminEarnings "No earnings found").
     emptyState: 'text=/no logs found|no earnings found|no data found|no items|no results/i',
     // A panel-level red error box (the {error} branches in each panel).
     errorBox: '.text-red-600',
-    // PHP fatal markers.
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
 } as const;
 
-// ============================================
-// PAGE OBJECT — admin Reports (Dokan Pro 5.0.0+ React admin dashboard).
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/reports (HashRouter).
-// NOTE: admin-facing — the vendor announcement modal does NOT appear in wp-admin,
-// so this page object deliberately does NOT register the closeAnnouncementModal
-// handler.
-// ============================================
+// PAGE OBJECT — admin Reports. Surface: admin.php?page=dokan-dashboard#/reports.
+// Admin-facing, so it deliberately does NOT register closeAnnouncementModal (the
+// vendor announcement modal never appears in wp-admin).
 export class AdminReportsPage {
     readonly page: Page;
     readonly url = toPath('wp-admin/admin.php?page=dokan-dashboard#/reports');
@@ -101,7 +69,6 @@ export class AdminReportsPage {
         this.page = page;
     }
 
-    // ---- Locators ----
     get reactRoot(): Locator {
         return this.page.locator(adminReportsSelectors.reactRoot).first();
     }
@@ -132,7 +99,6 @@ export class AdminReportsPage {
         return this.page.getByRole('columnheader', { name }).first();
     }
 
-    // ---- Navigation / readiness ----
     async goto(): Promise<void> {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
@@ -160,9 +126,8 @@ export class AdminReportsPage {
         return !fatal;
     }
 
-    // ---- Tabs ----
     /** True when a tab with the given label is present (role=tab). isVisible() does
-     * NOT wait, so we waitFor() (the gotcha: a snapshot would race the mount). */
+     * NOT wait, so we waitFor() to avoid racing the mount. */
     async isTabVisible(name: string): Promise<boolean> {
         try {
             await this.tab(name).waitFor({ state: 'visible', timeout: 10000 });
@@ -193,7 +158,6 @@ export class AdminReportsPage {
         return req.url();
     }
 
-    // ---- Reads ----
     async getRowCount(): Promise<number> {
         return await this.rows.count();
     }
@@ -205,6 +169,8 @@ export class AdminReportsPage {
     /** Wait until either >=1 DataViews row OR the empty-state has painted (a table
      * tab is "ready" in either state). */
     async waitForTableSettled(timeoutMs = 20000): Promise<void> {
+        // Wait out the loading skeleton so its rows aren't read as fresh data.
+        await this.page.locator(SKELETON).first().waitFor({ state: 'hidden', timeout: timeoutMs }).catch(() => undefined);
         const start = Date.now();
         while (Date.now() - start < timeoutMs) {
             if ((await this.rows.count()) > 0) return;
@@ -223,7 +189,71 @@ export class AdminReportsPage {
         }
     }
 
-    // ---- Authorization (non-admin) ----
+    /** Open the DataViews "Filter" toolbar button (the active table panel's). */
+    async openFilter(): Promise<void> {
+        const f = this.page.getByRole('button', { name: 'Filter', exact: true }).first();
+        await f.waitFor({ state: 'visible', timeout: 10000 });
+        await f.click();
+        await this.page.waitForTimeout(800); // portaled filter popover paints.
+    }
+
+    /** The field labels the open Filter popover offers (Vendor / Date Range / …).
+     * The popover is portaled (radix), so we read it from the live DOM rather than
+     * a single scoped locator. Call after openFilter(). */
+    async openFilterFieldNames(): Promise<string[]> {
+        await this.openFilter();
+        const names = await this.page.evaluate(() => {
+            const vis = (e: Element) => e.getClientRects().length > 0;
+            const txt = (e: Element) => (e.textContent || '').trim().replace(/\s+/g, ' ');
+            const pops = Array.from(document.querySelectorAll('[data-radix-popper-content-wrapper],.components-popover,[class*="popover"]')).filter(vis);
+            const cand = pops.flatMap(p => Array.from(p.querySelectorAll('button,[role="menuitem"],[role="option"],label')).filter(vis).map(txt));
+            return [...new Set(cand)].filter(t => t && t.length < 28 && !/^add filter$|^reset$|^filter$|^×$/i.test(t));
+        });
+        await this.page.keyboard.press('Escape').catch(() => undefined);
+        return names;
+    }
+
+    /** Apply an "Order Status" value via the Filter and return the refetch URL. */
+    async applyOrderStatusFilter(optionLabel: string, requestFragment: string): Promise<string> {
+        const control = this.page.locator('.react-select__control').first();
+        // Reuse the control if already showing; otherwise open Filter → Order Status.
+        if (!(await control.isVisible().catch(() => false))) {
+            await this.openFilter();
+            await this.page.getByRole('button', { name: 'Order Status', exact: true }).first().click();
+            await control.waitFor({ state: 'visible', timeout: 10000 });
+        }
+        const [req] = await Promise.all([
+            this.page.waitForRequest(r => r.url().includes(requestFragment) && r.url().includes('order_status'), { timeout: 15000 }),
+            (async () => {
+                await control.click();
+                await this.page.locator('.react-select__option').filter({ hasText: new RegExp(`^${optionLabel}$`, 'i') }).first().click();
+            })(),
+        ]);
+        await this.waitForTableSettled();
+        return req.url();
+    }
+
+    /** True when every visible data row's text matches the given status pattern. */
+    async everyRowMatchesStatus(status: RegExp): Promise<boolean> {
+        const count = await this.rows.count();
+        if (count === 0) return false;
+        for (let i = 0; i < count; i++) {
+            const text = (await this.rows.nth(i).innerText()).trim();
+            if (!status.test(text)) return false;
+        }
+        return true;
+    }
+
+    /** Click the "Export" toolbar button and return the downloaded file's
+     * suggested filename (or null if no download fired within the timeout). The
+     * download waiter is armed BEFORE the click so a fast export is not missed. */
+    async exportDownloadFilename(timeoutMs = 15000): Promise<string | null> {
+        const exportBtn = this.page.getByRole('button', { name: /^Export$/ }).first();
+        await exportBtn.waitFor({ state: 'visible', timeout: 10000 });
+        const [download] = await Promise.all([this.page.waitForEvent('download', { timeout: timeoutMs }).catch(() => null), exportBtn.click()]);
+        return download ? download.suggestedFilename() : null;
+    }
+
     /** True when the admin Reports UI is NOT reachable for the current user. */
     async isAccessDenied(): Promise<boolean> {
         const rootVisible = await this.reactRoot.isVisible({ timeout: 5000 }).catch(() => false);

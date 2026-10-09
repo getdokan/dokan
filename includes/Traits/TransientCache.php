@@ -39,7 +39,23 @@ trait TransientCache {
         if ( false === $transient_value || true === $refresh ) {
             $transient_value = static::get_time_prefix();
 
-            set_transient( $transient_name, $transient_value );
+            /**
+             * Filters the lifetime of a cache group's transient-version marker.
+             *
+             * A marker stored without an expiration is autoloaded by WordPress and never
+             * cleared, bloating autoloaded options on sites without a persistent object
+             * cache. Giving it a TTL makes WordPress store it as `autoload = no` and lets
+             * core garbage-collect it. The value must outlive the longest-lived data
+             * transient in any group, otherwise the group is invalidated prematurely.
+             *
+             * @since 5.0.9
+             *
+             * @param int    $expiration Marker lifetime in seconds. Default 1 month.
+             * @param string $group      Cache group the marker belongs to.
+             */
+            $expiration = apply_filters( 'dokan_cache_transient_version_expiration', MONTH_IN_SECONDS, $group );
+
+            set_transient( $transient_name, $transient_value, $expiration );
         }
 
         return $transient_value;

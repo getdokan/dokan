@@ -27,21 +27,24 @@ const path = require('path');
 const TEMPLATE_PATH = path.join(__dirname, 'quality-report-template.html');
 const OUTPUT_FILE = process.env.OUTPUT_FILE || path.join(process.cwd(), 'qa-report.html');
 
+/** @param {string|null|undefined} filePath @returns {any} */
 const readJson = filePath => {
     if (!filePath || !fs.existsSync(filePath)) return null;
     try {
         return JSON.parse(fs.readFileSync(filePath, 'utf8'));
     } catch (e) {
-        console.warn(`generateQualityReport: failed to parse ${filePath}: ${e.message}`);
+        console.warn(`generateQualityReport: failed to parse ${filePath}: ${e instanceof Error ? e.message : String(e)}`);
         return null;
     }
 };
 
+/** @param {*} value @param {number} [fallback] @returns {number} */
 const num = (value, fallback = 0) => {
     const n = Number(value);
     return Number.isFinite(n) ? n : fallback;
 };
 
+/** @param {number} ms */
 const formatDuration = ms => {
     if (!Number.isFinite(ms) || ms <= 0) return '—';
     const h = Math.floor(ms / 3_600_000);
@@ -54,6 +57,7 @@ const formatDuration = ms => {
     return parts.join(' ');
 };
 
+/** @param {number} bytes */
 const formatBytes = bytes => {
     if (!Number.isFinite(bytes) || bytes <= 0) return '—';
     const units = ['B', 'KB', 'MB', 'GB'];
@@ -66,12 +70,14 @@ const formatBytes = bytes => {
     return `${n.toFixed(n >= 100 ? 0 : 1)} ${units[i]}`;
 };
 
+/** @param {string} dir */
 const dirSize = dir => {
     let total = 0;
     if (!fs.existsSync(dir)) return 0;
     const stack = [dir];
     while (stack.length) {
         const cur = stack.pop();
+        if (!cur) continue;
         const stat = fs.statSync(cur);
         if (stat.isDirectory()) {
             for (const child of fs.readdirSync(cur)) stack.push(path.join(cur, child));
@@ -82,13 +88,14 @@ const dirSize = dir => {
     return total;
 };
 
-const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+/** @param {*} value @returns {string} */
+const escape = value => String(value ?? '').replace(/[&<>"']/g, c => (/** @type {Record<string, string>} */ ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
     "'": '&#39;',
-}[c]));
+})[c] ?? c));
 
 // ----------------------------------------------------------------------------
 
@@ -97,6 +104,7 @@ const e2eResult = readJson(process.env.E2E_TEST_RESULT);
 const apiCoverageRaw = readJson(process.env.API_COVERAGE);
 const e2eCoverageRaw = readJson(process.env.E2E_COVERAGE);
 
+/** @param {any} report */
 const suiteShape = report => {
     if (!report) return null;
     const total = num(report.total_tests);
@@ -122,14 +130,20 @@ const suiteShape = report => {
     };
 };
 
+/** @param {any} raw */
 const coverageShape = (raw) => {
     if (!raw) return { pct: null, total: 0, covered: 0 };
     const pctRaw = String(raw.coverage ?? '').replace('%', '').trim();
     const pct = Number.isFinite(Number(pctRaw)) ? Number(pctRaw) : null;
+    // Coverage files differ by suite: the API report counts REST endpoints
+    // (total_endpoints / covered_endpoints); a feature-based report would use
+    // total_features / total_covered_features. Accept either so the weighted
+    // combine below has real counts to work with instead of silently falling
+    // back to averaging the pre-rounded percentages.
     return {
         pct,
-        total: num(raw.total_features),
-        covered: num(raw.total_covered_features),
+        total: num(raw.total_features) || num(raw.total_endpoints),
+        covered: num(raw.total_covered_features) || num(raw.covered_endpoints),
     };
 };
 
@@ -145,18 +159,31 @@ const totals = {
     failed: num(api?.failed) + num(e2e?.failed),
     skipped: num(api?.skipped) + num(e2e?.skipped),
     durationMs: num(api?.durationMs) + num(e2e?.durationMs),
+    ran: 0,
+    passRate: 0,
 };
 totals.ran = totals.passed + totals.failed;
 totals.passRate = totals.ran > 0 ? Math.round((totals.passed / totals.ran) * 1000) / 10 : 0;
 
-// Combined coverage: weight by feature counts when available; else average pct.
+// Test NAMES, not just counts. Both summaries already carry `failed_tests` / `flaky_tests`
+// (mergeSummaryReport writes them); the report only ever read the numbers, so it could say
+// "2 failed" without saying which two. Tolerate a missing or non-array field so an older
+// summary shape degrades to an empty list instead of throwing.
+const namesOf = (/** @type {any} */ report, /** @type {string} */ key) => (Array.isArray(report?.[key]) ? report[key].filter(Boolean).map(String) : []);
+const failedTestNames = [...namesOf(apiResult, 'failed_tests'), ...namesOf(e2eResult, 'failed_tests')];
+const flakyTestNames = [...namesOf(apiResult, 'flaky_tests'), ...namesOf(e2eResult, 'flaky_tests')];
+
+// Combined coverage: weight by endpoint/feature counts when available; else
+// average the percentages. Keep 2-decimal precision so this reconciles with the
+// per-suite figures (which display .toFixed(2)) instead of drifting by rounding
+// — e.g. 268/592 must read 45.27%, not a 1-dp-rounded 45.30%.
 let totalCoveragePct = null;
 const combinedTotal = apiCov.total + e2eCov.total;
 if (combinedTotal > 0) {
-    totalCoveragePct = Math.round(((apiCov.covered + e2eCov.covered) / combinedTotal) * 1000) / 10;
+    totalCoveragePct = Math.round(((apiCov.covered + e2eCov.covered) / combinedTotal) * 10000) / 100;
 } else if (apiCov.pct !== null || e2eCov.pct !== null) {
     const vals = [apiCov.pct, e2eCov.pct].filter(v => v !== null);
-    totalCoveragePct = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10;
+    totalCoveragePct = Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 100) / 100;
 }
 
 const overallFailed = totals.failed > 0;
@@ -207,7 +234,13 @@ const prNumber = process.env.PR_NUMBER || '—';
 const runId = process.env.GITHUB_RUN_ID || '—';
 const today = new Date().toISOString().slice(0, 10);
 
+/** @param {*} v */
 const fmtPct = v => v === null || v === undefined ? '—' : `${num(v).toFixed(1)}`;
+// Coverage is reported to 2 decimals everywhere else (the step-summary and the
+// Playwright report both use .toFixed(2)); use a matching formatter here so the
+// HTML template doesn't show a 1-dp value that disagrees with them.
+const fmtCoverage = v => v === null || v === undefined ? '—' : `${num(v).toFixed(2)}`;
+/** @param {*} v */
 const fmtCount = v => v === null || v === undefined ? '—' : String(num(v));
 
 const placeholders = {
@@ -234,7 +267,7 @@ const placeholders = {
     FAILED_CLASS: totals.failed > 0 ? 'danger' : 'success',
     SKIPPED_TESTS: fmtCount(totals.skipped),
     TOTAL_DURATION: formatDuration(totals.durationMs),
-    TOTAL_COVERAGE: fmtPct(totalCoveragePct),
+    TOTAL_COVERAGE: fmtCoverage(totalCoveragePct),
 
     API_STATUS: api ? (api.failed > 0 ? 'Failed' : api.missingReports > 0 ? 'Incomplete' : 'Passed') : 'No data',
     API_STATUS_CLASS: api && (api.failed > 0 || api.missingReports > 0) ? 'failed' : '',
@@ -244,7 +277,7 @@ const placeholders = {
     API_FAILED_CLASS: api && api.failed > 0 ? 'failed' : '',
     API_SKIPPED: api ? fmtCount(api.skipped) : '—',
     API_DURATION: api ? formatDuration(api.durationMs) : '—',
-    API_COVERAGE: fmtPct(apiCov.pct),
+    API_COVERAGE: fmtCoverage(apiCov.pct),
     API_PASS_RATE: api ? fmtPct(api.passRate) : '0',
     API_PROGRESS_CLASS: api && api.failed > 0 ? 'failed' : '',
     API_TOTAL_RUN: api ? fmtCount(api.ran) : '—',
@@ -257,7 +290,7 @@ const placeholders = {
     E2E_FAILED_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
     E2E_SKIPPED: e2e ? fmtCount(e2e.skipped) : '—',
     E2E_DURATION: e2e ? formatDuration(e2e.durationMs) : '—',
-    E2E_COVERAGE: fmtPct(e2eCov.pct),
+    E2E_COVERAGE: fmtCoverage(e2eCov.pct),
     E2E_PASS_RATE: e2e ? fmtPct(e2e.passRate) : '0',
     E2E_PROGRESS_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
     E2E_TOTAL_RUN: e2e ? fmtCount(e2e.ran) : '—',
@@ -306,11 +339,18 @@ if (SUMMARY_FILE) {
         ink:           '1a1a1a',
     };
 
+    /** @param {*} n */
     const fmtNum = n => Number.isFinite(Number(n)) ? Number(n).toLocaleString('en-US') : '—';
+
+    /**
+     * @typedef {{ style?: string, labelColor?: string, logo?: string, logoColor?: string }} BadgeOpts
+     */
 
     // shields.io URL builder. Plain badges only — labelColor + color give us
     // the two-tone look the design uses for metric tiles.
+    /** @param {string} label @param {string} message @param {string} color @param {BadgeOpts} [opts] */
     const shieldUrl = (label, message, color, opts = {}) => {
+        /** @param {*} s */
         const enc = s => encodeURIComponent(String(s).replace(/-/g, '--').replace(/_/g, '__'));
         const params = new URLSearchParams({ style: opts.style || 'for-the-badge' });
         if (opts.labelColor) params.set('labelColor', opts.labelColor);
@@ -318,6 +358,7 @@ if (SUMMARY_FILE) {
         if (opts.logoColor)  params.set('logoColor', opts.logoColor);
         return `https://img.shields.io/badge/${enc(label)}-${enc(message)}-${color}?${params.toString()}`;
     };
+    /** @param {string} label @param {string} message @param {string} color @param {BadgeOpts} [opts] @param {string} [alt] */
     const badge = (label, message, color, opts = {}, alt) =>
         `<img alt="${escape(alt || `${label}: ${message}`)}" src="${shieldUrl(label, message, color, opts)}">`;
 
@@ -327,6 +368,7 @@ if (SUMMARY_FILE) {
           ? badge('⚠  Incomplete run', `${missingReports} shard report${missingReports === 1 ? '' : 's'} missing · totals under-count the suite`, C.amber, { labelColor: C.purplePrimary })
           : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
 
+    /** @param {any} s */
     const suiteStatusBadge = (s) => {
         if (!s)                    return badge('No data', '—', C.gray);
         if (s.failed > 0)          return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
@@ -334,18 +376,12 @@ if (SUMMARY_FILE) {
         return badge('Passed', `${s.passRate.toFixed(1)}% pass rate`, C.green);
     };
 
-    const passRateBadge = (pct) => badge(
-        'Pass rate',
-        `${pct.toFixed(1)}%`,
-        pct >= 99 ? C.green : pct >= 90 ? C.amber : C.red,
-        { style: 'flat-square' },
-    );
-
     const apiCovStr = apiCov.pct === null ? '—' : `${apiCov.pct.toFixed(2)}%`;
     const e2eCovStr = e2eCov.pct === null ? '—' : `${e2eCov.pct.toFixed(2)}%`;
     const totalCovStr = totalCoveragePct === null ? '—' : `${totalCoveragePct.toFixed(2)}%`;
 
     // Metrics tile (renders as a labelColor=purple / value=brand-color shield).
+    /** @param {string} label @param {string} value @param {string} color */
     const metricTile = (label, value, color) => `      <td align="center" valign="middle">${badge(label, value, color, { labelColor: C.purplePrimary })}</td>`;
 
     const artifactsTable = (() => {
@@ -406,8 +442,19 @@ if (SUMMARY_FILE) {
     lines.push('</table>');
     lines.push('');
 
-    // --- Outcomes pie chart ---------------------------------------------
-    if (totals.ran > 0) {
+    // --- Outcomes -------------------------------------------------------
+    // A pie is only drawn when it can tell the truth, i.e. when the run is green.
+    //
+    // Mermaid renders every pie slice label as an INTEGER-rounded percentage and offers no
+    // precision setting. With 2537 passed against 2 failed the failing share is 0.08%, so the
+    // chart printed a full green circle labelled "100%" on a run that had two real failures, and
+    // the red slice was smaller than a pixel. That is the exact fake-green this suite exists to
+    // catch, produced by our own report — the status badge said "2 failures" while the graph next
+    // to it said 100%.
+    //
+    // No chart type fixes this: any proportional visual of 2 against 2537 is unreadable. So on a
+    // failing run the pie is replaced by the thing a reader actually needs — WHICH tests failed.
+    if (totals.ran > 0 && totals.failed === 0) {
         lines.push('```mermaid');
         lines.push(mermaidTheme);
         lines.push('pie showData');
@@ -415,6 +462,33 @@ if (SUMMARY_FILE) {
         lines.push(`  "Passed" : ${totals.passed}`);
         lines.push(`  "Failed" : ${totals.failed}`);
         lines.push('```');
+        lines.push('');
+    }
+
+    // --- Failures ---------------------------------------------------------
+    // Named, not counted. `failed_tests` has always been present in the merged summary and was
+    // never surfaced, so reading the report told you two tests failed but never which two.
+    if (failedTestNames.length) {
+        lines.push('<h2>❌ Failed Tests</h2>');
+        lines.push('');
+        // Computed here from the raw counts rather than reusing the rounded 1-decimal `passRate`:
+        // this section exists because rounding is what produced the "100%" lie in the first place.
+        const ran = totals.passed + totals.failed;
+        const exactRate = ran > 0 ? ((totals.passed / ran) * 100).toFixed(2) : '0.00';
+        lines.push(`Pass rate **${exactRate}%** — ${fmtNum(totals.passed)} passed, ${fmtNum(totals.failed)} failed.`);
+        lines.push('');
+        failedTestNames.forEach(name => lines.push(`- ❌ ${escape(name)}`));
+        lines.push('');
+    }
+
+    // Flaky = passed only on a retry. Not a failure, but not a pass either: it is the category a
+    // green run hides, so it is named whenever it occurs.
+    if (flakyTestNames.length) {
+        lines.push('<h2>⚠️ Flaky Tests</h2>');
+        lines.push('');
+        lines.push('Passed on retry — a green run here is retry-masked, not clean.');
+        lines.push('');
+        flakyTestNames.forEach(name => lines.push(`- ⚠️ ${escape(name)}`));
         lines.push('');
     }
 
@@ -434,8 +508,8 @@ if (SUMMARY_FILE) {
     lines.push('    </tr>');
     lines.push('  </thead>');
     lines.push('  <tbody>');
+    /** @param {string} label @param {any} s @param {string} covStr */
     const suiteTr = (label, s, covStr) => {
-        const tag = s && s.failed > 0 ? 'failed' : 'ok';
         const passedCell = s ? `<strong>${fmtNum(s.passed)}</strong>` : '—';
         const failedCell = s ? (s.failed > 0 ? `<strong style="color:#${C.red}">${fmtNum(s.failed)}</strong>` : '0') : '—';
         const passRateCell = s ? `<img alt="${s.passRate.toFixed(1)}%" src="${shieldUrl('', `${s.passRate.toFixed(1)}%`, s.failed > 0 ? C.red : s.passRate >= 99 ? C.green : C.amber, { style: 'flat-square' })}">` : '—';

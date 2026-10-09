@@ -39,9 +39,9 @@ class AdminNoticeController extends DokanRESTAdminController {
                     'permission_callback' => [ $this, 'check_permission' ],
                     'args'                => [
                         'scope' => [
-                            'description' => __( 'Choose notice scope: "local" displays only on Dokan pages, "global" displays across the entire site.', 'dokan-lite' ),
+                            'description' => __( 'Choose notice scope: "local" displays only on Dokan pages, "global" displays across the entire site, "legacy_settings" displays only on the classic settings screen.', 'dokan-lite' ),
                             'type'        => 'string',
-                            'enum'        => [ 'local', 'global' ],
+                            'enum'        => [ 'local', 'global', 'legacy_settings' ],
                             'required'    => false,
                             'default'     => '',
                             'sanitize_callback' => 'sanitize_text_field',

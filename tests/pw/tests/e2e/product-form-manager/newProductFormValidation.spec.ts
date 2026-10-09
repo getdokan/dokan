@@ -1,8 +1,6 @@
-import path from 'path';
 import { test, expect, BrowserContext, Page } from '@utils/test';
 import { NewProductFormPage, newProductFormData } from './newProductFormPage';
-
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
+import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 test.describe('Vendor new product form (React) validation', () => {
     let ctx: BrowserContext;
@@ -26,7 +24,7 @@ test.describe('Vendor new product form (React) validation', () => {
     // NEGATIVE CASES — required fields & invalid input
     // ============================================
     test.describe('negative cases', () => {
-        test('shows error when title is empty', { tag: ['@lite', '@vendor'] }, async () => {
+        test('shows error when title is empty', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
 
             await form.fillBasicInfo({ ...data, title: '' });
@@ -39,7 +37,7 @@ test.describe('Vendor new product form (React) validation', () => {
             expect(disabled || (await titleError.isVisible().catch(() => false))).toBe(true);
         });
 
-        test('shows error when price is empty', { tag: ['@lite', '@vendor'] }, async () => {
+        test('shows error when price is empty', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
 
             await form.title.fill(data.title);
@@ -51,7 +49,7 @@ test.describe('Vendor new product form (React) validation', () => {
             expect(disabled || (await priceError.isVisible().catch(() => false))).toBe(true);
         });
 
-        test('shows error when description is empty', { tag: ['@lite', '@vendor'] }, async () => {
+        test('shows error when description is empty', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
 
             await form.fillBasicInfo({ ...data, description: undefined });
@@ -62,7 +60,7 @@ test.describe('Vendor new product form (React) validation', () => {
             expect(disabled || (await descError.isVisible().catch(() => false))).toBe(true);
         });
 
-        test('shows error when no category is selected', { tag: ['@lite', '@vendor'] }, async () => {
+        test('shows error when no category is selected', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
 
             await form.unselectCategory(data.category);
@@ -76,7 +74,7 @@ test.describe('Vendor new product form (React) validation', () => {
             expect(disabled || (await catError.isVisible().catch(() => false))).toBe(true);
         });
 
-        test('coerces negative price to a non-negative value', { tag: ['@lite', '@vendor'] }, async () => {
+        test('coerces negative price to a non-negative value', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await form.fillPrice(form.price, newProductFormData.invalid.negativePrice);
 
             // The price input strips the negative sign so the field reads
@@ -87,13 +85,13 @@ test.describe('Vendor new product form (React) validation', () => {
             expect(Number.isFinite(value) && value >= 0).toBe(true);
         });
 
-        test('rejects non-numeric price input', { tag: ['@lite', '@vendor'] }, async () => {
+        test('rejects non-numeric price input', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await form.fillPrice(form.price, newProductFormData.invalid.nonNumericPrice);
 
             expect(await form.price.inputValue()).not.toBe(newProductFormData.invalid.nonNumericPrice);
         });
 
-        test('shows error when sale price is greater than regular price', { tag: ['@lite', '@vendor'] }, async () => {
+        test('shows error when sale price is greater than regular price', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const data = newProductFormData.valid();
             const { price, salePrice } = newProductFormData.invalid.salePriceHigherThanRegular;
 
@@ -107,7 +105,7 @@ test.describe('Vendor new product form (React) validation', () => {
             expect(disabled || (await saleError.isVisible().catch(() => false))).toBe(true);
         });
 
-        test('accepts a valid min/max quantity range', { tag: ['@lite', '@vendor'] }, async () => {
+        test('accepts a valid min/max quantity range', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             // The min/max qty inputs are `type="number"` without `min=0`, so
             // the form does not coerce values at the field level. We just
             // verify that a valid non-negative value sticks.
@@ -118,7 +116,7 @@ test.describe('Vendor new product form (React) validation', () => {
             expect(await form.maxQty.inputValue()).toBe('5');
         });
 
-        test('accepts valid shipping dimensions', { tag: ['@lite', '@vendor'] }, async () => {
+        test('accepts valid shipping dimensions', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await form.weight.fill('1');
             await form.length.fill('1');
 

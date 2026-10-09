@@ -289,12 +289,20 @@ export class AdminVendorCreatePage {
     }
 
     // ---- Validation ----
-    /** True when an inline required-field error is rendered for the named label. */
+    /**
+     * True when an inline required-field error is rendered for the named label.
+     * Scoped to the React root on purpose: WP admin renders a hidden
+     * "Dokan Data Update Required" updater notice EARLIER in the DOM, which a
+     * page-wide getByText(/required/i).first() picks up and reports invisible.
+     * waitFor() is used over isVisible(), which does not wait.
+     */
     async hasFieldError(message: RegExp): Promise<boolean> {
         return await this.page
+            .locator(adminVendorCreateSelectors.reactRoot)
             .getByText(message)
             .first()
-            .isVisible({ timeout: 8000 })
+            .waitFor({ state: 'visible', timeout: 8000 })
+            .then(() => true)
             .catch(() => false);
     }
 

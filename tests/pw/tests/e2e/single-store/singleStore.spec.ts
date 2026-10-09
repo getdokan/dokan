@@ -1,22 +1,42 @@
 import { Page, expect, test } from '@utils/test';
 import { SingleStorePage, data } from './singleStorePage';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
 
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
+const { VENDOR_ID } = process.env;
 
 test.describe('Single store functionality test', () => {
     let customer: SingleStorePage;
     let cPage: Page;
+    let originalToc: string;
 
     test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext({ storageState: c1 });
         cPage = await customerContext.newPage();
         customer = new SingleStorePage(cPage);
+
+        // Seed the store Terms-and-Conditions prerequisites so the TOC tab renders
+        // regardless of shard ordering. dokan_get_toc_url() (functions.php) needs BOTH
+        // the global `seller_enable_terms_and_conditions` option AND the vendor's own
+        // `enable_tnc` to be 'on'. Re-seed both here instead of relying on ambient setup
+        // state, then restore in afterAll — the global option belongs to the whole shard,
+        // so this spec must not leave its own value behind either.
+        const [originalGeneral] = await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'on' });
+        originalToc = originalGeneral?.seller_enable_terms_and_conditions ?? 'on';
+        const apiUtils = new ApiUtils(null);
+        await apiUtils.updateStore(VENDOR_ID as string, { enable_tnc: true, store_tnc: data.vendor.toc }, payloads.adminAuth);
     });
 
-    test.afterAll(async () => { await cPage?.close(); });
+    test.afterAll(async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: originalToc });
+        await cPage?.close();
+    });
 
     test.skip('customer can view single store page', { tag: ['@lite', '@exploratory', '@customer'] }, async () => { await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1); });
     test.skip('customer can view store open-close time on single store', { tag: ['@lite', '@customer'] }, async () => { await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1); });

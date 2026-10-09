@@ -115,6 +115,8 @@ class ProFeatures extends AbstractPage {
             ]
         );
 
+        wp_set_script_translations( 'dokan-pro-features', 'dokan-lite' );
+
         wp_register_style( 'dokan-pro-features', DOKAN_PLUGIN_ASSEST . '/css/dokan-pro-features.css', [], $asset_file['version'] );
     }
 }

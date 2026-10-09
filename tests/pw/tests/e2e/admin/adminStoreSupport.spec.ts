@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminStoreSupportPage, adminStoreSupportData } from './adminStoreSupportPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import path from 'path';
@@ -97,6 +98,14 @@ test.describe('Admin Store Support functionality', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
+        });
+
+        test('applying the Vendor filter refetches the list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await support.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/admin/support-ticket', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
         });
 
         test('admin can view the Store Support list with DataViews table and columns', { tag: ['@pro', '@admin'] }, async () => {

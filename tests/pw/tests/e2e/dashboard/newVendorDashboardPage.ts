@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
 
 
-import { toPath } from '@utils/helpers';
+import { closeAnnouncementModal, toPath } from '@utils/helpers';
 
 /**
  * Page object for the new vendor React dashboard (Dokan 5.0.0+).
@@ -22,27 +22,15 @@ import { toPath } from '@utils/helpers';
  *   - Vendor Dashboard Style: New UI    (`dokan_appearance.vendor_layout_style = 'latest'`)
  *   - Vendor Product Editor: New UI     (`dokan_appearance.vendor_product_editor = 'latest'`)
  *
- * Self-contained per CONVENTIONS.md §4.
+ * Self-contained per NEW_UI_HOUSE_STYLE.md §1 (announcement dismissal comes
+ * from the shared @utils/helpers closeAnnouncementModal — F3 consolidation).
  */
 export class NewVendorDashboardPage {
     readonly page: Page;
 
     constructor(page: Page) {
         this.page = page;
-        void this.installAnnouncementModalHandler();
-    }
-
-    private async installAnnouncementModalHandler(): Promise<void> {
-        const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
-        const pwf = this.page as Page & { [installed]?: boolean };
-        if (pwf[installed]) return;
-        pwf[installed] = true;
-        const modal = this.page.locator('.vendor-announcement-modal');
-        await this.page.addLocatorHandler(modal, async () => {
-            const btn = modal.locator('button[aria-label="Close"]').first();
-            if (await btn.isVisible().catch(() => false)) await btn.click({ timeout: 2000 }).catch(() => undefined);
-            else await this.page.keyboard.press('Escape').catch(() => undefined);
-        }, { noWaitAfter: true }).catch(() => undefined);
+        void closeAnnouncementModal(page);
     }
 
     // --------------------------------------------------------------------

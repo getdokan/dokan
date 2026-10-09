@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -122,6 +123,7 @@ export class AdminReverseWithdrawalPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Deep-link / reload straight onto a per-store drill-down route. */
@@ -146,6 +148,7 @@ export class AdminReverseWithdrawalPage {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {

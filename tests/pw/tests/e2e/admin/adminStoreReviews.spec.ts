@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminStoreReviewsPage, adminStoreReviewsData } from './adminStoreReviewsPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
@@ -126,23 +127,18 @@ test.describe('Admin Store Reviews functionality', () => {
             expect(await reviews.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
 
+        test('applying the Vendor filter refetches the reviews list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await reviews.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/store-reviews', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the reviews list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
+        });
+
         test('All and Trash status tabs are present on the list', { tag: ['@pro', '@admin'] }, async () => {
             await reviews.goto();
             await expect(reviews.tab(/All/)).toBeVisible();
             await expect(reviews.tab(/Trash/)).toBeVisible();
-        });
-
-        // QUARANTINED @exploratory: the admin Store Reviews DataViews page renders
-        // NO free-text search input (ReviewList.tsx adds no <SearchInput> to
-        // additionalComponents and fetchReviews sends no `search` param). Only the
-        // Vendors page has search. This asserts search-driven filtering (the
-        // matching row present AND a non-matching row absent) the UI cannot perform.
-        // Documented product gap — re-enable when admin search lands.
-        test.fixme('searching by review title filters the list to the matching review', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await reviews.goto();
-            await reviews.search(adminStoreReviewsData.visible.title);
-            await expect(reviews.rowByTitle(adminStoreReviewsData.visible.title)).toBeVisible();
-            await expect(page.getByText(adminStoreReviewsData.deleteTarget.title, { exact: false })).toHaveCount(0);
         });
 
         test('admin can move a published review to Trash (it leaves the All tab)', { tag: ['@pro', '@admin'] }, async () => {
@@ -240,16 +236,6 @@ test.describe('Admin Store Reviews functionality', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
-        });
-
-        // QUARANTINED @exploratory: no free-text search input on the admin Store
-        // Reviews page (see the "searching by review title" test above) — a
-        // search-driven empty state is unreachable via the UI. Documented product gap.
-        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await reviews.goto();
-            await reviews.search(adminStoreReviewsData.searchMiss);
-            const empty = (await reviews.isEmptyStateVisible()) || (await reviews.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
         test('reloading on #/store-reviews preserves the route and re-mounts the list (route-registration regression)', { tag: ['@pro', '@admin'] }, async () => {

@@ -6,7 +6,10 @@ export {
     VIEW_LAYOUTS,
 } from '@wordpress/dataviews/wp';
 export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
-export { DataViews } from '@wedevs/plugin-ui';
+export { default as DataViews } from './dataviews/DokanDataViews';
+export { Switch, LabeledSwitch } from '@wedevs/plugin-ui';
+
+export { DokanSwitch } from './Switch';
 export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
 export { default as ListEmpty } from './dataviews/ListEmpty';
@@ -21,6 +24,7 @@ export { default as DokanAlert } from './Alert';
 export { default as AsyncSelect } from './AsyncSelect';
 export { default as DokanBadge } from './Badge';
 export { default as DokanButton } from './Button';
+export { default as ToolsSection } from './ToolsSection';
 export { default as CouponAsyncSelect } from './CouponAsyncSelect';
 export { default as CustomerFilter } from './CustomerFilter';
 export { default as DateRangePicker } from './DateRangePicker';
@@ -37,12 +41,20 @@ export { default as Popover } from './Popover';
 export { default as PriceHtml } from './PriceHtml';
 export { default as DokanPriceInput } from './PriceInput';
 export { default as ProductAsyncSelect } from './ProductAsyncSelect';
+export {
+    default as Repeater,
+    type RepeaterRow,
+    type RepeaterProps,
+} from './Repeater';
 export { default as RichText } from './richtext/RichText';
 export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';
 export { default as ShortContent } from './ShortContent';
 export { default as DokanTab } from './Tab';
-export { default as TimePicker } from './TimePicker';
+export {
+    default as TimePicker,
+    default as DokanTimePicker,
+} from './TimePicker';
 export { default as MediaUploader } from './Upload';
 export { default as UserCard } from './UserCard';
 export { default as StatCard } from './StatCard';
@@ -56,7 +68,37 @@ export { default as VendorAsyncSelect } from './VendorAsyncSelect';
 export { default as VisitStore } from './VisitStore';
 export { default as WpDatePicker } from './WpDatePicker';
 
+// Weekly time-slot schedule editor (single/multiple modes). Shared by Lite's
+// store open-close and Pro's delivery-time weekly schedule.
+export { default as WeeklyTimeSlots } from './WeeklyTimeSlots';
+export {
+    TimeDropdown,
+    FULL_DAY,
+    defaultSeedSlot,
+    timeToMinutes,
+    minutesToCanonical,
+    createSingleValidator,
+    createMultipleValidator,
+    hasWeeklyErrors,
+} from './WeeklyTimeSlots';
+export type {
+    TimeSlot,
+    WeeklyDay,
+    WeeklyValue,
+    SlotError,
+    WeeklyErrors,
+    WeeklyValidator,
+    WeeklyMessages,
+    WeeklyTimeSlotsProps,
+} from './WeeklyTimeSlots';
+
+// Provider-agnostic map location picker (Google Maps / Mapbox). Shared by the
+// admin Location settings (Default Location) and the vendor store map.
+export { default as MapPicker } from './MapPicker';
+export type { MapPickerProps, MapLocation, MapProvider } from './MapPicker';
+
 // Commission Components
 export * from './commission';
+export { default as LucideIcon } from './Icons/LucideIcon';
 
 /* Tailwind + theme loaded via single bundle: components.css (dokan-tailwind handle) */

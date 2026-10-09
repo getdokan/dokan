@@ -36,6 +36,9 @@ class Hooks {
         // Add WooCommerce product brands support.
         add_action( 'dokan_new_product_added', [ $this, 'update_product_brands_by_id' ], 10, 2 );
         add_action( 'dokan_product_updated', [ $this, 'update_product_brands_by_id' ], 10, 2 );
+        // Creating a product has to record its chosen category too, or nothing downstream knows what was picked.
+        add_action( 'dokan_new_product_added', [ $this, 'sync_category_data_for_commission' ] );
+        add_action( 'dokan_product_updated', [ $this, 'sync_category_data_for_commission' ] );
         add_action( 'dokan_product_edit_after_pricing_fields', [ $this, 'add_product_brand_template_in_edit_product' ] );
         add_action( 'dokan_new_product_after_product_category', [ $this, 'add_product_brand_template_in_add_product' ] );
 
@@ -52,6 +55,29 @@ class Hooks {
         add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
+
+        add_filter( 'woocommerce_new_product_variation_data', [ $this, 'set_new_variation_author_to_vendor' ] );
+    }
+
+    /**
+     * Give a new variation its product's vendor as author.
+     *
+     * WooCommerce stamps whoever creates it, so a variation an admin adds would fall outside the vendor's scope.
+     *
+     * @since 5.3.0
+     *
+     * @param array $data Post data WooCommerce inserts for the variation.
+     *
+     * @return array
+     */
+    public function set_new_variation_author_to_vendor( $data ) {
+        $vendor_id = empty( $data['post_parent'] ) ? 0 : dokan_get_vendor_by_product( $data['post_parent'], true );
+
+        if ( $vendor_id ) {
+            $data['post_author'] = $vendor_id;
+        }
+
+        return $data;
     }
 
     /**
@@ -628,5 +654,22 @@ class Hooks {
             return;
 		}
         dokan()->product->save_brands( $product_id, $brand_ids );
+    }
+
+    /**
+     * Sync category data for commission
+     *
+     * @since 5.0.6
+     *
+     * @param int   $product_id   The ID of the product being created or updated.
+     *
+     * @return void
+     */
+    public function sync_category_data_for_commission( int $product_id ): void {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return;
+        }
+
+        $this->update_product_categories( $product_id );
     }
 }

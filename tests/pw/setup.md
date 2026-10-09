@@ -107,11 +107,11 @@ import { faker } from '@faker-js/faker';
 
 const { ADMIN, ADMIN_PASSWORD, VENDOR, USER_PASSWORD, BASE_URL } = process.env;
 
-// SELECTORS ------------------------------------------------------
+// SELECTORS — discover + verify live via the Playwright MCP plugin (SKILL "LOCATORS").
+// Prefer role/name or data-test; no guessed CSS, no XPath.
 export const <slug>Selectors = {
-    list:   '[data-test="<slug>-list"]',
-    addBtn: '[data-test="<slug>-add"]',
-    // ...
+    addBtn: { role: 'button', name: /add/i } as const,
+    listItem: '[data-test="<slug>-list"]',
 };
 
 // TEST DATA ------------------------------------------------------
@@ -143,9 +143,8 @@ export class <Slug>Page {
 
     async <action>(data: any) {
         await this.goto();
-        await this.page.locator(<slug>Selectors.addBtn).click();
-        // ...
-        await expect(this.page.locator(<slug>Selectors.list)).toContainText(data.name);
+        await this.page.getByRole('button', { name: /add/i }).click();
+        await expect(this.page.locator(<slug>Selectors.listItem)).toContainText(data.name);
     }
 }
 ```

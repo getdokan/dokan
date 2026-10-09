@@ -8,6 +8,8 @@ import WithdrawPage from '../pages/withdraw';
 import VendorsSingle from '../pages/vendors-single';
 import Create from '../pages/vendor-create-edit/Create';
 import Edit from '../pages/vendor-create-edit/Edit';
+import NotFound from '../../../layout/404';
+import SettingsPage from '../pages/settings';
 import AdminDashboard from '../pages/dashboard';
 import VendorsPage from '../pages/vendors';
 import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
@@ -15,6 +17,7 @@ import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-with
 import ChangelogPage from '../pages/changelog';
 import ExtensionsPage from '../pages/extensions';
 import DummyData from '../pages/dummy-data';
+import Tools from './Tools/Tools';
 
 export type DokanAdminRoute = {
     id: string;
@@ -76,9 +79,19 @@ const getAdminRoutes = () => {
             path: '/reverse-withdrawal/store/:id',
         },
         {
+            id: 'settings',
+            element: <SettingsPage />,
+            path: '/settings',
+        },
+        {
             id: 'extensions',
             element: <ExtensionsPage />,
             path: '/extensions',
+        },
+        {
+            id: 'tools',
+            element: <Tools />,
+            path: '/tools',
         },
         {
             id: 'changelog',

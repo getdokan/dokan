@@ -31,6 +31,12 @@ test.describe('Verifications test', () => {
         cPage = await customerContext.newPage();
         customer = new VendorVerificationsPage(cPage);
         apiUtils = new ApiUtils(null);
+        // Clean slate: the admin settings "Vendor Verification" tab only loads the
+        // first page of methods (per_page=100, ascending by id). Methods accumulate
+        // across runs, so a freshly-created method eventually falls onto page 2 and
+        // its settings-list row can no longer be found (edit/delete/status tests).
+        // Reset the method list each run so every created method stays on page 1.
+        await apiUtils.deleteAllVerificationMethods(payloads.adminAuth);
         [, methodId, methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
         [, mediaId] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.adminAuth);
         [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);

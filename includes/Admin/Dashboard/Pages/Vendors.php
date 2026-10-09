@@ -8,9 +8,19 @@ class Vendors extends AbstractPage {
     }
 
     public function menu( string $capability, string $position ): array {
+        $pending_count = dokan_get_pending_vendor_count();
+
+        $menu_title = $pending_count ? sprintf(
+            /* translators: %s: Pending vendor count badge */
+            __( 'Vendors %s', 'dokan-lite' ),
+            '<span class="awaiting-mod count-1"><span class="pending-count">'
+            . number_format_i18n( $pending_count )
+            . '</span></span>'
+        ) : __( 'Vendors', 'dokan-lite' );
+
         return [
             'page_title' => __( 'Vendors', 'dokan-lite' ),
-            'menu_title' => __( 'Vendors', 'dokan-lite' ),
+            'menu_title' => $menu_title,
             'route'      => 'vendors',
             'capability' => $capability,
             'position'   => 100,

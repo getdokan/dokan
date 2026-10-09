@@ -1,4 +1,4 @@
-import { expect, Request, APIRequestContext, APIResponse } from '@playwright/test';
+import { expect, Request, APIRequestContext, APIResponse, request as pwRequest } from '@playwright/test';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
@@ -41,8 +41,23 @@ function extractTrailingJson(text: string): any {
 export class ApiUtils {
     readonly request: APIRequestContext;
 
-    constructor(request: APIRequestContext) {
-        this.request = request;
+    constructor(request: APIRequestContext | null) {
+        if (request) {
+            this.request = request;
+        } else {
+            // De-stubbed legacy specs construct `new ApiUtils(null)` (the old local
+            // stub accepted anything). Provide a lazy proxy that creates a real API
+            // request context on first use, so those specs run without each having to
+            // wire one. Callers that pass a real context are unaffected.
+            let ctx: APIRequestContext | null = null;
+            this.request = new Proxy({} as APIRequestContext, {
+                get: (_t, prop) => async (...args: unknown[]) => {
+                    if (!ctx) ctx = await pwRequest.newContext();
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    return (ctx as any)[prop](...args);
+                },
+            });
+        }
     }
 
     /**
@@ -1582,7 +1597,10 @@ export class ApiUtils {
             console.log('No verification method exists');
             return;
         }
-        const allMethodIds = allVerificationMethods.map((o: { id: unknown }) => o.id);
+        // The Address method is built in: the installer seeds it once and the REST layer
+        // refuses to delete it (403 dokan_pro_rest_cannot_delete, dokan-pro #5861). Skip it
+        // instead of letting the delete assertion take the whole beforeAll down.
+        const allMethodIds = allVerificationMethods.filter((o: { kind?: string }) => o.kind !== 'address').map((o: { id: unknown }) => o.id);
         for (const methodId of allMethodIds) {
             await this.delete(endPoints.deleteVerificationMethod(methodId), { headers: auth });
         }

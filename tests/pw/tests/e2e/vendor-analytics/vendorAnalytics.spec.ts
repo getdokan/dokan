@@ -7,7 +7,7 @@ import { toPath } from '@utils/helpers';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
-test.describe.skip('Vendor analytics test', () => {
+test.describe('Vendor analytics test', () => {
     let admin: VendorAnalyticsPage;
     let vendor: VendorAnalyticsPage;
     let aPage: Page, vPage: Page;
@@ -30,10 +30,20 @@ test.describe.skip('Vendor analytics test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can enable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => { await admin.enableVendorAnalyticsModule(); });
+    // Skipped: the admin-side module on/off surface moved to the React admin SPA
+    // (page=dokan#/settings). The section was renamed "Vendor Analytics" -> "Store Stats"
+    // and the legacy `div.nav-title` markup this asserted on no longer exists.
+    test.skip('admin can enable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => { await admin.enableVendorAnalyticsModule(); });
+
+    // Real classic-UI test: vendor "Store Stats" dashboard page renders with its tabs,
+    // date-range filter, and the per-tab "No Data Found!" empty state (GA not connected).
     test('vendor can view analytics menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorAnalyticsRenderProperly(); });
 
-    test('admin can disable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => {
+    // Skipped: pairs with the enable test above (React admin settings). It also deactivates
+    // the module and asserts the classic dashboard-wrap is hidden on the analytics URL, which
+    // is non-deterministic post-migration (the endpoint redirects to the dashboard home,
+    // which still renders `.dokan-dashboard-wrap`).
+    test.skip('admin can disable vendor analytics module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.vendorAnalytics, payloads.adminAuth);
         await admin.disableVendorAnalyticsModule();
     });

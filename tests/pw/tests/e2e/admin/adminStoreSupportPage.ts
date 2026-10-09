@@ -1,5 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // ============================================
 // TEST DATA
@@ -112,6 +114,7 @@ export class AdminStoreSupportPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async gotoSingle(ticketId: string | number, vendorId: string | number): Promise<void> {
@@ -129,12 +132,14 @@ export class AdminStoreSupportPage {
             if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
+        await waitForDataViewsSettle(this.page);
     }
 
     async reload(): Promise<void> {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -171,7 +176,7 @@ export class AdminStoreSupportPage {
         await tab.waitFor({ state: 'visible', timeout: 10000 });
         await tab.scrollIntoViewIfNeeded().catch(() => undefined);
         await tab.click();
-        await this.page.waitForTimeout(900); // DataViews refetch + repaint.
+        await waitForDataViewsSettle(this.page);
     }
 
     /** The currently selected tab's accessible name (aria-selected="true"). */
@@ -187,7 +192,7 @@ export class AdminStoreSupportPage {
         const input = this.searchBox;
         await input.waitFor({ state: 'visible', timeout: 10000 });
         await input.fill(query);
-        await this.page.waitForTimeout(900); // debounced search.
+        await waitForDataViewsSettle(this.page);
     }
 
     async clearSearch(): Promise<void> {
@@ -223,7 +228,7 @@ export class AdminStoreSupportPage {
 
     /** Click an item in the open actions menu, e.g. 'Open', 'Close', 'Mark as Read'. */
     async clickActionMenuItem(label: string): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: new RegExp(escapeRegExp(label), 'i') }).first();
+        const item = actionMenuItemByName(this.page, new RegExp(escapeRegExp(label), 'i')).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
         await this.page.waitForTimeout(1200); // POST + list refetch.
@@ -273,11 +278,7 @@ export class AdminStoreSupportPage {
         // been moved, deleted or does not exist", and a "Back to Dashboard"
         // button. Match those exact, stable phrases (the old regex never
         // appeared in the rendered copy, so NotFound was never detected).
-        return this.page
-            .locator(
-                'text=/can.?t be found|appears to have been moved|moved, deleted or does not exist|Back to Dashboard/i'
-            )
-            .first();
+        return this.page.locator('text=/can.?t be found|appears to have been moved|moved, deleted or does not exist|Back to Dashboard/i').first();
     }
     /** True when the single-ticket page rendered the NotFound fallback (bad id/IDOR). */
     async isDetailNotFound(): Promise<boolean> {

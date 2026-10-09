@@ -78,6 +78,9 @@ test.describe('request quote api test', () => {
         expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestSchema);
     });
 
+    // Skipped: batch-trash requires seeded quote requests. getAllQuoteRequests() returns
+    // [] in this env, so the PUT batch {trash: []} is rejected (non-2xx). Needs a quote
+    // request seeded in beforeAll before this can be re-enabled. Not a product bug.
     test.skip('update batch request quote', { tag: ['@pro'] }, async () => {
         const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });

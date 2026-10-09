@@ -1,7 +1,7 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
-import { isSerialized, serialize } from 'php-serialize';
 import { toPath, SERVER_URL } from '@utils/helpers';
+import { dbUtils } from '@utils/dbUtils';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -14,10 +14,8 @@ const {
     DB_USER_PASSWORD,
     DATABASE,
     DB_PORT,
-    DB_PREFIX,
 } = process.env;
 
-const dbPrefix = DB_PREFIX;
 
 // ============================================
 // HELPER FUNCTIONS
@@ -74,8 +72,8 @@ const settingsVendor = {
 
 const dashboardVendor = {
     menus: {
-        menus: '#primary ul.dokan-dashboard-menu',
-        activeMenu: '#primary .dokan-dashboard-menu li.active',
+        menus: 'ul.dokan-dashboard-menu',
+        activeMenu: '.dokan-dashboard-menu li.active',
         primary: {
             dashboard: 'ul.dokan-dashboard-menu li.dashboard a',
             settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
@@ -210,6 +208,7 @@ const pool = mysql.createPool({
     queueLimit: 0,
 });
 
+// Dokan settings go through dbUtils, which writes dokan_* options via update_option() (see utils/dbUtils.ts).
 export const db = {
     async query(query: string, params?: any[]): Promise<any> {
         const connection = await pool.getConnection();
@@ -222,13 +221,7 @@ export const db = {
     },
 
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
-        optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
-        const query = `
-            INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
-            VALUES (NULL, ?, ?, 'yes')
-            ON DUPLICATE KEY UPDATE option_value = ?;
-        `;
-        return await this.query(query, [optionName, optionValue, optionValue]);
+        return dbUtils.setOptionValue(optionName, optionValue, serializeData);
     },
 };
 

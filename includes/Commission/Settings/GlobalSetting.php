@@ -85,7 +85,7 @@ class GlobalSetting implements InterfaceSetting {
         $options['additional_fee']                   = isset( $setting['flat'] ) ? $setting['flat'] : '';
         $options['commission_category_based_values'] = isset( $setting['category_commissions'] ) ? $setting['category_commissions'] : [];
 
-        update_option( 'dokan_selling', $options );
+        dokan_save_legacy_settings_section( 'dokan_selling', $options );
 
         do_action( 'dokan_global_commission_settings_after_save', $setting );
     }

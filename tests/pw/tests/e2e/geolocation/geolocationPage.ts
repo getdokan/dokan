@@ -1,7 +1,7 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
-import { serialize, unserialize } from 'php-serialize';
 import { toPath, SERVER_URL } from '@utils/helpers';
+import { dbUtils } from '@utils/dbUtils';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -40,9 +40,7 @@ const {
     DB_USER_PASSWORD,
     DATABASE,
     DB_PORT,
-    DB_PREFIX,
 } = process.env;
-const dbPrefix = DB_PREFIX;
 
 // ============================================
 // HELPERS
@@ -175,15 +173,8 @@ const pool = mysql.createPool({
     queueLimit: 0,
 });
 
-function isSerialized(value: any): boolean {
-    if (typeof value !== 'string') return false;
-    const data = value.trim();
-    if (data === 'N;') return true;
-    if (data.length < 4) return false;
-    if (data[1] !== ':') return false;
-    return /^[adObis]:/.test(data);
-}
 
+// Dokan settings go through dbUtils, which writes dokan_* options via update_option() (see utils/dbUtils.ts).
 export const db = {
     async dbQuery(query: string, params?: any[]): Promise<any> {
         let connection: mysql.PoolConnection | undefined;
@@ -200,10 +191,7 @@ export const db = {
     },
 
     async getOptionValue(optionName: string): Promise<any> {
-        const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
-        const res = await db.dbQuery(query, [optionName]);
-        if (!res?.length) return null;
-        return unserialize(res[0].option_value);
+        return dbUtils.getOptionValue(optionName);
     },
 
     async setOptionValue(
@@ -211,11 +199,7 @@ export const db = {
         optionValue: object | string,
         serializeData: boolean = true
     ): Promise<any> {
-        const value = serializeData && !isSerialized(optionValue as any) ? serialize(optionValue) : optionValue;
-        const query = `INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
-            VALUES (NULL, ?, ?, 'yes')
-            ON DUPLICATE KEY UPDATE option_value = ?;`;
-        return await db.dbQuery(query, [optionName, value, value]);
+        return dbUtils.setOptionValue(optionName, optionValue, serializeData);
     },
 
     async updateOptionValue(
@@ -304,7 +288,10 @@ export class GeolocationPage {
     }
 
     private async gotoUntilNetworkidle(subPath: string): Promise<void> {
-        await this.page.goto(this.createUrl(subPath), { waitUntil: 'load' });
+        // These pages embed a Google Map whose script keeps loading tiles/API calls, so the
+        // 'load' event can lag and the goto hits its 90s cap under CI load. domcontentloaded is
+        // enough — the callers wait for the specific map element/attribute right after.
+        await this.page.goto(this.createUrl(subPath), { waitUntil: 'domcontentloaded' });
     }
 
     // Assertion helpers

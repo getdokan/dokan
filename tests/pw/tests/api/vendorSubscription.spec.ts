@@ -14,7 +14,7 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 
 test.describe('vendor subscription api test', () => {
-    test.skip(true, 'need subscription product');
+    test.skip(true, 'endpoint getAllVendorSubscriptions -> GET /dokan/v1/subscription now returns 404; route moved to /dokan/v1/product-subscriptions. Needs endpoint-map update + seeded subscription product. See SKIPPED-TESTS-BUG-REPORT.md');
     test.slow();
     let apiUtils: ApiUtils;
     let subscriptionPackId: string;

@@ -18,6 +18,25 @@ const pool = mysql.createPool({
     queueLimit: 0,
 });
 
+// Since Dokan 5.2.0 the mapped settings live in `dokan_admin_settings` and are overlaid on the
+// legacy dokan_* rows, so a raw SQL write to a legacy row is shadowed and a raw read can be stale.
+// These rows go through get_option()/update_option() instead (tests/pw/mu-plugins/dokan-test-options.php),
+// which the settings bridge adopts. The flat store and its snapshot stay raw: they are the bridge's own state.
+const isBridgedOption = (optionName: string): boolean => optionName.startsWith('dokan_') && !optionName.startsWith('dokan_admin_settings');
+
+async function dokanOptionRoute(name: string, value?: object | string): Promise<{ name: string; value: any }> {
+    const auth = `Basic ${Buffer.from(`${process.env.ADMIN}:${process.env.ADMIN_PASSWORD}`).toString('base64')}`;
+    const url = `${process.env.BASE_URL}/wp-json/dokan-test/v1/option`;
+    const res =
+        value === undefined
+            ? await fetch(`${url}?name=${encodeURIComponent(name)}`, { headers: { Authorization: auth } })
+            : await fetch(url, { method: 'POST', headers: { Authorization: auth, 'Content-Type': 'application/json' }, body: JSON.stringify({ name, value }) });
+    if (!res.ok) {
+        throw new Error(`dokan-test/v1/option ${value === undefined ? 'GET' : 'POST'} ${name} failed (${res.status}): ${(await res.text()).slice(0, 200)}`);
+    }
+    return res.json();
+}
+
 export const dbUtils = {
     async dbQuery(query: string, params?: any[]): Promise<any> {
         let connection: mysql.PoolConnection | undefined;
@@ -101,16 +120,79 @@ export const dbUtils = {
         return [currentMetaValue, newMetaValue];
     },
 
+    // Raw option rows matching a SQL LIKE pattern. Values stay serialized so
+    // callers can diff the stored strings directly.
+    async getOptionRows(likePattern: string): Promise<Record<string, string>> {
+        const query = `SELECT option_name, option_value FROM ${dbPrefix}_options WHERE option_name LIKE ?;`;
+        const rows = await dbUtils.dbQuery(query, [likePattern]);
+        return Object.fromEntries(rows.map((row: any) => [row.option_name, row.option_value]));
+    },
+
+    // Write back, raw, every snapshot row that differs now. The legacy rows, the flat
+    // `dokan_admin_settings` store and its reconcile baseline all come from the same moment,
+    // so restoring them together leaves the settings bridge consistent.
+    async restoreOptionRows(snapshot: Record<string, string>): Promise<void> {
+        const current = await dbUtils.getOptionRows('dokan\\_%');
+        const changed = Object.entries(snapshot).filter(([name, raw]) => current[name] !== raw);
+        for (const [name, raw] of changed) {
+            await dbUtils.setRawOptionValue(name, raw, false);
+        }
+        // A restored store URL slug only resolves once the rewrite rules are flushed; Dokan
+        // flushes on the next front-end request (`wp` hook) when this flag is set.
+        if (changed.some(([name]) => name === 'dokan_general')) {
+            await dbUtils.setOptionValue('dokan_rewrite_rules_needs_flashing', 'yes', false);
+            await fetch(`${process.env.BASE_URL}/`);
+        }
+    },
+
+    // For specs that save through the settings UI: snapshot every dokan_* option row before
+    // the file runs and put back what it changed, so its saves don't leak into shard-mates.
+    restoreDokanOptionsAfterAll(hooks: { beforeAll: (fn: () => Promise<void>) => void; afterAll: (fn: () => Promise<void>) => void }): void {
+        let snapshot: Record<string, string> = {};
+        hooks.beforeAll(async () => {
+            snapshot = await dbUtils.getOptionRows('dokan\\_%');
+        });
+        hooks.afterAll(async () => {
+            await dbUtils.restoreOptionRows(snapshot);
+        });
+    },
+
     // get option value
     async getOptionValue(optionName: string): Promise<any> {
+        if (isBridgedOption(optionName)) {
+            return (await dokanOptionRoute(optionName)).value;
+        }
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
         const res = await dbUtils.dbQuery(query, [optionName]);
         const optionValue = unserialize(res[0].option_value);
         return optionValue;
     },
 
+    // safe option read — returns the option value (unserialized only when it actually is serialized,
+    // like WordPress's maybe_unserialize), or null when the row is ABSENT. getOptionValue() throws on a
+    // missing row (it indexes res[0]) and also throws on a plain-string option value (php-serialize's
+    // unserialize rejects anything unserialized), so use this when an option may legitimately not exist
+    // yet or may hold a scalar. Real driver errors still propagate.
+    async getOptionValueOrNull(optionName: string): Promise<any> {
+        const res = await dbUtils.dbQuery(`Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`, [optionName]);
+        if (!res.length) {
+            return null;
+        }
+        const raw = res[0].option_value as string;
+        return isSerialized(raw) ? unserialize(raw) : raw;
+    },
+
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
+        if (isBridgedOption(optionName)) {
+            return (await dokanOptionRoute(optionName, optionValue)).value;
+        }
+        return dbUtils.setRawOptionValue(optionName, optionValue, serializeData);
+    },
+
+    // Raw SQL write that bypasses WordPress and the Dokan settings bridge. Only for specs that
+    // mean to write behind the bridge (legacy-edit reconciliation) or restore a full raw snapshot.
+    async setRawOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
         const query = `
                 INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
@@ -386,5 +468,59 @@ export const dbUtils = {
             await new Promise(resolve => setTimeout(resolve, 500));
         }
         return null;
+    },
+
+    // ============================================================
+    // Stripe Express e2e helpers (cart / user-meta) — DB-direct.
+    // The connected-vendor SEED lives in tests/e2e/stripe-express/helpers.ts
+    // (it POSTs the account_info ARRAY meta via the mu-plugin, PHP-native).
+    // ============================================================
+
+    /**
+     * Empty a logged-in customer's WooCommerce cart so a fresh browser context
+     * starts clean. A logged-in cart lives in TWO places — the
+     * `_woocommerce_persistent_cart_*` user meta AND the live session row in
+     * `_woocommerce_sessions` (keyed by user id) — so both must be cleared, or
+     * leftover items from prior tests (e.g. declined-card tests that never
+     * complete) pollute later checkouts.
+     */
+    async clearCustomerCart(userId: string | number): Promise<void> {
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key LIKE '_woocommerce_persistent_cart_%';`, [String(userId)]);
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_woocommerce_sessions WHERE session_key = ?;`, [String(userId)]);
+    },
+
+    // safe scalar user-meta read — returns the raw meta_value string (NOT unserialized), or null when the row is
+    // absent. getUserMeta() throws on a missing row; use this when a meta may legitimately not exist yet.
+    async getUserMetaValue(userId: string | number, metaKey: string): Promise<string | null> {
+        const res = await dbUtils.dbQuery(`SELECT meta_value FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`, [String(userId), metaKey]);
+        return res.length ? (res[0].meta_value as string) : null;
+    },
+
+    // delete one or more user-meta rows by key (generic).
+    async deleteUserMeta(userId: string | number, metaKeys: string[]): Promise<void> {
+        if (!metaKeys.length) {
+            return;
+        }
+        const placeholders = metaKeys.map(() => '?').join(', ');
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (${placeholders});`, [String(userId), ...metaKeys]);
+    },
+
+    // Pro's EmailVerification adds _dokan_email_pending_verification on every customer it creates —
+    // even while the feature is off — so any user seeded earlier gets locked out the moment a spec
+    // (or a human) turns verification on. Wipe the flag site-wide so seeded users are always verified.
+    async clearPendingEmailVerification(): Promise<void> {
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE meta_key = '_dokan_email_pending_verification';`);
+    },
+
+    // remove a vendor's active vendor-subscription (product_pack) state — cleanup for the subscription specs.
+    // Does NOT cancel the Stripe subscription itself; pair with stripeApi.cancelSubscription() when a sub_… exists.
+    async removeVendorSubscription(vendorId: string | number): Promise<void> {
+        await dbUtils.dbQuery(
+            `DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (` +
+                `'product_package_id', 'product_order_id', 'product_pack_startdate', 'product_pack_enddate', ` +
+                `'can_post_product', 'product_no_with_pack', '_customer_recurring_subscription', ` +
+                `'_dokan_stripe_express_stripe_subscription_id', '_stripe_subscription_id', 'dokan_has_active_cancelled_subscrption');`,
+            [String(vendorId)],
+        );
     },
 };

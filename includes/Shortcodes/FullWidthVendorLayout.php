@@ -27,13 +27,32 @@ class FullWidthVendorLayout implements Hookable {
      */
     public function register_hooks(): void {
         add_action( 'dokan_setup_wizard_styles', [ $this, 'update_layout_style' ] );
-        // Register vendor dashboard assets if the vendor layout is not legacy.
-        $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
-        if ( 'latest' === $vendor_layout ) {
-            add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ], 99 );
-            add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
-            add_filter( 'template_include', [ $this, 'rewrite_vendor_dashboard_template' ] );
-        }
+        // On wp_enqueue_scripts (not init): it only fires on front-end page
+        // renders — never for cron, Action Scheduler, AJAX, REST or admin —
+        // and the seller-dashboard check inside needs the parsed query.
+        add_action( 'wp_enqueue_scripts', [ $this, 'register_vendor_dashboard_assets' ], 5 );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
+        add_filter( 'template_include', [ $this, 'rewrite_vendor_dashboard_template' ] );
+    }
+
+    /**
+     * Whether the marketplace runs the React (latest) vendor dashboard layout.
+     *
+     * Deliberately resolved per callback instead of once in `register_hooks()`:
+     * hooks are registered on `plugins_loaded`, and reading a Dokan setting
+     * walks the legacy settings bridge, which builds the translated admin
+     * settings schema. Doing that before `init` — where
+     * `load_plugin_textdomain()` runs — trips WordPress 6.7+'s
+     * `_load_textdomain_just_in_time` notice on every request. Every callback
+     * below fires on `init` or later, and the repository memoizes the section
+     * snapshot, so the deferred read costs nothing.
+     *
+     * @since 5.2.0
+     *
+     * @return bool
+     */
+    protected function is_latest_layout(): bool {
+        return 'latest' === dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
     }
 
     /**
@@ -51,8 +70,9 @@ class FullWidthVendorLayout implements Hookable {
         $appearance                          = get_option( 'dokan_appearance', [] );
         $appearance['vendor_layout_style']   = 'latest';
         $appearance['vendor_product_editor'] = 'latest';
+        $appearance['vendor_store_settings'] = 'latest';
 
-        update_option( 'dokan_appearance', $appearance );
+        dokan_save_legacy_settings_section( 'dokan_appearance', $appearance );
     }
 
     /**
@@ -70,6 +90,10 @@ class FullWidthVendorLayout implements Hookable {
      * @return string Modified template path
      */
     public function rewrite_vendor_dashboard_template( $template ) {
+        if ( ! $this->is_latest_layout() ) {
+            return $template;
+        }
+
         // Check if we should load the fullwidth template.
         if ( ! dokan_is_seller_dashboard() ) {
             return $template;
@@ -94,6 +118,14 @@ class FullWidthVendorLayout implements Hookable {
      * @return void
      */
     public function register_vendor_dashboard_assets() {
+        if ( ! $this->is_latest_layout() ) {
+            return;
+        }
+
+        if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
+            return;
+        }
+
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/vendor-dashboard/layout/index.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
@@ -119,90 +151,109 @@ class FullWidthVendorLayout implements Hookable {
                 $this->script_key,
                 'dokan-lite'
             );
+        }
+    }
 
-            $user_id      = get_current_user_id();
-            $seller_id    = dokan_get_current_user_id();
-            $vendor       = dokan()->vendor->get( $seller_id );
-            $is_admin     = current_user_can( 'manage_options' );
-            $user_name    = wp_get_current_user()->display_name ?? '';
-            $admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
-            $no_access    = OrderUtil::is_hpos_enabled() ? 'on' : $admin_access;
+    /**
+     * Attach the layout config (sidebar nav, vendor, site info) to the registered script.
+     *
+     * Deliberately runs at enqueue time, not at registration: the nav's
+     * new/legacy gates read `dokan_appearance`, whose flat-settings overlay is
+     * only filtered in at `init` priority 999 — long after this class registers
+     * its assets at `init` 99. Building the nav there hands the app the
+     * pre-overlay (legacy) URLs.
+     *
+     * @since 5.3.0
+     *
+     * @return void
+     */
+    protected function add_dashboard_layout_config(): void {
+        if ( ! wp_script_is( $this->script_key, 'registered' ) ) {
+            return;
+        }
 
-            // Frontend header nav items.
-            // Build base with My Account and Log out; insert conditional admin links next.
-            $header_nav = [
+        $user_id      = get_current_user_id();
+        $seller_id    = dokan_get_current_user_id();
+        $vendor       = dokan()->vendor->get( $seller_id );
+        $is_admin     = current_user_can( 'manage_options' );
+        $user_name    = wp_get_current_user()->display_name ?? '';
+        $admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
+        $no_access    = OrderUtil::is_hpos_enabled() ? 'on' : $admin_access;
+
+        // Frontend header nav items.
+        // Build base with My Account and Log out; insert conditional admin links next.
+        $header_nav = [
+            [
+                'label' => esc_html__( 'My Account', 'dokan-lite' ),
+                'icon'  => 'UserRound',
+                'url'   => dokan_get_navigation_url( 'edit-account' ),
+            ],
+            [
+                'label' => esc_html__( 'Log out', 'dokan-lite' ),
+                'icon'  => 'LogOut',
+                'url'   => esc_url_raw( wp_logout_url( home_url() ) ),
+            ],
+        ];
+
+        if ( $is_admin ) {
+            // Only administrators: show Back to WP Panel.
+            array_splice(
+                $header_nav,
+                1,
+                0,
                 [
-                    'label' => esc_html__( 'My Account', 'dokan-lite' ),
-                    'icon'  => 'UserRound',
-                    'url'   => dokan_get_navigation_url( 'edit-account' ),
-                ],
+                    [
+                        'label' => esc_html__( 'Back to WP Panel', 'dokan-lite' ),
+                        'icon'  => 'WPLogo',
+                        'url'   => admin_url(),
+                        'isSvg' => true,
+                    ],
+                ]
+            );
+        } elseif ( 'on' !== $no_access ) {
+            // Non-admins with admin panel access: show Access Admin Panel.
+            array_splice(
+                $header_nav,
+                1,
+                0,
                 [
-                    'label' => esc_html__( 'Log out', 'dokan-lite' ),
-                    'icon'  => 'LogOut',
-                    'url'   => esc_url_raw( wp_logout_url( home_url() ) ),
-                ],
-            ];
-
-            if ( $is_admin ) {
-                // Only administrators: show Back to WP Panel.
-                array_splice(
-                    $header_nav,
-                    1,
-                    0,
                     [
-                        [
-                            'label' => esc_html__( 'Back to WP Panel', 'dokan-lite' ),
-                            'icon'  => 'WPLogo',
-                            'url'   => admin_url(),
-                            'isSvg' => true,
-                        ],
-                    ]
-                );
-            } elseif ( 'on' !== $no_access ) {
-                // Non-admins with admin panel access: show Access Admin Panel.
-                array_splice(
-                    $header_nav,
-                    1,
-                    0,
-                    [
-                        [
-                            'label' => esc_html__( 'Access Admin Panel', 'dokan-lite' ),
-                            'icon'  => 'LockOpen',
-                            'url'   => admin_url(),
-                        ],
-                    ]
-                );
-            }
-
-            wp_add_inline_script(
-                $this->script_key,
-                'var vendorDashboardLayoutConfig = ' . wp_json_encode(
-                    apply_filters(
-                        'dokan_vendor_dashboard_layout_config',
-                        [
-                            'siteInfo'   => [
-                                'siteTitle' => get_bloginfo( 'name' ),
-                                'siteIcon'  => get_site_icon_url(),
-                                'siteUrl'   => home_url(),
-                            ],
-                            'vendor'     => [
-                                'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
-                                'avatar' => $vendor->get_avatar() ?? VendorUtil::get_vendor_default_avatar_url(),
-                            ],
-                            'editUrl'    => dokan_get_navigation_url( 'edit-account' ),
-                            'user'       => [
-                                'name'   => $user_name,
-                                'avatar' => get_avatar_url( $user_id ),
-                            ],
-                            'sidebarNav' => dokan_get_dashboard_nav(),
-                            'headerNav'  => $header_nav,
-                        ],
-                        $vendor
-                    )
-                ),
-                'before'
+                        'label' => esc_html__( 'Access Admin Panel', 'dokan-lite' ),
+                        'icon'  => 'LockOpen',
+                        'url'   => admin_url(),
+                    ],
+                ]
             );
         }
+
+        wp_add_inline_script(
+            $this->script_key,
+            'var vendorDashboardLayoutConfig = ' . wp_json_encode(
+                apply_filters(
+                    'dokan_vendor_dashboard_layout_config',
+                    [
+                        'siteInfo'   => [
+                            'siteTitle' => get_bloginfo( 'name' ),
+                            'siteIcon'  => get_site_icon_url(),
+                            'siteUrl'   => home_url(),
+                        ],
+                        'vendor'     => [
+                            'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
+                            'avatar' => $vendor->get_avatar() ?? VendorUtil::get_vendor_default_avatar_url(),
+                        ],
+                        'editUrl'    => dokan_get_navigation_url( 'edit-account' ),
+                        'user'       => [
+                            'name'   => $user_name,
+                            'avatar' => get_avatar_url( $user_id ),
+                        ],
+                        'sidebarNav' => dokan_get_dashboard_nav(),
+                        'headerNav'  => $header_nav,
+                    ],
+                    $vendor
+                )
+            ),
+            'before'
+        );
     }
 
     /**
@@ -213,9 +264,15 @@ class FullWidthVendorLayout implements Hookable {
      * @return void
      */
     public function enqueue_vendor_dashboard_assets() {
+        if ( ! $this->is_latest_layout() ) {
+            return;
+        }
+
         if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
             return;
         }
+
+        $this->add_dashboard_layout_config();
 
         wp_enqueue_script( $this->script_key );
         wp_enqueue_style( $this->script_key );

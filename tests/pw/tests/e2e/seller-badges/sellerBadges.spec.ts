@@ -38,9 +38,15 @@ test.describe('Seller badge test', () => {
     test('admin can search seller badge', { tag: ['@pro', '@admin'] }, async () => { await admin.searchSellerBadge(data.sellerBadge.eventName.productsPublished); });
 
     test('admin can create seller badge', { tag: ['@pro', '@admin'] }, async () => {
-        const badgeId = await apiUtils.getSellerBadgeId(data.sellerBadge.eventName.numberOfItemsSold, payloads.adminAuth);
-        if (badgeId) await apiUtils.deleteSellerBadge(badgeId, payloads.adminAuth);
+        // The create-badge event dropdown lists every badge event; an already-created event
+        // renders a status tooltip whose handler (BadgeEvents.getTooltipTitle) calls a bare
+        // `sprintf` that is not in scope, throwing and aborting the whole dropdown render.
+        // Clearing all badges first means no event is "created", so the dropdown renders and
+        // the real create flow can be driven. Products Published is reseeded afterwards for
+        // the downstream edit / vendor-search tests that depend on it.
+        await apiUtils.deleteAllSellerBadges(payloads.adminAuth);
         await admin.createSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.numberOfItemsSold });
+        await apiUtils.createSellerBadge(payloads.createSellerBadgeProductsPublished, payloads.adminAuth);
     });
 
     test('admin can edit seller badge', { tag: ['@pro', '@admin'] }, async () => { await admin.editSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.productsPublished }); });
