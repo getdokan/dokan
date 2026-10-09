@@ -18,8 +18,9 @@
 #
 # Env overrides:
 #   DOKAN_WT_HOME   parent dir for worktrees (default: ~/dokan-wt)
-#   DOKAN_CLONE_FROM  path of a running wp-env checkout to clone the DB from
-#                     (once, on first start — written into the override's afterStart)
+#   DOKAN_CLONE_DB_FROM / _HOST / _PORT / _NAME / _USER / _PASS / _PREFIX
+#                   clone the dev DB on first start; written to the override as
+#                   env.development.config (see clone-db.sh for the semantics)
 #
 # Requires: gh (authenticated), jq. Run from inside the dokan-lite main checkout.
 set -euo pipefail
@@ -127,12 +128,21 @@ elif [[ -d "$PRO_MAIN" ]]; then
   PRO_ENTRY=$',\n    "'"$PRO_MAIN"'"'   # lite-only: mount the shared main pro checkout by absolute path
 fi
 
-# afterStart: activate the theme, then (optionally) clone a database once.
-AFTER_START="npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive"
-if [[ -n "${DOKAN_CLONE_FROM:-}" ]]; then
-  CLONE_SRC="$( cd "$DOKAN_CLONE_FROM" && pwd )"
-  AFTER_START="$AFTER_START && $SKILL_DIR/clone-db.sh $CLONE_SRC"
-fi
+# afterStart: activate the theme, then clone-db.sh — a no-op unless the
+# override configures a DOKAN_CLONE_DB_* source.
+AFTER_START="npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive && $SKILL_DIR/clone-db.sh"
+CLONE_CFG=""
+for k in FROM HOST PORT NAME USER PASS PREFIX; do
+  name="DOKAN_CLONE_DB_$k"; v="${!name:-}"
+  [[ -n "$v" ]] || continue
+  if [[ "$k" == FROM ]]; then   # store an absolute path
+    if [[ -f "$v" ]]; then v="$( cd "$( dirname "$v" )" && pwd )/$( basename "$v" )"; else v="$( cd "$v" && pwd )"; fi
+  fi
+  if [[ "$k" == PORT ]]; then j="$v"; else v="${v//\\/\\\\}"; v="${v//\"/\\\"}"; j="\"$v\""; fi
+  CLONE_CFG="$CLONE_CFG${CLONE_CFG:+, }\"$name\": $j"
+done
+CLONE_ENV=""
+[[ -z "$CLONE_CFG" ]] || CLONE_ENV=$',\n  "env": { "development": { "config": { '"$CLONE_CFG"' } } }'
 
 # The committed .wp-env.json stays untouched (CI reads it). Everything
 # worktree-specific goes in the gitignored override; its "plugins" list
@@ -147,7 +157,7 @@ cat > "$DEST/dokan/.wp-env.override.json" <<JSON
   ],
   "lifecycleScripts": {
     "afterStart": "$AFTER_START"
-  }
+  }${CLONE_ENV}
 }
 JSON
 

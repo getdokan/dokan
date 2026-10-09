@@ -293,66 +293,98 @@ scripts name every lite worktree `dokan`, so the plugin slug — and its active
 state — survives the swap. Other worktrees don't run their own env. Only one
 code tree is live at a time.
 
-### 2b. Clone a DB from another checkout (recommended for "reuse the setup")
+### 2b. Clone a DB into a worktree (recommended for "reuse the setup")
 
-Provision one site the way you want it, then copy its database into each new
-worktree's own (isolated) instance. You get fast provisioning **and**
-independence — changes in one worktree don't reach the others.
+Provision one site the way you want it — another wp-env checkout, or your
+regular local install (Herd/Valet/MAMP) — then copy its database into each new
+worktree's own (isolated) instance. Fast provisioning **and** independence:
+changes in one worktree don't reach the others or the source.
 
-It is **config-driven**: the worktree's `.wp-env.override.json` declares its
-data source in `afterStart`, and `clone-db.sh` does the rest.
+It is **config-driven**. The worktree declares its data source as wp-env
+`config` constants in `.wp-env.override.json`; `clone-db.sh` in `afterStart`
+reads them back and does the rest (wp-env rejects unknown top-level keys, which
+is why the source lives under `config`).
 
 ```jsonc
 // .wp-env.override.json in the NEW worktree
 {
   "port": 8892,
   "testsPort": 8893,
+  "env": { "development": { "config": {
+    // EITHER a path: a wp-env checkout dir, or a local install's wp-config.php
+    "DOKAN_CLONE_DB_FROM": "/Users/you/Sites/core-dokan/wp-config.php",
+    // OR explicit MySQL credentials (NAME switches this mode on)
+    "DOKAN_CLONE_DB_HOST": "127.0.0.1",      // default 127.0.0.1
+    "DOKAN_CLONE_DB_PORT": 3306,             // default 3306
+    "DOKAN_CLONE_DB_NAME": "dokan_core",
+    "DOKAN_CLONE_DB_USER": "admin",
+    "DOKAN_CLONE_DB_PASS": "secret",
+    "DOKAN_CLONE_DB_PREFIX": "wp_"           // default wp_
+  } } },
   "lifecycleScripts": {
-    "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && .claude/skills/dokan-wp-env-worktrees/clone-db.sh /abs/path/to/source-checkout"
+    "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && /abs/path/to/.claude/skills/dokan-wp-env-worktrees/clone-db.sh"
   }
 }
 ```
 
-The relative script path works when the worktree's branch already contains
-this skill; otherwise use an absolute path (the creator scripts always do).
-Or let the creator scripts write it:
+Source resolution, first match wins:
+
+1. `DOKAN_CLONE_DB_NAME` set → **explicit MySQL** on the host (`HOST/PORT/USER/PASS/PREFIX`).
+2. `DOKAN_CLONE_DB_FROM` is a `wp-config.php` → credentials and `$table_prefix`
+   are read from that file (never executed). Explicit `HOST/PORT/USER/PASS/PREFIX`
+   override individual values, e.g. to reach a `localhost` socket host via TCP.
+3. `DOKAN_CLONE_DB_FROM` is a wp-env checkout dir → its running development DB
+   is streamed container-to-container (`mariadb-dump | mariadb` via `docker exec`).
+4. Nothing set → the hook is a no-op, so the creator scripts always include it.
+
+Or let the creator scripts write the override — the same names work as
+environment variables:
 
 ```bash
-DOKAN_CLONE_FROM=~/Development/Projects/core-dokan/wp-content/plugins/dokan-lite \
+DOKAN_CLONE_DB_FROM=~/Sites/core-dokan/wp-config.php \
   .claude/skills/dokan-wp-env-worktrees/create-paired-worktree.sh fix/issue-123 develop 8892
+# or
+DOKAN_CLONE_DB_NAME=dokan_core DOKAN_CLONE_DB_USER=admin DOKAN_CLONE_DB_PASS=secret \
+  .claude/skills/dokan-wp-env-worktrees/worktree-from-pr.sh 3141 8892
 ```
 
 What `clone-db.sh` does on `npx wp-env start`:
 
-1. Finds both instances' containers from their paths — wp-env names them
-   `md5(<checkout>/.wp-env.json)-mysql-1` / `-cli-1`.
-2. Streams the source dev database straight into the target:
-   `docker exec <src>-mysql-1 mariadb-dump --single-transaction wordpress | docker exec -i <dst>-mysql-1 mariadb wordpress`.
-   No dump file, no MySQL ports, no host MySQL client, no `node_modules` needed.
-3. Rewrites the source's `home` URL to the target's (`wp search-replace`, run
-   in the target's `cli` container). Both are read from the databases, so a LAN
+1. Finds the target's containers from its path (`md5(<checkout>/.wp-env.json)-mysql-1` / `-cli-1`)
+   and reads the `DOKAN_CLONE_DB_*` constants back with `wp config get`.
+2. Streams the source database straight into the target's `wordpress` DB — no
+   dump file, no MySQL port on the target, no `node_modules` needed. A host
+   source needs `mysqldump`/`mysql` (or the mariadb equivalents) on the Mac.
+3. If the source used a non-`wp_` table prefix, sets the target's `$table_prefix`
+   to match.
+4. Rewrites the source's `home` URL to the target's (`wp search-replace` in the
+   target's `cli` container). Both are read from the databases, so a LAN
    `WP_HOME` on either side is handled.
-4. Records a `dokan_wp_env_cloned_from` option in the target. wp-env runs
-   `afterStart` on **every** start, so later starts see the marker and skip —
-   your work in the worktree is never overwritten.
+5. Re-activates WooCommerce, Dokan and (if mounted) Dokan Pro. The source's
+   `active_plugins` names plugins by *its* folders (`dokan-lite/dokan.php`);
+   here lite is mounted as `dokan/`, so without this step Lite would be off.
+6. Records a `dokan_wp_env_cloned_from` option in the target. wp-env runs
+   `afterStart` on **every** start; later starts see the marker and skip, so
+   work in the worktree is never overwritten. Changing the source re-clones.
 
 Notes:
 
-- The **source environment must be running** for the first start of the
-  target; otherwise the hook fails with a message saying so.
-- Re-clone on purpose with
-  `.claude/skills/dokan-wp-env-worktrees/clone-db.sh --force <source>` from the
-  target's root.
-- The copy carries the source's active-plugin list. If the source had Pro
-  active and the target doesn't mount it, Pro simply doesn't load (WordPress
-  drops it from the active list the next time the Plugins screen loads).
+- Re-clone on purpose: `clone-db.sh --force` from the target's root. A
+  positional path (`clone-db.sh --force /other/wp-config.php`) overrides the
+  configured source for a one-off.
+- A wp-env source must be **running** for the target's first start; a host
+  MySQL source must be reachable from the Mac.
+- `DOKAN_CLONE_DB_PASS` ends up as a `define()` in the target container's
+  `wp-config.php`. The override is gitignored and the container is local-only;
+  still, prefer `DOKAN_CLONE_DB_FROM=<wp-config.php>` where one exists so the
+  password stays in one place.
+- Plugins only the source has (redis-cache, email-log, …) are simply absent in
+  the target. Accounts are the source's — log in with those, not `admin/password`.
+- Media lives on disk, not in the DB. To see the source's uploads, map its
+  folder (writes from the worktree land there too):
+  `"mappings": { "wp-content/uploads": "/Users/you/Sites/core-dokan/wp-content/uploads" }`
 - Only the dev database is cloned — `npm run phpunit` rebuilds the tests DB on
   every run.
-- Need a frozen snapshot instead of a live source? Dump to a file outside the
-  repo and load it later:
-  `docker exec <src>-mysql-1 mariadb-dump -uroot -ppassword --single-transaction wordpress > ~/dokan-wt/seed.sql`,
-  then `docker exec -i <dst>-mysql-1 mariadb -uroot -ppassword wordpress < ~/dokan-wt/seed.sql`
-  and a `wp search-replace` of the URL.
 
 ### Which mode
 
