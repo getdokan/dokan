@@ -38,7 +38,9 @@ on:
             - '.github/workflows/phpunit.yml'
     workflow_dispatch:
 
-# Cancels superseded runs: pushing a new commit to a PR kills the in-flight run.
+# Cancels superseded runs: pushing a new commit to a PR kills the in-flight run, and a
+# newer push to develop kills the older develop run (keyed on the ref, not the commit).
+# Manual dispatches stay keyed on their commit.
 #
 # The group is a hardcoded literal rather than `${{ github.workflow }}` on purpose.
 # Interpolating the workflow name means the group changes whenever this workflow is
@@ -50,7 +52,7 @@ on:
 # REST API, or by an org/GitHub-side action (quota, incident) cannot be prevented
 # from inside the workflow.
 concurrency:
-    group: dokan-lite-phpunit-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    group: dokan-lite-phpunit-${{ github.event_name == 'pull_request' && github.head_ref || github.event_name == 'push' && github.ref || github.sha }}
     cancel-in-progress: true
 
 permissions:
