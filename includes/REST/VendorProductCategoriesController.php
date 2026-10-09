@@ -114,6 +114,15 @@ class VendorProductCategoriesController extends WC_REST_Product_Categories_Contr
     public function get_item( $request ) {
         $request = apply_filters( 'dokan_rest_product_category_query', $request );
 
+        // The vendor permission check above replaces WooCommerce's, which is also where
+        // WooCommerce verifies the term exists. Without this, `get_term()` hands `null`
+        // to the serializer for an unknown id.
+        $term = get_term( (int) $request['id'], $this->taxonomy );
+
+        if ( ! $term instanceof \WP_Term ) {
+            return new WP_Error( 'woocommerce_rest_term_invalid', __( 'Resource does not exist.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
         // Get category using parent method
         return parent::get_item( $request );
     }

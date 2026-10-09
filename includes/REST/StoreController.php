@@ -642,6 +642,11 @@ class StoreController extends WP_REST_Controller {
             return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
+        // Without Pro there is no review source; answer with an empty collection
+        // instead of reading variables that were never assigned.
+        $data        = [];
+        $total_count = 0;
+
         if ( dokan()->is_pro_exists() ) {
             if ( dokan_pro()->module->is_active( 'store_reviews' ) ) {
                 $args = [

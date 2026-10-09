@@ -38,6 +38,12 @@ class Withdraw {
 
         $data = wp_parse_args( $data, $defaults );
 
+        // The default is a DateTimeImmutable; the table column is a MySQL datetime string.
+        // `wpdb::prepare()` cannot take an object and would store an empty date.
+        if ( $data['date'] instanceof \DateTimeInterface ) {
+            $data['date'] = $data['date']->format( 'Y-m-d H:i:s' );
+        }
+
         $this->data = [
             'id'      => absint( $data['id'] ),
             'user_id' => absint( $data['user_id'] ),

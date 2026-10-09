@@ -209,7 +209,7 @@ class OrderController extends DokanRESTController {
         $order = dokan()->order->get( $request->get_param( 'id' ) );
 
         if ( empty( $order ) ) {
-            return new WP_Error( "dokan_rest_invalid_order_id", __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_rest_invalid_order_id', __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $data     = $this->prepare_data_for_response( $order, $request );
@@ -691,14 +691,16 @@ class OrderController extends DokanRESTController {
         $id    = (int) $request['note_id'];
         $order = wc_get_order( (int) $request['id'] );
 
+        // `wc_get_order()` returns `false` for an id that does not exist; it must be
+        // checked before anything is read off it.
+        if ( ! $order instanceof \WC_Order || $this->post_type !== $order->get_type() ) {
+            return new WP_Error( 'dokan_rest_order_invalid_id', __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
         $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
-        }
-
-        if ( ! $order || $this->post_type !== $order->get_type() ) {
-            return new WP_Error( 'dokan_rest_order_invalid_id', __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $note = get_comment( $id );
@@ -798,7 +800,8 @@ class OrderController extends DokanRESTController {
      * @return boolean
      */
     public function get_single_order_permissions_check( $request ) {
-        if ( current_user_can( 'shop_manager' ) || current_user_can( 'administrator' ) ) {
+        // Administrators and shop managers both hold the canonical admin capability (ADR 0005).
+        if ( current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
 
