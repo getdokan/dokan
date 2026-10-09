@@ -189,8 +189,8 @@ test.describe('Admin Setup Guide wizard functionality', () => {
         });
 
         test('a slow step GET shows the "Failed to load settings" error with a working Retry', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
-            // Hang the first Basic GET past the 30s client timeout, then serve a fast
-            // empty response on Retry so the error UI recovers.
+            // Hang the first Basic GET for 31s, then serve a fast empty response on Retry so the
+            // error UI recovers.
             let calls = 0;
             await page.route(/\/dokan\/v1\/admin\/setup-guide\/basic/, async route => {
                 calls += 1;
@@ -202,10 +202,10 @@ test.describe('Admin Setup Guide wizard functionality', () => {
                 await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
             });
             await setup.goto();
-            // Known bug: since 5.2.0 a failed step GET leaves an empty wizard with no error or Retry
-            // (DOK-102, https://github.com/getdokan/plugin-internal-tasks/issues/2432). The assertion
-            // below is the correct behaviour; when the bug is fixed this test passes, the marker fails
-            // the run, and the marker is what gets deleted.
+            // Known gap: #3439 (DOK-102) shows the error when a step GET fails, but the wizard sets no
+            // client-side request timeout, so a hung GET keeps the loading skeleton up and never shows
+            // the error. The assertion below is the correct behaviour; when a timeout lands this test
+            // passes, the marker fails the run, and the marker is what gets deleted.
             test.fail();
             await expect(setup.failedToLoad).toBeVisible({ timeout: 40000 });
             await expect(setup.retryButton).toBeVisible();
@@ -215,7 +215,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await page.unroute(/\/dokan\/v1\/admin\/setup-guide\/basic/);
         });
 
-        test('a 500 on the step GET surfaces the error screen and auto-clears after ~5s', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test('a 500 on the step GET shows the error screen with a working Retry Loading', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             let calls = 0;
             await page.route(/\/dokan\/v1\/admin\/setup-guide\/basic/, async route => {
                 calls += 1;
@@ -226,12 +226,10 @@ test.describe('Admin Setup Guide wizard functionality', () => {
                 await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
             });
             await setup.goto();
-            // Known bug: since 5.2.0 a failed step GET leaves an empty wizard with no error or Retry
-            // (DOK-102, https://github.com/getdokan/plugin-internal-tasks/issues/2432). The assertion
-            // below is the correct behaviour; when the bug is fixed this test passes, the marker fails
-            // the run, and the marker is what gets deleted.
-            test.fail();
             await expect(setup.failedToLoad).toBeVisible({ timeout: 20000 });
+            // The second GET succeeds, so Retry Loading clears the error.
+            await setup.retryButton.click();
+            await expect.poll(async () => setup.failedToLoad.isVisible().catch(() => false), { timeout: 15000 }).toBe(false);
             await page.unroute(/\/dokan\/v1\/admin\/setup-guide\/basic/);
         });
 
@@ -248,11 +246,6 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             });
             await setup.selectRadioBox(adminSetupGuideData.basic.recipientValue);
             await setup.clickNext();
-            // Known bug: since 5.2.0 a failed step save still advances the wizard, with no error
-            // (DOK-103, https://github.com/getdokan/plugin-internal-tasks/issues/2433). Everything above
-            // is a control that must pass on its own; when the bug is fixed this marker fails the run
-            // and is what gets deleted.
-            test.fail();
             // Still on Basic after a failed save.
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 10000 }).toBe('Basic');
             await page.unroute(/\/dokan\/v1\/admin\/setup-guide\/basic/);
