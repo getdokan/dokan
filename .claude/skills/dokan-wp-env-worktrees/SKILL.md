@@ -9,6 +9,61 @@ How Dokan's `wp-env` environment behaves when the plugin is checked out into
 multiple git worktrees, and how to make each worktree's database **isolated**
 (the default) or **shared** (deliberate).
 
+## Quick start — the day-to-day workflow
+
+Everything below this section is the reasoning; this is what you actually do.
+
+**Once per machine:** `dokan-lite` and `dokan-pro` main checkouts side by side
+under `wp-content/plugins/`; Docker Desktop; `gh` + `jq` (PR script);
+`mysqldump`/`mysql` on the host if you'll clone from a Herd/Valet site. Never
+edit the committed `.wp-env.json` — CI reads it; local settings go in the
+gitignored `.wp-env.override.json`.
+
+**1. Start an issue** (from the lite main checkout; pick an unused even port):
+
+```bash
+.claude/skills/dokan-wp-env-worktrees/worktree-from-pr.sh 3141 8890             # from a PR
+.claude/skills/dokan-wp-env-worktrees/create-paired-worktree.sh fix/x develop 8892   # from a branch
+# want real data instead of an empty site? prefix with a source (see Mode 2b):
+DOKAN_CLONE_DB_FROM=~/Sites/core-dokan/wp-config.php .claude/skills/dokan-wp-env-worktrees/create-paired-worktree.sh fix/x develop 8892
+```
+
+→ `~/dokan-wt/<branch>/dokan/` (+ `dokan-pro/` when the issue spans both) with a
+ready `.wp-env.override.json`: ports, plugin list, theme hook, clone source.
+
+**2. Install, build, start** — lite first, pro's webpack needs lite's `node_modules`:
+
+```bash
+cd ~/dokan-wt/fix-x/dokan     && composer install && npm ci && npm run build
+cd ~/dokan-wt/fix-x/dokan-pro && composer install && npm ci && npm run build   # if paired
+cd ~/dokan-wt/fix-x/dokan     && npx wp-env start                              # http://localhost:8892
+```
+
+First start provisions the worktree's own WordPress + MySQL (and clones data if
+configured). Login `admin` / `password` — or the source site's accounts if cloned.
+
+**3. Work:** one window per issue, each with its own branch, site and DB.
+`npm run start` for a watch build, `npm run phpunit` against this worktree's
+tests DB. Later starts never re-clone (marker); `clone-db.sh --force` does.
+Phone testing → "Open the site from a phone" below.
+
+**4. Ship:** commit/push from the worktree as usual; `gh pr create --base develop`.
+`git status` stays clean of env files.
+
+**5. Park or finish:**
+
+```bash
+npx wp-env stop        # park: keeps the DB, frees RAM (6 containers per site)
+npx wp-env destroy     # finish: drops this worktree's containers + volumes
+git -C <lite-main> worktree remove ~/dokan-wt/fix-x/dokan
+git -C <pro-main>  worktree remove ~/dokan-wt/fix-x/dokan-pro
+```
+
+Rules of thumb: the lite folder is `dokan/` (`npm run phpunit` depends on it);
+a branch can be checked out in only one worktree at a time; `docker volume ls |
+grep mysql` shows leftover DBs; if `npm ci` fails on `@getdokan/dokan-ui`, copy
+`node_modules` from the main checkout.
+
 ## How wp-env keys an instance (the one fact that explains everything)
 
 From `@wordpress/env` (`lib/config/load-config.js`):
