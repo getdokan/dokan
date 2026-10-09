@@ -158,7 +158,7 @@ install or build — do that with the bootstrap sequence below.
 > do). wp-env mounts a local plugin at
 > `/var/www/html/wp-content/plugins/<folder-basename>`, and Dokan's
 > `npm run phpunit` hardcodes `--env-cwd=wp-content/plugins/dokan`, so a
-> `dokan-lite/` folder breaks `npm run phpunit` and the Mode 2b seed paths.
+> `dokan-lite/` folder breaks `npm run phpunit`.
 > dokan-pro's build is fine either way — `src/utils/dokan-path.js` looks for
 > `../dokan-lite` and falls back to `../dokan`.
 
@@ -274,34 +274,72 @@ derived from the config path). "Sharing" therefore means one of:
 
 ### 2a. One owner instance, code swapped by remount (true single DB)
 
-Run the environment from **one** checkout only and point its `plugins` /
-`mappings` at whichever worktree's code you want live. Other worktrees do not
-run their own env; their tooling targets the owner's port. Simple, but only one
-code tree is active at a time.
+Run the environment from **one** checkout only and point its plugin mount at
+whichever worktree's code you want live — in the owner's
+`.wp-env.override.json`:
+
+```json
+{
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/woocommerce.zip",
+    "/Users/you/dokan-wt/issue-b/dokan"
+  ]
+}
+```
+
+then `npx wp-env start` in the owner. Same data, issue B's code; edit the path
+to switch again. A local plugin mounts under its folder basename, and the
+scripts name every lite worktree `dokan`, so the plugin slug — and its active
+state — survives the swap. Other worktrees don't run their own env. Only one
+code tree is live at a time.
 
 ### 2b. Clone a seeded DB into a new worktree (recommended for "reuse the setup")
 
-Provision once, then snapshot and restore into each new worktree's own
-(isolated) instance. You get fast provisioning **and** independence. The dump
-path must be inside a **bind-mounted** dir so both `cli` and `tests-cli`
-containers (and the host) can see it — the plugin mount works. Replace `dokan`
-below with your actual lite worktree folder name if it differs.
+Provision one site the way you want it, then copy its database into each new
+worktree's own (isolated) instance. You get fast provisioning **and**
+independence — changes in one worktree don't reach the others.
+
+Each environment can only see its **own** worktree folder (bind-mounted at
+`wp-content/plugins/<folder-basename>`; the `cli` container's cwd is
+`/var/www/html`). A dump exported in one worktree is invisible to another, so it
+must be copied across on the host. Keep dumps **outside the repo** so one is
+never committed:
 
 ```bash
-P=/var/www/html/wp-content/plugins/dokan        # = the lite mount (folder basename)
+SRC=~/path/to/seeded/dokan        # worktree/checkout with the prepared site
+DST=~/dokan-wt/issue-b/dokan      # new worktree, after `npx wp-env start`
+SEEDS=~/dokan-wt/.seeds; mkdir -p "$SEEDS"
 
-# In the seeded/owner worktree — export both DBs:
-npx wp-env run cli -- wp db export "$P/.wp-env-seed.sql"
-npx wp-env run tests-cli -- wp db export "$P/.wp-env-seed-tests.sql"
+# 1. Export from the seeded site (lands in $SRC on the host), move it out of the repo.
+cd "$SRC" && npx wp-env run cli wp db export "wp-content/plugins/$(basename "$SRC")/seed.sql"
+mv "$SRC/seed.sql" "$SEEDS/seed.sql"
 
-# In a fresh worktree after `npm run env:start` — import them:
-npx wp-env run cli -- wp db import "$P/.wp-env-seed.sql"
-npx wp-env run cli -- wp search-replace 'http://localhost:8888' 'http://localhost:8890' --all-tables
-npx wp-env run tests-cli -- wp db import "$P/.wp-env-seed-tests.sql"
+# 2. Copy into the new worktree only for the import, then remove it.
+cp "$SEEDS/seed.sql" "$DST/seed.sql"
+cd "$DST" && npx wp-env run cli wp db import "wp-content/plugins/$(basename "$DST")/seed.sql"
+rm "$DST/seed.sql"
+
+# 3. Rewrite URLs from the source site's address to the new one.
+npx wp-env run cli wp search-replace 'http://localhost:8888' 'http://localhost:8890' --all-tables
 ```
 
-Adjust the `search-replace` URLs to the source and target `port`. Add
-`.wp-env-seed*.sql` to `.gitignore` if you keep dumps in the tree.
+- The in-container path uses the folder basename: `plugins/dokan-lite` for a
+  main checkout named `dokan-lite`, `plugins/dokan` for script-made worktrees.
+- Adjust the `search-replace` URLs to the source and target `port` (or LAN
+  address, if the source used one).
+- The dump carries the source's active-plugin list. If the source had Pro
+  active and the target doesn't mount it, Pro simply doesn't load (WordPress
+  drops it from the active list the next time the Plugins screen loads).
+- Skip the tests database — `npm run phpunit` rebuilds it on every run.
+- Refresh `$SEEDS/seed.sql` whenever the prepared site changes.
+
+### Which mode
+
+| Need | Mode |
+|---|---|
+| Parallel issues, no interference | 1 — fresh |
+| Parallel issues, same realistic starting data | 2b — cloned |
+| Same data, different code, one at a time | 2a — shared |
 
 ## Gotchas
 
