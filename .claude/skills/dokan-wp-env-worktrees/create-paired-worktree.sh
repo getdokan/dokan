@@ -10,10 +10,14 @@
 #
 # Env overrides:
 #   DOKAN_WT_HOME   parent dir for worktrees (default: ~/dokan-wt)
+#   DOKAN_CLONE_FROM  path of a running wp-env checkout to clone the DB from
+#                     (once, on first start — written into the override's afterStart)
 #   PRO_BASE        base branch for a NEW pro branch  (default: develop)
 #
 # Run from anywhere inside the dokan-lite main checkout.
 set -euo pipefail
+
+SKILL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 BRANCH="${1:?usage: create-paired-worktree.sh <branch> [base-branch] [port]}"
 BASE="${2:-develop}"
@@ -42,6 +46,13 @@ add_worktree() { # <repo> <path> <branch> <base>
 add_worktree "$LITE_MAIN" "$DEST/dokan" "$BRANCH" "$BASE"
 add_worktree "$PRO_MAIN"  "$DEST/dokan-pro"  "$BRANCH" "${PRO_BASE:-develop}"
 
+# afterStart: activate the theme, then (optionally) clone a database once.
+AFTER_START="npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive"
+if [[ -n "${DOKAN_CLONE_FROM:-}" ]]; then
+  CLONE_SRC="$( cd "$DOKAN_CLONE_FROM" && pwd )"
+  AFTER_START="$AFTER_START && $SKILL_DIR/clone-db.sh $CLONE_SRC"
+fi
+
 # The committed .wp-env.json stays untouched (CI reads it). Everything
 # worktree-specific goes in the gitignored override; its "plugins" list
 # replaces the base list wholesale, so it repeats WooCommerce and ".".
@@ -55,7 +66,7 @@ cat > "$DEST/dokan/.wp-env.override.json" <<JSON
     "../dokan-pro"
   ],
   "lifecycleScripts": {
-    "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && npx wp-env run tests-cli wp theme activate twentytwentyfive"
+    "afterStart": "$AFTER_START"
   }
 }
 JSON

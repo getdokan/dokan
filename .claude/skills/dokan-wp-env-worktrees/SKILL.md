@@ -293,52 +293,73 @@ scripts name every lite worktree `dokan`, so the plugin slug — and its active
 state — survives the swap. Other worktrees don't run their own env. Only one
 code tree is live at a time.
 
-### 2b. Clone a seeded DB into a new worktree (recommended for "reuse the setup")
+### 2b. Clone a DB from another checkout (recommended for "reuse the setup")
 
 Provision one site the way you want it, then copy its database into each new
 worktree's own (isolated) instance. You get fast provisioning **and**
 independence — changes in one worktree don't reach the others.
 
-Each environment can only see its **own** worktree folder (bind-mounted at
-`wp-content/plugins/<folder-basename>`; the `cli` container's cwd is
-`/var/www/html`). A dump exported in one worktree is invisible to another, so it
-must be copied across on the host. Keep dumps **outside the repo** so one is
-never committed:
+It is **config-driven**: the worktree's `.wp-env.override.json` declares its
+data source in `afterStart`, and `clone-db.sh` does the rest.
 
-```bash
-SRC=~/path/to/seeded/dokan        # worktree/checkout with the prepared site
-DST=~/dokan-wt/issue-b/dokan      # new worktree, after `npx wp-env start`
-SEEDS=~/dokan-wt/.seeds; mkdir -p "$SEEDS"
-
-# 1. Export from the seeded site (lands in $SRC on the host), move it out of the repo.
-cd "$SRC" && npx wp-env run cli wp db export "wp-content/plugins/$(basename "$SRC")/seed.sql"
-mv "$SRC/seed.sql" "$SEEDS/seed.sql"
-
-# 2. Copy into the new worktree only for the import, then remove it.
-cp "$SEEDS/seed.sql" "$DST/seed.sql"
-cd "$DST" && npx wp-env run cli wp db import "wp-content/plugins/$(basename "$DST")/seed.sql"
-rm "$DST/seed.sql"
-
-# 3. Rewrite URLs from the source site's address to the new one.
-npx wp-env run cli wp search-replace 'http://localhost:8888' 'http://localhost:8890' --all-tables
+```jsonc
+// .wp-env.override.json in the NEW worktree
+{
+  "port": 8892,
+  "testsPort": 8893,
+  "lifecycleScripts": {
+    "afterStart": "npx wp-env run cli wp theme activate twentytwentyfive && .claude/skills/dokan-wp-env-worktrees/clone-db.sh /abs/path/to/source-checkout"
+  }
+}
 ```
 
-- The in-container path uses the folder basename: `plugins/dokan-lite` for a
-  main checkout named `dokan-lite`, `plugins/dokan` for script-made worktrees.
-- Adjust the `search-replace` URLs to the source and target `port` (or LAN
-  address, if the source used one).
-- The dump carries the source's active-plugin list. If the source had Pro
+The relative script path works when the worktree's branch already contains
+this skill; otherwise use an absolute path (the creator scripts always do).
+Or let the creator scripts write it:
+
+```bash
+DOKAN_CLONE_FROM=~/Development/Projects/core-dokan/wp-content/plugins/dokan-lite \
+  .claude/skills/dokan-wp-env-worktrees/create-paired-worktree.sh fix/issue-123 develop 8892
+```
+
+What `clone-db.sh` does on `npx wp-env start`:
+
+1. Finds both instances' containers from their paths — wp-env names them
+   `md5(<checkout>/.wp-env.json)-mysql-1` / `-cli-1`.
+2. Streams the source dev database straight into the target:
+   `docker exec <src>-mysql-1 mariadb-dump --single-transaction wordpress | docker exec -i <dst>-mysql-1 mariadb wordpress`.
+   No dump file, no MySQL ports, no host MySQL client, no `node_modules` needed.
+3. Rewrites the source's `home` URL to the target's (`wp search-replace`, run
+   in the target's `cli` container). Both are read from the databases, so a LAN
+   `WP_HOME` on either side is handled.
+4. Records a `dokan_wp_env_cloned_from` option in the target. wp-env runs
+   `afterStart` on **every** start, so later starts see the marker and skip —
+   your work in the worktree is never overwritten.
+
+Notes:
+
+- The **source environment must be running** for the first start of the
+  target; otherwise the hook fails with a message saying so.
+- Re-clone on purpose with
+  `.claude/skills/dokan-wp-env-worktrees/clone-db.sh --force <source>` from the
+  target's root.
+- The copy carries the source's active-plugin list. If the source had Pro
   active and the target doesn't mount it, Pro simply doesn't load (WordPress
   drops it from the active list the next time the Plugins screen loads).
-- Skip the tests database — `npm run phpunit` rebuilds it on every run.
-- Refresh `$SEEDS/seed.sql` whenever the prepared site changes.
+- Only the dev database is cloned — `npm run phpunit` rebuilds the tests DB on
+  every run.
+- Need a frozen snapshot instead of a live source? Dump to a file outside the
+  repo and load it later:
+  `docker exec <src>-mysql-1 mariadb-dump -uroot -ppassword --single-transaction wordpress > ~/dokan-wt/seed.sql`,
+  then `docker exec -i <dst>-mysql-1 mariadb -uroot -ppassword wordpress < ~/dokan-wt/seed.sql`
+  and a `wp search-replace` of the URL.
 
 ### Which mode
 
 | Need | Mode |
 |---|---|
 | Parallel issues, no interference | 1 — fresh |
-| Parallel issues, same realistic starting data | 2b — cloned |
+| Parallel issues, same realistic starting data | 2b — cloned (`clone-db.sh` via `afterStart`) |
 | Same data, different code, one at a time | 2a — shared |
 
 ## Gotchas
