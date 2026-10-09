@@ -1381,6 +1381,9 @@ jobs:
     # - On a PR run it force-cancels every other unfinished E2E_API run on the PR's branch. The
     #   concurrency group already cancels this PR's older run, but gracefully, and it never sees the
     #   push runs that branches cut before this file changed still start from their own old copy.
+    # - On a run started by dokan-pro (pro_sha set) it force-cancels the older unfinished runs for
+    #   the same pro branch, found by run-name, so a run testing another lite branch counts too.
+    #   Runs for other pro branches are left alone.
     # - On every run it cancels the run once 60 minutes have passed since the first e2e shard
     #   started. A queued shard reports its creation time as started_at, so only running or finished
     #   shards count. It exits once merge-reports and every other job are done, so it never holds a
@@ -1397,14 +1400,25 @@ jobs:
             GH_TOKEN: ${{ github.token }}
             RUN_API: repos/${{ github.repository }}/actions/runs/${{ github.run_id }}
         steps:
-            - name: Force-cancel older runs on this PR branch
-              if: github.event_name == 'pull_request'
+            - name: Force-cancel older runs for this branch
+              if: github.event_name == 'pull_request' || inputs.pro_sha != ''
               env:
                   HEAD_REF: ${{ github.head_ref }}
+                  # Every run-name for this pro branch starts with this, whichever lite branch it tests.
+                  PRO_PREFIX: ${{ inputs.pro_sha && format('E2E_API Tests (pro {0}, ', inputs.pro_ref) || '' }}
               run: |
+                  if [ -n "$PRO_PREFIX" ]; then
+                      filter=(-f event=workflow_dispatch)
+                      # $ENV is jq's environment, read by gh's --jq, not a shell variable.
+                      # shellcheck disable=SC2016
+                      match='(.display_title | startswith($ENV.PRO_PREFIX))'
+                  else
+                      filter=(-f branch="$HEAD_REF")
+                      match='.head_repository.full_name == "${{ github.repository }}"'
+                  fi
                   gh api -X GET "repos/${{ github.repository }}/actions/workflows/e2e_api_tests.yml/runs" \
-                      -f branch="$HEAD_REF" -f per_page=100 \
-                      --jq '.workflow_runs[] | select(.id < ${{ github.run_id }} and .status != "completed" and .head_repository.full_name == "${{ github.repository }}") | .id' |
+                      "${filter[@]}" -f per_page=100 \
+                      --jq ".workflow_runs[] | select(.id < ${{ github.run_id }} and .status != \"completed\" and $match) | .id" |
                   while read -r id; do
                       echo "Force-cancelling run $id"
                       gh api -X POST "repos/${{ github.repository }}/actions/runs/$id/force-cancel" || echo "::warning::Could not force-cancel run $id"
