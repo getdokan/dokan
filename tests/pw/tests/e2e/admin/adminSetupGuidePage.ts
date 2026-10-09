@@ -69,7 +69,9 @@ export const adminSetupGuideSelectors = {
     stepTitle: 'button[data-testid^="onboarding-step-"] span.truncate',
     activeStepTitle: 'button[data-testid^="onboarding-step-"][aria-current="step"] span.truncate',
     // Error / loading states.
-    failedToLoad: 'text=/Failed to load settings/i',
+    // Scoped to the Notice: its text is also copied into the 1px #a11y-speak-assertive region, which
+    // Playwright counts as visible and which keeps the text after the Notice unmounts.
+    failedToLoad: '.components-notice:has-text("Failed to load settings")',
     retryButton: 'role=button[name="Retry Loading"]',
     // PHP fatal markers.
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
