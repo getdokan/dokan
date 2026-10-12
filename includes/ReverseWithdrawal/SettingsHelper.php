@@ -32,7 +32,11 @@ class SettingsHelper {
      * @return array
      */
     public static function get_enabled_payment_gateways() {
-        $payment_methods = dokan_get_option( 'payment_gateways', 'dokan_reverse_withdrawal', [] );
+        if ( ! self::is_enabled() ) {
+            return [];
+        }
+
+        $payment_methods = array_keys( static::get_reverse_withrawal_payment_gateways() );
 
         return array_filter( $payment_methods );
     }

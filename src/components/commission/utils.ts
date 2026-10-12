@@ -72,17 +72,16 @@ export const buildCategoriesTree = ( categoriesData: {
         }
     }
 
-    // Sort categories by name for consistent ordering
-    const sortCategories = ( cats: Category[] ): Category[] => {
-        return cats
-            .sort( ( a, b ) => a.name.localeCompare( b.name ) )
+    // Order each level by descending term id (newest first) to match the legacy table.
+    const sortByNewest = ( cats: Category[] ): Category[] =>
+        [ ...cats ]
+            .sort( ( a, b ) => Number( b.term_id ) - Number( a.term_id ) )
             .map( ( cat ) => ( {
                 ...cat,
-                children: sortCategories( cat.children ),
+                children: sortByNewest( cat.children ),
             } ) );
-    };
 
-    return sortCategories( result );
+    return sortByNewest( result );
 };
 
 // Recursive function to get all nested children IDs

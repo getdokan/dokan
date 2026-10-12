@@ -365,7 +365,14 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
          * @param WP_REST_Request $request  Full details about the request.
          * @param bool            $creating Whether a new product is being created.
          */
-        return apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
+        $product = apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
+
+        // Existing buyers get added files and lose removed ones, the same permission sync the legacy editor runs before saving.
+        if ( ! $creating && $product instanceof WC_Product && $product->is_downloadable() && null !== $request->get_param( Elements::DOWNLOADS ) ) {
+            do_action( 'dokan_process_file_download', $product->get_id(), 0, $product->get_downloads() );
+        }
+
+        return $product;
     }
 
     /**

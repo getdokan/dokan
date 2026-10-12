@@ -154,7 +154,9 @@ test.describe.serial('Stripe Connect — one pack per cart @pro', () => {
             await stripe.addProductToCart(packB as string);
 
             await stripe.gotoBlockCheckout();
-            const summaryItems = page.locator('.wc-block-components-order-summary-item');
+            // From WooCommerce 11.2 a single-column checkout renders the order summary twice (main column
+            // and sidebar), so count the lines inside one summary rather than across the page.
+            const summaryItems = page.locator('.wc-block-components-order-summary').first().locator('.wc-block-components-order-summary-item');
             await summaryItems.first().waitFor({ state: 'visible', timeout: 30_000 });
             await expect(summaryItems, 'a second pack must replace the first rather than stack').toHaveCount(1);
             log.success('Adding a second pack left exactly one pack line in the cart');

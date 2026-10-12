@@ -6,6 +6,7 @@ import App from '@src/dashboard/product-editor/App';
 import Products from '@src/dashboard/products';
 import Orders from '@src/dashboard/orders';
 import ReverseWithdrawal from '@src/dashboard/reverse-withdraw';
+import StoreSettings from '@src/dashboard/settings/store';
 
 export default [
     {
@@ -71,5 +72,14 @@ export default [
         exact: true,
         order: 11,
         capabilities: [ 'dokan_view_withdraw_menu' ],
+    },
+    {
+        id: 'dokan-settings-store',
+        title: __( 'Store Settings', 'dokan-lite' ),
+        element: <StoreSettings />,
+        path: '/settings/store',
+        exact: true,
+        order: 200,
+        capabilities: [ 'dokan_view_store_settings_menu' ],
     },
 ] as Array< DokanRoute >;

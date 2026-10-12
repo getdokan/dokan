@@ -700,8 +700,10 @@ test.describe('Abuse Reports — Admin DataViews List @pro', () => {
         // rendered before we toggle the header select-all (DataViews wires the
         // header checkbox to the row set after the table re-renders).
         await adminPage.locator(flow.adminReact.dataRow).first().waitFor({ state: 'visible', timeout: 20000 });
-        const rowCount = await flow.getRowCount();
-        expect(rowCount, 'List should have seeded rows to select').toBeGreaterThan(0);
+        // Web-first: DataViews re-renders from the settled response and the tbody can be empty for a
+        // moment in between. A single count read 0 on CI run 37279716200 while the failure screenshot
+        // showed all five seeded rows.
+        await expect.poll(() => flow.getRowCount(), { message: 'List should have seeded rows to select', timeout: 20000 }).toBeGreaterThan(0);
         await adminPage.locator(flow.admin.reportRowCheckbox).first().waitFor({ state: 'visible', timeout: 10000 });
 
         // Click the header select-all checkbox (in <thead>, distinct from the

@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
+use WeDevs\Dokan\Admin\Settings;
 use WeDevs\Dokan\Admin\Status\Status;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
@@ -14,6 +15,7 @@ class AdminServiceProvider extends BaseServiceProvider {
 	protected $services = [
 		self::TAG,
         Status::class,
+        Settings::class,
 	];
 
 	/**

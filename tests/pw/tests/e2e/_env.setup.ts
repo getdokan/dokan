@@ -274,6 +274,14 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.privacyPolicy, { ...dbData.dokan.privacyPolicySettings, privacy_page: pageId });
     });
 
+    // Pro gates login behind email verification; the email-verification spec turns it on and only
+    // restores it in afterAll, so an interrupted run leaves every login blocked by the
+    // "Didn't get the email? Send again" notice. Force it off and clear the pending flag here.
+    setup('admin disable dokan email verification', { tag: ['@pro'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
+        await dbUtils.clearPendingEmailVerification();
+    });
+
     setup('admin set dokan color settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
     });

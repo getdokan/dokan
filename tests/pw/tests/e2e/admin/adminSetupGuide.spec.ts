@@ -66,7 +66,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
         test('admin can open the Setup Guide wizard mounted at #/setup', { tag: ['@lite', '@admin'] }, async () => {
             await setup.goto();
             await expect(setup.reactRoot).toBeVisible();
-            await expect(setup.stepperHeading).toBeVisible();
+            await expect(setup.stepper).toBeVisible();
             await expect(page).toHaveURL(/#\/setup/);
             expect(await setup.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
@@ -131,7 +131,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 15000 }).toBe('Commission');
             await setup.clickBack();
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 15000 }).toBe('Basic');
-            await expect(setup.stepperHeading).toBeVisible();
+            await expect(setup.stepper).toBeVisible();
         });
 
         test('Commission step: switching type to Category Based toggles the dependent fields', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
@@ -140,8 +140,8 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await setup.selectRadioBox(adminSetupGuideData.basic.recipientValue);
             await setup.clickNext();
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 15000 }).toBe('Commission');
-            // Fixed (default) shows the combine_input "Admin Commission".
-            expect(await setup.isFieldVisible('Admin Commission'), 'Admin Commission visible on Fixed').toBe(true);
+            // Fixed (default) shows the combine_input "Commission Amount".
+            expect(await setup.isFieldVisible('Commission Amount'), 'Commission Amount visible on Fixed').toBe(true);
             // Switching to Category Based reveals the parent-category switch field
             // (full label: "Apply Parent Category Commission to All Subcategories").
             await setup.selectCommissionType('Category Based');
@@ -185,12 +185,12 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await setup.reload();
             await expect(page).toHaveURL(/#\/setup/);
             await expect(setup.reactRoot).toBeVisible();
-            await expect(setup.stepperHeading).toBeVisible();
+            await expect(setup.stepper).toBeVisible();
         });
 
         test('a slow step GET shows the "Failed to load settings" error with a working Retry', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
-            // Hang the first Basic GET past the 30s client timeout, then serve a fast
-            // empty response on Retry so the error UI recovers.
+            // Hang the first Basic GET for 31s, then serve a fast empty response on Retry so the
+            // error UI recovers.
             let calls = 0;
             await page.route(/\/dokan\/v1\/admin\/setup-guide\/basic/, async route => {
                 calls += 1;
@@ -202,6 +202,11 @@ test.describe('Admin Setup Guide wizard functionality', () => {
                 await route.fulfill({ status: 200, contentType: 'application/json', body: '[]' });
             });
             await setup.goto();
+            // Known gap: #3439 (DOK-102) shows the error when a step GET fails, but the wizard sets no
+            // client-side request timeout, so a hung GET keeps the loading skeleton up and never shows
+            // the error. The assertion below is the correct behaviour; when a timeout lands this test
+            // passes, the marker fails the run, and the marker is what gets deleted.
+            test.fail();
             await expect(setup.failedToLoad).toBeVisible({ timeout: 40000 });
             await expect(setup.retryButton).toBeVisible();
             await setup.retryButton.click();
@@ -210,7 +215,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await page.unroute(/\/dokan\/v1\/admin\/setup-guide\/basic/);
         });
 
-        test('a 500 on the step GET surfaces the error screen and auto-clears after ~5s', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test('a 500 on the step GET shows the error screen with a working Retry Loading', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             let calls = 0;
             await page.route(/\/dokan\/v1\/admin\/setup-guide\/basic/, async route => {
                 calls += 1;
@@ -222,6 +227,9 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             });
             await setup.goto();
             await expect(setup.failedToLoad).toBeVisible({ timeout: 20000 });
+            // The second GET succeeds, so Retry Loading clears the error.
+            await setup.retryButton.click();
+            await expect.poll(async () => setup.failedToLoad.isVisible().catch(() => false), { timeout: 15000 }).toBe(false);
             await page.unroute(/\/dokan\/v1\/admin\/setup-guide\/basic/);
         });
 

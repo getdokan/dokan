@@ -1,3 +1,42 @@
+### v5.3.0 ( Oct 08, 2026 ) ###
+
+- **new:** Introduced a redesigned vendor Store Settings page in the new vendor dashboard.
+- **new:** Add-ons and extensions can now show their own options on the new vendor Store Settings page.
+- **update:** Admins can switch vendors between the new and classic Store Settings page from the Appearance settings, and existing sites stay on the classic page by default.
+- **update:** Added a `dokan_product_editor_after_save` action so features can save their own data right after a product is saved in the new product editor.
+- **fix:** Prevented vendors from changing a customer's password or login email through the customers REST endpoint.
+- **fix:** Prevented vendors from storing serialized PHP objects in product meta through the products REST endpoint, closing a PHP object injection vulnerability.
+- **fix:** Vendor store maps now open on the default location set in the Geolocation settings, and saving store settings no longer removes a vendor from geolocation search results.
+- **fix:** The setup guide now shows an error with a retry option when a step fails to load or save instead of silently moving on, and stops you from continuing while the required admin commission is empty.
+
+### v5.2.1 ( Sep 30, 2026 ) ###
+
+- **fix:** Fixed the setup wizard failing to load due to an outdated UI package.
+
+### v5.2.0 ( Sep 30, 2026 ) ###
+
+- **new:** Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.
+- **new:** The revamped settings screen is opt-in: your existing settings carry over and stay in sync, and you can switch back to the classic screen at any time.
+- **new:** Extensions can add their own settings to the new settings screen through the `dokan_get_admin_settings_schema` filter.
+- **fix:** Prevented vendors from using the commission calculator to read another vendor's commission or earnings, and limited it to accounts that can manage products.
+- **fix:** The v3 order downloads REST endpoint no longer throws a fatal error for orders that grant download access to existing products.
+
+### v5.1.3 ( Sep 24, 2026 ) ###
+
+- **fix:** The vendor dashboard navigation is no longer rebuilt on every request, so cron, Action Scheduler, and other background requests no longer do that work on each hit.
+- **fix:** The vendor product list now shows each product's real type instead of labeling unrecognized types as Simple.
+- **fix:** Prices on the vendor dashboard now follow the store's configured number of decimals, so a zero-decimal currency no longer shows trailing decimals.
+- **fix:** Vendors can now reorder product gallery images by dragging them in the new product editor.
+- **fix:** REST pagination links now point at the endpoint that actually served the request instead of the controller's shared base route.
+- **fix:** Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.
+
+### v5.1.2 ( Sep 17, 2026 ) ###
+
+- **update:** Added FlyCRM to the setup wizard's recommended add-ons and removed Texty from that step.
+- **update:** Added FlyCRM to the admin Extensions page as an installable add-on.
+- **fix:** Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.
+- **fix:** The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.
+
 ### v5.1.1 ( Sep 09, 2026 ) ###
 
 - **fix:** The Vendors screen's Pending tab now lists vendors whose selling status was never recorded, so the tab no longer shows a count with an empty list.

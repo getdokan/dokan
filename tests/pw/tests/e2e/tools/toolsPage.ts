@@ -169,7 +169,7 @@ const setupWizardAdmin = {
     // Recommended
     weMail: '//label[@for="dokan_recommended_wemail"]',
     wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
-    texty: '//label[@for="dokan_recommended_texty"]',
+    flyCrm: '//label[@for="dokan_recommended_flycrm"]',
     continueRecommended: '.button-primary',
     // Ready!
     visitDokanDashboard: '//a[contains(text(),"Visit Dokan Dashboard")]',
@@ -450,7 +450,7 @@ export class ToolsPage {
         // Recommended
         await this.disableSwitcherSetupWizard(setupWizardAdmin.weMail);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.texty);
+        await this.disableSwitcherSetupWizard(setupWizardAdmin.flyCrm);
         await this.page.locator(setupWizardAdmin.continueRecommended).click();
 
         // Ready!
