@@ -42,7 +42,7 @@ class Settings implements Hookable {
      * vendors are not permitted to read. Hydrating the store on page load keeps the
      * values available without the REST round trip.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.3
      *
      * @return array Option name => option value.
      */
@@ -50,7 +50,7 @@ class Settings implements Hookable {
         /**
          * Filters the option names hydrated into the vendor analytics options store.
          *
-         * @since DOKAN_SINCE
+         * @since 5.1.3
          *
          * @param array $option_names Option names to preload.
          */

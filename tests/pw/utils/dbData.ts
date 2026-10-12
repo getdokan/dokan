@@ -1908,13 +1908,13 @@ export const dbData = {
                 {
                     id: 'ss_delivered',
                     value: 'Delivered',
-                    must_use: 'true',
+                    must_use: true,
                     desc: '(This is must use item)',
                 },
                 {
                     id: 'ss_cancelled',
                     value: 'Cancelled',
-                    must_use: 'true',
+                    must_use: true,
                     desc: '(This is must use item)',
                 },
                 {

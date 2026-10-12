@@ -157,7 +157,7 @@ const getProductTypeLabel = ( item: ProductItem ) => {
     /**
      * Filter the human-readable label for a product type.
      *
-     * @since DOKAN_SINCE
+     * @since 5.1.3
      *
      * @param {string} label Default label.
      * @param {string} type  Product type slug.

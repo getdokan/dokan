@@ -64,7 +64,7 @@ const Header = ( { route } ) => {
 
     return (
         <div className="@container/header flex flex-col gap-4">
-            <div className="@container/before-header grid grid-cols-4 gap-4">
+            <div className="@container/before-header grid grid-cols-4 gap-4 empty:hidden">
                 <Slot name="dokan-before-header" />
             </div>
             <div className="dokan-header-title-section @container/header-title-section flex gap-y-4 justify-between items-center flex-wrap">

@@ -4,6 +4,128 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.0',
+        'released' => '2026-10-08',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Introduced a redesigned vendor Store Settings page in the new vendor dashboard.',
+                    'description' => '',
+                ],
+            ],
+            'New' => [
+                [
+                    'title'       => 'Add-ons and extensions can now show their own options on the new vendor Store Settings page.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Admins can switch vendors between the new and classic Store Settings page from the Appearance settings, and existing sites stay on the classic page by default.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a `dokan_product_editor_after_save` action so features can save their own data right after a product is saved in the new product editor.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Prevented vendors from changing a customer\'s password or login email through the customers REST endpoint.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented vendors from storing serialized PHP objects in product meta through the products REST endpoint, closing a PHP object injection vulnerability.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor store maps now open on the default location set in the Geolocation settings, and saving store settings no longer removes a vendor from geolocation search results.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The setup guide now shows an error with a retry option when a step fails to load or save instead of silently moving on, and stops you from continuing while the required admin commission is empty.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.2.1',
+        'released' => '2026-09-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed the setup wizard failing to load due to an outdated UI package.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.2.0',
+        'released' => '2026-09-30',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The revamped settings screen is opt-in: your existing settings carry over and stay in sync, and you can switch back to the classic screen at any time.',
+                    'description' => '',
+                ],
+            ],
+            'New' => [
+                [
+                    'title'       => 'Extensions can add their own settings to the new settings screen through the `dokan_get_admin_settings_schema` filter.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Prevented vendors from using the commission calculator to read another vendor\'s commission or earnings, and limited it to accounts that can manage products.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The v3 order downloads REST endpoint no longer throws a fatal error for orders that grant download access to existing products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.1.3',
+        'released' => '2026-09-24',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'The vendor dashboard navigation is no longer rebuilt on every request, so cron, Action Scheduler, and other background requests no longer do that work on each hit.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The vendor product list now shows each product\'s real type instead of labeling unrecognized types as Simple.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prices on the vendor dashboard now follow the store\'s configured number of decimals, so a zero-decimal currency no longer shows trailing decimals.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendors can now reorder product gallery images by dragging them in the new product editor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'REST pagination links now point at the endpoint that actually served the request instead of the controller\'s shared base route.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.1.2',
         'released' => '2026-09-17',
         'changes'  => [
