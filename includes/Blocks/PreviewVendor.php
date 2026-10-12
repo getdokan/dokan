@@ -214,14 +214,30 @@ class PreviewVendor extends Vendor {
     }
 
     /**
-     * Preview opening hours.
+     * Preview opening hours, in the shape the vendor settings store them.
      *
      * @since DOKAN_SINCE
      *
      * @return array
      */
     public function get_store_time() {
-        return [];
+        $open = static function ( $opening, $closing ) {
+            return [
+                'status'       => 'open',
+                'opening_time' => [ $opening ],
+                'closing_time' => [ $closing ],
+            ];
+        };
+
+        return [
+            'saturday'  => $open( '10:00 am', '4:00 pm' ),
+            'sunday'    => [ 'status' => 'close' ],
+            'monday'    => $open( '9:00 am', '6:00 pm' ),
+            'tuesday'   => $open( '9:00 am', '6:00 pm' ),
+            'wednesday' => $open( '9:00 am', '6:00 pm' ),
+            'thursday'  => $open( '9:00 am', '6:00 pm' ),
+            'friday'    => $open( '9:00 am', '6:00 pm' ),
+        ];
     }
 
     /**
@@ -232,7 +248,50 @@ class PreviewVendor extends Vendor {
      * @return bool
      */
     public function is_store_time_enabled() {
-        return false;
+        return true;
+    }
+
+    /**
+     * Preview product categories, shaped like the terms get_store_categories()
+     * returns so the store category walker can render them.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $best_selling Unused; the preview has no sales.
+     *
+     * @return array
+     */
+    public function get_store_categories( $best_selling = false ) {
+        $categories = [
+            [ 1, 0, __( 'Clothing', 'dokan-lite' ) ],
+            [ 2, 1, __( 'Men', 'dokan-lite' ) ],
+            [ 3, 1, __( 'Women', 'dokan-lite' ) ],
+            [ 4, 0, __( 'Electronics', 'dokan-lite' ) ],
+            [ 5, 0, __( 'Home & Kitchen', 'dokan-lite' ) ],
+            [ 6, 0, __( 'Books', 'dokan-lite' ) ],
+        ];
+
+        return array_map(
+            static function ( $category ) {
+                return (object) [
+                    'term_id' => $category[0],
+                    'parent'  => $category[1],
+                    'name'    => $category[2],
+                ];
+            },
+            $categories
+        );
+    }
+
+    /**
+     * Preview store location, as the one-line address a map marker labels.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_location_label(): string {
+        return $this->get_preview_data()['address'];
     }
 
     /**

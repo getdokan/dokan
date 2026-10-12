@@ -1,0 +1,14 @@
+/*
+ * Front-end + editor styles for dokan/store-header.
+ *
+ * Almost nothing belongs here: the block renders one of the header patterns,
+ * and every visual rule already lives with the block that pattern contains.
+ * The layout class is exposed so a theme can target a specific arrangement.
+ */
+
+.wp-block-dokan-store-header {
+
+	> .wp-block-group:first-child:last-child {
+		margin-block: 0;
+	}
+}
