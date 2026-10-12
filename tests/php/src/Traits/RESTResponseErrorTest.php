@@ -67,17 +67,25 @@ class RESTResponseErrorTest extends DokanTestCase {
     }
 
     public function test_wp_error_array_data_is_merged_without_stale_copy() {
-        $error = $this->convert( new DokanException( new WP_Error( 'with_data', 'Message', [ 'field' => 'amount' ] ), '', 400 ) );
+        $error    = $this->convert( new DokanException( new WP_Error( 'with_data', 'Message', [ 'field' => 'amount' ] ), '', 400 ) );
+        $expected = [
+            'field'  => 'amount',
+            'status' => 400,
+        ];
 
-        $this->assertSame( [ 'field' => 'amount', 'status' => 400 ], $error->get_error_data() );
-        $this->assertSame( [ [ 'field' => 'amount', 'status' => 400 ] ], $error->get_all_error_data( 'with_data' ) );
+        $this->assertSame( $expected, $error->get_error_data() );
+        $this->assertSame( [ $expected ], $error->get_all_error_data( 'with_data' ) );
         $this->assertSame( 400, rest_convert_error_to_response( $error )->get_status() );
     }
 
     public function test_wp_error_scalar_data_is_kept_and_status_attached() {
-        $error = $this->convert( new DokanException( new WP_Error( 'scalar', 'Message', 'some-text' ) ) );
+        $error    = $this->convert( new DokanException( new WP_Error( 'scalar', 'Message', 'some-text' ) ) );
+        $expected = [
+            'data'   => 'some-text',
+            'status' => 422,
+        ];
 
-        $this->assertSame( [ 'data' => 'some-text', 'status' => 422 ], $error->get_error_data() );
+        $this->assertSame( $expected, $error->get_error_data() );
         $this->assertSame( 422, rest_convert_error_to_response( $error )->get_status() );
     }
 
