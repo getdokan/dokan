@@ -126,6 +126,8 @@ test.describe('Product details functionality test', () => {
     test('vendor can add product tags', { tag: ['@lite', '@vendor'] }, async () => { await vendor.addProductTags(productIdBasic, data.product.productInfo.tags.tags); });
     test('vendor can remove product tags', { tag: ['@lite', '@vendor'] }, async () => { await vendor.removeProductTags(productIdFull, data.product.productInfo.tags.tags); });
     test('vendor can create product tags', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductTags(productIdFull, data.product.productInfo.tags.randomTags); });
+
+    test('vendor can create a product tag whose name starts with a digit', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductTags(productIdFull, data.product.productInfo.tags.digitLeadingTags); });
     test('vendor can add product cover image', { tag: ['@lite', '@vendor'] }, async () => { await vendor.addProductCoverImage(productIdBasic, data.product.productInfo.images.cover); });
 
     test('vendor can update product cover image', { tag: ['@lite', '@vendor'] }, async () => {

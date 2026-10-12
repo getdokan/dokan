@@ -158,8 +158,8 @@ class Assets implements Hookable {
                     'seller_id'          => dokan_get_current_user_id(),
                     'orderListPageUlr'   => dokan_get_navigation_url( 'orders' ),
                     'vendorAnalyticsUrl' => dokan_get_navigation_url( 'analytics' ),
-                    'dashboardPath' => wp_parse_url( dokan_get_navigation_url(), PHP_URL_PATH ),
-                    'reportsPath'   => wp_parse_url( dokan_get_navigation_url( 'reports' ), PHP_URL_PATH ),
+                    'dashboardPath'      => wp_parse_url( dokan_get_navigation_url(), PHP_URL_PATH ),
+                    'reportsPath'        => wp_parse_url( dokan_get_navigation_url( 'reports' ), PHP_URL_PATH ),
                 ]
             ), 'before'
         );

@@ -84,6 +84,8 @@ abstract class DokanTestCase extends WP_UnitTestCase {
         parent::set_up();
         Monkey\setUp();
 
+        $this->flush_settings_caches();
+
         $this->setup_permalink_structure();
 
         $this->set_dokan_pages();
@@ -100,6 +102,22 @@ abstract class DokanTestCase extends WP_UnitTestCase {
         $this->server   = $wp_rest_server;
         do_action( 'rest_api_init' );
         $this->setup_users();
+    }
+
+    /**
+     * Drop the in-memory snapshots of the settings repositories and bridge.
+     *
+     * They are shared container instances, and the DB rollback between tests
+     * fires no option hooks, so a value written in one test would otherwise
+     * leak into the next through the snapshot.
+     *
+     * @return void
+     */
+    protected function flush_settings_caches(): void {
+        $container = dokan_get_container();
+        $container->get( \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository::class )->flush_cache();
+        $container->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )->flush_cache( null );
+        $container->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class )->flush_cache();
     }
 
     /**

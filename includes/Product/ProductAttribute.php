@@ -37,6 +37,40 @@ class ProductAttribute {
     }
 
     /**
+     * Whether a value holds a PHP object, directly or inside its serialized form at any depth.
+     *
+     * Product meta is stored as-is, so a serialized PHP object left in it would be turned back into
+     * a live object by a later maybe_unserialize() call and run its magic methods. Attribute data is
+     * only ever plain arrays and scalars, so an object is always unwanted and must not be persisted.
+     * Decoding with `allowed_classes => false` keeps this check itself safe.
+     *
+     * @since 5.3.0
+     *
+     * @param mixed $value Value to inspect.
+     *
+     * @return bool
+     */
+    public static function contains_php_object( $value ) {
+        if ( is_string( $value ) && is_serialized( $value ) ) {
+            $value = unserialize( $value, [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+        }
+
+        if ( is_object( $value ) ) {
+            return true;
+        }
+
+        if ( is_array( $value ) ) {
+            foreach ( $value as $item ) {
+                if ( self::contains_php_object( $item ) ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Set request attributes.
      *
      * @since 3.7.10
@@ -97,7 +131,7 @@ class ProductAttribute {
                     'hide_empty' => 0,
                 ];
 
-                $all_terms = get_terms( $taxonomy, apply_filters( 'dokan_product_attribute_terms', $args ) );
+                $all_terms = get_terms( array_merge( [ 'taxonomy' => $taxonomy ], apply_filters( 'dokan_product_attribute_terms', $args ) ) );
                 $all_terms = is_wp_error( $all_terms ) ? [] : (array) $all_terms;
 
                 foreach ( $all_terms as $term ) { // phpcs:ignore

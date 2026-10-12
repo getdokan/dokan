@@ -1,6 +1,7 @@
 import { Page, Frame, expect, request } from '@playwright/test';
 import { toPath, closeAnnouncementModal, SERVER_URL, parseBoolean } from '@utils/helpers';
 import { payloads, MOBILE_TEST_PHONE } from '@utils/payloads';
+import { stripeConnectApi } from '@utils/stripeApi';
 
 // The suite's strict tsconfig doesn't pull in `@types/node`, so `process` would otherwise be
 // flagged as undefined. Declared locally, same as the Stripe Express page object.
@@ -322,6 +323,12 @@ export class StripeConnectPage {
             await this.page.route(/merchant-ui-api\.stripe\.com/i, route => route.abort());
         }
         await this.page.route(/hcaptcha/i, route => route.abort());
+        // LOCAL VALIDATION AID, inert unless SIMULATE_CONFIRM_BLOCK=1 (same as the Express page). Aborts
+        // only the PaymentIntent confirm POST, which reproduces the CI runner-IP hCaptcha block so the
+        // server-side settle fallback in confirmNewPaidConnectOrder can be verified locally. Never set on CI.
+        if (process.env.SIMULATE_CONFIRM_BLOCK === '1') {
+            await this.page.route(/api\.stripe\.com\/v1\/payment_intents\/[^/]+\/confirm/i, route => route.abort());
+        }
         for (let attempt = 1; attempt <= 2; attempt++) {
             await this.page.goto(this.checkout.blockUrl, { waitUntil: 'domcontentloaded' });
             await this.page.waitForLoadState('networkidle').catch(() => undefined);
@@ -494,18 +501,46 @@ export class StripeConnectPage {
      * Confirm a genuinely NEW Stripe Connect order settled to a paid status, and return its id.
      * This is the fallback oracle when the SPA redirect flakes after a successful payment. It is not
      * a softened assertion: it requires a new order, paid, on this gateway, or it throws.
+     *
+     * On CI the in-page card confirm can also be blocked by Stripe's hCaptcha on GitHub runner IPs:
+     * the order and its PaymentIntent exist but the intent stays `requires_payment_method` and no
+     * confirm request ever leaves the browser (run 37270644560, SCR-37). Like the Express page, confirm
+     * that REAL intent once through the Stripe test API and inject the resulting
+     * payment_intent.succeeded into the module's webhook handler (Stripe cannot reach CI's localhost).
+     * The payment still goes through Stripe; only the hCaptcha-gated click is bypassed. No order, no
+     * intent, or an order that never settles still fails.
      */
     private async confirmNewPaidConnectOrder(baseline: number): Promise<string> {
         const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
         try {
-            let found: { id: number; status: string } | undefined;
+            let found: { id: number; status: string; meta_data?: Array<{ key: string; value: string }> } | undefined;
+            let serverConfirmTried = false;
             await expect
                 .poll(
                     async () => {
-                        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?per_page=20&orderby=date&order=desc&_fields=id,parent_id,status,payment_method`);
-                        const orders = (await res.json().catch(() => [])) as Array<{ id: number; parent_id: number; status: string; payment_method: string }>;
+                        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?per_page=20&orderby=date&order=desc&_fields=id,parent_id,status,payment_method,meta_data`);
+                        const orders = (await res.json().catch(() => [])) as Array<{ id: number; parent_id: number; status: string; payment_method: string; meta_data?: Array<{ key: string; value: string }> }>;
                         found = Array.isArray(orders) ? orders.find(x => x.payment_method === StripeConnectPage.GATEWAY_ID && Number(x.parent_id) === 0 && Number(x.id) > baseline) : undefined;
-                        return found ? found.status : 'none';
+                        if (!found) return 'none';
+                        if (/processing|completed/.test(found.status)) return found.status;
+                        // `_stripe_intent_id` is CONNECT_INTENT_META_KEY in ./helpers (not imported: helpers imports this file).
+                        const intentId = (found.meta_data || []).find(m => m.key === '_stripe_intent_id')?.value;
+                        if (!serverConfirmTried && intentId && stripeConnectApi.hasSecretKey()) {
+                            // Act ONLY on the hCaptcha signature: no card ever reached the intent and no attempt
+                            // failed on it. An intent in requires_action already holds the card and is mid 3D
+                            // Secure; confirming it again restarts the challenge the test is completing (SCPE-04 /
+                            // SCSUB-12 broke that way). A declined card or an abandoned challenge also returns to
+                            // requires_payment_method, but with last_payment_error set, and must stay unpaid.
+                            const pi = await stripeConnectApi.getPaymentIntent(intentId).catch(() => undefined);
+                            if (pi?.status === 'requires_payment_method' && !pi.payment_method && !pi.last_payment_error) {
+                                serverConfirmTried = true;
+                                const confirmed = await stripeConnectApi.confirmPaymentIntent(intentId).catch(() => undefined);
+                                if (confirmed?.status === 'succeeded') {
+                                    await ctx.post(`${SERVER_URL}/dokan-test-connect/v1/connect-webhook`, { data: { type: 'payment_intent.succeeded', data_object: confirmed } }).catch(() => undefined);
+                                }
+                            }
+                        }
+                        return found.status;
                     },
                     {
                         message: `a NEW ${StripeConnectPage.GATEWAY_ID} order (id > ${baseline}) should settle to a paid status`,
