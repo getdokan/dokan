@@ -67,7 +67,11 @@ export const db = {
 // groups: admin.wooCommerce.settings.{general,payments,updatedSuccessMessage}
 // and vendor.vPaymentSettings).
 // ---------------------------------------------------------------------------
-const selectors = {
+// Exported so a sibling gateway suite can reuse a group instead of re-deriving it. The PayPal
+// Marketplace suite consumes `selectors.admin.payments.paypalMarketPlace`, an already-proven
+// admin selector set for that gateway. One copy means a settings-field rename breaks both suites
+// at once rather than silently passing in one of them.
+export const selectors = {
     admin: {
         // WooCommerce › Settings › General (currency)
         general: {
@@ -263,6 +267,22 @@ export class PaymentsPage {
         await this.page.locator(selector).check();
     }
 
+    /**
+     * Tick a setting that the gateway itself may render read-only, and say so when it does.
+     *
+     * Only for controls a gateway deliberately disables. Everything else keeps using check(), so a
+     * field that goes read-only unexpectedly still fails the run instead of being skipped quietly.
+     */
+    private async checkIfOperable(selector: string, why: string): Promise<void> {
+        const box = this.page.locator(selector);
+        await expect(box, `${selector} should be rendered`).toBeAttached();
+        if (await box.isDisabled()) {
+            console.log(`[payments] skipped ${selector}: rendered read-only by the gateway (${why})`);
+            return;
+        }
+        await box.check();
+    }
+
     private async fill(selector: string, value: string): Promise<void> {
         await this.page.locator(selector).fill(value);
     }
@@ -350,20 +370,29 @@ export class PaymentsPage {
         await this.goto(`${data.subUrls.backend.wc.paymentSettings}&path=%2Foffline%2F${path}&from=WCADMIN_PAYMENT_SETTINGS`);
     }
 
-    // Navigate to an offline payment method and toggle enable/disable
-    async togglePaymentMethod(method: string): Promise<void> {
+    // Navigate to an offline payment method and put its enable switch in the DESIRED state.
+    // Idempotent on purpose: a blind click flips whatever is there, so on an environment where
+    // _env.setup already enabled these gateways this used to DISABLE them and leave them off for
+    // every later spec on the shard (it broke productAdvertising's bacs checkout).
+    async setPaymentMethodEnabled(method: string, enabled: boolean): Promise<void> {
         await this.goToWcPaymentSettings(method);
         // eslint-disable-next-line playwright/no-networkidle
         await this.page.waitForLoadState('networkidle');
+        const toggle = this.page.locator(adminPayments.offlineToggle);
+        await expect(toggle, `the ${method} enable switch must render before it can be set`).toBeVisible();
+        if ((await toggle.isChecked()) === enabled) {
+            return;
+        }
         await this.click(adminPayments.offlineToggle);
         await this.click(adminPayments.offlineSaveChanges);
+        await expect(toggle, `${method} should now be ${enabled ? 'enabled' : 'disabled'}`).toBeChecked({ checked: enabled });
     }
 
     // Admin setup basic payment methods
     async setupBasicPaymentMethods(_payment: payment): Promise<void> {
-        await this.togglePaymentMethod('cheque'); // enable cheque
-        await this.togglePaymentMethod('cod'); // enable cash on delivery
-        await this.togglePaymentMethod('bacs'); // enable bank transfer
+        await this.setPaymentMethodEnabled('cheque', true);
+        await this.setPaymentMethodEnabled('cod', true);
+        await this.setPaymentMethodEnabled('bacs', true);
     }
 
     // ---- admin: enable pro modules (assert setup link appears) ----
@@ -448,7 +477,7 @@ export class PaymentsPage {
         await this.check(s.nonConnectedSellers);
         await this.check(s.displayNoticeToConnectSeller);
         await this.fill(s.displayNoticeInterval, payment.stripeConnect.displayNoticeInterval);
-        await this.check(s.threeDSecureAndSca);
+        await this.checkIfOperable(s.threeDSecureAndSca, 'Payment Elements keep SCA on permanently, so the revamped gateway ships this toggle disabled and keeps it only for legacy orders');
         await this.check(s.sellerPaysTheProcessingFeeIn3DsMode);
         await this.check(s.testMode);
         await this.check(s.savedCards);

@@ -33,25 +33,55 @@ The following libraries are used for TDD. All methods and features of these libr
 
 ### How to Run
 ---
-You can run the test cases from the plugin's root directory terminal using one of the following methods:
+Run the test cases from the plugin's root directory.
 
-**Option 1:**
+**Prerequisites**
 
-Run tests using the `./vendor/bin/phpunit` command:
+The suite needs built frontend assets. This is not optional — plugin bootstrap
+`require`s generated files from `assets/js/` on the `init` hook, so an unbuilt checkout
+dies with a PHP fatal before any test runs. See
+[ADR-0005](../adr/0005-phpunit-requires-a-webpack-build.md) for the full chain.
+
+```bash
+composer install
+npm install
+npm run build
+```
+
+**Option 1 — wp-env (recommended)**
+
+This is what CI runs, so a failure here reproduces a CI failure exactly:
+
+```bash
+npm run env:start          # boots WordPress + WooCommerce in Docker
+npm run phpunit
+npm run phpunit -- --filter {your-filter-key}
+```
+
+Or start the environment, run the suite, and tear it down in one go:
+
+```bash
+npm run test:phpunit
+```
+
+**Option 2 — direct binary**
+
+`./vendor/bin/phpunit` and the `composer test` / `composer test-f` scripts invoke
+PHPUnit directly, without wp-env:
 
 ```bash
 ./vendor/bin/phpunit
 ./vendor/bin/phpunit --filter {your-filter-key}
-```
 
-**Option 2:**
-
-Use the custom commands `test` and `test-f` added to the composer script:
-
-```bash
 composer test
 composer test-f {your-filter-key}
 ```
+
+These only work if you have already provisioned the environment yourself: a WordPress
+test install (`bin/install-wp-tests.sh`), a reachable MySQL matching
+`tests/php/phpunit-wp-config.php`, and a WooCommerce checkout as a sibling directory of
+this plugin (`bootstrap.php` resolves it as `../woocommerce`). If you have not done
+that, use Option 1.
 
 ## Why Not Latest PHPUnit
 

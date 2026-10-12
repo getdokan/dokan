@@ -7,6 +7,7 @@ interface CategoryTreeProps {
     expandedIds: ( string | number )[];
     onToggle: ( id: string | number ) => void;
     commissionInputsProps: CommissionInputsProps;
+    rowClassName?: string;
 }
 
 const CategoryTree: React.FC< CategoryTreeProps > = ( {
@@ -14,6 +15,7 @@ const CategoryTree: React.FC< CategoryTreeProps > = ( {
     expandedIds,
     onToggle,
     commissionInputsProps,
+    rowClassName = '',
 } ) => {
     const renderCategories = useCallback(
         ( cats: Category[], level = 0 ): JSX.Element[] => {
@@ -33,6 +35,7 @@ const CategoryTree: React.FC< CategoryTreeProps > = ( {
                         hasChildren={ hasChildren }
                         onToggle={ onToggle }
                         commissionInputsProps={ commissionInputsProps }
+                        className={ rowClassName }
                     />
                 );
 
@@ -47,7 +50,7 @@ const CategoryTree: React.FC< CategoryTreeProps > = ( {
 
             return result;
         },
-        [ expandedIds, onToggle, commissionInputsProps ]
+        [ expandedIds, onToggle, commissionInputsProps, rowClassName ]
     );
 
     return <>{ renderCategories( categories ) }</>;

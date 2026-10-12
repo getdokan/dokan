@@ -186,7 +186,7 @@ class AdminOnboardingController extends DokanBaseAdminController {
             }
 
             $general_options['custom_store_url'] = $custom_store_url;
-            update_option( 'dokan_general', $general_options );
+            dokan_save_legacy_settings_section( 'dokan_general', $general_options );
         }
 
         $share_essentials = isset( $data['share_essentials'] ) ? (bool) $data['share_essentials'] : false;
@@ -350,6 +350,11 @@ class AdminOnboardingController extends DokanBaseAdminController {
      */
     protected function install_required_plugins( array $plugins ): void {
         $setup_wizard = new \WeDevs\Dokan\Admin\SetupWizard();
+
+        // install_plugin() enforces this too; bailing here also keeps the install hooks below from firing for a user who may not install.
+        if ( ! $setup_wizard->user_can_install_plugin() ) {
+            return;
+        }
 
         /**
          * Filter the plugins to install during onboarding.

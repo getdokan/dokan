@@ -528,20 +528,21 @@ export class CustomerPage {
         await this.page.keyboard.press('Enter');
         await this.page.waitForLoadState('load');
 
-        // Open the product's single page from the listing, then add to cart
-        await Promise.all([
-            this.page.waitForLoadState('load'),
-            this.page.locator(selectors.shop.productLink(productName)).first().click(),
-        ]);
+        // Open the product's single page from the listing, then add to cart.
+        //
+        // NOT `Promise.all([waitForLoadState('load'), click()])`: a click that triggers a full
+        // navigation already auto-waits for "scheduled navigations to finish", so pairing it with
+        // a second load wait makes the CLICK itself the thing that times out under CI load
+        // (locator.click: Timeout 30000ms, "waiting for scheduled navigations"). Click, then let a
+        // web-first assertion on the destination prove the navigation landed — that retries, and it
+        // asserts arrival rather than merely that some load event fired.
+        await this.page.locator(selectors.shop.productLink(productName)).first().click();
+        await expect(this.page.locator(selectors.singleProduct.addToCart)).toBeVisible();
         await this.page.locator(selectors.singleProduct.addToCart).click();
         await expect(this.page.locator(selectors.singleProduct.productAddedSuccessMessage(productName))).toBeVisible();
 
-        // View cart and assert item is present
-        await Promise.all([
-            this.page.waitForLoadState('load'),
-            this.page.locator(selectors.singleProduct.viewCart).click(),
-        ]);
-
+        // View cart and assert item is present — same reasoning as above.
+        await this.page.locator(selectors.singleProduct.viewCart).click();
         await expect(this.page.locator(selectors.cart.cartItem(productName))).toBeVisible();
     }
 

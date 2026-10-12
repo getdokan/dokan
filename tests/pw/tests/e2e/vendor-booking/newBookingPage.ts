@@ -1,6 +1,21 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
-import { REACT_ROOT, SEARCH_INPUT, PHP_FATAL, DATA_ROW_ANY, DATA_ROW_SETTLED, SKELETON_ANY, statusTab as dvStatusTab, waitForRootReady as dvWaitForRootReady, hasNoPhpFatal as dvHasNoPhpFatal, parseTabCount, dataViewsConfirm, fillDataViewsSearch, clearDataViewsSearch } from '@utils/dataViews';
+import {
+    DATA_ROW_ANY,
+    DATA_ROW_SETTLED,
+    PHP_FATAL,
+    REACT_ROOT,
+    SEARCH_INPUT,
+    SKELETON_ANY,
+    actionMenuItemByName,
+    clearDataViewsSearch,
+    dataViewsConfirm,
+    fillDataViewsSearch,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    parseTabCount,
+    statusTab as dvStatusTab,
+    waitForRootReady as dvWaitForRootReady,
+} from '@utils/dataViews';
 
 // ============================================
 // SELECTORS — the vendor React "Booking" SPA (Dokan Pro, module booking). A
@@ -194,7 +209,7 @@ export class NewBookingPage {
     /** Delete a booking product via row action + destructive alertdialog confirm. */
     async deleteProduct(text: string): Promise<void> {
         await this.openRowMenu(text);
-        const item = this.page.getByRole('menuitem', { name: /Delete Permanently|Delete/i }).first();
+        const item = actionMenuItemByName(this.page, /Delete Permanently|Delete/i).first();
         await item.waitFor({ state: 'visible', timeout: 8000 });
         await item.click();
         const dialog = dataViewsConfirm(this.page);
@@ -243,7 +258,7 @@ export class NewBookingPage {
     /** Remove a resource via its row action + destructive alertdialog confirm. */
     async removeResource(text: string): Promise<void> {
         await this.openRowMenu(text);
-        const item = this.page.getByRole('menuitem', { name: /Remove|Delete/i }).first();
+        const item = actionMenuItemByName(this.page, /Remove|Delete/i).first();
         await item.waitFor({ state: 'visible', timeout: 8000 });
         await item.click();
         const dialog = dataViewsConfirm(this.page);

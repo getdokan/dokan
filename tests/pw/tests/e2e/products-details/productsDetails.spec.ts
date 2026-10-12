@@ -21,6 +21,7 @@ test.describe('Product details functionality test', () => {
     let productIdWithAddon: string;
     let addonExportResponseBody: responseBody;
     let addonNames: string[];
+    let originalProductEditor: string;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext({ storageState: v1 });
@@ -31,7 +32,11 @@ test.describe('Product details functionality test', () => {
         // The product-details tests drive the CLASSIC (legacy) PHP product-edit screen, which
         // only renders when the vendor product editor is set to 'legacy'. With NO_SETUP=true the
         // auth stage that normally flips this option does not run, so set it deterministically here.
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_product_editor: 'legacy' });
+        // Capture the previous value and restore it in afterAll: this option is GLOBAL, and leaving
+        // it on 'legacy' pinned every later spec on the shard to the legacy dashboard (it broke
+        // newAuction's React product-editor assertion).
+        const [originalAppearance] = await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_product_editor: 'legacy' });
+        originalProductEditor = originalAppearance?.vendor_product_editor ?? 'latest';
 
         const [basicResult, fullResult, discountResult, discountScheduleResult, multiCategoryResult, virtualResult, addonExportResult] = await Promise.all([
             apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth),
@@ -66,6 +71,15 @@ test.describe('Product details functionality test', () => {
     });
 
     test.afterAll(async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_product_editor: originalProductEditor });
+        // Delete the seeded products. This is not just tidiness: the "product status" test flips
+        // productIdBasic to 'draft' (testData otherOptions.status), and a leftover draft breaks
+        // newProducts' "empty Draft tab" assertion on any shard that runs both.
+        for (const id of [productIdBasic, productIdFull, productIdWithDiscount, productIdWithDiscountSchedule, productIdWithMultipleCategories, productIdVirtual, productIdWithAddon]) {
+            if (id) {
+                await apiUtils.deleteProduct(id, payloads.adminAuth, true).catch(() => undefined);
+            }
+        }
         await vPage?.close();
         await apiUtils.dispose();
     });
@@ -112,6 +126,8 @@ test.describe('Product details functionality test', () => {
     test('vendor can add product tags', { tag: ['@lite', '@vendor'] }, async () => { await vendor.addProductTags(productIdBasic, data.product.productInfo.tags.tags); });
     test('vendor can remove product tags', { tag: ['@lite', '@vendor'] }, async () => { await vendor.removeProductTags(productIdFull, data.product.productInfo.tags.tags); });
     test('vendor can create product tags', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductTags(productIdFull, data.product.productInfo.tags.randomTags); });
+
+    test('vendor can create a product tag whose name starts with a digit', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductTags(productIdFull, data.product.productInfo.tags.digitLeadingTags); });
     test('vendor can add product cover image', { tag: ['@lite', '@vendor'] }, async () => { await vendor.addProductCoverImage(productIdBasic, data.product.productInfo.images.cover); });
 
     test('vendor can update product cover image', { tag: ['@lite', '@vendor'] }, async () => {

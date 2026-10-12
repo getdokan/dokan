@@ -2,6 +2,7 @@ import { APIRequestContext, Locator, Page } from '@playwright/test';
 import { toPath, SERVER_URL } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
 import { confirmDataViewsAction, dismissDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
+import { actionMenuItemByName } from '@utils/dataViews';
 
 // ============================================
 // TEST DATA
@@ -239,7 +240,7 @@ export class AdminProductAdvertisingPage {
 
     /** Click an item in the open actions menu, e.g. 'Expire' or 'Delete'. */
     async clickActionMenuItem(label: string): Promise<void> {
-        const item = this.page.getByRole('menuitem', { name: new RegExp(escapeRegExp(label), 'i') }).first();
+        const item = actionMenuItemByName(this.page, new RegExp(escapeRegExp(label), 'i')).first();
         await item.waitFor({ state: 'visible', timeout: 10000 });
         await item.click();
     }

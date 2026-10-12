@@ -1,14 +1,15 @@
 import { test, expect, Page } from '@playwright/test';
 import { data } from '@utils/testData';
+import { actionMenuItems } from '@utils/dataViews';
 
 // The new React DataViews admin lives at page=dokan-dashboard (page=dokan is the legacy admin).
 const newDash = (url: string) => url.replace('page=dokan#', 'page=dokan-dashboard#');
 
 const failOnPageError = (page: Page, errors: string[]) => {
-    page.on('pageerror', (err) => {
+    page.on('pageerror', err => {
         errors.push(err.message);
     });
-    page.on('console', (msg) => {
+    page.on('console', msg => {
         if (msg.type() === 'error') {
             errors.push(msg.text());
         }
@@ -16,12 +17,7 @@ const failOnPageError = (page: Page, errors: string[]) => {
 };
 
 const expectNoMigrationRegressions = (errors: string[]) => {
-    const blockers = errors.filter(
-        (e) =>
-            /LucideIcons is not defined/i.test(e) ||
-            /Cannot read properties of undefined \(reading '/.test(e) ||
-            /\bAdminDataViews\b/.test(e),
-    );
+    const blockers = errors.filter(e => /LucideIcons is not defined/i.test(e) || /Cannot read properties of undefined \(reading '/.test(e) || /\bAdminDataViews\b/.test(e));
     expect.soft(blockers, blockers.join('\n')).toEqual([]);
 };
 
@@ -177,19 +173,7 @@ test.describe('Admin DataViews migration smoke', () => {
 
     test('Request for Quotation page renders 11 status tabs', { tag: ['@pro', '@admin'] }, async () => {
         await aPage.goto(newDash(data.subUrls.backend.dokan.requestForQuote), { waitUntil: 'domcontentloaded' });
-        for (const name of [
-            'All',
-            'Pending',
-            'Updated',
-            'Accepted',
-            'Cancelled',
-            'Approved',
-            'Expired',
-            'Draft',
-            'Trash',
-            'Rejected',
-            'Converted',
-        ]) {
+        for (const name of ['All', 'Pending', 'Updated', 'Accepted', 'Cancelled', 'Approved', 'Expired', 'Draft', 'Trash', 'Rejected', 'Converted']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(`^${name}`) })).toBeVisible();
         }
         expectNoMigrationRegressions(errors);
@@ -214,7 +198,7 @@ test.describe('Admin DataViews migration smoke', () => {
         const actionButtons = aPage.getByRole('button', { name: 'Actions' });
         if ((await actionButtons.count()) > 0) {
             await actionButtons.first().click();
-            await expect(aPage.getByRole('menuitem').first()).toBeVisible();
+            await expect(actionMenuItems(aPage).first()).toBeVisible();
         }
         expectNoMigrationRegressions(errors);
     });

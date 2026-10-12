@@ -520,6 +520,35 @@ export class AbuseReportsPage {
         return await this.page.locator(this.adminReact.dataRow).count();
     }
 
+    /**
+     * Row count read only once the table has STOPPED re-rendering.
+     *
+     * `waitForListReady()` returns on the first render that has any rows at all, which is not the
+     * same as the final render: DataViews paints an intermediate row set and then re-renders from
+     * the settled response. A bare `getRowCount()` taken right after it can therefore capture a
+     * transient count (observed on CI: 20, re-rendering to the real 2), and any later comparison
+     * against that baseline fails for a reason that has nothing to do with the behaviour under test.
+     *
+     * Require the same count twice in a row before trusting it.
+     */
+    async getStableRowCount(timeout = 15000): Promise<number> {
+        const rows = this.page.locator(this.adminReact.dataRow);
+        let last = -1;
+        const deadline = Date.now() + timeout;
+        while (Date.now() < deadline) {
+            const current = await rows.count();
+            if (current === last) return current;
+            last = current;
+            await this.page.waitForTimeout(300);
+        }
+        return last;
+    }
+
+    /** Web-first row-count assertion — retries, so it survives a late re-render. */
+    async expectRowCount(expected: number, message: string): Promise<void> {
+        await expect(this.page.locator(this.adminReact.dataRow), message).toHaveCount(expected);
+    }
+
     async isRowForReasonVisible(reason: string): Promise<boolean> {
         return await this.page.locator(this.adminReact.rowByReason(reason)).first().isVisible();
     }

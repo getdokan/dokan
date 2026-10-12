@@ -94,6 +94,11 @@ export const bookingSelectors = {
     cBookings: {
         calendarLoader: '//div[@class="blockUI blockOverlay"]',
         selectCalendarDay: (month: number, day: number) => `//td[not(contains(@class,"not-bookable")) and @data-month="${month}"]//a[@data-date="${day}"]`,
+        // Month navigation. jQuery UI's datepicker renders ONE month at a time and emits
+        // data-month/data-year on every day cell, so "is the target month on screen" is answerable
+        // from the DOM and does not need to track clicks.
+        nextMonth: 'a.ui-datepicker-next',
+        calendarDayAnyState: (year: number, month: number, day: number) => `//td[@data-month="${month}" and @data-year="${year}"]//a[@data-date="${day}"]`,
         bookNow: 'button.wc-bookings-booking-form-button',
     },
 
@@ -297,6 +302,37 @@ export class BookingPage {
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code, { timeout: RESPONSE_TIMEOUT }),
             element.click(),
         ]);
+    }
+
+    /**
+     * Page the datepicker forward until `target`'s day cell is rendered.
+     *
+     * The picker shows one month but DOES render the leading days of the next one, so
+     * `endDate = start + 1` is normally on screen even on the last day of a month — which is why
+     * this is a no-op almost every day. Not always: a month whose last day ends the final week row
+     * renders NO trailing cells, and there `endDate` genuinely cannot be found. Measured against
+     * this build: February 2027 renders 0 trailing cells; every other month in the following year
+     * renders between 4 and 31.
+     *
+     * Navigation is driven by the DOM — "is the target cell present yet?" — not by counting clicks,
+     * so it is correct whichever month the picker opens on and costs nothing when the cell is
+     * already rendered.
+     *
+     * `force: true` is required: jQuery UI's `.ui-datepicker-header` overlays the nav anchor and
+     * intercepts pointer events, so a normal click retries until it times out.
+     *
+     * Deliberately does NOT assert the day is bookable: that is the caller's assertion, and
+     * absorbing it here would turn "the date is not offered" into a silent pass.
+     */
+    private async ensureCalendarMonth(target: Date): Promise<void> {
+        const cell = bookingSelectors.cBookings.calendarDayAnyState(target.getFullYear(), target.getMonth(), target.getDate());
+        for (let hop = 0; hop < 12; hop++) {
+            if ((await this.page.locator(cell).count()) > 0) return;
+            const next = this.page.locator(bookingSelectors.cBookings.nextMonth);
+            if ((await next.count()) === 0) return; // no nav rendered — let the caller's click report it
+            await next.first().click({ force: true });
+            await expect(this.page.locator(bookingSelectors.cBookings.calendarLoader)).toBeHidden();
+        }
     }
 
     private async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<void> {
@@ -580,7 +616,9 @@ export class BookingPage {
 
         await this.page.locator(bookingSelectors.vBooking.addBooking.createANewCorrespondingOrderForThisNewBooking).click();
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.bookedDayBlocks, bookingSelectors.vBooking.addBooking.next);
+        await this.ensureCalendarMonth(bookings.startDate);
         await this.clickAndWaitForResponse(data.subUrls.ajax, bookingSelectors.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
+        await this.ensureCalendarMonth(bookings.endDate);
         await this.clickAndWaitForResponse(data.subUrls.ajax, bookingSelectors.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.addBooking, bookingSelectors.vBooking.addBooking.addBooking);
         await expect(this.page.locator(bookingSelectors.vBooking.addBooking.successMessage)).toContainText('The booking has been added successfully.');
@@ -592,7 +630,9 @@ export class BookingPage {
         const productPath = this.productPath(productName);
         await this.gotoUntilNetworkidle(productPath);
         await expect(this.page.locator(bookingSelectors.cBookings.calendarLoader)).toBeHidden();
+        await this.ensureCalendarMonth(bookings.startDate);
         await this.clickAndWaitForResponse(data.subUrls.ajax, bookingSelectors.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
+        await this.ensureCalendarMonth(bookings.endDate);
         await this.clickAndWaitForResponse(data.subUrls.ajax, bookingSelectors.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(productPath, bookingSelectors.cBookings.bookNow);
         await this.placeOrder();

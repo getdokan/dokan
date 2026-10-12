@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import { actionMenuItemByName, actionMenuItems } from '@utils/dataViews';
 
 // Pre-seeded simple product owned by `vendor1store`. The numeric post id is NOT
 // pinned — WooCommerce assigns ids by insertion order, so route assertions match
@@ -54,20 +55,48 @@ export class NewProductsPage {
     }
 
     // ---- Locators ----
-    get reactRoot(): Locator { return this.page.locator(newProductsSelectors.reactRoot).first(); }
-    get rows(): Locator { return this.page.locator(newProductsSelectors.dataRow); }
-    get columnHeaders(): Locator { return this.page.locator(newProductsSelectors.columnHeader); }
-    get searchBox(): Locator { return this.page.locator(newProductsSelectors.searchInput).first(); }
-    get addFilterButton(): Locator { return this.page.locator(newProductsSelectors.addFilterBtn).first(); }
-    get resetButton(): Locator { return this.page.locator(newProductsSelectors.resetBtn).first(); }
-    get addNewProductButton(): Locator { return this.page.getByRole('button', { name: /Add new product/i }).first(); }
-    get selectAllCheckbox(): Locator { return this.page.locator(newProductsSelectors.selectAll).first(); }
-    get rowCheckboxes(): Locator { return this.page.locator(newProductsSelectors.rowCheckbox); }
-    get emptyState(): Locator { return this.page.locator(newProductsSelectors.emptyState).first(); }
-    get quickCreateModalTitle(): Locator { return this.page.locator(newProductsSelectors.quickCreateModalTitle).first(); }
-    get quickCreateConfirmButton(): Locator { return this.page.locator(newProductsSelectors.quickCreateConfirmBtn).first(); }
-    get quickViewModal(): Locator { return this.page.locator(newProductsSelectors.quickViewModal).first(); }
-    get deleteAlert(): Locator { return this.page.locator(newProductsSelectors.deleteAlert).first(); }
+    get reactRoot(): Locator {
+        return this.page.locator(newProductsSelectors.reactRoot).first();
+    }
+    get rows(): Locator {
+        return this.page.locator(newProductsSelectors.dataRow);
+    }
+    get columnHeaders(): Locator {
+        return this.page.locator(newProductsSelectors.columnHeader);
+    }
+    get searchBox(): Locator {
+        return this.page.locator(newProductsSelectors.searchInput).first();
+    }
+    get addFilterButton(): Locator {
+        return this.page.locator(newProductsSelectors.addFilterBtn).first();
+    }
+    get resetButton(): Locator {
+        return this.page.locator(newProductsSelectors.resetBtn).first();
+    }
+    get addNewProductButton(): Locator {
+        return this.page.getByRole('button', { name: /Add new product/i }).first();
+    }
+    get selectAllCheckbox(): Locator {
+        return this.page.locator(newProductsSelectors.selectAll).first();
+    }
+    get rowCheckboxes(): Locator {
+        return this.page.locator(newProductsSelectors.rowCheckbox);
+    }
+    get emptyState(): Locator {
+        return this.page.locator(newProductsSelectors.emptyState).first();
+    }
+    get quickCreateModalTitle(): Locator {
+        return this.page.locator(newProductsSelectors.quickCreateModalTitle).first();
+    }
+    get quickCreateConfirmButton(): Locator {
+        return this.page.locator(newProductsSelectors.quickCreateConfirmBtn).first();
+    }
+    get quickViewModal(): Locator {
+        return this.page.locator(newProductsSelectors.quickViewModal).first();
+    }
+    get deleteAlert(): Locator {
+        return this.page.locator(newProductsSelectors.deleteAlert).first();
+    }
 
     // The count badge is not part of the tab's accessible name — match the label only.
     tab(name: RegExp): Locator {
@@ -104,14 +133,18 @@ export class NewProductsPage {
         await this.reactRoot.waitFor({ state: 'visible', timeout: timeoutMs });
         const start = Date.now();
         while (Date.now() - start < 15000) {
-            if (await this.rows.count() > 0) return;
-            if (await this.emptyState.count() > 0) return;
+            if ((await this.rows.count()) > 0) return;
+            if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
-        const fatal = await this.page.locator(newProductsSelectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
+        const fatal = await this.page
+            .locator(newProductsSelectors.phpFatal)
+            .first()
+            .isVisible({ timeout: 1000 })
+            .catch(() => false);
         return !fatal;
     }
 
@@ -121,7 +154,7 @@ export class NewProductsPage {
     }
 
     async getColumnHeaderTexts(): Promise<string[]> {
-        return (await this.columnHeaders.allInnerTexts()).map((t) => t.trim().toLowerCase());
+        return (await this.columnHeaders.allInnerTexts()).map(t => t.trim().toLowerCase());
     }
 
     async isEmptyStateVisible(): Promise<boolean> {
@@ -129,7 +162,11 @@ export class NewProductsPage {
     }
 
     async rowStatusText(name: string): Promise<string> {
-        return (await this.rowByName(name).innerText().catch(() => '')).trim();
+        return (
+            await this.rowByName(name)
+                .innerText()
+                .catch(() => '')
+        ).trim();
     }
 
     // ---- Status tabs ----
@@ -145,12 +182,7 @@ export class NewProductsPage {
     // single /products/<id>). A fixed debounce wait flakes — stale rows linger
     // until the REST round-trip lands and React repaints.
     private async waitForListRefetch(action: () => Promise<void>, timeout = 15000): Promise<void> {
-        const respP = this.page
-            .waitForResponse(
-                (r) => /\/dokan\/v\d+\/products(\?|$)/.test(r.url()) && !/\/products\/\d+/.test(r.url()) && r.request().method() === 'GET',
-                { timeout },
-            )
-            .catch(() => null);
+        const respP = this.page.waitForResponse(r => /\/dokan\/v\d+\/products(\?|$)/.test(r.url()) && !/\/products\/\d+/.test(r.url()) && r.request().method() === 'GET', { timeout }).catch(() => null);
         await action();
         await respP;
         await this.page.waitForTimeout(400);
@@ -206,7 +238,13 @@ export class NewProductsPage {
         const total = await boxes.count();
         let checked = 0;
         for (let i = 0; i < total; i++) {
-            if (await boxes.nth(i).isChecked().catch(() => false)) checked++;
+            if (
+                await boxes
+                    .nth(i)
+                    .isChecked()
+                    .catch(() => false)
+            )
+                checked++;
         }
         return checked;
     }
@@ -220,11 +258,14 @@ export class NewProductsPage {
         // click time out intermittently. Open it and CONFIRM a menuitem appeared;
         // re-trigger only if it's still closed — checking open-state first so we never
         // re-click an already-open menu (which would toggle it shut).
-        const firstItem = this.page.getByRole('menuitem').first();
+        const firstItem = actionMenuItems(this.page).first();
         for (let attempt = 0; attempt < 3; attempt++) {
             if (await firstItem.isVisible().catch(() => false)) return;
             await btn.click();
-            const opened = await firstItem.waitFor({ state: 'visible', timeout: 5000 }).then(() => true).catch(() => false);
+            const opened = await firstItem
+                .waitFor({ state: 'visible', timeout: 5000 })
+                .then(() => true)
+                .catch(() => false);
             if (opened) return;
         }
         // Still not open — surface a real error instead of clicking into the void.
@@ -232,7 +273,7 @@ export class NewProductsPage {
     }
 
     menuItem(label: string): Locator {
-        return this.page.getByRole('menuitem', { name: label }).first();
+        return actionMenuItemByName(this.page, label).first();
     }
 
     async clickMenuItem(label: string): Promise<void> {
@@ -245,9 +286,11 @@ export class NewProductsPage {
 
     async rowMenuItemLabels(name: string): Promise<string[]> {
         await this.openRowActionMenu(name);
-        const labels = await this.page.getByRole('menuitem').allInnerTexts().catch(() => []);
+        const labels = await actionMenuItems(this.page)
+            .allInnerTexts()
+            .catch(() => []);
         await this.page.keyboard.press('Escape').catch(() => undefined);
-        return labels.map((l) => l.trim());
+        return labels.map(l => l.trim());
     }
 
     // ---- Quick view ----
@@ -266,17 +309,18 @@ export class NewProductsPage {
     }
 
     async closeQuickView(): Promise<void> {
-        await this.page.locator(newProductsSelectors.quickViewClose).first().click().catch(() => undefined);
+        await this.page
+            .locator(newProductsSelectors.quickViewClose)
+            .first()
+            .click()
+            .catch(() => undefined);
         await this.quickViewModal.waitFor({ state: 'hidden', timeout: 8000 }).catch(() => undefined);
     }
 
     // ---- View in site (opens product permalink in a new tab) ----
     async viewInSite(name: string): Promise<Page | null> {
         await this.openRowActionMenu(name);
-        const [popup] = await Promise.all([
-            this.page.waitForEvent('popup', { timeout: 15000 }).catch(() => null),
-            this.clickMenuItem('View in site'),
-        ]);
+        const [popup] = await Promise.all([this.page.waitForEvent('popup', { timeout: 15000 }).catch(() => null), this.clickMenuItem('View in site')]);
         if (popup) await popup.waitForLoadState('domcontentloaded').catch(() => undefined);
         return popup;
     }

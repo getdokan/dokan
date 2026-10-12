@@ -72,6 +72,49 @@ test.describe('vendor verification api test', () => {
         expect(response.ok()).toBeTruthy();
     });
 
+    // The Address method is the one the seller-address auto-fill flows key off. The installer
+    // seeds it once and never recreates it, so dokan-pro #5861 made the REST layer refuse the
+    // delete. Assert that refusal, otherwise dropping the guard would break nothing visible.
+    test('built-in address verification method can not be deleted', { tag: ['@pro'] }, async () => {
+        const allMethods = await apiUtils.getAllVerificationMethods();
+        const addressMethod = allMethods.find((o: { kind: string }) => o.kind === 'address');
+        test.skip(!addressMethod, 'no built-in address verification method on this site, nothing to assert against');
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteVerificationMethod(addressMethod.id), {}, false);
+        expect(response.status()).toBe(403);
+        expect(responseBody.code).toBe('dokan_pro_rest_cannot_delete');
+    });
+
+    // Same PR turned a missing id into a 404 instead of the old blanket 500.
+    test('deleting a missing verification method returns not found', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteVerificationMethod('999999999'), {}, false);
+        expect(response.status()).toBe(404);
+        expect(responseBody.code).toBe('dokan_pro_rest_no_resource');
+    });
+
+    // KNOWN OPEN BUG — dokan-pro#6110. The delete guard above reads `kind` at delete time, while
+    // `update_item()` (VerificationMethodsApi.php:265-268) rewrites `kind` from the request with no
+    // built-in check. PUT {"kind":"custom"} then DELETE removes the built-in Address method for
+    // good, because Installer.php:77 only seeds when the table is empty. Reproduced 6/6 (DOK-066).
+    //
+    // The assertion below states the CORRECT behaviour and holds under either shape of fix, whether
+    // the update endpoint starts refusing the kind change or the delete guard stops keying off a
+    // writable column. Remove the `.fixme` when #6110 lands; it is expected to pass from then on.
+    //
+    // ⛔ Do NOT flip this to `.fail()` or run it before the fix is in. Unlike a read-only assertion,
+    // the body DESTROYS the built-in Address method on a site that still has the bug, and nothing
+    // recreates it — which breaks the sibling guard test above and the vendorVerifications e2e run.
+    test.fixme('built-in address method survives a kind change followed by a delete', { tag: ['@pro'] }, async () => {
+        const allMethods = await apiUtils.getAllVerificationMethods();
+        const addressMethod = allMethods.find((o: { kind: string }) => o.kind === 'address');
+        test.skip(!addressMethod, 'no built-in address verification method on this site, nothing to assert against');
+
+        await apiUtils.put(endPoints.updateVerificationMethod(addressMethod.id), { data: { kind: 'custom' } }, false);
+        await apiUtils.delete(endPoints.deleteVerificationMethod(addressMethod.id), {}, false);
+
+        const [response] = await apiUtils.get(endPoints.getSingleVerificationMethod(addressMethod.id), {}, false);
+        expect(response.status()).toBe(200);
+    });
+
     // verification requests
 
     test('get all verification requests', { tag: ['@pro'] }, async () => {

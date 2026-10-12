@@ -1,21 +1,22 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
 import {
+    DATA_ROW_ANY,
+    DATA_ROW_SETTLED,
+    PHP_FATAL,
     REACT_ROOT,
     ROW_ACTIONS_BTN,
     SEARCH_INPUT,
-    PHP_FATAL,
-    DATA_ROW_ANY,
-    DATA_ROW_SETTLED,
     SKELETON_ANY,
     actionMenuItem as dvActionMenuItem,
-    statusTab as dvStatusTab,
-    waitForRootReady as dvWaitForRootReady,
-    hasNoPhpFatal as dvHasNoPhpFatal,
-    parseTabCount,
+    actionMenuItemByName,
+    clearDataViewsSearch,
     dataViewsConfirm,
     fillDataViewsSearch,
-    clearDataViewsSearch,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    parseTabCount,
+    statusTab as dvStatusTab,
+    waitForRootReady as dvWaitForRootReady,
 } from '@utils/dataViews';
 
 // ============================================
@@ -194,13 +195,11 @@ export class NewRequestedQuotesPage {
                 .first()
                 .isVisible({ timeout: 2000 })
                 .catch(() => false),
-            trash: await this.page
-                .getByRole('menuitem', { name: /Move to Trash/i })
+            trash: await actionMenuItemByName(this.page, /Move to Trash/i)
                 .first()
                 .isVisible({ timeout: 2000 })
                 .catch(() => false),
-            restore: await this.page
-                .getByRole('menuitem', { name: /Pending|Restore/i })
+            restore: await actionMenuItemByName(this.page, /Pending|Restore/i)
                 .first()
                 .isVisible({ timeout: 2000 })
                 .catch(() => false),
@@ -215,7 +214,7 @@ export class NewRequestedQuotesPage {
         const row = this.rowsWithText(text).first();
         await row.waitFor({ state: 'visible', timeout: 15000 });
         await row.locator("button[aria-label='Actions']").first().click();
-        const item = this.page.getByRole('menuitem', { name: /Move to Trash/i }).first();
+        const item = actionMenuItemByName(this.page, /Move to Trash/i).first();
         await item.waitFor({ state: 'visible', timeout: 8000 });
         await item.click();
         // Destructive → plugin-ui alertdialog confirm.
@@ -235,7 +234,7 @@ export class NewRequestedQuotesPage {
         const row = this.rowsWithText(text).first();
         await row.waitFor({ state: 'visible', timeout: 15000 });
         await row.locator("button[aria-label='Actions']").first().click();
-        const item = this.page.getByRole('menuitem', { name: /Pending|Restore/i }).first();
+        const item = actionMenuItemByName(this.page, /Pending|Restore/i).first();
         await item.waitFor({ state: 'visible', timeout: 8000 });
         await Promise.all([this.page.waitForResponse(r => (newRequestedQuotesSelectors.itemMutateRest.test(r.url()) || newRequestedQuotesSelectors.batchRest.test(r.url())) && r.request().method() !== 'GET', { timeout: 15000 }).catch(() => undefined), item.click()]);
         await this.page.waitForTimeout(800);

@@ -1597,7 +1597,10 @@ export class ApiUtils {
             console.log('No verification method exists');
             return;
         }
-        const allMethodIds = allVerificationMethods.map((o: { id: unknown }) => o.id);
+        // The Address method is built in: the installer seeds it once and the REST layer
+        // refuses to delete it (403 dokan_pro_rest_cannot_delete, dokan-pro #5861). Skip it
+        // instead of letting the delete assertion take the whole beforeAll down.
+        const allMethodIds = allVerificationMethods.filter((o: { kind?: string }) => o.kind !== 'address').map((o: { id: unknown }) => o.id);
         for (const methodId of allMethodIds) {
             await this.delete(endPoints.deleteVerificationMethod(methodId), { headers: auth });
         }

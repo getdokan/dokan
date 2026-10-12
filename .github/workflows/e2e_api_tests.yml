@@ -1,16 +1,49 @@
 name: E2E_API Tests
 
+# Runs started by a dokan-pro PR (pro_sha set) are named after both branches so they can be found.
+run-name: ${{ inputs.pro_sha && format('E2E_API Tests (pro {0}, lite {1})', inputs.pro_ref, inputs.lite_ref || github.ref_name) || github.workflow }}
+
 on:
-    # Runs once a day only, to keep Actions cost down. Pull requests and pushes
-    # to develop no longer trigger this suite -- use the "Run workflow" button
-    # (workflow_dispatch) below to test a branch on demand.
-    # Target start time is 9:00 AM BDT. GitHub queues scheduled runs and
+    # Like the PHPUnit workflow: pull requests run the suite when they open and on every push
+    # to them, and develop runs it on every push (merges). A branch with no pull request gets
+    # no run; start one by hand from "Run workflow" if needed. Commits that only touch the
+    # files in paths-ignore are skipped. The two lists below must be kept in sync by hand:
+    # GitHub Actions does not support YAML anchors.
+    push:
+        branches: [develop]
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
+    pull_request:
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
+    # Scheduled runs. Target start time is 9:00 AM BDT. GitHub queues scheduled runs and
     # releases them once capacity frees up: on this repository that delay has
     # been roughly 70 minutes every day, so 02:00 UTC (nominally 8:00 AM BDT)
     # is what actually starts the run near 9:00 AM BDT. Check the real start
     # times of recent scheduled runs before "correcting" this to 03:00 UTC.
     schedule:
+        # 02:00 UTC -- the gating run, on whatever WordPress/WooCommerce is current.
         - cron: 0 2 * * *
+        # 14:00 UTC -- the pinned reference run, on the versions committed in .wp-env*.json.
+        # It warns and never gates; its job is triage. When the latest lane goes red, this
+        # says whether the pinned stack is red too, which separates "a WordPress/WooCommerce
+        # release broke us" from "we broke ourselves". Change this cron and you must change
+        # the WP_STACK expression AND the continue-on-error on the test jobs.
+        - cron: 0 14 * * *
     # workflow can be manually triggered
     workflow_dispatch:
         inputs:
@@ -22,11 +55,42 @@ on:
                     - E2E
                     - API
                     - All
+            wp_stack:
+                description: 'latest = resolve WordPress and WooCommerce to current (the default, and it gates); pinned = the versions committed in .wp-env*.json, for bisecting a regression against a known stack'
+                default: latest
+                type: choice
+                options:
+                    - pinned
+                    - latest
+            # The three inputs below are set by dokan-pro's e2e-on-lite.yml when a dokan-pro PR
+            # opens or gets a push. Leave them at their defaults for a normal manual run.
+            pro_ref:
+                description: dokan-pro branch to build
+                default: develop
+                type: string
+            lite_ref:
+                description: dokan-lite branch to test (empty = the branch picked in "Use workflow from")
+                default: ''
+                type: string
+            pro_sha:
+                description: dokan-pro commit that gets the "e2e" check (empty = no check)
+                default: ''
+                type: string
 
-# Cancels all previous workflow runs for pull requests that have not completed.
+# A newer run cancels the older one, queued or running, in the same group:
+# - Pull requests: one group per PR, so a new push to a PR stops that PR's older run. Only the
+#   newest commit on the PR is worth finishing.
+# - Pushes to develop share one group. The newest develop commit contains every earlier merge,
+#   so only its run is worth finishing (release weeks merge many PRs back to back).
+# - A run started by a dokan-pro PR (pro_sha set) is keyed on the pro branch. Those runs all
+#   dispatch on the same develop commit, so per-commit keys would make different pro branches
+#   cancel each other; per-branch keys let a new push to a pro branch cancel only that branch's
+#   older run.
+# - Scheduled and other manual runs: one group per commit.
 concurrency:
-    # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    # The stack is part of the group so the latest run and the pinned reference never cancel
+    # each other on the same commit.
+    group: ${{ github.workflow }}-${{ github.event_name }}-${{ inputs.pro_sha && format('pro-{0}', inputs.pro_ref) || github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || (github.event_name == 'push' && github.ref == 'refs/heads/develop' && 'develop') || github.sha }}-${{ inputs.wp_stack || github.event.schedule || 'latest' }}
     cancel-in-progress: true
 
 # workflow permissions
@@ -38,10 +102,17 @@ permissions:
 
 # workflow environment variables
 env:
+    # Which WordPress/WooCommerce versions this run installs.
+    #   latest -- whatever WordPress and WooCommerce are current (the DEFAULT, and it gates)
+    #   pinned -- the versions committed in .wp-env*.json (the 14:00 reference lane, never gates)
+    # Sourced from the workflow_dispatch input, else from which cron fired, else latest.
+    # `inputs.wp_stack` is empty (falsy) on scheduled runs, so the fallbacks apply.
+    WP_STACK: ${{ inputs.wp_stack || (github.event.schedule == '0 14 * * *' && 'pinned') || 'latest' }}
     ADMIN: admin
     ADMIN_PASSWORD: password
     VENDOR: vendor1
     VENDOR2: vendor2
+    VENDOR3: vendor3
     CUSTOMER: customer1
     CUSTOMER2: customer2
     USER_PASSWORD: 01dokan01
@@ -57,6 +128,18 @@ env:
     STRIPE_EXPRESS_VENDOR1_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR1_ACCT}}
     STRIPE_EXPRESS_VENDOR2_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR2_ACCT}}
     STRIPE_EXPRESS_REQUIRED: true
+    # Stripe Connect test keys + the real CONNECT connected accounts. A DIFFERENT Stripe platform
+    # from the Express set above, so the account ids are not interchangeable. Connect additionally
+    # needs an OAuth client id: Helper::is_ready() returns false without one and the gateway never
+    # reaches the checkout, so a key pair alone would leave every Connect spec skipping to green.
+    TEST_PUBLISH_KEY_STRIPE_CONNECT: ${{secrets.TEST_PUBLISH_KEY_STRIPE_CONNECT}}
+    TEST_SECRET_KEY_STRIPE_CONNECT: ${{secrets.TEST_SECRET_KEY_STRIPE_CONNECT}}
+    TEST_CLIENT_ID_STRIPE_CONNECT: ${{secrets.TEST_CLIENT_ID_STRIPE_CONNECT}}
+    STRIPE_VENDOR1_ACCT: ${{secrets.STRIPE_VENDOR1_ACCT}}
+    STRIPE_VENDOR2_ACCT: ${{secrets.STRIPE_VENDOR2_ACCT}}
+    # Fail loud when the secrets are expected but absent, and stay soft on fork PRs, where GitHub
+    # withholds them. Without this a fork PR would go green with near-zero Connect coverage.
+    STRIPE_CONNECT_REQUIRED: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true
@@ -89,6 +172,8 @@ jobs:
         steps:
             - name: Checkout testing repo
               uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.lite_ref }}
 
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
@@ -146,7 +231,8 @@ jobs:
         name: build dokan-pro
         runs-on: ubuntu-latest
         timeout-minutes: 15
-        # Only run when secrets are available (i.e. not a fork PR). Same gate as today.
+        # Not on fork PRs: GitHub withholds secrets there, so DOKAN_PRO_TOKEN cannot check out
+        # dokan-pro. The test jobs then run lite only.
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         steps:
             # Pro's webpack.config.js calls getDokanLitePath() which resolves
@@ -158,6 +244,8 @@ jobs:
             # a self-symlink, pro as sibling.
             - name: Checkout dokan-lite source (for pro webpack path resolution)
               uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.lite_ref }}
 
             - name: Prepare dokan-lite folder
               run: |
@@ -167,7 +255,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: develop
+                  ref: ${{ inputs.pro_ref || 'develop' }}
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
@@ -264,10 +352,18 @@ jobs:
         name: e2e tests
         runs-on: ubuntu-latest
         timeout-minutes: 75
+        # Only the 14:00 pinned REFERENCE lane is allowed not to gate. Everything else --
+        # including the default `latest` -- fails the run on failure. Note this can no longer
+        # key off `wp_stack == 'latest'`: that is now the default, so doing so would make every
+        # run non-gating and turn a green check into no signal at all. `env` is not readable
+        # from a job-level continue-on-error, so the schedule test is repeated here.
+        continue-on-error: ${{ github.event.schedule == '0 14 * * *' }}
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
-        # `always() && build_lite succeeded` covers the fork-PR path too.
+        # `!cancelled() && build_lite succeeded` covers the fork-PR path too. It must not be
+        # `always()`: a job whose `if` uses always() ignores a run cancellation, so superseded
+        # runs kept all 12 shards going to the end (run 37594492571).
         needs: [build_lite, build_pro]
-        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
+        if: ${{ !cancelled() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped') }}
         strategy:
             fail-fast: false
             matrix:
@@ -338,6 +434,23 @@ jobs:
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
                   fi
+                  # Default lane: drop the version pins so wp-env resolves whatever
+                  # WordPress and WooCommerce are current. The pinned reference lane
+                  # (14:00) is untouched and keeps the committed versions.
+                  if [ "$WP_STACK" = "latest" ]; then
+                    # The unversioned woocommerce.zip on wordpress.org serves WooCommerce's development
+                    # build (11.2.0-beta.2 on 2026-10-04), so pin the current stable release instead.
+                    WC_STABLE=$(curl -fsSL https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r .version)
+                    if [ -z "$WC_STABLE" ] || [ "$WC_STABLE" = "null" ]; then
+                      echo "::error::Could not resolve the current stable WooCommerce version from wordpress.org"
+                      exit 1
+                    fi
+                    jq --arg wc "$WC_STABLE" '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.\($wc).zip"))' \
+                       .wp-env.override.json > .wp-env.override.json.tmp
+                    mv .wp-env.override.json.tmp .wp-env.override.json
+                    echo "WP_STACK=latest — WordPress unpinned, WooCommerce $WC_STABLE (current stable)"
+                  fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
             # (mariadb, phpmyadmin, wordpress, composer — all official library/* images) then come
@@ -427,6 +540,32 @@ jobs:
                       cd tests/pw
                       npm run start:env
 
+            # What actually got installed, not what we asked for. On the canary lane this is
+            # the whole point of the run; on the gating lane it is the proof the pins held.
+            - name: Record resolved WordPress / WooCommerce versions
+              working-directory: tests/pw
+              run: |
+                  # `--` is required: without it npm swallows wp-cli's own flags, so
+                  # `--field=version` never reaches wp-cli, `wp plugin get` prints its
+                  # full field/value table, no line starts with a digit, and the grep
+                  # below yields "unknown" for WooCommerce on every single run.
+                  ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  WP=$(ver wp core version)
+                  WC=$(ver wp plugin get woocommerce --field=version)
+                  # Job log only — deliberately NOT $GITHUB_STEP_SUMMARY. Any job that writes a
+                  # step summary gets its own collapsible block on the run page, so writing here
+                  # produced 13 near-empty "… summary" panels burying the one that matters.
+                  # merge-reports prints the consolidated stack line from resolved-versions.json.
+                  echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
+                  echo "- $WP_STACK lane — WordPress ${WP:-unknown}, WooCommerce ${WC:-unknown}"
+
+                  # Persist for merge-reports, which runs on a clean runner with no
+                  # wp-env stack and so cannot resolve these itself. Rides along in the
+                  # existing tests/pw/playwright artifact — no new upload needed.
+                  mkdir -p playwright
+                  printf '{"stack":"%s","wordpress":"%s","woocommerce":"%s"}\n' \
+                      "$WP_STACK" "${WP:-unknown}" "${WC:-unknown}" > playwright/resolved-versions.json
+
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
               working-directory: tests/pw
@@ -478,6 +617,19 @@ jobs:
               working-directory: tests/pw
               run: npm run docker:setup
 
+            # Every run and shard charges through the same Stripe test account, where idempotency keys
+            # live for 24 hours, and Dokan Pro keys subscription renewals by order id
+            # (`dokan_pe_renewal_<order>_<attempt>` in modules/stripe RenewalProcessor). A fresh database
+            # hands out the same order ids every run, so a later run's renewal reused an earlier run's key
+            # and failed (SCSUB-02, run 37270644560). Start post ids, which HPOS order ids come from, at a
+            # random offset per shard and attempt so each run acts like a separate site. The offset stays
+            # under 2^31 because Dokan's own tables store order ids as INT.
+            - name: Offset post and order ids for this shard
+              working-directory: tests/pw
+              run: |
+                  OFFSET=$(( 1000000 + ( ((RANDOM << 15) | RANDOM) % 1000000000 ) ))
+                  npm run wp-env run tests-cli wp eval "global \$wpdb; \$wpdb->query( \"ALTER TABLE {\$wpdb->posts} AUTO_INCREMENT = $OFFSET\" ); echo 'next post id: ', \$wpdb->get_var( \"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{\$wpdb->posts}'\" ), PHP_EOL;"
+
             # Resolve the spec list for this shard from the committed duration baseline.
             # Falls back to alphabetical sharding if the baseline is missing.
             - name: Resolve balanced shard spec list
@@ -510,8 +662,12 @@ jobs:
                       '
                   fi
 
+            # continue-on-error: the isolation re-run below decides this shard's result.
+            # `outcome` still reports the true first-pass result, so every later step that
+            # keys off steps.e2e-test.outcome keeps working unchanged.
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
+              continue-on-error: true
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 60
               working-directory: tests/pw
@@ -523,6 +679,94 @@ jobs:
                       # No baseline — fall back to Playwright's built-in alphabetical sharding
                       npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
                   fi
+
+            # Rescue the first-pass traces/screenshots BEFORE anything else can delete them.
+            #
+            # Playwright CLEARS `outputDir` (playwright/e2e/test-artifacts, playwright.config.ts:15) at
+            # the START of every run, and two more runs follow this one: the isolation re-run below and
+            # the coverage run further down. By the time "Archive test artifacts" uploads
+            # tests/pw/playwright, the trace for the failure that actually mattered is long gone —
+            # verified on run 31362069120, whose shard-8 artifact contains only shard-features.json and
+            # systemInfo.json. Every CI-only failure therefore had to be diagnosed by guesswork from the
+            # error message alone.
+            #
+            # This is the same clobbering the summary-report steps below already work around; traces were
+            # simply never covered. Copy, don't move: the isolation re-run's own artifacts are still
+            # wanted, and a copy cannot break the run if the directory is absent.
+            - name: 🧾 Preserve first-pass traces before the re-run wipes them
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  if [ -d playwright/e2e/test-artifacts ]; then
+                      mkdir -p playwright/e2e/first-pass-artifacts
+                      cp -R playwright/e2e/test-artifacts/. playwright/e2e/first-pass-artifacts/ || true
+                      echo "preserved $(find playwright/e2e/first-pass-artifacts -type f | wc -l) file(s)"
+                  else
+                      echo "no test-artifacts directory — nothing to preserve"
+                  fi
+
+            # Re-run ONLY the failed tests, after the whole shard has finished, without
+            # their shard-mates. This separates a transient failure from a reproducible one.
+            #
+            # Guard on a non-empty failedTests list: if the first pass died from a crash or a
+            # timeout rather than test failures, `--last-failed` would select zero tests and
+            # "pass", turning an infrastructure failure green. No recorded failures => no re-run,
+            # and the gate step below keeps the shard red.
+            #
+            # --reporter=list overrides the config reporters on purpose: the blob reporter would
+            # otherwise emit a second set of results for these same tests and merge-reports would
+            # double-count them. The merged HTML report therefore keeps showing the FIRST-pass
+            # failures, which is what actually happened in shard context.
+            - name: 🔁 Re-run shard failures in isolation
+              id: e2e-recheck
+              if: always() && steps.e2e-test.outcome == 'failure'
+              timeout-minutes: 30
+              working-directory: tests/pw
+              run: |
+                  LAST_RUN=playwright/e2e/test-artifacts/.last-run.json
+                  if [ ! -f "$LAST_RUN" ] || [ "$(node -e "try{process.stdout.write(String((require('./'+process.argv[1]).failedTests||[]).length))}catch(e){process.stdout.write('0')}" "$LAST_RUN")" = "0" ]; then
+                      echo "::warning::No recorded test failures — the first pass failed for another reason (crash/timeout). Not re-running."
+                      exit 1
+                  fi
+                  set -o pipefail
+                  NO_SETUP=true npx playwright test --project=e2e_tests --last-failed \
+                      --reporter=list 2>&1 | tee /tmp/recheck.log
+
+            # Always say out loud which tests were rescued by the isolation re-run. A test that
+            # fails with its shard-mates but passes alone is the signature of shard-state
+            # pollution (an earlier spec leaving a global option/module/product dirty), NOT a
+            # timing flake — Playwright's in-place `retries` cannot green that class, this can.
+            - name: 📋 Report isolation re-run outcome
+              if: always() && steps.e2e-test.outcome == 'failure'
+              working-directory: tests/pw
+              run: |
+                  {
+                      echo "### Shard ${{ matrix.shardIndex }} — failures re-run in isolation"
+                      echo
+                      if [ "${{ steps.e2e-recheck.outcome }}" = "success" ]; then
+                          echo "⚠️ **These tests failed alongside their shard-mates but passed alone.**"
+                          echo "The shard is reported green. Treat this as suspected shard-state pollution"
+                          echo "and investigate the polluter — verify by running the earlier spec and reading"
+                          echo "the global state back, not by re-running the test that failed."
+                      else
+                          echo "❌ **The re-run failed too — reproducible failures, not flakes.**"
+                      fi
+                      echo
+                      echo '```'
+                      if [ -f /tmp/recheck.log ]; then
+                          grep -E '^[[:space:]]+(✓|✘|×)' /tmp/recheck.log | head -50
+                      else
+                          echo "(no re-run log — first pass failed without recorded test failures)"
+                      fi
+                      echo '```'
+                  } # job log only — see the note on the version line above
+
+            # The actual gate. The shard is red unless the isolation re-run cleared every failure.
+            - name: Fail the shard when the isolation re-run did not clear
+              if: always() && steps.e2e-test.outcome == 'failure' && steps.e2e-recheck.outcome != 'success'
+              run: |
+                  echo "::error::Shard ${{ matrix.shardIndex }} failed and the isolation re-run did not clear it."
+                  exit 1
 
             # Snapshot the e2e summary before coverage runs — both projects use
             # the same playwright.config.ts and write summaryReporter output to
@@ -538,13 +782,15 @@ jobs:
                          playwright-report/e2e/summary-report/results.e2e.bak.json
                   fi
 
-            # Coverage walks the suite a second time. Skip on PRs to halve the
-            # per-shard test runtime; develop pushes still compute it.
+            # Coverage walks the suite a second time. Skip on PRs and on pushes to
+            # branches other than develop to halve the per-shard test runtime; develop
+            # pushes, scheduled and manual runs still compute it.
             - name: 🧪 Run e2e coverage
               if: |
                 always()
                 && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
                 && github.event_name != 'pull_request'
+                && (github.event_name != 'push' || github.ref == 'refs/heads/develop')
               working-directory: tests/pw
               run: |
                   npm run test:e2e:coverage
@@ -580,8 +826,10 @@ jobs:
         name: api tests
         runs-on: ubuntu-latest
         timeout-minutes: 25
+        # See e2e_tests: only the 14:00 pinned reference lane is allowed not to gate.
+        continue-on-error: ${{ github.event.schedule == '0 14 * * *' }}
         needs: [build_lite, build_pro]
-        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
+        if: ${{ !cancelled() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped') }}
         strategy:
             fail-fast: false
             matrix:
@@ -651,6 +899,22 @@ jobs:
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
                   fi
+                  # Canary lane: drop the version pins so wp-env resolves whatever
+                  # WordPress and WooCommerce are current. Gating lane is untouched.
+                  if [ "$WP_STACK" = "latest" ]; then
+                    # The unversioned woocommerce.zip on wordpress.org serves WooCommerce's development
+                    # build (11.2.0-beta.2 on 2026-10-04), so pin the current stable release instead.
+                    WC_STABLE=$(curl -fsSL https://api.wordpress.org/plugins/info/1.0/woocommerce.json | jq -r .version)
+                    if [ -z "$WC_STABLE" ] || [ "$WC_STABLE" = "null" ]; then
+                      echo "::error::Could not resolve the current stable WooCommerce version from wordpress.org"
+                      exit 1
+                    fi
+                    jq --arg wc "$WC_STABLE" '.env.tests.core = null
+                        | .env.tests.plugins |= map(sub("/woocommerce\\.[0-9][0-9.]*\\.zip$"; "/woocommerce.\($wc).zip"))' \
+                       .wp-env.override.json > .wp-env.override.json.tmp
+                    mv .wp-env.override.json.tmp .wp-env.override.json
+                    echo "WP_STACK=latest — WordPress unpinned, WooCommerce $WC_STABLE (current stable)"
+                  fi
 
             # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
             # (mariadb, phpmyadmin, wordpress, composer — all official library/* images) then come
@@ -739,6 +1003,32 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # What actually got installed, not what we asked for. On the canary lane this is
+            # the whole point of the run; on the gating lane it is the proof the pins held.
+            - name: Record resolved WordPress / WooCommerce versions
+              working-directory: tests/pw
+              run: |
+                  # `--` is required: without it npm swallows wp-cli's own flags, so
+                  # `--field=version` never reaches wp-cli, `wp plugin get` prints its
+                  # full field/value table, no line starts with a digit, and the grep
+                  # below yields "unknown" for WooCommerce on every single run.
+                  ver() { npm run --silent wp-env -- run tests-cli "$@" 2>/dev/null | tr -d '\r' | grep -Eo '^[0-9]+\.[0-9.]+' | head -n1; }
+                  WP=$(ver wp core version)
+                  WC=$(ver wp plugin get woocommerce --field=version)
+                  # Job log only — deliberately NOT $GITHUB_STEP_SUMMARY. Any job that writes a
+                  # step summary gets its own collapsible block on the run page, so writing here
+                  # produced 13 near-empty "… summary" panels burying the one that matters.
+                  # merge-reports prints the consolidated stack line from resolved-versions.json.
+                  echo "stack=$WP_STACK wordpress=${WP:-unknown} woocommerce=${WC:-unknown}"
+                  echo "- $WP_STACK lane — WordPress ${WP:-unknown}, WooCommerce ${WC:-unknown}"
+
+                  # Persist for merge-reports, which runs on a clean runner with no
+                  # wp-env stack and so cannot resolve these itself. Rides along in the
+                  # existing tests/pw/playwright artifact — no new upload needed.
+                  mkdir -p playwright
+                  printf '{"stack":"%s","wordpress":"%s","woocommerce":"%s"}\n' \
+                      "$WP_STACK" "${WP:-unknown}" "${WC:-unknown}" > playwright/resolved-versions.json
 
             - name: Activate WooCommerce premium plugins
               if: needs.build_pro.result == 'success'
@@ -825,7 +1115,7 @@ jobs:
                   retention-days: 1
 
     merge-reports:
-        # Merge reports after playwright-tests, even if some shards have failed
+        # Merge reports after playwright-tests, even if some shards have failed.
         if: ${{ !cancelled() }}
         needs: [e2e_tests, api_tests]
         runs-on: ubuntu-24.04
@@ -843,6 +1133,8 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+              with:
+                  ref: ${{ inputs.lite_ref }}
 
             - name: Prepare dokan-lite folder
               run: |
@@ -853,7 +1145,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: develop
+                  ref: ${{ inputs.pro_ref || 'develop' }}
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
@@ -883,6 +1175,30 @@ jobs:
               with:
                   path: tests/pw/all-reports
                   pattern: test-artifact-*
+
+            # Runs before every other summary write in this job so the stack the suite
+            # actually ran on is the first thing on the run page. The shards each record
+            # their own line too; this is the consolidated one. Disagreement between
+            # shards is worth surfacing rather than hiding — on the canary lane it means
+            # WordPress or WooCommerce shipped a release mid-run.
+            - name: Report resolved stack at the top of the summary
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              run: |
+                  FILES=$(find tests/pw/all-reports -name resolved-versions.json 2>/dev/null | sort)
+                  COUNT=$(printf '%s\n' "$FILES" | grep -c . || true)
+                  if [ "${COUNT:-0}" -eq 0 ]; then
+                      printf '> Resolved stack: **unavailable** — no job reported one.\n\n' >> "$GITHUB_STEP_SUMMARY"
+                      exit 0
+                  fi
+                  COMBOS=$(printf '%s\n' "$FILES" | xargs jq -r '"\(.stack)|\(.wordpress)|\(.woocommerce)"' | sort -u)
+                  printf '%s\n' "$COMBOS" | while IFS='|' read -r stack wp wc; do
+                      printf '> **`%s` lane — WordPress %s, WooCommerce %s** _(%s jobs reporting)_\n' \
+                          "$stack" "$wp" "$wc" "$COUNT" >> "$GITHUB_STEP_SUMMARY"
+                  done
+                  if [ "$(printf '%s\n' "$COMBOS" | wc -l)" -gt 1 ]; then
+                      printf '> \n> ⚠️ Jobs did **not** all run the same stack — results are not comparable across shards.\n' >> "$GITHUB_STEP_SUMMARY"
+                  fi
+                  printf '\n' >> "$GITHUB_STEP_SUMMARY"
 
             # download-artifact silently does nothing when no artifacts match
             # (e.g. all upstream test jobs were skipped after a build failure),
@@ -914,14 +1230,15 @@ jobs:
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeSummaryReport.ts
 
-            # No coverage on PR runs (skipped per-shard above), so the merge
-            # would exit 1 on missing inputs. Quality report handles missing
-            # E2E_COVERAGE via an existsSync guard.
+            # No coverage on PR runs or on pushes to branches other than develop (skipped
+            # per-shard above), so the merge would exit 1 on missing inputs. Quality report
+            # handles missing E2E_COVERAGE via an existsSync guard.
             - name: Generate merged coverage report
               id: merge-coverage-report
               if: |
                 steps.download-test-artifacts.outcome == 'success'
                 && github.event_name != 'pull_request'
+                && (github.event_name != 'push' || github.ref == 'refs/heads/develop')
               working-directory: tests/pw
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeCoverageSummary.ts
@@ -1038,3 +1355,122 @@ jobs:
                   path: tests/pw/all-reports
                   if-no-files-found: ignore
                   retention-days: 7
+
+    # Report the result back to the dokan-pro PR that started this run (pro_sha set).
+    # DOKAN_PRO_TOKEN needs "Commit statuses: Read and write" on dokan-pro for this step.
+    pro_pr_status:
+        name: e2e check on dokan-pro PR
+        if: always() && inputs.pro_sha != ''
+        needs: [build_lite, build_pro, e2e_tests, api_tests]
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        steps:
+            - name: Set the e2e check on the dokan-pro commit
+              env:
+                  GH_TOKEN: ${{ secrets.DOKAN_PRO_TOKEN }}
+                  PRO_SHA: ${{ inputs.pro_sha }}
+                  STATE: ${{ needs.e2e_tests.result == 'success' && needs.api_tests.result == 'success' && 'success' || 'failure' }}
+                  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  LITE_REF: ${{ inputs.lite_ref || github.ref_name }}
+              run: |
+                  gh api "repos/getdokan/dokan-pro/statuses/$PRO_SHA" \
+                      -f state="$STATE" -f context=e2e -f target_url="$RUN_URL" \
+                      -f description="lite ${LITE_REF:0:100}: $STATE"
+
+    # Starts with the run (no needs) and watches it from a spare runner.
+    # - On a PR run it force-cancels every other unfinished E2E_API run on the PR's branch. The
+    #   concurrency group already cancels this PR's older run, but gracefully, and it never sees the
+    #   push runs that branches cut before this file changed still start from their own old copy.
+    # - On a run started by dokan-pro (pro_sha set) it force-cancels the older unfinished runs for
+    #   the same pro branch, found by run-name, so a run testing another lite branch counts too.
+    #   Runs for other pro branches are left alone.
+    # - On every run it cancels the run once 60 minutes have passed since the first e2e shard
+    #   started. A queued shard reports its creation time as started_at, so only running or finished
+    #   shards count. It exits once merge-reports and every other job are done, so it never holds a
+    #   finished run open. Fork PRs skip it: their token cannot cancel runs.
+    run_guard:
+        name: run guard
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+        # Backstop only: builds, the wait for shard runners and the 60-minute limit fit well inside.
+        timeout-minutes: 120
+        permissions:
+            actions: write
+        env:
+            GH_TOKEN: ${{ github.token }}
+            RUN_API: repos/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        steps:
+            - name: Force-cancel older runs for this branch
+              if: github.event_name == 'pull_request' || inputs.pro_sha != ''
+              env:
+                  HEAD_REF: ${{ github.head_ref }}
+                  # Every run-name for this pro branch starts with this, whichever lite branch it tests.
+                  PRO_PREFIX: ${{ inputs.pro_sha && format('E2E_API Tests (pro {0}, ', inputs.pro_ref) || '' }}
+              run: |
+                  if [ -n "$PRO_PREFIX" ]; then
+                      filter=(-f event=workflow_dispatch)
+                      # $ENV is jq's environment, read by gh's --jq, not a shell variable.
+                      # shellcheck disable=SC2016
+                      match='(.display_title | startswith($ENV.PRO_PREFIX))'
+                  else
+                      filter=(-f branch="$HEAD_REF")
+                      match='.head_repository.full_name == "${{ github.repository }}"'
+                  fi
+                  gh api -X GET "repos/${{ github.repository }}/actions/workflows/e2e_api_tests.yml/runs" \
+                      "${filter[@]}" -f per_page=100 \
+                      --jq ".workflow_runs[] | select(.id < ${{ github.run_id }} and .status != \"completed\" and $match) | .id" |
+                  while read -r id; do
+                      echo "Force-cancelling run $id"
+                      gh api -X POST "repos/${{ github.repository }}/actions/runs/$id/force-cancel" || echo "::warning::Could not force-cancel run $id"
+                      # A force-cancel skips always() jobs, so that run's delete_pro_artifact never
+                      # runs. Remove its dokan-pro tarball here instead (see delete_pro_artifact).
+                      gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts?name=dokan-pro-build" --jq '.artifacts[].id' |
+                      while read -r aid; do
+                          gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$aid" \
+                              && echo "Deleted dokan-pro-build artifact $aid of run $id" \
+                              || echo "::warning::Could not delete artifact $aid of run $id"
+                      done
+                  done
+
+            - name: Cancel the run 60 minutes after the first e2e shard starts
+              run: |
+                  limit=$((60 * 60))
+                  while sleep 60; do
+                      state=$(gh api "$RUN_API/attempts/${{ github.run_attempt }}/jobs?per_page=100" --jq '[
+                          ([.jobs[] | select(.name != "run guard" and .status != "completed")] | length),
+                          ([.jobs[] | select(.name == "merge-reports" and .status == "completed")] | length),
+                          ([.jobs[] | select((.name | startswith("e2e tests")) and (.status == "in_progress" or .status == "completed") and .conclusion != "skipped") | .started_at] | min // "none")
+                      ] | @tsv') || continue
+                      read -r open merged first <<< "$state"
+                      if [ "$merged" -gt 0 ] && [ "$open" -eq 0 ]; then exit 0; fi
+                      if [ "$first" != none ] && [ $(( $(date +%s) - $(date -d "$first" +%s) )) -ge "$limit" ]; then
+                          echo "::error::60 minutes passed since the first e2e shard started at $first, so the run guard cancelled this run."
+                          gh api -X POST "$RUN_API/cancel"
+                          exit 1
+                      fi
+                  done
+
+    # dokan-pro is private but this repo is public, so any signed-in GitHub user can download this
+    # run's artifacts. Delete the pro source tarball once every shard has pulled it, instead of
+    # leaving it up until retention-days expires. always() so a failed or cancelled run cleans up too.
+    # A force-cancelled run never creates this job; run_guard deletes the tarball of the runs it
+    # force-cancels for that reason.
+    # Side effect: "Re-run failed jobs" on a shard can't find the artifact — use "Re-run all jobs".
+    delete_pro_artifact:
+        name: delete dokan-pro build artifact
+        if: always() && needs.build_pro.result == 'success'
+        needs: [build_pro, e2e_tests, api_tests]
+        runs-on: ubuntu-latest
+        timeout-minutes: 2
+        permissions:
+            actions: write
+        steps:
+            - name: Delete dokan-pro-build
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  ids=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?name=dokan-pro-build" --jq '.artifacts[].id')
+                  for id in $ids; do
+                      gh api -X DELETE "repos/${{ github.repository }}/actions/artifacts/$id"
+                      echo "deleted artifact $id"
+                  done

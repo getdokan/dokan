@@ -5,6 +5,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { SERVER_URL } from '@utils/helpers';
 import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
+import { expectTabCountAtLeast } from '@utils/dataViews';
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)
@@ -108,8 +109,8 @@ test.describe('Vendor Support (React) functionality', () => {
         test('the All / Active / Closed tabs render with counts (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await support.gotoList();
             // Counts only grow on the shared DB; assert >= our two seeds rather than equality.
-            expect(await support.getTabCount('all'), 'All tab count reflects >= the two seeded tickets').toBeGreaterThanOrEqual(2);
-            expect(await support.getTabCount('closed'), 'Closed tab count reflects >= the seeded closed ticket').toBeGreaterThanOrEqual(1);
+            await expectTabCountAtLeast(() => support.getTabCount('all'), 2, 'All tab count reflects >= the two seeded tickets');
+            await expectTabCountAtLeast(() => support.getTabCount('closed'), 1, 'Closed tab count reflects >= the seeded closed ticket');
         });
 
         test('the Closed tab filters the list to closed tickets (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {

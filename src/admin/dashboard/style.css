@@ -118,3 +118,14 @@
         }
     }
 }
+
+#dokan-tab-settings,
+#dokan-tab-menu_manager {
+    .components-tab-panel__tabs {
+        border-bottom: none;
+    }
+
+    .components-tab-panel__tabs-item {
+        border-bottom-width: 3px !important;
+    }
+}

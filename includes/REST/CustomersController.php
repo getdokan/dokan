@@ -82,6 +82,19 @@ class CustomersController extends WC_REST_Customers_Controller {
             }
         }
 
+        // A vendor may edit a customer's profile, but changing its login password or email would hand over the account.
+        if ( 'edit' === $action ) {
+            // A missing or blank password is not a change (WooCommerce skips it on save).
+            $new_password = $request->get_param( 'password' );
+            if ( ! in_array( $new_password, [ null, '' ], true ) ) {
+                return new WP_Error( 'dokan_rest_forbidden_field', __( 'You are not allowed to change this customer\'s password.', 'dokan-lite' ), [ 'status' => rest_authorization_required_code() ] );
+            }
+
+            if ( $this->is_email_change( $request->get_param( 'email' ), $target_id ) ) {
+                return new WP_Error( 'dokan_rest_forbidden_field', __( 'You are not allowed to change this customer\'s email address.', 'dokan-lite' ), [ 'status' => rest_authorization_required_code() ] );
+            }
+        }
+
         return true;
     }
 
@@ -129,6 +142,32 @@ class CustomersController extends WC_REST_Customers_Controller {
         }
 
         return true;
+    }
+
+    /**
+     * Whether a requested email differs from the customer's current login email.
+     *
+     * Re-sending the current email is not a change. A non-string value (possible in batch items,
+     * which skip request validation) counts as a change, so it is rejected before sanitize_email().
+     *
+     * @since 5.3.0
+     *
+     * @param mixed $new_email   Requested email, or null when the field is absent.
+     * @param int   $customer_id Target customer ID.
+     *
+     * @return bool
+     */
+    protected function is_email_change( $new_email, int $customer_id ): bool {
+        if ( null === $new_email ) {
+            return false;
+        }
+
+        $customer = get_userdata( $customer_id );
+        if ( ! $customer ) {
+            return false;
+        }
+
+        return ! is_string( $new_email ) || sanitize_email( $new_email ) !== $customer->user_email;
     }
 
     /**

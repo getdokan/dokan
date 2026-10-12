@@ -33,6 +33,8 @@ function dokan_get_dashboard_nav(): array {
     // The "Vendor Product Editor" setting drives the whole product UI, so the legacy editor also keeps the legacy listing page.
     // TODO: Drop this toggle once the legacy product pages are removed — then always register the new (React) product page.
     $use_new_product_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred();
+    // Same contract for Settings → Store: the "Vendor Store Settings" toggle picks the legacy form or the React page.
+    $use_new_settings_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_store_settings_legacy_preferred();
 
     $menus = [
         'dashboard' => [
@@ -73,7 +75,7 @@ function dokan_get_dashboard_nav(): array {
             'title'     => __( 'Settings', 'dokan-lite' ),
             'icon'      => '<i class="fas fa-cog"></i>',
             'icon_name' => 'Settings',
-            'url'       => dokan_get_navigation_url( 'settings/store' ),
+            'url'       => dokan_get_navigation_url( 'settings/store', $use_new_settings_ui ),
             'pos'       => 200,
         ],
     ];
@@ -82,7 +84,7 @@ function dokan_get_dashboard_nav(): array {
         'store'   => [
             'title'      => __( 'Store', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-university"></i>',
-            'url'        => dokan_get_navigation_url( 'settings/store' ),
+            'url'        => dokan_get_navigation_url( 'settings/store', $use_new_settings_ui ),
             'pos'        => 30,
             'permission' => 'dokan_view_store_settings_menu',
         ],

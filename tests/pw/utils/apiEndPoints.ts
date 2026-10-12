@@ -90,6 +90,7 @@ export const endPoints = {
     // store settings
     getSettings: `${SERVER_URL}/dokan/v1/settings`,
     updateSettings: `${SERVER_URL}/dokan/v1/settings`,
+    vendorStoreSettings: `${SERVER_URL}/dokan/v1/vendor-settings/store`,
 
     // dummy data
     getDummyDataStatus: `${SERVER_URL}/dokan/v1/dummy-data/status`,

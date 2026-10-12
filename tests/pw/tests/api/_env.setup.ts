@@ -144,6 +144,12 @@ setup.describe('setup user settings', () => {
         helpers.createEnvVar('PRODUCT_ID_V2', productId);
     });
 
+    setup('add vendor3 product', { tag: ['@lite'] }, async () => {
+        await apiUtils.deleteAllProducts(data.predefined.vendor3.simpleProduct.product1.name, payloads.vendor3Auth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor3.simpleProduct.product1.name }, payloads.vendor3Auth);
+        helpers.createEnvVar('PRODUCT_ID_V3', productId);
+    });
+
     setup('add vendor1 coupon', { tag: ['@pro'] }, async () => {
         // create store coupon
         const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);

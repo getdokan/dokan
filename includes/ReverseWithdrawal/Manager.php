@@ -230,10 +230,13 @@ class Manager {
                 return new WP_Error( 'db_query_error', $wpdb->last_error, $wpdb->last_query );
             }
 
-            // if per_page is 1, send single item
-            if ( 1 === $args['per_page'] ) {
-                $data = is_array( $data ) && ! empty( $data ) ? $data[0] : [];
-            }
+            /*
+             * A list request returns a list, whatever the page size. This used to collapse to a bare row at
+             * per_page 1, which silently changed the return shape for every caller — including `get_store_transactions()`,
+             * whose page size comes straight from the request. The `balance` mode below still collapses, because
+             * its callers ask for exactly one aggregate row.
+             */
+            $data = is_array( $data ) ? $data : [];
             // store on cache
             Cache::set( $cache_key, $data, $cache_group );
         } elseif ( 'count' === $args['return'] && false === $data ) {
