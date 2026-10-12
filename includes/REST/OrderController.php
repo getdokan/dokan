@@ -894,7 +894,16 @@ class OrderController extends DokanRESTController {
      * @return void
      */
     public function after_order_create( $object, $request ) {
-        dokan()->order->maybe_split_orders( $object->get_id() );
+        static $processed = [];
+        $order_id = $object->get_id();
+
+        // Skip duplicate calls from OrderControllerV2/V3 (fixes #3230)
+        if ( isset( $processed[ $order_id ] ) ) {
+            return;
+        }
+
+        $processed[ $order_id ] = true;
+        dokan()->order->maybe_split_orders( $order_id );
     }
 
     /**
