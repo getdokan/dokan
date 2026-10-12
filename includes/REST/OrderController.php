@@ -61,10 +61,6 @@ class OrderController extends DokanRESTController {
      */
     public function __construct() {
         $this->post_status = array_keys( wc_get_order_statuses() );
-
-        add_filter( 'woocommerce_new_order_data', array( $this, 'set_order_vendor_id' ) );
-        add_filter( 'woocommerce_rest_pre_insert_shop_order_object', array( $this, 'pre_insert_shop_order' ), 10, 3 );
-        add_action( 'woocommerce_rest_insert_shop_order_object', array( $this, 'after_order_create' ), 10, 2 );
     }
 
     /**
@@ -847,23 +843,21 @@ class OrderController extends DokanRESTController {
      * Set vendor ID on order when creating from REST API
      *
      * @since 2.8.2
+     * @deprecated DOKAN_SINCE No longer hooked here. Use \WeDevs\Dokan\Order\Hooks::set_rest_order_author() instead.
      *
      * @param array $args
      *
      * @return array
      */
     public function set_order_vendor_id( $args ) {
-        if ( defined( 'REST_REQUEST' ) ) {
-            $args['post_author'] = dokan_get_current_user_id();
-        }
-
-        return $args;
+        return dokan()->order_controller->hooks->set_rest_order_author( $args );
     }
 
     /**
      * Mark order as parent when it has products from multiple vendors
      *
      * @since 2.9.11
+     * @deprecated DOKAN_SINCE No longer hooked here. Use \WeDevs\Dokan\Order\Hooks::mark_rest_order_as_parent() instead.
      *
      * @param WC_Order        $order
      * @param WP_REST_Request $request
@@ -872,38 +866,23 @@ class OrderController extends DokanRESTController {
      * @return WC_Order
      */
     public function pre_insert_shop_order( $order, $request, $creating ) {
-        if ( $creating ) {
-            $vendors = dokan_get_sellers_by( $order );
-
-            if ( count( $vendors ) > 1 ) {
-                $order->update_meta_data( 'has_sub_order', true );
-            }
-        }
-
-        return $order;
+        return dokan()->order_controller->hooks->mark_rest_order_as_parent( $order, $request, $creating );
     }
 
     /**
-     * Insert into Dokan sync table once an order is created via API
+     * Split an order created via the REST API into vendor sub-orders
      *
-     * @since 2.8.2 [<description>]
+     * @since 2.8.2
+     * @deprecated DOKAN_SINCE No longer hooked here. Use \WeDevs\Dokan\Order\Hooks::split_rest_order() instead.
      *
-     * @param  WC_Order $object
+     * @param  WC_Order        $order
      * @param  WP_REST_Request $request
+     * @param  bool            $creating
      *
      * @return void
      */
-    public function after_order_create( $object, $request ) {
-        static $processed = [];
-        $order_id = $object->get_id();
-
-        // Skip duplicate calls from OrderControllerV2/V3 (fixes #3230)
-        if ( isset( $processed[ $order_id ] ) ) {
-            return;
-        }
-
-        $processed[ $order_id ] = true;
-        dokan()->order->maybe_split_orders( $order_id );
+    public function after_order_create( $order, $request, $creating = true ) {
+        dokan()->order_controller->hooks->split_rest_order( $order, $request, $creating );
     }
 
     /**
