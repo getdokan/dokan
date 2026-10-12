@@ -1,8 +1,12 @@
 import { defineConfig, devices, expect } from '@playwright/test';
 import { parseBoolean } from '@utils/helpers';
 import { customExpect } from '@utils/pwMatchers';
+import { blockedSpecs, blockedTagPattern } from '@utils/planFilter';
 import 'dotenv/config';
 const { CI, HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
+/* Package workflow only (DOKAN_PLAN set): specs and @module-<id> tests the plan does not offer. Empty otherwise. */
+const planIgnore = blockedSpecs('e2e').map(spec => `**/tests/e2e/${spec.file}`);
+const planTag = blockedTagPattern();
 
 export default defineConfig({
     /* test directory */
@@ -10,7 +14,7 @@ export default defineConfig({
     /* Include tests based on the pattern */
     grep: [/@lite/, /@liteOnly/, /@pro/],
     /* Exclude tests based on the pattern */
-    grepInvert: parseBoolean(DOKAN_PRO) ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/],
+    grepInvert: [...(parseBoolean(DOKAN_PRO) ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/]), ...(planTag ? [planTag] : [])],
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/e2e/test-artifacts/',
     /* Path to the global setup file. This file will be required and run before all the tests. */
@@ -151,6 +155,7 @@ export default defineConfig({
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
+            testIgnore: planIgnore,
             /* whether not to run setup tests before running actual tests */
             dependencies: parseBoolean(NO_SETUP) ? [] : ['e2e_setup'],
             /* whether not to run teardown tests after running actual tests */

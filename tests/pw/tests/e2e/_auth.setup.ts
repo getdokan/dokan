@@ -4,6 +4,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { helpers, parseBoolean } from '@utils/helpers';
+import { planOffers } from '@utils/planFilter';
 import { RankMathWizardPage } from './rank-math/rankMathWizardPage';
 
 const { DOKAN_PRO } = process.env;
@@ -148,7 +149,7 @@ setup.describe('add & authenticate users', () => {
         if (sellerId) {
             await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
 
-            if (isPro) {
+            if (isPro && planOffers('store_reviews')) {
                 await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
             }
             await dbUtils.addStoreMapLocation(sellerId);
@@ -167,7 +168,7 @@ setup.describe('add & authenticate users', () => {
 
         if (sellerId) {
             await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
-            if (isPro) {
+            if (isPro && planOffers('store_reviews')) {
                 await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
             }
             await dbUtils.addStoreMapLocation(sellerId);
@@ -185,7 +186,7 @@ setup.describe('add & authenticate users', () => {
 
         if (sellerId) {
             await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
-            if (isPro) {
+            if (isPro && planOffers('store_reviews')) {
                 await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
             }
             await dbUtils.addStoreMapLocation(sellerId);
