@@ -32,139 +32,6 @@ class Manager implements Hookable {
         add_action( 'init', [ $this, 'register_block_types' ] );
         // Before Pro's category registration (@10) so the dedupe guard wins in either load order.
         add_filter( 'block_categories_all', [ $this, 'register_block_category' ], 9 );
-        add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_styles' ] );
-        add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_scripts' ] );
-        // After Dokan's own asset logic (@10) so store pages keep their enqueue order.
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_block_styles' ], 20 );
-    }
-
-    /**
-     * Load the store styles when Dokan blocks are used outside a store page.
-     *
-     * Store pages already get these through Assets; a page built with store
-     * blocks does not, and enqueuing from the render callbacks would print the
-     * stylesheets in the footer, after the markup they style.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function enqueue_front_block_styles(): void {
-        $post = get_post();
-
-        if ( ! $post instanceof \WP_Post || false === strpos( $post->post_content, '<!-- wp:dokan/' ) ) {
-            return;
-        }
-
-        wp_enqueue_style( 'dokan-style' );
-        wp_enqueue_style( 'dokan-fontawesome' );
-        wp_enqueue_style( 'dashicons' );
-        wp_enqueue_script( 'dokan-script' );
-    }
-
-    /**
-     * Load the front-end store styles inside the block editor canvas.
-     *
-     * Server-side rendered previews come back as bare HTML — the styles the
-     * render callbacks enqueue never reach the editor iframe, so the same
-     * stylesheets must ride `enqueue_block_assets` for preview parity.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function enqueue_editor_preview_styles(): void {
-        if ( ! is_admin() ) {
-            return; // The front end loads these through the block render callbacks.
-        }
-
-        // Star ratings inside store blocks are styled by WooCommerce, which only
-        // registers its front-end stylesheet on the front end.
-        if ( ! wp_style_is( 'woocommerce-general', 'registered' ) && function_exists( 'WC' ) ) {
-            wp_register_style(
-                'woocommerce-general',
-                WC()->plugin_url() . '/assets/css/woocommerce.css',
-                [],
-                defined( 'WC_VERSION' ) ? WC_VERSION : null
-            );
-        }
-
-        /**
-         * Front-end stylesheets to load inside the block editor canvas.
-         *
-         * Store blocks render through Dokan's own templates, and anything those
-         * templates hook into — vendor buttons, badges, colour schemes — is
-         * styled by the stylesheet that registered it. Extensions add their
-         * handles here so their markup previews the way it looks on the store.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param string[] $handles Registered style handles.
-         */
-        $handles = apply_filters(
-            'dokan_blocks_editor_preview_styles',
-            [ 'dokan-style', 'dokan-fontawesome', 'dashicons', 'woocommerce-general' ]
-        );
-
-        foreach ( (array) $handles as $handle ) {
-            if ( wp_style_is( $handle, 'registered' ) ) {
-                wp_enqueue_style( $handle );
-            }
-        }
-
-        /**
-         * Extra CSS to print inside the block editor canvas.
-         *
-         * Appearance settings such as the colour scheme are printed inline on
-         * `wp_head`, which the editor iframe never runs, so previews fall back to
-         * the default palette. Extensions return their front-end CSS here to keep
-         * the preview honest.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param string $css Inline CSS.
-         */
-        $inline_css = apply_filters( 'dokan_blocks_editor_preview_inline_css', '' );
-
-        if ( ! empty( $inline_css ) && wp_style_is( 'dokan-style', 'enqueued' ) ) {
-            wp_add_inline_style( 'dokan-style', $inline_css );
-        }
-    }
-
-    /**
-     * Load the editor preview scripts for Dokan blocks.
-     *
-     * Server rendered previews are inert HTML — nothing wires up the filter,
-     * sort or layout controls the way the front end does. These load in the
-     * editor document; the canvas is a same-origin iframe that scripts reach
-     * into, since WordPress only carries a block's own view script inside it.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function enqueue_editor_preview_scripts(): void {
-        if ( ! is_admin() ) {
-            return; // Block.json already loads these on the front end.
-        }
-
-        /**
-         * Script handles to load inside the block editor canvas.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param string[] $handles Registered script handles.
-         */
-        $handles = apply_filters(
-            'dokan_blocks_editor_preview_scripts',
-            [ 'dokan-store-filter-bar-view-script' ]
-        );
-
-        foreach ( (array) $handles as $handle ) {
-            if ( wp_script_is( $handle, 'registered' ) ) {
-                wp_enqueue_script( $handle );
-            }
-        }
     }
 
     /**
@@ -184,6 +51,68 @@ class Manager implements Hookable {
         if ( is_admin() && ! function_exists( 'dokan_store_sidebar_args' ) ) {
             require_once DOKAN_INC_DIR . '/template-tags.php';
         }
+    }
+
+    /**
+     * Publish the attributes of the block about to render.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $attributes Block attributes.
+     * @param string $block_name Name of the block rendering, e.g. `dokan/store-list`.
+     *
+     * @return void
+     */
+    public static function publish_rendering_attributes( array $attributes, string $block_name = '' ): void {
+        /**
+         * Fires as each Dokan block publishes its attributes.
+         *
+         * A store block renders through Dokan's own templates and hooks, so the
+         * extensions drawing into it never receive its attributes otherwise. An
+         * extension whose markup lands in a different block than the one carrying
+         * its setting listens here — Dokan Pro's map toggle lives on the filter
+         * bar, but the map itself can render inside the grid.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array  $attributes Block attributes.
+         * @param string $block_name Name of the block rendering, so a listener can tell the bar from the grid.
+         */
+        do_action( 'dokan_blocks_rendering_attributes', $attributes, $block_name );
+    }
+
+    /**
+     * Let extensions set up the store listing before a block renders it.
+     *
+     * `templates/store-lists.php` fires this once, ahead of the listing, and
+     * modules use it to decide where their own markup goes — the geolocation
+     * module moves its map out of the product loop and into the filter bar here.
+     * The editor renders every block in a request of its own, so each block that
+     * reproduces part of that template has to dispatch it too, or a module that
+     * relocates itself would render twice.
+     *
+     * Dokan's own listener draws the classic filter template the blocks replace,
+     * so it stands aside for the dispatch and goes back on the hook afterwards.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $stores Store query result passed to the action.
+     *
+     * @return void
+     */
+    public static function dispatch_store_lists_filter_form( $stores ): void {
+        if ( did_action( 'dokan_store_lists_filter_form' ) ) {
+            return;
+        }
+
+        $filter = dokan()->get_container()->get( \WeDevs\Dokan\Vendor\StoreListsFilter::class );
+
+        remove_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
+
+        /** This action is documented in templates/store-lists.php */
+        do_action( 'dokan_store_lists_filter_form', $stores );
+
+        add_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
     }
 
     /**

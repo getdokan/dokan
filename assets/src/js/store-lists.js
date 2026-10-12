@@ -297,9 +297,11 @@
                 if ( key[0].includes( 'store_categories[' ) || key[0].includes( 'store_category[' ) ) {
                     const trimedValue = value[0].split( ' ' ).join( '-' );
                     const cateItem = $( `[data-slug=${trimedValue}]` );
+                    // A page can hold more than one filter bar; read the name off one item, or the texts concatenate.
+                    const cateName = cateItem.first().text().trim();
 
-                    if ( ! self.cateItemStringArray.includes( cateItem.text().trim() ) ) {
-                        self.cateItemStringArray.push( cateItem.text().trim() );
+                    if ( ! self.cateItemStringArray.includes( cateName ) ) {
+                        self.cateItemStringArray.push( cateName );
                     }
 
                     cateItem.addClass( 'dokan-btn-theme' );
