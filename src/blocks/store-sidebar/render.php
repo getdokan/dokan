@@ -72,8 +72,8 @@ if ( $vendor->data instanceof WP_User ) {
     }
 }
 
-// Widgets in the store sidebar area replace the default content, exactly as templates/store-sidebar.php does.
-if ( is_active_sidebar( 'sidebar-store' ) ) {
+// Classic themes keep the widget-area override; on block themes WP dumps the old theme's widgets here, so the arranged blocks win.
+if ( ! wp_is_block_theme() && is_active_sidebar( 'sidebar-store' ) ) {
     ob_start();
     dynamic_sidebar( 'sidebar-store' );
     $content = ob_get_clean();
