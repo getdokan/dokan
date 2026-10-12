@@ -95,6 +95,13 @@ class Templates implements Hookable {
             return $available;
         }
 
+        // A theme that overrides the classic store template keeps it; Pro's store tabs follow this too.
+        if ( '' !== locate_template( trailingslashit( dokan()->template_path() ) . 'store.php' ) ) {
+            $available = false;
+
+            return $available;
+        }
+
         $available = null !== resolve_block_template( self::TEMPLATE_SLUG, [ self::TEMPLATE_SLUG ], '' );
 
         return $available;

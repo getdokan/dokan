@@ -146,7 +146,8 @@
         toggleView: function( event ) {
             const self = storeLists;
             const currentElement = $( event.target );
-            const elements = currentElement.parent().find( 'span' );
+            // The layout is one stored preference, so every bar's icons follow it.
+            const elements = $( '.toggle-view span' );
             const view = currentElement.data( 'view' );
 
             self.setView( view, elements );

@@ -24,9 +24,9 @@
  * through $args. A copy of this template that predates them keeps working, but it
  * renders the whole bar and silently ignores those block settings.
  *
- * dokan_before_store_lists_filter_left and _right are captured before
- * dokan_before_store_lists_filter runs, so an all-hidden bar with nothing hooked
- * into it prints no empty chrome. Their output still appears in the same place.
+ * dokan_before_store_lists_filter_left and _right are captured, after
+ * dokan_before_store_lists_filter as before, so an all-hidden bar with nothing
+ * hooked into it prints no empty chrome. Their output still appears in the same place.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -47,6 +47,8 @@ $bar = wp_parse_args(
 
 $sort_label_text = '' !== $bar['sort_label'] ? $bar['sort_label'] : __( 'Sort by', 'dokan-lite' ) . ':';
 
+do_action( 'dokan_before_store_lists_filter', $stores );
+
 // Captured so a bar with every section hidden and nothing hooked into it prints no empty chrome.
 ob_start();
 do_action( 'dokan_before_store_lists_filter_left', $stores );
@@ -59,8 +61,6 @@ $right_hook_output = ob_get_clean();
 $has_bar_content = $bar['show_store_count'] || $bar['show_search'] || $bar['show_sort'] || $bar['show_view_toggle']
     || '' !== trim( $left_hook_output . $right_hook_output );
 ?>
-
-<?php do_action( 'dokan_before_store_lists_filter', $stores ); ?>
 
 <?php if ( $has_bar_content ) : ?>
     <div id="dokan-store-listing-filter-wrap">

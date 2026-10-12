@@ -3,10 +3,10 @@
  * Render `dokan/store-sidebar`.
  *
  * The block-theme replacement for the `sidebar-store` widget area. Its children
- * are the content, so the widget-area plumbing of `templates/store-sidebar.php`
- * is dropped — but both of its actions are preserved, because Pro's vendor
- * verification widget renders from `dokan_sidebar_store_after` and would
- * otherwise have nowhere to go on a block theme.
+ * are the default content, which widgets placed in that area replace. Both of
+ * its actions are preserved, because Pro's vendor verification widget renders
+ * from `dokan_sidebar_store_after` and would otherwise have nowhere to go on a
+ * block theme.
  *
  * @since DOKAN_SINCE
  *
@@ -70,6 +70,13 @@ if ( $vendor->data instanceof WP_User ) {
             }
         );
     }
+}
+
+// Widgets in the store sidebar area replace the default content, exactly as templates/store-sidebar.php does.
+if ( is_active_sidebar( 'sidebar-store' ) ) {
+    ob_start();
+    dynamic_sidebar( 'sidebar-store' );
+    $content = ob_get_clean();
 }
 
 printf(

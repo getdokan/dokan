@@ -15,6 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+// The classic listing drops its whole filter bar when this gate is closed.
+if ( ! apply_filters( 'dokan_store_lists_filter', true ) ) {
+    return;
+}
+
 $attributes = wp_parse_args(
     $attributes,
     [
@@ -34,35 +39,24 @@ $attributes = wp_parse_args(
 
 $requested_data = \WeDevs\Dokan\Vendor\StoreListsFilter::get_requested_data();
 
-// The count has to reflect the filters the grid applied, so it runs the same query.
-// Nothing else reads the payload, so a hidden count skips the query entirely.
-$stores = [
-    'users' => [],
-    'count' => 0,
+// The count and the hooks below get the same result the classic listing passes them:
+// the matching stores, a first page of them at [dokan-stores]' default size.
+$store_args = [
+    'number' => 10,
 ];
 
-if ( $attributes['showStoreCount'] ) {
-    $count_args = [
-        'number' => 1,
-        'fields' => 'ID',
+if ( ! empty( $requested_data['dokan_seller_search'] ) ) {
+    $store_args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+        [
+            'key'     => 'dokan_store_name',
+            'value'   => $requested_data['dokan_seller_search'],
+            'compare' => 'LIKE',
+        ],
     ];
-
-    if ( ! empty( $requested_data['dokan_seller_search'] ) ) {
-        $count_args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-            [
-                'key'     => 'dokan_store_name',
-                'value'   => $requested_data['dokan_seller_search'],
-                'compare' => 'LIKE',
-            ],
-        ];
-    }
-
-    /** This filter is documented in includes/Shortcodes/Stores.php */
-    $stores = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $count_args, $requested_data ) );
-
-    // A count-only query returns no usable rows; the hooks below expect a list.
-    $stores['users'] = [];
 }
+
+/** This filter is documented in includes/Shortcodes/Stores.php */
+$stores = dokan_get_sellers( apply_filters( 'dokan_seller_listing_args', $store_args, $requested_data ) );
 
 // Hiding every option would leave an empty select, so the whole control goes with them.
 $sort_filters = array_diff_key(

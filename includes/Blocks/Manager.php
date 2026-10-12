@@ -101,7 +101,8 @@ class Manager implements Hookable {
      * @return void
      */
     public static function dispatch_store_lists_filter_form( $stores ): void {
-        if ( did_action( 'dokan_store_lists_filter_form' ) ) {
+        // Same gate templates/store-lists.php checks before firing the action.
+        if ( did_action( 'dokan_store_lists_filter_form' ) || ! apply_filters( 'dokan_store_lists_filter', true ) ) {
             return;
         }
 

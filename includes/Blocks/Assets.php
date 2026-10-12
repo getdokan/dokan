@@ -75,10 +75,29 @@ class Assets implements Hookable {
             return;
         }
 
-        wp_enqueue_style( 'dokan-style' );
-        wp_enqueue_style( 'dokan-fontawesome' );
-        wp_enqueue_style( 'dashicons' );
-        wp_enqueue_script( 'dokan-script' );
+        self::enqueue_store_assets();
+    }
+
+    /**
+     * Enqueue the front-end store assets, honouring the same switches as Dokan's own enqueue.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public static function enqueue_store_assets(): void {
+        if ( DOKAN_LOAD_STYLE ) {
+            wp_enqueue_style( 'dokan-style' );
+            wp_enqueue_style( 'dashicons' );
+
+            if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+                wp_enqueue_style( 'dokan-fontawesome' );
+            }
+        }
+
+        if ( DOKAN_LOAD_SCRIPTS ) {
+            wp_enqueue_script( 'dokan-script' );
+        }
     }
 
     /**

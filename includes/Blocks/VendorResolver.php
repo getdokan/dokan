@@ -125,6 +125,7 @@ class VendorResolver {
             return true;
         }
 
-        return is_admin();
+        // admin-ajax.php is is_admin() too, but its requests come from the front end.
+        return is_admin() && ! wp_doing_ajax();
     }
 }

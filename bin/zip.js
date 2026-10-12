@@ -8,6 +8,7 @@ const pluginFiles = [
     'assets/',
     'includes/',
     'languages/',
+    'patterns/',
     'templates/',
     'lib/',
     'vendor/',

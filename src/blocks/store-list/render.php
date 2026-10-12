@@ -39,10 +39,7 @@ $attributes = wp_parse_args(
 // geolocation map is one of them, and its toggle is registered by Dokan Pro.
 \WeDevs\Dokan\Blocks\Manager::publish_rendering_attributes( $attributes, 'dokan/store-list' );
 
-wp_enqueue_style( 'dokan-style' );
-wp_enqueue_style( 'dokan-fontawesome' );
-wp_enqueue_style( 'dashicons' );
-wp_enqueue_script( 'dokan-script' );
+\WeDevs\Dokan\Blocks\Assets::enqueue_store_assets();
 
 $limit = max( 1, absint( $attributes['perPage'] ) );
 $page_num = is_front_page() ? max( 1, absint( get_query_var( 'page' ) ) ) : max( 1, absint( get_query_var( 'paged' ) ) );
