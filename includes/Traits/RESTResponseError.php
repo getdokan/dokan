@@ -30,8 +30,11 @@ trait RESTResponseError {
                 $data = $error->get_error_data();
 
                 // Attach the exception status unless the error already carries one; set directly so add_data() keeps no stale copy.
-                if ( ! $data || ( is_array( $data ) && ! isset( $data['status'] ) ) ) {
-                    $error->error_data[ $error->get_error_code() ] = array_merge( $data ? $data : [], [ 'status' => $e->get_status_code() ] );
+                if ( ! is_array( $data ) || ! isset( $data['status'] ) ) {
+                    // Keep scalar data under a key so the status can still be attached.
+                    $data = is_array( $data ) ? $data : ( $data ? [ 'data' => $data ] : [] );
+
+                    $error->error_data[ $error->get_error_code() ] = array_merge( $data, [ 'status' => $e->get_status_code() ] );
                 }
 
                 return $error;

@@ -11,7 +11,7 @@ class DokanException extends Exception {
      *
      * @since 2.9.16
      *
-     * @var string
+     * @var string|\WP_Error
      */
     protected $error_code = '';
 
