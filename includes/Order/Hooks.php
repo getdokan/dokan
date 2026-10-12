@@ -41,11 +41,6 @@ class Hooks {
         add_action( 'woocommerce_checkout_update_order_meta', [ $this, 'split_vendor_orders' ] );
         add_action( 'woocommerce_store_api_checkout_order_processed', [ $this, 'split_vendor_orders' ] );
 
-        // create sub-orders for orders created through the WooCommerce REST API
-        add_filter( 'woocommerce_new_order_data', [ $this, 'set_rest_order_author' ] );
-        add_filter( 'woocommerce_rest_pre_insert_shop_order_object', [ $this, 'mark_rest_order_as_parent' ], 10, 3 );
-        add_action( 'woocommerce_rest_insert_shop_order_object', [ $this, 'split_rest_order' ], 10, 3 );
-
         // order table synced for WooCommerce update order meta
         add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
         add_action( 'woocommerce_store_api_checkout_order_processed', 'dokan_sync_insert_order', 20 );
@@ -445,95 +440,6 @@ class Hooks {
      */
     public function split_vendor_orders( $parent_order_id ) {
         dokan()->order->maybe_split_orders( $parent_order_id );
-    }
-
-    /**
-     * Set the current user as the author of an order created through the REST API.
-     *
-     * @since DOKAN_SINCE Moved from REST\OrderController::set_order_vendor_id().
-     *
-     * @param array $args New order data.
-     *
-     * @return array
-     */
-    public function set_rest_order_author( $args ) {
-        if ( defined( 'REST_REQUEST' ) ) {
-            $args['post_author'] = dokan_get_current_user_id();
-        }
-
-        return $args;
-    }
-
-    /**
-     * Mark an order created through the REST API as a parent order when it
-     * holds products from more than one vendor.
-     *
-     * @since DOKAN_SINCE Moved from REST\OrderController::pre_insert_shop_order().
-     *
-     * @param WC_Order         $order    Order about to be inserted.
-     * @param \WP_REST_Request $request  REST request.
-     * @param bool             $creating True when the order is being created, false on update.
-     *
-     * @return WC_Order
-     */
-    public function mark_rest_order_as_parent( $order, $request, $creating ) {
-        if ( $creating && count( dokan_get_sellers_by( $order ) ) > 1 ) {
-            $order->update_meta_data( 'has_sub_order', true );
-        }
-
-        return $order;
-    }
-
-    /**
-     * Split an order created through the WooCommerce REST API into vendor sub-orders.
-     *
-     * This hook used to be registered by every versioned REST\OrderController
-     * instance, so one REST order was split once per API version (#3230).
-     * Registering it here, once, guarantees a single split per order.
-     *
-     * WooCommerce fires the same action on update. An order that already has
-     * sub-orders keeps them, so editing a parent over REST does not delete and
-     * recreate its sub-orders.
-     *
-     * @since DOKAN_SINCE Moved from REST\OrderController::after_order_create().
-     *
-     * @param WC_Order         $order    Inserted order.
-     * @param \WP_REST_Request $request  REST request.
-     * @param bool             $creating True when the order was created, false on update.
-     *
-     * @return void
-     */
-    public function split_rest_order( $order, $request, $creating = true ) {
-        if ( ! $creating && $this->is_order_already_split( $order ) ) {
-            return;
-        }
-
-        dokan()->order->maybe_split_orders( $order->get_id() );
-    }
-
-    /**
-     * Whether maybe_split_orders() has already processed an order.
-     *
-     * A sub-order or a single-vendor order carries `_dokan_vendor_id`; a
-     * multi-vendor parent carries `has_sub_order` and owns child orders. The
-     * child-order query only runs for flagged parents.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param WC_Order $order Order to inspect.
-     *
-     * @return bool
-     */
-    protected function is_order_already_split( $order ) {
-        if ( (int) $order->get_meta( '_dokan_vendor_id' ) > 0 ) {
-            return true;
-        }
-
-        if ( ! wc_string_to_bool( $order->get_meta( 'has_sub_order' ) ) ) {
-            return false;
-        }
-
-        return ! empty( dokan()->order->get_child_orders( $order->get_id() ) );
     }
 
     /**
