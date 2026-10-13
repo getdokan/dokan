@@ -5,6 +5,8 @@ export interface FormProps {
     requiredFields: Record< any, any >;
     formKey?: string;
     createForm?: boolean;
+    // Bump to switch to the tab holding the first validation error and scroll to it.
+    focusErrorsTrigger?: number;
 }
 
 export interface SectionProps {
@@ -26,6 +28,8 @@ export interface TabData {
     className: string;
     component: any;
     renderAsFunction: boolean;
+    // Field keys rendered by this tab, used to locate validation errors.
+    fields?: string[];
 }
 
 export interface CountryOption {

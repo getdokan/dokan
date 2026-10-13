@@ -1,5 +1,11 @@
-import { useCallback, useMemo, useState, useEffect } from '@wordpress/element';
-import { useDispatch, useSelect } from '@wordpress/data';
+import {
+    useCallback,
+    useMemo,
+    useState,
+    useEffect,
+    useRef,
+} from '@wordpress/element';
+import { useDispatch, useSelect, select as dataSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { applyFilters } from '@wordpress/hooks';
@@ -28,6 +34,11 @@ export const useVendorForm = (
     const [ commissionSubCategoryConfirm, setCommissionSubCategoryConfirm ] =
         useState( false );
 
+    // Sequence counters so a slow availability response cannot overwrite a newer one.
+    const storeCheckSeq = useRef( 0 );
+    const usernameCheckSeq = useRef( 0 );
+    const emailCheckSeq = useRef( 0 );
+
     // Load categories
     useEffect( () => {
         apiFetch( { path: 'dokan/v2/products/multistep-categories' } ).then(
@@ -38,6 +49,24 @@ export const useVendorForm = (
             }
         );
     }, [] );
+
+    // Always read the live store value, never a render-time snapshot.
+    const getLatestVendor = useCallback( (): Vendor => {
+        // @ts-ignore
+        return dataSelect( store ).getCreateOrEditVendor() ?? {};
+    }, [] );
+
+    // Merge a partial update into the latest vendor so concurrent writes never clobber each other.
+    const updateVendor = useCallback(
+        ( partial: Record< string, any > ) => {
+            // @ts-ignore
+            return setCreateOrEditVendor( {
+                ...getLatestVendor(),
+                ...partial,
+            } );
+        },
+        [ getLatestVendor, setCreateOrEditVendor ]
+    );
 
     // Clear error for a specific field
     const clearFieldError = useCallback(
@@ -54,20 +83,15 @@ export const useVendorForm = (
 
     // Set vendor data
     const setData = useCallback(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async ( key: string, value: any, existingVendor?: object ) => {
             // Clear error for this field when value changes
             clearFieldError( key );
 
-            const updatableVendor: Vendor =
-                ( existingVendor as Vendor ) ?? vendor;
-
-            // @ts-ignore
-            return await setCreateOrEditVendor( {
-                ...updatableVendor,
-                [ key ]: value,
-            } );
+            // existingVendor is ignored: snapshots overwrote concurrent edits.
+            return await updateVendor( { [ key ]: value } );
         },
-        [ vendor, setCreateOrEditVendor, clearFieldError ]
+        [ updateVendor, clearFieldError ]
     );
 
     // Check if field is required
@@ -96,12 +120,13 @@ export const useVendorForm = (
 
     // Check store availability
     const checkStore = useCallback(
-        async ( storeName: string, updatedData: any = null ) => {
+        async ( storeName: string ) => {
             if ( ! storeName ) {
                 return;
             }
 
-            await setData( 'storeSearchText', 'searching', updatedData );
+            const seq = ++storeCheckSeq.current;
+            await updateVendor( { storeSearchText: 'searching' } );
 
             const response = await apiFetch( {
                 path: addQueryArgs( 'dokan/v1/stores/check', {
@@ -109,28 +134,29 @@ export const useVendorForm = (
                 } ),
             } );
 
-            // @ts-ignore
-            if ( response.available ) {
-                await setData( 'storeSearchText', 'available', updatedData );
-            } else {
-                await setData(
-                    'storeSearchText',
-                    'not-available',
-                    updatedData
-                );
+            if ( seq !== storeCheckSeq.current ) {
+                return;
             }
+
+            await updateVendor( {
+                // @ts-ignore
+                storeSearchText: response.available
+                    ? 'available'
+                    : 'not-available',
+            } );
         },
-        [ setData ]
+        [ updateVendor ]
     );
 
     // Search username availability
     const searchUsername = useCallback(
-        async ( userName: string, updatedVendor: any ) => {
+        async ( userName: string ) => {
             if ( ! userName ) {
                 return;
             }
 
-            await setData( 'userSearchText', 'searching', updatedVendor );
+            const seq = ++usernameCheckSeq.current;
+            await updateVendor( { userSearchText: 'searching' } );
 
             const response = await apiFetch( {
                 path: addQueryArgs( 'dokan/v1/stores/check', {
@@ -138,28 +164,29 @@ export const useVendorForm = (
                 } ),
             } );
 
-            // @ts-ignore
-            if ( response.available ) {
-                await setData( 'userSearchText', 'available', updatedVendor );
-            } else {
-                await setData(
-                    'userSearchText',
-                    'not-available',
-                    updatedVendor
-                );
+            if ( seq !== usernameCheckSeq.current ) {
+                return;
             }
+
+            await updateVendor( {
+                // @ts-ignore
+                userSearchText: response.available
+                    ? 'available'
+                    : 'not-available',
+            } );
         },
-        [ setData ]
+        [ updateVendor ]
     );
 
     // Search email availability
     const searchEmail = useCallback(
-        async ( userEmail: string, updatedVendor: any ) => {
+        async ( userEmail: string ) => {
             if ( ! userEmail ) {
                 return;
             }
 
-            await setData( 'userEmailText', 'searching', updatedVendor );
+            const seq = ++emailCheckSeq.current;
+            await updateVendor( { userEmailText: 'searching' } );
 
             const response = await apiFetch( {
                 path: addQueryArgs( 'dokan/v1/stores/check', {
@@ -167,19 +194,23 @@ export const useVendorForm = (
                 } ),
             } );
 
-            // @ts-ignore
-            await setData(
-                'userEmailText',
-                response.available ? 'available' : 'not-available',
-                updatedVendor
-            );
+            if ( seq !== emailCheckSeq.current ) {
+                return;
+            }
+
+            await updateVendor( {
+                // @ts-ignore
+                userEmailText: response.available
+                    ? 'available'
+                    : 'not-available',
+            } );
         },
-        [ setData ]
+        [ updateVendor ]
     );
 
     // Handle store name change
     const onChangeStoreName = useCallback(
-        ( value: string, createForm: boolean ) => {
+        async ( value: string, createForm: boolean ) => {
             // Clear errors for store_name and store_url when changing
             clearFieldError( 'store_name' );
             if ( createForm ) {
@@ -187,18 +218,16 @@ export const useVendorForm = (
             }
 
             const storeUrl = formatStoreUrl( value );
-            // @ts-ignore
-            setCreateOrEditVendor( {
-                ...vendor,
+            await updateVendor( {
                 store_name: value,
                 ...( createForm ? { user_nicename: storeUrl } : {} ),
-            } ).then( async ( data: any ) => {
-                if ( createForm ) {
-                    await checkStore( storeUrl, data.vendor );
-                }
             } );
+
+            if ( createForm ) {
+                await checkStore( storeUrl );
+            }
         },
-        [ vendor, setCreateOrEditVendor, checkStore, clearFieldError ]
+        [ updateVendor, checkStore, clearFieldError ]
     );
 
     // Handle store URL change
@@ -208,38 +237,32 @@ export const useVendorForm = (
             clearFieldError( 'store_url' );
 
             storeUrl = formatStoreUrl( storeUrl );
-            const data = await setCreateOrEditVendor( {
-                ...vendor,
-                // @ts-ignore
-                user_nicename: storeUrl,
-            } );
-            await checkStore( storeUrl, data.vendor );
+            await updateVendor( { user_nicename: storeUrl } );
+            await checkStore( storeUrl );
         },
-        [ vendor, setCreateOrEditVendor, checkStore, clearFieldError ]
+        [ updateVendor, checkStore, clearFieldError ]
     );
 
     // Set logo
     const setLogo = useCallback(
         ( logo: any ) => {
-            setCreateOrEditVendor( {
-                ...vendor,
+            updateVendor( {
                 gravatar: logo?.url,
                 gravatar_id: logo?.id,
             } );
         },
-        [ vendor, setCreateOrEditVendor ]
+        [ updateVendor ]
     );
 
     // Set banner
     const setBanner = useCallback(
         ( banner: any ) => {
-            setCreateOrEditVendor( {
-                ...vendor,
+            updateVendor( {
                 banner: banner?.url,
                 banner_id: banner?.id,
             } );
         },
-        [ vendor, setCreateOrEditVendor ]
+        [ updateVendor ]
     );
 
     // Get reset sub category value

@@ -22,8 +22,8 @@ interface GeneralProps extends SectionProps {
     onChangeStoreUrl: ( value: string ) => void;
     setLogo: ( logo: any ) => void;
     setBanner: ( banner: any ) => void;
-    searchEmail: ( email: string, vendor: any ) => void;
-    searchUsername: ( username: string, vendor: any ) => void;
+    searchEmail: ( email: string ) => void;
+    searchUsername: ( username: string ) => void;
     generatePassword: () => void;
     setCreateOrEditVendor: ( vendor: any ) => void;
     countries: Array< { label: string; value: string } >;
@@ -162,8 +162,9 @@ export const General = ( {
                         </h2>
                     </div>
                     <div className="p-6 flex flex-col gap-3">
-                        <div>
+                        <div data-vendor-field="store_name">
                             <DebouncedInput
+                                flushOnUnmount
                                 label={ __( 'Store Name', 'dokan-lite' ) }
                                 value={ vendor?.store_name ?? '' }
                                 onChange={ ( value ) => {
@@ -190,8 +191,9 @@ export const General = ( {
 
                         { createForm && (
                             <>
-                                <div>
+                                <div data-vendor-field="store_url">
                                     <DebouncedInput
+                                        flushOnUnmount
                                         label={ __(
                                             'Store Url',
                                             'dokan-lite'
@@ -384,7 +386,10 @@ export const General = ( {
                         />
 
                         <div className="flex flex-row gap-6">
-                            <div className="w-1/2">
+                            <div
+                                className="w-1/2"
+                                data-vendor-field="first_name"
+                            >
                                 <SimpleInput
                                     label={ __( 'First Name', 'dokan-lite' ) }
                                     value={ vendor?.first_name ?? '' }
@@ -403,7 +408,10 @@ export const General = ( {
                                     errors={ getError( 'first_name' ) }
                                 />
                             </div>
-                            <div className="w-1/2">
+                            <div
+                                className="w-1/2"
+                                data-vendor-field="last_name"
+                            >
                                 <SimpleInput
                                     label={ __( 'Last Name', 'dokan-lite' ) }
                                     value={ vendor?.last_name ?? '' }
@@ -428,18 +436,14 @@ export const General = ( {
                             name={ `${ formKey }-after-first-last-name-store-information` }
                         />
 
-                        <div>
+                        <div data-vendor-field="email">
                             <DebouncedInput
+                                flushOnUnmount
                                 label={ __( 'Email', 'dokan-lite' ) }
                                 value={ vendor?.email ?? '' }
                                 onChange={ ( value ) => {
-                                    setData( 'email', value ).then(
-                                        async ( updatedVendor ) => {
-                                            await searchEmail(
-                                                value,
-                                                updatedVendor.vendor
-                                            );
-                                        }
+                                    setData( 'email', value ).then( () =>
+                                        searchEmail( value )
                                     );
                                 } }
                                 input={ {
@@ -447,7 +451,7 @@ export const General = ( {
                                         'Enter email address',
                                         'dokan-lite'
                                     ),
-                                    id: 'last-name',
+                                    id: 'email',
                                     type: 'email',
                                     required: true,
                                 } }
@@ -470,8 +474,9 @@ export const General = ( {
 
                         { createForm && (
                             <>
-                                <div>
+                                <div data-vendor-field="user_login">
                                     <DebouncedInput
+                                        flushOnUnmount
                                         label={ __( 'Username', 'dokan-lite' ) }
                                         value={
                                             // @ts-ignore
@@ -479,12 +484,7 @@ export const General = ( {
                                         }
                                         onChange={ ( value ) => {
                                             setData( 'user_login', value ).then(
-                                                async ( updatedVendor ) => {
-                                                    await searchUsername(
-                                                        value,
-                                                        updatedVendor.vendor
-                                                    );
-                                                }
+                                                () => searchUsername( value )
                                             );
                                         } }
                                         input={ {
@@ -511,7 +511,10 @@ export const General = ( {
                                     name={ `${ formKey }-after-username-store-information` }
                                 />
 
-                                <div className="flex flex-row gap-2">
+                                <div
+                                    className="flex flex-row gap-2"
+                                    data-vendor-field="user_pass"
+                                >
                                     <div className="w-full">
                                         <SimpleInput
                                             label={ __(
@@ -572,7 +575,7 @@ export const General = ( {
                             </>
                         ) }
 
-                        <div>
+                        <div data-vendor-field="phone">
                             <SimpleInput
                                 label={ __( 'Phone', 'dokan-lite' ) }
                                 value={ vendor?.phone ?? '' }
