@@ -87,6 +87,14 @@ class Products {
     public static function load_download_virtual_template( $post, $post_id ) {
         $_downloadable   = get_post_meta( $post_id, '_downloadable', true );
         $_virtual        = get_post_meta( $post_id, '_virtual', true );
+        $staged_flag     = dokan_get_staged_downloadable_flag( $post_id );
+
+        // while the change awaits approval, show the vendor what they submitted rather than
+        // the still-live value, the same way the file list does
+        if ( null !== $staged_flag ) {
+            $_downloadable = $staged_flag;
+        }
+
         $is_downloadable = 'yes' === $_downloadable;
         $is_virtual      = 'yes' === $_virtual;
         $digital_mode    = dokan_get_option( 'global_digital_mode', 'dokan_general', 'sell_both' );
@@ -491,6 +499,16 @@ class Products {
 
         if ( empty( $post_status ) ) {
             $post_status = $current_post_status;
+        }
+
+        // A vendor may only move a product between the statuses the dashboard actually
+        // offers them. Without this a crafted POST sets any status at all — including one
+        // that releases a downloadable file change being held for admin review, letting the
+        // vendor approve their own submission.
+        if ( ! array_key_exists( $post_status, (array) dokan_get_available_post_status( $post_id ) ) ) {
+            $post_status = $is_new_product
+                ? dokan_get_default_product_status( get_current_user_id() )
+                : $current_post_status;
         }
 
         if ( ! dokan_is_product_author( $post_id ) ) {
