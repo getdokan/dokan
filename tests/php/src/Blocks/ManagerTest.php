@@ -28,8 +28,14 @@ class ManagerTest extends DokanTestCase {
     public function it_leaves_a_category_an_extension_already_registered_alone() {
         $manager  = dokan()->get_container()->get( Manager::class );
         $existing = [
-            [ 'slug' => 'dokan', 'title' => 'Dokan' ],
-            [ 'slug' => 'text', 'title' => 'Text' ],
+            [
+                'slug'  => 'dokan',
+                'title' => 'Dokan',
+            ],
+            [
+                'slug'  => 'text',
+                'title' => 'Text',
+            ],
         ];
 
         $this->assertSame( $existing, $manager->register_block_category( $existing ) );

@@ -63,7 +63,7 @@ class PatternsTest extends DokanTestCase {
     public function it_skips_a_file_without_a_title_or_slug() {
         $file = tempnam( sys_get_temp_dir(), 'dokan-pattern' ) . '.php';
 
-        file_put_contents( $file, "<?php\n/**\n * Title: No Slug\n */\n?>\n<!-- wp:paragraph --><p>Hi</p><!-- /wp:paragraph -->" );
+        file_put_contents( $file, "<?php\n/**\n * Title: No Slug\n */\n?>\n<!-- wp:paragraph --><p>Hi</p><!-- /wp:paragraph -->" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- test fixture
 
         add_filter(
             'dokan_block_pattern_files', function () use ( $file ) {
