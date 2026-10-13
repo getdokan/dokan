@@ -47,9 +47,9 @@ class VendorCreateProfileTest extends DokanTestCase {
             ],
             'payment'    => [
                 'bank'   => [
-					'ac_name' => 'Holder',
-					'ac_number' => '123',
-				],
+                    'ac_name'   => 'Holder',
+                    'ac_number' => '123',
+                ],
                 'paypal' => [ 'email' => 'pp@example.test' ],
             ],
             'social'     => [ 'fb' => 'https://fb.com/profile' ],
@@ -93,10 +93,10 @@ class VendorCreateProfileTest extends DokanTestCase {
     public function test_returned_vendor_reflects_profile_when_selling_is_enabled() {
         $payload = $this->payload(
             [
-				'enabled' => true,
-				'featured' => true,
-				'trusted' => true,
-			]
+                'enabled'  => true,
+                'featured' => true,
+                'trusted'  => true,
+            ]
         );
 
         $vendor = dokan()->vendor->create( $payload );
