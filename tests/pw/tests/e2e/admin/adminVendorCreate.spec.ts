@@ -226,19 +226,29 @@ test.describe('Admin Vendor Create functionality', () => {
             await expect(createVendor.usernameInput, 'username is still there after the tab round trip').toHaveValue('avc_tabswitch');
         });
 
+        test('a social URL typed right before switching tabs survives the round trip', { tag: ['@lite', '@admin'] }, async () => {
+            await createVendor.goto();
+            await createVendor.clickTab(/^Social Options$/);
+            await createVendor.typeFast(createVendor.socialInput('fb'), 'https://facebook.com/avc_tabswitch');
+            await createVendor.tab(/^General$/).click();
+            await page.waitForTimeout(300);
+            await createVendor.clickTab(/^Social Options$/);
+            await expect(createVendor.socialInput('fb'), 'social URL is still there after the tab round trip').toHaveValue('https://facebook.com/avc_tabswitch');
+        });
+
         test('store name, email and username typed back-to-back all survive the availability checks', { tag: ['@lite', '@admin'] }, async () => {
             const tag = faker.string.alphanumeric(6).toLowerCase();
             await createVendor.goto();
             await createVendor.typeFast(createVendor.storeNameInput, `AVC Race ${tag}`);
             await createVendor.typeFast(createVendor.emailInput, `avc_race_${tag}@example.test`);
             await createVendor.typeFast(createVendor.usernameInput, `avc_race_${tag}`);
-            // Let the three debounced writes and their availability responses land.
-            await page.waitForTimeout(2500);
+            // Store URL, email and username each report Available for unique input.
+            // Waiting on all three indicators also means every availability response has landed.
+            await expect(createVendor.reactRoot.locator(adminVendorCreateSelectors.available), 'all three availability indicators resolve').toHaveCount(3, { timeout: 12000 });
+            // Only now is a lost value provable: a stale write-back would already have happened.
             await expect(createVendor.storeNameInput, 'store name kept').toHaveValue(`AVC Race ${tag}`);
             await expect(createVendor.emailInput, 'email kept').toHaveValue(`avc_race_${tag}@example.test`);
             await expect(createVendor.usernameInput, 'username kept').toHaveValue(`avc_race_${tag}`);
-            // Store URL, email and username each report Available for unique input.
-            await expect(createVendor.reactRoot.locator(adminVendorCreateSelectors.available), 'all three availability indicators resolve').toHaveCount(3, { timeout: 12000 });
         });
 
         test('submitting with errors from another tab switches to General and focuses the first invalid field', { tag: ['@lite', '@admin'] }, async () => {

@@ -39,6 +39,15 @@ export const useVendorForm = (
     const usernameCheckSeq = useRef( 0 );
     const emailCheckSeq = useRef( 0 );
 
+    // A flushed-on-unmount input must not start or finish a check after the form is gone.
+    const isMounted = useRef( true );
+    useEffect( () => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, [] );
+
     // Load categories
     useEffect( () => {
         apiFetch( { path: 'dokan/v2/products/multistep-categories' } ).then(
@@ -81,14 +90,13 @@ export const useVendorForm = (
         [ errors, setCreateOrEditVendorErrors ]
     );
 
-    // Set vendor data
+    // Set vendor data. existingVendor is deprecated and ignored: snapshots overwrote concurrent edits.
     const setData = useCallback(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         async ( key: string, value: any, existingVendor?: object ) => {
             // Clear error for this field when value changes
             clearFieldError( key );
 
-            // existingVendor is ignored: snapshots overwrote concurrent edits.
             return await updateVendor( { [ key ]: value } );
         },
         [ updateVendor, clearFieldError ]
@@ -121,7 +129,7 @@ export const useVendorForm = (
     // Check store availability
     const checkStore = useCallback(
         async ( storeName: string ) => {
-            if ( ! storeName ) {
+            if ( ! storeName || ! isMounted.current ) {
                 return;
             }
 
@@ -134,7 +142,7 @@ export const useVendorForm = (
                 } ),
             } );
 
-            if ( seq !== storeCheckSeq.current ) {
+            if ( ! isMounted.current || seq !== storeCheckSeq.current ) {
                 return;
             }
 
@@ -151,7 +159,7 @@ export const useVendorForm = (
     // Search username availability
     const searchUsername = useCallback(
         async ( userName: string ) => {
-            if ( ! userName ) {
+            if ( ! userName || ! isMounted.current ) {
                 return;
             }
 
@@ -164,7 +172,7 @@ export const useVendorForm = (
                 } ),
             } );
 
-            if ( seq !== usernameCheckSeq.current ) {
+            if ( ! isMounted.current || seq !== usernameCheckSeq.current ) {
                 return;
             }
 
@@ -181,7 +189,7 @@ export const useVendorForm = (
     // Search email availability
     const searchEmail = useCallback(
         async ( userEmail: string ) => {
-            if ( ! userEmail ) {
+            if ( ! userEmail || ! isMounted.current ) {
                 return;
             }
 
@@ -194,7 +202,7 @@ export const useVendorForm = (
                 } ),
             } );
 
-            if ( seq !== emailCheckSeq.current ) {
+            if ( ! isMounted.current || seq !== emailCheckSeq.current ) {
                 return;
             }
 

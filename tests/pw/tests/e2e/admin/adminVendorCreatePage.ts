@@ -120,6 +120,11 @@ export class AdminVendorCreatePage {
         return this.page.locator(adminVendorCreateSelectors.successToast).first();
     }
 
+    /** A Social Options tab input by platform id (fb, twitter, instagram, ...). */
+    socialInput(platformId: string): Locator {
+        return this.page.locator(`[data-platform-id="${platformId}"] input`).first();
+    }
+
     /** A form tab button by visible label — General / Commission / Social Options. */
     tab(name: RegExp): Locator {
         return this.page.getByRole('button', { name }).first();

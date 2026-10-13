@@ -18,6 +18,7 @@ export interface SectionProps {
     setData: (
         key: string,
         value: any,
+        /** @deprecated DOKAN_SINCE Ignored; writes always merge into the live vendor. */
         existingVendor?: object
     ) => Promise< any >;
 }
