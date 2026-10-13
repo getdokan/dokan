@@ -61,8 +61,13 @@ registerBlockType( metadata.name, {
                     : [ ...hidden, key ],
             } );
 
+        // view.js drives the preview's controls and blocks navigation, so it stays clickable.
         return (
-            <SSREdit name={ metadata.name } attributes={ attributes }>
+            <SSREdit
+                name={ metadata.name }
+                attributes={ attributes }
+                interactive
+            >
                 <InspectorControls>
                     <PanelBody
                         title={ __( 'Filter Bar Settings', 'dokan-lite' ) }

@@ -9,6 +9,7 @@ type SSREditProps = {
     attributes: Record< string, unknown >;
     setAttributes?: ( attrs: Record< string, unknown > ) => void;
     children?: any;
+    interactive?: boolean;
 };
 
 /**
@@ -19,7 +20,8 @@ type SSREditProps = {
  * The preview is wrapped in <Disabled> so its links, images and forms cannot
  * swallow pointer events — a click anywhere on the block selects the block.
  * The trade-off is that hover-driven previews (the store-hours popover) only
- * behave on the front end.
+ * behave on the front end. Blocks whose preview carries its own editor
+ * behaviour pass `interactive` to opt out.
  *
  * When setAttributes is passed, a "Reset block settings" control is appended
  * to the inspector: it returns every attribute — including the style, colour
@@ -33,12 +35,14 @@ type SSREditProps = {
  * @param root0.attributes
  * @param root0.setAttributes
  * @param root0.children
+ * @param root0.interactive
  */
 const SSREdit = ( {
     name,
     attributes,
     setAttributes,
     children,
+    interactive = false,
 }: SSREditProps ) => {
     const blockProps = useBlockProps();
 
@@ -99,9 +103,16 @@ const SSREdit = ( {
                     </PanelBody>
                 </InspectorControls>
             ) }
-            <Disabled>
+            { interactive ? (
                 <ServerSideRender block={ name } attributes={ attributes } />
-            </Disabled>
+            ) : (
+                <Disabled>
+                    <ServerSideRender
+                        block={ name }
+                        attributes={ attributes }
+                    />
+                </Disabled>
+            ) }
         </div>
     );
 };
