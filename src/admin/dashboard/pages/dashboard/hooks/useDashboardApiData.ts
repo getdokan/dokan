@@ -23,9 +23,11 @@ export const useDashboardApiData = < T >({
             const response = await fetchFunction( params || initialParams );
             setData( response );
         } catch ( err ) {
-            // apiFetch rejects with a plain { code, message } object, so show its message to let admins see why the request failed.
+            // apiFetch rejects with a plain { code, message } object, and WordPress's critical-error message is HTML, so show it as plain text.
+            const message = ( err as { message?: string } )?.message || '';
+
             setError(
-                ( err as { message?: string } )?.message ||
+                message.replace( /<[^>]+>/g, ' ' ).trim() ||
                     __( 'An error occurred', 'dokan-lite' )
             );
             // eslint-disable-next-line no-console
