@@ -4,6 +4,7 @@ import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsP
 import { data } from '@utils/testData';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 
 // Both the legacy `subscription_pack` select and the new `subscription_view_page`
 // picker list real WP pages, so the dataset can only name a page that exists —
@@ -82,6 +83,9 @@ const newDataset = {
         },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Vendor -> vendor_subscription', () => {
     let loginPage: LoginPage;

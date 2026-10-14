@@ -172,7 +172,7 @@ test.describe('Admin Setting: input values persist through the UI', () => {
 
     test.afterAll(async () => {
         for (const [name, raw] of Object.entries(restorePoint ?? {})) {
-            await dbUtils.setOptionValue(name, raw, false);
+            await dbUtils.setRawOptionValue(name, raw, false);
         }
         await apiContext?.dispose();
     });

@@ -2,6 +2,10 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPage } from '@pages/adminSettingsPage';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Settings Migration', () => {
     let loginPage: LoginPage;

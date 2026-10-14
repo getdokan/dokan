@@ -1,3 +1,14 @@
+### v5.3.0 ( Oct 08, 2026 ) ###
+
+- **new:** Introduced a redesigned vendor Store Settings page in the new vendor dashboard.
+- **new:** Add-ons and extensions can now show their own options on the new vendor Store Settings page.
+- **update:** Admins can switch vendors between the new and classic Store Settings page from the Appearance settings, and existing sites stay on the classic page by default.
+- **update:** Added a `dokan_product_editor_after_save` action so features can save their own data right after a product is saved in the new product editor.
+- **fix:** Prevented vendors from changing a customer's password or login email through the customers REST endpoint.
+- **fix:** Prevented vendors from storing serialized PHP objects in product meta through the products REST endpoint, closing a PHP object injection vulnerability.
+- **fix:** Vendor store maps now open on the default location set in the Geolocation settings, and saving store settings no longer removes a vendor from geolocation search results.
+- **fix:** The setup guide now shows an error with a retry option when a step fails to load or save instead of silently moving on, and stops you from continuing while the required admin commission is empty.
+
 ### v5.2.1 ( Sep 30, 2026 ) ###
 
 - **fix:** Fixed the setup wizard failing to load due to an outdated UI package.

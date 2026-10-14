@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 // Shipping Providers – New UI locators ([role="switch"])
 const shippingProviderLocators = {
     australiaPost:      '[data-testid="settings-field-sp-australia-post"] [role="switch"]',
@@ -135,6 +136,9 @@ const newDataset = {
         // Shipment status field will be checked manually.
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Shipment -> shipment-settings', () => {
     let loginPage: LoginPage;

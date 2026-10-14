@@ -1463,6 +1463,10 @@ class ProductController extends DokanRESTController {
         // Allow set meta_data.
         if ( is_array( $request['meta_data'] ) ) {
             foreach ( $request['meta_data'] as $meta ) {
+                // A serialized PHP object left in meta would be revived by a later maybe_unserialize() call; never store one.
+                if ( ProductAttribute::contains_php_object( $meta['value'] ) ) {
+                    continue;
+                }
                 $product->update_meta_data( $meta['key'], $meta['value'], isset( $meta['id'] ) ? $meta['id'] : '' );
             }
         }

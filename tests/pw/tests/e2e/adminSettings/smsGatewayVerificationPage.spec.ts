@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 // Old UI dataset (placeholder, update selectors if legacy UI exists)
 const oldDataset = [
@@ -124,6 +125,9 @@ const newDataset = {
 };
 
 // 🧪 TESTS
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
+
 test.describe('Admin Setting: Vendor → Verification SMS Gateways', () => {
     let loginPage: LoginPage;
     let adminSettingsPage: AdminSettingsPage;

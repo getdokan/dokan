@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 const oldDataset = [
     {
@@ -178,6 +179,9 @@ const newDataset = {
         // },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Compliance -> EU Compliance', () => {
     let loginPage: LoginPage;

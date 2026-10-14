@@ -4,6 +4,7 @@ import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsP
 import { data } from '@utils/testData';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 
 const oldDataset = {
     title: 'Admin Old Setting: General -> Page Setup',
@@ -60,6 +61,9 @@ const newDataset = {
         },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: General -> Page Setup', () => {
     let loginPage: LoginPage;

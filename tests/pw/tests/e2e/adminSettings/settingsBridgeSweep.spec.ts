@@ -108,7 +108,7 @@ test.describe('Admin Setting: legacy bridge sweep', () => {
         // Guarded: when beforeAll fails early there is nothing to restore, and
         // an unguarded Object.entries here buries the real failure.
         for (const [name, raw] of Object.entries(restorePoint ?? {})) {
-            await dbUtils.setOptionValue(name, raw, false);
+            await dbUtils.setRawOptionValue(name, raw, false);
         }
         await apiContext?.dispose();
     });
@@ -148,7 +148,7 @@ test.describe('Admin Setting: legacy bridge sweep', () => {
             if (value === null) {
                 continue;
             }
-            await dbUtils.setOptionValue(name, typeof value === 'string' ? value : serialize(value), false);
+            await dbUtils.setRawOptionValue(name, typeof value === 'string' ? value : serialize(value), false);
         }
 
         // Reconciliation runs on admin_init, so it needs a real admin page load.
