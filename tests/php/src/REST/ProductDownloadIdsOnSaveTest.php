@@ -23,6 +23,11 @@ class ProductDownloadIdsOnSaveTest extends DokanTestCase {
     const FILE_URL = 'https://example.com/icon-set.zip';
 
     /**
+     * A second file URL.
+     */
+    const OTHER_URL = 'https://example.com/fonts.zip';
+
+    /**
      * REST namespace for this controller.
      *
      * @var string
@@ -92,6 +97,45 @@ class ProductDownloadIdsOnSaveTest extends DokanTestCase {
 
         $this->assertSame( 200, $response->get_status() );
         $this->assertSame( [ $this->download_id ], array_keys( wc_get_product( $this->product_id )->get_downloads() ) );
+        $this->assertSame( 2, ( new WC_Customer_Download( $this->permission_id ) )->get_downloads_remaining() );
+    }
+
+    /**
+     * Two files sharing one URL each keep their own id, whether the client sends the editor's id or the stored one (getdokan/plugin-internal-tasks#2438).
+     *
+     * @dataProvider shared_url_id_shapes
+     *
+     * @param bool $send_stored_ids Whether each row carries its stored download id, as a client echoing the GET response does.
+     */
+    public function test_rest_save_keeps_both_files_that_share_a_url( bool $send_stored_ids ) {
+        $stored_ids = $this->add_files_sharing_a_url();
+
+        $rows = [];
+        foreach ( [ self::FILE_URL, self::OTHER_URL, self::FILE_URL ] as $i => $url ) {
+            $rows[] = [
+                'id'   => $send_stored_ids ? $stored_ids[ $i ] : '0',
+                'name' => 'File ' . $i,
+                'file' => $url,
+            ];
+        }
+
+        $response = $this->update_downloads( $rows );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertEqualsCanonicalizing( $stored_ids, array_keys( wc_get_product( $this->product_id )->get_downloads() ) );
+        $this->assertSame( 2, ( new WC_Customer_Download( $this->permission_id ) )->get_downloads_remaining() );
+    }
+
+    /**
+     * Row ids for the shared-URL case.
+     *
+     * @return array
+     */
+    public function shared_url_id_shapes(): array {
+        return [
+            'editor row id' => [ false ],
+            'stored id'     => [ true ],
+        ];
     }
 
     /**
@@ -128,20 +172,85 @@ class ProductDownloadIdsOnSaveTest extends DokanTestCase {
     }
 
     /**
+     * The legacy edit form keeps both files that share a URL on their own ids.
+     *
+     * @covers ::dokan_process_product_meta
+     */
+    public function test_legacy_save_keeps_both_files_that_share_a_url() {
+        $stored_ids = $this->add_files_sharing_a_url();
+
+        dokan_process_product_meta(
+            $this->product_id,
+            [
+                '_stock_status'    => 'instock',
+                '_enable_reviews'  => 'yes',
+                '_downloadable'    => 'on',
+                '_virtual'         => 'on',
+                '_download_limit'  => '',
+                '_download_expiry' => '',
+                '_wc_file_names'   => [ 'File 0', 'File 1', 'File 2' ],
+                '_wc_file_urls'    => [ self::FILE_URL, self::OTHER_URL, self::FILE_URL ],
+            ]
+        );
+
+        $this->assertEqualsCanonicalizing( $stored_ids, array_keys( wc_get_product( $this->product_id )->get_downloads() ) );
+        $this->assertSame( 2, ( new WC_Customer_Download( $this->permission_id ) )->get_downloads_remaining() );
+    }
+
+    /**
+     * Give the product two more files, the last on the same URL as the first, and return the three stored ids in order.
+     *
+     * @return string[]
+     */
+    protected function add_files_sharing_a_url(): array {
+        $product   = wc_get_product( $this->product_id );
+        $downloads = array_values( $product->get_downloads() );
+
+        foreach ( [ self::OTHER_URL, self::FILE_URL ] as $i => $url ) {
+            $download = new WC_Product_Download();
+            $download->set_id( wp_generate_uuid4() );
+            $download->set_name( 'Extra ' . $i );
+            $download->set_file( $url );
+            $downloads[] = $download;
+        }
+
+        $product->set_downloads( $downloads );
+        $product->save();
+
+        return array_map(
+            function ( $download ) {
+                return $download->get_id();
+            },
+            $downloads
+        );
+    }
+
+    /**
      * Save one file through the v3 route, shaped like the React editor's row (its media attachment id as `id`).
      *
      * @param string $file_url File URL.
      */
     protected function update_download( string $file_url ) {
-        $file = [
-            'id'   => '123',
-            'name' => 'Icon set',
-            'file' => $file_url,
-        ];
+        return $this->update_downloads(
+            [
+                [
+                    'id'   => '123',
+                    'name' => 'Icon set',
+                    'file' => $file_url,
+                ],
+            ]
+        );
+    }
 
+    /**
+     * Save the given download rows through the v3 route.
+     *
+     * @param array $rows Download rows.
+     */
+    protected function update_downloads( array $rows ) {
         $request = new WP_REST_Request( 'PUT', $this->get_route( '/products/' . $this->product_id ) );
         $request->add_header( 'Content-Type', 'application/json' );
-        $request->set_body( wp_json_encode( [ 'downloads' => [ $file ] ] ) );
+        $request->set_body( wp_json_encode( [ 'downloads' => $rows ] ) );
 
         return $this->server->dispatch( $request );
     }

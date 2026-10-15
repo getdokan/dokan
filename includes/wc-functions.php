@@ -333,7 +333,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $_download_expiry = ''; // 0 or blank = unlimited
         }
 
-        // An unchanged file keeps its stored id so buyers' permissions (limit, expiry, count) survive the save; a new file is keyed by md5( url ).
+        // An unchanged file keeps its stored id so buyers' permissions (limit, expiry, count) survive the save; files sharing a URL each keep their own id, and a new file is keyed by md5( url ).
         if ( isset( $data['_wc_file_urls'] ) ) {
             $files = [];
 
@@ -343,12 +343,14 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
 
             $stored_ids = [];
             foreach ( wc_get_product( $post_id )->get_downloads() as $download_id => $download ) {
-                $stored_ids[ esc_url_raw( trim( $download->get_file() ) ) ] = $download_id;
+                $stored_ids[ esc_url_raw( trim( $download->get_file() ) ) ][] = $download_id;
             }
 
             for ( $i = 0; $i < $file_url_size; $i++ ) {
                 if ( ! empty( $file_urls[ $i ] ) ) {
-                    $files[ $stored_ids[ $file_urls[ $i ] ] ?? md5( $file_urls[ $i ] ) ] = [
+                    $file_id = ! empty( $stored_ids[ $file_urls[ $i ] ] ) ? array_shift( $stored_ids[ $file_urls[ $i ] ] ) : md5( $file_urls[ $i ] );
+
+                    $files[ $file_id ] = [
                         'name' => $file_names[ $i ],
                         'file' => $file_urls[ $i ],
                     ];
