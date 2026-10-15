@@ -17,6 +17,7 @@
  * @var WP_Block $block      Block instance.
  */
 
+use WeDevs\Dokan\Blocks\HeaderLayouts;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -45,50 +46,10 @@ if ( ! $vendor ) {
 }
 
 // Not `layout`: WordPress reserves that attribute name for its layout block
-// support, which stores an object there.
-$layout = sanitize_key( $attributes['headerLayout'] );
-
-if ( '' === $layout ) {
-    /*
-     * Follow the classic Appearance setting, so a marketplace that picked a
-     * header before moving to a block theme keeps the look it had. The classic
-     * keys do not match the pattern names, because the classic "default" is the
-     * panel layout and the others shift along by one.
-     */
-    $classic = dokan_get_option( 'store_header_template', 'dokan_appearance', 'default' );
-
-    $layout = [
-        'default' => 'panel',
-        'layout1' => 'default',
-        'layout2' => 'stacked',
-        'layout3' => 'minimal',
-    ][ $classic ] ?? 'panel';
-}
-
-/**
- * Header layouts this block can render, as pattern slug => label.
- *
- * Extensions add their own header patterns here to make them selectable from
- * the block, without shipping a second copy of the markup.
- *
- * @since DOKAN_SINCE
- *
- * @param array $layouts Map of layout key => registered pattern slug.
- */
-$layouts = apply_filters(
-    'dokan_store_header_layouts',
-    [
-        'panel'   => 'dokan/single-store-header-panel',
-        'default' => 'dokan/single-store-header-default',
-        'stacked' => 'dokan/single-store-header-stacked',
-        'split'   => 'dokan/single-store-header-split',
-        'minimal' => 'dokan/single-store-header-minimal',
-    ]
-);
-
-if ( ! isset( $layouts[ $layout ] ) ) {
-    $layout = 'panel';
-}
+// support, which stores an object there. HeaderLayouts resolves an empty
+// setting to the classic Appearance option.
+$layouts = HeaderLayouts::get_layouts();
+$layout  = HeaderLayouts::resolve( (string) $attributes['headerLayout'], $layouts );
 
 /*
  * `dokan_store_header_layouts` is public, so a header pattern could be pointed

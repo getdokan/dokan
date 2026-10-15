@@ -30,6 +30,7 @@ class Assets implements Hookable {
         add_action( 'init', [ $this, 'register_store_listing_registry' ] );
         add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_editor_block_data' ] );
         add_action( 'enqueue_block_editor_assets', [ $this, 'localize_store_tab_preview' ] );
+        add_action( 'enqueue_block_editor_assets', [ $this, 'localize_store_header_layouts' ] );
         add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_preview_assets' ] );
         // After Dokan's own asset logic (@10) so store pages keep their enqueue order.
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_block_styles' ], 20 );
@@ -249,6 +250,19 @@ class Assets implements Hookable {
                     // Store categories are a Dokan Pro taxonomy; the control is dead without it.
                     'storeCategory' => taxonomy_exists( 'store_category' ),
                 ],
+                /**
+                 * Filter fields extensions draw into the store filter bar.
+                 *
+                 * Each entry is `[ 'key' => ..., 'label' => ..., 'placeholder' => ... ]`.
+                 * The block offers a text override for every one, stored on its
+                 * `filterLabels` attribute under the field's key, which the extension
+                 * reads back as it renders the field.
+                 *
+                 * @since DOKAN_SINCE
+                 *
+                 * @param array[] $fields Extension filter fields.
+                 */
+                'filterFields' => apply_filters( 'dokan_store_filter_bar_extension_fields', [] ),
             ]
         );
 
@@ -282,9 +296,37 @@ class Assets implements Hookable {
             ];
         }
 
+        // Both blocks list the tabs: one to preview a body, the other to rename and decorate them.
+        foreach ( [ 'dokan/store-tab-content', 'dokan/store-tabs' ] as $block_name ) {
+            wp_add_inline_script(
+                generate_block_asset_handle( $block_name, 'editorScript' ),
+                'window.dokanStoreTabPreview = ' . wp_json_encode( [ 'tabs' => $tabs ] ) . ';',
+                'before'
+            );
+        }
+    }
+
+    /**
+     * Hand the Store Header block its layout => pattern map and the resolved default.
+     *
+     * The "Customize this header" control replaces the block with the pattern it
+     * renders, which it can only do if it knows which pattern that is.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function localize_store_header_layouts(): void {
+        $layouts = HeaderLayouts::get_layouts();
+
         wp_add_inline_script(
-            generate_block_asset_handle( 'dokan/store-tab-content', 'editorScript' ),
-            'window.dokanStoreTabPreview = ' . wp_json_encode( [ 'tabs' => $tabs ] ) . ';',
+            generate_block_asset_handle( 'dokan/store-header', 'editorScript' ),
+            'window.dokanStoreHeaderLayouts = ' . wp_json_encode(
+                [
+                    'layouts' => $layouts,
+                    'default' => HeaderLayouts::resolve( '', $layouts ),
+                ]
+            ) . ';',
             'before'
         );
     }

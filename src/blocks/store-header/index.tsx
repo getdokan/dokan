@@ -1,6 +1,12 @@
-import { registerBlockType } from '@wordpress/blocks';
+import { createBlock, parse, registerBlockType } from '@wordpress/blocks';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, SelectControl, Notice } from '@wordpress/components';
+import { useDispatch, useSelect } from '@wordpress/data';
+import {
+    Button,
+    PanelBody,
+    SelectControl,
+    Notice,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
 import type { StoreBlockEditProps } from '../shared/types';
@@ -9,6 +15,56 @@ import './style.scss';
 
 type StoreHeaderAttributes = {
     headerLayout: string;
+};
+
+type HeaderLayoutData = {
+    layouts?: Record< string, string >;
+    default?: string;
+};
+
+type Pattern = { name: string; content?: string };
+
+type ParsedBlock = ReturnType< typeof parse >[ number ];
+
+/*
+ * The header's colours win over the ones baked into the pattern through this
+ * block's stylesheet, which stops loading once the block is split. So the split
+ * drops the pattern's own colours wherever the header sets one.
+ */
+const withoutPatternColors = (
+    blocks: ParsedBlock[],
+    wrapper: Record< string, any >
+): ParsedBlock[] => {
+    const hasBackground = !! (
+        wrapper.backgroundColor ||
+        wrapper.gradient ||
+        wrapper.style?.color?.background ||
+        wrapper.style?.color?.gradient
+    );
+    const hasText = !! ( wrapper.textColor || wrapper.style?.color?.text );
+
+    return blocks.map( ( block ) => {
+        const attrs = { ...block.attributes };
+        const color = { ...( attrs.style?.color ?? {} ) };
+
+        if ( hasBackground ) {
+            delete attrs.backgroundColor;
+            delete attrs.gradient;
+            delete color.background;
+            delete color.gradient;
+        }
+
+        if ( hasText ) {
+            delete attrs.textColor;
+            delete color.text;
+        }
+
+        if ( attrs.style ) {
+            attrs.style = { ...attrs.style, color };
+        }
+
+        return { ...block, attributes: attrs };
+    } );
 };
 
 /*
@@ -31,11 +87,81 @@ const LAYOUTS = [
     { value: 'minimal', label: __( 'Compact — no banner', 'dokan-lite' ) },
 ];
 
-registerBlockType( metadata.name, {
-    edit: ( {
-        attributes,
-        setAttributes,
-    }: StoreBlockEditProps< StoreHeaderAttributes > ) => (
+// Blocks\Assets hands the editor the layout => pattern map and the resolved default.
+const layoutData = (): HeaderLayoutData =>
+    ( window as unknown as { dokanStoreHeaderLayouts?: HeaderLayoutData } )
+        .dokanStoreHeaderLayouts ?? {};
+
+/**
+ * Editor for the store header block.
+ *
+ * @param root0
+ * @param root0.attributes
+ * @param root0.setAttributes
+ * @param root0.clientId
+ */
+const Edit = ( {
+    attributes,
+    setAttributes,
+    clientId,
+}: StoreBlockEditProps< StoreHeaderAttributes > & {
+    clientId: string;
+} ) => {
+    const { replaceBlocks } = useDispatch( 'core/block-editor' );
+
+    // The pattern this header renders right now, by its registered slug.
+    const data = layoutData();
+    const layoutKey = attributes.headerLayout || data.default || 'panel';
+    const patternName = data.layouts?.[ layoutKey ];
+
+    const pattern = useSelect(
+        ( select ) => {
+            if ( ! patternName ) {
+                return undefined;
+            }
+
+            const patterns: Pattern[] =
+                ( select( 'core' ) as any ).getBlockPatterns?.() ?? [];
+
+            return patterns.find( ( item ) => item.name === patternName );
+        },
+        [ patternName ]
+    );
+
+    /*
+     * Splits this block into the pattern it renders, so every part of the
+     * header becomes an ordinary editable block. The pattern is wrapped in a
+     * group that keeps this block's colour, spacing, alignment and classes,
+     * so the page does not change until the merchant edits one of the pieces.
+     */
+    const customize = () => {
+        if ( ! pattern?.content ) {
+            return;
+        }
+
+        const { headerLayout, className, ...wrapper } =
+            attributes as StoreHeaderAttributes & Record< string, any >;
+        const textAlign = wrapper.style?.typography?.textAlign;
+        const classes = [
+            'wp-block-dokan-store-header',
+            `is-header-${ layoutKey }`,
+            textAlign ? `has-text-align-${ textAlign }` : '',
+            className ?? '',
+        ]
+            .filter( Boolean )
+            .join( ' ' );
+
+        replaceBlocks(
+            clientId,
+            createBlock(
+                'core/group',
+                { ...wrapper, className: classes, layout: { type: 'default' } },
+                withoutPatternColors( parse( pattern.content ), wrapper )
+            )
+        );
+    };
+
+    return (
         <SSREdit
             name={ metadata.name }
             attributes={ attributes }
@@ -63,8 +189,29 @@ registerBlockType( metadata.name, {
                         </Notice>
                     ) }
                 </PanelBody>
+
+                <PanelBody title={ __( 'Customize', 'dokan-lite' ) }>
+                    <Button
+                        variant="secondary"
+                        onClick={ customize }
+                        disabled={ ! pattern?.content }
+                        __next40pxDefaultSize
+                    >
+                        { __( 'Customize this header', 'dokan-lite' ) }
+                    </Button>
+                    <p>
+                        { __(
+                            'Splits the header into separate blocks — picture, name, details, social links and banner — so each can be edited on its own. The layout dropdown no longer applies afterwards.',
+                            'dokan-lite'
+                        ) }
+                    </p>
+                </PanelBody>
             </InspectorControls>
         </SSREdit>
-    ),
+    );
+};
+
+registerBlockType( metadata.name, {
+    edit: Edit,
     save: () => null,
 } );

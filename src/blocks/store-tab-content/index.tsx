@@ -4,6 +4,7 @@ import {
     PanelBody,
     RangeControl,
     SelectControl,
+    TextControl,
     ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -16,6 +17,7 @@ type StoreTabContentAttributes = {
     columns: number;
     showPagination: boolean;
     previewTab: string;
+    noProductsText: string;
 };
 
 type TabOption = { value: string; label: string };
@@ -82,6 +84,23 @@ registerBlockType( metadata.name, {
                         options={ previewTabs() }
                         onChange={ ( previewTab ) =>
                             setAttributes( { previewTab } )
+                        }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                        label={ __( 'No products message', 'dokan-lite' ) }
+                        help={ __(
+                            'Shown when the vendor has no products. Leave empty for the default wording.',
+                            'dokan-lite'
+                        ) }
+                        placeholder={ __(
+                            'No products were found of this vendor!',
+                            'dokan-lite'
+                        ) }
+                        value={ attributes.noProductsText ?? '' }
+                        onChange={ ( noProductsText ) =>
+                            setAttributes( { noProductsText } )
                         }
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom

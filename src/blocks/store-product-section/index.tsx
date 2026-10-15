@@ -15,6 +15,7 @@ import './style.scss';
 type StoreProductSectionAttributes = {
     sectionId: string;
     title: string;
+    emptyText: string;
 };
 
 const SECTIONS = [
@@ -59,6 +60,19 @@ registerBlockType( metadata.name, {
                         ) }
                         value={ attributes.title ?? '' }
                         onChange={ ( title ) => setAttributes( { title } ) }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                        label={ __( 'No products message', 'dokan-lite' ) }
+                        help={ __(
+                            'Shown on the store page when this section has no products. Leave empty to hide the section instead, as today.',
+                            'dokan-lite'
+                        ) }
+                        value={ attributes.emptyText ?? '' }
+                        onChange={ ( emptyText ) =>
+                            setAttributes( { emptyText } )
+                        }
                         __next40pxDefaultSize
                         __nextHasNoMarginBottom
                     />

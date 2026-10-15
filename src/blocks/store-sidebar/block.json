@@ -6,7 +6,14 @@
     "title": "Store Sidebar",
     "category": "dokan",
     "description": "A container for store widgets, replacing the classic store sidebar on block themes.",
-    "keywords": [ "dokan", "store", "vendor", "sidebar", "widgets", "aside" ],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "sidebar",
+        "widgets",
+        "aside"
+    ],
     "textdomain": "dokan-lite",
     "supports": {
         "html": false,
@@ -18,10 +25,28 @@
             "margin": true,
             "padding": true,
             "blockGap": true
+        },
+        "__experimentalBorder": {
+            "color": true,
+            "radius": true,
+            "style": true,
+            "width": true,
+            "__experimentalDefaultControls": {
+                "color": true,
+                "radius": true,
+                "style": true,
+                "width": true
+            }
         }
     },
     "example": {},
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
-    "render": "file:./render.php"
+    "render": "file:./render.php",
+    "attributes": {
+        "isSticky": {
+            "type": "boolean",
+            "default": false
+        }
+    }
 }

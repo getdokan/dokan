@@ -1,6 +1,11 @@
 import { registerBlockType } from '@wordpress/blocks';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import {
+    PanelBody,
+    RangeControl,
+    TextControl,
+    ToggleControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
 import type { StoreBlockEditProps } from '../shared/types';
@@ -10,6 +15,7 @@ import './style.scss';
 type StoreLocationMapAttributes = {
     title: string;
     showTitle: boolean;
+    mapHeight: number;
 };
 
 registerBlockType( metadata.name, {
@@ -45,6 +51,24 @@ registerBlockType( metadata.name, {
                             __nextHasNoMarginBottom
                         />
                     ) }
+                    <RangeControl
+                        label={ __( 'Map height (px)', 'dokan-lite' ) }
+                        help={ __(
+                            'Set to 0 to use the default height.',
+                            'dokan-lite'
+                        ) }
+                        value={ attributes.mapHeight ?? 0 }
+                        onChange={ ( mapHeight ) =>
+                            setAttributes( {
+                                mapHeight: Number( mapHeight ) || 0,
+                            } )
+                        }
+                        min={ 0 }
+                        max={ 800 }
+                        step={ 10 }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
                 </PanelBody>
             </InspectorControls>
         </SSREdit>

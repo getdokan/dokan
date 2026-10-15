@@ -30,13 +30,15 @@
         "color": {
             "text": true,
             "background": true,
-            "link": true
+            "link": true,
+            "heading": true
         },
         "typography": {
             "fontSize": true,
             "__experimentalDefaultControls": {
                 "fontSize": true
-            }
+            },
+            "textAlign": true
         },
         "spacing": {
             "margin": true,

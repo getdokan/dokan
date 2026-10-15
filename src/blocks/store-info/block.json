@@ -44,6 +44,66 @@
         "infoLayout": {
             "type": "string",
             "default": "list"
+        },
+        "addressIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "phoneIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "emailIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "ratingIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "openCloseIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "addressLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "phoneLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "emailLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "ratingLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "openCloseLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "openText": {
+            "type": "string",
+            "default": ""
+        },
+        "closedText": {
+            "type": "string",
+            "default": ""
+        },
+        "iconColor": {
+            "type": "string",
+            "default": ""
+        },
+        "iconSize": {
+            "type": "string",
+            "default": "medium"
+        },
+        "boldLabels": {
+            "type": "boolean",
+            "default": false
         }
     },
     "supports": {
@@ -58,8 +118,10 @@
             "lineHeight": true,
             "__experimentalFontFamily": true,
             "__experimentalDefaultControls": {
-                "fontSize": true
-            }
+                "fontSize": true,
+                "textAlign": true
+            },
+            "textAlign": true
         },
         "spacing": {
             "margin": true,

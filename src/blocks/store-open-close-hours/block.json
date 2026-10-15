@@ -24,6 +24,10 @@
         "showTitle": {
             "type": "boolean",
             "default": true
+        },
+        "offDayText": {
+            "type": "string",
+            "default": ""
         }
     },
     "supports": {
@@ -31,13 +35,15 @@
         "color": {
             "text": true,
             "background": true,
-            "link": true
+            "link": true,
+            "heading": true
         },
         "typography": {
             "fontSize": true,
             "__experimentalDefaultControls": {
                 "fontSize": true
-            }
+            },
+            "textAlign": true
         },
         "spacing": {
             "margin": true,

@@ -10,6 +10,8 @@
  * @var array $attributes Block attributes.
  */
 
+use WeDevs\Dokan\Blocks\Styles;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
@@ -32,6 +34,24 @@ $attributes = wp_parse_args(
         'showRating'       => true,
         'showAddress'      => true,
         'showPhone'        => true,
+        'featuredText'     => '',
+        'openText'         => '',
+        'closedText'       => '',
+        'visitStoreText'   => '',
+        'noVendorText'     => '',
+        'prevText'         => '',
+        'nextText'         => '',
+        'phoneIcon'        => '',
+        'addressIcon'      => '',
+        'addressLabel'     => '',
+        'avatarShape'      => 'circle',
+        'cardAlign'        => '',
+        'cardBackgroundColor' => '',
+        'storeNameColor'      => '',
+        'storeDetailsColor'   => '',
+        'avatarPosition'      => '',
+        'storeNameSize'       => '',
+        'storeDetailsSize'    => '',
     ]
 );
 
@@ -102,9 +122,71 @@ $pagination_base = empty( $post ) ? '' : str_replace( (string) $post->ID, '%#%',
 <?php
 // The filter bar renders in a request of its own and cannot see this block's
 // featured/category/include settings, so it publishes the total it actually matched.
+$dokan_card_classes = [ 'dokan-store-list-block' ];
+$dokan_avatar_shape = in_array( $attributes['avatarShape'], [ 'rounded', 'square' ], true ) ? $attributes['avatarShape'] : '';
+
+if ( '' !== $dokan_avatar_shape ) {
+    $dokan_card_classes[] = 'has-avatar-' . $dokan_avatar_shape;
+}
+
+if ( in_array( $attributes['cardAlign'], [ 'left', 'center', 'right' ], true ) ) {
+    $dokan_card_classes[] = 'has-card-align-' . $attributes['cardAlign'];
+}
+
+$dokan_card_background = Styles::color( $attributes['cardBackgroundColor'] );
+
+if ( '' !== $dokan_card_background ) {
+    $dokan_card_classes[] = 'has-card-background';
+}
+
+// The link colour support only adds a weak `wp-elements-*` rule; Dokan's card colours win over it.
+$dokan_link_color = (string) ( $attributes['style']['elements']['link']['color']['text'] ?? '' );
+$dokan_link_color = Styles::color( preg_replace( '/^var:preset\|color\|([a-z0-9-]+)$/i', 'var(--wp--preset--color--$1)', $dokan_link_color ) );
+
+if ( '' !== $dokan_link_color ) {
+    $dokan_card_classes[] = 'has-store-link-color';
+}
+
+$dokan_store_name_color    = Styles::color( $attributes['storeNameColor'] );
+$dokan_store_details_color = Styles::color( $attributes['storeDetailsColor'] );
+
+if ( '' !== $dokan_store_name_color ) {
+    $dokan_card_classes[] = 'has-store-name-color';
+}
+
+if ( '' !== $dokan_store_details_color ) {
+    $dokan_card_classes[] = 'has-store-details-color';
+}
+
+// Empty keeps Dokan's own placement, the right side.
+if ( in_array( $attributes['avatarPosition'], [ 'left', 'center', 'right' ], true ) ) {
+    $dokan_card_classes[] = 'has-avatar-position-' . $attributes['avatarPosition'];
+}
+
+$dokan_store_name_size    = Styles::font_size( $attributes['storeNameSize'] );
+$dokan_store_details_size = Styles::font_size( $attributes['storeDetailsSize'] );
+
+if ( '' !== $dokan_store_name_size ) {
+    $dokan_card_classes[] = 'has-store-name-size';
+}
+
+if ( '' !== $dokan_store_details_size ) {
+    $dokan_card_classes[] = 'has-store-details-size';
+}
+
 $wrapper_attributes = get_block_wrapper_attributes(
     [
-        'class'                  => 'dokan-store-list-block',
+        'class'                  => implode( ' ', $dokan_card_classes ),
+        'style'                  => Styles::custom_properties(
+            [
+                '--dokan-store-card-background' => $dokan_card_background,
+                '--dokan-store-link-color'      => $dokan_link_color,
+                '--dokan-store-name-color'      => $dokan_store_name_color,
+                '--dokan-store-details-color'   => $dokan_store_details_color,
+                '--dokan-store-name-size'       => $dokan_store_name_size,
+                '--dokan-store-details-size'    => $dokan_store_details_size,
+            ]
+        ),
         'data-dokan-store-count' => number_format_i18n( absint( $sellers['count'] ) ),
     ]
 );
@@ -137,6 +219,17 @@ $wrapper_attributes = get_block_wrapper_attributes(
             'show_rating'        => (bool) $attributes['showRating'],
             'show_address'       => (bool) $attributes['showAddress'],
             'show_phone'         => (bool) $attributes['showPhone'],
+            'featured_text'      => sanitize_text_field( (string) $attributes['featuredText'] ),
+            'open_text'          => sanitize_text_field( (string) $attributes['openText'] ),
+            'closed_text'        => sanitize_text_field( (string) $attributes['closedText'] ),
+            'visit_store_text'   => sanitize_text_field( (string) $attributes['visitStoreText'] ),
+            'no_vendor_text'     => sanitize_text_field( (string) $attributes['noVendorText'] ),
+            'prev_text'          => sanitize_text_field( (string) $attributes['prevText'] ),
+            'next_text'          => sanitize_text_field( (string) $attributes['nextText'] ),
+            'phone_icon'         => Styles::icon_class( $attributes['phoneIcon'], 'fas fa-phone-alt' ),
+            // The classic card has no address icon; "default" here means none.
+            'address_icon'       => Styles::icon_class( $attributes['addressIcon'], '' ),
+            'address_label'      => sanitize_text_field( (string) $attributes['addressLabel'] ),
         ]
     );
 

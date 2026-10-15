@@ -6,7 +6,14 @@
     "title": "Store Header",
     "category": "dokan",
     "description": "The store header, in any of the layouts a marketplace can choose from.",
-    "keywords": [ "dokan", "store", "vendor", "header", "layout", "banner" ],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "header",
+        "layout",
+        "banner"
+    ],
     "textdomain": "dokan-lite",
     "attributes": {
         "headerLayout": {
@@ -16,10 +23,29 @@
     },
     "supports": {
         "html": false,
-        "align": [ "wide", "full" ],
+        "align": [
+            "wide",
+            "full"
+        ],
         "spacing": {
             "margin": true,
             "padding": true
+        },
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true,
+            "gradients": true,
+            "__experimentalDefaultControls": {
+                "text": true,
+                "background": true
+            }
+        },
+        "typography": {
+            "textAlign": true,
+            "__experimentalDefaultControls": {
+                "textAlign": true
+            }
         }
     },
     "example": {},

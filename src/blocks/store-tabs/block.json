@@ -6,11 +6,20 @@
     "title": "Store Tabs",
     "category": "dokan",
     "description": "Navigation between the store's tabs, such as Products and Terms and Conditions.",
-    "keywords": [ "dokan", "store", "vendor", "tabs", "navigation", "menu" ],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "tabs",
+        "navigation",
+        "menu"
+    ],
     "textdomain": "dokan-lite",
     "supports": {
         "html": false,
-        "align": [ "wide" ],
+        "align": [
+            "wide"
+        ],
         "color": {
             "text": true,
             "background": true,
@@ -29,7 +38,8 @@
             "__experimentalTextTransform": true,
             "__experimentalDefaultControls": {
                 "fontSize": true
-            }
+            },
+            "textAlign": true
         },
         "spacing": {
             "margin": true,
@@ -40,5 +50,34 @@
     "example": {},
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
-    "render": "file:./render.php"
+    "render": "file:./render.php",
+    "attributes": {
+        "tabLabels": {
+            "type": "object",
+            "default": {}
+        },
+        "tabIcons": {
+            "type": "object",
+            "default": {}
+        },
+        "activeColor": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "styles": [
+        {
+            "name": "default",
+            "label": "Underline",
+            "isDefault": true
+        },
+        {
+            "name": "pills",
+            "label": "Pills"
+        },
+        {
+            "name": "boxed",
+            "label": "Boxed"
+        }
+    ]
 }

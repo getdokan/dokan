@@ -72,6 +72,8 @@ class StoreOpenClose extends WP_Widget {
 					'seller_id'        => $seller_id,
 					'dokan_store_time' => $dokan_store_time,
                     'dokan_days'       => dokan_get_translated_days(),
+                    // Wording the store opening hours block passes through its instance.
+                    'off_day_text'     => isset( $instance['off_day_text'] ) ? (string) $instance['off_day_text'] : '',
                 ]
             );
 

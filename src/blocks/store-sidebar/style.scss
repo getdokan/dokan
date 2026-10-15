@@ -23,4 +23,11 @@
 	.dokan-store-widget {
 		margin: 0;
 	}
+
+	// Sticky on scroll. The offset leaves room for the admin bar when it is there;
+	// themes with a fixed header can raise it through the custom property.
+	&.is-sticky {
+		position: sticky;
+		top: var(--dokan-sidebar-sticky-offset, var(--wp-admin--admin-bar--height, 0));
+	}
 }

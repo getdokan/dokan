@@ -15,6 +15,7 @@
  * @var WP_Block $block      Block instance.
  */
 
+use WeDevs\Dokan\Blocks\Styles;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,6 +28,7 @@ $attributes = wp_parse_args(
         'columns'        => 0,
         'showPagination' => true,
         'previewTab'     => 'products',
+        'noProductsText' => '',
     ]
 );
 
@@ -259,7 +261,7 @@ if ( $dokan_query->have_posts() ) {
         '<p class="dokan-info">%s</p>',
         $dokan_preview
             ? esc_html__( 'The vendor\'s products appear here once the shop has published products.', 'dokan-lite' )
-            : esc_html__( 'No products were found of this vendor!', 'dokan-lite' )
+            : esc_html( Styles::text( $attributes['noProductsText'], __( 'No products were found of this vendor!', 'dokan-lite' ) ) )
     );
 }
 

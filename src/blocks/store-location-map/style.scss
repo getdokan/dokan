@@ -12,6 +12,7 @@
 		margin-block-start: 0;
 	}
 
+
 	/* Editor stand-in for the map — the map script only runs on the store page. */
 	.dokan-store-location-preview {
 		display: flex;
@@ -34,6 +35,13 @@
 	.dokan-store-location-preview__pin {
 		font-size: 2em;
 		color: #ea4335;
+	}
+
+	// Map height. Only emitted once set; the classic 200px rule stands otherwise.
+	&.has-map-height #dokan-store-location,
+	&.has-map-height .dokan-store-location-preview {
+		height: var(--dokan-store-map-height);
+		min-height: 0;
 	}
 
 	&.is-editor-placeholder .dokan-info {

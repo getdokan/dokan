@@ -62,4 +62,36 @@
 		white-space: nowrap;
 		border: 0;
 	}
+
+	/* --- Icon styles. Plain is the default and draws nothing around the icon.
+	   Circle and Square give each icon a tile, coloured by the icon background
+	   setting when one is picked and by a faint tint otherwise. The tile scales
+	   with the icon size so a large icon does not spill over its shape. --- */
+
+
+	&.is-style-circle .dokan-store-social-link i,
+	&.is-style-square .dokan-store-social-link i {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: calc(var(--dokan-social-icon-size) * 1.75);
+		height: calc(var(--dokan-social-icon-size) * 1.75);
+		background: var(--dokan-social-icon-background, rgba(128, 128, 128, 0.15));
+	}
+
+	&.is-style-circle .dokan-store-social-link i {
+		border-radius: 50%;
+	}
+
+	&.is-style-square .dokan-store-social-link i {
+		border-radius: 4px;
+	}
+
+	// Plain style with a background picked: colour the icon glyph's box lightly
+	// padded, so the setting is not silently ignored. Untouched blocks keep their look.
+	&.has-icon-background:not(.is-style-circle):not(.is-style-square) .dokan-store-social-link i {
+		background: var(--dokan-social-icon-background);
+		padding: 0.15em;
+		border-radius: 3px;
+	}
 }

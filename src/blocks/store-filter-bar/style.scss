@@ -21,6 +21,7 @@
 	// The container is named so extensions can give their own filter fields the same treatment — Dokan Pro
 	// matches this query for its category, featured, open-now and rating controls.
 	@container dokan-store-filter-bar (max-width: 767px) {
+
 		#dokan-store-listing-filter-wrap {
 			display: block;
 
@@ -33,5 +34,28 @@
 				}
 			}
 		}
+	}
+}
+
+// Button colour. Only emitted once a colour is picked; the Cancel button keeps
+// its outline look and follows the picked colour as its border and text
+// instead. `!important` because Dokan's own button rules carry it.
+// Each part falls back to the theme button colour, so picking only one keeps the other.
+$filter-btn-bg: var(--dokan-filter-button-background, var(--dokan-button-background-color, #7047eb));
+$filter-btn-text: var(--dokan-filter-button-color, var(--dokan-button-text-color, #fff));
+
+.wp-block-dokan-store-filter-bar.has-button-color {
+
+	.dokan-btn-theme,
+	#dokan-store-listing-filter-form-wrap .apply-filter #apply-filter-btn {
+		background: $filter-btn-bg !important;
+		border-color: $filter-btn-bg !important;
+		color: $filter-btn-text !important;
+	}
+
+	#dokan-store-listing-filter-form-wrap .apply-filter #cancel-filter-btn {
+		background: transparent !important;
+		border-color: $filter-btn-bg !important;
+		color: $filter-btn-bg !important;
 	}
 }

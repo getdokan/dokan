@@ -25,14 +25,36 @@
         "title": {
             "type": "string",
             "default": ""
+        },
+        "emptyText": {
+            "type": "string",
+            "default": ""
         }
     },
     "supports": {
         "html": false,
-        "align": [ "wide", "full" ],
+        "align": [
+            "wide",
+            "full"
+        ],
         "spacing": {
             "margin": true,
             "padding": true
+        },
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true,
+            "heading": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true,
+            "textAlign": true,
+            "__experimentalFontFamily": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
         }
     },
     "example": {},

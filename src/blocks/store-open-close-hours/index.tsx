@@ -10,6 +10,7 @@ import './style.scss';
 type StoreOpenCloseHoursAttributes = {
     title: string;
     showTitle: boolean;
+    offDayText: string;
 };
 
 registerBlockType( metadata.name, {
@@ -45,6 +46,20 @@ registerBlockType( metadata.name, {
                             __nextHasNoMarginBottom
                         />
                     ) }
+                    <TextControl
+                        label={ __( 'Closed day text', 'dokan-lite' ) }
+                        help={ __(
+                            'Shown for days the store is closed. Leave empty for the default wording.',
+                            'dokan-lite'
+                        ) }
+                        placeholder={ __( 'Off Day', 'dokan-lite' ) }
+                        value={ attributes.offDayText ?? '' }
+                        onChange={ ( offDayText ) =>
+                            setAttributes( { offDayText } )
+                        }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
                 </PanelBody>
             </InspectorControls>
         </SSREdit>

@@ -27,6 +27,19 @@
 		border-radius: inherit;
 	}
 
+	// Overlay colour sits on top of the image; the figure anchors it. Pointer
+	// events pass through so a linked banner stays clickable.
+	&.has-overlay {
+		position: relative;
+	}
+
+	&__overlay {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+	}
+
 	/* Editor-only frame for a vendor with no banner, so the block stays
 	 * selectable. */
 	&__placeholder {

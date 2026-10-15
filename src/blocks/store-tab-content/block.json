@@ -6,7 +6,14 @@
     "title": "Store Tab Content",
     "category": "dokan",
     "description": "Displays the body of the store's active tab: the vendor's products, terms and conditions, or an extension's tab.",
-    "keywords": [ "dokan", "store", "vendor", "products", "tab", "content" ],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "products",
+        "tab",
+        "content"
+    ],
     "textdomain": "dokan-lite",
     "attributes": {
         "columns": {
@@ -20,11 +27,18 @@
         "previewTab": {
             "type": "string",
             "default": "products"
+        },
+        "noProductsText": {
+            "type": "string",
+            "default": ""
         }
     },
     "supports": {
         "html": false,
-        "align": [ "wide", "full" ],
+        "align": [
+            "wide",
+            "full"
+        ],
         "color": {
             "text": true,
             "background": true,

@@ -81,7 +81,7 @@ if ( ! wp_is_block_theme() && is_active_sidebar( 'sidebar-store' ) ) {
 
 printf(
     '<div %1$s role="complementary"><div class="dokan-widget-area widget-collapse">%2$s%3$s%4$s</div></div>',
-    get_block_wrapper_attributes( [ 'class' => 'dokan-store-sidebar' ] ),
+    get_block_wrapper_attributes( [ 'class' => empty( $attributes['isSticky'] ) ? 'dokan-store-sidebar' : 'dokan-store-sidebar is-sticky' ] ),
     $before, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped template parts by the listeners.
     $content, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Inner blocks, already rendered by WP_Block::render().
     $after // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped template parts by the listeners.

@@ -32,6 +32,10 @@
 
 		> i {
 			margin-inline-end: 0.5em;
+
+			/* Icon colour setting. Unset, icons inherit the text colour as
+			   they always have. */
+			color: var(--dokan-info-icon-color, inherit);
 		}
 	}
 
@@ -131,6 +135,55 @@
 
 		> li {
 			margin: 0;
+		}
+	}
+
+	/* --- Appearance settings. Each rule is gated on a class or custom property
+	   the block emits only once a setting is changed, so an untouched block
+	   renders exactly as before. --- */
+
+	&.has-icon-size-small > li > i {
+		font-size: 0.85em;
+	}
+
+	&.has-icon-size-large > li > i {
+		font-size: 1.35em;
+	}
+
+	.dokan-store-info-label {
+		margin-inline-end: 0.35em;
+	}
+
+	&.has-bold-labels .dokan-store-info-label {
+		font-weight: 700;
+	}
+
+	// Alignment comes from the typography text-align support. Block-level rows
+	// follow text-align on their own; the two flex rows need their content moved.
+	&.has-text-align-center {
+
+		> li.dokan-store-open-close {
+			justify-content: center;
+		}
+
+		&.is-inline {
+			justify-content: center;
+		}
+	}
+
+	&.has-text-align-right {
+
+		> li.dokan-store-open-close {
+			justify-content: flex-end;
+		}
+
+		&.is-inline {
+			justify-content: flex-end;
+		}
+
+		.store-open-close-notice #vendor-store-times {
+			inset-inline-start: auto;
+			inset-inline-end: 0;
 		}
 	}
 }
