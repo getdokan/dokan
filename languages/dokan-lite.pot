@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.3.0\n"
+"Project-Id-Version: Dokan 5.3.1\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T09:43:24+00:00\n"
+"POT-Creation-Date: 2026-10-15T10:31:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -4621,7 +4621,7 @@ msgid "Order is required for order commission calculation."
 msgstr ""
 
 #. translators: 1: Refund item ID, 2: Error message
-#: includes/Commission/OrderCommission.php:169
+#: includes/Commission/OrderCommission.php:192
 msgid "Refund item ID %1$s error: %2$s"
 msgstr ""
 
@@ -9240,16 +9240,16 @@ msgid "Order status"
 msgstr ""
 
 #. translators: numeric number of files
-#: includes/REST/OrderControllerV2.php:319
+#: includes/REST/OrderControllerV2.php:320
 msgid "File %d"
 msgstr ""
 
-#: includes/REST/OrderControllerV2.php:345
+#: includes/REST/OrderControllerV2.php:346
 msgid "Download permission not found."
 msgstr ""
 
-#: includes/REST/OrderControllerV2.php:355
-#: includes/REST/OrderControllerV2.php:414
+#: includes/REST/OrderControllerV2.php:356
+#: includes/REST/OrderControllerV2.php:415
 msgid "Download permission does not belong to this order."
 msgstr ""
 
@@ -9510,9 +9510,9 @@ msgstr ""
 msgid "The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:568
 #: includes/REST/ProductControllerV3.php:597
-#: includes/REST/ProductControllerV3.php:657
+#: includes/REST/ProductControllerV3.php:626
+#: includes/REST/ProductControllerV3.php:686
 msgid "Invalid product ID."
 msgstr ""
 
@@ -10537,7 +10537,7 @@ msgid "No Name"
 msgstr ""
 
 #: includes/Traits/AjaxResponseError.php:32
-#: includes/Traits/RESTResponseError.php:30
+#: includes/Traits/RESTResponseError.php:50
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Something went wrong"
@@ -10596,12 +10596,12 @@ msgstr ""
 msgid "Unable to create vendor"
 msgstr ""
 
-#: includes/Vendor/Manager.php:368
+#: includes/Vendor/Manager.php:369
 msgid "Email is not valid"
 msgstr ""
 
-#: includes/Vendor/Manager.php:606
-#: includes/Vendor/Manager.php:625
+#: includes/Vendor/Manager.php:607
+#: includes/Vendor/Manager.php:626
 msgid "Invalid vendor ID."
 msgstr ""
 
@@ -11357,11 +11357,11 @@ msgstr ""
 msgid "The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features."
 msgstr ""
 
-#: includes/wc-functions.php:387
+#: includes/wc-functions.php:394
 msgid "Product SKU must be unique"
 msgstr ""
 
-#: includes/wc-functions.php:851
+#: includes/wc-functions.php:858
 #: templates/account/update-customer-to-vendor.php:26
 #: templates/account/vendor-registration.php:18
 #: templates/global/seller-registration-form.php:16
@@ -11371,7 +11371,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:852
+#: includes/wc-functions.php:859
 #: templates/account/update-customer-to-vendor.php:30
 #: templates/account/vendor-registration.php:23
 #: templates/global/seller-registration-form.php:21
@@ -11381,57 +11381,57 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:853
+#: includes/wc-functions.php:860
 #: templates/account/vendor-registration.php:36
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:859
+#: includes/wc-functions.php:866
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:865
+#: includes/wc-functions.php:872
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:867
+#: includes/wc-functions.php:874
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:873
+#: includes/wc-functions.php:880
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:878
+#: includes/wc-functions.php:885
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:881
+#: includes/wc-functions.php:888
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:884
+#: includes/wc-functions.php:891
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:887
+#: includes/wc-functions.php:894
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:907
+#: includes/wc-functions.php:914
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-functions.php:953
+#: includes/wc-functions.php:960
 msgid "More Products"
 msgstr ""
 
-#: includes/wc-functions.php:1006
+#: includes/wc-functions.php:1013
 msgid "No product has been found!"
 msgstr ""
 
-#: includes/wc-functions.php:1079
+#: includes/wc-functions.php:1086
 msgid "Reviews cannot be posted for products that you own."
 msgstr ""
 
@@ -15708,6 +15708,10 @@ msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "You have unsaved settings changes. Leaving this page discards them."
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:2
+msgid "An error occurred"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:2

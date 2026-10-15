@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.3.0
+Stable tag: 5.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -379,6 +379,14 @@ A. Please report security bugs found in the source code of the plugin through th
 
 == Changelog ==
 
+= v5.3.1 ( Oct 15, 2026 ) =
+- **new:** Add-ons can now adjust how an order's earnings are split between the vendor and the admin, so features like vendor-funded affiliate commissions show the correct amounts.
+- **fix:** Saving a downloadable product from the vendor dashboard no longer resets buyers' existing download limits, expiry dates, and download counts.
+- **fix:** Creating a vendor from the admin with selling enabled no longer loses the vendor's phone, address, payment details, and social links.
+- **fix:** Vendors can now see download permissions for variable products and variable subscriptions on an order.
+- **fix:** The admin dashboard now shows the actual error message when a section fails to load instead of a generic "An error occurred".
+- **fix:** REST API requests now return the real error message instead of failing with a server error when certain Dokan errors occur.
+
 = v5.3.0 ( Oct 08, 2026 ) =
 - **new:** Introduced a redesigned vendor Store Settings page in the new vendor dashboard.
 - **new:** Add-ons and extensions can now show their own options on the new vendor Store Settings page.
@@ -406,11 +414,5 @@ A. Please report security bugs found in the source code of the plugin through th
 - **fix:** Vendors can now reorder product gallery images by dragging them in the new product editor.
 - **fix:** REST pagination links now point at the endpoint that actually served the request instead of the controller's shared base route.
 - **fix:** Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.
-
-= v5.1.2 ( Sep 17, 2026 ) =
-- **update:** Added FlyCRM to the setup wizard's recommended add-ons and removed Texty from that step.
-- **update:** Added FlyCRM to the admin Extensions page as an installable add-on.
-- **fix:** Dokan now falls back to a current AI model when the saved one has been retired, so AI content generation no longer fails and the admin AI model dropdown no longer appears blank.
-- **fix:** The Single Product Multi Vendor search field now renders correctly in the new product editor instead of showing a plain text box and a debug notice.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

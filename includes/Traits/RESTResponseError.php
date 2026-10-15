@@ -12,7 +12,7 @@ trait RESTResponseError {
      * Send REST error response
      *
      * @since 3.0.0
-     * @since DOKAN_SINCE Return the wrapped WP_Error when the error code is a WP_Error.
+     * @since 5.3.1 Return the wrapped WP_Error when the error code is a WP_Error.
      *
      * @param \Exception $e
      * @param string     $default_message

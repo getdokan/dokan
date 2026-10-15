@@ -111,7 +111,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         /**
          * Filters the vendor's net earning on an order, once its line items are calculated.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.1
          *
          * @param float           $vendor_net_earning The vendor's net earning on the order's line items.
          * @param WC_Order        $order              The order.
@@ -122,7 +122,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         /**
          * Filters the admin's net commission on an order, once its line items are calculated.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.1
          *
          * @param float           $admin_net_commission The admin's net commission on the order's line items.
          * @param WC_Order        $order                The order.
