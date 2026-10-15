@@ -264,6 +264,11 @@ class Manager {
             );
         }
 
+        // Persist the profile before make_active() reads and caches shop data.
+        $vendor->update_meta( 'dokan_profile_settings', $store_data );
+        $vendor->update_meta( 'dokan_store_name', $store_data['store_name'] );
+        $vendor->set_store_name( $store_data['store_name'] );
+
         if ( current_user_can( 'manage_woocommerce' ) ) {
             if ( isset( $data['enabled'] ) && dokan_validate_boolean( $data['enabled'] ) ) {
                 $vendor->make_active();
@@ -293,10 +298,6 @@ class Manager {
                 $vendor->update_meta( 'admin_category_commission', wc_clean( $data['admin_category_commission'] ) );
             }
         }
-
-        $vendor->update_meta( 'dokan_profile_settings', $store_data );
-        $vendor->update_meta( 'dokan_store_name', $store_data['store_name'] );
-        $vendor->set_store_name( $store_data['store_name'] );
 
         /**
          * @since 3.2.7 hook introduced

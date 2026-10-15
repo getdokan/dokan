@@ -110,6 +110,22 @@ class OrderControllerV2ResponseTest extends DokanTestCase {
     }
 
     /**
+     * An order without permissions lists no products, rather than every product in the store.
+     *
+     * @covers \WeDevs\Dokan\REST\OrderControllerV2::get_order_downloads
+     */
+    public function test_order_without_permissions_lists_no_products() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->server->dispatch( new WP_REST_Request( 'GET', "/dokan/v2/orders/{$this->order_id}/downloads" ) );
+        $data     = $response->get_data();
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( [], $data['downloads'] );
+        $this->assertSame( [], $data['products'] );
+    }
+
+    /**
      * Create a downloadable product (with one file) owned by the given seller.
      */
     protected function create_downloadable_product_for( int $seller_id ): int {

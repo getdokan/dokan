@@ -1,3 +1,12 @@
+### v5.3.1 ( Oct 15, 2026 ) ###
+
+- **new:** Add-ons can now adjust how an order's earnings are split between the vendor and the admin, so features like vendor-funded affiliate commissions show the correct amounts.
+- **fix:** Saving a downloadable product from the vendor dashboard no longer resets buyers' existing download limits, expiry dates, and download counts.
+- **fix:** Creating a vendor from the admin with selling enabled no longer loses the vendor's phone, address, payment details, and social links.
+- **fix:** Vendors can now see download permissions for variable products and variable subscriptions on an order.
+- **fix:** The admin dashboard now shows the actual error message when a section fails to load instead of a generic "An error occurred".
+- **fix:** REST API requests now return the real error message instead of failing with a server error when certain Dokan errors occur.
+
 ### v5.3.0 ( Oct 08, 2026 ) ###
 
 - **new:** Introduced a redesigned vendor Store Settings page in the new vendor dashboard.

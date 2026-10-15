@@ -843,9 +843,7 @@ export class ProductsPage {
     }
 
     // add product tags
-    // afterSave runs between the save and the post-save checks, so a spec can mark a known bug there
-    // (test.fail) while the steps before the save stay ordinary checks.
-    async addProductTags(productName: string, tags: string[], afterSave?: () => void): Promise<void> {
+    async addProductTags(productName: string, tags: string[]): Promise<void> {
         await this.goToProductEditById(productName);
         for (const tag of tags) {
             await this.typeAndWaitForResponse(subUrls.ajax, productsVendor.tags.tagInput, tag);
@@ -853,7 +851,6 @@ export class ProductsPage {
             await this.toBeVisible(productsVendor.tags.selectedTags(tag));
         }
         await this.saveProduct();
-        afterSave?.();
         for (const tag of tags) {
             await this.toBeVisible(productsVendor.tags.selectedTags(tag));
         }
