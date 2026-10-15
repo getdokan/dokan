@@ -18,7 +18,8 @@ const VendorMetricsSection = () => {
         return <VendorMetricsSkeleton />;
     }
 
-    if ( ! data ) {
+    // Keep the section on a failed request so its error is shown instead of the cards vanishing.
+    if ( ! data && ! error ) {
         return null;
     }
 
