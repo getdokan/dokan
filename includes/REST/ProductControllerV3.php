@@ -526,7 +526,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * The product editor sends a file's attachment id as `id`; an unchanged URL keeps its stored id so buyers' permissions stay valid.
      * Ids are queued per URL, so two files sharing one URL each keep their own id instead of collapsing into one.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.1
      *
      * @param WC_Product $product    Product being saved, still holding its stored downloads.
      * @param array      $downloads  Downloads from the request.
