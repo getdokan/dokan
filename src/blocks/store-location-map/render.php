@@ -25,8 +25,20 @@ $attributes = wp_parse_args(
     [
         'title'     => '',
         'showTitle' => true,
+        'mapHeight' => 0,
     ]
 );
+
+// The map height is a custom property; zero means the stylesheet default.
+$dokan_map_height = absint( $attributes['mapHeight'] );
+$dokan_wrapper    = static function ( $extra_class = '' ) use ( $dokan_map_height ) {
+    return get_block_wrapper_attributes(
+        [
+            'class' => trim( ( $dokan_map_height > 0 ? 'has-map-height ' : '' ) . $extra_class ),
+            'style' => $dokan_map_height > 0 ? sprintf( '--dokan-store-map-height:%dpx;', $dokan_map_height ) : '',
+        ]
+    );
+};
 
 /*
  * Store pages already carry these, but a block can sit on any page — and blocks
@@ -71,7 +83,7 @@ if ( ! $vendor->get_id() ) {
     if ( 'on' !== dokan_get_option( 'store_map', 'dokan_appearance', 'off' ) || ! dokan_has_map_api_key() ) {
         printf(
             '<div %1$s><p class="dokan-info">%2$s</p></div>',
-            get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
+            $dokan_wrapper( 'is-editor-placeholder' ),
             esc_html__( 'The store map is switched off or has no map API key in Dokan settings, so this block will not appear on the store page.', 'dokan-lite' )
         );
 
@@ -80,7 +92,7 @@ if ( ! $vendor->get_id() ) {
 
     printf(
         '<div %1$s><aside class="widget dokan-store-widget dokan-store-location">%2$s<div class="location-container"><div class="dokan-store-location-preview"><span class="dokan-store-location-preview__pin fas fa-map-marker-alt" aria-hidden="true"></span><span class="dokan-store-location-preview__label">%3$s</span></div></div></aside></div>',
-        get_block_wrapper_attributes(),
+        $dokan_wrapper(),
         '' !== $widget_title ? '<h3 class="widget-title">' . esc_html( $widget_title ) . '</h3>' : '',
         esc_html( $vendor->get_location_label() )
     );
@@ -110,6 +122,6 @@ if ( '' === trim( $widget_output ) ) {
 
 printf(
     '<div %1$s>%2$s</div>',
-    get_block_wrapper_attributes(),
+    $dokan_wrapper(),
     $widget_output // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped widget templates.
 );

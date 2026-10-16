@@ -30,6 +30,7 @@ $attributes = wp_parse_args(
     [
         'sectionId' => 'featured',
         'title'     => '',
+        'emptyText' => '',
     ]
 );
 
@@ -94,11 +95,20 @@ if ( ! $section->is_enabled() ) {
  */
 $products = $section->get_products( $vendor->get_id() );
 
-// No products means no section at all — not an empty heading, matching the classic page.
+// No products means no section at all — not an empty heading, matching the classic
+// page — unless the merchant wrote a message for that case.
 if ( ! $products instanceof WP_Query || ! $products->have_posts() ) {
+    $dokan_empty_text = trim( (string) $attributes['emptyText'] );
+
     if ( $resolver->is_editor_preview() ) {
         $dokan_section_placeholder(
-            __( 'This store has no products in this section yet.', 'dokan-lite' )
+            \WeDevs\Dokan\Blocks\Styles::text( $dokan_empty_text, __( 'This store has no products in this section yet.', 'dokan-lite' ) )
+        );
+    } elseif ( '' !== $dokan_empty_text ) {
+        printf(
+            '<div %1$s><p class="dokan-info">%2$s</p></div>',
+            get_block_wrapper_attributes( [ 'class' => 'dokan-store-product-section-block is-empty' ] ),
+            esc_html( $dokan_empty_text )
         );
     }
 

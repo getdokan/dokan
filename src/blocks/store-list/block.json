@@ -74,6 +74,78 @@
         "showPhone": {
             "type": "boolean",
             "default": true
+        },
+        "featuredText": {
+            "type": "string",
+            "default": ""
+        },
+        "openText": {
+            "type": "string",
+            "default": ""
+        },
+        "closedText": {
+            "type": "string",
+            "default": ""
+        },
+        "visitStoreText": {
+            "type": "string",
+            "default": ""
+        },
+        "noVendorText": {
+            "type": "string",
+            "default": ""
+        },
+        "prevText": {
+            "type": "string",
+            "default": ""
+        },
+        "nextText": {
+            "type": "string",
+            "default": ""
+        },
+        "phoneIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "addressIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "addressLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "avatarShape": {
+            "type": "string",
+            "default": "circle"
+        },
+        "avatarPosition": {
+            "type": "string",
+            "default": ""
+        },
+        "cardAlign": {
+            "type": "string",
+            "default": ""
+        },
+        "cardBackgroundColor": {
+            "type": "string",
+            "default": ""
+        },
+        "storeNameColor": {
+            "type": "string",
+            "default": ""
+        },
+        "storeDetailsColor": {
+            "type": "string",
+            "default": ""
+        },
+        "storeNameSize": {
+            "type": "string",
+            "default": ""
+        },
+        "storeDetailsSize": {
+            "type": "string",
+            "default": ""
         }
     },
     "supports": {
@@ -81,12 +153,43 @@
             "wide",
             "full"
         ],
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true
+        },
+        "typography": {
+            "fontSize": true,
+            "__experimentalFontFamily": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        },
         "spacing": {
             "margin": true,
             "padding": true
         },
         "html": false
     },
+    "styles": [
+        {
+            "name": "default",
+            "label": "Default",
+            "isDefault": true
+        },
+        {
+            "name": "shadow",
+            "label": "Shadow"
+        },
+        {
+            "name": "bordered",
+            "label": "Bordered"
+        },
+        {
+            "name": "flat",
+            "label": "Flat"
+        }
+    ],
     "example": {},
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",

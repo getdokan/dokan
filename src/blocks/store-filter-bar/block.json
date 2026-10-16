@@ -46,6 +46,30 @@
         "hiddenSortOptions": {
             "type": "array",
             "default": []
+        },
+        "searchPlaceholder": {
+            "type": "string",
+            "default": ""
+        },
+        "applyText": {
+            "type": "string",
+            "default": ""
+        },
+        "cancelText": {
+            "type": "string",
+            "default": ""
+        },
+        "buttonColor": {
+            "type": "string",
+            "default": ""
+        },
+        "buttonTextColor": {
+            "type": "string",
+            "default": ""
+        },
+        "filterLabels": {
+            "type": "object",
+            "default": {}
         }
     },
     "supports": {
@@ -53,6 +77,18 @@
             "wide",
             "full"
         ],
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true
+        },
+        "typography": {
+            "fontSize": true,
+            "__experimentalFontFamily": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        },
         "spacing": {
             "margin": true,
             "padding": true

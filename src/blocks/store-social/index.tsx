@@ -3,6 +3,7 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
+import ColorPanel from '../shared/color-panel';
 import type { StoreBlockEditProps } from '../shared/types';
 import metadata from './block.json';
 import './style.scss';
@@ -11,6 +12,7 @@ type StoreSocialAttributes = {
     iconSize: number;
     showLabels: boolean;
     openInNewTab: boolean;
+    iconBackgroundColor: string;
 };
 
 registerBlockType( metadata.name, {
@@ -60,6 +62,18 @@ registerBlockType( metadata.name, {
                     />
                 </PanelBody>
             </InspectorControls>
+
+            <ColorPanel
+                title={ __( 'Icons', 'dokan-lite' ) }
+                settings={ [
+                    {
+                        label: __( 'Icon background', 'dokan-lite' ),
+                        value: attributes.iconBackgroundColor,
+                        onChange: ( iconBackgroundColor ) =>
+                            setAttributes( { iconBackgroundColor } ),
+                    },
+                ] }
+            />
         </SSREdit>
     ),
     save: () => null,

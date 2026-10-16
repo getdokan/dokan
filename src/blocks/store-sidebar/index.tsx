@@ -1,9 +1,12 @@
 import { registerBlockType } from '@wordpress/blocks';
 import {
     InnerBlocks,
+    InspectorControls,
     useBlockProps,
     useInnerBlocksProps,
 } from '@wordpress/block-editor';
+import { PanelBody, ToggleControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import metadata from './block.json';
 import './style.scss';
 
@@ -19,13 +22,42 @@ const TEMPLATE = [
     [ 'dokan/store-contact-form', {} ],
 ];
 
-const Edit = () => {
+type StoreSidebarAttributes = { isSticky: boolean };
+
+const Edit = ( {
+    attributes,
+    setAttributes,
+}: {
+    attributes: StoreSidebarAttributes;
+    setAttributes: ( attrs: Partial< StoreSidebarAttributes > ) => void;
+} ) => {
     const blockProps = useBlockProps( { className: 'dokan-store-sidebar' } );
     const innerBlocksProps = useInnerBlocksProps( blockProps, {
         template: TEMPLATE,
     } );
 
-    return <div { ...innerBlocksProps } />;
+    // Sticky is not previewed: the editor canvas does not scroll the way a page does.
+    return (
+        <>
+            <InspectorControls>
+                <PanelBody title={ __( 'Sidebar Settings', 'dokan-lite' ) }>
+                    <ToggleControl
+                        label={ __( 'Sticky on scroll', 'dokan-lite' ) }
+                        help={ __(
+                            'Keeps the sidebar in view while the products scroll. Themes with their own sticky header may need the offset adjusted.',
+                            'dokan-lite'
+                        ) }
+                        checked={ !! attributes.isSticky }
+                        onChange={ ( isSticky ) =>
+                            setAttributes( { isSticky } )
+                        }
+                        __nextHasNoMarginBottom
+                    />
+                </PanelBody>
+            </InspectorControls>
+            <div { ...innerBlocksProps } />
+        </>
+    );
 };
 
 registerBlockType( metadata.name, {

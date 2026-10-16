@@ -4,12 +4,20 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
+import ColorPanel from '../shared/color-panel';
+import TextList from '../shared/text-list';
 import metadata from './block.json';
 import './style.scss';
+
+type FilterField = { key: string; label: string; placeholder?: string };
 
 // Sorting is filterable and Pro modules add to it, so the list comes from the server.
 const sortOptions = (): Record< string, string > =>
     ( window as any )?.dokanBlocksData?.sortOptions ?? {};
+
+// Filter fields extensions draw into the panel, so their labels can be edited here too.
+const extensionFields = (): FilterField[] =>
+    ( window as any )?.dokanBlocksData?.filterFields ?? [];
 
 // Each section is a toggle, optionally followed by the label that section renders.
 const sections = [
@@ -50,9 +58,28 @@ const sections = [
     },
 ];
 
+const PANEL_TEXTS = [
+    {
+        key: 'searchPlaceholder',
+        label: __( 'Search placeholder', 'dokan-lite' ),
+        placeholder: __( 'Search Vendors', 'dokan-lite' ),
+    },
+    {
+        key: 'applyText',
+        label: __( 'Apply button', 'dokan-lite' ),
+        placeholder: __( 'Apply', 'dokan-lite' ),
+    },
+    {
+        key: 'cancelText',
+        label: __( 'Cancel button', 'dokan-lite' ),
+        placeholder: __( 'Cancel', 'dokan-lite' ),
+    },
+];
+
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => {
         const hidden: string[] = attributes.hiddenSortOptions ?? [];
+        const labels: Record< string, string > = attributes.filterLabels ?? {};
 
         const toggleSortOption = ( key: string, visible: boolean ) =>
             setAttributes( {
@@ -61,11 +88,25 @@ registerBlockType( metadata.name, {
                     : [ ...hidden, key ],
             } );
 
+        const setLabel = ( key: string, value: string ) => {
+            const next = { ...labels };
+
+            // An empty label falls back to the extension's wording, so it is not stored.
+            if ( value ) {
+                next[ key ] = value;
+            } else {
+                delete next[ key ];
+            }
+
+            setAttributes( { filterLabels: next } );
+        };
+
         // view.js drives the preview's controls and blocks navigation, so it stays clickable.
         return (
             <SSREdit
                 name={ metadata.name }
                 attributes={ attributes }
+                setAttributes={ setAttributes }
                 interactive
             >
                 <InspectorControls>
@@ -104,6 +145,32 @@ registerBlockType( metadata.name, {
                         ) ) }
                     </PanelBody>
 
+                    { attributes.showSearch && (
+                        <PanelBody
+                            title={ __( 'Filter Panel Text', 'dokan-lite' ) }
+                            initialOpen={ false }
+                        >
+                            <TextList
+                                fields={ PANEL_TEXTS }
+                                attributes={ attributes }
+                                setAttributes={ setAttributes }
+                            />
+                            { extensionFields().map( ( field ) => (
+                                <TextControl
+                                    key={ field.key }
+                                    label={ field.label }
+                                    placeholder={ field.placeholder }
+                                    value={ labels[ field.key ] ?? '' }
+                                    onChange={ ( value ) =>
+                                        setLabel( field.key, value )
+                                    }
+                                    __next40pxDefaultSize
+                                    __nextHasNoMarginBottom
+                                />
+                            ) ) }
+                        </PanelBody>
+                    ) }
+
                     { attributes.showSort && (
                         <PanelBody
                             title={ __( 'Sorting Options', 'dokan-lite' ) }
@@ -124,6 +191,24 @@ registerBlockType( metadata.name, {
                         </PanelBody>
                     ) }
                 </InspectorControls>
+
+                <ColorPanel
+                    title={ __( 'Buttons', 'dokan-lite' ) }
+                    settings={ [
+                        {
+                            label: __( 'Button background', 'dokan-lite' ),
+                            value: attributes.buttonColor,
+                            onChange: ( buttonColor ) =>
+                                setAttributes( { buttonColor } ),
+                        },
+                        {
+                            label: __( 'Button text', 'dokan-lite' ),
+                            value: attributes.buttonTextColor,
+                            onChange: ( buttonTextColor ) =>
+                                setAttributes( { buttonTextColor } ),
+                        },
+                    ] }
+                />
             </SSREdit>
         );
     },

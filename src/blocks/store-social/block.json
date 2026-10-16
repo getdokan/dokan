@@ -6,7 +6,14 @@
     "title": "Store Social Icons",
     "category": "dokan",
     "description": "Displays links to the vendor's social profiles.",
-    "keywords": [ "dokan", "store", "vendor", "social", "profile", "links" ],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "social",
+        "profile",
+        "links"
+    ],
     "textdomain": "dokan-lite",
     "attributes": {
         "iconSize": {
@@ -20,6 +27,10 @@
         "openInNewTab": {
             "type": "boolean",
             "default": true
+        },
+        "iconBackgroundColor": {
+            "type": "string",
+            "default": ""
         }
     },
     "supports": {
@@ -42,5 +53,20 @@
     "example": {},
     "editorScript": "file:./index.js",
     "style": "file:./style-index.css",
-    "render": "file:./render.php"
+    "render": "file:./render.php",
+    "styles": [
+        {
+            "name": "default",
+            "label": "Plain",
+            "isDefault": true
+        },
+        {
+            "name": "circle",
+            "label": "Circle"
+        },
+        {
+            "name": "square",
+            "label": "Square"
+        }
+    ]
 }

@@ -11,6 +11,8 @@
  * @var array $attributes Block attributes.
  */
 
+use WeDevs\Dokan\Blocks\Styles;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
@@ -31,6 +33,12 @@ $attributes = wp_parse_args(
         'filterButtonText'  => '',
         'sortLabel'         => '',
         'hiddenSortOptions' => [],
+        'searchPlaceholder' => '',
+        'applyText'         => '',
+        'cancelText'        => '',
+        'buttonColor'       => '',
+        'buttonTextColor'   => '',
+        'filterLabels'      => [],
     ]
 );
 
@@ -71,8 +79,23 @@ if ( ! array_key_exists( $sort_by, $sort_filters ) ) {
     $sort_by = array_key_exists( 'most_recent', $sort_filters ) ? 'most_recent' : (string) key( $sort_filters );
 }
 
+// Button colours travel as custom properties; extensions style their own filter controls from the same two.
+$dokan_button_color      = Styles::color( $attributes['buttonColor'] );
+$dokan_button_text_color = Styles::color( $attributes['buttonTextColor'] );
+
+$wrapper_attributes = get_block_wrapper_attributes(
+    [
+        'class' => 'dokan-store-filter-bar-block' . ( '' !== $dokan_button_color . $dokan_button_text_color ? ' has-button-color' : '' ),
+        'style' => Styles::custom_properties(
+            [
+                '--dokan-filter-button-background' => $dokan_button_color,
+                '--dokan-filter-button-color'      => $dokan_button_text_color,
+            ]
+        ),
+    ]
+);
 ?>
-<div <?php echo get_block_wrapper_attributes( [ 'class' => 'dokan-store-filter-bar-block' ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <?php
     \WeDevs\Dokan\Blocks\Manager::dispatch_store_lists_filter_form( $stores );
 
@@ -91,6 +114,9 @@ if ( ! array_key_exists( $sort_by, $sort_filters ) ) {
             'store_count_text'   => trim( (string) $attributes['storeCountText'] ),
             'filter_button_text' => trim( (string) $attributes['filterButtonText'] ),
             'sort_label'         => trim( (string) $attributes['sortLabel'] ),
+            'search_placeholder' => sanitize_text_field( (string) $attributes['searchPlaceholder'] ),
+            'apply_text'         => sanitize_text_field( (string) $attributes['applyText'] ),
+            'cancel_text'        => sanitize_text_field( (string) $attributes['cancelText'] ),
         ]
     );
     ?>

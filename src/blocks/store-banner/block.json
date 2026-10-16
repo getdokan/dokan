@@ -6,7 +6,13 @@
     "title": "Store Banner",
     "category": "dokan",
     "description": "Displays the vendor's store banner image.",
-    "keywords": [ "dokan", "store", "vendor", "banner", "cover" ],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "banner",
+        "cover"
+    ],
     "textdomain": "dokan-lite",
     "attributes": {
         "height": {
@@ -24,11 +30,22 @@
         "focalY": {
             "type": "number",
             "default": 50
+        },
+        "overlayColor": {
+            "type": "string",
+            "default": ""
+        },
+        "overlayOpacity": {
+            "type": "number",
+            "default": 40
         }
     },
     "supports": {
         "html": false,
-        "align": [ "wide", "full" ],
+        "align": [
+            "wide",
+            "full"
+        ],
         "shadow": true,
         "spacing": {
             "margin": true,

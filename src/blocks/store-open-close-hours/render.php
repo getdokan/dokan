@@ -23,10 +23,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 $attributes = wp_parse_args(
     $attributes,
     [
-        'title'     => '',
-        'showTitle' => true,
+        'title'      => '',
+        'showTitle'  => true,
+        'offDayText' => '',
     ]
 );
+
+$dokan_off_day_text = sanitize_text_field( (string) $attributes['offDayText'] );
 
 /*
  * Store pages already carry these, but a block can sit on any page — and blocks
@@ -85,6 +88,7 @@ if ( ! $vendor->get_id() ) {
             'seller_id'        => 0,
             'dokan_store_time' => $vendor->get_store_time(),
             'dokan_days'       => dokan_get_translated_days(),
+            'off_day_text'     => $dokan_off_day_text,
         ]
     );
 
@@ -100,10 +104,13 @@ if ( ! $vendor->get_id() ) {
 
 $widget_output = $resolver->render_in_store_context(
     $vendor,
-    function () use ( $widget_title ) {
+    function () use ( $widget_title, $dokan_off_day_text ) {
         the_widget(
             'WeDevs\\Dokan\\Widgets\\StoreOpenClose',
-            [ 'title' => $widget_title ],
+            [
+                'title'        => $widget_title,
+                'off_day_text' => $dokan_off_day_text,
+            ],
             [
                 'before_widget' => '<aside class="widget dokan-store-widget %1$s">',
                 'after_widget'  => '</aside>',

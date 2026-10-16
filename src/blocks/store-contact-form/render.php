@@ -14,6 +14,7 @@
  * @var WP_Block $block      Block instance.
  */
 
+use WeDevs\Dokan\Blocks\Styles;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,8 +26,40 @@ $attributes = wp_parse_args(
     [
         'title'     => '',
         'showTitle' => true,
+        'buttonText'         => '',
+        'namePlaceholder'    => '',
+        'emailPlaceholder'   => '',
+        'messagePlaceholder' => '',
+        'buttonColor'        => '',
+        'buttonTextColor'    => '',
     ]
 );
+
+// Text overrides travel to the widget template; empty keeps today's wording.
+$dokan_form_text = [
+    'button_text'         => sanitize_text_field( (string) $attributes['buttonText'] ),
+    'name_placeholder'    => sanitize_text_field( (string) $attributes['namePlaceholder'] ),
+    'email_placeholder'   => sanitize_text_field( (string) $attributes['emailPlaceholder'] ),
+    'message_placeholder' => sanitize_text_field( (string) $attributes['messagePlaceholder'] ),
+];
+
+// Button colours as custom properties the stylesheet applies to the submit button.
+$dokan_button_color      = Styles::color( $attributes['buttonColor'] );
+$dokan_button_text_color = Styles::color( $attributes['buttonTextColor'] );
+
+$dokan_wrapper = static function () use ( $dokan_button_color, $dokan_button_text_color ) {
+    return get_block_wrapper_attributes(
+        [
+            'class' => '' !== $dokan_button_color . $dokan_button_text_color ? 'has-button-color' : '',
+            'style' => Styles::custom_properties(
+                [
+                    '--dokan-contact-button-background' => $dokan_button_color,
+                    '--dokan-contact-button-color'      => $dokan_button_text_color,
+                ]
+            ),
+        ]
+    );
+};
 
 /*
  * Store pages already carry these, but a block can sit on any page — and blocks
@@ -92,17 +125,20 @@ if ( ! $vendor->get_id() ) {
     dokan_get_template_part(
         'widgets/store-contact-form',
         '',
-        [
-            'seller_id'  => 0,
-            'store_info' => [],
-            'username'   => $dokan_user->exists() ? $dokan_user->display_name : '',
-            'email'      => $dokan_user->exists() ? $dokan_user->user_email : '',
-        ]
+        array_merge(
+            [
+                'seller_id'  => 0,
+                'store_info' => [],
+                'username'   => $dokan_user->exists() ? $dokan_user->display_name : '',
+                'email'      => $dokan_user->exists() ? $dokan_user->user_email : '',
+            ],
+            $dokan_form_text
+        )
     );
 
     printf(
         '<div %1$s><aside class="widget dokan-store-widget dokan-store-contact">%2$s%3$s</aside></div>',
-        get_block_wrapper_attributes(),
+        $dokan_wrapper(),
         '' !== $widget_title ? '<h3 class="widget-title">' . esc_html( $widget_title ) . '</h3>' : '',
         ob_get_clean() // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the template part.
     );
@@ -112,10 +148,10 @@ if ( ! $vendor->get_id() ) {
 
 $widget_output = $resolver->render_in_store_context(
     $vendor,
-    function () use ( $widget_title ) {
+    function () use ( $widget_title, $dokan_form_text ) {
         the_widget(
             'WeDevs\\Dokan\\Widgets\\StoreContactForm',
-            [ 'title' => $widget_title ],
+            array_merge( [ 'title' => $widget_title ], $dokan_form_text ),
             [
                 'before_widget' => '<aside class="widget dokan-store-widget %1$s">',
                 'after_widget'  => '</aside>',
@@ -132,6 +168,6 @@ if ( '' === trim( $widget_output ) ) {
 
 printf(
     '<div %1$s>%2$s</div>',
-    get_block_wrapper_attributes(),
+    $dokan_wrapper(),
     $widget_output // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped widget templates.
 );

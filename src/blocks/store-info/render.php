@@ -17,6 +17,7 @@
  */
 
 use WeDevs\Dokan\Blocks\PreviewVendor;
+use WeDevs\Dokan\Blocks\Styles;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,6 +34,21 @@ $attributes = wp_parse_args(
         'showOpenClose' => true,
         'showIcons'     => true,
         'infoLayout'    => 'list',
+        'addressIcon'   => '',
+        'phoneIcon'     => '',
+        'emailIcon'     => '',
+        'ratingIcon'    => '',
+        'openCloseIcon' => '',
+        'addressLabel'  => '',
+        'phoneLabel'    => '',
+        'emailLabel'    => '',
+        'ratingLabel'   => '',
+        'openCloseLabel' => '',
+        'openText'      => '',
+        'closedText'    => '',
+        'iconColor'     => '',
+        'iconSize'      => 'medium',
+        'boldLabels'    => false,
     ]
 );
 
@@ -58,9 +74,17 @@ if ( ! $vendor ) {
 $store_id = $vendor->get_id();
 $items    = '';
 
-// Icons are markup this block emits itself, so hiding them is a plain subtraction.
-$dokan_info_icon = static function ( $classes ) use ( $attributes ) {
-    return empty( $attributes['showIcons'] ) ? '' : '<i class="' . esc_attr( $classes ) . '"></i>';
+// Icons are markup this block emits itself, so hiding or swapping them is a plain
+// subtraction. The attribute names the line's icon; empty keeps today's, `none` drops it.
+$dokan_info_icon = static function ( $attribute, $default_class ) use ( $attributes ) {
+    return empty( $attributes['showIcons'] ) ? '' : Styles::icon( $attributes[ $attribute ], $default_class );
+};
+
+// A label is shown before the value; empty means none, exactly as today.
+$dokan_info_label = static function ( $attribute ) use ( $attributes ) {
+    $label = trim( (string) $attributes[ $attribute ] );
+
+    return '' === $label ? '' : '<span class="dokan-store-info-label">' . esc_html( $label ) . '</span>';
 };
 
 // Address — admin privacy gate.
@@ -73,8 +97,9 @@ if ( ! empty( $attributes['showAddress'] ) && ! dokan_is_vendor_info_hidden( 'ad
 
     if ( ! empty( $store_address ) ) {
         $items .= sprintf(
-            '<li class="dokan-store-address">%1$s%2$s</li>',
-            $dokan_info_icon( 'fas fa-map-marker-alt' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
+            '<li class="dokan-store-address">%1$s%2$s%3$s</li>',
+            $dokan_info_icon( 'addressIcon', 'fas fa-map-marker-alt' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
+            $dokan_info_label( 'addressLabel' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
             wp_kses_post( $store_address )
         );
     }
@@ -86,10 +111,11 @@ if ( ! empty( $attributes['showPhone'] ) && ! dokan_is_vendor_info_hidden( 'phon
 
     if ( ! empty( $phone ) ) {
         $items .= sprintf(
-            '<li class="dokan-store-phone">%1$s<a href="tel:%2$s">%3$s</a></li>',
-            $dokan_info_icon( 'fas fa-mobile-alt' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
+            '<li class="dokan-store-phone">%1$s%4$s<a href="tel:%2$s">%3$s</a></li>',
+            $dokan_info_icon( 'phoneIcon', 'fas fa-mobile-alt' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
             esc_attr( $phone ),
-            esc_html( $phone )
+            esc_html( $phone ),
+            $dokan_info_label( 'phoneLabel' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
         );
     }
 }
@@ -102,10 +128,11 @@ if ( ! empty( $attributes['showEmail'] ) && ! dokan_is_vendor_info_hidden( 'emai
         $obfuscated_email = antispambot( $email );
 
         $items .= sprintf(
-            '<li class="dokan-store-email">%1$s<a href="mailto:%2$s">%3$s</a></li>',
-            $dokan_info_icon( 'far fa-envelope' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
+            '<li class="dokan-store-email">%1$s%4$s<a href="mailto:%2$s">%3$s</a></li>',
+            $dokan_info_icon( 'emailIcon', 'far fa-envelope' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
             esc_attr( $obfuscated_email ),
-            esc_html( $obfuscated_email )
+            esc_html( $obfuscated_email ),
+            $dokan_info_label( 'emailLabel' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
         );
     }
 }
@@ -127,9 +154,10 @@ if ( ! empty( $attributes['showRating'] ) ) {
      * has to carry it. Scoped to this row so no other Woo rule applies.
      */
     $items .= sprintf(
-        '<li class="dokan-store-rating woocommerce">%1$s%2$s</li>',
-        $dokan_info_icon( 'fas fa-star' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
-        wp_kses_post( $vendor->get_readable_rating( false ) )
+        '<li class="dokan-store-rating woocommerce">%1$s%3$s%2$s</li>',
+        $dokan_info_icon( 'ratingIcon', 'fas fa-star' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
+        wp_kses_post( $vendor->get_readable_rating( false ) ),
+        $dokan_info_label( 'ratingLabel' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
     );
 }
 
@@ -143,9 +171,10 @@ if (
     // editor preview does not have — preview the open state instead.
     $current_time = dokan_current_datetime();
     $is_open      = $store_id ? dokan_is_store_open( $store_id ) : true;
-    $notice       = $is_open
-        ? $vendor->get_store_open_notice( __( 'Store Open', 'dokan-lite' ) )
-        : $vendor->get_store_close_notice( __( 'Store Closed', 'dokan-lite' ) );
+    // The block's text is the default the vendor's own notice overrides, as today's does.
+    $notice = $is_open
+        ? $vendor->get_store_open_notice( Styles::text( $attributes['openText'], __( 'Store Open', 'dokan-lite' ) ) )
+        : $vendor->get_store_close_notice( Styles::text( $attributes['closedText'], __( 'Store Closed', 'dokan-lite' ) ) );
 
     ob_start();
 
@@ -167,11 +196,12 @@ if (
     $times = ob_get_clean();
 
     $items .= sprintf(
-        '<li class="dokan-store-open-close">%1$s<div class="store-open-close-notice"><span class="store-notice">%2$s</span>%3$s%4$s</div></li>',
-        $dokan_info_icon( 'fas fa-shopping-cart' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
+        '<li class="dokan-store-open-close">%1$s%5$s<div class="store-open-close-notice"><span class="store-notice">%2$s</span>%3$s%4$s</div></li>',
+        $dokan_info_icon( 'openCloseIcon', 'fas fa-shopping-cart' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
         esc_html( $notice ),
         empty( $attributes['showIcons'] ) ? '' : '<span class="fas fa-angle-down"></span>',
-        $times // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the template part.
+        $times, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the template part.
+        $dokan_info_label( 'openCloseLabel' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure.
     );
 }
 
@@ -191,10 +221,27 @@ if ( '' === trim( $items ) ) {
     return; // Every field is hidden — emit nothing rather than an empty list.
 }
 
+$dokan_info_classes = [ 'dokan-store-info' ];
+
+if ( 'inline' === $attributes['infoLayout'] ) {
+    $dokan_info_classes[] = 'is-inline';
+}
+
+if ( ! empty( $attributes['boldLabels'] ) ) {
+    $dokan_info_classes[] = 'has-bold-labels';
+}
+
+if ( in_array( $attributes['iconSize'], [ 'small', 'large' ], true ) ) {
+    $dokan_info_classes[] = 'has-icon-size-' . $attributes['iconSize'];
+}
+
 printf(
     '<ul %1$s>%2$s</ul>',
     get_block_wrapper_attributes(
-        [ 'class' => 'inline' === $attributes['infoLayout'] ? 'dokan-store-info is-inline' : 'dokan-store-info' ]
+        [
+            'class' => implode( ' ', $dokan_info_classes ),
+            'style' => Styles::custom_properties( [ '--dokan-info-icon-color' => Styles::color( $attributes['iconColor'] ) ] ),
+        ]
     ),
     $items // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each item is escaped as it is built.
 );

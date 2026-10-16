@@ -3,6 +3,7 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, RangeControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import SSREdit from '../shared/ssr-edit';
+import ColorPanel from '../shared/color-panel';
 import type { StoreBlockEditProps } from '../shared/types';
 import metadata from './block.json';
 import './style.scss';
@@ -12,6 +13,8 @@ type StoreBannerAttributes = {
     isLink: boolean;
     focalX: number;
     focalY: number;
+    overlayColor: string;
+    overlayOpacity: number;
 };
 
 registerBlockType( metadata.name, {
@@ -82,8 +85,41 @@ registerBlockType( metadata.name, {
                         onChange={ ( isLink ) => setAttributes( { isLink } ) }
                         __nextHasNoMarginBottom
                     />
+                    { !! attributes.overlayColor && (
+                        <RangeControl
+                            label={ __( 'Overlay strength', 'dokan-lite' ) }
+                            help={ __(
+                                'How much of the banner the overlay colour covers.',
+                                'dokan-lite'
+                            ) }
+                            value={ attributes.overlayOpacity ?? 40 }
+                            onChange={ ( overlayOpacity ) =>
+                                setAttributes( {
+                                    overlayOpacity:
+                                        Number( overlayOpacity ) || 0,
+                                } )
+                            }
+                            min={ 0 }
+                            max={ 100 }
+                            step={ 10 }
+                            __next40pxDefaultSize
+                            __nextHasNoMarginBottom
+                        />
+                    ) }
                 </PanelBody>
             </InspectorControls>
+
+            <ColorPanel
+                title={ __( 'Overlay', 'dokan-lite' ) }
+                settings={ [
+                    {
+                        label: __( 'Overlay color', 'dokan-lite' ),
+                        value: attributes.overlayColor,
+                        onChange: ( overlayColor ) =>
+                            setAttributes( { overlayColor } ),
+                    },
+                ] }
+            />
         </SSREdit>
     ),
     save: () => null,

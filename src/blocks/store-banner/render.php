@@ -12,6 +12,7 @@
  * @var WP_Block $block      Block instance.
  */
 
+use WeDevs\Dokan\Blocks\Styles;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,6 +26,8 @@ $attributes = wp_parse_args(
         'isLink'  => false,
         'focalX'  => 50,
         'focalY'  => 50,
+        'overlayColor'   => '',
+        'overlayOpacity' => 40,
     ]
 );
 
@@ -114,8 +117,22 @@ if ( ! empty( $attributes['isLink'] ) ) {
     );
 }
 
+// A tinted layer over the image, so text placed on a busy banner stays readable.
+// Nothing is emitted until a colour is picked.
+$dokan_overlay       = '';
+$dokan_overlay_color = Styles::color( $attributes['overlayColor'] );
+
+if ( '' !== $dokan_overlay_color ) {
+    $dokan_overlay = sprintf(
+        '<span class="wp-block-dokan-store-banner__overlay" aria-hidden="true" style="background-color:%1$s;opacity:%2$s"></span>',
+        esc_attr( $dokan_overlay_color ),
+        esc_attr( (string) ( min( 100, max( 0, absint( $attributes['overlayOpacity'] ) ) ) / 100 ) )
+    );
+}
+
 printf(
-    '<figure %1$s>%2$s</figure>',
-    get_block_wrapper_attributes(),
-    $image // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+    '<figure %1$s>%2$s%3$s</figure>',
+    get_block_wrapper_attributes( [ 'class' => '' !== $dokan_overlay ? 'has-overlay' : '' ] ),
+    $image, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+    $dokan_overlay // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
 );

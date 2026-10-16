@@ -16,6 +16,7 @@
  * @var WP_Block $block      Block instance.
  */
 
+use WeDevs\Dokan\Blocks\Styles;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,6 +29,7 @@ $attributes = wp_parse_args(
         'iconSize'     => 24,
         'showLabels'   => false,
         'openInNewTab' => true,
+        'iconBackgroundColor' => '',
     ]
 );
 
@@ -92,13 +94,20 @@ if ( '' === $items ) {
     return;
 }
 
+$icon_background = Styles::color( $attributes['iconBackgroundColor'] );
+
 printf(
     '<div %1$s><ul class="dokan-store-social-list">%2$s</ul></div>',
     get_block_wrapper_attributes(
         [
-			'class' => empty( $attributes['showLabels'] ) ? 'has-icons-only' : '',
-			'style' => sprintf( '--dokan-social-icon-size:%dpx;', $icon_size ),
-		]
+            'class' => trim( ( empty( $attributes['showLabels'] ) ? 'has-icons-only' : '' ) . ( '' !== $icon_background ? ' has-icon-background' : '' ) ),
+            'style' => Styles::custom_properties(
+                [
+                    '--dokan-social-icon-size'       => $icon_size . 'px',
+                    '--dokan-social-icon-background' => $icon_background,
+                ]
+            ),
+        ]
     ),
     $items // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each item is escaped as it is built.
 );

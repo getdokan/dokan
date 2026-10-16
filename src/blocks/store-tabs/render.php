@@ -14,6 +14,7 @@
  * @var WP_Block $block      Block instance.
  */
 
+use WeDevs\Dokan\Blocks\Styles;
 use WeDevs\Dokan\Blocks\VendorResolver;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,6 +32,18 @@ wp_enqueue_style( 'dokan-style' );
 if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
     wp_enqueue_style( 'dokan-fontawesome' );
 }
+
+$attributes = wp_parse_args(
+    $attributes,
+    [
+        'tabLabels'   => [],
+        'tabIcons'    => [],
+        'activeColor' => '',
+    ]
+);
+
+$dokan_tab_labels = is_array( $attributes['tabLabels'] ) ? $attributes['tabLabels'] : [];
+$dokan_tab_icons  = is_array( $attributes['tabIcons'] ) ? $attributes['tabIcons'] : [];
 
 $resolver = dokan_get_container()->get( VendorResolver::class );
 $vendor   = $resolver->resolve( $block->context ?? [], $attributes );
@@ -73,13 +86,17 @@ foreach ( $store_tabs as $key => $store_tab ) {
         $tab_url = '#';
     }
 
+    // A rename applies to the shared template, so to every store; empty keeps the tab's own title.
+    $tab_title = Styles::text( $dokan_tab_labels[ $key ] ?? '', (string) ( $store_tab['title'] ?? $key ) );
+
     $items .= sprintf(
-        '<li class="dokan-store-tab dokan-store-tab--%1$s%2$s"><a href="%3$s"%4$s>%5$s</a></li>',
+        '<li class="dokan-store-tab dokan-store-tab--%1$s%2$s"><a href="%3$s"%4$s>%6$s<span class="dokan-store-tab-label">%5$s</span></a></li>',
         esc_attr( $key ),
         $key === $active_tab ? ' is-active' : '',
         esc_url( $tab_url ),
         $key === $active_tab ? ' aria-current="page"' : '',
-        esc_html( isset( $store_tab['title'] ) ? $store_tab['title'] : $key )
+        esc_html( $tab_title ),
+        Styles::icon( $dokan_tab_icons[ $key ] ?? '', '', 'dokan-store-tab-icon' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the helper.
     );
 }
 
@@ -103,7 +120,12 @@ $buttons = $resolver->render_in_store_context(
 
 printf(
     '<nav %1$s><ul class="dokan-modules-button">%2$s</ul><ul class="dokan-store-tab-list">%3$s</ul></nav>',
-    get_block_wrapper_attributes( [ 'class' => 'dokan-store-tabs' ] ),
+    get_block_wrapper_attributes(
+        [
+            'class' => 'dokan-store-tabs',
+            'style' => Styles::custom_properties( [ '--dokan-tab-active-color' => Styles::color( $attributes['activeColor'] ) ] ),
+        ]
+    ),
     $buttons, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built from escaped template parts by the listeners.
     $items // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each item is escaped as it is built.
 );

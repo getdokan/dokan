@@ -42,10 +42,13 @@ $bar = wp_parse_args(
         'store_count_text'   => '',
         'filter_button_text' => '',
         'sort_label'         => '',
+        'search_placeholder' => '',
+        'apply_text'         => '',
+        'cancel_text'        => '',
     ]
 );
 
-$sort_label_text = '' !== $bar['sort_label'] ? $bar['sort_label'] : __( 'Sort by', 'dokan-lite' ) . ':';
+$sort_label_text = \WeDevs\Dokan\Blocks\Styles::text( $bar['sort_label'], __( 'Sort by', 'dokan-lite' ) . ':' );
 
 do_action( 'dokan_before_store_lists_filter', $stores );
 
@@ -95,7 +98,7 @@ $has_bar_content = $bar['show_store_count'] || $bar['show_search'] || $bar['show
                     </div>
 
                     <button class="dokan-store-list-filter-button dokan-btn dokan-btn-theme">
-                        <?php echo esc_html( '' !== $bar['filter_button_text'] ? $bar['filter_button_text'] : __( 'Filter', 'dokan-lite' ) ); ?>
+                        <?php echo esc_html( \WeDevs\Dokan\Blocks\Styles::text( $bar['filter_button_text'], __( 'Filter', 'dokan-lite' ) ) ); ?>
                     </button>
                 </div>
             <?php endif; ?>
@@ -133,7 +136,7 @@ $has_bar_content = $bar['show_store_count'] || $bar['show_search'] || $bar['show
         if ( apply_filters( 'dokan_load_store_lists_filter_search_bar', true ) ) :
             ?>
             <div class="store-search grid-item">
-                <input type="search" class="store-search-input" name="dokan_seller_search" placeholder="<?php esc_attr_e( 'Search Vendors', 'dokan-lite' ); ?>">
+                <input type="search" class="store-search-input" name="dokan_seller_search" placeholder="<?php echo esc_attr( \WeDevs\Dokan\Blocks\Styles::text( $bar['search_placeholder'], __( 'Search Vendors', 'dokan-lite' ) ) ); ?>">
             </div>
             <?php
         endif;
@@ -142,8 +145,8 @@ $has_bar_content = $bar['show_store_count'] || $bar['show_search'] || $bar['show
         ?>
 
         <div class="apply-filter">
-            <button id="cancel-filter-btn" class="dokan-btn dokan-btn-theme"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></button>
-            <button id="apply-filter-btn" class="dokan-btn dokan-btn-theme" type="submit"><?php esc_html_e( 'Apply', 'dokan-lite' ); ?></button>
+            <button id="cancel-filter-btn" class="dokan-btn dokan-btn-theme"><?php echo esc_html( \WeDevs\Dokan\Blocks\Styles::text( $bar['cancel_text'], __( 'Cancel', 'dokan-lite' ) ) ); ?></button>
+            <button id="apply-filter-btn" class="dokan-btn dokan-btn-theme" type="submit"><?php echo esc_html( \WeDevs\Dokan\Blocks\Styles::text( $bar['apply_text'], __( 'Apply', 'dokan-lite' ) ) ); ?></button>
         </div>
 
         <?php do_action( 'dokan_after_store_lists_filter_apply_button', $stores ); ?>

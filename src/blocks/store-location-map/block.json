@@ -6,7 +6,14 @@
     "title": "Store Location",
     "category": "dokan",
     "description": "A map of the vendor's store location.",
-    "keywords": [ "dokan", "store", "vendor", "location", "map", "address" ],
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "location",
+        "map",
+        "address"
+    ],
     "textdomain": "dokan-lite",
     "attributes": {
         "title": {
@@ -16,6 +23,10 @@
         "showTitle": {
             "type": "boolean",
             "default": true
+        },
+        "mapHeight": {
+            "type": "number",
+            "default": 0
         }
     },
     "supports": {
@@ -23,13 +34,15 @@
         "color": {
             "text": true,
             "background": true,
-            "link": true
+            "link": true,
+            "heading": true
         },
         "typography": {
             "fontSize": true,
             "__experimentalDefaultControls": {
                 "fontSize": true
-            }
+            },
+            "textAlign": true
         },
         "spacing": {
             "margin": true,
