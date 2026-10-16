@@ -1,0 +1,61 @@
+// Front-end + editor styles for dokan/store-filter-bar.
+
+.wp-block-dokan-store-filter-bar {
+	// Dokan only switches the bar to its stacked layout on a narrow viewport, so a bar placed in a sidebar or a
+	// narrow column keeps the desktop layout and its controls crowd each other. Sizing off the block's own
+	// width gives the same treatment to a narrow block on a wide screen.
+	container-type: inline-size;
+	container-name: dokan-store-filter-bar;
+
+	// Spacing lives on the row rather than on the sorting control, which is where Dokan puts it. Hiding any one
+	// control then leaves the rest evenly spaced instead of flush against each other or gapped against an empty
+	// edge.
+	#dokan-store-listing-filter-wrap .right {
+		gap: 30px;
+
+		.item.sort-by {
+			margin: 0;
+		}
+	}
+
+	// The container is named so extensions can give their own filter fields the same treatment — Dokan Pro
+	// matches this query for its category, featured, open-now and rating controls.
+	@container dokan-store-filter-bar (max-width: 767px) {
+
+		#dokan-store-listing-filter-wrap {
+			display: block;
+
+			.right {
+				justify-content: space-between;
+				margin-top: 15px;
+
+				.item.sort-by {
+					margin: 0;
+				}
+			}
+		}
+	}
+}
+
+// Button colour. Only emitted once a colour is picked; the Cancel button keeps
+// its outline look and follows the picked colour as its border and text
+// instead. `!important` because Dokan's own button rules carry it.
+// Each part falls back to the theme button colour, so picking only one keeps the other.
+$filter-btn-bg: var(--dokan-filter-button-background, var(--dokan-button-background-color, #7047eb));
+$filter-btn-text: var(--dokan-filter-button-color, var(--dokan-button-text-color, #fff));
+
+.wp-block-dokan-store-filter-bar.has-button-color {
+
+	.dokan-btn-theme,
+	#dokan-store-listing-filter-form-wrap .apply-filter #apply-filter-btn {
+		background: $filter-btn-bg !important;
+		border-color: $filter-btn-bg !important;
+		color: $filter-btn-text !important;
+	}
+
+	#dokan-store-listing-filter-form-wrap .apply-filter #cancel-filter-btn {
+		background: transparent !important;
+		border-color: $filter-btn-bg !important;
+		color: $filter-btn-bg !important;
+	}
+}

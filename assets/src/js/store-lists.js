@@ -146,7 +146,8 @@
         toggleView: function( event ) {
             const self = storeLists;
             const currentElement = $( event.target );
-            const elements = currentElement.parent().find( 'span' );
+            // The layout is one stored preference, so every bar's icons follow it.
+            const elements = $( '.toggle-view span' );
             const view = currentElement.data( 'view' );
 
             self.setView( view, elements );
@@ -170,7 +171,9 @@
                 return;
             }
 
-            const listingWrap = $( '#dokan-seller-listing-wrap' );
+            // Blocks let a page hold more than one listing, and each reuses the
+            // same id, so match on the attribute to reach every one of them.
+            const listingWrap = $( '[id="dokan-seller-listing-wrap"]' );
 
             [...elements].forEach( function( value ) {
                 const element = $( value );
@@ -195,7 +198,15 @@
         toggleForm: function( event ) {
             event.preventDefault();
 
-            $( '#dokan-store-listing-filter-form-wrap' ).slideToggle();
+            // Same duplicated ids as above: toggle the form that belongs to the
+            // bar that was clicked, not whichever one happens to come first.
+            const bar = $( event.currentTarget ).closest( '.dokan-store-filter-bar-block' );
+
+            const form = bar.length
+                ? bar.find( '[id="dokan-store-listing-filter-form-wrap"]' )
+                : $( '[id="dokan-store-listing-filter-form-wrap"]' ).first();
+
+            form.slideToggle();
         },
 
         /**
@@ -287,9 +298,11 @@
                 if ( key[0].includes( 'store_categories[' ) || key[0].includes( 'store_category[' ) ) {
                     const trimedValue = value[0].split( ' ' ).join( '-' );
                     const cateItem = $( `[data-slug=${trimedValue}]` );
+                    // A page can hold more than one filter bar; read the name off one item, or the texts concatenate.
+                    const cateName = cateItem.first().text().trim();
 
-                    if ( ! self.cateItemStringArray.includes( cateItem.text().trim() ) ) {
-                        self.cateItemStringArray.push( cateItem.text().trim() );
+                    if ( ! self.cateItemStringArray.includes( cateName ) ) {
+                        self.cateItemStringArray.push( cateName );
                     }
 
                     cateItem.addClass( 'dokan-btn-theme' );
@@ -342,14 +355,10 @@
             }
 
             $( window ).on( 'resize', function() {
-                const container = $(this);
-
-                if ( container.width() < 767 ) {
-                    $( '#dokan-seller-listing-wrap' ).removeClass( 'list-view' );
-                    $( '#dokan-seller-listing-wrap' ).addClass( 'grid-view' );
-                } else {
-                    $( '.toggle-view.item span' ).last().removeClass( 'active' );
-                    $( '.toggle-view.item span' ).first().addClass( 'active' );
+                // There is no list layout below 767px, so fall back to the grid —
+                // through setView, so the toggle icons stay in step with the layout.
+                if ( $( this ).width() <= 767 ) {
+                    self.setView( 'grid-view', $( '.toggle-view span' ) );
                 }
             });
         }

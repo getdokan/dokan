@@ -1,0 +1,38 @@
+/*
+ * Front-end + editor styles for dokan/store-contact-form.
+ *
+ * The widget markup is the classic one, so it keeps the classic
+ * `.widget.dokan-store-widget` classes and whatever styles those already carry.
+ * Only the block wrapper and the editor placeholder are styled here.
+ */
+
+.wp-block-dokan-store-contact-form {
+
+	.widget-title {
+		margin-block-start: 0;
+	}
+
+	// Button colour, only once one is picked; each part falls back to the theme
+	// button colour. Dokan's theme button rules carry `!important`, so these must too.
+	&.has-button-color form#dokan-form-contact-seller input[type="submit"] {
+		background: var(--dokan-contact-button-background, var(--dokan-button-background-color, #7047eb)) !important;
+		border-color: var(--dokan-contact-button-background, var(--dokan-button-background-color, #7047eb)) !important;
+		color: var(--dokan-contact-button-color, var(--dokan-button-text-color, #fff)) !important;
+	}
+
+	// Alignment from the typography support: the form's fields follow the text.
+	// Dokan's `.dokan-right` float is `!important`, so releasing it must be too.
+	&.has-text-align-center form#dokan-form-contact-seller input[type="submit"],
+	&.has-text-align-left form#dokan-form-contact-seller input[type="submit"] {
+		float: none !important;
+		display: inline-block;
+	}
+
+	&.is-editor-placeholder .dokan-info {
+		padding: 1.5em;
+		text-align: center;
+		border: 1px dashed currentcolor;
+		border-radius: 4px;
+		opacity: 0.7;
+	}
+}
