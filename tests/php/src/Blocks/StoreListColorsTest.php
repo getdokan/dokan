@@ -114,6 +114,18 @@ class StoreListColorsTest extends DokanTestCase {
     /**
      * @test
      */
+    public function the_banner_grows_only_when_a_setting_can_lengthen_the_card_text() {
+        $this->assertStringNotContainsString( 'has-growing-banner', $this->render_store_list( [] ) );
+        $this->assertStringNotContainsString( 'has-growing-banner', $this->render_store_list( [ 'addressIcon' => 'none' ] ) );
+        $this->assertStringContainsString( 'has-growing-banner', $this->render_store_list( [ 'addressLabel' => 'Address:' ] ) );
+        $this->assertStringContainsString( 'has-growing-banner', $this->render_store_list( [ 'addressIcon' => 'fas fa-map-marker-alt' ] ) );
+        $this->assertStringContainsString( 'has-growing-banner', $this->render_store_list( [ 'storeDetailsSize' => '22px' ] ) );
+        $this->assertStringContainsString( 'has-growing-banner', $this->render_store_list( [ 'avatarPosition' => 'center' ] ) );
+    }
+
+    /**
+     * @test
+     */
     public function an_unsafe_colour_is_dropped() {
         $html = $this->render_store_list( [ 'storeNameColor' => 'red;background:url(x)' ] );
 

@@ -166,6 +166,17 @@ if ( in_array( $attributes['avatarPosition'], [ 'left', 'center', 'right' ], tru
 $dokan_store_name_size    = Styles::font_size( $attributes['storeNameSize'] );
 $dokan_store_details_size = Styles::font_size( $attributes['storeDetailsSize'] );
 
+// Settings that can lengthen the card text let the banner grow instead of hiding it.
+$dokan_card_text_grows = '' !== trim( (string) $attributes['addressLabel'] )
+    || ! in_array( trim( (string) $attributes['addressIcon'] ), [ '', 'none' ], true )
+    || '' !== $dokan_store_name_size
+    || '' !== $dokan_store_details_size
+    || in_array( $attributes['avatarPosition'], [ 'left', 'center', 'right' ], true );
+
+if ( $dokan_card_text_grows ) {
+    $dokan_card_classes[] = 'has-growing-banner';
+}
+
 if ( '' !== $dokan_store_name_size ) {
     $dokan_card_classes[] = 'has-store-name-size';
 }

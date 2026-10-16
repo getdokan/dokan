@@ -160,9 +160,9 @@ $dokan-store-max-columns: 6;
 
 	/*! rtl:begin:ignore */
 	// Store picture position (grid view); unset keeps Dokan's own placement, mirrored in RTL.
-	// Corner the lowered picture takes in the text layer (banner + footer).
+	// Corner the lowered picture takes at the banner's foot (positions always grow the banner).
 	$dokan-avatar-room: 90px;
-	$dokan-avatar-height: 100px;
+	$dokan-avatar-height: 40px;
 
 	&.has-avatar-position-left #dokan-seller-listing-wrap.grid-view .store-footer .seller-avatar {
 		top: -40px !important;
@@ -223,6 +223,42 @@ $dokan-store-max-columns: 6;
 	}
 	/*! rtl:end:ignore */
 
+
+	// The banner grows with its text: banner and text share one grid row, the footer the next.
+	// Cards in a row stretch to the tallest, so a taller card cannot snag the floats below it.
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view ul.dokan-seller-wrap {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view ul.dokan-seller-wrap > li.dokan-single-seller {
+		display: flex;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-wrapper {
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 1fr auto;
+		width: 100%;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-header,
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-content {
+		grid-area: 1 / 1;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-content {
+		position: relative;
+		height: auto;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-banner {
+		height: 100%;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-footer {
+		grid-area: 2 / 1;
+	}
 
 	// An address icon of its own replaces list view's built-in pin.
 	#dokan-seller-listing-wrap.list-view .store-address.has-address-icon::before {
