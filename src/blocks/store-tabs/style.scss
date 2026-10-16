@@ -86,6 +86,21 @@
 		}
 	}
 
+	// WordPress's alignment classes keep their side in RTL, where flex-start is the right.
+	[dir="rtl"] &.has-text-align-right,
+	[dir="rtl"] &.has-text-align-right .dokan-store-tab-list {
+		justify-content: flex-start;
+	}
+
+	[dir="rtl"] &.has-text-align-left,
+	[dir="rtl"] &.has-text-align-left .dokan-store-tab-list {
+		justify-content: flex-end;
+	}
+
+	[dir="rtl"] &.has-text-align-left .dokan-store-tab-list {
+		flex: 1 1 auto;
+	}
+
 	// --- Styles -----------------------------------------------------------
 	// Underline is the default drawn above. Pills and Boxed fill the tab instead;
 	// the fill is the active tab colour when set, else the marketplace theme colour.

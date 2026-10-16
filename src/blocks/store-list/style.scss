@@ -77,6 +77,10 @@ $dokan-store-max-columns: 6;
 		border-radius: 0 !important;
 	}
 
+	/*! rtl:begin:ignore */
+	// Card text alignment and picture position are physical sides, like WordPress's
+	// own alignment classes, so the RTL stylesheet keeps them as they are.
+
 	// Card text alignment: the details and the name on every card.
 	@each $align in left, center, right {
 		&.has-card-align-#{$align} #dokan-seller-listing-wrap .store-data-container,
@@ -90,8 +94,13 @@ $dokan-store-max-columns: 6;
 	}
 
 	&.has-card-align-right #dokan-seller-listing-wrap .featured-label {
-		margin-inline-start: auto;
+		margin-left: auto;
 	}
+
+	&.has-card-align-left #dokan-seller-listing-wrap .featured-label {
+		margin-right: auto;
+	}
+	/*! rtl:end:ignore */
 
 	// Card styles. The default is today's flat-on-white card.
 	&.is-style-shadow #dokan-seller-listing-wrap .store-wrapper {
@@ -149,7 +158,8 @@ $dokan-store-max-columns: 6;
 		font-size: var(--dokan-store-details-size) !important;
 	}
 
-	// Store picture position (grid view); unset keeps Dokan's own placement.
+	/*! rtl:begin:ignore */
+	// Store picture position (grid view); unset keeps Dokan's own placement, mirrored in RTL.
 	// Corner the lowered picture takes in the text layer (banner + footer).
 	$dokan-avatar-room: 90px;
 	$dokan-avatar-height: 100px;
@@ -168,9 +178,13 @@ $dokan-store-max-columns: 6;
 		transform: none !important;
 	}
 
-	// With the picture on the left, the footer's buttons move to the right.
+	// The footer's buttons sit on the side away from the picture, in either direction.
 	&.has-avatar-position-left #dokan-seller-listing-wrap.grid-view .store-footer {
 		text-align: right;
+	}
+
+	&.has-avatar-position-right #dokan-seller-listing-wrap.grid-view .store-footer {
+		text-align: left;
 	}
 
 	// Centre moves below the banner, above the buttons, so it never covers text.
@@ -207,6 +221,7 @@ $dokan-store-max-columns: 6;
 			}
 		}
 	}
+	/*! rtl:end:ignore */
 
 
 	// An address icon of its own replaces list view's built-in pin.

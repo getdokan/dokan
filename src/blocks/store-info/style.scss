@@ -171,6 +171,17 @@
 		}
 	}
 
+	// WordPress's alignment classes keep their side in RTL, where flex-start is the right.
+	[dir="rtl"] &.has-text-align-right > li.dokan-store-open-close,
+	[dir="rtl"] &.has-text-align-right.is-inline {
+		justify-content: flex-start;
+	}
+
+	[dir="rtl"] &.has-text-align-left > li.dokan-store-open-close,
+	[dir="rtl"] &.has-text-align-left.is-inline {
+		justify-content: flex-end;
+	}
+
 	&.has-text-align-right {
 
 		> li.dokan-store-open-close {
@@ -182,8 +193,10 @@
 		}
 
 		.store-open-close-notice #vendor-store-times {
-			inset-inline-start: auto;
-			inset-inline-end: 0;
+			/*! rtl:ignore */
+			left: auto;
+			/*! rtl:ignore */
+			right: 0;
 		}
 	}
 }
