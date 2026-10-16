@@ -145,28 +145,18 @@ $next_text        = \WeDevs\Dokan\Blocks\Styles::text( $card['next_text'], __( '
                                                 ],
                                                 'br'   => [],
                                             ];
+
+                                            // Built first so the paragraph holds no stray whitespace; list view shows it inline.
+                                            $address_html  = '' !== $card['address_icon'] ? '<i class="' . esc_attr( $card['address_icon'] ) . '" aria-hidden="true"></i>' : '';
+                                            $address_html .= '' !== $card['address_label'] ? '<span class="store-address-label">' . esc_html( $card['address_label'] ) . '</span>' : '';
+                                            $address_html .= wp_kses( $store_address, $allowed_tags );
                                             ?>
-                                            <p class="store-address<?php echo '' !== $card['address_icon'] ? ' has-address-icon' : ''; ?>"><?php
-                                            if ( '' !== $card['address_icon'] ) {
-                                                echo '<i class="' . esc_attr( $card['address_icon'] ) . '" aria-hidden="true"></i>';
-                                            }
-
-                                            if ( '' !== $card['address_label'] ) {
-                                                echo '<span class="store-address-label">' . esc_html( $card['address_label'] ) . '</span>';
-                                            }
-
-                                            echo wp_kses( $store_address, $allowed_tags );
-                                            ?></p>
+                                            <p class="store-address<?php echo '' !== $card['address_icon'] ? ' has-address-icon' : ''; ?>"><?php echo $address_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each part is escaped above. ?></p>
                                         <?php endif ?>
 
                                         <?php if ( $card['show_phone'] && ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
-                                            <p class="store-phone"><?php
-                                            if ( '' !== $card['phone_icon'] ) {
-                                                echo '<i class="' . esc_attr( $card['phone_icon'] ) . '" aria-hidden="true"></i> ';
-                                            }
-
-                                            echo esc_html( $store_phone );
-                                            ?></p>
+                                            <?php $phone_html = ( '' !== $card['phone_icon'] ? '<i class="' . esc_attr( $card['phone_icon'] ) . '" aria-hidden="true"></i> ' : '' ) . esc_html( $store_phone ); ?>
+                                            <p class="store-phone"><?php echo $phone_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each part is escaped above. ?></p>
                                         <?php } ?>
 
                                         <?php do_action( 'dokan_seller_listing_after_store_data', $seller, $store_info ); ?>
