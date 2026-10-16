@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { useState, useCallback, useMemo } from '@wordpress/element';
+import { useState, useCallback, useMemo, useEffect } from '@wordpress/element';
 import { SimpleCheckbox } from '@getdokan/dokan-ui';
 import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
@@ -16,9 +16,13 @@ export default function Form( {
     requiredFields,
     formKey = 'dokan-create-new-vendor',
     createForm = true,
+    focusErrorsTrigger = 0,
 }: FormProps ) {
     const formState = useVendorForm( vendor, requiredFields );
     const [ tabQueryParam, setTabQueryParam ] = useState( 'general' );
+    const [ pendingErrorField, setPendingErrorField ] = useState<
+        string | null
+    >( null );
 
     const handleTabChange = useCallback( ( tabName: string ) => {
         setTabQueryParam( tabName );
@@ -35,6 +39,16 @@ export default function Form( {
                         'border-0 border-b border-solid mr-5 -mb-px space-x-8 whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium cursor-pointer hover:bg-transparent focus:outline-none text-gray-500 border-gray-200 hover:text-gray-600 hover:border-gray-300',
                     component: General,
                     renderAsFunction: true,
+                    fields: [
+                        'store_name',
+                        'store_url',
+                        'first_name',
+                        'last_name',
+                        'email',
+                        'user_login',
+                        'user_pass',
+                        'phone',
+                    ],
                 },
                 {
                     name: 'commission',
@@ -55,6 +69,59 @@ export default function Form( {
             ] ) as TabData[],
         [ formKey ]
     );
+
+    // On save failure, jump to the first errored field in tab order.
+    useEffect( () => {
+        if ( ! focusErrorsTrigger ) {
+            return;
+        }
+
+        const errors = ( formState.errors ?? [] ) as string[];
+        if ( ! errors.length ) {
+            return;
+        }
+
+        let targetTab: string | null = null;
+        let targetField: string = errors[ 0 ];
+
+        for ( const tab of tabsData ) {
+            const hit = ( tab.fields ?? [] ).find( ( field ) =>
+                errors.includes( field )
+            );
+            if ( hit ) {
+                targetTab = tab.name;
+                targetField = hit;
+                break;
+            }
+        }
+
+        if ( targetTab && targetTab !== tabQueryParam ) {
+            setTabQueryParam( targetTab );
+        }
+        setPendingErrorField( targetField );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ focusErrorsTrigger ] );
+
+    // Scroll once the target tab has rendered.
+    useEffect( () => {
+        if ( ! pendingErrorField ) {
+            return;
+        }
+
+        const wrapper = document.querySelector< HTMLElement >(
+            `[data-vendor-field="${ pendingErrorField }"]`
+        );
+        const target =
+            wrapper ??
+            document.querySelector< HTMLElement >( '.dokan-vendor-form-tabs' );
+
+        target?.scrollIntoView( { behavior: 'smooth', block: 'center' } );
+        wrapper
+            ?.querySelector< HTMLElement >( 'input, select, textarea' )
+            ?.focus( { preventScroll: true } );
+
+        setPendingErrorField( null );
+    }, [ pendingErrorField, tabQueryParam ] );
 
     // Current tab component
     const getCurrentTabComponent = useMemo( () => {
@@ -138,7 +205,7 @@ export default function Form( {
         <>
             <div className="flex flex-col">
                 { /* Tab Navigation */ }
-                <div className="flex border-gray-200 overflow-x-auto @md:space-x-8 space-x-4">
+                <div className="dokan-vendor-form-tabs flex border-gray-200 overflow-x-auto @md:space-x-8 space-x-4">
                     { tabsData.map( ( tab ) => (
                         <button
                             key={ tab.name }

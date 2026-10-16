@@ -28,9 +28,8 @@ export const adminVendorCreateData = {
 // The create form mounts on #dokan-admin-dashboard at
 // admin.php?page=dokan-dashboard#/vendors/create. Inputs are dokan-ui
 // SimpleInput/DebouncedInput, so the `input.id` from the JSX lands on the real
-// <input> (e.g. id="store-name"). NOTE: the Email field is given id="last-name"
-// in the source (a duplicate-id bug), so Email is targeted by its placeholder
-// "Enter email address" rather than by id.
+// <input> (e.g. id="store-name"). Each General-tab field wrapper also carries a
+// data-vendor-field="<key>" attribute used by the save-error focus behaviour.
 // ============================================
 export const adminVendorCreateSelectors = {
     reactRoot: '#dokan-admin-dashboard',
@@ -39,11 +38,12 @@ export const adminVendorCreateSelectors = {
     storeUrl: '#store-url',
     firstName: '#first-name',
     lastName: '#last-name',
+    email: '#email',
     username: '#username',
     password: '#password',
     phone: '#phone',
-    // Email placeholder (its id collides with last-name in the source JSX).
-    emailPlaceholder: 'Enter email address',
+    // Tab bar wrapper (form/index.tsx) — the fallback scroll target on a failed save.
+    tabBar: '.dokan-vendor-form-tabs',
     // Availability indicators rendered by getStoreSearchText().
     available: 'text=/^\\s*Available\\s*$/',
     notAvailable: 'text=/Not Available/i',
@@ -96,7 +96,7 @@ export class AdminVendorCreatePage {
         return this.page.locator(adminVendorCreateSelectors.lastName).first();
     }
     get emailInput(): Locator {
-        return this.page.getByPlaceholder(adminVendorCreateSelectors.emailPlaceholder).first();
+        return this.page.locator(adminVendorCreateSelectors.email).first();
     }
     get usernameInput(): Locator {
         return this.page.locator(adminVendorCreateSelectors.username).first();
@@ -118,6 +118,11 @@ export class AdminVendorCreatePage {
     }
     get successToast(): Locator {
         return this.page.locator(adminVendorCreateSelectors.successToast).first();
+    }
+
+    /** A Social Options tab input by platform id (fb, twitter, instagram, ...). */
+    socialInput(platformId: string): Locator {
+        return this.page.locator(`[data-platform-id="${platformId}"] input`).first();
     }
 
     /** A form tab button by visible label — General / Commission / Social Options. */
@@ -179,6 +184,16 @@ export class AdminVendorCreatePage {
         await loc.pressSequentially(value, { delay: 25 });
         await loc.blur();
         await this.page.waitForTimeout(settleMs);
+    }
+
+    /**
+     * Type like a fast user: per-keystroke input events but NO blur and NO settle,
+     * so the next action lands inside the 500ms debounce window. Used by the
+     * dokan-pro#6259 retention tests.
+     */
+    async typeFast(loc: Locator, value: string): Promise<void> {
+        await loc.click();
+        await loc.pressSequentially(value, { delay: 10 });
     }
 
     async fillStoreName(value: string): Promise<void> {
@@ -304,6 +319,19 @@ export class AdminVendorCreatePage {
             .waitFor({ state: 'visible', timeout: 8000 })
             .then(() => true)
             .catch(() => false);
+    }
+
+    /** id of the element that currently has keyboard focus ('' when none). */
+    async activeElementId(): Promise<string> {
+        return await this.page.evaluate(() => (document.activeElement as HTMLElement | null)?.id ?? '');
+    }
+
+    /** True when the locator's box is fully inside the current viewport. */
+    async isInViewport(loc: Locator): Promise<boolean> {
+        return await loc.evaluate(el => {
+            const r = el.getBoundingClientRect();
+            return r.top >= 0 && r.bottom <= window.innerHeight;
+        });
     }
 
     // ---- Authorization (non-admin) ----
