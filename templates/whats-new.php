@@ -4,6 +4,40 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.1',
+        'released' => '2026-10-15',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Add-ons can now adjust how an order\'s earnings are split between the vendor and the admin, so features like vendor-funded affiliate commissions show the correct amounts.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Saving a downloadable product from the vendor dashboard no longer resets buyers\' existing download limits, expiry dates, and download counts.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Creating a vendor from the admin with selling enabled no longer loses the vendor\'s phone, address, payment details, and social links.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendors can now see download permissions for variable products and variable subscriptions on an order.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The admin dashboard now shows the actual error message when a section fails to load instead of a generic "An error occurred".',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'REST API requests now return the real error message instead of failing with a server error when certain Dokan errors occur.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.3.0',
         'released' => '2026-10-08',
         'changes'  => [

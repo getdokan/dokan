@@ -107,6 +107,29 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
                 );
             }
         }
+
+        /**
+         * Filters the vendor's net earning on an order, once its line items are calculated.
+         *
+         * @since 5.3.1
+         *
+         * @param float           $vendor_net_earning The vendor's net earning on the order's line items.
+         * @param WC_Order        $order              The order.
+         * @param OrderCommission $order_commission   The calculation in progress.
+         */
+        $vendor_net_earning = apply_filters( 'dokan_order_vendor_net_earning', $vendor_net_earning, $this->order, $this );
+
+        /**
+         * Filters the admin's net commission on an order, once its line items are calculated.
+         *
+         * @since 5.3.1
+         *
+         * @param float           $admin_net_commission The admin's net commission on the order's line items.
+         * @param WC_Order        $order                The order.
+         * @param OrderCommission $order_commission     The calculation in progress.
+         */
+        $admin_net_commission = apply_filters( 'dokan_order_admin_net_commission', $admin_net_commission, $this->order, $this );
+
         $this->set_admin_net_commission( $admin_net_commission )
             ->set_admin_net_earning( $admin_net_earning )
             ->set_admin_discount( $admin_discount )
