@@ -46,6 +46,15 @@ class DokanFactory extends WP_UnitTest_Factory {
     */
     public $shipping;
 
+    /**
+     * Generates refund fixtures for use in tests.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var RefundFactory
+     */
+    public $refund;
+
     public function __construct() {
         parent::__construct();
         $this->customer = new CustomerFactory( $this );
@@ -54,5 +63,6 @@ class DokanFactory extends WP_UnitTest_Factory {
         $this->product = new ProductFactory( $this );
         $this->order = new OrderFactory( $this );
         $this->shipping = new ShippingFactory( $this );
+        $this->refund = new RefundFactory( $this );
     }
 }

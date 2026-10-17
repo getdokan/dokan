@@ -49,6 +49,35 @@ class ProductAttributeTermsController extends WC_REST_Product_Attribute_Terms_V1
         return current_user_can( 'dokandar' );
     }
 
+    /**
+     * Get a single attribute term.
+     *
+     * The vendor permission check above replaces WooCommerce's, which is also where
+     * WooCommerce verifies the attribute and the term exist. Without this, an unknown
+     * id reaches the serializer as `null`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_Error|WP_REST_Response
+     */
+    public function get_item( $request ) {
+        $taxonomy = $this->get_taxonomy( $request );
+
+        if ( ! $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
+            return new WP_Error( 'woocommerce_rest_taxonomy_invalid', __( 'Taxonomy does not exist.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $term = get_term( (int) $request['id'], $taxonomy );
+
+        if ( ! $term instanceof \WP_Term ) {
+            return new WP_Error( 'woocommerce_rest_term_invalid', __( 'Resource does not exist.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        return parent::get_item( $request );
+    }
+
 
     /**
      * Check if a given request has access to update a attribute.

@@ -143,7 +143,7 @@ class StoreSettingController extends StoreController {
             $current_user = dokan_get_current_user_id();
 
             if ( ! $current_user ) {
-                return new WP_Error( 'Unauthorized', __( 'You are not logged in', 'dokan-lite' ), [ 'code' => 401 ] );
+                return new WP_Error( 'Unauthorized', __( 'You are not logged in', 'dokan-lite' ), [ 'status' => 401 ] );
             }
 
             if ( $current_user ) {
