@@ -14,7 +14,9 @@ test.describe('modules api test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        randomModule = helpers.randomItem(await apiUtils.getAllModuleIds());
+        // Only modules the license unlocks can be toggled; the catalogue also lists the plan's locked ones.
+        const modules: { id: string; available: boolean }[] = await apiUtils.getAllModules();
+        randomModule = helpers.randomItem(modules.filter(m => m.available).map(m => m.id));
     });
 
     test.afterAll(async () => {

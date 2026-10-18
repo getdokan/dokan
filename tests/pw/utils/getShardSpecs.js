@@ -18,6 +18,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { blockedSpecs } = require('./planFilter');
 
 const [, , shardIndexArg, shardTotalArg] = process.argv;
 const shardIndex = parseInt(shardIndexArg ?? '', 10);
@@ -70,7 +71,17 @@ if (!fs.existsSync(e2eRoot)) {
     process.exit(0);
 }
 
+// Package workflow (DOKAN_PLAN set): leave out the specs the plan does not offer, so shards balance on what
+// actually runs, and record them for the run summary's Blocked (not in plan) list.
+const planBlocked = blockedSpecs('e2e');
+if (process.env.DOKAN_PLAN) {
+    fs.mkdirSync(path.join(pwRoot, 'playwright'), { recursive: true });
+    fs.writeFileSync(path.join(pwRoot, 'playwright', 'blocked-specs.json'), JSON.stringify(planBlocked, null, 2));
+}
+const planBlockedFiles = new Set(planBlocked.map(spec => spec.file));
+
 const allSpecs = walkSpecs(e2eRoot)
+    .filter(file => !planBlockedFiles.has(file.split(path.sep).join('/')))
     .map(file => ({
         file,
         // Default newly-added (unmeasured) specs to the global mean so they
