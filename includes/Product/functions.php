@@ -174,8 +174,9 @@ function dokan_save_product( $args ) {
 function dokan_product_output_variations() {
     global $post, $wpdb;
 
-    // Get attributes
-    $attributes = maybe_unserialize( get_post_meta( $post->ID, '_product_attributes', true ) );
+    // Get attributes. get_post_meta() already unserializes once; a second maybe_unserialize()
+    // would peel a double-serialized string and instantiate attacker-controlled objects.
+    $attributes = array_filter( (array) get_post_meta( $post->ID, '_product_attributes', true ) );
 
     // See if any are set
     $variation_attribute_found = false;

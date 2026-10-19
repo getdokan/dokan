@@ -85,6 +85,26 @@ class ProductAttributesObjectInjectionTest extends DokanTestCase {
     }
 
     /**
+     * Rendering the variable-product options (which happens when a vendor merely opens the edit
+     * page, before any save) must not instantiate a poisoned attributes value either.
+     *
+     * @covers ::dokan_product_output_variations
+     */
+    public function test_variations_render_does_not_instantiate_poisoned_attributes() {
+        $class   = Dokan_Object_Injection_Probe::class;
+        $payload = 'O:' . strlen( $class ) . ':"' . $class . '":0:{}';
+        $this->plant_poisoned_attributes( $payload );
+
+        $GLOBALS['post'] = get_post( $this->product_id );
+
+        ob_start();
+        dokan_product_output_variations();
+        ob_get_clean();
+
+        $this->assertFalse( Dokan_Object_Injection_Probe::$woke, 'Rendering the variations UI must not unserialize the poisoned attributes into an object.' );
+    }
+
+    /**
      * A legitimate attributes array is still read as an array, so the taxonomy-cleanup loop runs:
      * a stored taxonomy attribute omitted from the save has its object terms unset.
      *
