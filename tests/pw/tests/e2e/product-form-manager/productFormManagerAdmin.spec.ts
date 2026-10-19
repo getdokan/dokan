@@ -7,6 +7,7 @@ import {
     type FieldVariant,
     type SchemaItem,
 } from './productFormManagerAdminPage';
+import { NewProductFormPage } from './newProductFormPage';
 import path from 'path';
 
 // ============================================================================
@@ -974,6 +975,147 @@ test.describe('Product Form Manager', () => {
                 // Documents current behavior: sanitize_schema_item() has no
                 // `requireds` branch, so per-type required overrides never persist.
                 expect(saved?.requireds).toBeUndefined();
+            }
+        );
+    });
+
+    // ========================================================================
+    // PRODUCT-TYPE SCOPING — a custom field added under a product-type filter is
+    // saved for that type only, and a custom field in the Auction Options block
+    // never leaks onto other types. Auction is a Pro module, so every case is @pro.
+    //
+    // Note on the REST shape: GET /product-editor/settings returns the effective
+    // schema, and Pro's simple-auction module hides fields outside its legacy
+    // allow-list for `auction` by default, so a custom field added under "All
+    // Types" reads back with `visibilities.auction === false`. Assert only on the
+    // keys each case is about.
+    // ========================================================================
+    test.describe('custom fields scoped to a product type', () => {
+        let vPage: Page;
+        let vendorForm: NewProductFormPage;
+        let vendorUi: ProductFormManager;
+
+        test.beforeAll(async ({ browser }) => {
+            const vendorContext = await browser.newContext({ storageState: v1 });
+            vPage = await vendorContext.newPage();
+            vendorForm = new NewProductFormPage(vPage);
+            vendorUi = new ProductFormManager(vPage);
+        });
+
+        test.afterAll(async () => {
+            await vPage?.close();
+        });
+
+        // Open a fresh "Add New Product" form for the given type. Routing through
+        // about:blank forces a clean React mount (the form is a hash-routed SPA).
+        const openNewProductForm = async (type: 'simple' | 'variable' | 'auction') => {
+            await vPage.goto('about:blank');
+            await vendorForm.goto();
+            await vendorForm.waitForFormReady();
+            if (type !== 'simple') {
+                await vendorForm.setProductType(type);
+            }
+        };
+
+        // Assert whether a custom field (matched by label) renders per product type.
+        const expectShownFor = async (
+            label: string,
+            shown: Record<'simple' | 'variable' | 'auction', boolean>
+        ) => {
+            for (const type of ['simple', 'variable', 'auction'] as const) {
+                await openNewProductForm(type);
+                if (shown[type]) {
+                    await vendorUi.assertVendorFieldVisibleByLabel(label);
+                } else {
+                    await vendorUi.assertVendorFieldAbsentByLabel(label);
+                }
+            }
+        };
+
+        test(
+            'a custom field added under the Auction filter is saved for Auction only',
+            { tag: ['@pro', '@admin'] },
+            async () => {
+                const field = data.customField(uid(), 'text');
+                await admin.goto();
+                await admin.setTypeFilter('Auction');
+                await admin.addCustomField('General', field);
+                await admin.saveChanges();
+
+                const saved = api.fieldByLabel(await api.getSchema(), field.label);
+                expect(saved, `field "${field.label}" persisted`).toBeTruthy();
+                expect(saved!.is_custom).toBe(true);
+                expect(saved!.visibilities?.auction).toBe(true);
+                expect(saved!.visibilities?.simple).toBe(false);
+                expect(saved!.visibilities?.variable).toBe(false);
+                // The single product page reads the plain `visibility` to print the
+                // field's value, so scoping must not switch it off.
+                expect(saved!.visibility).not.toBe(false);
+            }
+        );
+
+        test(
+            'a custom field added under All Types is not scoped to a product type',
+            { tag: ['@pro', '@admin'] },
+            async () => {
+                const field = data.customField(uid(), 'text');
+                await admin.goto();
+                await admin.addCustomField('General', field);
+                await admin.saveChanges();
+
+                const saved = api.fieldByLabel(await api.getSchema(), field.label);
+                expect(saved, `field "${field.label}" persisted`).toBeTruthy();
+                expect(saved!.visibilities?.simple).toBeUndefined();
+                expect(saved!.visibilities?.variable).toBeUndefined();
+                expect(saved!.visibility).not.toBe(false);
+            }
+        );
+
+        test(
+            'a custom field added under the Auction filter shows for Auction only in the vendor form',
+            { tag: ['@pro', '@vendor'] },
+            async () => {
+                test.slow();
+                const field = data.customField(uid(), 'text');
+                await admin.goto();
+                await admin.setTypeFilter('Auction');
+                await admin.addCustomField('General', field);
+                await admin.saveChanges();
+
+                await expectShownFor(field.label, { simple: false, variable: false, auction: true });
+            }
+        );
+
+        test(
+            'a custom field in the Auction Options block shows for Auction only',
+            { tag: ['@pro', '@vendor'] },
+            async () => {
+                test.slow();
+                const field = data.customField(uid(), 'text');
+                await admin.goto();
+                await admin.addCustomField('Auction Options', field);
+                await admin.saveChanges();
+
+                // Without the auction-only rule it leaked onto every other type
+                // (and its Auction Options card with it).
+                await expectShownFor(field.label, { simple: false, variable: false, auction: true });
+            }
+        );
+
+        test(
+            'a custom field added under All Types stays hidden for Auction until it is enabled there',
+            { tag: ['@pro', '@vendor'] },
+            async () => {
+                test.slow();
+                const field = data.customField(uid(), 'text');
+                await admin.goto();
+                await admin.addCustomField('General', field);
+                await admin.saveChanges();
+
+                // The auction form mirrors the legacy auction page, so fields outside
+                // its allow-list are hidden by default; an explicit `auction: true`
+                // (set per type in the builder) is what re-enables one.
+                await expectShownFor(field.label, { simple: true, variable: true, auction: false });
             }
         );
     });
