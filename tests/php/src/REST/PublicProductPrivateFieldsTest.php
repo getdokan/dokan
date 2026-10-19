@@ -101,6 +101,17 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
      * @return int
      */
     protected function get_caller_id( string $caller ): int {
+        switch ( $caller ) {
+            case 'shop_manager':
+                return $this->factory()->user->create( [ 'role' => 'shop_manager' ] );
+
+            case 'staff':
+                return $this->create_staff( true );
+
+            case 'narrowed_staff':
+                return $this->create_staff( false );
+        }
+
         $ids = [
             'anonymous'     => 0,
             'customer'      => $this->customer_id,
@@ -113,15 +124,40 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
     }
 
     /**
+     * Create a vendor staff member of seller_id1.
+     *
+     * @param bool $can_view_products Whether the staff member keeps the product menu capability.
+     *
+     * @return int
+     */
+    protected function create_staff( bool $can_view_products ): int {
+        $staff_id = $this->factory()->user->create( [ 'role' => 'customer' ] );
+        $staff    = new \WP_User( $staff_id );
+
+        $staff->add_cap( 'vendor_staff' );
+        $staff->add_cap( 'dokandar' );
+
+        if ( $can_view_products ) {
+            $staff->add_cap( 'dokan_view_product_menu' );
+            $staff->add_cap( 'dokan_edit_product' );
+        }
+
+        update_user_meta( $staff_id, '_vendor_id', $this->seller_id1 );
+
+        return $staff_id;
+    }
+
+    /**
      * Callers that must not see vendor-only fields.
      *
      * @return array
      */
     public function unauthorized_caller_provider(): array {
         return [
-            'anonymous'    => [ 'anonymous' ],
-            'customer'     => [ 'customer' ],
-            'other vendor' => [ 'other_vendor' ],
+            'anonymous'                        => [ 'anonymous' ],
+            'customer'                         => [ 'customer' ],
+            'other vendor'                     => [ 'other_vendor' ],
+            'staff without product menu access' => [ 'narrowed_staff' ],
         ];
     }
 
@@ -133,6 +169,8 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
     public function authorized_caller_provider(): array {
         return [
             'owner'         => [ 'owner' ],
+            'owner staff'   => [ 'staff' ],
+            'shop manager'  => [ 'shop_manager' ],
             'administrator' => [ 'administrator' ],
         ];
     }

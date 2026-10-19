@@ -1103,7 +1103,7 @@ class ProductController extends DokanRESTController {
             'upsell_ids'            => array_map( 'absint', $product->get_upsell_ids( $context ) ),
             'cross_sell_ids'        => array_map( 'absint', $product->get_cross_sell_ids( $context ) ),
             'parent_id'             => $product->get_parent_id( $context ),
-            'purchase_note'         => ! $can_view_private ? '' : ( 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context ) ),
+            'purchase_note'         => $can_view_private ? ( 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context ) ) : '',
             'categories'            => $this->get_taxonomy_terms( $product ),
             'tags'                  => $this->get_taxonomy_terms( $product, 'tag' ),
             'images'                => $this->get_images( $product ),
@@ -1149,11 +1149,13 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     protected function can_view_private_product_data( $product ): bool {
+        // Required: a product with post_author 0 would otherwise match an anonymous caller's user id 0.
         if ( ! is_user_logged_in() ) {
             return false;
         }
 
-        return current_user_can( 'manage_woocommerce' ) || dokan_is_product_author( $product->get_id() );
+        return current_user_can( 'manage_woocommerce' )
+            || ( dokan_is_product_author( $product->get_id() ) && current_user_can( 'dokan_view_product_menu' ) );
     }
 
     /**
