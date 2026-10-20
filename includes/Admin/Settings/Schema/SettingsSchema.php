@@ -2400,6 +2400,12 @@ class SettingsSchema {
             ],
         ];
 
+        // The legacy bridge builds this schema on ordinary requests to harvest legacy keys; the
+        // connection block declares none and is only worth building for a settings screen.
+        if ( ! is_admin() && ! wp_is_serving_rest_request() ) {
+            return $elements;
+        }
+
         return array_merge( $elements, self::mcp_connection_fields( $when_enabled ) );
     }
 

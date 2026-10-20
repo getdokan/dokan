@@ -78,11 +78,23 @@ class Catalog {
     /**
      * How many tools a connected client would find.
      *
+     * Settings screens call this while building their schema, which can happen before the
+     * Abilities registry has initialised; forcing that initialisation early would register
+     * whatever plugins have hooked so far and leave the rest out for the whole request. So the
+     * registry is only consulted once it has initialised itself, and the curated list is counted
+     * as declared otherwise.
+     *
      * @since DOKAN_SINCE
      *
      * @return int
      */
     public static function tool_count(): int {
-        return count( self::ability_ids() );
+        if ( did_action( 'wp_abilities_api_init' ) ) {
+            return count( self::ability_ids() );
+        }
+
+        $ids = apply_filters( 'dokan_mcp_server_abilities', self::default_ability_ids() );
+
+        return is_array( $ids ) ? count( array_unique( array_filter( $ids, 'is_string' ) ) ) : 0;
     }
 }
