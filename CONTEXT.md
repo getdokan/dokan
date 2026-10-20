@@ -70,6 +70,20 @@ Ability Context, because an Ability is machine-facing wherever it runs; the
 transport that reached it is not the boundary.
 _Avoid_: MCP request, MCP context
 
+**Connection**:
+A credential that lets an AI client reach the Dokan MCP server as exactly one
+user: an OAuth grant approved on the Consent page, or a Personal Token minted
+from the settings screen. A Connection acts as its user and can never do more
+than that account can; there is no site-wide or shared key.
+_Avoid_: API key, pairing, shared token
+
+**Consent**:
+The browser page where a logged-in user approves or refuses an AI client's
+OAuth request. Who may approve is decided by `Access::user_can_connect()`: a
+Store Admin always, a Vendor or Vendor Staff only while vendor access is on and
+their store's selling is enabled.
+_Avoid_: login page, authorize screen
+
 **Selling Activation**:
 Whether a Vendor's Store is live and may transact, independent of whether the
 Vendor role is held.

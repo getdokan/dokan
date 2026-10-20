@@ -633,4 +633,39 @@ class ProductAbilityScopeTest extends DokanTestCase {
 
         $this->assertSame( $this->admin_id, (int) get_post_field( 'post_author', $result['id'] ) );
     }
+
+    /**
+     * Wrap a product-delete callback that records the input it received.
+     *
+     * @param array|null $seen Filled with the input the callback received.
+     *
+     * @return callable
+     */
+    private function wrapped_delete_callback( ?array &$seen ): callable {
+        $args = $this->sut->extend_product_abilities(
+            [
+                'execute_callback' => static function ( $input ) use ( &$seen ) {
+                    $seen = (array) $input;
+
+                    return [ 'deleted' => true ];
+                },
+            ],
+            'woocommerce/product-delete'
+        );
+
+        return $args['execute_callback'];
+    }
+
+    public function test_vendors_delete_to_the_trash_only() {
+        $this->force_ability_context();
+        $seen = null;
+
+        wp_set_current_user( $this->seller_id1 );
+        call_user_func( $this->wrapped_delete_callback( $seen ), [ 'id' => 1, 'force' => true ] );
+        $this->assertFalse( $seen['force'] );
+
+        wp_set_current_user( $this->admin_id );
+        call_user_func( $this->wrapped_delete_callback( $seen ), [ 'id' => 1, 'force' => true ] );
+        $this->assertTrue( $seen['force'] );
+    }
 }

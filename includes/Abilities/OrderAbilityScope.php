@@ -100,6 +100,32 @@ class OrderAbilityScope implements Hookable {
         // Annotate order-list output with the Dokan parent / Suborder relationship and owning
         // vendor, so totals can be summed without double-counting a parent and its Suborders.
         add_filter( 'wp_register_ability_args', [ $this, 'extend_order_abilities' ], 10, 2 );
+
+        // Vendors may only change order status when the marketplace allows it, as on the dashboard.
+        add_filter( 'wp_ability_permission_result', [ $this, 'honour_order_status_change_setting' ], 10, 2 );
+    }
+
+    /**
+     * Refuse `woocommerce/order-update-status` to vendors when the "Order Status Change" selling
+     * option is off, mirroring Dokan's own REST order update.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool|\WP_Error $result       The permission decided so far.
+     * @param string         $ability_name The ability being checked.
+     *
+     * @return bool|\WP_Error
+     */
+    public function honour_order_status_change_setting( $result, $ability_name ) {
+        if ( true !== $result || 'woocommerce/order-update-status' !== $ability_name || ! RequestContext::is_vendor_ability_context() ) {
+            return $result;
+        }
+
+        if ( 'on' === dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
+            return $result;
+        }
+
+        return new \WP_Error( 'dokan_order_status_change_disabled', __( 'Vendors are not allowed to change order status on this marketplace.', 'dokan-lite' ), [ 'status' => 403 ] );
     }
 
     /**
@@ -305,6 +331,14 @@ class OrderAbilityScope implements Hookable {
                     'store_name' => [ 'type' => 'string' ],
                 ],
             ],
+            'earning'        => [
+                'type'        => 'object',
+                'description' => __( 'What the vendor earns on this order and what the marketplace keeps as commission. Present for store admins and the owning vendor; vendor staff need the sales-overview permission.', 'dokan-lite' ),
+                'properties'  => [
+                    'vendor_earning'   => [ 'type' => [ 'number', 'null' ] ],
+                    'admin_commission' => [ 'type' => [ 'number', 'null' ] ],
+                ],
+            ],
         ];
     }
 
@@ -376,7 +410,53 @@ class OrderAbilityScope implements Hookable {
         $order_data['order_relation'] = $relation;
         $order_data['vendor']         = VendorPayload::for_user( $vendor_id );
 
+        // Money stays with the owner unless shared: a parent order has no single earning.
+        if ( 'parent' !== $relation && $this->can_view_earning( $vendor_id ) ) {
+            $order_data['earning'] = $this->earning_for( $order );
+        }
+
         return $order_data;
+    }
+
+    /**
+     * Whether the caller may see an order's earning split.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id The owning vendor.
+     *
+     * @return bool
+     */
+    private function can_view_earning( int $vendor_id ): bool {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        if ( $vendor_id <= 0 || dokan_get_current_user_id() !== $vendor_id ) {
+            return false;
+        }
+
+        // Gated like the dashboard's earnings widgets, which bites only for narrowed staff.
+        return current_user_can( 'dokan_view_sales_overview' );
+    }
+
+    /**
+     * The earning split of a single-vendor order or Suborder.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order $order The order.
+     *
+     * @return array{vendor_earning:?float,admin_commission:?float}
+     */
+    private function earning_for( \WC_Order $order ): array {
+        $vendor = dokan()->commission->get_earning_by_order( $order, 'seller' );
+        $admin  = dokan()->commission->get_earning_by_order( $order, 'admin' );
+
+        return [
+            'vendor_earning'   => is_numeric( $vendor ) ? (float) $vendor : null,
+            'admin_commission' => is_numeric( $admin ) ? (float) $admin : null,
+        ];
     }
 
     /**

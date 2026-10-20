@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Abilities;
 
 use WeDevs\Dokan\Abilities\Definitions\CurrentVendor;
+use WeDevs\Dokan\Abilities\Definitions\OrdersSummaryGet;
 use WeDevs\Dokan\Abilities\Definitions\VendorsQuery;
 use WeDevs\Dokan\Abilities\Definitions\VendorStatsGet;
 use WeDevs\Dokan\Abilities\Definitions\WithdrawsQuery;
@@ -106,6 +107,7 @@ class DokanAbilityRegistrar implements Hookable {
                 VendorStatsGet::class,
                 WithdrawsQuery::class,
                 VendorsQuery::class,
+                OrdersSummaryGet::class,
             ]
         );
     }

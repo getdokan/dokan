@@ -29,6 +29,10 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Abilities\ProductAbilityScope::class,
         \WeDevs\Dokan\Abilities\OrderAbilityScope::class,
         \WeDevs\Dokan\Abilities\DokanAbilityRegistrar::class,
+        \WeDevs\Dokan\Abilities\Mcp\Server::class,
+        \WeDevs\Dokan\Abilities\Mcp\Consent::class,
+        \WeDevs\Dokan\Abilities\Mcp\Grants::class,
+        \WeDevs\Dokan\Abilities\Mcp\Actions::class,
 	];
 
 	/**
