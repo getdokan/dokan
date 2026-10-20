@@ -105,6 +105,11 @@ var Dokan_Vendor_Registration = {
         var chk_value = $( this ).val();
 
         if ( $( this ).prop( "checked" ) ) {
+            // A taken shop URL keeps the submit button locked.
+            if ( $( this ).closest( 'form' ).find( '#url-alart-mgs' ).hasClass( 'text-danger' ) ) {
+                return;
+            }
+
             $( 'input[name=register]' ).removeAttr( 'disabled' );
             $( 'button[name=register]' ).removeAttr( 'disabled' );
             $( 'input[name=dokan_migration]' ).removeAttr( 'disabled' );
@@ -154,6 +159,9 @@ var Dokan_Vendor_Registration = {
         }
 
         var row = self.closest('.form-row');
+        const form = self.closest( 'form' );
+        const submitButton = form.find( '[type=submit]' );
+
         row.block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
 
         $.post( dokan.ajaxurl, data, function(resp) {
@@ -161,11 +169,13 @@ var Dokan_Vendor_Registration = {
             if ( resp.success === true ) {
                 $('#url-alart').removeClass('text-danger').addClass('text-success');
                 $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan.seller.available);
-                $('.woocommerce-form-register__submit').prop('disabled', false);
+                // An unticked terms box keeps the button locked.
+                const termsUnticked = form.find( '.tc_check_box:not(:checked)' ).length > 0;
+                submitButton.prop( 'disabled', termsUnticked );
             } else {
                 $('#url-alart').removeClass('text-success').addClass('text-danger');
                 $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
-                $('.woocommerce-form-register__submit').prop('disabled', true);
+                submitButton.prop( 'disabled', true );
             }
 
             row.unblock();
