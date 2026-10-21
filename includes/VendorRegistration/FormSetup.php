@@ -90,7 +90,18 @@ class FormSetup implements Hookable {
             return '[dokan-vendor-onboarding-registration]';
         }
 
-        return '<!-- wp:' . self::BLOCK_NAME . ' /-->';
+        // Starts from Dokan's Terms and Conditions setting, as a block added in the editor does.
+        $terms_page = 'on' === dokan_get_option( 'enable_tc_on_reg', 'dokan_general', 'off' ) ? absint( dokan_get_option( 'reg_tc_page', 'dokan_pages', 0 ) ) : 0;
+
+        return serialize_block(
+            [
+                'blockName'    => self::BLOCK_NAME,
+                'attrs'        => [ 'termsPageId' => $terms_page ],
+                'innerBlocks'  => [],
+                'innerHTML'    => '',
+                'innerContent' => [],
+            ]
+        );
     }
 
     /**
@@ -205,6 +216,8 @@ class FormSetup implements Hookable {
     /**
      * Find the first registration block on a page, including inside nested blocks.
      *
+     * @since DOKAN_SINCE
+     *
      * @param int $page_id Page ID.
      *
      * @return array|null
@@ -221,6 +234,8 @@ class FormSetup implements Hookable {
 
     /**
      * Search parsed blocks depth-first for the registration block.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $blocks Parsed blocks.
      *
@@ -247,6 +262,8 @@ class FormSetup implements Hookable {
     /**
      * Turn the registry's sections into setup sections without rows.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array[] $defaults Registry sections.
      *
      * @return array[]
@@ -268,6 +285,8 @@ class FormSetup implements Hookable {
 
     /**
      * Rebuild sections and rows from the saved attributes, keeping their saved order.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array   $saved    Saved sections.
      * @param array[] $defaults Registry sections.
@@ -336,6 +355,8 @@ class FormSetup implements Hookable {
 
     /**
      * Turn one saved row into a setup row, or null when it no longer applies.
+     *
+     * @since DOKAN_SINCE
      *
      * @param mixed   $saved_row Saved row.
      * @param array[] $rows      Available rows keyed by ID.
@@ -407,6 +428,8 @@ class FormSetup implements Hookable {
     /**
      * Build a custom field row from its saved settings; rows without a valid meta key are dropped.
      *
+     * @since DOKAN_SINCE
+     *
      * @param string $id        Row ID.
      * @param array  $saved_row Saved row.
      *
@@ -457,6 +480,8 @@ class FormSetup implements Hookable {
     /**
      * Put back built-in sections the saved setup doesn't have, after the section that precedes them by default.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array[] $sections Setup sections.
      * @param array[] $defaults Registry sections.
      *
@@ -481,6 +506,8 @@ class FormSetup implements Hookable {
 
     /**
      * Place available rows the saved setup doesn't have into their default section, by position.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array[] $sections Setup sections.
      * @param array[] $rows     Available rows keyed by ID.
@@ -522,6 +549,8 @@ class FormSetup implements Hookable {
 
     /**
      * Resolve steps and assign every section to one.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array   $attributes Saved block attributes.
      * @param array[] $sections   Setup sections.
@@ -574,6 +603,8 @@ class FormSetup implements Hookable {
 
     /**
      * Sanitize a saved text value; anything that isn't a scalar becomes an empty string.
+     *
+     * @since DOKAN_SINCE
      *
      * @param mixed $value Saved value.
      *

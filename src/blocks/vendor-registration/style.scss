@@ -192,6 +192,11 @@
 		font-size: 0.875em;
 	}
 
+	// Focused by script on step change; no ring unless the keyboard brought it there.
+	&__step-note:focus:not(:focus-visible) {
+		outline: none;
+	}
+
 	&__section + &__section {
 		margin-top: 8px;
 	}

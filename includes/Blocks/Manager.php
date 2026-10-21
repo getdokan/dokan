@@ -60,7 +60,9 @@ class Manager implements Hookable {
             }
 
             // Manifest not built (dev checkout) — fall back to per-directory registration.
-            foreach ( glob( trailingslashit( $path ) . '*/block.json' ) as $block_json ) {
+            $block_files = glob( trailingslashit( $path ) . '*/block.json' );
+
+            foreach ( false === $block_files ? [] : $block_files as $block_json ) {
                 register_block_type( dirname( $block_json ) );
             }
         }

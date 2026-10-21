@@ -251,7 +251,7 @@ function LoginPreview( { login }: { login: LoginSettings } ) {
             ) }
             {
                 applyFilters(
-                    'dokan.vendorRegistration.preview.afterLogin',
+                    'dokan_vendor_registration_preview_after_login',
                     null,
                     context
                 ) as ReactNode
@@ -260,12 +260,28 @@ function LoginPreview( { login }: { login: LoginSettings } ) {
     );
 }
 
+// Like the server, a text left blank shows its default.
+const withDefaults = < T extends object >(
+    defaults: T,
+    saved: Partial< T > | undefined
+): T => {
+    const merged = { ...defaults };
+
+    Object.entries( saved || {} ).forEach( ( [ key, value ] ) => {
+        if ( 'string' !== typeof value || value.trim() ) {
+            ( merged as Record< string, unknown > )[ key ] = value;
+        }
+    } );
+
+    return merged;
+};
+
 export default function Preview() {
     const context = useEditorContext();
     const { data, attributes, setup, view, hasTermsPage } = context;
     const [ current, setCurrent ] = useState( 0 );
-    const texts = { ...data.texts, ...attributes.texts };
-    const login: LoginSettings = { ...data.login, ...attributes.login };
+    const texts = withDefaults( data.texts, attributes.texts );
+    const login = withDefaults( data.login, attributes.login ) as LoginSettings;
     const steps = previewSteps( setup, ( row ) =>
         isRowShown( row, view, data, hasTermsPage )
     );
@@ -300,7 +316,7 @@ export default function Preview() {
             ) }
             {
                 applyFilters(
-                    'dokan.vendorRegistration.preview.beforeForm',
+                    'dokan_vendor_registration_preview_before_form',
                     null,
                     context
                 ) as ReactNode
@@ -385,7 +401,7 @@ export default function Preview() {
             </div>
             {
                 applyFilters(
-                    'dokan.vendorRegistration.preview.afterForm',
+                    'dokan_vendor_registration_preview_after_form',
                     null,
                     context
                 ) as ReactNode

@@ -49,7 +49,8 @@ class FieldRegistry {
             [
                 'id'     => 'address',
                 'title'  => __( 'Store Address', 'dokan-lite' ),
-                'hidden' => true,
+                // Follows Dokan's "Address on registration" setting until the block saves its own choice.
+                'hidden' => 'on' !== dokan_get_option( 'enabled_address_on_reg', 'dokan_general', 'off' ),
                 'locked' => false,
             ],
             [
@@ -243,6 +244,8 @@ class FieldRegistry {
     /**
      * Build a built-in row definition.
      *
+     * @since DOKAN_SINCE
+     *
      * @param string $id         Row ID.
      * @param string $section    Default section ID.
      * @param int    $position   Position within the section.
@@ -271,6 +274,8 @@ class FieldRegistry {
     /**
      * Fill in a section's defaults.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array $section Section definition.
      *
      * @return array
@@ -286,6 +291,8 @@ class FieldRegistry {
 
     /**
      * Fill in a row's defaults; rows without an ID, section or label are dropped.
+     *
+     * @since DOKAN_SINCE
      *
      * @param mixed $row Row definition.
      *

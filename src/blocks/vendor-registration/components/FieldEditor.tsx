@@ -51,8 +51,14 @@ export default function FieldEditor( {
     onDone,
     onCancel,
 }: Props ) {
-    const { data, setup, savedFields, attributes, setAttributes } =
-        useEditorContext();
+    const {
+        data,
+        setup,
+        savedFields,
+        savedFieldsLoaded,
+        attributes,
+        setAttributes,
+    } = useEditorContext();
     const [ reused, setReused ] = useState( false );
     const [ skipped, setSkipped ] = useState( false );
 
@@ -62,10 +68,12 @@ export default function FieldEditor( {
     );
     const answers = saved?.answers || 0;
     // The key is shared once vendors answered or another page uses it; then it no longer follows the label.
-    const keyIsShared =
-        !! saved &&
-        ( answers > 0 ||
-            saved.pages.some( ( page ) => String( page.id ) !== postId ) );
+    // Without the list, an existing field may have answers, so its key stays put.
+    const keyIsShared = savedFieldsLoaded
+        ? !! saved &&
+          ( answers > 0 ||
+              saved.pages.some( ( page ) => String( page.id ) !== postId ) )
+        : row.custom && 'add' !== mode;
     const keyFollowsLabel = row.custom && ! reused && ! keyIsShared;
     const typeLocked = row.custom && ( reused || keyIsShared );
 
@@ -185,7 +193,8 @@ export default function FieldEditor( {
 
             { needsOptions && (
                 <OptionsEditor
-                    allFresh={ 'add' === mode }
+                    // A reused or shared key already has answers matching its option values, so those stay fixed.
+                    allFresh={ 'add' === mode && ! reused && ! keyIsShared }
                     options={ row.options }
                     onChange={ ( options ) => update( { options } ) }
                 />
@@ -286,6 +295,14 @@ export default function FieldEditor( {
                         />
                     ) }
                 </div>
+            ) }
+            { row.custom && ! savedFieldsLoaded && (
+                <p className="dokan-vreg-editor__help">
+                    { __(
+                        'Fields used on other forms couldn’t be checked, so existing keys stay as they are.',
+                        'dokan-lite'
+                    ) }
+                </p>
             ) }
             { reused && (
                 <p className="dokan-vreg-editor__help">

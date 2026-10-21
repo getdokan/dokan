@@ -199,6 +199,34 @@ class AnswersTest extends DokanTestCase {
 
         wp_set_current_user( $this->vendor_id );
         $this->assertFalse( $admin->can_manage( $this->vendor_id ) );
+
+        // Admins also count as sellers for Dokan, but they have no sign-up answers.
+        $admin_id = $this->factory()->user->create( [ 'role' => 'administrator' ] );
+        wp_set_current_user( $admin_id );
+        $this->assertFalse( $admin->can_manage( $admin_id ) );
+    }
+
+    public function test_a_required_field_added_later_never_blocks_saving_a_profile() {
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'administrator' ] ) );
+        $post = get_post( $this->page_id );
+        wp_update_post(
+            [
+                'ID'           => $this->page_id,
+                'post_content' => str_replace( '"label":"Support email"', '"label":"Support email","required":true', $post->post_content ),
+            ]
+        );
+        dokan_get_container()->get( FormSetup::class )->flush_cache();
+
+        $_POST  = [
+            'dokan_vreg_answers_nonce' => wp_create_nonce( 'dokan_vreg_answers' ),
+            'dokan_vreg'               => [ 'dokan_vreg_business_type' => 'company' ],
+            'dokan_vreg_shown'         => [ 'dokan_vreg_business_type', 'dokan_vreg_support_email' ],
+        ];
+        $errors = new \WP_Error();
+
+        dokan_get_container()->get( AnswersAdmin::class )->validate_profile_section( $errors, true, get_userdata( $this->vendor_id ) );
+
+        $this->assertFalse( $errors->has_errors() );
     }
 
     public function test_phone_counts_in_profile_completion_only_when_filled() {

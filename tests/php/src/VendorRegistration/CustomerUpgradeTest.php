@@ -198,6 +198,15 @@ class CustomerUpgradeTest extends DokanTestCase {
         $this->assertContains( 'editor', get_userdata( $user_id )->roles );
     }
 
+    public function test_authors_keep_their_role() {
+        $user_id = $this->factory()->user->create( [ 'role' => 'author' ] );
+        wp_set_current_user( $user_id );
+        $this->post_form();
+
+        $this->assertSame( 'dokan_vreg_role', $this->upgrade->upgrade( wp_get_current_user() )->get_error_code() );
+        $this->assertSame( [ 'author' ], get_userdata( $user_id )->roles );
+    }
+
     public function test_a_subscriber_can_become_a_vendor() {
         wp_set_current_user( $this->factory()->user->create( [ 'role' => 'subscriber' ] ) );
         $this->post_form();

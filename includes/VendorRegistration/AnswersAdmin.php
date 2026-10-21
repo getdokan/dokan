@@ -67,7 +67,10 @@ class AnswersAdmin implements Hookable {
      * @return bool
      */
     public function can_manage( int $user_id ): bool {
-        return current_user_can( 'manage_woocommerce' ) && current_user_can( 'edit_user', $user_id ) && dokan_is_user_seller( $user_id );
+        $user = get_userdata( $user_id );
+
+        // Real vendors only; admins and shop managers also pass dokan_is_user_seller().
+        return $user && in_array( 'seller', (array) $user->roles, true ) && current_user_can( 'manage_woocommerce' ) && current_user_can( 'edit_user', $user_id );
     }
 
     /**
@@ -145,7 +148,8 @@ class AnswersAdmin implements Hookable {
         $fields = $this->answers->get_fields( (int) $user->ID );
 
         foreach ( $fields as $key => $field ) {
-            if ( array_key_exists( $key, $answers ) ) {
+            // Only answers the admin changed, so a field added later never blocks saving the profile.
+            if ( array_key_exists( $key, $answers ) && $this->is_changed( $field, $answers[ $key ] ) ) {
                 $valid = $this->submission->validate_custom_answer( $field, $answers[ $key ] );
 
                 if ( is_wp_error( $valid ) ) {
@@ -153,6 +157,31 @@ class AnswersAdmin implements Hookable {
                 }
             }
         }
+    }
+
+    /**
+     * Whether a posted answer differs from the saved one.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $field  Field with its saved `value`.
+     * @param mixed $answer Posted answer.
+     *
+     * @return bool
+     */
+    protected function is_changed( array $field, $answer ): bool {
+        $normalize = function ( $value ) {
+            if ( is_array( $value ) ) {
+                $values = array_map( 'strval', array_filter( $value, 'is_scalar' ) );
+                sort( $values );
+
+                return $values;
+            }
+
+            return is_scalar( $value ) ? trim( (string) $value ) : '';
+        };
+
+        return $normalize( $answer ) !== $normalize( $field['value'] ?? '' );
     }
 
     /**
@@ -292,6 +321,8 @@ class AnswersAdmin implements Hookable {
     /**
      * Every `dokan_vreg_` value saved for a user, including the sign-up page.
      *
+     * @since DOKAN_SINCE
+     *
      * @param int $user_id User ID.
      *
      * @return array<string, mixed>
@@ -310,6 +341,8 @@ class AnswersAdmin implements Hookable {
 
     /**
      * Posted answers from the Edit User screen, or null when the section wasn't submitted.
+     *
+     * @since DOKAN_SINCE
      *
      * @return array|null
      */
@@ -337,6 +370,8 @@ class AnswersAdmin implements Hookable {
 
     /**
      * Render one answer's input.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $field Field with its `value`.
      *

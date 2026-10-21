@@ -30,8 +30,20 @@ const initForm = ( form ) => {
         items.forEach( ( item, i ) => {
             item.classList.toggle( 'is-active', i === index );
             item.classList.toggle( 'is-done', i < index );
+
+            if ( i === index ) {
+                item.setAttribute( 'aria-current', 'step' );
+            } else {
+                item.removeAttribute( 'aria-current' );
+            }
         } );
         current = index;
+
+        // Screen readers hear "Step 2 of 3: …"; an invalid field reported next takes focus from here.
+        const note = steps[ index ]?.querySelector( '.dokan-vreg__step-note' );
+        if ( note ) {
+            note.focus( { preventScroll: true } );
+        }
 
         const top = form.getBoundingClientRect().top;
         if ( top < 0 ) {

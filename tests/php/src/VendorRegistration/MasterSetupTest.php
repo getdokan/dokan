@@ -224,16 +224,19 @@ class MasterSetupTest extends DokanTestCase {
         $this->assertSame( get_permalink( $page_id ), $form->get_account_migration_redirect() );
     }
 
-    public function test_dokans_own_forms_keep_their_rules() {
-        $this->onboarding_page( $this->master_block() );
+    public function test_a_sign_up_without_the_signed_setup_follows_the_onboarding_block() {
+        $master_id  = $this->onboarding_page( $this->master_block() );
         $submission = dokan_get_container()->get( Submission::class );
-        $_POST      = [
-            'role'                                => 'seller',
+        // A stale copy of Dokan's form, or the block's form with its setup removed.
+        $_POST = [
+            'role'                                 => 'seller',
             'dokan_vendor_registration_form_nonce' => 'stale-copy',
         ];
 
-        $this->assertNull( $submission->get_posted_setup() );
-        $this->assertFalse( $submission->validate( new WP_Error() )->has_errors() );
+        $setup = $submission->get_posted_setup();
+
+        $this->assertSame( $master_id, $setup['page_id'] );
+        $this->assertSame( 'myaccount', $setup['view'] );
     }
 
     public function test_the_old_migration_form_stands_down_once_the_block_takes_over() {

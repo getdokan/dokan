@@ -199,6 +199,8 @@ class FieldIndex {
     /**
      * Every registration block in parsed blocks, including nested ones.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array $blocks Parsed blocks.
      *
      * @return array[]

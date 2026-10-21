@@ -97,8 +97,8 @@ class CustomerUpgrade implements Hookable {
             return new WP_Error( 'dokan_vreg_login', __( 'You need to log in before becoming a vendor.', 'dokan-lite' ) );
         }
 
-        // dokan_user_update_to_seller() replaces every role, so privileged users are refused, as in the block's preview.
-        if ( dokan_is_user_seller( $user->ID ) || user_can( $user, 'edit_others_pages' ) ) {
+        // dokan_user_update_to_seller() replaces every role, so only customers may switch, as in the block's preview.
+        if ( dokan_is_user_seller( $user->ID ) || ! self::can_become_vendor( $user ) ) {
             return new WP_Error( 'dokan_vreg_role', __( 'Only customers can become vendors from this form.', 'dokan-lite' ) );
         }
 
@@ -201,5 +201,28 @@ class CustomerUpgrade implements Hookable {
         do_action( 'dokan_vendor_registration_customer_upgraded', $user->ID, $setup );
 
         return true;
+    }
+
+    /**
+     * Whether a user may become a vendor from the block: only roles that lose nothing when replaced by seller.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_User $user User.
+     *
+     * @return bool
+     */
+    public static function can_become_vendor( WP_User $user ): bool {
+        /**
+         * Filter the roles that may become vendors from the Vendor Registration Form block.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string[] $roles Roles; a user needs at least one and no others.
+         */
+        $allowed = (array) apply_filters( 'dokan_vendor_registration_upgradable_roles', [ 'customer', 'subscriber' ] );
+        $roles   = (array) $user->roles;
+
+        return ! empty( $roles ) && ! array_diff( $roles, $allowed );
     }
 }

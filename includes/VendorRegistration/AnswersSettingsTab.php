@@ -156,6 +156,8 @@ class AnswersSettingsTab implements Hookable {
     /**
      * Whether the current user is the vendor themselves.
      *
+     * @since DOKAN_SINCE
+     *
      * @param int $vendor_id Vendor ID.
      *
      * @return bool
@@ -166,6 +168,8 @@ class AnswersSettingsTab implements Hookable {
 
     /**
      * Submitted answers that differ from the saved ones.
+     *
+     * @since DOKAN_SINCE
      *
      * The page sends every field on each save, so unchanged answers (even ones the form's rules no longer accept) are left alone.
      *
@@ -196,6 +200,8 @@ class AnswersSettingsTab implements Hookable {
     /**
      * Comparable form of an answer.
      *
+     * @since DOKAN_SINCE
+     *
      * @param mixed $value Answer.
      *
      * @return string|string[]
@@ -213,6 +219,8 @@ class AnswersSettingsTab implements Hookable {
 
     /**
      * Build the settings field for one answer, using the settings page's own controls.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array  $field      Field with its `value`.
      * @param string $section_id Card ID.
@@ -318,6 +326,8 @@ class AnswersSettingsTab implements Hookable {
 
     /**
      * Turn a settings value back into an answer: the switch's "no" means unticked.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $field Field.
      * @param mixed $value Settings value.

@@ -196,12 +196,15 @@ class Block implements Hookable {
 
         $wrapper = [ 'class' => implode( ' ', $classes ) ];
         $style   = $this->renderer->get_style_variables( $attributes );
+        $css     = '';
 
+        // Inline styles pass through safecss_filter_attr(), which drops rgb()/hsl() colours; a rule scoped to the block keeps them.
         if ( '' !== $style ) {
-            $wrapper['style'] = $style;
+            $wrapper['id'] = wp_unique_id( 'dokan-vreg-' );
+            $css           = '<style>#' . $wrapper['id'] . '{' . wp_strip_all_tags( $style ) . '}</style>';
         }
 
-        $html = '<div ' . get_block_wrapper_attributes( $wrapper ) . '>' . $notice . $notices . $layout . '</div>';
+        $html = '<div ' . get_block_wrapper_attributes( $wrapper ) . '>' . $css . $notice . $notices . $layout . '</div>';
 
         /**
          * Fires after the vendor registration block rendered.
@@ -264,7 +267,7 @@ class Block implements Hookable {
      *
      * @since DOKAN_SINCE
      *
-     * @return string `visitor`, `customer` (any logged-in non-vendor), `vendor`, or `preview` (admins and editors).
+     * @return string `visitor`, `customer` (customers and subscribers), `vendor`, or `preview` (admins, editors and other roles).
      */
     public function get_view(): string {
         if ( ! is_user_logged_in() ) {
@@ -275,7 +278,12 @@ class Block implements Hookable {
             return 'preview';
         }
 
-        return dokan_is_user_seller( get_current_user_id() ) ? 'vendor' : 'customer';
+        if ( dokan_is_user_seller( get_current_user_id() ) ) {
+            return 'vendor';
+        }
+
+        // Other roles would lose theirs on becoming a vendor, so they only get the preview.
+        return CustomerUpgrade::can_become_vendor( wp_get_current_user() ) ? 'customer' : 'preview';
     }
 
     /**
@@ -396,6 +404,8 @@ class Block implements Hookable {
 
     /**
      * A notice only users who can edit the page see.
+     *
+     * @since DOKAN_SINCE
      *
      * @param string $message Notice text.
      *

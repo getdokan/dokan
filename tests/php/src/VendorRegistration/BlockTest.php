@@ -113,6 +113,15 @@ class BlockTest extends DokanTestCase {
         $this->assertStringContainsString( 'name="dokan_vreg_become_vendor"', $this->block()->render( [] ) );
     }
 
+    public function test_roles_that_would_lose_their_role_only_get_the_preview() {
+        $this->on_page();
+
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'author' ] ) );
+
+        $this->assertSame( 'preview', $this->block()->get_view() );
+        $this->assertStringContainsString( 'data-preview="1"', $this->block()->render( [] ) );
+    }
+
     public function test_the_customer_form_has_no_captcha() {
         $this->on_page();
         add_action(
@@ -332,6 +341,16 @@ class BlockTest extends DokanTestCase {
 
         $this->assertSame( [ true ], $inside );
         $this->assertSame( did_action( 'dokan_vendor_registration_before_render' ), did_action( 'dokan_vendor_registration_after_render' ) );
+    }
+
+    public function test_colour_functions_reach_the_page() {
+        $this->on_page();
+
+        $html = $this->block()->render( [ 'styles' => [ 'accentColor' => 'rgb(10, 20, 30)' ] ] );
+
+        $this->assertMatchesRegularExpression( '/<style>#(dokan-vreg-\d+)\{[^}]*--dokan-vreg-accent:rgb\(10, 20, 30\)/', $html );
+        preg_match( '/<style>#(dokan-vreg-\d+)/', $html, $id );
+        $this->assertStringContainsString( 'id="' . $id[1] . '"', $html );
     }
 
     public function test_the_social_layout_is_a_class_on_the_block() {

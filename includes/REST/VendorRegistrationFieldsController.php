@@ -57,7 +57,8 @@ class VendorRegistrationFieldsController extends DokanBaseController {
      * @return bool
      */
     public function get_items_permissions_check( $request ) {
-        return current_user_can( 'manage_woocommerce' );
+        // Anyone who can edit pages can set up the block, so they need the keys other forms use.
+        return current_user_can( 'edit_pages' );
     }
 
     /**

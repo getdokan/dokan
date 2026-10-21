@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\VendorRegistration;
 
 use WeDevs\Dokan\Contracts\Hookable;
-use WeDevs\Dokan\Registration;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -98,11 +97,7 @@ class Submission implements Hookable {
      */
     public function get_posted_setup(): ?array {
         if ( ! $this->is_block_request() ) {
-            // Dokan's own forms carry the vendor-form marker; a stale copy of one keeps its old rules.
-            if ( isset( $_POST[ Registration::VENDOR_FORM_NONCE_FIELD ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- presence check only.
-                return null;
-            }
-
+            // Once the onboarding page has the block, Dokan's own forms are drawn from it, so any other vendor sign-up follows its rules.
             $master = $this->setup->get_master_setup();
 
             if ( $master ) {
@@ -124,6 +119,29 @@ class Submission implements Hookable {
             return null;
         }
 
+        $post = $page_id ? get_post( $page_id ) : null;
+
+        // Not from a published page (e.g. signed through a draft's preview): only the onboarding block's rules apply.
+        if ( ! $post || 'publish' !== $post->post_status ) {
+            $master = $this->setup->get_master_setup();
+
+            if ( $master ) {
+                $master['view'] = 'visitor';
+            }
+
+            return $master;
+        }
+
+        // The page still holds the block: its current setup counts, so an older signed copy can't loosen the rules.
+        $current = $this->setup->get_for_page( $page_id );
+
+        if ( $current['has_block'] ) {
+            $current['view'] = 'visitor';
+
+            return $current;
+        }
+
+        // Block placed in a template or synced pattern: the signed copy is the only record of its setup.
         $setup = $this->setup->build( $attributes );
 
         $setup['page_id']    = $page_id;
@@ -380,7 +398,9 @@ class Submission implements Hookable {
      * @return WP_Error|true
      */
     public function validate_custom_answer( array $row, $answer ) {
-        $values = array_filter( array_map( 'trim', array_map( 'strval', array_filter( (array) $answer, 'is_scalar' ) ) ), 'strlen' );
+        // Only multi-selects and checkboxes take a list; an array for any other field counts as no answer, as sanitize_answer() saves nothing for it.
+        $list   = in_array( $row['type'], [ 'multiselect', 'checkbox' ], true ) ? (array) $answer : ( is_scalar( $answer ) ? [ $answer ] : [] );
+        $values = array_filter( array_map( 'trim', array_map( 'strval', array_filter( $list, 'is_scalar' ) ) ), 'strlen' );
 
         if ( 'checkbox' === $row['type'] ) {
             $values = in_array( 'yes', $values, true ) ? [ 'yes' ] : [];
@@ -475,6 +495,8 @@ class Submission implements Hookable {
     /**
      * Get the posted custom answers keyed by meta key.
      *
+     * @since DOKAN_SINCE
+     *
      * @return array
      */
     protected function get_posted_answers(): array {
@@ -486,6 +508,8 @@ class Submission implements Hookable {
 
     /**
      * Refuse a shop URL another user already has, compared the way WordPress will save it.
+     *
+     * @since DOKAN_SINCE
      *
      * @param WP_Error $errors Registration errors.
      *

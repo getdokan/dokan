@@ -37,6 +37,8 @@ export default function Edit( {
     const data = getEditorData();
     const [ view, setView ] = useState< View >( 'visitor' );
     const [ savedFields, setSavedFields ] = useState< SavedField[] >( [] );
+    // Until the list loads (or if it can't), keys other forms use are unknown.
+    const [ savedFieldsLoaded, setSavedFieldsLoaded ] = useState( false );
 
     const setup = useMemo(
         () => buildSetup( attributes, data ),
@@ -84,7 +86,10 @@ export default function Edit( {
         apiFetch< SavedField[] >( {
             path: `/${ data.dokan.restNamespace }/vendor-registration/fields`,
         } )
-            .then( setSavedFields )
+            .then( ( fields ) => {
+                setSavedFields( fields );
+                setSavedFieldsLoaded( true );
+            } )
             .catch( () => setSavedFields( [] ) );
     }, [ data.dokan.restNamespace ] );
 
@@ -97,6 +102,7 @@ export default function Edit( {
         view,
         setView,
         savedFields,
+        savedFieldsLoaded,
         hasTermsPage: ( attributes.termsPageId || 0 ) > 0,
     };
 
@@ -126,7 +132,7 @@ export default function Edit( {
                 <LoginPanel />
                 {
                     applyFilters(
-                        'dokan.vendorRegistration.settingsPanels',
+                        'dokan_vendor_registration_settings_panels',
                         null,
                         context
                     ) as ReactNode

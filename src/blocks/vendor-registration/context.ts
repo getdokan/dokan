@@ -11,6 +11,7 @@ export interface EditorContextValue {
     view: View;
     setView: ( view: View ) => void;
     savedFields: SavedField[];
+    savedFieldsLoaded: boolean;
     hasTermsPage: boolean;
 }
 

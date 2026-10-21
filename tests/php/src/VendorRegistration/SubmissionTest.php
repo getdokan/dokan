@@ -241,6 +241,36 @@ class SubmissionTest extends DokanTestCase {
         $this->assertSame( $page_id, $setup['page_id'] );
     }
 
+    public function test_an_older_signed_copy_cannot_loosen_the_pages_current_rules() {
+        $strict  = $this->attributes();
+        $page_id = $this->block_page( $strict );
+
+        // Signed before the owner made the form stricter.
+        $this->post_form( [ 'sections' => [] ], [], $page_id );
+
+        $this->assertSame( $strict, $this->submission->get_posted_setup()['attributes'] );
+    }
+
+    public function test_a_setup_signed_for_an_unpublished_page_gets_only_the_onboarding_rules() {
+        $draft = $this->factory()->post->create(
+            [
+                'post_type'   => 'page',
+                'post_status' => 'draft',
+            ]
+        );
+        $this->post_form( [ 'sections' => [] ], [], $draft );
+
+        $this->assertNull( $this->submission->get_posted_setup() );
+
+        // Signed without a page, e.g. through the block renderer.
+        $signed                    = dokan_get_container()->get( FormRenderer::class )->sign_setup( [ 'sections' => [] ], 0 );
+        $_POST['dokan_vreg_form']  = 0;
+        $_POST['dokan_vreg_setup'] = $signed['payload'];
+        $_POST['dokan_vreg_sig']   = $signed['signature'];
+
+        $this->assertNull( $this->submission->get_posted_setup() );
+    }
+
     public function test_a_reformatted_taken_shop_url_is_refused() {
         $this->factory()->user->create(
             [
@@ -330,6 +360,19 @@ class SubmissionTest extends DokanTestCase {
         $this->assertSame( 'yes', $this->submission->sanitize_answer( [ 'type' => 'checkbox' ], [ '', 'yes' ] ) );
         $this->assertSame( "line one\nline two", $this->submission->sanitize_answer( [ 'type' => 'textarea' ], "line one\nline two<script>" ) );
         $this->assertNull( $this->submission->sanitize_answer( [ 'type' => 'text' ], [ 'array' ] ) );
+    }
+
+    public function test_a_list_posted_for_a_single_answer_field_is_no_answer() {
+        $row = [
+            'id'       => 'f',
+            'type'     => 'select',
+            'label'    => 'Field',
+            'required' => true,
+            'options'  => [ [ 'value' => 'a' ] ],
+        ];
+
+        $this->assertInstanceOf( WP_Error::class, $this->submission->validate_custom_answer( $row, [ 'a' ] ) );
+        $this->assertTrue( $this->submission->validate_custom_answer( $row, 'a' ) );
     }
 
     public function test_logged_in_users_cannot_sign_up_through_the_visitor_form() {

@@ -28,16 +28,18 @@ const fromRegistry = ( registry: RegistryRow ): Row => ( {
     registry,
 } );
 
-// Mirror of the PHP: options need a value, values are unique, an empty label shows the value.
+// Mirror of the PHP: values are unique and an empty label shows the value. An option still being typed
+// (no value yet) stays, so "Add option" works; the server drops it if it's saved empty.
 const uniqueOptions = ( options: FieldOption[] ): FieldOption[] => {
     const seen = new Set< string >();
 
     return options
         .filter(
             ( option ) =>
-                option?.value &&
-                ! seen.has( option.value ) &&
-                seen.add( option.value )
+                !! option &&
+                ( ! option.value ||
+                    ( ! seen.has( option.value ) &&
+                        !! seen.add( option.value ) ) )
         )
         .map( ( option ) => ( {
             label: option.label?.trim() ? option.label : option.value,
@@ -45,7 +47,7 @@ const uniqueOptions = ( options: FieldOption[] ): FieldOption[] => {
         } ) );
 };
 
-// Same rule as FormSetup: only the parts a row declares, and only filled in.
+// Same rule as FormSetup: only the parts a row declares, and only filled in. Kept as typed; the server trims.
 const cleanLabels = (
     labels: Record< string, string > | undefined,
     editLabels: Record< string, string > | undefined
@@ -53,10 +55,9 @@ const cleanLabels = (
     const clean: Record< string, string > = {};
 
     Object.keys( editLabels || {} ).forEach( ( key ) => {
-        const label =
-            typeof labels?.[ key ] === 'string' ? labels[ key ].trim() : '';
+        const label = typeof labels?.[ key ] === 'string' ? labels[ key ] : '';
 
-        if ( label ) {
+        if ( label.trim() ) {
             clean[ key ] = label;
         }
     } );
@@ -115,7 +116,8 @@ const resolveSavedRow = (
 
     const row = fromRegistry( registry );
 
-    row.label = saved.label?.trim() || row.label;
+    // Kept as typed, so a space between words survives; the server trims.
+    row.label = saved.label?.trim() ? saved.label : row.label;
     row.placeholder = saved.placeholder || '';
     row.help = saved.help || '';
     row.labels = cleanLabels( saved.labels, registry.edit_labels );

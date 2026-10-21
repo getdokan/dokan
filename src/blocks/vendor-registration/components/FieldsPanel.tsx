@@ -129,7 +129,7 @@ export default function FieldsPanel() {
         endDrag();
     };
 
-    const renderSection = ( section: Section, index: number ) => {
+    const renderSection = ( section: Section ) => {
         const shown = section.rows.filter(
             ( row ) => ! row.hidden && ! offInWooCommerce( row, data )
         ).length;
@@ -234,7 +234,10 @@ export default function FieldsPanel() {
                         controls={ [
                             {
                                 title: __( 'Move up', 'dokan-lite' ),
-                                isDisabled: 0 === index,
+                                // Asks the move itself, so a section can cross into an empty step at either end.
+                                isDisabled:
+                                    moveSection( setup, section.id, -1 ) ===
+                                    setup,
                                 onClick: () =>
                                     updateSetup(
                                         moveSection( setup, section.id, -1 )
@@ -242,7 +245,9 @@ export default function FieldsPanel() {
                             },
                             {
                                 title: __( 'Move down', 'dokan-lite' ),
-                                isDisabled: sections.length - 1 === index,
+                                isDisabled:
+                                    moveSection( setup, section.id, 1 ) ===
+                                    setup,
                                 onClick: () =>
                                     updateSetup(
                                         moveSection( setup, section.id, 1 )
@@ -318,6 +323,35 @@ export default function FieldsPanel() {
                                         updateSetup(
                                             removeRow( setup, row.id )
                                         )
+                                    }
+                                    // Keyboard alternative to dragging; moveRow() counts the row's own slot, hence +2 down.
+                                    onMoveUp={
+                                        rowIndex > 0
+                                            ? () =>
+                                                  updateSetup(
+                                                      moveRow(
+                                                          setup,
+                                                          row.id,
+                                                          section.id,
+                                                          rowIndex - 1,
+                                                          data
+                                                      )
+                                                  )
+                                            : undefined
+                                    }
+                                    onMoveDown={
+                                        rowIndex < section.rows.length - 1
+                                            ? () =>
+                                                  updateSetup(
+                                                      moveRow(
+                                                          setup,
+                                                          row.id,
+                                                          section.id,
+                                                          rowIndex + 2,
+                                                          data
+                                                      )
+                                                  )
+                                            : undefined
                                     }
                                     onDragStart={ ( event ) => {
                                         event.dataTransfer.effectAllowed =
@@ -481,15 +515,12 @@ export default function FieldsPanel() {
                                       </p>
                                   ) }
                                   { stepSections.map( ( section ) =>
-                                      renderSection(
-                                          section,
-                                          sections.indexOf( section )
-                                      )
+                                      renderSection( section )
                                   ) }
                               </div>
                           );
                       } )
-                    : sections.map( renderSection ) }
+                    : sections.map( ( section ) => renderSection( section ) ) }
             </div>
 
             { setup.splitSteps && (

@@ -113,14 +113,14 @@ class FieldIndexTest extends DokanTestCase {
         $this->assertSame( $type, $this->index->guess_type( $sample ) );
     }
 
-    public function test_the_endpoint_is_for_shop_managers_and_admins_only() {
+    public function test_the_endpoint_is_for_users_who_can_edit_pages() {
         $this->form_with( 'dokan_vreg_licence', 'Licence' );
         $request = new WP_REST_Request( 'GET', '/dokan/v1/vendor-registration/fields' );
 
-        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'editor' ] ) );
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'author' ] ) );
         $this->assertSame( 403, $this->server->dispatch( $request )->get_status() );
 
-        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'shop_manager' ] ) );
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'editor' ] ) );
         $response = $this->server->dispatch( $request );
 
         $this->assertSame( 200, $response->get_status() );

@@ -91,13 +91,18 @@ class FormRenderer {
     /**
      * Sign a payload for a page.
      *
+     * @since DOKAN_SINCE
+     *
      * @param string $payload Payload.
      * @param int    $page_id Page ID.
      *
      * @return string
      */
     protected function signature( string $payload, int $page_id ): string {
-        return hash_hmac( 'sha256', $payload . '|' . $page_id, wp_salt( 'auth' ) );
+        // A key of its own, derived from the auth salt.
+        $key = hash_hmac( 'sha256', 'dokan-vendor-registration-setup', wp_salt( 'auth' ) );
+
+        return hash_hmac( 'sha256', $payload . '|' . $page_id, $key );
     }
 
     /**
@@ -234,6 +239,8 @@ class FormRenderer {
 
     /**
      * Accept a color a picker or theme palette produces; anything else is dropped.
+     *
+     * @since DOKAN_SINCE
      *
      * @param string $value Color value.
      *
@@ -394,7 +401,7 @@ class FormRenderer {
                 <?php $is_last = count( $steps ) - 1 === $index; ?>
                 <div class="dokan-vreg__step<?php echo 0 === $index ? ' is-active' : ''; ?>" data-step="<?php echo esc_attr( $index + 1 ); ?>"<?php echo 0 === $index || count( $steps ) < 2 ? '' : ' hidden'; ?>>
                     <?php if ( count( $steps ) > 1 ) : ?>
-                        <p class="dokan-vreg__step-note">
+                        <p class="dokan-vreg__step-note" tabindex="-1">
                             <?php
                             /* translators: 1: current step number, 2: number of steps, 3: step title */
                             echo esc_html( sprintf( __( 'Step %1$d of %2$d: %3$s', 'dokan-lite' ), $index + 1, count( $steps ), $step['title'] ) );
@@ -673,6 +680,8 @@ class FormRenderer {
     /**
      * Hooks that visible rows claim, so they don't also fire at their default position.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array $setup   Form setup.
      * @param array $context Render context.
      *
@@ -697,6 +706,8 @@ class FormRenderer {
     /**
      * Render the step bar.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array[] $steps Steps to render.
      *
      * @return void
@@ -705,7 +716,7 @@ class FormRenderer {
         ?>
         <ol class="dokan-vreg__step-bar">
             <?php foreach ( array_values( $steps ) as $index => $step ) : ?>
-                <li class="dokan-vreg__step-item<?php echo 0 === $index ? ' is-active' : ''; ?>" data-step="<?php echo esc_attr( $index + 1 ); ?>">
+                <li class="dokan-vreg__step-item<?php echo 0 === $index ? ' is-active' : ''; ?>" data-step="<?php echo esc_attr( $index + 1 ); ?>"<?php echo 0 === $index ? ' aria-current="step"' : ''; ?>>
                     <span class="dokan-vreg__step-number"><?php echo esc_html( $index + 1 ); ?></span>
                     <span class="dokan-vreg__step-title"><?php echo esc_html( $step['title'] ); ?></span>
                 </li>
@@ -716,6 +727,8 @@ class FormRenderer {
 
     /**
      * Render one section and its rows.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $section    Section with visible rows.
      * @param array $values     Submitted values.
@@ -750,6 +763,8 @@ class FormRenderer {
     /**
      * Render the hooks Dokan fires at the end of its form: captcha and unclaimed add-on fields.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array $claimed Hooks rows claim.
      * @param array $context Render context.
      *
@@ -770,6 +785,8 @@ class FormRenderer {
 
     /**
      * Render one row.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $row     Setup row.
      * @param array $values  Submitted values.
@@ -903,6 +920,8 @@ class FormRenderer {
     /**
      * Render a label, with the required marker.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array  $row      Setup row.
      * @param string $input_id Input ID.
      *
@@ -922,6 +941,8 @@ class FormRenderer {
     /**
      * Render a help line under a field.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array  $row  Setup row.
      * @param string $note Extra note shown before the help text.
      *
@@ -935,6 +956,8 @@ class FormRenderer {
 
     /**
      * Render a text-like built-in input with Dokan's ID and name.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array  $row   Setup row.
      * @param string $id    Input ID Dokan's scripts expect.
@@ -968,6 +991,8 @@ class FormRenderer {
     /**
      * Render the shop URL field with Dokan's availability check markup.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array  $row   Setup row.
      * @param string $value Value to fill in.
      *
@@ -989,6 +1014,8 @@ class FormRenderer {
     /**
      * Render the country select.
      *
+     * @since DOKAN_SINCE
+     *
      * @param array  $row     Setup row.
      * @param string $country Selected country code.
      *
@@ -1009,6 +1036,8 @@ class FormRenderer {
 
     /**
      * Render the state field: a select when the country has states, otherwise a text input.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array  $row     Setup row.
      * @param string $country Selected country code.
@@ -1037,6 +1066,8 @@ class FormRenderer {
 
     /**
      * Render the Terms & Conditions checkbox; nothing when no page is chosen.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array  $row       Setup row.
      * @param string $terms_url Terms page URL.
@@ -1089,6 +1120,8 @@ class FormRenderer {
 
     /**
      * Render a custom field.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $row    Setup row.
      * @param array $values Submitted values.
@@ -1158,6 +1191,8 @@ class FormRenderer {
 
     /**
      * Build an escaped HTML attribute string.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $attrs Attribute name => value; empty values are skipped.
      *

@@ -611,4 +611,26 @@ class FormSetupTest extends DokanTestCase {
 
         $this->assertSame( '[dokan-vendor-onboarding-registration]', FormSetup::get_default_page_content() );
     }
+
+    public function test_a_new_page_starts_from_dokans_address_and_terms_settings() {
+        $page_id = $this->factory()->post->create( [ 'post_type' => 'page' ] );
+        update_option(
+            'dokan_general',
+            array_merge(
+                (array) get_option( 'dokan_general', [] ),
+                [
+                    'enabled_address_on_reg' => 'on',
+                    'enable_tc_on_reg'       => 'on',
+                ]
+            )
+        );
+        update_option( 'dokan_pages', array_merge( (array) get_option( 'dokan_pages', [] ), [ 'reg_tc_page' => $page_id ] ) );
+        $this->flush_settings_caches();
+
+        $blocks = parse_blocks( FormSetup::get_default_page_content() );
+        $setup  = dokan_get_container()->get( FormSetup::class )->build( $blocks[0]['attrs'] );
+
+        $this->assertSame( $page_id, $blocks[0]['attrs']['termsPageId'] );
+        $this->assertFalse( $this->section( $setup, 'address' )['hidden'] );
+    }
 }
