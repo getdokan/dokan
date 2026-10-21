@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test\VendorRegistration;
 
 use WeDevs\Dokan\Test\DokanTestCase;
+use WeDevs\Dokan\VendorRegistration\FormRenderer;
 use WeDevs\Dokan\VendorRegistration\FormSetup;
 
 /**
@@ -612,8 +613,15 @@ class FormSetupTest extends DokanTestCase {
         $this->assertSame( '[dokan-vendor-onboarding-registration]', FormSetup::get_default_page_content() );
     }
 
-    public function test_a_new_page_starts_from_dokans_address_and_terms_settings() {
+    public function test_a_new_page_follows_dokans_address_and_terms_settings_even_when_turned_on_later() {
+        $content = FormSetup::get_default_page_content();
         $page_id = $this->factory()->post->create( [ 'post_type' => 'page' ] );
+        $attrs   = parse_blocks( $content )[0]['attrs'];
+
+        $this->assertSame( '<!-- wp:' . FormSetup::BLOCK_NAME . ' /-->', $content );
+        $this->assertSame( '', dokan_get_container()->get( FormRenderer::class )->get_terms_url( $attrs ) );
+
+        // The owner turns both on after the page was created.
         update_option(
             'dokan_general',
             array_merge(
@@ -627,10 +635,9 @@ class FormSetupTest extends DokanTestCase {
         update_option( 'dokan_pages', array_merge( (array) get_option( 'dokan_pages', [] ), [ 'reg_tc_page' => $page_id ] ) );
         $this->flush_settings_caches();
 
-        $blocks = parse_blocks( FormSetup::get_default_page_content() );
-        $setup  = dokan_get_container()->get( FormSetup::class )->build( $blocks[0]['attrs'] );
+        $setup = dokan_get_container()->get( FormSetup::class )->build( $attrs );
 
-        $this->assertSame( $page_id, $blocks[0]['attrs']['termsPageId'] );
         $this->assertFalse( $this->section( $setup, 'address' )['hidden'] );
+        $this->assertNotSame( '', dokan_get_container()->get( FormRenderer::class )->get_terms_url( $attrs ) );
     }
 }

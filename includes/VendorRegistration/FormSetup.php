@@ -90,18 +90,8 @@ class FormSetup implements Hookable {
             return '[dokan-vendor-onboarding-registration]';
         }
 
-        // Starts from Dokan's Terms and Conditions setting, as a block added in the editor does.
-        $terms_page = 'on' === dokan_get_option( 'enable_tc_on_reg', 'dokan_general', 'off' ) ? absint( dokan_get_option( 'reg_tc_page', 'dokan_pages', 0 ) ) : 0;
-
-        return serialize_block(
-            [
-                'blockName'    => self::BLOCK_NAME,
-                'attrs'        => [ 'termsPageId' => $terms_page ],
-                'innerBlocks'  => [],
-                'innerHTML'    => '',
-                'innerContent' => [],
-            ]
-        );
+        // A bare block follows Dokan's Terms and Condition and address settings until the owner sets its own.
+        return '<!-- wp:' . self::BLOCK_NAME . ' /-->';
     }
 
     /**

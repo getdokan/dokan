@@ -12,7 +12,6 @@ import { Notice } from '@wordpress/components';
 import { EditorContext, type EditorContextValue } from './context';
 import { getEditorData } from './data';
 import { buildSetup, toAttributes } from './setup';
-import { setSectionHidden } from './mutations';
 import FieldsPanel from './components/FieldsPanel';
 import GeneralPanel from './components/GeneralPanel';
 import LoginPanel from './components/LoginPanel';
@@ -61,27 +60,6 @@ export default function Edit( {
         [ clientId ]
     );
 
-    // A new block starts from Dokan's Address Fields and Terms and Condition settings, then keeps its own.
-    useEffect( () => {
-        if ( undefined !== attributes.termsPageId ) {
-            return;
-        }
-
-        const start: Partial< BlockAttributes > = {
-            termsPageId: data.dokan.termsEnabled ? data.dokan.termsPageId : 0,
-        };
-
-        if ( data.dokan.addressEnabled && ! attributes.sections.length ) {
-            Object.assign(
-                start,
-                toAttributes( setSectionHidden( setup, 'address', false ) )
-            );
-        }
-
-        setAttributes( start );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [] );
-
     useEffect( () => {
         apiFetch< SavedField[] >( {
             path: `/${ data.dokan.restNamespace }/vendor-registration/fields`,
@@ -93,6 +71,11 @@ export default function Edit( {
             .catch( () => setSavedFields( [] ) );
     }, [ data.dokan.restNamespace ] );
 
+    // Like the server: until the owner picks a page, the block follows Dokan's Terms and Condition setting.
+    const termsPageId =
+        attributes.termsPageId ??
+        ( data.dokan.termsEnabled ? data.dokan.termsPageId : 0 );
+
     const context: EditorContextValue = {
         data,
         attributes,
@@ -103,7 +86,8 @@ export default function Edit( {
         setView,
         savedFields,
         savedFieldsLoaded,
-        hasTermsPage: ( attributes.termsPageId || 0 ) > 0,
+        termsPageId,
+        hasTermsPage: termsPageId > 0,
     };
 
     const login = { ...data.login, ...attributes.login };

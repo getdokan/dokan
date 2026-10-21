@@ -56,7 +56,7 @@ export default function FieldEditor( {
         setup,
         savedFields,
         savedFieldsLoaded,
-        attributes,
+        termsPageId,
         setAttributes,
     } = useEditorContext();
     const [ reused, setReused ] = useState( false );
@@ -267,9 +267,9 @@ export default function FieldEditor( {
 
             { isTerms && (
                 <TermsPagePicker
-                    pageId={ attributes.termsPageId || 0 }
-                    onChange={ ( termsPageId ) =>
-                        setAttributes( { termsPageId } )
+                    pageId={ termsPageId }
+                    onChange={ ( pageId ) =>
+                        setAttributes( { termsPageId: pageId } )
                     }
                 />
             ) }

@@ -59,11 +59,14 @@ class FormRenderer {
      * @return array{payload: string, signature: string}
      */
     public function sign_setup( array $attributes, int $page_id ): array {
+        $rest = function_exists( 'wp_is_serving_rest_request' ) ? wp_is_serving_rest_request() : ( defined( 'REST_REQUEST' ) && REST_REQUEST );
+
         $payload = base64_encode( (string) wp_json_encode( array_intersect_key( $attributes, array_flip( self::SIGNED_ATTRIBUTES ) ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- transport encoding for a signed hidden field.
 
         return [
             'payload'   => $payload,
-            'signature' => $this->signature( $payload, $page_id ),
+            // The editor previews in React; a REST render (e.g. the block renderer) could sign any setup, so it gets no signature.
+            'signature' => $rest ? '' : $this->signature( $payload, $page_id ),
         ];
     }
 
