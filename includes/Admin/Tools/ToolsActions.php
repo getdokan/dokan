@@ -43,7 +43,7 @@ class ToolsActions {
                 'post_title' => __( 'Vendor Onboarding', 'dokan-lite' ),
                 'slug'       => 'vendor-onboarding',
                 'page_id'    => 'vendor_onboarding',
-                'content'    => '[dokan-vendor-onboarding-registration]',
+                'content'    => \WeDevs\Dokan\VendorRegistration\FormSetup::get_default_page_content(),
             ],
         ];
     }

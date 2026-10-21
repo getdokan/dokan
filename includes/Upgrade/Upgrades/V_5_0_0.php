@@ -73,7 +73,7 @@ class V_5_0_0 extends DokanUpgrader {
             [
                 'post_title'     => __( 'Vendor Onboarding', 'dokan-lite' ),
                 'post_name'      => 'vendor-onboarding',
-                'post_content'   => '[dokan-vendor-onboarding-registration]',
+                'post_content'   => \WeDevs\Dokan\VendorRegistration\FormSetup::get_default_page_content(),
                 'post_status'    => 'publish',
                 'post_type'      => 'page',
                 'comment_status' => 'closed',
