@@ -6,6 +6,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\VendorRegistration\FormRenderer;
 use WeDevs\Dokan\VendorRegistration\FormSetup;
 use WeDevs\Dokan\VendorRegistration\Submission;
+use WeDevs\Dokan\VendorRegistration\VendorAnswers;
 use WP_Error;
 
 /**
@@ -312,6 +313,11 @@ class SubmissionTest extends DokanTestCase {
         $this->assertSame( [ 'music' ], get_user_meta( $user_id, 'dokan_vreg_categories', true ) );
         $this->assertSame( '', get_user_meta( $user_id, 'dokan_vreg_not_in_form', true ) );
         $this->assertSame( $page_id, (int) get_user_meta( $user_id, Submission::SIGNUP_PAGE_META, true ) );
+
+        // The page holds no block (a template or pattern form), so its fields come from the setup kept at sign-up.
+        $fields = dokan_get_container()->get( VendorAnswers::class )->get_fields( $user_id );
+        $this->assertArrayHasKey( 'dokan_vreg_business_type', $fields );
+        $this->assertSame( 'company', $fields['dokan_vreg_business_type']['value'] );
     }
 
     public function test_customers_get_nothing_saved() {

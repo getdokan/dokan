@@ -83,6 +83,8 @@ const resolveSavedRow = (
             reserved.has( saved.id ) ||
             ! key.startsWith( data.metaPrefix ) ||
             key === data.metaPrefix ||
+            // Same rule as the server: only what sanitize_key() keeps.
+            ! /^[a-z0-9_-]+$/.test( key ) ||
             data.reservedKeys.includes( key ) ||
             ! data.customTypes.includes( type )
         ) {
@@ -124,8 +126,11 @@ const resolveSavedRow = (
 
     if ( ! row.locked ) {
         row.required = saved.required ?? row.required;
-        // Rows Dokan settings switch on show whenever their setting is on.
-        if ( ! registry.keeps_section_visible ) {
+        // Rows Dokan settings switch on show whenever their setting is on; WooCommerce decides username and password.
+        if (
+            ! registry.keeps_section_visible &&
+            ! registry.woocommerce_setting
+        ) {
             row.hidden = saved.hidden ?? row.hidden;
         }
     }
@@ -266,14 +271,14 @@ export const buildSetup = (
     } );
 
     const splitSteps = !! attributes.splitSteps;
-    let steps: Step[] = [];
+    // Kept while steps are off, so turning them back on restores the owner's split.
+    let steps: Step[] = ( attributes.steps || [] ).filter(
+        ( step, index, all ) =>
+            step?.id &&
+            all.findIndex( ( other ) => other?.id === step.id ) === index
+    );
 
     if ( splitSteps ) {
-        steps = ( attributes.steps || [] ).filter(
-            ( step, index, all ) =>
-                step?.id &&
-                all.findIndex( ( other ) => other?.id === step.id ) === index
-        );
         steps = steps.length ? steps : data.suggestedSteps.steps;
 
         const ids = steps.map( ( step ) => step.id );
@@ -291,8 +296,6 @@ export const buildSetup = (
                 step: ids.includes( suggested ) ? suggested : last,
             };
         } );
-    } else {
-        sections = sections.map( ( section ) => ( { ...section, step: '' } ) );
     }
 
     return { splitSteps, steps, sections };
@@ -347,7 +350,8 @@ export const toAttributes = (
     setup: Setup
 ): Pick< BlockAttributes, 'splitSteps' | 'steps' | 'sections' > => ( {
     splitSteps: setup.splitSteps,
-    steps: setup.splitSteps ? setup.steps : [],
+    // Saved even while steps are off; the server ignores them until they're on.
+    steps: setup.steps,
     sections: setup.sections.map( ( section ) => {
         const saved: SavedSection = {
             id: section.id,
@@ -360,7 +364,7 @@ export const toAttributes = (
             saved.title = section.title;
         }
 
-        if ( setup.splitSteps ) {
+        if ( section.step ) {
             saved.step = section.step;
         }
 

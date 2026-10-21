@@ -52,6 +52,19 @@ class VendorAnswers {
             if ( $setup['has_block'] ) {
                 return $setup;
             }
+
+            // A form in a template or synced pattern: the setup kept at sign-up.
+            $attributes = get_user_meta( $user_id, Submission::SIGNUP_SETUP_META, true );
+
+            if ( is_array( $attributes ) && $attributes ) {
+                $setup = $this->setup->build( $attributes );
+
+                $setup['page_id']    = $page_id;
+                $setup['has_block']  = true;
+                $setup['attributes'] = $attributes;
+
+                return $setup;
+            }
         }
 
         return $this->setup->get_master_setup();

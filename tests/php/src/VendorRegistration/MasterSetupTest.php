@@ -265,4 +265,23 @@ class MasterSetupTest extends DokanTestCase {
         $this->assertStringContainsString( 'name="dokan_vreg_form" value="' . $master_id . '"', $html );
         $this->assertStringContainsString( 'wp-block-dokan-vendor-registration', $html );
     }
+
+    public function test_the_old_shortcodes_keep_their_login_and_registration_choices() {
+        $this->onboarding_page( $this->master_block() );
+        $this->on_page( '' );
+        $block = dokan_get_container()->get( Block::class );
+
+        // The registration shortcode never had a login box.
+        $block->reset_render_count( '' );
+        $this->assertStringNotContainsString( 'dokan-vreg__login', $block->skip_shortcode_next_to_block( false, 'dokan-vendor-registration', [] ) );
+
+        $block->reset_render_count( '' );
+        $this->assertStringNotContainsString( 'dokan-vreg__login', $block->skip_shortcode_next_to_block( false, 'dokan-vendor-onboarding-registration', [ 'show_login' => 'no' ] ) );
+
+        $block->reset_render_count( '' );
+        $this->assertStringContainsString( 'dokan-vreg__login', $block->skip_shortcode_next_to_block( false, 'dokan-vendor-onboarding-registration', [] ) );
+
+        // Login only: the old shortcode draws itself.
+        $this->assertFalse( $block->skip_shortcode_next_to_block( false, 'dokan-vendor-onboarding-registration', [ 'show_registration' => 'no' ] ) );
+    }
 }

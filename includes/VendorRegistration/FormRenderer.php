@@ -397,6 +397,8 @@ class FormRenderer {
             ?>
 
             <?php if ( count( $steps ) > 1 ) : ?>
+                <?php // Without scripts the steps can't switch, so every step shows as one form. ?>
+                <noscript><style>.dokan-vreg__step[hidden]{display:block!important}.dokan-vreg__step-bar,.dokan-vreg__step-note,.dokan-vreg__next,.dokan-vreg__back{display:none!important}</style></noscript>
                 <?php $this->render_step_bar( $steps ); ?>
             <?php endif; ?>
 

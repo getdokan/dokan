@@ -1,6 +1,7 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { useMemo, useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
+import { decodeEntities } from '@wordpress/html-entities';
 import { store as coreStore } from '@wordpress/core-data';
 import {
     Button,
@@ -160,7 +161,11 @@ export default function FieldEditor( {
                                 { field.removed
                                     ? __( 'Removed field', 'dokan-lite' )
                                     : field.pages
-                                          .map( ( page ) => page.title )
+                                          .map( ( page ) =>
+                                              decodeEntities( page.title )
+                                          )
+                                          // Pages the user can't edit come without a title.
+                                          .filter( Boolean )
                                           .join( ', ' ) }
                             </span>
                             <code>{ field.key }</code>
@@ -410,7 +415,9 @@ function TermsPagePicker( { pageId, onChange }: TermsPagePickerProps ) {
             : [] ),
     ].map( ( page ) => ( {
         value: String( page.id ),
-        label: page.title.rendered || __( '(no title)', 'dokan-lite' ),
+        label:
+            decodeEntities( page.title.rendered ) ||
+            __( '(no title)', 'dokan-lite' ),
     } ) );
 
     return (

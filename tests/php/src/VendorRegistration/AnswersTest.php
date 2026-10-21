@@ -288,6 +288,30 @@ class AnswersTest extends DokanTestCase {
         $this->assertArrayHasKey( 'dokan_vreg_ships_abroad', $this->answers->get_fields( $this->vendor_id ) );
     }
 
+    public function test_an_admins_edit_saves_even_when_an_untouched_answer_breaks_a_newer_rule() {
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'administrator' ] ) );
+        $post = get_post( $this->page_id );
+        wp_update_post(
+            [
+                'ID'           => $this->page_id,
+                'post_content' => str_replace( '"label":"Support email"', '"label":"Support email","required":true', $post->post_content ),
+            ]
+        );
+        dokan_get_container()->get( FormSetup::class )->flush_cache();
+        update_user_meta( $this->vendor_id, 'dokan_vreg_business_type', 'company' );
+
+        // The support email was never answered and is now required; the admin only clears the business type.
+        $_POST = [
+            'dokan_vreg_answers_nonce' => wp_create_nonce( 'dokan_vreg_answers' ),
+            'dokan_vreg'               => [ 'dokan_vreg_support_email' => '' ],
+            'dokan_vreg_shown'         => [ 'dokan_vreg_business_type', 'dokan_vreg_support_email' ],
+        ];
+
+        dokan_get_container()->get( AnswersAdmin::class )->save_profile_section( $this->vendor_id );
+
+        $this->assertSame( '', get_user_meta( $this->vendor_id, 'dokan_vreg_business_type', true ) );
+    }
+
     public function test_an_admin_can_clear_a_multi_select() {
         wp_set_current_user( $this->factory()->user->create( [ 'role' => 'administrator' ] ) );
         update_user_meta( $this->vendor_id, 'dokan_vreg_business_type', 'company' );

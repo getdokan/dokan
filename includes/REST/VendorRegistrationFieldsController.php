@@ -48,7 +48,7 @@ class VendorRegistrationFieldsController extends DokanBaseController {
     }
 
     /**
-     * Admins and shop managers only: the list spans every page and counts vendor answers.
+     * Anyone who can edit pages, as they can place the block; titles of pages they can't edit are left out.
      *
      * @since DOKAN_SINCE
      *
@@ -71,9 +71,64 @@ class VendorRegistrationFieldsController extends DokanBaseController {
      * @return WP_REST_Response
      */
     public function get_items( $request ) {
-        $fields = dokan_get_container()->get( FieldIndex::class )->get_fields();
+        $data = [];
 
-        return rest_ensure_response( array_values( $fields ) );
+        foreach ( dokan_get_container()->get( FieldIndex::class )->get_fields() as $field ) {
+            $data[] = $this->prepare_response_for_collection( $this->prepare_item_for_response( $field, $request ) );
+        }
+
+        $response = rest_ensure_response( $data );
+        $response->add_links(
+            [
+                'self' => [ 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) ],
+            ]
+        );
+
+        return $response;
+    }
+
+    /**
+     * Prepare one field for the response.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array           $item    Field from the field index.
+     * @param WP_REST_Request $request Request.
+     *
+     * @return WP_REST_Response
+     */
+    public function prepare_item_for_response( $item, $request ) {
+        $data = [
+            'key'     => (string) $item['key'],
+            'label'   => (string) $item['label'],
+            'type'    => (string) $item['type'],
+            'options' => array_values( (array) ( $item['options'] ?? [] ) ),
+            // IDs keep the editor's "used on another page" check right; titles only for pages the user can edit.
+            'pages'   => array_map(
+                function ( $page ) {
+                    return [
+                        'id'    => (int) $page['id'],
+                        'title' => current_user_can( 'edit_post', (int) $page['id'] ) ? (string) $page['title'] : '',
+                    ];
+                },
+                (array) ( $item['pages'] ?? [] )
+            ),
+            'answers' => (int) ( $item['answers'] ?? 0 ),
+            'removed' => (bool) ( $item['removed'] ?? false ),
+        ];
+
+        /**
+         * Filter a registration field in the REST response.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array           $data    Response data.
+         * @param array           $item    Field from the field index.
+         * @param WP_REST_Request $request Request.
+         */
+        $data = apply_filters( 'dokan_rest_prepare_vendor_registration_field', $data, $item, $request );
+
+        return rest_ensure_response( $data );
     }
 
     /**

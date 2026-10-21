@@ -268,6 +268,25 @@ class BlockTest extends DokanTestCase {
         $this->assertStringContainsString( 'dokan-vreg__form', $block->render( [] ) );
     }
 
+    public function test_content_filtered_while_the_block_renders_keeps_the_count() {
+        $this->on_page();
+        $block = $this->block();
+        $inner = null;
+
+        // An add-on runs the_content inside the form, e.g. for a pack description that holds a second block.
+        add_action(
+            'dokan_vendor_reg_form_start',
+            function () use ( $block, &$inner ) {
+                $block->reset_render_count( '' );
+                $inner = $block->render( [] );
+            }
+        );
+
+        $block->render( [] );
+
+        $this->assertStringNotContainsString( 'dokan-vreg__form', (string) $inner );
+    }
+
     public function test_the_login_returns_to_the_page_being_viewed() {
         $page_id = $this->on_page();
         $this->go_to( get_permalink( $page_id ) );

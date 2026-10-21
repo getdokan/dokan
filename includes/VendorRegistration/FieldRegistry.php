@@ -17,7 +17,7 @@ class FieldRegistry {
     const META_KEY_PREFIX = 'dokan_vreg_';
 
     /** Prefixed keys Dokan stores itself, which a custom field can't use. */
-    const RESERVED_META_KEYS = [ 'dokan_vreg_signup_page' ];
+    const RESERVED_META_KEYS = [ 'dokan_vreg_signup_page', 'dokan_vreg_signup_setup' ];
 
     /** Field types a custom field can use. */
     const CUSTOM_FIELD_TYPES = [ 'text', 'textarea', 'number', 'email', 'phone', 'url', 'select', 'multiselect', 'radio', 'checkbox', 'date' ];

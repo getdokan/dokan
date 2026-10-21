@@ -79,7 +79,8 @@ class MyAccountForm implements Hookable {
     public function render_vendor_fields(): void {
         $master = $this->setup->get_master_setup();
 
-        if ( ! $master ) {
+        // A site that unhooked Dokan's vendor fields from My Account keeps that choice.
+        if ( ! $master || false === has_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' ) ) {
             return;
         }
 

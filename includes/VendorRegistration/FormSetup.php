@@ -394,7 +394,8 @@ class FormSetup implements Hookable {
             }
 
             // Rows Dokan settings switch on (EU fields, subscription packs) show whenever their setting is on.
-            if ( isset( $saved_row['hidden'] ) && ! $row['keeps_section_visible'] ) {
+            // WooCommerce decides whether username and password show; hiding them would break every sign-up while it needs them.
+            if ( isset( $saved_row['hidden'] ) && ! $row['keeps_section_visible'] && '' === $row['woocommerce_setting'] ) {
                 $row['hidden'] = (bool) $saved_row['hidden'];
             }
         }

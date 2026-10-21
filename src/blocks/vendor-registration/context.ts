@@ -12,6 +12,7 @@ export interface EditorContextValue {
     setView: ( view: View ) => void;
     savedFields: SavedField[];
     savedFieldsLoaded: boolean;
+    savedFieldsStatus: 'loading' | 'loaded' | 'failed';
     // Page the form links for Terms & Conditions: the block's own choice, else Dokan's setting.
     termsPageId: number;
     hasTermsPage: boolean;

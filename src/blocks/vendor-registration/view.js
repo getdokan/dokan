@@ -89,6 +89,21 @@ const initForm = ( form ) => {
                 return;
             }
 
+            // Enter on an earlier step moves on instead of submitting past steps the visitor hasn't seen.
+            if ( current < steps.length - 1 ) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                const invalid = firstInvalid( steps[ current ] );
+
+                if ( invalid ) {
+                    report( invalid );
+                } else {
+                    show( current + 1 );
+                }
+
+                return;
+            }
+
             for ( let i = 0; i < steps.length; i++ ) {
                 const invalid = firstInvalid( steps[ i ] );
 

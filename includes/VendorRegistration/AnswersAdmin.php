@@ -200,7 +200,20 @@ class AnswersAdmin implements Hookable {
             return;
         }
 
-        $this->answers->update( (int) $user_id, $answers );
+        $fields = $this->answers->get_fields( (int) $user_id );
+
+        // Only changed answers, so an untouched answer a later rule rejects can't make the save drop the admin's edits.
+        $changed = array_filter(
+            $answers,
+            function ( $answer, $key ) use ( $fields ) {
+                return isset( $fields[ $key ] ) && $this->is_changed( $fields[ $key ], $answer );
+            },
+            ARRAY_FILTER_USE_BOTH
+        );
+
+        if ( $changed ) {
+            $this->answers->update( (int) $user_id, $changed );
+        }
     }
 
     /**
@@ -263,6 +276,11 @@ class AnswersAdmin implements Hookable {
 
         foreach ( $this->get_saved_keys( $user->ID ) as $key => $value ) {
             $field = $fields[ $key ] ?? null;
+
+            // The form's setup, not the vendor's data; erasing still removes it.
+            if ( Submission::SIGNUP_SETUP_META === $key ) {
+                continue;
+            }
 
             if ( Submission::SIGNUP_PAGE_META === $key ) {
                 $data[] = [

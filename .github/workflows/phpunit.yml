@@ -127,7 +127,8 @@ jobs:
                   path: |
                       assets/js
                       assets/css
-                  key: dokan-assets-v1-${{ runner.os }}-${{ hashFiles('src/**', 'webpack.config.js', 'webpack-entries.js', 'webpack-dependency-mapping.js', 'postcss.config.js', 'tsconfig.json', 'package-lock.json', 'package.json') }}
+                      assets/blocks
+                  key: dokan-assets-v2-${{ runner.os }}-${{ hashFiles('src/**', 'webpack.config.js', 'webpack-entries.js', 'webpack-dependency-mapping.js', 'postcss.config.js', 'tsconfig.json', 'package-lock.json', 'package.json') }}
 
             # ---------------------------------------------------------------
             # Node — needed on every run, because wp-env itself is a

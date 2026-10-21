@@ -37,7 +37,9 @@ export default function Edit( {
     const [ view, setView ] = useState< View >( 'visitor' );
     const [ savedFields, setSavedFields ] = useState< SavedField[] >( [] );
     // Until the list loads (or if it can't), keys other forms use are unknown.
-    const [ savedFieldsLoaded, setSavedFieldsLoaded ] = useState( false );
+    const [ savedFieldsStatus, setSavedFieldsStatus ] = useState<
+        'loading' | 'loaded' | 'failed'
+    >( 'loading' );
 
     const setup = useMemo(
         () => buildSetup( attributes, data ),
@@ -66,9 +68,9 @@ export default function Edit( {
         } )
             .then( ( fields ) => {
                 setSavedFields( fields );
-                setSavedFieldsLoaded( true );
+                setSavedFieldsStatus( 'loaded' );
             } )
-            .catch( () => setSavedFields( [] ) );
+            .catch( () => setSavedFieldsStatus( 'failed' ) );
     }, [ data.dokan.restNamespace ] );
 
     // Like the server: until the owner picks a page, the block follows Dokan's Terms and Condition setting.
@@ -85,7 +87,8 @@ export default function Edit( {
         view,
         setView,
         savedFields,
-        savedFieldsLoaded,
+        savedFieldsLoaded: 'loaded' === savedFieldsStatus,
+        savedFieldsStatus,
         termsPageId,
         hasTermsPage: termsPageId > 0,
     };

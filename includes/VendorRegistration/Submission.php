@@ -22,6 +22,9 @@ class Submission implements Hookable {
     /** User meta holding the page a vendor signed up on. */
     const SIGNUP_PAGE_META = 'dokan_vreg_signup_page';
 
+    /** User meta keeping the setup of a form placed in a template or synced pattern, whose page holds no block. */
+    const SIGNUP_SETUP_META = 'dokan_vreg_signup_setup';
+
     /** Built-in rows Dokan's own required-field check reads, by row ID => posted field. */
     const DOKAN_REQUIRED_FIELDS = [
         'first_name' => 'fname',
@@ -289,6 +292,11 @@ class Submission implements Hookable {
         }
 
         update_user_meta( $user_id, self::SIGNUP_PAGE_META, (int) $setup['page_id'] );
+
+        // The page can't tell later which fields a template or pattern form had, so keep its setup.
+        if ( ! empty( $setup['attributes'] ) && ! $this->setup->page_has_block( (int) $setup['page_id'] ) ) {
+            update_user_meta( $user_id, self::SIGNUP_SETUP_META, wp_slash( (array) $setup['attributes'] ) );
+        }
 
         /**
          * Fires after a vendor's answers from the Vendor Registration Form block are saved.

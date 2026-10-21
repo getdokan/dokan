@@ -42,8 +42,8 @@ export default function FieldRow( {
     const wooManaged = !! row.registry?.woocommerce_setting;
     const viewReason = hiddenInViewReason( row, view );
     const fromSettings = !! row.registry?.keeps_section_visible;
-    // Rows Dokan needs, and rows Dokan settings switch on, can't be hidden from the form.
-    const pinned = row.locked || fromSettings;
+    // Rows Dokan needs, rows Dokan settings switch on, and rows WooCommerce decides can't be hidden from the form.
+    const pinned = row.locked || fromSettings || wooManaged;
     const openWoo = () => setWooModal( true );
 
     const classes = [
@@ -90,12 +90,17 @@ export default function FieldRow( {
                     { pinned || wooOff ? (
                         <Tooltip
                             text={
-                                fromSettings
-                                    ? __(
-                                          'Shown when Dokan settings turn it on',
-                                          'dokan-lite'
-                                      )
-                                    : __( 'Always on', 'dokan-lite' )
+                                ( fromSettings &&
+                                    __(
+                                        'Shown when Dokan settings turn it on',
+                                        'dokan-lite'
+                                    ) ) ||
+                                ( wooManaged &&
+                                    __(
+                                        'Shown whenever WooCommerce needs it',
+                                        'dokan-lite'
+                                    ) ) ||
+                                __( 'Always on', 'dokan-lite' )
                             }
                         >
                             <span className="dokan-vreg-editor__icon is-lock">

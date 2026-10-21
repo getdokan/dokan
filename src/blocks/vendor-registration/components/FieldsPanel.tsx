@@ -5,6 +5,7 @@ import {
     Dashicon,
     DropdownMenu,
     Modal,
+    Notice,
     PanelBody,
     Tooltip,
 } from '@wordpress/components';
@@ -38,7 +39,8 @@ interface DropTarget {
 }
 
 export default function FieldsPanel() {
-    const { data, setup, updateSetup, savedFields } = useEditorContext();
+    const { data, setup, updateSetup, savedFields, savedFieldsStatus } =
+        useEditorContext();
     const [ open, setOpen ] = useState< Record< string, boolean > >( {} );
     const [ editing, setEditing ] = useState< string | null >( null );
     const [ adding, setAdding ] = useState< {
@@ -418,6 +420,8 @@ export default function FieldsPanel() {
                                 variant="link"
                                 icon="plus-alt2"
                                 className="dokan-vreg-editor__add-field"
+                                // Waits for the keys other forms use, so a new field can't take one.
+                                disabled={ 'loading' === savedFieldsStatus }
                                 onClick={ () => startAdding( section.id ) }
                             >
                                 { __( 'Add field', 'dokan-lite' ) }
@@ -431,6 +435,14 @@ export default function FieldsPanel() {
 
     return (
         <PanelBody title={ __( 'Fields', 'dokan-lite' ) } initialOpen>
+            { 'failed' === savedFieldsStatus && (
+                <Notice status="warning" isDismissible={ false }>
+                    { __(
+                        'Fields used on other forms couldn’t be loaded. A new field’s key may match one another form already uses.',
+                        'dokan-lite'
+                    ) }
+                </Notice>
+            ) }
             <div className="dokan-vreg-editor__legend">
                 <span>
                     <Dashicon icon="visibility" size={ 16 } />{ ' ' }

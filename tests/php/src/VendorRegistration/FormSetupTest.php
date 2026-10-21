@@ -640,4 +640,32 @@ class FormSetupTest extends DokanTestCase {
         $this->assertFalse( $this->section( $setup, 'address' )['hidden'] );
         $this->assertNotSame( '', dokan_get_container()->get( FormRenderer::class )->get_terms_url( $attrs ) );
     }
+
+    public function test_woocommerce_decides_whether_username_and_password_show() {
+        $setup = $this->setup->get_for_page(
+            $this->page_with_block(
+                [
+                    'sections' => [
+                        [
+                            'id'   => 'account',
+                            'rows' => [
+                                [
+                                    'id'     => 'username',
+                                    'hidden' => true,
+                                ],
+                                [
+                                    'id'     => 'password',
+                                    'hidden' => true,
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
+            )
+        );
+        $rows  = array_column( $this->section( $setup, 'account' )['rows'], 'hidden', 'id' );
+
+        $this->assertFalse( $rows['username'] );
+        $this->assertFalse( $rows['password'] );
+    }
 }

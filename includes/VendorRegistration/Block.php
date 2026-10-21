@@ -27,6 +27,9 @@ class Block implements Hookable {
     /** @var int Blocks rendered in this request. */
     protected int $rendered = 0;
 
+    /** @var int Blocks rendering right now; content filtered inside one (e.g. by an add-on) mustn't restart the count. */
+    protected int $depth = 0;
+
     /** @var int Page a shortcode-drawn master form belongs to, while it renders. */
     protected int $page_override = 0;
 
@@ -51,7 +54,7 @@ class Block implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        add_filter( 'pre_do_shortcode_tag', [ $this, 'skip_shortcode_next_to_block' ], 10, 2 );
+        add_filter( 'pre_do_shortcode_tag', [ $this, 'skip_shortcode_next_to_block' ], 10, 3 );
         add_action( 'template_redirect', [ $this, 'redirect_vendors' ] );
         // Before do_blocks (9): each content render counts its own blocks, so an early SEO or excerpt render can't use up "the first".
         add_filter( 'the_content', [ $this, 'reset_render_count' ], 8 );
@@ -67,6 +70,10 @@ class Block implements Hookable {
      * @return string
      */
     public function reset_render_count( $content ) {
+        if ( $this->depth > 0 ) {
+            return $content;
+        }
+
         $this->rendered = 0;
 
         return $content;
@@ -82,6 +89,25 @@ class Block implements Hookable {
      * @return string
      */
     public function render( array $attributes ): string {
+        ++$this->depth;
+
+        try {
+            return $this->render_markup( $attributes );
+        } finally {
+            --$this->depth;
+        }
+    }
+
+    /**
+     * Build the block's markup.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $attributes Block attributes.
+     *
+     * @return string
+     */
+    protected function render_markup( array $attributes ): string {
         ++$this->rendered;
 
         // Two blocks on one page: the first counts.
@@ -92,7 +118,7 @@ class Block implements Hookable {
         $context = $this->get_render_context( $attributes );
 
         if ( 'vendor' === $context['view'] ) {
-            return '<div ' . get_block_wrapper_attributes( [ 'class' => 'dokan-vreg' ] ) . '><p class="dokan-vreg__note">'
+            return '<div ' . $this->wrapper_attributes( [ 'class' => 'dokan-vreg' ] ) . '><p class="dokan-vreg__note">'
                 . esc_html__( 'You are already a vendor.', 'dokan-lite' )
                 . ' <a href="' . esc_url( dokan_get_navigation_url() ) . '">' . esc_html__( 'Go to your vendor dashboard', 'dokan-lite' ) . '</a></p></div>';
         }
@@ -204,7 +230,7 @@ class Block implements Hookable {
             $css           = '<style>#' . $wrapper['id'] . '{' . wp_strip_all_tags( $style ) . '}</style>';
         }
 
-        $html = '<div ' . get_block_wrapper_attributes( $wrapper ) . '>' . $css . $notice . $notices . $layout . '</div>';
+        $html = '<div ' . $this->wrapper_attributes( $wrapper ) . '>' . $css . $notice . $notices . $layout . '</div>';
 
         /**
          * Fires after the vendor registration block rendered.
@@ -349,11 +375,19 @@ class Block implements Hookable {
      *
      * @param false|string $output Short-circuit output.
      * @param string       $tag    Shortcode tag.
+     * @param array|string $attr   Shortcode attributes.
      *
      * @return false|string
      */
-    public function skip_shortcode_next_to_block( $output, $tag ) {
+    public function skip_shortcode_next_to_block( $output, $tag, $attr = [] ) {
         if ( ! in_array( $tag, self::SHORTCODES, true ) ) {
+            return $output;
+        }
+
+        $attr = is_array( $attr ) ? $attr : [];
+
+        // A login-only onboarding shortcode has no sign-up form for the block to draw.
+        if ( 'dokan-vendor-onboarding-registration' === $tag && isset( $attr['show_registration'] ) && ! wc_string_to_bool( $attr['show_registration'] ) ) {
             return $output;
         }
 
@@ -367,12 +401,19 @@ class Block implements Hookable {
             return $output;
         }
 
+        $attributes = $master['attributes'];
+
+        // The registration shortcode never had a login box, and the onboarding one can turn it off.
+        if ( 'dokan-vendor-registration' === $tag || ( isset( $attr['show_login'] ) && ! wc_string_to_bool( $attr['show_login'] ) ) ) {
+            $attributes['login'] = array_merge( (array) ( $attributes['login'] ?? [] ), [ 'enabled' => false ] );
+        }
+
         // Through the block pipeline, so its scripts, styles and design settings load; recorded against the master page.
         $this->page_override = (int) $master['page_id'];
         $html                = render_block(
             [
                 'blockName'    => FormSetup::BLOCK_NAME,
-                'attrs'        => $master['attributes'],
+                'attrs'        => $attributes,
                 'innerBlocks'  => [],
                 'innerHTML'    => '',
                 'innerContent' => [],
@@ -400,6 +441,29 @@ class Block implements Hookable {
         wp_enqueue_script( 'wc-country-select' );
         wp_enqueue_script( generate_block_asset_handle( FormSetup::BLOCK_NAME, 'viewScript' ) );
         wp_enqueue_style( generate_block_asset_handle( FormSetup::BLOCK_NAME, 'style' ) );
+    }
+
+    /**
+     * Wrapper attributes with the block's design supports, or plain ones when no block is rendering (e.g. a direct call).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $extra Attributes to add.
+     *
+     * @return string
+     */
+    protected function wrapper_attributes( array $extra ): string {
+        if ( class_exists( \WP_Block_Supports::class ) && ! empty( \WP_Block_Supports::$block_to_render ) ) {
+            return get_block_wrapper_attributes( $extra );
+        }
+
+        $attributes = [];
+
+        foreach ( $extra as $name => $value ) {
+            $attributes[] = sprintf( '%s="%s"', esc_attr( $name ), esc_attr( $value ) );
+        }
+
+        return implode( ' ', $attributes );
     }
 
     /**
