@@ -129,6 +129,8 @@ class Hooks {
                 if ( is_callable( [ $sub_order, 'update_status' ] ) ) {
                     $current_status = $sub_order->get_status();
                     if ( $this->is_status_change_allowed( $current_status, $new_status ) ) {
+                        // The customer already gets the parent order's email.
+                        EmailHooks::flag_synced_status( $sub_order, $new_status );
                         $sub_order->update_status( $new_status );
                     } else {
                         $this->log_skipped_status_update( $sub_order->get_id(), $current_status, $new_status );
@@ -425,6 +427,8 @@ class Hooks {
         // mark the parent order as complete
         if ( $all_complete ) {
             $parent_order = wc_get_order( $parent_order_id );
+            // The customer already got each Suborder's completed email.
+            EmailHooks::flag_synced_status( $parent_order, 'completed' );
             $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
         }
     }

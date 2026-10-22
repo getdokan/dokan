@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Order;
 
+use WC_Emails;
 use WC_Order;
 use WP_User;
 use WeDevs\Dokan\FakeMailer;
@@ -18,6 +19,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class EmailHooks {
     /**
+     * Order meta holding statuses Dokan synced while WooCommerce defers emails.
+     *
+     * @since DOKAN_SINCE
+     */
+    const SYNCED_STATUS_META = '_dokan_synced_status';
+
+    /**
      * Class constructor
      *
      * @since 3.8.0
@@ -28,6 +36,12 @@ class EmailHooks {
         add_action( 'woocommerce_order_status_pending_to_processing', [ $this, 'prevent_sending_multiple_email' ] );
         add_action( 'woocommerce_order_status_completed', [ $this, 'prevent_sending_multiple_email' ] );
         add_action( 'woocommerce_order_status_failed_to_processing', [ $this, 'prevent_sending_multiple_email' ] );
+
+        // Deferred emails skip the guard above, so they are checked at send time instead.
+        add_filter( 'woocommerce_email_enabled_customer_on_hold_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
+        add_filter( 'woocommerce_email_enabled_customer_processing_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
+        add_filter( 'woocommerce_email_enabled_customer_completed_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
+        add_action( 'woocommerce_order_status_changed', [ $this, 'clear_synced_status' ], 1, 4 );
 
         add_filter( 'woocommerce_email_recipient_cancelled_order', [ $this, 'send_email_for_order_cancellation' ], 10, 2 );
         add_filter( 'woocommerce_email_headers', [ $this, 'add_reply_to_vendor_email_on_wc_customer_note_mail' ], 10, 3 );
@@ -63,6 +77,118 @@ class EmailHooks {
         if ( did_action( 'woocommerce_order_status_failed_to_processing_notification' ) === 1 ) {
             dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_failed_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
         }
+    }
+
+    /**
+     * Flag a status Dokan is about to save onto an order, so its deferred customer email is skipped.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order  Parent order or Suborder.
+     * @param string   $status Status being synced, with or without the "wc-" prefix.
+     *
+     * @return void
+     */
+    public static function flag_synced_status( WC_Order $order, string $status ) {
+        $status = preg_replace( '/^wc-/', '', $status );
+
+        if ( ! self::emails_are_deferred() || $order->get_status() === $status || ! in_array( $status, [ 'on-hold', 'processing', 'completed' ], true ) ) {
+            return;
+        }
+
+        // Several syncs can land before deferred emails are sent, so keep every flagged status.
+        $statuses = (array) $order->get_meta( self::SYNCED_STATUS_META );
+
+        $order->update_meta_data( self::SYNCED_STATUS_META, array_values( array_unique( array_filter( array_merge( $statuses, [ $status ] ) ) ) ) );
+    }
+
+    /**
+     * Whether WooCommerce queues transactional emails instead of sending them right away.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected static function emails_are_deferred(): bool {
+        return false !== has_action( 'woocommerce_order_status_completed', [ WC_Emails::class, 'queue_transactional_email' ] );
+    }
+
+    /**
+     * Disable a customer order email when Dokan synced that status onto the order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool          $enabled Whether the email is enabled.
+     * @param WC_Order|null $order   Order the email is for.
+     *
+     * @return bool
+     */
+    public function skip_synced_status_email( $enabled, $order ) {
+        if ( ! $order instanceof WC_Order ) {
+            return $enabled;
+        }
+
+        $email_statuses = [
+            'woocommerce_email_enabled_customer_on_hold_order'    => 'on-hold',
+            'woocommerce_email_enabled_customer_processing_order' => 'processing',
+            'woocommerce_email_enabled_customer_completed_order'  => 'completed',
+        ];
+
+        $email_status = $email_statuses[ current_filter() ] ?? '';
+        $statuses     = (array) $order->get_meta( self::SYNCED_STATUS_META );
+
+        if ( ! in_array( $email_status, $statuses, true ) ) {
+            return $enabled;
+        }
+
+        // Each flag skips one email, even when the email itself is disabled.
+        $this->save_synced_statuses( $order, array_diff( $statuses, [ $email_status ] ) );
+
+        return false;
+    }
+
+    /**
+     * Drop the synced-status flags once the order moves to a status Dokan did not sync.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int      $order_id   Order ID.
+     * @param string   $old_status Old status.
+     * @param string   $new_status New status.
+     * @param WC_Order $order      Order object.
+     *
+     * @return void
+     */
+    public function clear_synced_status( $order_id, $old_status, $new_status, $order ) {
+        if ( ! $order instanceof WC_Order ) {
+            return;
+        }
+
+        $statuses = array_filter( (array) $order->get_meta( self::SYNCED_STATUS_META ) );
+
+        if ( $statuses && ! in_array( $new_status, $statuses, true ) ) {
+            $this->save_synced_statuses( $order, [] );
+        }
+    }
+
+    /**
+     * Save the remaining synced-status flags of an order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order    Order object.
+     * @param string[] $statuses Flagged statuses to keep.
+     *
+     * @return void
+     */
+    protected function save_synced_statuses( WC_Order $order, array $statuses ) {
+        if ( $statuses ) {
+            $order->update_meta_data( self::SYNCED_STATUS_META, array_values( $statuses ) );
+        } else {
+            $order->delete_meta_data( self::SYNCED_STATUS_META );
+        }
+
+        $order->save_meta_data();
     }
 
     /**
