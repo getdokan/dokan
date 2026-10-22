@@ -92,6 +92,7 @@ class VendorStatusMultisiteScopeTest extends DokanTestCase {
         $response = $this->put_request( 'stores/batch', [ 'approved' => [ $this->outsider_id, $this->super_admin_id, $this->seller_id1 ] ] );
 
         $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( [ $this->outsider_id, $this->super_admin_id ], $response->get_data()['skipped'] );
         $this->assertSame( 'no', get_user_meta( $this->outsider_id, 'dokan_enable_selling', true ) );
         $this->assertSame( 'no', get_user_meta( $this->super_admin_id, 'dokan_enable_selling', true ) );
         $this->assertSame( 'yes', get_user_meta( $this->seller_id1, 'dokan_enable_selling', true ) );

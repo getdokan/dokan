@@ -83,14 +83,7 @@ class OrderParentGuestAccessTest extends DokanTestCase {
     }
 
     public function test_vendor_still_reads_own_sub_order() {
-        $sub_order_id = (int) current(
-            array_filter(
-                dokan_get_suborder_ids_by( $this->parent_id ),
-                function ( $id ) {
-                    return (int) dokan_get_seller_id_by_order( $id ) === $this->seller_id1;
-                }
-            )
-        );
+        $sub_order_id = $this->own_sub_order_id();
 
         wp_set_current_user( $this->seller_id1 );
 
@@ -100,11 +93,55 @@ class OrderParentGuestAccessTest extends DokanTestCase {
         $this->assertSame( $sub_order_id, $response->get_data()['id'] );
     }
 
-    public function test_admin_still_reads_parent_order() {
-        wp_set_current_user( $this->admin_id );
+    public function test_vendor_without_view_order_capability_is_denied() {
+        $sub_order_id = $this->own_sub_order_id();
+
+        $seller = new \WP_User( $this->seller_id1 );
+        $seller->add_cap( 'dokan_view_order', false );
+
+        wp_set_current_user( $this->seller_id1 );
+
+        $this->assertSame( 403, $this->get_request( 'orders/' . $sub_order_id )->get_status() );
+    }
+
+    public function test_vendor_staff_reads_their_vendors_sub_order() {
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+
+        $staff = new \WP_User( $staff_id );
+        $staff->add_cap( 'vendor_staff' );
+        $staff->add_cap( 'dokan_view_order' );
+
+        wp_set_current_user( $staff_id );
+
+        $this->assertSame( 200, $this->get_request( 'orders/' . $this->own_sub_order_id() )->get_status() );
+    }
+
+    /**
+     * @dataProvider store_admin_roles
+     */
+    public function test_store_admins_still_read_parent_order( string $role ) {
+        wp_set_current_user( 'administrator' === $role ? $this->admin_id : self::factory()->user->create( [ 'role' => $role ] ) );
 
         $response = $this->get_request( 'orders/' . $this->parent_id );
 
         $this->assertSame( 200, $response->get_status() );
+    }
+
+    public function store_admin_roles(): array {
+        return [
+            'administrator' => [ 'administrator' ],
+            'shop manager'  => [ 'shop_manager' ],
+        ];
+    }
+
+    protected function own_sub_order_id(): int {
+        return (int) current(
+            array_filter(
+                dokan_get_suborder_ids_by( $this->parent_id ),
+                function ( $id ) {
+                    return (int) dokan_get_seller_id_by_order( $id ) === $this->seller_id1;
+                }
+            )
+        );
     }
 }

@@ -1099,13 +1099,19 @@ class StoreController extends WP_REST_Controller {
 
         foreach ( $params as $status => $value ) {
             if ( in_array( $status, $allowed_status, true ) ) {
-                // Skip users the current admin may not manage, e.g. another site's members on multisite.
-                $value = array_filter(
+                // Skip users the current admin may not manage, e.g. another site's members on multisite, and report them back.
+                $allowed = array_filter(
                     (array) $value,
                     function ( $vendor_id ) {
                         return VendorUtil::current_user_can_manage_vendor( (int) $vendor_id );
                     }
                 );
+
+                foreach ( array_diff_key( (array) $value, $allowed ) as $vendor_id ) {
+                    $response['skipped'][] = (int) $vendor_id;
+                }
+
+                $value = $allowed;
 
                 switch ( $status ) {
                     case 'approved':

@@ -198,8 +198,8 @@ class Helper {
     public static function get_collected_amount_from_order( \WC_Abstract_Order $order ): float {
         foreach ( $order->get_items() as $item ) {
             if ( $item->get_meta( '_dokan_reverse_withdrawal_balance' ) ) {
-                // Line total is after coupons and before tax, so it is what was really paid towards the debt.
-                return max( 0.0, (float) $item->get_total() );
+                // Line total is after coupons, and the order total also reflects negative fees some discount plugins add.
+                return max( 0.0, min( (float) $item->get_total(), (float) $order->get_total() ) );
             }
         }
 

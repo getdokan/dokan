@@ -245,6 +245,31 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     }
 
     /**
+     * A negative fee leaves the line total untouched, so the cap must also respect the order total.
+     */
+    public function test_negative_fee_discount_credits_only_what_was_collected() {
+        $this->register_order_completion_hooks();
+
+        $order = $this->create_awaiting_payment_order( self::DUE );
+
+        $fee = new \WC_Order_Item_Fee();
+        $fee->set_props(
+            [
+                'name'       => 'Wallet discount',
+                'tax_status' => 'none',
+                'total'      => -60,
+            ]
+        );
+        $order->add_item( $fee );
+        $order->calculate_totals( false );
+        $order->save();
+
+        $order->update_status( 'completed' );
+
+        $this->assertSame( 60.0, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+    }
+
+    /**
      * A free order credits at payment_complete without anyone completing it, so the cap must hold there too.
      */
     public function test_fully_discounted_payment_clears_nothing_at_payment_complete() {

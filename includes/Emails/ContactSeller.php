@@ -110,7 +110,7 @@ class ContactSeller extends WC_Email {
     }
 
     /**
-     * Get email headers, with the contact form submitter as the only Reply-to.
+     * Get email headers, with the contact form submitter as the only Reply-to (also replaces any added via `woocommerce_email_headers`).
      *
      * @since DOKAN_SINCE
      *
