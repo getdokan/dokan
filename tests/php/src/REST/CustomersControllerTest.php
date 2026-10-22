@@ -913,17 +913,33 @@ class CustomersControllerTest extends DokanTestCase {
     }
 
     /**
-     * The customer ID lookup returns each vendor's customers once, and no guests.
+     * The customer list query works with both HPOS and posts order storage.
      */
-    public function test_get_customer_ids_by_seller() {
-        $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => $this->customers[0] ] );
-        $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => $this->customers[0] ] );
-        $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => 0 ] );
-        $this->factory()->order->set_seller_id( $this->seller_id2 )->create( [ 'customer_id' => $this->customers[1] ] );
+    public function test_get_items_in_both_order_storages() {
+        foreach ( [ 'no', 'yes' ] as $hpos ) {
+            $use_storage = static function () use ( $hpos ) {
+                return $hpos;
+            };
+            add_filter( 'pre_option_woocommerce_custom_orders_table_enabled', $use_storage, 99 );
 
-        $this->assertSame( [ $this->customers[0] ], dokan_get_customer_ids_by_seller( $this->seller_id1 ) );
-        $this->assertSame( [ $this->customers[1] ], dokan_get_customer_ids_by_seller( $this->seller_id2 ) );
-        $this->assertSame( [], dokan_get_customer_ids_by_seller( 0 ) );
+            try {
+                $this->assertSame( 'yes' === $hpos, \WeDevs\Dokan\Utilities\OrderUtil::is_hpos_enabled() );
+
+                $customer_id = $this->factory()->customer->create( [ 'email' => "storage-$hpos@example.com" ] );
+                $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => $customer_id ] );
+                $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => 0 ] );
+
+                wp_set_current_user( $this->seller_id1 );
+                $response = $this->get_request( 'customers', [ 'include' => [ $customer_id, $this->customers[0] ] ] );
+                $this->assertSame( [ $customer_id ], wp_list_pluck( $response->get_data(), 'id' ), "storage hpos=$hpos" );
+                $this->assertSame( 1, (int) $response->get_headers()['X-WP-Total'] );
+
+                wp_set_current_user( $this->seller_id2 );
+                $this->assertEmpty( $this->get_request( 'customers', [ 'include' => [ $customer_id ] ] )->get_data() );
+            } finally {
+                remove_filter( 'pre_option_woocommerce_custom_orders_table_enabled', $use_storage, 99 );
+            }
+        }
     }
 
     /**
