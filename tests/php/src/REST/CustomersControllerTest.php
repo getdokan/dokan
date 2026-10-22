@@ -881,6 +881,52 @@ class CustomersControllerTest extends DokanTestCase {
     }
 
     /**
+     * The list total must not reveal customers outside the vendor's own, e.g. when looking up an email.
+     */
+    public function test_get_items_total_counts_only_vendor_customers() {
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create(
+            [
+                'customer_id' => $this->customers[1],
+            ]
+        );
+
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->get_request(
+            'customers',
+            [
+                'email' => 'john.doe@example.com',
+                'role'  => 'all',
+            ]
+        );
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
+
+        $response = $this->get_request( 'customers', [ 'role' => 'all' ] );
+        $this->assertSame( [ $this->customers[1] ], wp_list_pluck( $response->get_data(), 'id' ) );
+        $this->assertSame( 1, (int) $response->get_headers()['X-WP-Total'] );
+
+        $response = $this->get_request( 'customers', [ 'include' => [ $this->customers[0] ] ] );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
+    }
+
+    /**
+     * The customer ID lookup returns each vendor's customers once, and no guests.
+     */
+    public function test_get_customer_ids_by_seller() {
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => $this->customers[0] ] );
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => $this->customers[0] ] );
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => 0 ] );
+        $this->factory()->order->set_seller_id( $this->seller_id2 )->create( [ 'customer_id' => $this->customers[1] ] );
+
+        $this->assertSame( [ $this->customers[0] ], dokan_get_customer_ids_by_seller( $this->seller_id1 ) );
+        $this->assertSame( [ $this->customers[1] ], dokan_get_customer_ids_by_seller( $this->seller_id2 ) );
+        $this->assertSame( [], dokan_get_customer_ids_by_seller( 0 ) );
+    }
+
+    /**
      * Helper method for making requests
      */
     protected function request( $method, $endpoint, $data = [] ): WP_REST_Response {

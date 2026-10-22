@@ -205,28 +205,43 @@ class CustomersController extends WC_REST_Customers_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-        return $this->perform_vendor_action(
-            function () use ( $request ) {
-                $response = parent::get_items( $request );
-                if ( is_wp_error( $response ) || ! ( $response instanceof WP_REST_Response ) ) {
-                    return $response;
+        add_filter( 'woocommerce_rest_customer_query', [ $this, 'restrict_query_to_vendor_customers' ] );
+        try {
+            return $this->perform_vendor_action(
+                function () use ( $request ) {
+                    return parent::get_items( $request );
                 }
+            );
+        } finally {
+            remove_filter( 'woocommerce_rest_customer_query', [ $this, 'restrict_query_to_vendor_customers' ] );
+        }
+    }
 
-                $vendor_id = dokan_get_current_user_id();
-                $data = array_values(
-                    array_filter(
-                        (array) $response->get_data(),
-                        static function ( $item ) use ( $vendor_id ) {
-							$id = is_array( $item ) ? ( $item['id'] ?? 0 ) : 0;
-							return $id && dokan_customer_has_order_from_this_seller( $id, $vendor_id );
-                        }
-                    )
-                );
+    /**
+     * Limit the customer list query to the vendor's own customers, so the rows and the total headers match.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $prepared_args WP_User_Query arguments.
+     *
+     * @return array
+     */
+    public function restrict_query_to_vendor_customers( $prepared_args ) {
+        $customer_ids = dokan_get_customer_ids_by_seller( dokan_get_current_user_id() );
 
-                $response->set_data( $data );
-                return $response;
-            }
-        );
+        if ( ! empty( $prepared_args['include'] ) ) {
+            $customer_ids = array_intersect( $customer_ids, array_map( 'absint', (array) $prepared_args['include'] ) );
+        }
+
+        // WP_User_Query ignores exclude once include is set.
+        if ( ! empty( $prepared_args['exclude'] ) ) {
+            $customer_ids = array_diff( $customer_ids, array_map( 'absint', (array) $prepared_args['exclude'] ) );
+        }
+
+        // An empty include is ignored by WP_User_Query, so match no user instead.
+        $prepared_args['include'] = ! empty( $customer_ids ) ? array_values( $customer_ids ) : [ 0 ];
+
+        return $prepared_args;
     }
 
     /**
