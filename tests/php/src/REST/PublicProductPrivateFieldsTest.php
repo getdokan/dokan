@@ -53,6 +53,7 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
         $product->set_virtual( true );
         $product->set_downloads( [ $download ] );
         $product->set_purchase_note( 'License key: EXAMPLE-LICENSE' );
+        $product->update_meta_data( '_per_product_admin_commission', '7' );
         $product->save();
     }
 
@@ -78,6 +79,22 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
         }
 
         $this->fail( "Product {$this->product_id} missing from {$rest_namespace}/{$route}" );
+    }
+
+    /**
+     * Keys of a serialized product's meta data.
+     *
+     * @param array $product Serialized product.
+     *
+     * @return array
+     */
+    protected function get_meta_keys( array $product ): array {
+        return array_map(
+            function ( $meta ) {
+                return is_object( $meta ) ? $meta->key : $meta['key'];
+            },
+            $product['meta_data']
+        );
     }
 
     /**
@@ -176,7 +193,7 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
     }
 
     /**
-     * Download file URLs, earning, purchase note and dashboard links are blanked for other callers.
+     * Download file URLs, earning, purchase note, meta data and dashboard links are blanked for other callers.
      *
      * @dataProvider unauthorized_caller_provider
      *
@@ -197,6 +214,7 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
             $this->assertSame( '', $product['purchase_note'], "Purchase note leaked to {$label}" );
             $this->assertSame( '', $product['edit_url'], "Edit URL leaked to {$label}" );
             $this->assertSame( [], $product['row_actions'], "Row actions leaked to {$label}" );
+            $this->assertSame( [], $product['meta_data'], "Meta data leaked to {$label}" );
         }
     }
 
@@ -222,6 +240,7 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
             $this->assertStringContainsString( 'EXAMPLE-LICENSE', $product['purchase_note'], $label );
             $this->assertNotEmpty( $product['edit_url'], $label );
             $this->assertNotEmpty( $product['row_actions'], $label );
+            $this->assertContains( '_per_product_admin_commission', $this->get_meta_keys( $product ), $label );
         }
     }
 }

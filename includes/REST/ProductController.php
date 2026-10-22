@@ -1112,7 +1112,7 @@ class ProductController extends DokanRESTController {
             'variations'            => $product->is_type( 'variable' ) ? $product->get_children() : [],
             'grouped_products'      => $product->is_type( 'grouped' ) ? $product->get_children() : [],
             'menu_order'            => $product->get_menu_order( $context ),
-            'meta_data'             => $product->get_meta_data(),
+            'meta_data'             => $can_view_private ? $product->get_meta_data() : [],
             'store'                 => [
                 'id'      => $store->get_id(),
                 'name'    => $store->get_shop_name(),
@@ -1140,7 +1140,7 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * Whether the current user may see a product's vendor-only fields (download files, earning, purchase note).
+     * Whether the current user may see a product's vendor-only fields (download files, earning, purchase note, meta data).
      *
      * @since DOKAN_SINCE
      *
@@ -1149,7 +1149,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     protected function can_view_private_product_data( $product ): bool {
-        // Required: a product with post_author 0 would otherwise match an anonymous caller's user id 0.
+        // Defence in depth: a product with post_author 0 would otherwise match an anonymous caller's user id 0.
         if ( ! is_user_logged_in() ) {
             return false;
         }
