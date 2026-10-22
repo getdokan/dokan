@@ -292,7 +292,7 @@ class CustomersController extends WC_REST_Customers_Controller {
         }
 
         return $wpdb->prepare(
-            "SELECT DISTINCT cu.meta_value FROM {$wpdb->posts} p
+            "SELECT DISTINCT CAST( cu.meta_value AS UNSIGNED ) FROM {$wpdb->posts} p
             INNER JOIN {$wpdb->postmeta} v ON v.post_id = p.ID AND v.meta_key = '_dokan_vendor_id'
             INNER JOIN {$wpdb->postmeta} cu ON cu.post_id = p.ID AND cu.meta_key = '_customer_user'
             WHERE v.meta_value = %s AND p.post_type = 'shop_order' AND cu.meta_value > 0 AND p.post_status IN ({$status_placeholders})",
