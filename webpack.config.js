@@ -115,9 +115,13 @@ const updatedConfig = {
     },
 
     plugins: [
+        // Blocks under src/blocks are built by `build:blocks`, so this build must not copy their block.json/PHP.
         ...defaultConfig.plugins.filter(
             ( plugin ) =>
-                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+                ! [
+                    'DependencyExtractionWebpackPlugin',
+                    'CopyPlugin',
+                ].includes( plugin.constructor.name )
         ),
         new MiniCssExtractPlugin( {
             filename: ( { chunk } ) => {

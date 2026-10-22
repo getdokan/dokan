@@ -1,0 +1,445 @@
+// Vendor Registration Form block: shared by the front end and the editor preview.
+.dokan-vreg {
+	--dokan-vreg-accent: #7047eb;
+	--dokan-vreg-label: inherit;
+	--dokan-vreg-input-text: inherit;
+	--dokan-vreg-input-bg: #f7f5ff;
+	--dokan-vreg-input-border: #ddd6fe;
+	--dokan-vreg-button-bg: var(--dokan-vreg-accent);
+	--dokan-vreg-button-text: #fff;
+	--dokan-vreg-input-radius: 6px;
+	--dokan-vreg-button-radius: 6px;
+	--dokan-vreg-field-gap: 18px;
+	--dokan-vreg-login-gap: 48px;
+	--dokan-vreg-muted: #6b7280;
+
+	box-sizing: border-box;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: inherit;
+	}
+
+	[hidden] {
+		display: none !important;
+	}
+
+	&__columns {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--dokan-vreg-login-gap);
+
+		@media (min-width: 782px) {
+			grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+		}
+	}
+
+	&.has-login-left &__columns {
+		@media (min-width: 782px) {
+			grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+		}
+	}
+
+	&__login-link {
+		margin: 0 0 16px;
+	}
+
+	&__login-toggle {
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--dokan-vreg-accent);
+		font: inherit;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+
+	&.has-login-link &__login {
+		margin-bottom: var(--dokan-vreg-login-gap);
+		padding: 20px;
+		border: 1px solid var(--dokan-vreg-input-border);
+		border-radius: var(--dokan-vreg-input-radius);
+	}
+
+	&__lost-password {
+		margin: 12px 0 0;
+		font-size: 0.9em;
+	}
+
+	&__actions#{&}__actions--login {
+		justify-content: flex-start;
+	}
+
+	&__note {
+		margin: -8px 0 16px;
+		color: var(--dokan-vreg-muted);
+	}
+
+	&__heading {
+		margin: 0 0 16px;
+	}
+
+	&__admin-notice {
+		padding: 12px 16px;
+		border-left: 4px solid #dba617;
+		background: #fcf9e8;
+	}
+
+	&__step-bar {
+		display: flex;
+		gap: 8px;
+		margin: 0 0 12px;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__step-item {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding-top: 10px;
+		border-top: 3px solid #e5e7eb;
+		color: var(--dokan-vreg-muted);
+		font-size: 0.875em;
+
+		&.is-active,
+		&.is-done {
+			border-top-color: var(--dokan-vreg-accent);
+		}
+
+		&.is-active {
+			color: var(--dokan-vreg-accent);
+			font-weight: 600;
+		}
+	}
+
+	&__step-number {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 22px;
+		height: 22px;
+		border: 1px solid currentColor;
+		border-radius: 50%;
+		font-size: 0.8em;
+	}
+
+	// Step bar styles (Styles tab); "bars" is the default above.
+	&.is-step-style-circles &__step-item {
+		align-items: center;
+		padding-top: 0;
+		border-top: 0;
+		text-align: center;
+
+		.dokan-vreg__step-number {
+			width: 32px;
+			height: 32px;
+			border-width: 2px;
+		}
+
+		&.is-active .dokan-vreg__step-number,
+		&.is-done .dokan-vreg__step-number {
+			border-color: var(--dokan-vreg-accent);
+			background: var(--dokan-vreg-accent);
+			color: #fff;
+		}
+	}
+
+	&.is-step-style-pills &__step-item {
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		padding: 8px 12px;
+		border-top: 0;
+		border-radius: 999px;
+		background: #f3f4f6;
+
+		&.is-active {
+			background: var(--dokan-vreg-accent);
+			color: #fff;
+		}
+
+		.dokan-vreg__step-number {
+			border: 0;
+		}
+	}
+
+	&.is-step-style-progress &__step-bar {
+		gap: 0;
+	}
+
+	&.is-step-style-progress &__step-item {
+		padding-top: 0;
+		border-top: 0;
+		border-bottom: 6px solid #e5e7eb;
+		font-size: 0;
+
+		&.is-active,
+		&.is-done {
+			border-bottom-color: var(--dokan-vreg-accent);
+		}
+
+		.dokan-vreg__step-number {
+			display: none;
+		}
+	}
+
+	&__step-note {
+		margin: 0 0 16px;
+		color: var(--dokan-vreg-muted);
+		font-size: 0.875em;
+	}
+
+	// Focused by script on step change; no ring unless the keyboard brought it there.
+	&__step-note:focus:not(:focus-visible) {
+		outline: none;
+	}
+
+	&__section + &__section {
+		margin-top: 8px;
+	}
+
+	&__section-title {
+		margin: 16px 0 10px;
+		color: var(--dokan-vreg-muted);
+		font-size: 0.75em;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	&__row {
+		margin: 0 0 var(--dokan-vreg-field-gap);
+	}
+
+	&__label {
+		display: block;
+		margin-bottom: 6px;
+		color: var(--dokan-vreg-label);
+		font-weight: 600;
+
+		&--inline {
+			display: inline;
+			font-weight: 500;
+		}
+
+		.required {
+			color: #d63638;
+		}
+	}
+
+	&__choices {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+
+	&__choice {
+		display: block;
+		margin: 4px 0;
+	}
+
+	&__help {
+		display: block;
+		margin-top: 6px;
+		color: var(--dokan-vreg-muted);
+		font-size: 0.85em;
+	}
+
+	&__url-status {
+		float: right;
+		font-size: 0.85em;
+	}
+
+	&__actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 12px;
+		margin-top: 8px;
+	}
+
+	&__back {
+		margin-right: auto;
+	}
+
+	&__trap {
+		position: absolute;
+		left: -999em;
+	}
+
+	// Social buttons add-ons print; the Styles tab picks the layout.
+	&__social {
+		margin: var(--dokan-vreg-field-gap) 0;
+	}
+
+	&__divider {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin: var(--dokan-vreg-field-gap) 0;
+		color: var(--dokan-vreg-muted);
+		font-size: 0.875em;
+
+		&::before,
+		&::after {
+			content: "";
+			flex: 1;
+			border-top: 1px solid var(--dokan-vreg-input-border);
+		}
+	}
+
+	&__social-buttons {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	&__social-button {
+		--dokan-vreg-social-brand: #000;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		padding: 10px 16px;
+		border: 1px solid var(--dokan-vreg-social-brand);
+		border-radius: var(--dokan-vreg-button-radius);
+		background: var(--dokan-vreg-social-brand);
+		color: #fff;
+		font: inherit;
+		font-weight: 500;
+		line-height: 1.4;
+		text-decoration: none;
+		cursor: pointer;
+
+		&:hover,
+		&:focus {
+			color: #fff;
+			text-decoration: none;
+			filter: brightness(0.92);
+		}
+
+		&.is-facebook {
+			--dokan-vreg-social-brand: #1877f2;
+		}
+
+		&.is-linkedinopenid {
+			--dokan-vreg-social-brand: #0a66c2;
+		}
+
+		// Google's mark stays on white, as its brand rules ask.
+		&.is-google,
+		&.is-google:hover,
+		&.is-google:focus {
+			border-color: #dadce0;
+			background: #fff;
+			color: #1f1f1f;
+		}
+	}
+
+	// Themes underline content links; these buttons never are.
+	.dokan-vreg__social-buttons a.dokan-vreg__social-button {
+		text-decoration: none;
+	}
+
+	&__social-icon {
+		display: inline-flex;
+		flex: none;
+		width: 20px;
+		height: 20px;
+
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	&.is-social-outline,
+	&.is-social-columns {
+
+		.dokan-vreg__social-button {
+			border-color: var(--dokan-vreg-input-border);
+			background: transparent;
+			color: inherit;
+		}
+
+		.dokan-vreg__social-icon {
+			color: var(--dokan-vreg-social-brand);
+		}
+	}
+
+	&.is-social-columns .dokan-vreg__social-buttons {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	&.is-social-icons {
+
+		.dokan-vreg__social-buttons {
+			flex-direction: row;
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+
+		.dokan-vreg__social-button {
+			width: 48px;
+			height: 48px;
+			padding: 0;
+		}
+
+		.dokan-vreg__social-label {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+		}
+	}
+
+	// Block themes get the form's own look; classic themes keep Dokan's input and button styles.
+	&:not(.is-classic-theme) {
+		.dokan-vreg__input {
+			width: 100%;
+			padding: 10px 12px;
+			border: 1px solid var(--dokan-vreg-input-border);
+			border-radius: var(--dokan-vreg-input-radius);
+			background: var(--dokan-vreg-input-bg);
+			color: var(--dokan-vreg-input-text);
+			font: inherit;
+
+			&:focus {
+				outline: 2px solid var(--dokan-vreg-accent);
+				outline-offset: 1px;
+			}
+		}
+
+		.dokan-vreg__next,
+		.dokan-vreg__submit,
+		.dokan-vreg__login-submit {
+			padding: 12px 24px;
+			border: 0;
+			border-radius: var(--dokan-vreg-button-radius);
+			background: var(--dokan-vreg-button-bg);
+			color: var(--dokan-vreg-button-text);
+			font: inherit;
+			cursor: pointer;
+
+			&:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+			}
+		}
+
+		.dokan-vreg__back {
+			padding: 12px 20px;
+			border: 1px solid var(--dokan-vreg-input-border);
+			border-radius: var(--dokan-vreg-button-radius);
+			background: transparent;
+			color: inherit;
+			font: inherit;
+			cursor: pointer;
+		}
+	}
+}

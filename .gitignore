@@ -5,6 +5,7 @@ npm-debug.log
 includes/.DS_Store
 .idea
 .vscode
+/assets/blocks/
 /includes/.DS_Store
 plugin-deploy.sh
 secret.json
