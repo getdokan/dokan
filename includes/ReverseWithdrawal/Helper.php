@@ -187,6 +187,26 @@ class Helper {
     }
 
     /**
+     * Get the amount an order actually collected towards the reverse withdrawal balance.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Abstract_Order $order
+     *
+     * @return float
+     */
+    public static function get_collected_amount_from_order( \WC_Abstract_Order $order ): float {
+        foreach ( $order->get_items() as $item ) {
+            if ( $item->get_meta( '_dokan_reverse_withdrawal_balance' ) ) {
+                // Line total is after coupons, and the order total also reflects negative fees some discount plugins add.
+                return max( 0.0, min( (float) $item->get_total(), (float) $order->get_total() ) );
+            }
+        }
+
+        return 0.0;
+    }
+
+    /**
      * Get reverse withdrawal base product id
      *
      * @since 3.5.1
