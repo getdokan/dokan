@@ -1,3 +1,8 @@
+### v5.3.2 ( Oct 22, 2026 ) ###
+
+- **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.
+- **fix:** Saving a vendor from the WordPress Users screen no longer resets their custom commission to the global rate.
+
 ### v5.3.1 ( Oct 15, 2026 ) ###
 
 - **new:** Add-ons can now adjust how an order's earnings are split between the vendor and the admin, so features like vendor-funded affiliate commissions show the correct amounts.
