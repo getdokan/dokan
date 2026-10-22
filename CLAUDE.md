@@ -8,6 +8,7 @@ Dokan Lite is a multi-vendor e-commerce marketplace plugin for WordPress, powere
 
 - **`CONTEXT.md`** — the canonical ubiquitous-language glossary for the whole Dokan bounded context (Lite **and** Pro). Read it before naming things or discussing domain concepts; use its canonical terms (e.g. Vendor not seller, Suborder vs Vendor order, Commission = admin's share) and respect its _Avoid_ lists.
 - **`docs/adr/`** — Architecture Decision Records. Check here before "fixing" surprising behavior (e.g. parent orders ignoring refunds/stock is deliberate — ADR-0004). Cross-cutting Lite+Pro decisions live here; Pro-only decisions live in dokan-pro's `docs/adr/`.
+- **Business-logic questions** ("how is commission calculated?", "when can a vendor withdraw?") — answer from `docs/adr/` first: each business-rule ADR's filename and H1 state the rule, with settings branches and worked examples. `docs/adr/decisions-index.md` groups them by domain; `docs/adr/reference/` holds the source-cited subsystem docs (how things are wired); `docs/adr/eval/business-questions.md` is the regression question bank — after changing business logic, update the affected ADR and its questions.
 - New root-level files must be added to `.distignore` or they ship in the release zip.
 
 ## Available Skills
