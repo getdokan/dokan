@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Test\REST;
+namespace WeDevs\Dokan\Test\Product;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Test\Helpers\WC_Helper_Product;
@@ -9,11 +9,7 @@ use Dokan_Object_Injection_Probe;
 require_once __DIR__ . '/Dokan_Object_Injection_Probe.php';
 
 /**
- * A poisoned `_product_attributes` meta must not instantiate an object when a vendor saves the product (getdokan/dokan-pro#6268).
- *
- * A shop manager can write `_product_attributes` through the WooCommerce REST API, where WordPress stores a
- * serialized-looking string double-serialized. get_post_meta() peels one layer; dokan_process_product_meta()
- * must not peel the second with maybe_unserialize(), or it would instantiate attacker-controlled objects.
+ * A poisoned `_product_attributes` meta must not instantiate an object when a vendor saves or opens the product (getdokan/dokan-pro#6268).
  *
  * @since DOKAN_SINCE
  *
@@ -57,8 +53,7 @@ class ProductAttributesObjectInjectionTest extends DokanTestCase {
     }
 
     /**
-     * Mirror the WooCommerce REST writer: a serialized-looking string stored as plain meta ends up double-serialized,
-     * so get_post_meta() peels exactly one layer and hands back the attacker string intact.
+     * Mirror the WooCommerce REST writer, which double-serializes a serialized-looking string so get_post_meta() returns it intact.
      *
      * @param string $inner The serialized payload the attacker controls.
      */
@@ -85,8 +80,7 @@ class ProductAttributesObjectInjectionTest extends DokanTestCase {
     }
 
     /**
-     * Rendering the variable-product options (which happens when a vendor merely opens the edit
-     * page, before any save) must not instantiate a poisoned attributes value either.
+     * Rendering the variable-product options (on opening the edit page, before any save) must not instantiate them either.
      *
      * @covers ::dokan_product_output_variations
      */
@@ -95,7 +89,7 @@ class ProductAttributesObjectInjectionTest extends DokanTestCase {
         $payload = 'O:' . strlen( $class ) . ':"' . $class . '":0:{}';
         $this->plant_poisoned_attributes( $payload );
 
-        $GLOBALS['post'] = get_post( $this->product_id );
+        $GLOBALS['post'] = get_post( $this->product_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
         ob_start();
         dokan_product_output_variations();
@@ -105,8 +99,38 @@ class ProductAttributesObjectInjectionTest extends DokanTestCase {
     }
 
     /**
-     * A legitimate attributes array is still read as an array, so the taxonomy-cleanup loop runs:
-     * a stored taxonomy attribute omitted from the save has its object terms unset.
+     * A non-array entry next to a real variation attribute is skipped instead of causing a TypeError on render.
+     *
+     * @covers ::dokan_product_output_variations
+     */
+    public function test_variations_render_skips_non_array_attribute_entries() {
+        update_post_meta(
+            $this->product_id,
+            '_product_attributes',
+            [
+                'color' => [
+                    'name'         => 'Color',
+                    'value'        => 'Red | Blue',
+                    'position'     => 0,
+                    'is_visible'   => 1,
+                    'is_variation' => 1,
+                    'is_taxonomy'  => 0,
+                ],
+                'junk'  => 'x',
+            ]
+        );
+
+        $GLOBALS['post'] = get_post( $this->product_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+        ob_start();
+        dokan_product_output_variations();
+        $html = ob_get_clean();
+
+        $this->assertStringContainsString( 'name="default_attribute_color"', $html );
+    }
+
+    /**
+     * A legitimate attributes array is still read, so a taxonomy attribute removed on save has its terms unset.
      *
      * @covers ::dokan_process_product_meta
      */

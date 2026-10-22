@@ -200,9 +200,8 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
      * Unset removed attributes by looping over previous values and
      * unsetting the terms.
      */
-    // get_post_meta() already unserializes once; a second maybe_unserialize() would peel a
-    // double-serialized string and instantiate attacker-controlled objects (PHP object injection).
-    $old_attributes = array_filter( (array) get_post_meta( $post_id, '_product_attributes', true ) );
+    // get_post_meta() already unserializes once; drop the second unserialize and keep only arrays to avoid object injection.
+    $old_attributes = array_filter( (array) get_post_meta( $post_id, '_product_attributes', true ), 'is_array' );
 
     if ( ! empty( $old_attributes ) ) {
         foreach ( $old_attributes as $key => $value ) {

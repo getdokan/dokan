@@ -174,9 +174,8 @@ function dokan_save_product( $args ) {
 function dokan_product_output_variations() {
     global $post, $wpdb;
 
-    // Get attributes. get_post_meta() already unserializes once; a second maybe_unserialize()
-    // would peel a double-serialized string and instantiate attacker-controlled objects.
-    $attributes = array_filter( (array) get_post_meta( $post->ID, '_product_attributes', true ) );
+    // get_post_meta() already unserializes once; drop the second unserialize and keep only arrays to avoid object injection.
+    $attributes = array_filter( (array) get_post_meta( $post->ID, '_product_attributes', true ), 'is_array' );
 
     // See if any are set
     $variation_attribute_found = false;
@@ -253,7 +252,7 @@ function dokan_product_output_variations() {
                         <span class="dokan-variation-default-label dokan-left float-none"><i class="fas fa-question-circle tips" title="<?php esc_attr_e( 'Default Form Values: These are the attributes that will be pre-selected on the frontend.', 'dokan-lite' ); ?>" aria-hidden="true"></i></span>
 
                         <?php
-                            $default_attributes = maybe_unserialize( get_post_meta( $post->ID, '_default_attributes', true ) );
+                            $default_attributes = get_post_meta( $post->ID, '_default_attributes', true );
 
                         foreach ( $attributes as $attribute ) {
 

@@ -1,10 +1,6 @@
 <?php
 /**
- * Test fixture: a global-namespace class whose wake-up magic method flips a static flag.
- *
- * Lives in the global namespace (no backslashes in its serialized class name, which
- * WordPress's update_metadata() would otherwise strip) and in its own file so it is not
- * PSR-4 autoloaded; the test require_once's it.
+ * Test fixture: a global-namespace class (no backslashes for update_metadata() to strip) whose __wakeup() flips a static flag.
  *
  * @package WeDevs\Dokan\Test
  */
