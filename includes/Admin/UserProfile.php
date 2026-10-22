@@ -540,8 +540,6 @@ class UserProfile {
 
         $selling         = sanitize_text_field( wp_unslash( $_POST['dokan_enable_selling'] ) );
         $publishing      = isset( $_POST['dokan_publish'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_publish'] ) ) : '';
-        $percentage      = isset( $_POST['dokan_admin_percentage'] ) && $_POST['dokan_admin_percentage'] !== '' ? sanitize_text_field( wp_unslash( $_POST['dokan_admin_percentage'] ) ) : '';
-        $percentage_type = empty( $_POST['dokan_admin_percentage_type'] ) ? 'percentage' : sanitize_text_field( wp_unslash( $_POST['dokan_admin_percentage_type'] ) );
         $feature_seller  = isset( $_POST['dokan_feature'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_feature'] ) ) : '';
         $store_settings  = dokan_get_store_info( $user_id );
 
@@ -581,8 +579,6 @@ class UserProfile {
         }
 
         update_user_meta( $user_id, 'dokan_publishing', $publishing );
-        update_user_meta( $user_id, 'dokan_admin_percentage', wc_format_decimal( $percentage ) );
-        update_user_meta( $user_id, 'dokan_admin_percentage_type', $percentage_type );
         update_user_meta( $user_id, 'dokan_feature_seller', $feature_seller );
         update_user_meta( $user_id, 'dokan_store_name', $store_settings['store_name'] );
 
