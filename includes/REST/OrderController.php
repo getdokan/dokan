@@ -802,13 +802,10 @@ class OrderController extends DokanRESTController {
             return true;
         }
 
-        $seller_id = dokan_get_seller_id_by_order( $request['id'] );
+        $seller_id = (int) dokan_get_seller_id_by_order( $request['id'] );
 
-        if ( $seller_id === get_current_user_id() ) {
-            return true;
-        }
-
-        return false;
+        // Parent orders resolve to vendor 0, the same id a guest has, so 0 must never count as a match.
+        return $seller_id > 0 && $seller_id === get_current_user_id();
     }
 
     /**

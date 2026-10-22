@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Traits\VendorAuthorizable;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WeDevs\Dokan\Vendor\Vendor;
 use WP_Error;
 use WP_Query;
@@ -150,20 +151,26 @@ class StoreController extends WP_REST_Controller {
                     'callback'            => [ $this, 'send_email' ],
                     'args'                => [
                         'name'    => [
-                            'type'        => 'string',
-                            'description' => __( 'Your Name', 'dokan-lite' ),
-                            'required'    => true,
+                            'type'              => 'string',
+                            'description'       => __( 'Your Name', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => 'rest_validate_request_arg',
                         ],
                         'email'   => [
-                            'type'        => 'string',
-                            'format'      => 'email',
-                            'description' => __( 'Your email', 'dokan-lite' ),
-                            'required'    => true,
+                            'type'              => 'string',
+                            'format'            => 'email',
+                            'description'       => __( 'Your email', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_email',
+                            'validate_callback' => 'rest_validate_request_arg',
                         ],
                         'message' => [
-                            'type'        => 'string',
-                            'description' => __( 'Your Message', 'dokan-lite' ),
-                            'required'    => true,
+                            'type'              => 'string',
+                            'description'       => __( 'Your Message', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => 'rest_validate_request_arg',
                         ],
                     ],
                     'permission_callback' => '__return_true',
@@ -379,7 +386,7 @@ class StoreController extends WP_REST_Controller {
         // Resolve vendor ID: handles both vendor IDs and vendor staff IDs
         $store_id = $this->get_vendor_id_for_user( $requested_id );
 
-        return $this->can_access_vendor_store( $store_id );
+        return $this->can_access_vendor_store( $store_id ) && VendorUtil::current_user_can_manage_vendor( $store_id );
     }
 
     /**
@@ -1055,6 +1062,10 @@ class StoreController extends WP_REST_Controller {
             return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
+        if ( ! VendorUtil::current_user_can_manage_vendor( (int) $store_id ) ) {
+            return new WP_Error( 'dokan_rest_cannot_manage_vendor', __( 'Sorry, you are not allowed to manage this vendor.', 'dokan-lite' ), [ 'status' => rest_authorization_required_code() ] );
+        }
+
         if ( 'active' === $request['status'] ) {
             $user = dokan()->vendor->get( $store_id )->make_active();
         } else {
@@ -1088,6 +1099,14 @@ class StoreController extends WP_REST_Controller {
 
         foreach ( $params as $status => $value ) {
             if ( in_array( $status, $allowed_status, true ) ) {
+                // Skip users the current admin may not manage, e.g. another site's members on multisite.
+                $value = array_filter(
+                    (array) $value,
+                    function ( $vendor_id ) {
+                        return VendorUtil::current_user_can_manage_vendor( (int) $vendor_id );
+                    }
+                );
+
                 switch ( $status ) {
                     case 'approved':
                         foreach ( $value as $vendor_id ) {

@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Test\ReverseWithdrawal;
 
+use WeDevs\Dokan\ReverseWithdrawal\Cart;
 use WeDevs\Dokan\ReverseWithdrawal\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper;
 use WeDevs\Dokan\ReverseWithdrawal\Manager;
@@ -43,6 +44,13 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
      * @var Order|null
      */
     protected $order_hooks = null;
+
+    /**
+     * Cart hook instance registered for the coupon tests, unhooked again in tear_down.
+     *
+     * @var Cart|null
+     */
+    protected $cart_hooks = null;
 
     public function set_up() {
         parent::set_up();
@@ -191,14 +199,96 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
      * booted long before this test with reverse withdrawal disabled.
      */
     protected function register_order_completion_hooks() {
+        $this->enable_reverse_withdrawal();
+
+        // Kept so tear_down can unhook it — hooks are global and would otherwise leak into every later test.
+        $this->order_hooks = new Order();
+    }
+
+    /**
+     * Put the cart hooks in place, for the same reason as the completion hooks.
+     */
+    protected function register_cart_hooks() {
+        $this->enable_reverse_withdrawal();
+
+        $this->cart_hooks = new Cart();
+    }
+
+    protected function enable_reverse_withdrawal() {
         $settings            = (array) get_option( 'dokan_reverse_withdrawal', [] );
         $settings['enabled'] = 'on';
         update_option( 'dokan_reverse_withdrawal', $settings );
 
         $this->assertTrue( SettingsHelper::is_enabled() );
+    }
 
-        // Kept so tear_down can unhook it — hooks are global and would otherwise leak into every later test.
-        $this->order_hooks = new Order();
+    /**
+     * A discount coupon cannot clear more debt than the order actually collected (getdokan/dokan-pro#6284, issue 4).
+     *
+     * @dataProvider discounted_payments
+     */
+    public function test_discounted_payment_credits_only_what_was_collected( float $collected, float $remaining ) {
+        $this->register_order_completion_hooks();
+
+        $order = $this->create_awaiting_payment_order( self::DUE, 'processing', $collected );
+        $order->update_status( 'completed' );
+
+        $this->assertSame( $remaining, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+    }
+
+    public function discounted_payments(): array {
+        return [
+            'no discount'  => [ self::DUE, 0.0 ],
+            'half off'     => [ self::DUE / 2, self::DUE / 2 ],
+            '100% coupon'  => [ 0.0, self::DUE ],
+        ];
+    }
+
+    /**
+     * A free order credits at payment_complete without anyone completing it, so the cap must hold there too.
+     */
+    public function test_fully_discounted_payment_clears_nothing_at_payment_complete() {
+        $this->register_order_completion_hooks();
+
+        $order = $this->create_awaiting_payment_order( self::DUE, 'pending', 0.0 );
+
+        do_action( 'woocommerce_payment_complete', $order->get_id() );
+
+        $this->assertSame( self::DUE, (float) Helper::get_vendor_balance( $this->seller_id1 )['balance'] );
+    }
+
+    public function test_coupon_cannot_discount_a_reverse_withdrawal_payment() {
+        $this->register_cart_hooks();
+
+        $coupon = $this->create_percent_coupon( 100 );
+
+        $this->assertTrue( Helper::add_payment_to_cart( self::DUE ) );
+
+        $result = ( new \WC_Discounts( WC()->cart ) )->is_coupon_valid( $coupon );
+
+        $this->assertWPError( $result );
+        $this->assertSame( 'Coupons can not be applied to a reverse withdrawal payment.', $result->get_error_message() );
+    }
+
+    public function test_coupon_still_applies_to_a_regular_cart() {
+        $this->register_cart_hooks();
+
+        $coupon = $this->create_percent_coupon( 10 );
+
+        WC()->cart->empty_cart();
+        WC()->cart->add_to_cart( $this->factory()->product->create() );
+
+        $this->assertTrue( ( new \WC_Discounts( WC()->cart ) )->is_coupon_valid( $coupon ) );
+    }
+
+    protected function create_percent_coupon( float $amount ): \WC_Coupon {
+        $coupon = new \WC_Coupon();
+        $coupon->set_code( 'rw' . wp_generate_password( 8, false ) );
+        $coupon->set_discount_type( 'percent' );
+        $coupon->set_amount( $amount );
+        $coupon->save();
+
+        return $coupon;
     }
 
     /**
@@ -494,7 +584,7 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
     /**
      * Build a reverse-withdrawal payment order sitting in a status that has not credited the ledger yet.
      */
-    protected function create_awaiting_payment_order( float $amount, string $status = 'processing' ): \WC_Order {
+    protected function create_awaiting_payment_order( float $amount, string $status = 'processing', ?float $collected = null ): \WC_Order {
         $order = wc_create_order( [ 'customer_id' => $this->seller_id1 ] );
 
         $item = new \WC_Order_Item_Product();
@@ -503,7 +593,8 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
                 'product_id' => Helper::get_reverse_withdrawal_base_product(),
                 'quantity'   => 1,
                 'subtotal'   => $amount,
-                'total'      => $amount,
+                // A line total below the subtotal is what a discount coupon leaves behind.
+                'total'      => $collected ?? $amount,
             ]
         );
         $item->add_meta_data( '_dokan_reverse_withdrawal_balance', $amount );
@@ -540,6 +631,15 @@ class PaymentAmountReconciliationTest extends DokanTestCase {
             remove_filter( 'woocommerce_order_item_display_meta_value', [ $this->order_hooks, 'hide_order_item_meta_value' ], 999 );
 
             $this->order_hooks = null;
+        }
+
+        if ( $this->cart_hooks ) {
+            remove_filter( 'woocommerce_add_to_cart_validation', [ $this->cart_hooks, 'prevent_purchasing_multiple_products' ], 10 );
+            remove_filter( 'woocommerce_get_item_data', [ $this->cart_hooks, 'remove_seller_name_from_cart_item' ], 9 );
+            remove_action( 'woocommerce_before_calculate_totals', [ $this->cart_hooks, 'woocommerce_custom_price_to_cart_item' ], 99 );
+            remove_filter( 'woocommerce_coupon_is_valid', [ $this->cart_hooks, 'prevent_coupon_on_reverse_withdrawal_payment' ], 10 );
+
+            $this->cart_hooks = null;
         }
 
         parent::tear_down();
