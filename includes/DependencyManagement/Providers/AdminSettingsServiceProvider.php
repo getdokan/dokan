@@ -36,8 +36,21 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
      * Register the classes.
      */
 	public function register(): void {
+        // The container does not autowire, so a definition without explicit
+        // arguments is built with every nullable constructor parameter at its
+        // `null` default, and the bridge and legacy repository then `new` up
+        // their own SettingsRepository. Inject the shared instances so the
+        // whole stack holds a single new-option snapshot.
+        $arguments = [
+            LegacySettingsBridge::class     => [ SettingsRepository::class ],
+            LegacySettingsRepository::class => [ SettingsRepository::class, LegacySettingsBridge::class ],
+        ];
+
         foreach ( $this->services as $service ) {
             $definition = $this->share_with_implements_tags( $service );
+            if ( isset( $arguments[ $service ] ) ) {
+                $definition->addArguments( $arguments[ $service ] );
+            }
             $this->add_tags( $definition, $this->tags );
         }
 

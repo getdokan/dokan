@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.3.1
+Stable tag: 5.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -379,6 +379,10 @@ A. Please report security bugs found in the source code of the plugin through th
 
 == Changelog ==
 
+= v5.3.2 ( Oct 22, 2026 ) =
+- **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.
+- **fix:** Saving a vendor from the WordPress Users screen no longer resets their custom commission to the global rate.
+
 = v5.3.1 ( Oct 15, 2026 ) =
 - **new:** Add-ons can now adjust how an order's earnings are split between the vendor and the admin, so features like vendor-funded affiliate commissions show the correct amounts.
 - **fix:** Saving a downloadable product from the vendor dashboard no longer resets buyers' existing download limits, expiry dates, and download counts.
@@ -406,13 +410,5 @@ A. Please report security bugs found in the source code of the plugin through th
 - **new:** Extensions can add their own settings to the new settings screen through the `dokan_get_admin_settings_schema` filter.
 - **fix:** Prevented vendors from using the commission calculator to read another vendor's commission or earnings, and limited it to accounts that can manage products.
 - **fix:** The v3 order downloads REST endpoint no longer throws a fatal error for orders that grant download access to existing products.
-
-= v5.1.3 ( Sep 24, 2026 ) =
-- **fix:** The vendor dashboard navigation is no longer rebuilt on every request, so cron, Action Scheduler, and other background requests no longer do that work on each hit.
-- **fix:** The vendor product list now shows each product's real type instead of labeling unrecognized types as Simple.
-- **fix:** Prices on the vendor dashboard now follow the store's configured number of decimals, so a zero-decimal currency no longer shows trailing decimals.
-- **fix:** Vendors can now reorder product gallery images by dragging them in the new product editor.
-- **fix:** REST pagination links now point at the endpoint that actually served the request instead of the controller's shared base route.
-- **fix:** Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

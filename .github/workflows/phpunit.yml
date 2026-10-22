@@ -245,11 +245,22 @@ jobs:
                   path: ~/.cache/wp-env-images
                   key: ${{ steps.wp-env-images.outputs.key }}
 
+            # wordpress:php7.4 is frozen on Debian 11 (bullseye), which is past EOL: deb.debian.org
+            # still serves the bullseye-security index, but the packages it lists are gone from the
+            # pool, so wp-env's `apt-get install $PHPIZE_DEPS` build step 404s. wp-env has no
+            # Dockerfile hook, so the base image is rebuilt under its own tag with apt pointed at
+            # archive.debian.org; wp-env's `FROM wordpress:php7.4` then picks it up. The archive's
+            # Release files carry an expired Valid-Until, hence Check-Valid-Until "false". The RUN
+            # is a no-op on non-bullseye images (8.3 is bookworm). It runs after both the cache load
+            # (older cached tars hold the unpatched image) and a fresh pull, and before the save, so
+            # the cache carries the patched image from then on.
             - name: Pre-seed wp-env docker images
               env:
                   IMAGES: ${{ steps.wp-env-images.outputs.list }}
+                  PHP_VERSION: ${{ matrix.php }}
               run: |
                   TAR="$HOME/.cache/wp-env-images/images.tar"
+                  complete=false
                   if [ -f "$TAR" ]; then
                       docker load -i "$TAR"
                   else
@@ -269,9 +280,19 @@ jobs:
                               complete=false
                           fi
                       done
-                      # Only cache a complete set so a partial failure is retried next run.
-                      if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
                   fi
+                  WP_IMAGE="wordpress:php$PHP_VERSION"
+                  if docker image inspect "$WP_IMAGE" >/dev/null 2>&1; then
+                      docker build -t "$WP_IMAGE" - <<EOF
+                  FROM $WP_IMAGE
+                  RUN if grep -qs bullseye /etc/apt/sources.list; then \
+                          sed -i -e 's|deb.debian.org|archive.debian.org|g' -e 's|security.debian.org|archive.debian.org|g' /etc/apt/sources.list \
+                          && echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99-archive; \
+                      fi
+                  EOF
+                  fi
+                  # Only cache a complete set so a partial failure is retried next run.
+                  if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
                   docker image ls
 
             - name: Start WordPress environment
