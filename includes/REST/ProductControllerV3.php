@@ -354,7 +354,8 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return $invalid;
         }
 
-        $this->enforce_publish_moderation( $product, $creating );
+        // On update only a requested status is moderated, like the v1 API; a create without status defaults to publish in WooCommerce.
+        $this->enforce_publish_moderation( $product, $creating || isset( $request['status'] ) );
 
         $product = $this->apply_image_positions( $product, $request );
 
@@ -382,24 +383,19 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
-     * Apply the vendor's default product status when a vendor tries to make a product live, as the v1 API does.
+     * Apply the vendor's default product status when a vendor asks for a live status, as the v1 API does.
      *
      * @since DOKAN_SINCE
      *
-     * @param WC_Data $product  Product assembled from the request, not yet saved.
-     * @param bool    $creating Whether a new product is being created.
+     * @param WC_Data $product          Product assembled from the request, not yet saved.
+     * @param bool    $status_requested Whether the request sets the product's status.
      *
      * @return void
      */
-    protected function enforce_publish_moderation( $product, bool $creating ): void {
+    protected function enforce_publish_moderation( $product, bool $status_requested ): void {
         $live_statuses = [ 'publish', 'future' ];
 
-        if ( ! $product instanceof WC_Product || ! in_array( $product->get_status(), $live_statuses, true ) || current_user_can( 'manage_woocommerce' ) ) {
-            return;
-        }
-
-        // Already live, so editing it doesn't send it back to review.
-        if ( ! $creating && in_array( get_post_status( $product->get_id() ), $live_statuses, true ) ) {
+        if ( ! $status_requested || ! $product instanceof WC_Product || ! in_array( $product->get_status(), $live_statuses, true ) || current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
 

@@ -188,9 +188,9 @@ class ProductControllerV3ModerationTest extends DokanTestCase {
     }
 
     /**
-     * Editing an already-published product doesn't send it back to review.
+     * Re-saving a published product with status publish sends it back to review, like the v1 API and the classic editor.
      */
-    public function test_editing_published_product_keeps_it_published(): void {
+    public function test_untrusted_vendor_resaving_published_product_is_held_for_review(): void {
         wp_set_current_user( $this->seller_id1 );
         $published = $this->vendor_product( 'publish' );
 
@@ -202,6 +202,20 @@ class ProductControllerV3ModerationTest extends DokanTestCase {
                 'regular_price' => '12',
             ]
         );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( 'pending', get_post_status( $published ) );
+        $this->assertSame( '12', wc_get_product( $published )->get_regular_price() );
+    }
+
+    /**
+     * An edit that doesn't send a status keeps a published product live, like the v1 API.
+     */
+    public function test_edit_without_status_keeps_published_product_live(): void {
+        wp_set_current_user( $this->seller_id1 );
+        $published = $this->vendor_product( 'publish' );
+
+        $response = $this->json_request( 'PUT', "products/$published", [ 'regular_price' => '12' ] );
 
         $this->assertSame( 200, $response->get_status() );
         $this->assertSame( 'publish', get_post_status( $published ) );
