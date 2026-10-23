@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class EmailHooks {
     /**
-     * Order meta holding statuses Dokan synced while WooCommerce defers emails.
+     * Order meta holding the customer emails to skip while WooCommerce defers emails.
      *
      * @since DOKAN_SINCE
      */
@@ -31,6 +31,13 @@ class EmailHooks {
      * @since DOKAN_SINCE
      */
     const AUTO_COMPLETED = 'auto-completed';
+
+    /**
+     * Seconds a flag stays valid, so a queued email that never runs cannot block later emails.
+     *
+     * @since DOKAN_SINCE
+     */
+    const FLAG_LIFETIME = DAY_IN_SECONDS;
 
     /**
      * Class constructor
@@ -64,6 +71,11 @@ class EmailHooks {
      * @return void
      */
     public function prevent_sending_multiple_email() {
+        // Deferred emails are checked at send time by skip_synced_status_email().
+        if ( self::emails_are_deferred() ) {
+            return;
+        }
+
         if ( did_action( 'woocommerce_order_status_pending_to_on-hold_notification' ) === 1 ) {
             dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_on-hold_notification', 'WC_Email_Customer_On_Hold_Order', 'trigger', 10 );
         }
@@ -127,15 +139,15 @@ class EmailHooks {
      * @return bool Whether its completed email was still queued and is now skipped.
      */
     public static function skip_auto_completed_email( WC_Order $order ): bool {
-        $statuses = array_filter( (array) $order->get_meta( self::SYNCED_STATUS_META ) );
-        $marker   = array_search( self::AUTO_COMPLETED, $statuses, true );
+        $flags  = self::get_flags( $order );
+        $marker = array_search( self::AUTO_COMPLETED, array_column( $flags, 'status' ), true );
 
         if ( false === $marker ) {
             return false;
         }
 
-        $statuses[ $marker ] = 'completed';
-        self::save_flags( $order, $statuses );
+        $flags[ $marker ] = self::new_flag( 'completed' );
+        self::save_flags( $order, $flags );
 
         return true;
     }
@@ -155,12 +167,48 @@ class EmailHooks {
             return false;
         }
 
-        $statuses   = array_filter( (array) $order->get_meta( self::SYNCED_STATUS_META ) );
-        $statuses[] = $status;
+        $flags   = self::get_flags( $order );
+        $flags[] = self::new_flag( $status );
 
-        $order->update_meta_data( self::SYNCED_STATUS_META, array_values( $statuses ) );
+        $order->update_meta_data( self::SYNCED_STATUS_META, $flags );
 
         return true;
+    }
+
+    /**
+     * Build a flag for a status, stamped with the current time.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $status Flagged status.
+     *
+     * @return array{status: string, time: int}
+     */
+    protected static function new_flag( string $status ): array {
+        return [
+            'status' => $status,
+            'time'   => time(),
+        ];
+    }
+
+    /**
+     * Get an order's flags that have not expired.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Order object.
+     *
+     * @return array<int, array{status: string, time: int}>
+     */
+    protected static function get_flags( WC_Order $order ): array {
+        $flags = array_filter(
+            (array) $order->get_meta( self::SYNCED_STATUS_META ),
+            static function ( $flag ) {
+                return is_array( $flag ) && isset( $flag['status'], $flag['time'] ) && time() - (int) $flag['time'] < self::FLAG_LIFETIME;
+            }
+        );
+
+        return array_values( $flags );
     }
 
     /**
@@ -197,7 +245,8 @@ class EmailHooks {
             return $enabled;
         }
 
-        $statuses = array_filter( (array) $order->get_meta( self::SYNCED_STATUS_META ) );
+        $flags    = self::get_flags( $order );
+        $statuses = array_column( $flags, 'status' );
         $flag     = array_search( $email_status, $statuses, true );
         $skip     = false !== $flag;
 
@@ -211,8 +260,8 @@ class EmailHooks {
         }
 
         // Each flag stands for one email, even when the email itself is disabled.
-        unset( $statuses[ $flag ] );
-        self::save_flags( $order, $statuses );
+        unset( $flags[ $flag ] );
+        self::save_flags( $order, $flags );
 
         return $skip ? false : $enabled;
     }
@@ -222,14 +271,14 @@ class EmailHooks {
      *
      * @since DOKAN_SINCE
      *
-     * @param WC_Order $order    Order object.
-     * @param string[] $statuses Flags to keep.
+     * @param WC_Order $order Order object.
+     * @param array    $flags Flags to keep.
      *
      * @return void
      */
-    protected static function save_flags( WC_Order $order, array $statuses ) {
-        if ( $statuses ) {
-            $order->update_meta_data( self::SYNCED_STATUS_META, array_values( $statuses ) );
+    protected static function save_flags( WC_Order $order, array $flags ) {
+        if ( $flags ) {
+            $order->update_meta_data( self::SYNCED_STATUS_META, array_values( $flags ) );
         } else {
             $order->delete_meta_data( self::SYNCED_STATUS_META );
         }

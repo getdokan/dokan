@@ -293,13 +293,61 @@ class SuborderCustomerEmailTest extends DokanTestCase {
         [ $parent, $suborder_ids ] = $this->create_order( 'pending' );
         $parent->update_status( 'on-hold' );
 
-        $this->assertSame( [ 'on-hold' ], wc_get_order( $suborder_ids[0] )->get_meta( EmailHooks::SYNCED_STATUS_META ) );
+        $this->assertSame( [ 'on-hold' ], array_column( wc_get_order( $suborder_ids[0] )->get_meta( EmailHooks::SYNCED_STATUS_META ), 'status' ) );
 
         $this->next_request();
 
         foreach ( $suborder_ids as $suborder_id ) {
             $this->assertSame( '', wc_get_order( $suborder_id )->get_meta( EmailHooks::SYNCED_STATUS_META ) );
         }
+    }
+
+    public function test_flag_whose_email_never_ran_expires_after_a_day() {
+        $this->maybe_defer( true );
+        [ $parent, $suborder_ids ] = $this->create_order( 'pending' );
+        $parent->update_status( 'on-hold' );
+
+        // The queued email jobs never run, e.g. an admin cancels them.
+        $this->take_deferred_emails();
+        $this->reset_request_state();
+
+        $expired = wc_get_order( $suborder_ids[0] );
+        $flags   = $expired->get_meta( EmailHooks::SYNCED_STATUS_META );
+        $flags[0]['time'] -= EmailHooks::FLAG_LIFETIME;
+        $expired->update_meta_data( EmailHooks::SYNCED_STATUS_META, $flags );
+        $expired->save_meta_data();
+
+        foreach ( $suborder_ids as $suborder_id ) {
+            WC()->mailer()->emails['WC_Email_Customer_On_Hold_Order']->trigger( $suborder_id, wc_get_order( $suborder_id ) );
+        }
+
+        $this->assertSame( [ $suborder_ids[0] ], $this->sent_for( 'customer_on_hold_order' ) );
+        $this->assertContains( [ 'customer_on_hold_order', $suborder_ids[1], false ], $this->decisions );
+    }
+
+    public function test_deferred_emails_run_in_one_request_are_not_dropped() {
+        $this->maybe_defer( true );
+        $order_ids = [];
+
+        $params           = $this->get_multi_vendor_order_data();
+        $params['status'] = 'pending';
+
+        for ( $i = 0; $i < 3; $i++ ) {
+            $order_ids[] = $this->create_single_vendor_order( 0, $params );
+        }
+        $this->next_request();
+
+        wc_get_order( $order_ids[0] )->update_status( 'on-hold' );
+        wc_get_order( $order_ids[1] )->update_status( 'on-hold' );
+        $jobs = array_column( $this->take_deferred_emails(), null, 'order_id' );
+        $this->reset_request_state();
+
+        // Action Scheduler runs several jobs in one request, and an order status changes in between.
+        $this->queue->send_queued_transactional_email( $jobs[ $order_ids[0] ]['filter'], $jobs[ $order_ids[0] ]['args'] );
+        wc_get_order( $order_ids[2] )->update_status( 'on-hold' );
+        $this->queue->send_queued_transactional_email( $jobs[ $order_ids[1] ]['filter'], $jobs[ $order_ids[1] ]['args'] );
+
+        $this->assertSame( [ $order_ids[0], $order_ids[1] ], $this->sent_for( 'customer_on_hold_order' ) );
     }
 
     public function test_single_vendor_order_emails_the_customer() {
@@ -393,15 +441,31 @@ class SuborderCustomerEmailTest extends DokanTestCase {
             return;
         }
 
+        foreach ( $this->take_deferred_emails() as $item ) {
+            $this->queue->send_queued_transactional_email( $item['filter'], $item['args'] );
+            $this->reset_request_state();
+        }
+    }
+
+    /**
+     * Remove and return the emails WooCommerce has queued so far.
+     *
+     * @return array
+     */
+    protected function take_deferred_emails(): array {
         $property = new ReflectionProperty( $this->queue, 'queue' );
         $property->setAccessible( true );
         $items = $property->getValue( $this->queue );
         $property->setValue( $this->queue, [] );
 
-        foreach ( $items as $item ) {
-            $this->queue->send_queued_transactional_email( $item['filter'], $item['args'] );
-            $this->reset_request_state();
-        }
+        return array_map(
+            function ( $item ) {
+                $item['order_id'] = $item['args'][0];
+
+                return $item;
+            },
+            $items
+        );
     }
 
     /**

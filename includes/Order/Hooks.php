@@ -432,8 +432,11 @@ class Hooks {
 
             // The parent's completed email covers Suborders auto-completed whose own email is still queued.
             foreach ( $sub_orders as $sub_order ) {
-                $fresh_sub_order  = wc_get_order( $sub_order->get_id() );
-                $covers_suborders = ( $fresh_sub_order && EmailHooks::skip_auto_completed_email( $fresh_sub_order ) ) || $covers_suborders;
+                $fresh_sub_order = wc_get_order( $sub_order->get_id() );
+
+                if ( $fresh_sub_order && EmailHooks::skip_auto_completed_email( $fresh_sub_order ) ) {
+                    $covers_suborders = true;
+                }
             }
 
             // Otherwise the customer already got each Suborder's completed email.
