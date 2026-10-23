@@ -2350,7 +2350,7 @@ class SettingsSchema {
                 'type'        => 'subpage',
                 'page_id'     => 'ai_assist',
                 'title'       => esc_html__( 'AI Assistants (MCP)', 'dokan-lite' ),
-                'description' => esc_html__( 'Connect assistants such as Claude, ChatGPT or Cursor to your marketplace through the Model Context Protocol.', 'dokan-lite' ),
+                'description' => esc_html__( 'Connect assistants such as Claude Code, Claude Desktop or Cursor to your marketplace through the Model Context Protocol.', 'dokan-lite' ),
                 'priority'    => 200,
                 'doc_link'    => 'https://dokan.co/docs/wordpress/settings/dokan-mcp/',
             ],
@@ -2385,7 +2385,7 @@ class SettingsSchema {
                 'variant'       => 'switch',
                 'section_id'    => 'mcp_section',
                 'title'         => esc_html__( 'Allow vendors to connect', 'dokan-lite' ),
-                'description'   => esc_html__( 'Vendors and their staff can approve an assistant through the sign-in screen. Each connection only reaches that vendor\'s own store.', 'dokan-lite' ),
+                'description'   => esc_html__( 'Vendors and their staff can connect an assistant with an application password of their own. Each connection only reaches that vendor\'s own store.', 'dokan-lite' ),
                 'default'       => 'off',
                 'enable_state'  => [
                     'label' => esc_html__( 'Enabled', 'dokan-lite' ),
@@ -2411,11 +2411,11 @@ class SettingsSchema {
 
     /**
      * The connection, described with display-only fields whose values are filled in when the
-     * screen is built: status, the connector URL, the personal token and the connected apps.
+     * screen is built: status, the connector URL and how an assistant signs in.
      *
-     * Nothing here is a setting. The values are dropped on save by
-     * {@see \WeDevs\Dokan\Abilities\Mcp\Actions::strip_display_values()}, and the actions
-     * (create / rotate / revoke) are nonced `admin-post.php` links.
+     * Nothing here is a setting; the values are dropped on save by
+     * {@see \WeDevs\Dokan\Abilities\Mcp\DisplayFields::strip_display_values()}. There is nothing
+     * to create or revoke from this screen: WordPress and WooCommerce own the credentials.
      *
      * @since DOKAN_SINCE
      *
@@ -2424,9 +2424,8 @@ class SettingsSchema {
      * @return array
      */
     private static function mcp_connection_fields( array $when_enabled ): array {
-        $status   = \WeDevs\Dokan\Abilities\Mcp\Status::summary( get_current_user_id() );
-        $redirect = admin_url( 'admin.php?page=dokan-dashboard#/settings?page_id=ai_assist&subpage_id=mcp' );
-        $section  = 'mcp_connection_section';
+        $status  = \WeDevs\Dokan\Abilities\Mcp\Status::summary();
+        $section = 'mcp_connection_section';
 
         $field = static function ( string $id, string $variant, array $extra ) use ( $section, $when_enabled ): array {
             return array_merge(
@@ -2447,7 +2446,7 @@ class SettingsSchema {
                 'type'         => 'section',
                 'subpage_id'   => 'mcp',
                 'title'        => esc_html__( 'Connect an Assistant', 'dokan-lite' ),
-                'description'  => esc_html__( 'Pick how the assistant should sign in. Either way it acts as the account that approved it.', 'dokan-lite' ),
+                'description'  => esc_html__( 'An assistant signs in as a WordPress user and acts as that account. WordPress and WooCommerce check the credentials; nothing is stored here.', 'dokan-lite' ),
                 'dependencies' => $when_enabled,
             ],
             $field(
@@ -2479,7 +2478,7 @@ class SettingsSchema {
                 [
                     'notice_type'        => 'warning',
                     'notice_title'       => esc_html__( 'This site is not served over HTTPS', 'dokan-lite' ),
-                    'notice_description' => esc_html__( 'Most AI assistants refuse a plain-http connector.', 'dokan-lite' ),
+                    'notice_description' => esc_html__( 'WordPress only accepts application passwords over HTTPS, and most AI assistants refuse a plain-http connector.', 'dokan-lite' ),
                 ]
             );
         }
@@ -2489,93 +2488,54 @@ class SettingsSchema {
             'copy_field',
             [
                 'title'       => esc_html__( 'Connector URL', 'dokan-lite' ),
-                'description' => esc_html__( 'Paste this into Claude, ChatGPT or Cursor. The assistant opens this site\'s approval screen, you sign in once, and nothing else needs to be copied.', 'dokan-lite' )
+                'description' => esc_html__( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication.', 'dokan-lite' )
                     . ' '
                     . ( $status['vendor_access']
-                        ? esc_html__( 'Vendors may use the same URL with their own login.', 'dokan-lite' )
-                        : esc_html__( 'Only store admins can approve a connection while vendor access is off.', 'dokan-lite' ) ),
+                        ? esc_html__( 'Vendors use the same URL with their own login.', 'dokan-lite' )
+                        : esc_html__( 'Only store admins can connect while vendor access is off.', 'dokan-lite' ) ),
                 'value'       => $status['endpoint'],
             ]
         );
 
-        $token      = $status['token'];
-        $token_desc = sprintf(
-            /* translators: %s: the current user's display name. */
-            esc_html__( 'For assistants without a browser, such as the Claude Code CLI. It acts as %s and is shown only to you.', 'dokan-lite' ),
-            esc_html( $status['user']['display_name'] )
+        $elements[] = $field(
+            'mcp_application_password',
+            'html',
+            [
+                'title'        => esc_html__( 'Application password', 'dokan-lite' ),
+                'description'  => esc_html__( 'The usual way in. Each password can be revoked on its own from the profile screen.', 'dokan-lite' ),
+                'html_content' => \WeDevs\Dokan\Abilities\Mcp\Status::application_password_html( $status, false ),
+            ]
         );
 
-        if ( ! $token['connected'] ) {
+        if ( $status['vendor_access'] ) {
             $elements[] = $field(
-                'mcp_personal_token',
-                'html',
+                'mcp_vendor_authorize_url',
+                'copy_field',
                 [
-                    'title'        => esc_html__( 'Personal token', 'dokan-lite' ),
-                    'description'  => $token_desc,
-                    'html_content' => sprintf(
-                        '<a href="%1$s">%2$s</a>',
-                        esc_url( \WeDevs\Dokan\Abilities\Mcp\Actions::url( 'rotate_token', $redirect ) ),
-                        esc_html__( 'Create a personal token', 'dokan-lite' )
-                    ),
+                    'title'       => esc_html__( 'Vendor approval link', 'dokan-lite' ),
+                    'description' => esc_html__( 'Vendors open this link, sign in and create an application password of their own. Share it with them. A staff member\'s password is created by the store admin on that user\'s profile.', 'dokan-lite' ),
+                    'value'       => $status['authorize_url'],
                 ]
             );
-        } else {
-            $actions = sprintf(
-                /* translators: 1: date, 2: rotate link, 3: revoke link. */
-                esc_html__( 'Last used: %1$s. %2$s · %3$s', 'dokan-lite' ),
-                esc_html( \WeDevs\Dokan\Abilities\Mcp\Status::format_date( (int) $token['last_used'] ) ),
-                sprintf( '<a href="%1$s">%2$s</a>', esc_url( \WeDevs\Dokan\Abilities\Mcp\Actions::url( 'rotate_token', $redirect ) ), esc_html__( 'Rotate token', 'dokan-lite' ) ),
-                sprintf( '<a href="%1$s">%2$s</a>', esc_url( \WeDevs\Dokan\Abilities\Mcp\Actions::url( 'revoke_token', $redirect ) ), esc_html__( 'Revoke token', 'dokan-lite' ) )
-            );
-
-            if ( ! $token['token_available'] ) {
-                $elements[] = $field(
-                    'mcp_token_notice',
-                    'notice',
-                    [
-                        'notice_type'        => 'warning',
-                        'notice_title'       => esc_html__( 'Your personal token cannot be shown', 'dokan-lite' ),
-                        'notice_description' => esc_html__( 'The stored copy cannot be read any more (the site\'s security salts changed). Connected clients keep working; rotate the token to see it again.', 'dokan-lite' ) . ' ' . $actions,
-                    ]
-                );
-            } else {
-                $elements[] = $field(
-                    'mcp_personal_token',
-                    'copy_field',
-                    [
-                        'title'       => esc_html__( 'Personal token', 'dokan-lite' ),
-                        'description' => $token_desc . ' ' . $actions,
-                        'value'       => $token['token'],
-                    ]
-                );
-                $elements[] = $field(
-                    'mcp_token_cli',
-                    'copy_field',
-                    [
-                        'title'       => esc_html__( 'Claude Code', 'dokan-lite' ),
-                        'description' => esc_html__( 'Adds Dokan to the Claude Code CLI with this token.', 'dokan-lite' ),
-                        'value'       => $token['config']['cli'],
-                    ]
-                );
-                $elements[] = $field(
-                    'mcp_token_json',
-                    'html',
-                    [
-                        'title'        => esc_html__( 'mcpServers block', 'dokan-lite' ),
-                        'description'  => esc_html__( 'For Claude Desktop, Cursor, VS Code and other JSON-configured clients.', 'dokan-lite' ),
-                        'html_content' => '<pre><code>' . esc_html( $token['config']['json'] ) . '</code></pre>',
-                    ]
-                );
-            }
         }
 
         $elements[] = $field(
-            'mcp_connected_apps',
+            'mcp_claude_code',
+            'copy_field',
+            [
+                'title'       => esc_html__( 'Claude Code', 'dokan-lite' ),
+                'description' => esc_html__( 'Adds Dokan to the Claude Code CLI. Replace USERNAME and APPLICATION PASSWORD with yours.', 'dokan-lite' ),
+                'value'       => \WeDevs\Dokan\Abilities\Mcp\Status::claude_code_command( $status ),
+            ]
+        );
+
+        $elements[] = $field(
+            'mcp_api_key',
             'html',
             [
-                'title'        => esc_html__( 'Connected apps', 'dokan-lite' ),
-                'description'  => esc_html__( 'Apps that signed in through the approval screen, and who approved them.', 'dokan-lite' ),
-                'html_content' => \WeDevs\Dokan\Abilities\Mcp\Status::apps_html( $status['apps'], $redirect ),
+                'title'        => esc_html__( 'WooCommerce API key', 'dokan-lite' ),
+                'description'  => esc_html__( 'For store owners who already manage REST API keys.', 'dokan-lite' ),
+                'html_content' => \WeDevs\Dokan\Abilities\Mcp\Status::api_key_html( $status ),
             ]
         );
 

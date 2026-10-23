@@ -82,4 +82,28 @@ class AccessTest extends DokanTestCase {
     public function test_endpoint_is_the_rest_route_of_the_server() {
         $this->assertSame( rest_url( 'dokan/mcp' ), Access::endpoint() );
     }
+
+    public function test_the_endpoint_is_recognised_from_the_raw_request() {
+        $backup = $_SERVER;
+
+        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/mcp';
+        $this->assertTrue( Access::is_request_to_endpoint() );
+
+        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/mcp?foo=bar';
+        $this->assertTrue( Access::is_request_to_endpoint() );
+
+        // Neighbouring routes and the OAuth-era REST namespace are not the endpoint.
+        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/mcp-other';
+        $this->assertFalse( Access::is_request_to_endpoint() );
+
+        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/v1/mcp/oauth/token';
+        $this->assertFalse( Access::is_request_to_endpoint() );
+
+        $_SERVER['REQUEST_URI'] = '/index.php?rest_route=/dokan/mcp';
+        $_GET['rest_route']     = '/dokan/mcp';
+        $this->assertTrue( Access::is_request_to_endpoint() );
+
+        unset( $_GET['rest_route'] );
+        $_SERVER = $backup;
+    }
 }

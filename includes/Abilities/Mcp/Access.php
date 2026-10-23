@@ -113,6 +113,30 @@ class Access {
     }
 
     /**
+     * Whether the raw HTTP request targets the MCP endpoint.
+     *
+     * Decided from the request URI rather than a matched REST route, because it is needed while
+     * WordPress is still working out who the user is, before any route has matched.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_request_to_endpoint(): bool {
+        $path = self::ROUTE_NAMESPACE . '/' . self::ROUTE;
+        $uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        if ( preg_match( '#/' . preg_quote( rest_get_url_prefix() . '/' . $path, '#' ) . '(?:[/?]|$)#', $uri ) ) {
+            return true;
+        }
+
+        // Plain permalinks carry the route in a query argument instead.
+        $route = isset( $_GET['rest_route'] ) ? sanitize_text_field( wp_unslash( $_GET['rest_route'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+        return (bool) preg_match( '#^/?' . preg_quote( $path, '#' ) . '(?:/|$)#', $route );
+    }
+
+    /**
      * Whether a user may hold a working MCP connection right now.
      *
      * Store Admins always may. A Vendor or Vendor Staff may only while vendor access is on and

@@ -3,25 +3,31 @@
 namespace WeDevs\Dokan\Test\Abilities\Mcp;
 
 use WeDevs\Dokan\Abilities\Mcp\Catalog;
-use WeDevs\Dokan\Abilities\Mcp\OAuth;
-use WeDevs\Dokan\Abilities\Mcp\RateLimiter;
 use WeDevs\Dokan\Abilities\Mcp\Server;
 use WeDevs\Dokan\Abilities\Mcp\Session;
-use WeDevs\Dokan\Abilities\Mcp\Tokens;
 use WeDevs\Dokan\Abilities\Mcp\Transport;
 use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Test\DokanTestCase;
+use WP_Application_Passwords;
 use WP_Error;
 use WP_REST_Request;
+use WP_REST_Response;
 
 /**
  * @group abilities
  * @group mcp
  *
- * The transport's authentication decision, in the order it is made, and the per-request state
- * the ability layer reads from it.
+ * The transport's authorization decision, in the order it is made, and the two ways WordPress
+ * and WooCommerce sign a client in before it runs.
  */
 class TransportTest extends DokanTestCase {
+
+    /**
+     * `$_SERVER` before the test touched it.
+     *
+     * @var array
+     */
+    private array $server_backup = [];
 
     public function set_up() {
         parent::set_up();
@@ -34,144 +40,158 @@ class TransportTest extends DokanTestCase {
         remove_all_filters( 'dokan_mcp_vendor_access_enabled' );
         add_filter( 'dokan_mcp_allow_insecure_transport', '__return_true' );
 
+        $this->server_backup = $_SERVER;
+
         Session::reset();
         RequestContext::reset();
-        RateLimiter::clear();
         wp_set_current_user( 0 );
     }
 
+    public function tear_down() {
+        $_SERVER = $this->server_backup;
+        unset( $_GET['rest_route'] );
+
+        parent::tear_down();
+    }
+
     /**
-     * An MCP request carrying a bearer token.
-     *
-     * @param string $token Token, or '' for none.
+     * An MCP request as the transport sees it.
      *
      * @return WP_REST_Request
      */
-    private function request( string $token = '' ): WP_REST_Request {
-        $request = new WP_REST_Request( 'POST', '/dokan/mcp' );
-
-        if ( '' !== $token ) {
-            $request->set_header( 'authorization', 'Bearer ' . $token );
-        }
-
-        return $request;
+    private function request(): WP_REST_Request {
+        return new WP_REST_Request( 'POST', '/dokan/mcp' );
     }
 
     public function test_a_switched_off_server_refuses_everyone_the_same_way() {
-        $token = Tokens::mint( $this->admin_id )['token'];
+        wp_set_current_user( $this->admin_id );
 
-        $result = Transport::authenticate( $this->request( $token ) );
+        $result = Transport::authorize( $this->request() );
 
         $this->assertInstanceOf( WP_Error::class, $result );
         $this->assertSame( 'dokan_mcp_disabled', $result->get_error_code() );
         $this->assertSame( 0, Session::user_id() );
-        $this->assertSame( 0, get_current_user_id() );
     }
 
-    public function test_no_credential_is_a_401_with_a_challenge() {
+    public function test_nobody_signed_in_is_a_401_naming_basic_auth() {
         add_filter( 'dokan_mcp_enabled', '__return_true' );
 
-        $result = Transport::authenticate( $this->request() );
+        $result = Transport::authorize( $this->request() );
 
         $this->assertInstanceOf( WP_Error::class, $result );
         $this->assertSame( 'dokan_mcp_unauthorized', $result->get_error_code() );
         $this->assertSame( 401, $result->get_error_data()['status'] );
-        $this->assertStringContainsString( OAuth::resource_metadata_url(), Transport::challenge_header() );
         $this->assertNotFalse( has_filter( 'rest_post_dispatch', [ Transport::class, 'add_challenge_header' ] ) );
+
+        $response = Transport::add_challenge_header( new WP_REST_Response() );
+
+        $this->assertSame( 'Basic realm="Dokan MCP"', $response->get_headers()['WWW-Authenticate'] );
     }
 
-    public function test_bad_tokens_are_counted_and_lock_the_client_out() {
+    public function test_a_store_admin_may_connect_and_the_ability_context_is_flagged() {
         add_filter( 'dokan_mcp_enabled', '__return_true' );
-        add_filter(
-            'dokan_mcp_rate_limits',
-            static function () {
-                return [
-                    'max_fails' => 2,
-                    'lockout'   => 60,
-                ];
-            }
-        );
+        wp_set_current_user( $this->admin_id );
 
-        $first = Transport::authenticate( $this->request( 'bogus' ) );
-        $this->assertSame( 'dokan_mcp_unauthorized', $first->get_error_code() );
-
-        Transport::authenticate( $this->request( 'bogus' ) );
-
-        $third = Transport::authenticate( $this->request( 'bogus' ) );
-        $this->assertSame( 'dokan_mcp_too_many_attempts', $third->get_error_code() );
-        $this->assertSame( 429, $third->get_error_data()['status'] );
-
-        // Even a good token waits out the window: the compare never runs for a locked client.
-        $token = Tokens::mint( $this->admin_id )['token'];
-        $this->assertSame( 'dokan_mcp_too_many_attempts', Transport::authenticate( $this->request( $token ) )->get_error_code() );
-    }
-
-    public function test_an_admin_token_authenticates_and_flags_the_ability_context() {
-        add_filter( 'dokan_mcp_enabled', '__return_true' );
-
-        $token = Tokens::mint( $this->admin_id )['token'];
-
-        $this->assertTrue( Transport::authenticate( $this->request( $token ) ) );
-        $this->assertSame( $this->admin_id, get_current_user_id() );
+        $this->assertTrue( Transport::authorize( $this->request() ) );
         $this->assertSame( $this->admin_id, Session::user_id() );
-        $this->assertFalse( Session::is_read_only() );
         $this->assertTrue( RequestContext::is_ability_context() );
     }
 
-    public function test_a_vendor_token_needs_vendor_access() {
+    public function test_a_vendor_needs_vendor_access() {
         add_filter( 'dokan_mcp_enabled', '__return_true' );
+        wp_set_current_user( $this->seller_id1 );
 
-        $token = Tokens::mint( $this->seller_id1 )['token'];
-
-        $denied = Transport::authenticate( $this->request( $token ) );
+        $denied = Transport::authorize( $this->request() );
 
         $this->assertInstanceOf( WP_Error::class, $denied );
-        $this->assertSame( 'dokan_mcp_grant_revoked', $denied->get_error_code() );
-        $this->assertSame( 0, get_current_user_id() );
+        $this->assertSame( 'dokan_mcp_not_allowed', $denied->get_error_code() );
+        $this->assertSame( 403, $denied->get_error_data()['status'] );
+        $this->assertSame( 0, Session::user_id() );
 
         add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
 
-        $this->assertTrue( Transport::authenticate( $this->request( $token ) ) );
-        $this->assertSame( $this->seller_id1, get_current_user_id() );
+        $this->assertTrue( Transport::authorize( $this->request() ) );
+        $this->assertSame( $this->seller_id1, Session::user_id() );
         $this->assertTrue( RequestContext::is_vendor_ability_context() );
     }
 
-    public function test_an_oauth_token_carries_its_scope() {
+    public function test_a_customer_is_never_allowed() {
         add_filter( 'dokan_mcp_enabled', '__return_true' );
         add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
+        wp_set_current_user( $this->customer_id );
 
-        $tokens = $this->oauth_tokens_for( $this->seller_id1, 'read' );
+        $denied = Transport::authorize( $this->request() );
 
-        $this->assertTrue( Transport::authenticate( $this->request( $tokens['access_token'] ) ) );
-        $this->assertSame( $this->seller_id1, Session::user_id() );
-        $this->assertTrue( Session::is_read_only() );
+        $this->assertInstanceOf( WP_Error::class, $denied );
+        $this->assertSame( 'dokan_mcp_not_allowed', $denied->get_error_code() );
     }
 
-    public function test_read_only_connections_are_refused_write_tools() {
-        if ( ! function_exists( 'wp_has_ability' ) || ! wp_has_ability( 'woocommerce/product-update' ) || ! wp_has_ability( 'dokan/current-vendor' ) ) {
-            $this->markTestSkipped( 'Abilities are not registered in this environment.' );
+    /**
+     * WordPress core resolves an application password on `determine_current_user`; the transport
+     * only ever sees the user that produced.
+     */
+    public function test_wordpress_signs_a_client_in_with_an_application_password() {
+        add_filter( 'wp_is_application_passwords_available', '__return_true' );
+        // Core only honours application passwords on REST (or XML-RPC) requests; PHPUnit is neither.
+        add_filter( 'application_password_is_api_request', '__return_true' );
+
+        $created = WP_Application_Passwords::create_new_application_password( $this->seller_id1, [ 'name' => 'Claude Code' ] );
+
+        $this->assertIsArray( $created );
+
+        $_SERVER['PHP_AUTH_USER'] = get_userdata( $this->seller_id1 )->user_login;
+        $_SERVER['PHP_AUTH_PW']   = $created[0];
+
+        $this->assertSame( $this->seller_id1, (int) apply_filters( 'determine_current_user', 0 ) );
+
+        $_SERVER['PHP_AUTH_PW'] = 'not-the-password';
+
+        $this->assertSame( 0, (int) apply_filters( 'determine_current_user', 0 ) );
+    }
+
+    /**
+     * WooCommerce resolves a consumer key and secret on the routes it owns; the MCP route is
+     * declared one of them.
+     */
+    public function test_woocommerce_signs_a_client_in_with_a_rest_api_key() {
+        if ( ! class_exists( 'WC_REST_Authentication' ) ) {
+            $this->markTestSkipped( 'WooCommerce REST authentication is not loaded.' );
         }
 
-        add_filter( 'dokan_mcp_enabled', '__return_true' );
-        add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
+        global $wpdb;
 
-        $server = new Server();
-        $tokens = $this->oauth_tokens_for( $this->seller_id1, 'read' );
+        $consumer_key    = 'ck_' . wc_rand_hash();
+        $consumer_secret = 'cs_' . wc_rand_hash();
 
-        Transport::authenticate( $this->request( $tokens['access_token'] ) );
+        $wpdb->insert(
+            $wpdb->prefix . 'woocommerce_api_keys',
+            [
+                'user_id'         => $this->admin_id,
+                'description'     => 'Claude Code',
+                'permissions'     => 'read_write',
+                'consumer_key'    => wc_api_hash( $consumer_key ),
+                'consumer_secret' => $consumer_secret,
+                'truncated_key'   => substr( $consumer_key, -7 ),
+            ]
+        );
 
-        $this->assertTrue( $server->enforce_read_only_scope( true, 'dokan/current-vendor' ) );
+        $_SERVER['HTTPS']         = 'on';
+        $_SERVER['REQUEST_URI']   = '/wp-json/dokan/mcp';
+        $_SERVER['PHP_AUTH_USER'] = $consumer_key;
+        $_SERVER['PHP_AUTH_PW']   = $consumer_secret;
 
-        $refused = $server->enforce_read_only_scope( true, 'woocommerce/product-update' );
+        $this->assertTrue( ( new Server() )->accept_woocommerce_api_keys( false ) );
+        $this->assertSame( $this->admin_id, (int) apply_filters( 'determine_current_user', 0 ) );
 
-        $this->assertInstanceOf( WP_Error::class, $refused );
-        $this->assertSame( 'dokan_mcp_read_only', $refused->get_error_code() );
+        // WooCommerce's own answer is never overturned, and other Dokan routes stay out of it.
+        $this->assertTrue( ( new Server() )->accept_woocommerce_api_keys( true ) );
 
-        // A denial from the ability itself is never overturned, and a full-access session is untouched.
-        $this->assertFalse( $server->enforce_read_only_scope( false, 'woocommerce/product-update' ) );
+        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/v1/stores';
 
-        Session::reset();
-        $this->assertTrue( $server->enforce_read_only_scope( true, 'woocommerce/product-update' ) );
+        $this->assertFalse( ( new Server() )->accept_woocommerce_api_keys( false ) );
+        $this->assertSame( 0, (int) apply_filters( 'determine_current_user', 0 ) );
+
+        $wpdb->delete( $wpdb->prefix . 'woocommerce_api_keys', [ 'consumer_key' => wc_api_hash( $consumer_key ) ] );
     }
 
     public function test_catalog_only_lists_registered_abilities_and_honours_the_filter() {
@@ -197,39 +217,5 @@ class TransportTest extends DokanTestCase {
             $this->assertContains( 'dokan/current-vendor', $ids );
             $this->assertContains( 'dokan/orders-summary-get', $ids );
         }
-    }
-
-    /**
-     * Run the OAuth flow for a user and return its tokens.
-     *
-     * @param int    $user_id Approving user.
-     * @param string $scope   Requested scope.
-     *
-     * @return array
-     */
-    private function oauth_tokens_for( int $user_id, string $scope ): array {
-        $redirect = 'https://claude.ai/api/mcp/auth_callback';
-        $client   = OAuth::register_client( [ 'redirect_uris' => [ $redirect ] ] );
-        $verifier = 'transport-verifier-transport-verifier-transport-verifier';
-        $request  = OAuth::validate_authorize_request(
-            [
-                'client_id'             => $client['client_id'],
-                'redirect_uri'          => $redirect,
-                'response_type'         => 'code',
-                'code_challenge'        => OAuth::s256( $verifier ),
-                'code_challenge_method' => 'S256',
-                'scope'                 => $scope,
-            ]
-        );
-
-        return OAuth::grant(
-            [
-                'grant_type'    => 'authorization_code',
-                'code'          => OAuth::issue_code( $request, $user_id ),
-                'client_id'     => $client['client_id'],
-                'redirect_uri'  => $redirect,
-                'code_verifier' => $verifier,
-            ]
-        );
     }
 }

@@ -11,24 +11,28 @@ use WP_REST_Response;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The HTTP transport of the Dokan MCP server: Bearer-token authentication on top of the shared
- * adapter's Streamable HTTP implementation.
+ * The HTTP transport of the Dokan MCP server: authorization on top of the shared adapter's
+ * Streamable HTTP implementation.
+ *
+ * Dokan authenticates nobody. By the time this permission check runs, WordPress has resolved the
+ * request's user from an Application Password (or a cookie with a REST nonce) and WooCommerce
+ * from a REST API consumer key and secret, exactly as on any other REST route. This class only
+ * decides whether that user may hold an MCP connection.
  *
  * Order matters in {@see self::check_permission()}. The master switch answers first, so a site
- * with MCP off tells every caller the same thing whether or not their credential was any good.
- * Then TLS, then the lockout before the credential is compared at all, then the credential, and
- * only then is the user still allowed to hold a connection.
+ * with MCP off tells every caller the same thing whether or not they signed in. Then TLS, then
+ * whether anyone signed in at all, and only then whether that user is allowed to connect.
  *
  * The permission check is overridden here rather than passed as the adapter's
  * `transport_permission_callback`, which treats a `WP_Error` as "fall back to the `read`
- * capability" and would let a cookie-authenticated browser session through.
+ * capability" and would let any signed-in user through.
  *
  * @since DOKAN_SINCE
  */
 class Transport extends HttpTransport {
 
     /**
-     * Authenticate the request and become the user behind the credential.
+     * Decide whether the signed-in user may use the server.
      *
      * @since DOKAN_SINCE
      *
@@ -37,11 +41,11 @@ class Transport extends HttpTransport {
      * @return bool|WP_Error
      */
     public function check_permission( WP_REST_Request $request ) {
-        return self::authenticate( $request );
+        return self::authorize( $request );
     }
 
     /**
-     * The authentication decision behind {@see self::check_permission()}, callable without a
+     * The authorization decision behind {@see self::check_permission()}, callable without a
      * transport instance.
      *
      * @since DOKAN_SINCE
@@ -50,7 +54,7 @@ class Transport extends HttpTransport {
      *
      * @return bool|WP_Error
      */
-    public static function authenticate( WP_REST_Request $request ) {
+    public static function authorize( WP_REST_Request $request ) {
         Session::reset();
 
         if ( ! Access::is_enabled() ) {
@@ -69,32 +73,17 @@ class Transport extends HttpTransport {
             return new WP_Error( 'dokan_mcp_insecure_transport', __( 'HTTPS is required for MCP requests.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
-        $presented = self::bearer_token( $request );
+        $user_id = get_current_user_id();
 
-        if ( '' === $presented ) {
-            return self::unauthorized( __( 'Authentication required: send the connection token or OAuth access token as a Bearer token.', 'dokan-lite' ) );
+        if ( $user_id <= 0 ) {
+            return self::unauthenticated();
         }
 
-        if ( RateLimiter::is_locked() ) {
-            return self::locked();
+        if ( ! Access::user_can_connect( $user_id ) ) {
+            return new WP_Error( 'dokan_mcp_not_allowed', __( 'This account may not connect an AI assistant. Store admins always can; vendors and their staff only while "Allow vendors to connect" is on and their store is enabled.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
-        $grant = self::authorize( $presented );
-
-        if ( null === $grant ) {
-            RateLimiter::record_failure();
-
-            return self::unauthorized( __( 'Invalid or expired token.', 'dokan-lite' ) );
-        }
-
-        // The credential is genuine but its user may no longer connect: a dead grant, not a missing one.
-        if ( ! Access::user_can_connect( $grant['user_id'] ) ) {
-            return new WP_Error( 'dokan_mcp_grant_revoked', __( 'This connection is no longer allowed for its user. Connect again from an account that may use the marketplace.', 'dokan-lite' ), [ 'status' => 403 ] );
-        }
-
-        RateLimiter::clear();
-        wp_set_current_user( $grant['user_id'] );
-        Session::authenticate( $grant['user_id'], $grant['read_only'] );
+        Session::authenticate( $user_id );
 
         // The adapter runs ability permission checks outside any execution window; flag the Ability
         // Context ourselves so the vendor scoping holds during that pre-flight.
@@ -104,21 +93,20 @@ class Transport extends HttpTransport {
     }
 
     /**
-     * The RFC 9728 `WWW-Authenticate` challenge value.
+     * The `WWW-Authenticate` value naming the scheme a client has to use.
      *
      * @since DOKAN_SINCE
      *
      * @return string
      */
     public static function challenge_header(): string {
-        return sprintf( 'Bearer resource_metadata="%s"', OAuth::resource_metadata_url() );
+        return 'Basic realm="Dokan MCP"';
     }
 
     /**
-     * Add the OAuth challenge to the outgoing response.
+     * Add the challenge to the outgoing response.
      *
-     * Hooked to `rest_post_dispatch` only after a 401 was decided; points OAuth-capable clients at
-     * the protected-resource metadata so they can start the flow.
+     * Hooked to `rest_post_dispatch` only after a 401 was decided.
      *
      * @since DOKAN_SINCE
      *
@@ -135,98 +123,15 @@ class Transport extends HttpTransport {
     }
 
     /**
-     * Resolve a presented credential: a personal connection token first, then an OAuth access token.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $presented Credential from the request.
-     *
-     * @return array{user_id:int,read_only:bool}|null Null when nothing matched.
-     */
-    private static function authorize( string $presented ): ?array {
-        $user_id = Tokens::verify( $presented );
-
-        if ( $user_id > 0 ) {
-            Tokens::touch_last_used( $user_id );
-
-            return [
-                'user_id'   => $user_id,
-                'read_only' => false,
-            ];
-        }
-
-        $grant = OAuth::validate_token( $presented );
-
-        if ( is_array( $grant ) && ! empty( $grant['user_id'] ) ) {
-            return [
-                'user_id'   => (int) $grant['user_id'],
-                'read_only' => OAuth::scope_is_read_only( isset( $grant['scope'] ) ? (string) $grant['scope'] : '' ),
-            ];
-        }
-
-        return null;
-    }
-
-    /**
-     * Pull the token from `Authorization: Bearer ...`.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param WP_REST_Request $request The REST request.
-     *
-     * @return string
-     */
-    private static function bearer_token( WP_REST_Request $request ): string {
-        $header = (string) $request->get_header( 'authorization' );
-
-        // Some FastCGI setups only expose the header under this name.
-        if ( '' === $header && isset( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ) ) {
-            $header = (string) wp_unslash( $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- a credential header, compared by digest; sanitising would corrupt it.
-        }
-
-        if ( preg_match( '/^Bearer\s+(.+)$/i', trim( $header ), $matches ) ) {
-            return trim( $matches[1] );
-        }
-
-        return '';
-    }
-
-    /**
-     * A 401 carrying the OAuth challenge.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $message Why.
-     *
-     * @return WP_Error
-     */
-    private static function unauthorized( string $message ): WP_Error {
-        add_filter( 'rest_post_dispatch', [ self::class, 'add_challenge_header' ] );
-
-        return new WP_Error( 'dokan_mcp_unauthorized', $message, [ 'status' => 401 ] );
-    }
-
-    /**
-     * The 429 a locked-out client gets, keeping the challenge so it does not conclude the server
-     * has no OAuth at all.
+     * The 401 nobody-signed-in answer.
      *
      * @since DOKAN_SINCE
      *
      * @return WP_Error
      */
-    private static function locked(): WP_Error {
+    private static function unauthenticated(): WP_Error {
         add_filter( 'rest_post_dispatch', [ self::class, 'add_challenge_header' ] );
-        add_filter(
-            'rest_post_dispatch',
-            static function ( $response ) {
-                if ( $response instanceof WP_REST_Response ) {
-                    $response->header( 'Retry-After', (string) RateLimiter::retry_after() );
-                }
 
-                return $response;
-            }
-        );
-
-        return new WP_Error( 'dokan_mcp_too_many_attempts', __( 'Too many failed attempts. Try again later.', 'dokan-lite' ), [ 'status' => 429 ] );
+        return new WP_Error( 'dokan_mcp_unauthorized', __( 'Sign in with HTTP Basic authentication: a WordPress username and application password, or a WooCommerce REST API consumer key and secret.', 'dokan-lite' ), [ 'status' => 401 ] );
     }
 }

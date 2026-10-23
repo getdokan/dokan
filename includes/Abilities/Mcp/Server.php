@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Abilities\Mcp;
 
 use WeDevs\Dokan\Contracts\Hookable;
-use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -34,7 +33,7 @@ class Server implements Hookable {
         add_action( 'rest_api_init', [ $this, 'boot_adapter' ], 9 );
         add_action( 'mcp_adapter_init', [ $this, 'register_server' ] );
 
-        add_filter( 'wp_ability_permission_result', [ $this, 'enforce_read_only_scope' ], 10, 2 );
+        add_filter( 'woocommerce_rest_is_request_to_rest_api', [ $this, 'accept_woocommerce_api_keys' ] );
         add_action( 'wp_ability_invoked', [ $this, 'record_invocation' ], 10, 2 );
     }
 
@@ -120,31 +119,21 @@ class Server implements Hookable {
     }
 
     /**
-     * Refuse write tools to a read-only credential.
+     * Let WooCommerce authenticate its REST API keys on the MCP route.
      *
-     * Runs inside every ability permission check; only a request authenticated by the Dokan
-     * transport with a read-only grant is affected.
+     * WooCommerce only looks at a Basic-auth consumer key and secret on requests it considers
+     * its own (the `/wc/` and `/wc-` routes). Declaring the MCP route one of them makes a key
+     * work here exactly as on `/wc/v3`: WooCommerce resolves the user, enforces the key's
+     * Read/Write permission and records its last access. Dokan touches no credential.
      *
      * @since DOKAN_SINCE
      *
-     * @param bool|WP_Error $result       The permission decided so far.
-     * @param string        $ability_name The ability being checked.
+     * @param bool $is_woocommerce Whether WooCommerce already considers the request its own.
      *
-     * @return bool|WP_Error
+     * @return bool
      */
-    public function enforce_read_only_scope( $result, $ability_name ) {
-        if ( true !== $result || ! Session::is_read_only() ) {
-            return $result;
-        }
-
-        $ability = function_exists( 'wp_get_ability' ) ? wp_get_ability( (string) $ability_name ) : null;
-        $meta    = $ability && method_exists( $ability, 'get_meta' ) ? (array) $ability->get_meta() : [];
-
-        if ( ! empty( $meta['annotations']['readonly'] ) ) {
-            return $result;
-        }
-
-        return new WP_Error( 'dokan_mcp_read_only', __( 'This connection is read-only and cannot change anything.', 'dokan-lite' ), [ 'status' => 403 ] );
+    public function accept_woocommerce_api_keys( $is_woocommerce ) {
+        return (bool) $is_woocommerce || Access::is_request_to_endpoint();
     }
 
     /**
