@@ -1112,7 +1112,7 @@ class ProductController extends DokanRESTController {
             'variations'            => $product->is_type( 'variable' ) ? $product->get_children() : [],
             'grouped_products'      => $product->is_type( 'grouped' ) ? $product->get_children() : [],
             'menu_order'            => $product->get_menu_order( $context ),
-            'meta_data'             => $can_view_private ? $product->get_meta_data() : [],
+            'meta_data'             => $can_view_private ? $product->get_meta_data() : $this->get_public_meta_data( $product ),
             'store'                 => [
                 'id'      => $store->get_id(),
                 'name'    => $store->get_shop_name(),
@@ -1156,6 +1156,33 @@ class ProductController extends DokanRESTController {
 
         return current_user_can( 'manage_woocommerce' )
             || ( dokan_is_product_author( $product->get_id() ) && current_user_can( 'dokan_view_product_menu' ) );
+    }
+
+    /**
+     * Product meta entries that any caller may see, opted in through `dokan_rest_public_product_meta_keys`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Product $product Product instance.
+     *
+     * @return array
+     */
+    protected function get_public_meta_data( $product ): array {
+        // Buyer-facing meta keys only; nothing is public unless a module opts its key in.
+        $public_keys = (array) apply_filters( 'dokan_rest_public_product_meta_keys', [], $product );
+
+        if ( empty( $public_keys ) ) {
+            return [];
+        }
+
+        return array_values(
+            array_filter(
+                $product->get_meta_data(),
+                function ( $meta ) use ( $public_keys ) {
+                    return in_array( $meta->key, $public_keys, true );
+                }
+            )
+        );
     }
 
     /**

@@ -13,8 +13,22 @@ use WeDevs\Dokan\Test\DokanTestCase;
  *
  * @covers \WeDevs\Dokan\REST\ProductController::prepare_data_for_response
  * @covers \WeDevs\Dokan\REST\ProductController::can_view_private_product_data
+ * @covers \WeDevs\Dokan\REST\ProductController::get_public_meta_data
  */
 class PublicProductPrivateFieldsTest extends DokanTestCase {
+
+    /**
+     * Buyer-facing meta key used to exercise the public meta allowlist.
+     */
+    const PUBLIC_META_KEY = '_dokan_min_max_meta';
+
+    /**
+     * Value stored under the public meta key.
+     */
+    const PUBLIC_META_VALUE = [
+        'min_quantity' => 2,
+        'max_quantity' => 10,
+    ];
 
     /**
      * Published downloadable product owned by seller_id1.
@@ -54,6 +68,7 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
         $product->set_downloads( [ $download ] );
         $product->set_purchase_note( 'License key: EXAMPLE-LICENSE' );
         $product->update_meta_data( '_per_product_admin_commission', '7' );
+        $product->update_meta_data( self::PUBLIC_META_KEY, self::PUBLIC_META_VALUE );
         $product->save();
     }
 
@@ -241,6 +256,41 @@ class PublicProductPrivateFieldsTest extends DokanTestCase {
             $this->assertNotEmpty( $product['edit_url'], $label );
             $this->assertNotEmpty( $product['row_actions'], $label );
             $this->assertContains( '_per_product_admin_commission', $this->get_meta_keys( $product ), $label );
+            $this->assertContains( self::PUBLIC_META_KEY, $this->get_meta_keys( $product ), $label );
+        }
+    }
+
+    /**
+     * Meta keys opted in through `dokan_rest_public_product_meta_keys` reach other callers; the rest stays hidden.
+     *
+     * @dataProvider unauthorized_caller_provider
+     *
+     * @param string $caller Caller label.
+     *
+     * @return void
+     */
+    public function test_opted_in_meta_keys_are_public( string $caller ): void {
+        add_filter(
+            'dokan_rest_public_product_meta_keys',
+            function ( $keys ) {
+                $keys[] = self::PUBLIC_META_KEY;
+
+                return $keys;
+            }
+        );
+
+        wp_set_current_user( $this->get_caller_id( $caller ) );
+
+        foreach ( $this->get_public_routes() as [ $rest_namespace, $route ] ) {
+            $product = $this->get_fixture_product( $rest_namespace, $route );
+            $label   = "{$caller} on {$rest_namespace}/{$route}";
+
+            $this->assertSame( [ self::PUBLIC_META_KEY ], $this->get_meta_keys( $product ), "Only opted-in meta may reach {$label}" );
+
+            $meta  = $product['meta_data'][0];
+            $value = is_object( $meta ) ? $meta->value : $meta['value'];
+
+            $this->assertSame( self::PUBLIC_META_VALUE, $value, $label );
         }
     }
 }
