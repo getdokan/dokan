@@ -2313,6 +2313,232 @@ class SettingsSchema {
         // (see ProSettingsSchema::ai_assist_settings()). It depends on image
         // providers that only Pro registers, so it lives entirely in Pro.
 
+        return array_merge( $elements, self::mcp_subpage() );
+    }
+
+    /**
+     * AI Assistants (MCP) subpage: the switches that run the Dokan MCP server, then the
+     * connection described with ordinary display fields.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    private static function mcp_subpage(): array {
+        $when_enabled = [
+            [
+                'key'        => 'mcp_enabled',
+                'value'      => 'on',
+                'to_self'    => true,
+                'attribute'  => 'display',
+                'effect'     => 'show',
+                'comparison' => '===',
+            ],
+            [
+                'key'        => 'mcp_enabled',
+                'value'      => 'on',
+                'to_self'    => true,
+                'attribute'  => 'display',
+                'effect'     => 'hide',
+                'comparison' => '!==',
+            ],
+        ];
+
+        $elements = [
+            [
+                'id'          => 'mcp',
+                'type'        => 'subpage',
+                'page_id'     => 'ai_assist',
+                'title'       => esc_html__( 'AI Assistants (MCP)', 'dokan-lite' ),
+                'description' => esc_html__( 'Connect assistants such as Claude Code, Claude Desktop or Cursor to your marketplace through the Model Context Protocol.', 'dokan-lite' ),
+                'priority'    => 200,
+                'doc_link'    => 'https://dokan.co/docs/wordpress/settings/dokan-mcp/',
+            ],
+            [
+                'id'          => 'mcp_section',
+                'type'        => 'section',
+                'subpage_id'  => 'mcp',
+                'title'       => esc_html__( 'AI Assistant Access', 'dokan-lite' ),
+                'description' => esc_html__( 'A connected assistant acts as the person who connected it and can never do more than that account can.', 'dokan-lite' ),
+            ],
+            [
+                'id'            => 'mcp_enabled',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'section_id'    => 'mcp_section',
+                'title'         => esc_html__( 'Enable AI assistant access', 'dokan-lite' ),
+                'description'   => esc_html__( 'Run the Dokan MCP server so connected assistants can read and manage products and orders.', 'dokan-lite' ),
+                'default'       => 'off',
+                'enable_state'  => [
+                    'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+                    'value' => 'on',
+                ],
+                'disable_state' => [
+                    'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+                    'value' => 'off',
+                ],
+                'legacy_key'    => 'dokan_ai.dokan_mcp_enabled',
+            ],
+            [
+                'id'            => 'mcp_vendor_access',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'section_id'    => 'mcp_section',
+                'title'         => esc_html__( 'Allow vendors to connect', 'dokan-lite' ),
+                'description'   => esc_html__( 'Vendors and their staff can connect an assistant with an application password of their own. Each connection only reaches that vendor\'s own store.', 'dokan-lite' ),
+                'default'       => 'off',
+                'enable_state'  => [
+                    'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+                    'value' => 'on',
+                ],
+                'disable_state' => [
+                    'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+                    'value' => 'off',
+                ],
+                'legacy_key'    => 'dokan_ai.dokan_mcp_vendor_access',
+                'dependencies'  => $when_enabled,
+            ],
+        ];
+
+        // The legacy bridge builds this schema on ordinary requests to harvest legacy keys; the
+        // connection block declares none and is only worth building for a settings screen.
+        if ( ! is_admin() && ! wp_is_serving_rest_request() ) {
+            return $elements;
+        }
+
+        return array_merge( $elements, self::mcp_connection_fields( $when_enabled ) );
+    }
+
+    /**
+     * The connection, described with display-only fields whose values are filled in when the
+     * screen is built: status, the connector URL and how an assistant signs in.
+     *
+     * Nothing here is a setting; the values are dropped on save by
+     * {@see \WeDevs\Dokan\Abilities\Mcp\DisplayFields::strip_display_values()}. There is nothing
+     * to create or revoke from this screen: WordPress and WooCommerce own the credentials.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $when_enabled Dependencies that show an element only while MCP is on.
+     *
+     * @return array
+     */
+    private static function mcp_connection_fields( array $when_enabled ): array {
+        $status  = \WeDevs\Dokan\Abilities\Mcp\Status::summary();
+        $section = 'mcp_connection_section';
+
+        $field = static function ( string $id, string $variant, array $extra ) use ( $section, $when_enabled ): array {
+            return array_merge(
+                [
+                    'id'           => $id,
+                    'type'         => 'field',
+                    'variant'      => $variant,
+                    'section_id'   => $section,
+                    'dependencies' => $when_enabled,
+                ],
+                $extra
+            );
+        };
+
+        $elements = [
+            [
+                'id'           => $section,
+                'type'         => 'section',
+                'subpage_id'   => 'mcp',
+                'title'        => esc_html__( 'Connect an Assistant', 'dokan-lite' ),
+                'description'  => esc_html__( 'An assistant signs in as a WordPress user and acts as that account. WordPress and WooCommerce check the credentials; nothing is stored here.', 'dokan-lite' ),
+                'dependencies' => $when_enabled,
+            ],
+            $field(
+                'mcp_server_status',
+                'info',
+                [
+                    'title'       => $status['live'] ? esc_html__( 'Server status: Active', 'dokan-lite' ) : esc_html__( 'Server status: Off', 'dokan-lite' ),
+                    'description' => esc_html( \WeDevs\Dokan\Abilities\Mcp\Status::activity_line( $status ) ),
+                ]
+            ),
+        ];
+
+        if ( ! $status['adapter_available'] ) {
+            $elements[] = $field(
+                'mcp_adapter_notice',
+                'notice',
+                [
+                    'notice_type'        => 'warning',
+                    'notice_title'       => esc_html__( 'The MCP adapter is not available', 'dokan-lite' ),
+                    'notice_description' => esc_html__( 'It ships with WooCommerce 10.9 or newer. Update WooCommerce to run the server.', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        if ( ! $status['https'] ) {
+            $elements[] = $field(
+                'mcp_https_notice',
+                'notice',
+                [
+                    'notice_type'        => 'warning',
+                    'notice_title'       => esc_html__( 'This site is not served over HTTPS', 'dokan-lite' ),
+                    'notice_description' => esc_html__( 'WordPress only accepts application passwords over HTTPS, and most AI assistants refuse a plain-http connector.', 'dokan-lite' ),
+                ]
+            );
+        }
+
+        $elements[] = $field(
+            'mcp_connector_url',
+            'copy_field',
+            [
+                'title'       => esc_html__( 'Connector URL', 'dokan-lite' ),
+                'description' => esc_html__( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication.', 'dokan-lite' )
+                    . ' '
+                    . ( $status['vendor_access']
+                        ? esc_html__( 'Vendors use the same URL with their own login.', 'dokan-lite' )
+                        : esc_html__( 'Only store admins can connect while vendor access is off.', 'dokan-lite' ) ),
+                'value'       => $status['endpoint'],
+            ]
+        );
+
+        $elements[] = $field(
+            'mcp_application_password',
+            'html',
+            [
+                'title'        => esc_html__( 'Application password', 'dokan-lite' ),
+                'description'  => esc_html__( 'The usual way in. Each password can be revoked on its own from the profile screen.', 'dokan-lite' ),
+                'html_content' => \WeDevs\Dokan\Abilities\Mcp\Status::application_password_html( $status, false ),
+            ]
+        );
+
+        if ( $status['vendor_access'] ) {
+            $elements[] = $field(
+                'mcp_vendor_authorize_url',
+                'copy_field',
+                [
+                    'title'       => esc_html__( 'Vendor approval link', 'dokan-lite' ),
+                    'description' => esc_html__( 'Vendors open this link, sign in and create an application password of their own. Share it with them. A staff member\'s password is created by the store admin on that user\'s profile.', 'dokan-lite' ),
+                    'value'       => $status['authorize_url'],
+                ]
+            );
+        }
+
+        $elements[] = $field(
+            'mcp_claude_code',
+            'copy_field',
+            [
+                'title'       => esc_html__( 'Claude Code', 'dokan-lite' ),
+                'description' => esc_html__( 'Adds Dokan to the Claude Code CLI. Replace USERNAME and APPLICATION PASSWORD with yours.', 'dokan-lite' ),
+                'value'       => \WeDevs\Dokan\Abilities\Mcp\Status::claude_code_command( $status ),
+            ]
+        );
+
+        $elements[] = $field(
+            'mcp_api_key',
+            'html',
+            [
+                'title'        => esc_html__( 'WooCommerce API key', 'dokan-lite' ),
+                'description'  => esc_html__( 'For store owners who already manage REST API keys.', 'dokan-lite' ),
+                'html_content' => \WeDevs\Dokan\Abilities\Mcp\Status::api_key_html( $status ),
+            ]
+        );
+
         return $elements;
     }
 

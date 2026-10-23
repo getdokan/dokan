@@ -70,6 +70,16 @@ Ability Context, because an Ability is machine-facing wherever it runs; the
 transport that reached it is not the boundary.
 _Avoid_: MCP request, MCP context
 
+**Connection**:
+An AI client signed in to the Dokan MCP server as exactly one WordPress user,
+with a credential WordPress or WooCommerce already knows: an Application
+Password of that user, or a WooCommerce REST API key issued to them. Dokan
+issues and stores no credential of its own; it decides whether that user may
+connect (`Access::user_can_connect()`) and scopes every tool call to them. A
+Connection can never do more than its account can; there is no site-wide or
+shared key.
+_Avoid_: pairing, shared token, site key, personal token
+
 **Selling Activation**:
 Whether a Vendor's Store is live and may transact, independent of whether the
 Vendor role is held.
