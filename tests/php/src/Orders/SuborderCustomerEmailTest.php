@@ -171,6 +171,101 @@ class SuborderCustomerEmailTest extends DokanTestCase {
         $this->assertSame( $suborder_ids, $this->sent_for( 'customer_completed_order' ) );
     }
 
+    /**
+     * @dataProvider email_modes
+     */
+    public function test_digital_suborders_auto_completed_with_the_parent_send_one_email_per_stage( bool $deferred ) {
+        // Digital-only items paid by a gateway Dokan auto-completes.
+        add_filter( 'woocommerce_order_item_needs_processing', '__return_false' );
+        $this->maybe_defer( $deferred );
+        [ $parent, $suborder_ids ] = $this->create_order( 'pending' );
+
+        foreach ( array_merge( [ $parent->get_id() ], $suborder_ids ) as $order_id ) {
+            $order = wc_get_order( $order_id );
+            $order->set_payment_method( 'stripe' );
+            $order->save();
+        }
+        $this->next_request();
+
+        wc_get_order( $parent->get_id() )->update_status( 'processing' );
+        $this->next_request();
+
+        $this->assertSame( 'completed', wc_get_order( $parent->get_id() )->get_status() );
+        $this->assertSame( [ $parent->get_id() ], $this->sent_for( 'customer_processing_order' ) );
+        $this->assertCount( 1, $this->sent_for( 'customer_completed_order' ) );
+
+        if ( $deferred ) {
+            $this->assertSame( [ $parent->get_id() ], $this->sent_for( 'customer_completed_order' ) );
+            $this->assertNoFlagsLeft( array_merge( [ $parent->get_id() ], $suborder_ids ) );
+        }
+    }
+
+    /**
+     * @dataProvider email_modes
+     */
+    public function test_digital_suborder_auto_completed_before_the_parent_emails_the_customer( bool $deferred ) {
+        $this->maybe_defer( $deferred );
+        [ $parent, $suborder_ids ] = $this->create_order( 'pending' );
+
+        // Only the second vendor's Suborder is digital.
+        $digital_suborder_id = $suborder_ids[1];
+        add_filter(
+            'woocommerce_order_item_needs_processing',
+            function ( $needs_processing, $product, $order_id ) use ( $digital_suborder_id ) {
+                return $digital_suborder_id === $order_id ? false : $needs_processing;
+            },
+            10,
+            3
+        );
+
+        foreach ( array_merge( [ $parent->get_id() ], $suborder_ids ) as $order_id ) {
+            $order = wc_get_order( $order_id );
+            $order->set_payment_method( 'stripe' );
+            $order->save();
+        }
+        $this->next_request();
+
+        wc_get_order( $parent->get_id() )->update_status( 'processing' );
+        $this->next_request();
+
+        $this->assertSame( 'completed', wc_get_order( $digital_suborder_id )->get_status() );
+        $this->assertSame( [ $parent->get_id() ], $this->sent_for( 'customer_processing_order' ) );
+        $this->assertSame( [ $digital_suborder_id ], $this->sent_for( 'customer_completed_order' ) );
+
+        $this->decisions = [];
+        wc_get_order( $suborder_ids[0] )->update_status( 'completed' );
+        $this->next_request();
+
+        $this->assertSame( 'completed', wc_get_order( $parent->get_id() )->get_status() );
+        $this->assertSame( [ $suborder_ids[0] ], $this->sent_for( 'customer_completed_order' ) );
+        $this->assertNoFlagsLeft( array_merge( [ $parent->get_id() ], $suborder_ids ) );
+    }
+
+    public function test_skip_filter_on_another_email_keeps_it_enabled() {
+        $order = wc_get_order( $this->create_single_vendor_order() );
+
+        add_filter( 'woocommerce_email_enabled_customer_invoice', [ new EmailHooks(), 'skip_synced_status_email' ], 10, 2 );
+
+        $this->assertTrue( apply_filters( 'woocommerce_email_enabled_customer_invoice', true, $order ) );
+    }
+
+    /**
+     * @dataProvider email_modes
+     */
+    public function test_vendor_changing_a_suborder_before_deferred_emails_go_out( bool $deferred ) {
+        $this->maybe_defer( $deferred );
+        [ $parent, $suborder_ids ] = $this->create_order( 'pending' );
+        $this->next_request();
+
+        $parent->update_status( 'on-hold' );
+        $this->next_request( false );
+        wc_get_order( $suborder_ids[0] )->update_status( 'processing' );
+        $this->next_request();
+
+        $this->assertSame( [ $parent->get_id() ], $this->sent_for( 'customer_on_hold_order' ) );
+        $this->assertSame( [ $suborder_ids[0] ], $this->sent_for( 'customer_processing_order' ) );
+    }
+
     public function test_deferred_bulk_status_change_emails_every_customer() {
         $this->maybe_defer( true );
         [ $first ]  = $this->create_order( 'pending' );
@@ -287,12 +382,14 @@ class SuborderCustomerEmailTest extends DokanTestCase {
     /**
      * End the current request: run deferred email jobs, each as its own request.
      *
+     * @param bool $send_emails Whether the deferred email jobs run now.
+     *
      * @return void
      */
-    protected function next_request() {
+    protected function next_request( bool $send_emails = true ) {
         $this->reset_request_state();
 
-        if ( ! $this->queue ) {
+        if ( ! $this->queue || ! $send_emails ) {
             return;
         }
 
@@ -318,6 +415,19 @@ class SuborderCustomerEmailTest extends DokanTestCase {
         foreach ( $this->triggers as $hook => $callbacks ) {
             $wp_filter[ $hook ]->callbacks = $callbacks;
             unset( $wp_actions[ $hook ] );
+        }
+    }
+
+    /**
+     * Assert no skip flags are left on the orders.
+     *
+     * @param int[] $order_ids Order IDs.
+     *
+     * @return void
+     */
+    protected function assertNoFlagsLeft( array $order_ids ) {
+        foreach ( $order_ids as $order_id ) {
+            $this->assertSame( '', wc_get_order( $order_id )->get_meta( EmailHooks::SYNCED_STATUS_META ), "Flags left on #{$order_id}." );
         }
     }
 
