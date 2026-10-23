@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Order;
 
+use WC_Emails;
 use WC_Order;
 use WP_User;
 use WeDevs\Dokan\FakeMailer;
@@ -18,6 +19,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class EmailHooks {
     /**
+     * Order meta holding the customer emails to skip while WooCommerce defers emails.
+     *
+     * @since DOKAN_SINCE
+     */
+    const SYNCED_STATUS_META = '_dokan_synced_status';
+
+    /**
+     * Flag for an auto-completed Suborder whose completed email is still queued.
+     *
+     * @since DOKAN_SINCE
+     */
+    const AUTO_COMPLETED = 'auto-completed';
+
+    /**
+     * Seconds a flag stays valid, so a queued email that never runs cannot block later emails.
+     *
+     * @since DOKAN_SINCE
+     */
+    const FLAG_LIFETIME = DAY_IN_SECONDS;
+
+    /**
      * Class constructor
      *
      * @since 3.8.0
@@ -28,6 +50,11 @@ class EmailHooks {
         add_action( 'woocommerce_order_status_pending_to_processing', [ $this, 'prevent_sending_multiple_email' ] );
         add_action( 'woocommerce_order_status_completed', [ $this, 'prevent_sending_multiple_email' ] );
         add_action( 'woocommerce_order_status_failed_to_processing', [ $this, 'prevent_sending_multiple_email' ] );
+
+        // Deferred emails skip the guard above, so they are checked at send time instead.
+        add_filter( 'woocommerce_email_enabled_customer_on_hold_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
+        add_filter( 'woocommerce_email_enabled_customer_processing_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
+        add_filter( 'woocommerce_email_enabled_customer_completed_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
 
         add_filter( 'woocommerce_email_recipient_cancelled_order', [ $this, 'send_email_for_order_cancellation' ], 10, 2 );
         add_filter( 'woocommerce_email_headers', [ $this, 'add_reply_to_vendor_email_on_wc_customer_note_mail' ], 10, 3 );
@@ -44,6 +71,11 @@ class EmailHooks {
      * @return void
      */
     public function prevent_sending_multiple_email() {
+        // Deferred emails are checked at send time by skip_synced_status_email().
+        if ( self::emails_are_deferred() ) {
+            return;
+        }
+
         if ( did_action( 'woocommerce_order_status_pending_to_on-hold_notification' ) === 1 ) {
             dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_on-hold_notification', 'WC_Email_Customer_On_Hold_Order', 'trigger', 10 );
         }
@@ -63,6 +95,195 @@ class EmailHooks {
         if ( did_action( 'woocommerce_order_status_failed_to_processing_notification' ) === 1 ) {
             dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_failed_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
         }
+    }
+
+    /**
+     * Flag a status Dokan is about to save onto an order, so its deferred customer email is skipped.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order  Parent order or Suborder.
+     * @param string   $status Status being synced, with or without the "wc-" prefix.
+     *
+     * @return void
+     */
+    public static function flag_synced_status( WC_Order $order, string $status ) {
+        $status = preg_replace( '/^wc-/', '', $status );
+
+        // No status change, so no email to skip.
+        if ( $order->get_status() !== $status ) {
+            self::add_flag( $order, $status );
+        }
+    }
+
+    /**
+     * Mark a Suborder Dokan is about to auto-complete, while its completed email is still queued.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Suborder being auto-completed.
+     *
+     * @return void
+     */
+    public static function flag_auto_completed( WC_Order $order ) {
+        self::add_flag( $order, self::AUTO_COMPLETED );
+    }
+
+    /**
+     * Skip the queued completed email of an auto-completed Suborder.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Suborder.
+     *
+     * @return bool Whether its completed email was still queued and is now skipped.
+     */
+    public static function skip_auto_completed_email( WC_Order $order ): bool {
+        $flags  = self::get_flags( $order );
+        $marker = array_search( self::AUTO_COMPLETED, array_column( $flags, 'status' ), true );
+
+        if ( false === $marker ) {
+            return false;
+        }
+
+        $flags[ $marker ] = self::new_flag( 'completed' );
+        self::save_flags( $order, $flags );
+
+        return true;
+    }
+
+    /**
+     * Add one flag per queued email to skip.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order  Order object.
+     * @param string   $status Status of the email to skip.
+     *
+     * @return bool Whether a flag was added.
+     */
+    protected static function add_flag( WC_Order $order, string $status ): bool {
+        if ( ! self::emails_are_deferred() || ! in_array( $status, [ 'on-hold', 'processing', 'completed', self::AUTO_COMPLETED ], true ) ) {
+            return false;
+        }
+
+        $flags   = self::get_flags( $order );
+        $flags[] = self::new_flag( $status );
+
+        $order->update_meta_data( self::SYNCED_STATUS_META, $flags );
+
+        return true;
+    }
+
+    /**
+     * Build a flag for a status, stamped with the current time.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $status Flagged status.
+     *
+     * @return array{status: string, time: int}
+     */
+    protected static function new_flag( string $status ): array {
+        return [
+            'status' => $status,
+            'time'   => time(),
+        ];
+    }
+
+    /**
+     * Get an order's flags that have not expired.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Order object.
+     *
+     * @return array<int, array{status: string, time: int}>
+     */
+    protected static function get_flags( WC_Order $order ): array {
+        $flags = array_filter(
+            (array) $order->get_meta( self::SYNCED_STATUS_META ),
+            static function ( $flag ) {
+                return is_array( $flag ) && isset( $flag['status'], $flag['time'] ) && time() - (int) $flag['time'] < self::FLAG_LIFETIME;
+            }
+        );
+
+        return array_values( $flags );
+    }
+
+    /**
+     * Whether WooCommerce queues transactional emails instead of sending them right away.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected static function emails_are_deferred(): bool {
+        return false !== has_action( 'woocommerce_order_status_completed', [ WC_Emails::class, 'queue_transactional_email' ] );
+    }
+
+    /**
+     * Disable a customer order email when Dokan flagged its status on the order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool          $enabled Whether the email is enabled.
+     * @param WC_Order|null $order   Order the email is for.
+     *
+     * @return bool
+     */
+    public function skip_synced_status_email( $enabled, $order ) {
+        $email_statuses = [
+            'woocommerce_email_enabled_customer_on_hold_order'    => 'on-hold',
+            'woocommerce_email_enabled_customer_processing_order' => 'processing',
+            'woocommerce_email_enabled_customer_completed_order'  => 'completed',
+        ];
+
+        $email_status = $email_statuses[ current_filter() ] ?? '';
+
+        if ( ! $email_status || ! $order instanceof WC_Order ) {
+            return $enabled;
+        }
+
+        $flags    = self::get_flags( $order );
+        $statuses = array_column( $flags, 'status' );
+        $flag     = array_search( $email_status, $statuses, true );
+        $skip     = false !== $flag;
+
+        // An auto-completed Suborder's own completed email is going out, so it is no longer queued.
+        if ( ! $skip && 'completed' === $email_status ) {
+            $flag = array_search( self::AUTO_COMPLETED, $statuses, true );
+        }
+
+        if ( false === $flag ) {
+            return $enabled;
+        }
+
+        // Each flag stands for one email, even when the email itself is disabled.
+        unset( $flags[ $flag ] );
+        self::save_flags( $order, $flags );
+
+        return $skip ? false : $enabled;
+    }
+
+    /**
+     * Save the remaining flags of an order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Order object.
+     * @param array    $flags Flags to keep.
+     *
+     * @return void
+     */
+    protected static function save_flags( WC_Order $order, array $flags ) {
+        if ( $flags ) {
+            $order->update_meta_data( self::SYNCED_STATUS_META, array_values( $flags ) );
+        } else {
+            $order->delete_meta_data( self::SYNCED_STATUS_META );
+        }
+
+        $order->save_meta_data();
     }
 
     /**

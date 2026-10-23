@@ -649,6 +649,8 @@ class Manager {
 
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
+            // The customer already gets the parent order's email.
+            EmailHooks::flag_synced_status( $order, $parent_order->get_status() );
             $order->set_status( $parent_order->get_status() );
             $order->set_parent_id( $parent_order->get_id() );
             $order->save();
