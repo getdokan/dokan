@@ -1041,7 +1041,13 @@ class ProductController extends DokanRESTController {
         $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
         $author_id = get_post_field( 'post_author', $product->get_id() );
         $store     = dokan()->vendor->get( $author_id );
-        $data      = [
+
+        $purchase_note = '';
+        if ( $can_view_private ) {
+            $purchase_note = 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context );
+        }
+
+        $data = [
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
             'slug'                  => $product->get_slug( $context ),
@@ -1103,7 +1109,7 @@ class ProductController extends DokanRESTController {
             'upsell_ids'            => array_map( 'absint', $product->get_upsell_ids( $context ) ),
             'cross_sell_ids'        => array_map( 'absint', $product->get_cross_sell_ids( $context ) ),
             'parent_id'             => $product->get_parent_id( $context ),
-            'purchase_note'         => $can_view_private ? ( 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context ) ) : '',
+            'purchase_note'         => $purchase_note,
             'categories'            => $this->get_taxonomy_terms( $product ),
             'tags'                  => $this->get_taxonomy_terms( $product, 'tag' ),
             'images'                => $this->get_images( $product ),
