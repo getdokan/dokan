@@ -881,6 +881,68 @@ class CustomersControllerTest extends DokanTestCase {
     }
 
     /**
+     * The list total must not reveal customers outside the vendor's own, e.g. when looking up an email.
+     */
+    public function test_get_items_total_counts_only_vendor_customers() {
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create(
+            [
+                'customer_id' => $this->customers[1],
+            ]
+        );
+
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->get_request(
+            'customers',
+            [
+                'email' => 'john.doe@example.com',
+                'role'  => 'all',
+            ]
+        );
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
+
+        $response = $this->get_request( 'customers', [ 'role' => 'all' ] );
+        $this->assertSame( [ $this->customers[1] ], wp_list_pluck( $response->get_data(), 'id' ) );
+        $this->assertSame( 1, (int) $response->get_headers()['X-WP-Total'] );
+
+        $response = $this->get_request( 'customers', [ 'include' => [ $this->customers[0] ] ] );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
+    }
+
+    /**
+     * The customer list query works with both HPOS and posts order storage.
+     */
+    public function test_get_items_in_both_order_storages() {
+        foreach ( [ 'no', 'yes' ] as $hpos ) {
+            $use_storage = static function () use ( $hpos ) {
+                return $hpos;
+            };
+            add_filter( 'pre_option_woocommerce_custom_orders_table_enabled', $use_storage, 99 );
+
+            try {
+                $this->assertSame( 'yes' === $hpos, \WeDevs\Dokan\Utilities\OrderUtil::is_hpos_enabled() );
+
+                $customer_id = $this->factory()->customer->create( [ 'email' => "storage-$hpos@example.com" ] );
+                $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => $customer_id ] );
+                $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => 0 ] );
+
+                wp_set_current_user( $this->seller_id1 );
+                $response = $this->get_request( 'customers', [ 'include' => [ $customer_id, $this->customers[0] ] ] );
+                $this->assertSame( [ $customer_id ], wp_list_pluck( $response->get_data(), 'id' ), "storage hpos=$hpos" );
+                $this->assertSame( 1, (int) $response->get_headers()['X-WP-Total'] );
+
+                wp_set_current_user( $this->seller_id2 );
+                $this->assertEmpty( $this->get_request( 'customers', [ 'include' => [ $customer_id ] ] )->get_data() );
+            } finally {
+                remove_filter( 'pre_option_woocommerce_custom_orders_table_enabled', $use_storage, 99 );
+            }
+        }
+    }
+
+    /**
      * Helper method for making requests
      */
     protected function request( $method, $endpoint, $data = [] ): WP_REST_Response {
