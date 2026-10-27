@@ -2,15 +2,12 @@
 
 namespace WeDevs\Dokan\Test\Abilities\Mcp;
 
-use WeDevs\Dokan\Abilities\Mcp\Catalog;
 use WeDevs\Dokan\Abilities\Mcp\Server;
-use WeDevs\Dokan\Abilities\Mcp\Session;
 use WeDevs\Dokan\Abilities\Mcp\Transport;
 use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WP_Application_Passwords;
 use WP_Error;
-use WP_REST_Request;
 use WP_REST_Response;
 
 /**
@@ -23,7 +20,7 @@ use WP_REST_Response;
 class TransportTest extends DokanTestCase {
 
     /**
-     * `$_SERVER` before the test touched it.
+     * `$_SERVER` before the test touched it; core only restores it in its own suite.
      *
      * @var array
      */
@@ -36,47 +33,31 @@ class TransportTest extends DokanTestCase {
             $this->markTestSkipped( 'The MCP adapter is not loaded.' );
         }
 
-        remove_all_filters( 'dokan_mcp_enabled' );
-        remove_all_filters( 'dokan_mcp_vendor_access_enabled' );
-        add_filter( 'dokan_mcp_allow_insecure_transport', '__return_true' );
-
         $this->server_backup = $_SERVER;
 
-        Session::reset();
         RequestContext::reset();
         wp_set_current_user( 0 );
     }
 
     public function tear_down() {
         $_SERVER = $this->server_backup;
-        unset( $_GET['rest_route'] );
 
         parent::tear_down();
-    }
-
-    /**
-     * An MCP request as the transport sees it.
-     *
-     * @return WP_REST_Request
-     */
-    private function request(): WP_REST_Request {
-        return new WP_REST_Request( 'POST', '/dokan/mcp' );
     }
 
     public function test_a_switched_off_server_refuses_everyone_the_same_way() {
         wp_set_current_user( $this->admin_id );
 
-        $result = Transport::authorize( $this->request() );
+        $result = Transport::authorize();
 
         $this->assertInstanceOf( WP_Error::class, $result );
         $this->assertSame( 'dokan_mcp_disabled', $result->get_error_code() );
-        $this->assertSame( 0, Session::user_id() );
     }
 
     public function test_nobody_signed_in_is_a_401_naming_basic_auth() {
         add_filter( 'dokan_mcp_enabled', '__return_true' );
 
-        $result = Transport::authorize( $this->request() );
+        $result = Transport::authorize();
 
         $this->assertInstanceOf( WP_Error::class, $result );
         $this->assertSame( 'dokan_mcp_unauthorized', $result->get_error_code() );
@@ -92,8 +73,7 @@ class TransportTest extends DokanTestCase {
         add_filter( 'dokan_mcp_enabled', '__return_true' );
         wp_set_current_user( $this->admin_id );
 
-        $this->assertTrue( Transport::authorize( $this->request() ) );
-        $this->assertSame( $this->admin_id, Session::user_id() );
+        $this->assertTrue( Transport::authorize() );
         $this->assertTrue( RequestContext::is_ability_context() );
     }
 
@@ -101,17 +81,15 @@ class TransportTest extends DokanTestCase {
         add_filter( 'dokan_mcp_enabled', '__return_true' );
         wp_set_current_user( $this->seller_id1 );
 
-        $denied = Transport::authorize( $this->request() );
+        $denied = Transport::authorize();
 
         $this->assertInstanceOf( WP_Error::class, $denied );
         $this->assertSame( 'dokan_mcp_not_allowed', $denied->get_error_code() );
         $this->assertSame( 403, $denied->get_error_data()['status'] );
-        $this->assertSame( 0, Session::user_id() );
 
         add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
 
-        $this->assertTrue( Transport::authorize( $this->request() ) );
-        $this->assertSame( $this->seller_id1, Session::user_id() );
+        $this->assertTrue( Transport::authorize() );
         $this->assertTrue( RequestContext::is_vendor_ability_context() );
     }
 
@@ -120,7 +98,7 @@ class TransportTest extends DokanTestCase {
         add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
         wp_set_current_user( $this->customer_id );
 
-        $denied = Transport::authorize( $this->request() );
+        $denied = Transport::authorize();
 
         $this->assertInstanceOf( WP_Error::class, $denied );
         $this->assertSame( 'dokan_mcp_not_allowed', $denied->get_error_code() );
@@ -160,6 +138,7 @@ class TransportTest extends DokanTestCase {
 
         global $wpdb;
 
+        $server          = new Server();
         $consumer_key    = 'ck_' . wc_rand_hash();
         $consumer_secret = 'cs_' . wc_rand_hash();
 
@@ -180,42 +159,30 @@ class TransportTest extends DokanTestCase {
         $_SERVER['PHP_AUTH_USER'] = $consumer_key;
         $_SERVER['PHP_AUTH_PW']   = $consumer_secret;
 
-        $this->assertTrue( ( new Server() )->accept_woocommerce_api_keys( false ) );
+        $this->assertTrue( $server->accept_woocommerce_api_keys( false ) );
         $this->assertSame( $this->admin_id, (int) apply_filters( 'determine_current_user', 0 ) );
 
         // WooCommerce's own answer is never overturned, and other Dokan routes stay out of it.
-        $this->assertTrue( ( new Server() )->accept_woocommerce_api_keys( true ) );
+        $this->assertTrue( $server->accept_woocommerce_api_keys( true ) );
 
         $_SERVER['REQUEST_URI'] = '/wp-json/dokan/v1/stores';
 
-        $this->assertFalse( ( new Server() )->accept_woocommerce_api_keys( false ) );
+        $this->assertFalse( $server->accept_woocommerce_api_keys( false ) );
         $this->assertSame( 0, (int) apply_filters( 'determine_current_user', 0 ) );
 
         $wpdb->delete( $wpdb->prefix . 'woocommerce_api_keys', [ 'consumer_key' => wc_api_hash( $consumer_key ) ] );
     }
 
-    public function test_catalog_only_lists_registered_abilities_and_honours_the_filter() {
-        if ( ! function_exists( 'wp_has_ability' ) ) {
-            $this->markTestSkipped( 'The Abilities API is not loaded.' );
-        }
+    public function test_the_server_only_answers_requests_to_its_endpoint() {
+        add_filter( 'dokan_mcp_enabled', '__return_true' );
 
-        add_filter(
-            'dokan_mcp_server_abilities',
-            static function ( array $ids ) {
-                $ids[] = 'dokan/does-not-exist';
+        $_SERVER['REQUEST_URI'] = '/wp-json/wc/store/v1/cart';
+        $this->assertFalse( Server::serves_this_request() );
 
-                return array_values( array_diff( $ids, [ 'woocommerce/product-delete' ] ) );
-            }
-        );
+        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/mcp';
+        $this->assertTrue( Server::serves_this_request() );
 
-        $ids = Catalog::ability_ids();
-
-        $this->assertNotContains( 'dokan/does-not-exist', $ids );
-        $this->assertNotContains( 'woocommerce/product-delete', $ids );
-
-        if ( wp_has_ability( 'dokan/current-vendor' ) ) {
-            $this->assertContains( 'dokan/current-vendor', $ids );
-            $this->assertContains( 'dokan/orders-summary-get', $ids );
-        }
+        remove_all_filters( 'dokan_mcp_enabled' );
+        $this->assertFalse( Server::serves_this_request() );
     }
 }

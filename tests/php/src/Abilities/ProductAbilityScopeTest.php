@@ -656,16 +656,38 @@ class ProductAbilityScopeTest extends DokanTestCase {
         return $args['execute_callback'];
     }
 
-    public function test_vendors_delete_to_the_trash_only() {
+    public function test_a_vendor_hears_why_a_product_ability_was_refused() {
         $this->force_ability_context();
-        $seen = null;
+        $scope = new ProductAbilityScope();
 
         wp_set_current_user( $this->seller_id1 );
-        call_user_func( $this->wrapped_delete_callback( $seen ), [ 'id' => 1, 'force' => true ] );
+        $refused = $scope->explain_vendor_denial( false, 'woocommerce/product-update' );
+
+        $this->assertInstanceOf( \WP_Error::class, $refused );
+        $this->assertSame( 'dokan_product_not_in_store', $refused->get_error_code() );
+
+        // Granted results, other abilities and store admins pass through untouched.
+        $this->assertTrue( $scope->explain_vendor_denial( true, 'woocommerce/product-update' ) );
+        $this->assertFalse( $scope->explain_vendor_denial( false, 'woocommerce/customers-query' ) );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertFalse( $scope->explain_vendor_denial( false, 'woocommerce/product-update' ) );
+    }
+
+    public function test_vendors_delete_to_the_trash_only() {
+        $this->force_ability_context();
+        $seen  = null;
+        $input = [
+            'id'    => 1,
+            'force' => true,
+        ];
+
+        wp_set_current_user( $this->seller_id1 );
+        call_user_func( $this->wrapped_delete_callback( $seen ), $input );
         $this->assertFalse( $seen['force'] );
 
         wp_set_current_user( $this->admin_id );
-        call_user_func( $this->wrapped_delete_callback( $seen ), [ 'id' => 1, 'force' => true ] );
+        call_user_func( $this->wrapped_delete_callback( $seen ), $input );
         $this->assertTrue( $seen['force'] );
     }
 }

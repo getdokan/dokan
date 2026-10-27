@@ -103,6 +103,27 @@ class OrderAbilityScope implements Hookable {
 
         // Vendors may only change order status when the marketplace allows it, as on the dashboard.
         add_filter( 'wp_ability_permission_result', [ $this, 'honour_order_status_change_setting' ], 10, 2 );
+
+        // A vendor refused by the ownership gate should hear why, not "access denied for tool".
+        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], 20, 2 );
+    }
+
+    /**
+     * Turn a bare refusal of an order ability into one that says what a vendor can do about it.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool|\WP_Error $result       The permission decided so far.
+     * @param string         $ability_name The ability being checked.
+     *
+     * @return bool|\WP_Error
+     */
+    public function explain_vendor_denial( $result, $ability_name ) {
+        if ( false !== $result || 0 !== strpos( (string) $ability_name, 'woocommerce/order' ) || ! RequestContext::is_vendor_ability_context() ) {
+            return $result;
+        }
+
+        return new \WP_Error( 'dokan_order_not_in_store', __( 'This order is not your store\'s, or your account may not manage orders.', 'dokan-lite' ), [ 'status' => 403 ] );
     }
 
     /**
@@ -316,7 +337,7 @@ class OrderAbilityScope implements Hookable {
         return [
             'parent_id'      => [
                 'type'        => 'integer',
-                'description' => __( 'Parent order ID, or 0 for a top-level order.', 'dokan-lite' ),
+                'description' => __( 'Parent order ID as seen by a store admin; 0 for a top-level order, and always 0 for a vendor, whose view ends at their own orders.', 'dokan-lite' ),
             ],
             'order_relation' => [
                 'type'        => 'string',
@@ -406,7 +427,8 @@ class OrderAbilityScope implements Hookable {
         // A parent multi-vendor order belongs to no single vendor; Suborders / single orders do.
         $vendor_id = 'parent' === $relation ? 0 : absint( dokan_get_seller_id_by_order( $order ) );
 
-        $order_data['parent_id']      = $parent_id;
+        // A vendor's view ends at their own order: the parent, and through it the siblings, are the marketplace's.
+        $order_data['parent_id']      = current_user_can( 'manage_woocommerce' ) ? $parent_id : 0;
         $order_data['order_relation'] = $relation;
         $order_data['vendor']         = VendorPayload::for_user( $vendor_id );
 
@@ -432,12 +454,7 @@ class OrderAbilityScope implements Hookable {
             return true;
         }
 
-        if ( $vendor_id <= 0 || dokan_get_current_user_id() !== $vendor_id ) {
-            return false;
-        }
-
-        // Gated like the dashboard's earnings widgets, which bites only for narrowed staff.
-        return current_user_can( 'dokan_view_sales_overview' );
+        return $vendor_id > 0 && dokan_get_current_user_id() === $vendor_id && OwnershipGate::has_read_capability( 'shop_order', 'earning' );
     }
 
     /**
@@ -450,8 +467,19 @@ class OrderAbilityScope implements Hookable {
      * @return array{vendor_earning:?float,admin_commission:?float}
      */
     private function earning_for( \WC_Order $order ): array {
-        $vendor = dokan()->commission->get_earning_by_order( $order, 'seller' );
-        $admin  = dokan()->commission->get_earning_by_order( $order, 'admin' );
+        $commission = dokan()->commission;
+        $row        = $commission->get_earning_from_order_table( $order->get_id(), 'seller', true );
+
+        // One row answers both sides; only legacy orders (saved admin fee, or no row) take the slow path.
+        if ( is_array( $row ) && '' === (string) $order->get_meta( '_dokan_admin_fee', true ) ) {
+            return [
+                'vendor_earning'   => $row['net_amount'],
+                'admin_commission' => $row['order_total'] - $row['net_amount'],
+            ];
+        }
+
+        $vendor = $commission->get_earning_by_order( $order, 'seller' );
+        $admin  = $commission->get_earning_by_order( $order, 'admin' );
 
         return [
             'vendor_earning'   => is_numeric( $vendor ) ? (float) $vendor : null,

@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Abilities\Support;
 
+use WeDevs\Dokan\Abilities\Mcp\Access;
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -203,7 +204,7 @@ class RequestContext {
      * Whether the request targets a known MCP endpoint.
      *
      * Prefers WooCommerce's own detection when present; otherwise (or when it reports false,
-     * e.g. for a future `/dokan/mcp` endpoint) falls back to a URI check.
+     * as it does for `/dokan/mcp`) falls back to a URI check.
      *
      * @since 5.0.15
      *
@@ -220,7 +221,7 @@ class RequestContext {
 
         return self::is_rest_request()
             && '' !== $request_uri
-            && (bool) preg_match( '#/(?:woocommerce|dokan)/mcp(?:/|$)#', $request_uri );
+            && ( Access::is_request_to_endpoint() || (bool) preg_match( '#/woocommerce/mcp(?:/|$)#', $request_uri ) );
     }
 
     /**

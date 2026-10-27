@@ -14,44 +14,52 @@ use WeDevs\Dokan\Test\DokanTestCase;
  */
 class DisplayFieldsTest extends DokanTestCase {
 
-    public function test_display_only_values_are_dropped_from_a_new_ui_save() {
-        $fields = new DisplayFields();
-
-        $stored = $fields->strip_display_values(
+    public function test_only_the_two_switches_survive_a_new_ui_save() {
+        $stored = ( new DisplayFields() )->strip_display_values(
             [
                 'mcp_enabled'              => 'on',
                 'mcp_vendor_access'        => 'off',
                 'mcp_connector_url'        => 'https://example.com/wp-json/dokan/mcp',
                 'mcp_application_password' => '<p>how to</p>',
-                'mcp_server_status'        => 'Active',
+                'mcp_some_future_notice'   => 'x',
+                'ai_product_info_engine'   => 'openai',
             ]
         );
 
         $this->assertSame(
             [
-                'mcp_enabled'       => 'on',
-                'mcp_vendor_access' => 'off',
+                'mcp_enabled'            => 'on',
+                'mcp_vendor_access'      => 'off',
+                'ai_product_info_engine' => 'openai',
             ],
             $stored
         );
     }
 
-    public function test_display_only_values_are_dropped_from_the_legacy_ai_section_only() {
+    public function test_only_the_two_switches_survive_a_legacy_ai_section_save() {
         $fields = new DisplayFields();
 
         $stored = $fields->strip_legacy_display_values(
             [
                 'dokan_mcp_enabled'       => 'on',
+                'dokan_mcp_vendor_access' => 'on',
                 'dokan_mcp_status'        => 'Active',
                 'dokan_mcp_connector_url' => 'https://example.com/wp-json/dokan/mcp',
-                'dokan_mcp_api_key'       => 'how to',
+                'dokan_ai_engine'         => 'openai',
             ],
             Access::SETTING_SECTION
         );
 
-        $this->assertSame( [ 'dokan_mcp_enabled' => 'on' ], $stored );
+        $this->assertSame(
+            [
+                'dokan_mcp_enabled'       => 'on',
+                'dokan_mcp_vendor_access' => 'on',
+                'dokan_ai_engine'         => 'openai',
+            ],
+            $stored
+        );
 
-        // Another section with a same-named key is not this class's business.
+        // Another section is not this class's business.
         $this->assertSame( [ 'dokan_mcp_status' => 'x' ], $fields->strip_legacy_display_values( [ 'dokan_mcp_status' => 'x' ], 'dokan_general' ) );
     }
 }

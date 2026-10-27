@@ -108,7 +108,7 @@ class OrdersSummaryGet extends AbstractVendorAbility {
             $vendor_id = absint( $input['vendor_id'] );
 
             if ( ! dokan_is_user_seller( $vendor_id ) ) {
-                return new WP_Error( 'dokan_ability_vendor_not_found', __( 'Vendor not found.', 'dokan-lite' ), [ 'status' => 404 ] );
+                return new WP_Error( 'dokan_ability_invalid_vendor', __( 'The selected vendor_id is not a valid vendor.', 'dokan-lite' ), [ 'status' => 400 ] );
             }
         }
 

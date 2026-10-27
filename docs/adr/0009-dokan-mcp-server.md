@@ -9,7 +9,10 @@ WooCommerce endpoint is deprecated upstream.
 
 We ship a Dokan server at `/wp-json/dokan/mcp` on the same `wordpress/mcp-adapter`
 WooCommerce bundles, with a curated tool list (`Catalog`, filterable through
-`dokan_mcp_server_abilities`) and our own transport.
+`dokan_mcp_server_abilities`) and our own transport. Every tool carries a Dokan
+name: Lite's own abilities, plus `dokan/*` aliases of the WooCommerce product
+and order abilities (`WooCommerceAliases`) that delegate to them, so the vendor
+scoping and Pro's output shaping hooked on the WooCommerce names still run.
 
 Dokan issues no credential and runs no login flow. An AI client signs in the way
 any REST client signs in to this site, with HTTP Basic authentication: a
@@ -22,7 +25,7 @@ last-access bookkeeping. A cookie session counts only with a REST nonce, as
 everywhere else in the REST API.
 
 The transport (`Transport`) decides authorization only, in this order: the
-server switch, TLS, that somebody signed in at all, and
+server switch, that somebody signed in at all, and
 `Access::user_can_connect()` — a Store Admin always, a Vendor or Vendor Staff
 only while the "Allow vendors to connect" switch is on and their store's selling
 is enabled. The switch is **off by default**: vendor connections are an explicit
@@ -32,16 +35,21 @@ whose role changes, is cut off at once; there is nothing of Dokan's to revoke.
 Revoking the credential itself is WordPress' job (the profile screen) or
 WooCommerce's (the REST API keys screen).
 
-The transport becomes nobody. It reads the user WordPress already set, records
-it (`Session`) and flags the Ability Context, so the vendor scoping of ADR-0006 /
-ADR-0007 applies to every tool call. No scoping lives in the server.
+The transport becomes nobody. It reads the user WordPress already set and flags
+the Ability Context, so the vendor scoping of ADR-0006 / ADR-0007 applies to
+every tool call. No scoping lives in the server. HTTPS is not enforced by Dokan
+either: WordPress only honours application passwords over HTTPS (or on a local
+environment) and WooCommerce only reads a REST key over HTTPS, so a plain-http
+request has nobody to sign in as.
 
-Vendors cannot open wp-admin, so they create their application password on
-WordPress' own approval screen (`wp-admin/authorize-application.php`), which the
-admin-area block lets through for a user who may connect while MCP is on.
-Vendor Staff hold none of the capabilities WooCommerce admits to wp-admin
-(`edit_posts`, `manage_woocommerce`, `view_admin_dashboard`), so a staff
-member's password is created by the store admin on that user's profile screen.
+The adapter is only booted, and the server only built, on a request to the MCP
+endpoint (and under WP-CLI); every other REST request leaves the Abilities
+registry untouched.
+
+Vendors cannot open wp-admin, and Dokan adds no screen or exemption for this:
+WordPress lets an administrator add application passwords to any user's
+profile, so the store admin issues a vendor's or staff member's password from
+that user's profile screen and hands it over.
 
 The settings screens describe the connection with their ordinary field types
 (plugin-ui `info`, `copy_field`, `html` and `notice` variants; legacy `html`
@@ -76,6 +84,15 @@ decided Dokan does not own an authentication layer, and they were removed.
 
 A WooCommerce key with Read-only permission cannot use the server at all: every
 MCP request is a POST, which WooCommerce's permission check treats as a write.
+
+Clients on the MCP TypeScript SDK validate results against the output schema
+with format checking and list a tool's fields from its top-level `properties`.
+WooCommerce's order and product dates carry no timezone yet are declared
+`date-time`, and product-create / product-update keep their fields inside
+`oneOf` branches, so Claude Desktop (through a proxy) rejected every product and
+order result and showed the create tool with no fields. `ToolSchemas` drops the
+`date-time` format and mirrors the branch properties at the top level for the
+catalog's abilities; values and server-side validation are unchanged.
 
 Display-only field values ride along in a settings save because the new UI
 submits every field of a page. `DisplayFields` drops them before the repository

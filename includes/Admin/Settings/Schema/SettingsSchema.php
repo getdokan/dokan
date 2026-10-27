@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Schema;
 
+use WeDevs\Dokan\Abilities\Mcp\Status;
 use WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer;
 use WeDevs\Dokan\Utilities\AdminSettings;
 
@@ -2325,6 +2326,7 @@ class SettingsSchema {
      * @return array
      */
     private static function mcp_subpage(): array {
+        $copy         = Status::copy();
         $when_enabled = [
             [
                 'key'        => 'mcp_enabled',
@@ -2350,7 +2352,7 @@ class SettingsSchema {
                 'type'        => 'subpage',
                 'page_id'     => 'ai_assist',
                 'title'       => esc_html__( 'AI Assistants (MCP)', 'dokan-lite' ),
-                'description' => esc_html__( 'Connect assistants such as Claude Code, Claude Desktop or Cursor to your marketplace through the Model Context Protocol.', 'dokan-lite' ),
+                'description' => esc_html( $copy['intro'] ),
                 'priority'    => 200,
                 'doc_link'    => 'https://dokan.co/docs/wordpress/settings/dokan-mcp/',
             ],
@@ -2367,7 +2369,7 @@ class SettingsSchema {
                 'variant'       => 'switch',
                 'section_id'    => 'mcp_section',
                 'title'         => esc_html__( 'Enable AI assistant access', 'dokan-lite' ),
-                'description'   => esc_html__( 'Run the Dokan MCP server so connected assistants can read and manage products and orders.', 'dokan-lite' ),
+                'description'   => esc_html( $copy['enabled'] ),
                 'default'       => 'off',
                 'enable_state'  => [
                     'label' => esc_html__( 'Enabled', 'dokan-lite' ),
@@ -2385,7 +2387,7 @@ class SettingsSchema {
                 'variant'       => 'switch',
                 'section_id'    => 'mcp_section',
                 'title'         => esc_html__( 'Allow vendors to connect', 'dokan-lite' ),
-                'description'   => esc_html__( 'Vendors and their staff can connect an assistant with an application password of their own. Each connection only reaches that vendor\'s own store.', 'dokan-lite' ),
+                'description'   => esc_html( $copy['vendor_access'] ),
                 'default'       => 'off',
                 'enable_state'  => [
                     'label' => esc_html__( 'Enabled', 'dokan-lite' ),
@@ -2399,12 +2401,6 @@ class SettingsSchema {
                 'dependencies'  => $when_enabled,
             ],
         ];
-
-        // The legacy bridge builds this schema on ordinary requests to harvest legacy keys; the
-        // connection block declares none and is only worth building for a settings screen.
-        if ( ! is_admin() && ! wp_is_serving_rest_request() ) {
-            return $elements;
-        }
 
         return array_merge( $elements, self::mcp_connection_fields( $when_enabled ) );
     }
@@ -2424,7 +2420,7 @@ class SettingsSchema {
      * @return array
      */
     private static function mcp_connection_fields( array $when_enabled ): array {
-        $status  = \WeDevs\Dokan\Abilities\Mcp\Status::summary();
+        $status  = Status::summary();
         $section = 'mcp_connection_section';
 
         $field = static function ( string $id, string $variant, array $extra ) use ( $section, $when_enabled ): array {
@@ -2454,31 +2450,19 @@ class SettingsSchema {
                 'info',
                 [
                     'title'       => $status['live'] ? esc_html__( 'Server status: Active', 'dokan-lite' ) : esc_html__( 'Server status: Off', 'dokan-lite' ),
-                    'description' => esc_html( \WeDevs\Dokan\Abilities\Mcp\Status::activity_line( $status ) ),
+                    'description' => esc_html( Status::tool_count_label( $status['tools'] ) ),
                 ]
             ),
         ];
 
-        if ( ! $status['adapter_available'] ) {
+        foreach ( Status::warnings( $status ) as $key => $warning ) {
             $elements[] = $field(
-                'mcp_adapter_notice',
+                'mcp_' . $key . '_notice',
                 'notice',
                 [
                     'notice_type'        => 'warning',
-                    'notice_title'       => esc_html__( 'The MCP adapter is not available', 'dokan-lite' ),
-                    'notice_description' => esc_html__( 'It ships with WooCommerce 10.9 or newer. Update WooCommerce to run the server.', 'dokan-lite' ),
-                ]
-            );
-        }
-
-        if ( ! $status['https'] ) {
-            $elements[] = $field(
-                'mcp_https_notice',
-                'notice',
-                [
-                    'notice_type'        => 'warning',
-                    'notice_title'       => esc_html__( 'This site is not served over HTTPS', 'dokan-lite' ),
-                    'notice_description' => esc_html__( 'WordPress only accepts application passwords over HTTPS, and most AI assistants refuse a plain-http connector.', 'dokan-lite' ),
+                    'notice_title'       => esc_html( $warning['title'] ),
+                    'notice_description' => esc_html( $warning['text'] ),
                 ]
             );
         }
@@ -2488,11 +2472,7 @@ class SettingsSchema {
             'copy_field',
             [
                 'title'       => esc_html__( 'Connector URL', 'dokan-lite' ),
-                'description' => esc_html__( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication.', 'dokan-lite' )
-                    . ' '
-                    . ( $status['vendor_access']
-                        ? esc_html__( 'Vendors use the same URL with their own login.', 'dokan-lite' )
-                        : esc_html__( 'Only store admins can connect while vendor access is off.', 'dokan-lite' ) ),
+                'description' => esc_html( Status::connector_description( $status ) ),
                 'value'       => $status['endpoint'],
             ]
         );
@@ -2503,21 +2483,9 @@ class SettingsSchema {
             [
                 'title'        => esc_html__( 'Application password', 'dokan-lite' ),
                 'description'  => esc_html__( 'The usual way in. Each password can be revoked on its own from the profile screen.', 'dokan-lite' ),
-                'html_content' => \WeDevs\Dokan\Abilities\Mcp\Status::application_password_html( $status, false ),
+                'html_content' => Status::application_password_html() . ( $status['vendor_access'] ? '<br>' . Status::vendor_password_html() : '' ),
             ]
         );
-
-        if ( $status['vendor_access'] ) {
-            $elements[] = $field(
-                'mcp_vendor_authorize_url',
-                'copy_field',
-                [
-                    'title'       => esc_html__( 'Vendor approval link', 'dokan-lite' ),
-                    'description' => esc_html__( 'Vendors open this link, sign in and create an application password of their own. Share it with them. A staff member\'s password is created by the store admin on that user\'s profile.', 'dokan-lite' ),
-                    'value'       => $status['authorize_url'],
-                ]
-            );
-        }
 
         $elements[] = $field(
             'mcp_claude_code',
@@ -2525,7 +2493,7 @@ class SettingsSchema {
             [
                 'title'       => esc_html__( 'Claude Code', 'dokan-lite' ),
                 'description' => esc_html__( 'Adds Dokan to the Claude Code CLI. Replace USERNAME and APPLICATION PASSWORD with yours.', 'dokan-lite' ),
-                'value'       => \WeDevs\Dokan\Abilities\Mcp\Status::claude_code_command( $status ),
+                'value'       => Status::claude_code_command( $status['endpoint'] ),
             ]
         );
 
@@ -2535,7 +2503,7 @@ class SettingsSchema {
             [
                 'title'        => esc_html__( 'WooCommerce API key', 'dokan-lite' ),
                 'description'  => esc_html__( 'For store owners who already manage REST API keys.', 'dokan-lite' ),
-                'html_content' => \WeDevs\Dokan\Abilities\Mcp\Status::api_key_html( $status ),
+                'html_content' => Status::api_key_html(),
             ]
         );
 

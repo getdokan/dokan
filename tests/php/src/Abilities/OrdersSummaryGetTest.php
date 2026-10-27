@@ -52,7 +52,7 @@ class OrdersSummaryGetTest extends DokanTestCase {
         $missing = OrdersSummaryGet::execute( [ 'vendor_id' => $this->customer_id ] );
 
         $this->assertInstanceOf( WP_Error::class, $missing );
-        $this->assertSame( 'dokan_ability_vendor_not_found', $missing->get_error_code() );
+        $this->assertSame( 'dokan_ability_invalid_vendor', $missing->get_error_code() );
     }
 
     public function test_staff_need_the_order_report_capability() {

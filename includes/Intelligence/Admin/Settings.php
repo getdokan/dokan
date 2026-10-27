@@ -35,6 +35,7 @@ class Settings implements Hookable {
      * @return array
      */
     public function render_mcp_settings( array $settings_fields ): array {
+        $copy         = Status::copy();
         $when_enabled = [
             'dokan_mcp_enabled' => [
                 'equal' => 'on',
@@ -45,14 +46,14 @@ class Settings implements Hookable {
             'name'          => 'dokan_mcp',
             'type'          => 'sub_section',
             'label'         => __( 'AI Assistants (MCP)', 'dokan-lite' ),
-            'description'   => __( 'Connect assistants such as Claude Code, Claude Desktop or Cursor to your marketplace through the Model Context Protocol.', 'dokan-lite' ),
+            'description'   => $copy['intro'],
             'content_class' => 'sub-section-styles',
         ];
 
         $settings_fields['dokan_ai']['dokan_mcp_enabled'] = [
             'name'    => 'dokan_mcp_enabled',
             'label'   => __( 'Enable AI Assistant Access', 'dokan-lite' ),
-            'desc'    => __( 'Run the Dokan MCP server so connected assistants can read and manage products and orders.', 'dokan-lite' ),
+            'desc'    => $copy['enabled'],
             'type'    => 'switcher',
             'default' => 'off',
             'is_lite' => true,
@@ -61,7 +62,7 @@ class Settings implements Hookable {
         $settings_fields['dokan_ai']['dokan_mcp_vendor_access'] = [
             'name'    => 'dokan_mcp_vendor_access',
             'label'   => __( 'Allow Vendors to Connect', 'dokan-lite' ),
-            'desc'    => __( 'Vendors and their staff can connect an assistant with an application password of their own. Each connection only reaches that vendor\'s own store.', 'dokan-lite' ),
+            'desc'    => $copy['vendor_access'],
             'type'    => 'switcher',
             'default' => 'off',
             'is_lite' => true,
@@ -93,35 +94,28 @@ class Settings implements Hookable {
         $status   = Status::summary();
         $warnings = '';
 
-        if ( ! $status['adapter_available'] ) {
-            $warnings .= '<br><strong>' . esc_html__( 'The MCP adapter is not available on this site. It ships with WooCommerce 10.9 or newer; update WooCommerce to run the server.', 'dokan-lite' ) . '</strong>';
-        }
-
-        if ( ! $status['https'] ) {
-            $warnings .= '<br><strong>' . esc_html__( 'This site is not served over HTTPS. WordPress only accepts application passwords over HTTPS, and most AI assistants refuse a plain-http connector.', 'dokan-lite' ) . '</strong>';
+        foreach ( Status::warnings( $status ) as $warning ) {
+            $warnings .= '<br><strong>' . esc_html( $warning['title'] . '. ' . $warning['text'] ) . '</strong>';
         }
 
         return [
             'dokan_mcp_status'               => [
                 'label' => __( 'Server Status', 'dokan-lite' ),
-                'desc'  => '<strong>' . ( $status['live'] ? esc_html__( 'Active', 'dokan-lite' ) : esc_html__( 'Off', 'dokan-lite' ) ) . '</strong> · ' . esc_html( Status::activity_line( $status ) ) . $warnings,
+                'desc'  => '<strong>' . ( $status['live'] ? esc_html__( 'Active', 'dokan-lite' ) : esc_html__( 'Off', 'dokan-lite' ) ) . '</strong> · ' . esc_html( Status::tool_count_label( $status['tools'] ) ) . $warnings,
             ],
             'dokan_mcp_connector_url'        => [
                 'label' => __( 'Connector URL', 'dokan-lite' ),
-                'desc'  => '<code>' . esc_html( $status['endpoint'] ) . '</code><br>'
-                    . esc_html__( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication.', 'dokan-lite' )
-                    . ' '
-                    . ( $status['vendor_access']
-                        ? esc_html__( 'Vendors use the same URL with their own login.', 'dokan-lite' )
-                        : esc_html__( 'Only store admins can connect while vendor access is off.', 'dokan-lite' ) ),
+                'desc'  => '<code>' . esc_html( $status['endpoint'] ) . '</code><br>' . esc_html( Status::connector_description( $status ) ),
             ],
             'dokan_mcp_application_password' => [
                 'label' => __( 'Application Password', 'dokan-lite' ),
-                'desc'  => Status::application_password_html( $status ),
+                'desc'  => Status::application_password_html()
+                    . ( $status['vendor_access'] ? '<br>' . Status::vendor_password_html() : '' )
+                    . '<br>' . esc_html__( 'For Claude Code:', 'dokan-lite' ) . '<br><code>' . esc_html( Status::claude_code_command( $status['endpoint'] ) ) . '</code>',
             ],
             'dokan_mcp_api_key'              => [
                 'label' => __( 'WooCommerce API Key', 'dokan-lite' ),
-                'desc'  => Status::api_key_html( $status ),
+                'desc'  => Status::api_key_html(),
             ],
         ];
     }

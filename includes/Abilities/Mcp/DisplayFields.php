@@ -12,25 +12,12 @@ defined( 'ABSPATH' ) || exit;
  * Both settings screens describe the MCP connection (status, connector URL, how to sign in) in
  * ordinary fields whose values are filled in when the screen is built. Nothing in them is a
  * setting, but the new UI submits every field of a page on save and the legacy screen posts its
- * section as a whole, so the values would otherwise be written next to the real switches.
+ * section as a whole. The rule is by name: every `mcp_*` / `dokan_mcp_*` field except the two
+ * switches is display-only.
  *
  * @since DOKAN_SINCE
  */
 class DisplayFields implements Hookable {
-
-    /**
-     * New-UI field ids whose values are display-only and never stored.
-     *
-     * @since DOKAN_SINCE
-     */
-    const FIELDS = [ 'mcp_server_status', 'mcp_connector_url', 'mcp_application_password', 'mcp_vendor_authorize_url', 'mcp_claude_code', 'mcp_api_key', 'mcp_adapter_notice', 'mcp_https_notice' ];
-
-    /**
-     * Legacy field names whose values are display-only and never stored.
-     *
-     * @since DOKAN_SINCE
-     */
-    const LEGACY_FIELDS = [ 'dokan_mcp_status', 'dokan_mcp_connector_url', 'dokan_mcp_application_password', 'dokan_mcp_api_key' ];
 
     /**
      * Register hooks.
@@ -54,15 +41,7 @@ class DisplayFields implements Hookable {
      * @return array
      */
     public function strip_display_values( $slice ) {
-        if ( ! is_array( $slice ) ) {
-            return $slice;
-        }
-
-        foreach ( self::FIELDS as $id ) {
-            unset( $slice[ $id ] );
-        }
-
-        return $slice;
+        return is_array( $slice ) ? self::without_display_fields( $slice, 'mcp_', [ 'mcp_enabled', 'mcp_vendor_access' ] ) : $slice;
     }
 
     /**
@@ -80,8 +59,25 @@ class DisplayFields implements Hookable {
             return $values;
         }
 
-        foreach ( self::LEGACY_FIELDS as $name ) {
-            unset( $values[ $name ] );
+        return self::without_display_fields( $values, 'dokan_mcp_', [ Access::SETTING_ENABLED, Access::SETTING_VENDOR_ACCESS ] );
+    }
+
+    /**
+     * Drop every key with the MCP prefix that is not a real setting.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array    $values   Values about to be stored.
+     * @param string   $prefix   The screen's MCP field prefix.
+     * @param string[] $settings The keys that are settings and stay.
+     *
+     * @return array
+     */
+    private static function without_display_fields( array $values, string $prefix, array $settings ): array {
+        foreach ( array_keys( $values ) as $key ) {
+            if ( is_string( $key ) && 0 === strpos( $key, $prefix ) && ! in_array( $key, $settings, true ) ) {
+                unset( $values[ $key ] );
+            }
         }
 
         return $values;

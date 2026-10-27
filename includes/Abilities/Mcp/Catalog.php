@@ -7,9 +7,11 @@ defined( 'ABSPATH' ) || exit;
 /**
  * The curated list of abilities the Dokan MCP server exposes as tools.
  *
- * One place to find the tools: Lite's own abilities plus the WooCommerce domain abilities that
- * {@see \WeDevs\Dokan\Abilities\ProductAbilityScope} and {@see \WeDevs\Dokan\Abilities\OrderAbilityScope}
- * already vendor-scope. Pro and modules append their own through `dokan_mcp_server_abilities`.
+ * One place to find the tools: Lite's own abilities plus the Dokan-named aliases of the
+ * WooCommerce product and order abilities ({@see \WeDevs\Dokan\Abilities\WooCommerceAliases}),
+ * which {@see \WeDevs\Dokan\Abilities\ProductAbilityScope} and
+ * {@see \WeDevs\Dokan\Abilities\OrderAbilityScope} vendor-scope. Pro and modules append their own
+ * through `dokan_mcp_server_abilities`.
  *
  * @since DOKAN_SINCE
  */
@@ -30,28 +32,25 @@ class Catalog {
             'dokan/vendor-stats-get',
             'dokan/withdraws-query',
             'dokan/orders-summary-get',
-            // WooCommerce domain abilities, vendor-scoped by the Abilities layer.
-            'woocommerce/products-query',
-            'woocommerce/product-create',
-            'woocommerce/product-update',
-            'woocommerce/product-delete',
-            'woocommerce/orders-query',
-            'woocommerce/order-update-status',
-            'woocommerce/order-add-note',
+            // Dokan-named aliases of WooCommerce's product and order abilities, vendor-scoped by the Abilities layer.
+            'dokan/products-query',
+            'dokan/product-create',
+            'dokan/product-update',
+            'dokan/product-delete',
+            'dokan/orders-query',
+            'dokan/order-update-status',
+            'dokan/order-add-note',
         ];
     }
 
     /**
-     * The abilities to expose, filtered and reduced to the ones actually registered.
-     *
-     * Registering a tool for an unregistered ability is a logged failure on the adapter, so the
-     * list is intersected with the registry at the moment it is read.
+     * The abilities the site wants exposed: the default list after the filter, deduplicated.
      *
      * @since DOKAN_SINCE
      *
      * @return string[]
      */
-    public static function ability_ids(): array {
+    public static function configured_ability_ids(): array {
         /**
          * Filters the abilities the Dokan MCP server exposes as tools.
          *
@@ -61,40 +60,38 @@ class Catalog {
          */
         $ids = apply_filters( 'dokan_mcp_server_abilities', self::default_ability_ids() );
 
-        if ( ! is_array( $ids ) || ! function_exists( 'wp_has_ability' ) ) {
-            return [];
-        }
-
-        $ids = array_filter(
-            array_unique( array_filter( $ids, 'is_string' ) ),
-            static function ( string $id ): bool {
-                return wp_has_ability( $id );
-            }
-        );
-
-        return array_values( $ids );
+        return is_array( $ids ) ? array_values( array_unique( array_filter( $ids, 'is_string' ) ) ) : [];
     }
 
     /**
-     * How many tools a connected client would find.
+     * The configured abilities that are actually registered, which is what the server registers.
      *
-     * Settings screens call this while building their schema, which can happen before the
-     * Abilities registry has initialised; forcing that initialisation early would register
-     * whatever plugins have hooked so far and leave the rest out for the whole request. So the
-     * registry is only consulted once it has initialised itself, and the curated list is counted
-     * as declared otherwise.
+     * Registering a tool for an unregistered ability is a logged failure on the adapter.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string[]
+     */
+    public static function ability_ids(): array {
+        if ( ! function_exists( 'wp_has_ability' ) ) {
+            return [];
+        }
+
+        return array_values( array_filter( self::configured_ability_ids(), 'wp_has_ability' ) );
+    }
+
+    /**
+     * How many tools the settings screens announce.
+     *
+     * Counts the configured list without consulting the Abilities registry: a settings schema may
+     * be built before the registry has initialised, and forcing it early would register only the
+     * plugins hooked so far.
      *
      * @since DOKAN_SINCE
      *
      * @return int
      */
     public static function tool_count(): int {
-        if ( did_action( 'wp_abilities_api_init' ) ) {
-            return count( self::ability_ids() );
-        }
-
-        $ids = apply_filters( 'dokan_mcp_server_abilities', self::default_ability_ids() );
-
-        return is_array( $ids ) ? count( array_unique( array_filter( $ids, 'is_string' ) ) ) : 0;
+        return count( self::configured_ability_ids() );
     }
 }

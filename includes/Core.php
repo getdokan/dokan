@@ -49,11 +49,6 @@ class Core {
         $valid_pages = [ 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' ];
         $user_role   = reset( $current_user->roles );
 
-        // A vendor who may connect an AI assistant creates its application password on WordPress' own approval screen.
-        if ( 'authorize-application.php' === $pagenow && \WeDevs\Dokan\Abilities\Mcp\Access::is_enabled() && \WeDevs\Dokan\Abilities\Mcp\Access::user_can_connect( (int) $current_user->ID ) ) {
-            return;
-        }
-
         if ( ( 'on' === $no_access ) && ( ! in_array( $pagenow, $valid_pages, true ) ) && in_array( $user_role, [ 'seller', 'customer', 'vendor_staff' ], true ) ) {
             wp_safe_redirect( home_url() );
             exit;
@@ -196,4 +191,6 @@ class Core {
 
         dokan_redirect_to_admin_setup_wizard();
     }
+
 }
+
