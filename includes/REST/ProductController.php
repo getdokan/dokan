@@ -1764,7 +1764,10 @@ class ProductController extends DokanRESTController {
             return true;
         }
 
-        return is_user_logged_in() && dokan_is_product_author( $product->get_id() );
+        // Variations created before 5.3.0 may still carry an admin as post_author, so ownership is resolved through the parent.
+        $owner_product_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+
+        return dokan_is_product_author( $owner_product_id );
     }
 
     /**

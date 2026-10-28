@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\Test\REST;
 
 use WC_Product_Download;
+use WC_Product_Variation;
+use WeDevs\Dokan\REST\ProductController;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
@@ -178,5 +180,66 @@ class ProductPublicRoutesDisclosureTest extends DokanTestCase {
 
         $this->assertNotNull( $product );
         $this->assertSame( $this->file_url, $product['downloads'][0]['file'] );
+    }
+
+    public function test_related_route_gives_anonymous_caller_no_download_url_or_earning(): void {
+        $term     = wp_insert_term( 'Ebooks ' . uniqid(), 'product_cat' );
+        $sibling  = $this->factory()->product->set_seller_id( $this->seller_id1 )->create(
+            [
+				'name' => 'Sibling',
+				'status' => 'publish',
+				'regular_price' => '5',
+			]
+        );
+
+        wp_set_object_terms( $this->product_id, [ $term['term_id'] ], 'product_cat' );
+        wp_set_object_terms( $sibling, [ $term['term_id'] ], 'product_cat' );
+        delete_transient( 'wc_related_' . $sibling );
+
+        wp_set_current_user( 0 );
+
+        $response = $this->get_request( "products/{$sibling}/related", [ 'per_page' => 100 ] );
+        $this->assertEquals( 200, $response->get_status() );
+
+        $product = $this->find_product( $response->get_data() );
+        $this->assertNotNull( $product, 'Fixture must be listed as related' );
+        $this->assertSame( [], $product['downloads'] );
+        $this->assertNull( $product['earning'] );
+    }
+
+    public function test_owner_keeps_vendor_data_on_a_variation_authored_by_an_admin(): void {
+        $variable = $this->factory()->product->set_seller_id( $this->seller_id1 )->create_variation_product();
+        $parent   = wc_get_product( $variable->get_id() );
+        wp_update_post(
+            [
+				'ID' => $parent->get_id(),
+				'post_author' => $this->seller_id1,
+			]
+        );
+
+        // Variations created before 5.3.0 carry whoever added them, typically an admin.
+        $variation_id = $parent->get_children()[0];
+        wp_update_post(
+            [
+				'ID' => $variation_id,
+				'post_author' => $this->admin_id,
+			]
+        );
+        $variation = new WC_Product_Variation( $variation_id );
+
+        $controller = new class() extends ProductController {
+            public function check( $product ): bool {
+                return $this->can_view_vendor_product_data( $product );
+            }
+        };
+
+        wp_set_current_user( $this->seller_id1 );
+        $this->assertTrue( $controller->check( $variation ) );
+
+        wp_set_current_user( $this->seller_id2 );
+        $this->assertFalse( $controller->check( $variation ) );
+
+        wp_set_current_user( 0 );
+        $this->assertFalse( $controller->check( $variation ) );
     }
 }
