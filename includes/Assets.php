@@ -897,6 +897,8 @@ class Assets {
             'allow_shipment'                => dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' ),
             'wc_shipping_enabled'           => get_option( 'woocommerce_calc_shipping' ) === 'yes',
             'has_shipment_func'             => function_exists( 'dokan_get_order_shipment_current_status' ),
+            // Vendor order status change permission (used by JS order list to match PHP template behavior)
+            'order_status_change'           => dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ),
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );

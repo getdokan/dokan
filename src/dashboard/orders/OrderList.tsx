@@ -51,6 +51,7 @@ declare const window: Window & {
         wc_shipping_enabled?: boolean;
         allow_shipment?: string;
         has_shipment_func?: boolean;
+        order_status_change?: string;
     };
 };
 
@@ -597,6 +598,9 @@ function OrderList() {
     );
 
     // ── Actions ─────────────────────────────────────────────────
+    // Status actions follow the admin "Order Status Change" setting, like the legacy list.
+    const canChangeOrderStatus = window.dokan?.order_status_change === 'on';
+
     const actions = useMemo(
         () => [
             {
@@ -616,7 +620,8 @@ function OrderList() {
                 label: __( 'Change status to on-hold', 'dokan-lite' ),
                 supportsBulk: true,
                 isDestructive: true,
-                isEligible: ( item: OrderItem ) => item.status !== 'on-hold',
+                isEligible: ( item: OrderItem ) =>
+                    canChangeOrderStatus && item.status !== 'on-hold',
                 callback: async ( items: OrderItem[] ) => {
                     await handleStatusUpdate( items, 'wc-on-hold' );
                 },
@@ -626,7 +631,8 @@ function OrderList() {
                 label: __( 'Change status to processing', 'dokan-lite' ),
                 supportsBulk: true,
                 isDestructive: true,
-                isEligible: ( item: OrderItem ) => item.status !== 'processing',
+                isEligible: ( item: OrderItem ) =>
+                    canChangeOrderStatus && item.status !== 'processing',
                 callback: async ( items: OrderItem[] ) => {
                     await handleStatusUpdate( items, 'wc-processing' );
                 },
@@ -636,13 +642,14 @@ function OrderList() {
                 label: __( 'Change status to completed', 'dokan-lite' ),
                 supportsBulk: true,
                 isDestructive: true,
-                isEligible: ( item: OrderItem ) => item.status !== 'completed',
+                isEligible: ( item: OrderItem ) =>
+                    canChangeOrderStatus && item.status !== 'completed',
                 callback: async ( items: OrderItem[] ) => {
                     await handleStatusUpdate( items, 'wc-completed' );
                 },
             },
         ],
-        [ handleStatusUpdate ]
+        [ handleStatusUpdate, canChangeOrderStatus ]
     );
 
     // ── View change handler ─────────────────────────────────────
