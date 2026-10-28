@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.3.1\n"
+"Project-Id-Version: Dokan 5.3.2\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-15T10:31:20+00:00\n"
+"POT-Creation-Date: 2026-10-22T11:58:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -11357,11 +11357,11 @@ msgstr ""
 msgid "The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features."
 msgstr ""
 
-#: includes/wc-functions.php:394
+#: includes/wc-functions.php:395
 msgid "Product SKU must be unique"
 msgstr ""
 
-#: includes/wc-functions.php:858
+#: includes/wc-functions.php:859
 #: templates/account/update-customer-to-vendor.php:26
 #: templates/account/vendor-registration.php:18
 #: templates/global/seller-registration-form.php:16
@@ -11371,7 +11371,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:859
+#: includes/wc-functions.php:860
 #: templates/account/update-customer-to-vendor.php:30
 #: templates/account/vendor-registration.php:23
 #: templates/global/seller-registration-form.php:21
@@ -11381,57 +11381,57 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:860
+#: includes/wc-functions.php:861
 #: templates/account/vendor-registration.php:36
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:866
+#: includes/wc-functions.php:867
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:872
+#: includes/wc-functions.php:873
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:874
+#: includes/wc-functions.php:875
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:880
+#: includes/wc-functions.php:881
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:885
+#: includes/wc-functions.php:886
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:888
+#: includes/wc-functions.php:889
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:891
+#: includes/wc-functions.php:892
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:894
+#: includes/wc-functions.php:895
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:914
+#: includes/wc-functions.php:915
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-functions.php:960
+#: includes/wc-functions.php:961
 msgid "More Products"
 msgstr ""
 
-#: includes/wc-functions.php:1013
+#: includes/wc-functions.php:1014
 msgid "No product has been found!"
 msgstr ""
 
-#: includes/wc-functions.php:1086
+#: includes/wc-functions.php:1087
 msgid "Reviews cannot be posted for products that you own."
 msgstr ""
 

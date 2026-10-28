@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.2',
+        'released' => '2026-10-22',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Saving a vendor from the WordPress Users screen no longer resets their custom commission to the global rate.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.3.1',
         'released' => '2026-10-15',
         'changes'  => [
