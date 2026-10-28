@@ -23,6 +23,9 @@ class MyAccountForm implements Hookable {
     /** @var FormRenderer */
     protected FormRenderer $renderer;
 
+    /** @var bool Whether this request already swapped Dokan's fields for the block's, e.g. for a second register form. */
+    protected bool $took_over = false;
+
     /**
      * Class constructor.
      *
@@ -79,12 +82,13 @@ class MyAccountForm implements Hookable {
     public function render_vendor_fields(): void {
         $master = $this->setup->get_master_setup();
 
-        // A site that unhooked Dokan's vendor fields from My Account keeps that choice.
-        if ( ! $master || false === has_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' ) ) {
+        // A site that unhooked Dokan's vendor fields from My Account keeps that choice; our own removal doesn't count.
+        if ( ! $master || ( ! $this->took_over && false === has_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' ) ) ) {
             return;
         }
 
         remove_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' );
+        $this->took_over = true;
 
         wp_enqueue_script( 'dokan-vendor-registration' );
         wp_enqueue_script( 'dokan-vendor-address' );

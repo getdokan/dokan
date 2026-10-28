@@ -284,4 +284,28 @@ class MasterSetupTest extends DokanTestCase {
         // Login only: the old shortcode draws itself.
         $this->assertFalse( $block->skip_shortcode_next_to_block( false, 'dokan-vendor-onboarding-registration', [ 'show_registration' => 'no' ] ) );
     }
+
+    public function test_a_second_register_form_on_the_page_also_gets_the_block_fields() {
+        $this->onboarding_page( $this->master_block() );
+        $form = new MyAccountForm( dokan_get_container()->get( FormSetup::class ), dokan_get_container()->get( FormRenderer::class ) );
+
+        ob_start();
+        $form->render_vendor_fields();
+        $form->render_vendor_fields();
+        $html = ob_get_clean();
+
+        $this->assertSame( 2, substr_count( $html, 'dokan-vreg--myaccount' ) );
+    }
+
+    public function test_a_site_that_unhooked_dokans_fields_keeps_its_own_rules() {
+        $this->onboarding_page( $this->master_block() );
+        remove_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' );
+        $form = new MyAccountForm( dokan_get_container()->get( FormSetup::class ), dokan_get_container()->get( FormRenderer::class ) );
+        $_POST = [ 'role' => 'seller' ];
+
+        ob_start();
+        $form->render_vendor_fields();
+        $this->assertSame( '', ob_get_clean() );
+        $this->assertNull( dokan_get_container()->get( Submission::class )->get_posted_setup() );
+    }
 }

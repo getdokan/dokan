@@ -100,6 +100,11 @@ class Submission implements Hookable {
      */
     public function get_posted_setup(): ?array {
         if ( ! $this->is_block_request() ) {
+            // A site that unhooked Dokan's My Account fields draws its own, so the block's rules don't apply there.
+            if ( false === has_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' ) ) {
+                return null;
+            }
+
             // Once the onboarding page has the block, Dokan's own forms are drawn from it, so any other vendor sign-up follows its rules.
             $master = $this->setup->get_master_setup();
 

@@ -181,6 +181,11 @@ class AnswersAdmin implements Hookable {
             return is_scalar( $value ) ? trim( (string) $value ) : '';
         };
 
+        // A checkbox is ticked or not: saved "no" and an unticked box ("") are the same answer.
+        if ( 'checkbox' === ( $field['type'] ?? '' ) ) {
+            return in_array( 'yes', (array) $normalize( $answer ), true ) !== in_array( 'yes', (array) $normalize( $field['value'] ?? '' ), true );
+        }
+
         return $normalize( $answer ) !== $normalize( $field['value'] ?? '' );
     }
 
