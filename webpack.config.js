@@ -71,6 +71,8 @@ const updatedConfig = {
     output: {
         path: path.resolve( __dirname, './assets/js' ),
         filename: '[name].js',
+        // Lazy chunks (e.g. 8139.js) must carry a hash in their URL, or browsers and CDNs keep serving a stale copy after an update.
+        chunkFilename: '[name].js?ver=[chunkhash]',
         clean: true,
         devtoolNamespace: 'dokan',
         // library: { // Bind every entryChunkName to dokan global window object
