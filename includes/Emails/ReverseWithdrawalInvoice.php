@@ -57,6 +57,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
         ];
 
         add_action( 'dokan_reverse_withdrawal_invoice_email_sent', [ $this, 'trigger' ], 30, 2 );
+        add_filter( 'woocommerce_prepare_email_for_preview', [ $this, 'prepare_email_for_preview' ] );
 
         // Call parent constructor.
         parent::__construct();
@@ -136,6 +137,42 @@ class ReverseWithdrawalInvoice extends WC_Email {
         }
 
         $this->restore_locale();
+    }
+
+    /**
+     * Fill the email with sample data for the WooCommerce email preview and "Send a test email".
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Email $email The email being previewed.
+     *
+     * @return WC_Email
+     */
+    public function prepare_email_for_preview( $email ) {
+        if ( ! $email instanceof self ) {
+            return $email;
+        }
+
+        // A vendor without a user behind it, named so the sample reads like a real invoice.
+        $email->seller_info = new class() extends Vendor {
+            public function get_shop_name() {
+                return __( 'Sample Store', 'dokan-lite' );
+            }
+        };
+
+        $email->due_status = [
+            'status'   => true,
+            'due_date' => dokan_current_datetime()->modify( '+7 days' )->format( 'Y-m-d' ),
+            'balance'  => [ 'payable_amount' => 100 ],
+        ];
+
+        $last_month = dokan_current_datetime()->modify( 'first day of last month' );
+
+        $email->placeholders['{month}']      = $last_month->format( 'F' );
+        $email->placeholders['{year}']       = $last_month->format( 'Y' );
+        $email->placeholders['{store_name}'] = $email->seller_info->get_shop_name();
+
+        return $email;
     }
 
     /**
