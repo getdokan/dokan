@@ -281,6 +281,8 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
         getCommissionValue: getCommissionValueCallback,
         formatValue: formatValueCallback,
         currency,
+        // Only the All-Categories rate is validated; outline its empty box behind the message.
+        highlightEmpty: !! validationError,
     };
 
     const categoriesList = useMemo(
@@ -323,9 +325,9 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
             </div>
             { validationError && (
                 <div className="p-4 border-[#E9E9E9]">
-                    <i className="text-sm font-light text-[#9F2225]">
+                    <p className="text-sm text-destructive">
                         <RawHTML>{ validationError }</RawHTML>
-                    </i>
+                    </p>
                 </div>
             ) }
         </div>
