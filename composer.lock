@@ -1235,12 +1235,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "d62fd8870f8266929d1a4d14dbe3b2771f7a7576"
+                "reference": "5f7cc6a4b500c619cf79208920057d36b2ebe49a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/d62fd8870f8266929d1a4d14dbe3b2771f7a7576",
-                "reference": "d62fd8870f8266929d1a4d14dbe3b2771f7a7576",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/5f7cc6a4b500c619cf79208920057d36b2ebe49a",
+                "reference": "5f7cc6a4b500c619cf79208920057d36b2ebe49a",
                 "shasum": ""
             },
             "require": {
@@ -1295,7 +1295,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-08-15T17:46:53+00:00"
+            "time": "2026-10-22T00:04:19+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -4002,12 +4002,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "510f4f678ac00b65c162aa0ad57d4768940a0409"
+                "reference": "475e7223a25db76e0f138feff91ab1999f4c189f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/510f4f678ac00b65c162aa0ad57d4768940a0409",
-                "reference": "510f4f678ac00b65c162aa0ad57d4768940a0409",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/475e7223a25db76e0f138feff91ab1999f4c189f",
+                "reference": "475e7223a25db76e0f138feff91ab1999f4c189f",
                 "shasum": ""
             },
             "require": {
@@ -4061,7 +4061,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-10-07T20:23:40+00:00"
+            "time": "2026-10-22T08:16:15+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
