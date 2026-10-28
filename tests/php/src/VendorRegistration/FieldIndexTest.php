@@ -125,5 +125,8 @@ class FieldIndexTest extends DokanTestCase {
 
         $this->assertSame( 200, $response->get_status() );
         $this->assertContains( 'dokan_vreg_licence', wp_list_pluck( $response->get_data(), 'key' ) );
+
+        // The editor calls .find() on it, so the JSON it receives must be an array, not an object.
+        $this->assertTrue( wp_is_numeric_array( rest_get_server()->response_to_data( $response, false ) ) );
     }
 }

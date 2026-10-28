@@ -77,14 +77,8 @@ class VendorRegistrationFieldsController extends DokanBaseController {
             $data[] = $this->prepare_response_for_collection( $this->prepare_item_for_response( $field, $request ) );
         }
 
-        $response = rest_ensure_response( $data );
-        $response->add_links(
-            [
-                'self' => [ 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) ],
-            ]
-        );
-
-        return $response;
+        // A plain list: links on a collection would add a `_links` key and turn the JSON array into an object.
+        return rest_ensure_response( $data );
     }
 
     /**
