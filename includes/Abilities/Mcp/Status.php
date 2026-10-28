@@ -95,7 +95,7 @@ class Status {
     }
 
     /**
-     * What to do with the connector URL, unescaped.
+     * What to do with the connector URL, unescaped: how to use it, who may, then the server state in brackets.
      *
      * @since DOKAN_SINCE
      *
@@ -104,76 +104,45 @@ class Status {
      * @return string
      */
     public static function connector_description( array $summary ): string {
-        $who = $summary['vendor_access']
+        $who   = $summary['vendor_access']
             ? __( 'Vendors use the same URL with their own login.', 'dokan-lite' )
             : __( 'Only store admins can connect while vendor access is off.', 'dokan-lite' );
+        $state = $summary['live']
+            ? self::tool_count_label( $summary['tools'] )
+            : __( 'The server is off', 'dokan-lite' );
 
-        return __( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication.', 'dokan-lite' ) . ' ' . $who;
+        return __( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication.', 'dokan-lite' ) . ' ' . $who . ' (' . $state . ')';
     }
 
     /**
-     * The Claude Code CLI line that adds the server, with the credential left for the user to fill in.
+     * How an assistant signs in, unescaped: one sentence for both settings screens.
      *
      * @since DOKAN_SINCE
      *
-     * @param string $endpoint The MCP endpoint URL.
+     * @param array $summary Output of {@see self::summary()}.
      *
      * @return string
      */
-    public static function claude_code_command( string $endpoint ): string {
-        return sprintf( 'claude mcp add --transport http dokan %s --header "Authorization: Basic $(printf %%s \'USERNAME:APPLICATION PASSWORD\' | base64)"', $endpoint );
-    }
+    public static function sign_in_text( array $summary ): string {
+        $parts = [ __( 'Assistants sign in with an application password', 'dokan-lite' ) ];
 
-    /**
-     * How an assistant signs in with a WordPress application password, as escaped HTML.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public static function application_password_html(): string {
-        $profile = sprintf( '<a href="%1$s">%2$s</a>', esc_url( admin_url( 'profile.php#application-passwords-section' ) ), esc_html__( 'Profile › Application Passwords', 'dokan-lite' ) );
-        $lines   = [
-            /* translators: %s: link to the profile screen. */
-            sprintf( esc_html__( 'Create an application password for your account under %s, then give the assistant your username and that password.', 'dokan-lite' ), $profile ),
-            esc_html__( 'Works with any assistant that can send a username and password (HTTP Basic authentication), such as Claude Code, Cursor or Claude Desktop.', 'dokan-lite' ),
-        ];
-
-        if ( ! wp_is_application_passwords_available() ) {
-            $lines[] = '<strong>' . esc_html__( 'WordPress only accepts application passwords over HTTPS, so none will work on this site yet.', 'dokan-lite' ) . '</strong>';
+        if ( $summary['vendor_access'] ) {
+            $parts[] = __( 'Vendors: create theirs under Users › Edit', 'dokan-lite' );
         }
 
-        return implode( '<br>', $lines );
+        $parts[] = __( 'A Read/Write WooCommerce key works too', 'dokan-lite' );
+
+        return implode( ' | ', $parts );
     }
 
     /**
-     * How a vendor or staff member gets an application password, as escaped HTML.
-     *
-     * Dokan keeps vendors out of wp-admin and adds nothing for this: WordPress lets an
-     * administrator add application passwords to any user's profile, so the store admin issues theirs.
+     * Where a user creates an application password for themselves.
      *
      * @since DOKAN_SINCE
      *
      * @return string
      */
-    public static function vendor_password_html(): string {
-        $users = sprintf( '<a href="%1$s">%2$s</a>', esc_url( admin_url( 'users.php' ) ), esc_html__( 'Users › Edit', 'dokan-lite' ) );
-
-        /* translators: %s: link to the users list. */
-        return sprintf( esc_html__( 'A vendor\'s or staff member\'s password is created by the store admin on that user\'s profile (%s › Application Passwords) and handed to them.', 'dokan-lite' ), $users );
-    }
-
-    /**
-     * How a store owner signs in with a WooCommerce REST API key, as escaped HTML.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public static function api_key_html(): string {
-        $keys = sprintf( '<a href="%1$s">%2$s</a>', esc_url( admin_url( 'admin.php?page=wc-settings&tab=advanced&section=keys' ) ), esc_html__( 'WooCommerce › Settings › Advanced › REST API', 'dokan-lite' ) );
-
-        /* translators: %s: link to the WooCommerce REST API keys screen. */
-        return sprintf( esc_html__( 'A WooCommerce REST API key with Read/Write permissions, created under %s, also works: the consumer key is the username and the consumer secret is the password. A Read-only key cannot be used, because every MCP request is a POST.', 'dokan-lite' ), $keys );
+    public static function application_passwords_url(): string {
+        return admin_url( 'profile.php#application-passwords-section' );
     }
 }

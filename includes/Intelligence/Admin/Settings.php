@@ -84,7 +84,7 @@ class Settings implements Hookable {
     }
 
     /**
-     * The connection as legacy `html` fields: status, connector URL and how an assistant signs in.
+     * The connection as legacy `html` fields: the connector URL, carrying the server status, and a link to create an application password.
      *
      * @since DOKAN_SINCE
      *
@@ -99,23 +99,13 @@ class Settings implements Hookable {
         }
 
         return [
-            'dokan_mcp_status'               => [
-                'label' => __( 'Server Status', 'dokan-lite' ),
-                'desc'  => '<strong>' . ( $status['live'] ? esc_html__( 'Active', 'dokan-lite' ) : esc_html__( 'Off', 'dokan-lite' ) ) . '</strong> · ' . esc_html( Status::tool_count_label( $status['tools'] ) ) . $warnings,
-            ],
-            'dokan_mcp_connector_url'        => [
+            'dokan_mcp_connector_url' => [
                 'label' => __( 'Connector URL', 'dokan-lite' ),
-                'desc'  => '<code>' . esc_html( $status['endpoint'] ) . '</code><br>' . esc_html( Status::connector_description( $status ) ),
+                'desc'  => '<code>' . esc_html( $status['endpoint'] ) . '</code><br>' . esc_html( Status::connector_description( $status ) ) . $warnings,
             ],
-            'dokan_mcp_application_password' => [
-                'label' => __( 'Application Password', 'dokan-lite' ),
-                'desc'  => Status::application_password_html()
-                    . ( $status['vendor_access'] ? '<br>' . Status::vendor_password_html() : '' )
-                    . '<br>' . esc_html__( 'For Claude Code:', 'dokan-lite' ) . '<br><code>' . esc_html( Status::claude_code_command( $status['endpoint'] ) ) . '</code>',
-            ],
-            'dokan_mcp_api_key'              => [
-                'label' => __( 'WooCommerce API Key', 'dokan-lite' ),
-                'desc'  => Status::api_key_html(),
+            'dokan_mcp_sign_in'       => [
+                'label' => __( 'Sign In', 'dokan-lite' ),
+                'desc'  => esc_html( Status::sign_in_text( $status ) ) . ' ' . sprintf( '<a href="%1$s">%2$s</a>', esc_url( Status::application_passwords_url() ), esc_html__( 'Create one', 'dokan-lite' ) ),
             ],
         ];
     }

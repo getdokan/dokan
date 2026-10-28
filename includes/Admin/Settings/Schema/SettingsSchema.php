@@ -2407,7 +2407,8 @@ class SettingsSchema {
 
     /**
      * The connection, described with display-only fields whose values are filled in when the
-     * screen is built: status, the connector URL and how an assistant signs in.
+     * screen is built: the connector URL, which also carries the server status, and a link to
+     * create an application password.
      *
      * Nothing here is a setting; the values are dropped on save by
      * {@see \WeDevs\Dokan\Abilities\Mcp\DisplayFields::strip_display_values()}. There is nothing
@@ -2445,14 +2446,6 @@ class SettingsSchema {
                 'description'  => esc_html__( 'An assistant signs in as a WordPress user and acts as that account. WordPress and WooCommerce check the credentials; nothing is stored here.', 'dokan-lite' ),
                 'dependencies' => $when_enabled,
             ],
-            $field(
-                'mcp_server_status',
-                'info',
-                [
-                    'title'       => $status['live'] ? esc_html__( 'Server status: Active', 'dokan-lite' ) : esc_html__( 'Server status: Off', 'dokan-lite' ),
-                    'description' => esc_html( Status::tool_count_label( $status['tools'] ) ),
-                ]
-            ),
         ];
 
         foreach ( Status::warnings( $status ) as $key => $warning ) {
@@ -2467,43 +2460,27 @@ class SettingsSchema {
             );
         }
 
+        // The icon beside the title doubles as the server status.
         $elements[] = $field(
             'mcp_connector_url',
             'copy_field',
             [
                 'title'       => esc_html__( 'Connector URL', 'dokan-lite' ),
+                'icon'        => $status['live'] ? 'CircleCheck' : 'CircleX',
+                'is_danger'   => ! $status['live'],
                 'description' => esc_html( Status::connector_description( $status ) ),
                 'value'       => $status['endpoint'],
             ]
         );
 
         $elements[] = $field(
-            'mcp_application_password',
-            'html',
+            'mcp_sign_in',
+            'info',
             [
-                'title'        => esc_html__( 'Application password', 'dokan-lite' ),
-                'description'  => esc_html__( 'The usual way in. Each password can be revoked on its own from the profile screen.', 'dokan-lite' ),
-                'html_content' => Status::application_password_html() . ( $status['vendor_access'] ? '<br>' . Status::vendor_password_html() : '' ),
-            ]
-        );
-
-        $elements[] = $field(
-            'mcp_claude_code',
-            'copy_field',
-            [
-                'title'       => esc_html__( 'Claude Code', 'dokan-lite' ),
-                'description' => esc_html__( 'Adds Dokan to the Claude Code CLI. Replace USERNAME and APPLICATION PASSWORD with yours.', 'dokan-lite' ),
-                'value'       => Status::claude_code_command( $status['endpoint'] ),
-            ]
-        );
-
-        $elements[] = $field(
-            'mcp_api_key',
-            'html',
-            [
-                'title'        => esc_html__( 'WooCommerce API key', 'dokan-lite' ),
-                'description'  => esc_html__( 'For store owners who already manage REST API keys.', 'dokan-lite' ),
-                'html_content' => Status::api_key_html(),
+                'show_icon'  => true,
+                'title'      => esc_html( Status::sign_in_text( $status ) ),
+                'link_title' => esc_html__( 'Create one', 'dokan-lite' ),
+                'link_url'   => Status::application_passwords_url(),
             ]
         );
 
