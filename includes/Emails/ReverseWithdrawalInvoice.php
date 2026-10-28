@@ -125,7 +125,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
 
         $this->due_status = $due_status;
 
-        $this->set_invoice_placeholders();
+        $this->set_invoice_placeholders( $this->seller_info->get_shop_name() );
 
         if ( $this->get_recipient() !== 'unpaid_vendor@ofthe.site' ) {
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -148,38 +148,35 @@ class ReverseWithdrawalInvoice extends WC_Email {
             return $email;
         }
 
-        // A vendor without a user behind it, named so the sample reads like a real invoice.
-        $email->seller_info = new class() extends Vendor {
-            public function get_shop_name() {
-                return __( 'Sample Store', 'dokan-lite' );
-            }
-        };
-
-        $email->due_status = [
-            'due_date' => dokan_current_datetime()->modify( '+7 days' )->format( 'Y-m-d' ),
+        // An empty vendor keeps theme-overridden templates that still read $seller_info from fataling.
+        $email->seller_info = dokan()->vendor->get( 0 );
+        $email->due_status  = [
+            'due_date' => Helper::get_monthly_due_date( dokan_current_datetime() ),
             'balance'  => [ 'payable_amount' => 100 ],
         ];
 
-        $email->set_invoice_placeholders();
+        $email->set_invoice_placeholders( __( 'Sample Store', 'dokan-lite' ) );
 
         return $email;
     }
 
     /**
-     * Fill the {month}, {year} and {store_name} placeholders for the current seller.
+     * Fill the {month}, {year} and {store_name} placeholders.
      *
      * The invoice covers the previous calendar month.
      *
      * @since DOKAN_SINCE
      *
+     * @param string $store_name Store name shown in the subject and body.
+     *
      * @return void
      */
-    protected function set_invoice_placeholders() {
+    protected function set_invoice_placeholders( $store_name ) {
         $last_month = dokan_current_datetime()->modify( 'first day of last month' );
 
         $this->placeholders['{month}']      = $last_month->format( 'F' );
         $this->placeholders['{year}']       = $last_month->format( 'Y' );
-        $this->placeholders['{store_name}'] = $this->seller_info->get_shop_name();
+        $this->placeholders['{store_name}'] = $store_name;
     }
 
     /**

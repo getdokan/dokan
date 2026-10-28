@@ -525,28 +525,8 @@ class Helper {
                 }
 
                 // vendor needs to pay due amount
-                $ret['status'] = true;
-
-                // check if user crossed the due period
-                $due_date = $current_date->modify( 'first day of this month' )->setTime( 23, 59, 59 );
-
-                if ( SettingsHelper::get_billing_day() ) {
-                    $billing_day = SettingsHelper::get_billing_day() - 1;
-                    $due_date    = $billing_day > 0 ? $due_date->modify( "+ {$billing_day} days" ) : $due_date;
-                }
-
-                if ( SettingsHelper::get_due_period() ) {
-                    $due_period = SettingsHelper::get_due_period() - 1;
-                    $due_date   = $due_period > 0 ? $due_date->modify( "+ {$due_period} days" ) : $due_date;
-                }
-
-                if ( $current_date > $due_date ) {
-                    // vendor needs to pay due balance immediately
-                    $ret['due_date'] = 'immediate';
-                } else {
-                    // vendor needs to pay due balance on due date
-                    $ret['due_date'] = $due_date->format( 'Y-m-d' );
-                }
+                $ret['status']   = true;
+                $ret['due_date'] = static::get_monthly_due_date( $current_date );
 
                 break;
 
@@ -595,6 +575,34 @@ class Helper {
         }
 
         return $ret;
+    }
+
+    /**
+     * Get the due date for the current month's reverse withdrawal payment.
+     *
+     * Billing day and due period both count from the first day of the month.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \DateTimeImmutable $current_date
+     *
+     * @return string 'immediate' once the due date has passed, otherwise Y-m-d
+     */
+    public static function get_monthly_due_date( $current_date ) {
+        $due_date = $current_date->modify( 'first day of this month' )->setTime( 23, 59, 59 );
+
+        if ( SettingsHelper::get_billing_day() ) {
+            $billing_day = SettingsHelper::get_billing_day() - 1;
+            $due_date    = $billing_day > 0 ? $due_date->modify( "+ {$billing_day} days" ) : $due_date;
+        }
+
+        if ( SettingsHelper::get_due_period() ) {
+            $due_period = SettingsHelper::get_due_period() - 1;
+            $due_date   = $due_period > 0 ? $due_date->modify( "+ {$due_period} days" ) : $due_date;
+        }
+
+        // vendor needs to pay due balance immediately once the due date has passed
+        return $current_date > $due_date ? 'immediate' : $due_date->format( 'Y-m-d' );
     }
 
     /**
