@@ -57,6 +57,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
         ];
 
         add_action( 'dokan_reverse_withdrawal_invoice_email_sent', [ $this, 'trigger' ], 30, 2 );
+        add_filter( 'woocommerce_prepare_email_for_preview', [ $this, 'prepare_email_for_preview' ] );
 
         // Call parent constructor.
         parent::__construct();
@@ -124,18 +125,58 @@ class ReverseWithdrawalInvoice extends WC_Email {
 
         $this->due_status = $due_status;
 
-        // add placeholders
-        $last_month = dokan_current_datetime()->modify( 'first day of last month' );
-
-        $this->placeholders['{month}']      = $last_month->format( 'F' );
-        $this->placeholders['{year}']       = $last_month->format( 'Y' );
-        $this->placeholders['{store_name}'] = $this->seller_info->get_shop_name();
+        $this->set_invoice_placeholders( $this->seller_info->get_shop_name() );
 
         if ( $this->get_recipient() !== 'unpaid_vendor@ofthe.site' ) {
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
 
         $this->restore_locale();
+    }
+
+    /**
+     * Fill the email with sample data for the WooCommerce email preview and "Send a test email".
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Email $email The email being previewed.
+     *
+     * @return WC_Email
+     */
+    public function prepare_email_for_preview( $email ) {
+        if ( ! $email instanceof self ) {
+            return $email;
+        }
+
+        // An empty vendor keeps theme-overridden templates that still read $seller_info from fataling.
+        $email->seller_info = dokan()->vendor->get( 0 );
+        $email->due_status  = [
+            'due_date' => Helper::get_monthly_due_date( dokan_current_datetime() ),
+            'balance'  => [ 'payable_amount' => 100 ],
+        ];
+
+        $email->set_invoice_placeholders( __( 'Sample Store', 'dokan-lite' ) );
+
+        return $email;
+    }
+
+    /**
+     * Fill the {month}, {year} and {store_name} placeholders.
+     *
+     * The invoice covers the previous calendar month.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $store_name Store name shown in the subject and body.
+     *
+     * @return void
+     */
+    protected function set_invoice_placeholders( $store_name ) {
+        $last_month = dokan_current_datetime()->modify( 'first day of last month' );
+
+        $this->placeholders['{month}']      = $last_month->format( 'F' );
+        $this->placeholders['{year}']       = $last_month->format( 'Y' );
+        $this->placeholders['{store_name}'] = $store_name;
     }
 
     /**
