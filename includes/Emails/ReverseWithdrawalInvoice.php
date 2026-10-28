@@ -125,12 +125,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
 
         $this->due_status = $due_status;
 
-        // add placeholders
-        $last_month = dokan_current_datetime()->modify( 'first day of last month' );
-
-        $this->placeholders['{month}']      = $last_month->format( 'F' );
-        $this->placeholders['{year}']       = $last_month->format( 'Y' );
-        $this->placeholders['{store_name}'] = $this->seller_info->get_shop_name();
+        $this->set_invoice_placeholders();
 
         if ( $this->get_recipient() !== 'unpaid_vendor@ofthe.site' ) {
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -161,18 +156,30 @@ class ReverseWithdrawalInvoice extends WC_Email {
         };
 
         $email->due_status = [
-            'status'   => true,
             'due_date' => dokan_current_datetime()->modify( '+7 days' )->format( 'Y-m-d' ),
             'balance'  => [ 'payable_amount' => 100 ],
         ];
 
-        $last_month = dokan_current_datetime()->modify( 'first day of last month' );
-
-        $email->placeholders['{month}']      = $last_month->format( 'F' );
-        $email->placeholders['{year}']       = $last_month->format( 'Y' );
-        $email->placeholders['{store_name}'] = $email->seller_info->get_shop_name();
+        $email->set_invoice_placeholders();
 
         return $email;
+    }
+
+    /**
+     * Fill the {month}, {year} and {store_name} placeholders for the current seller.
+     *
+     * The invoice covers the previous calendar month.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function set_invoice_placeholders() {
+        $last_month = dokan_current_datetime()->modify( 'first day of last month' );
+
+        $this->placeholders['{month}']      = $last_month->format( 'F' );
+        $this->placeholders['{year}']       = $last_month->format( 'Y' );
+        $this->placeholders['{store_name}'] = $this->seller_info->get_shop_name();
     }
 
     /**
