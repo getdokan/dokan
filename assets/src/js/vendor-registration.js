@@ -105,6 +105,11 @@ var Dokan_Vendor_Registration = {
         var chk_value = $( this ).val();
 
         if ( $( this ).prop( "checked" ) ) {
+            // A taken shop URL keeps the submit button locked.
+            if ( $( this ).closest( 'form' ).find( '#url-alart-mgs' ).hasClass( 'text-danger' ) ) {
+                return;
+            }
+
             $( 'input[name=register]' ).removeAttr( 'disabled' );
             $( 'button[name=register]' ).removeAttr( 'disabled' );
             $( 'input[name=dokan_migration]' ).removeAttr( 'disabled' );
@@ -154,6 +159,9 @@ var Dokan_Vendor_Registration = {
         }
 
         var row = self.closest('.form-row');
+        const form = self.closest( 'form' );
+        const submitButton = form.find( '[type=submit]' );
+
         row.block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
 
         $.post( dokan.ajaxurl, data, function(resp) {
@@ -161,11 +169,13 @@ var Dokan_Vendor_Registration = {
             if ( resp.success === true ) {
                 $('#url-alart').removeClass('text-danger').addClass('text-success');
                 $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan.seller.available);
-                $('.woocommerce-form-register__submit').prop('disabled', false);
+                // An unticked terms box keeps the button locked.
+                const termsUnticked = form.find( '.tc_check_box:not(:checked)' ).length > 0;
+                submitButton.prop( 'disabled', termsUnticked );
             } else {
                 $('#url-alart').removeClass('text-success').addClass('text-danger');
                 $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
-                $('.woocommerce-form-register__submit').prop('disabled', true);
+                submitButton.prop( 'disabled', true );
             }
 
             row.unblock();
@@ -191,45 +201,47 @@ var Dokan_Vendor_Registration = {
     },
 
     handlePasswordStrengthObserver: function() {
-        // Identify the password input element to observe.
-        const elementToObserve  = document.querySelector( '.woocommerce-form-register .password-input' ),
+        // WooCommerce wraps the field and adds the strength meter after this runs, so anchor on the field itself.
+        const passwordField     = document.querySelector( '.woocommerce-form-register #reg_password' ),
               AllowedClassNames = [ 'good', 'strong' ];
 
         // If registration password input field is not exists.
-        if ( ! elementToObserve ) {
+        if ( ! passwordField ) {
             return;
         }
 
+        // The meter lands next to the field's wrapper, so watch the whole row.
+        const elementToObserve = passwordField.closest( '.form-row' ) || passwordField.parentElement;
+
         // Create a new instance of `MutationObserver` named `observer`.
-        const observer = new MutationObserver( ( mutationList, observer ) => {
+        const observer = new MutationObserver( ( mutationList ) => {
             for ( const mutation of mutationList ) {
-                // Check if the mutation element class list contains at least an allowed class names.
-                if ( AllowedClassNames.some( className => mutation.target.classList.contains( className ) ) ) {
+                // WooCommerce re-enables the button on a good or strong password, so re-apply the locks.
+                if ( mutation.target.classList && AllowedClassNames.some( className => mutation.target.classList.contains( className ) ) ) {
                     this.ensureShopSlugAvailability();
                 }
             }
         });
 
-        // Call `observe()` on that MutationObserver instance.
-        observer.observe( elementToObserve, { subtree: true, childList: true } );
+        // The meter's strength class changes on every keystroke, so watch class attributes too.
+        observer.observe( elementToObserve, { subtree: true, childList: true, attributes: true, attributeFilter: [ 'class' ] } );
     },
 
     ensureShopSlugAvailability: function() {
-        const slugAvailabilityStatus = $( '#url-alart-mgs' ).hasClass( 'text-success' ),
+        const urlStatus              = $( '#url-alart-mgs' ),
+              form                   = urlStatus.closest( 'form' ),
+              slugAvailabilityStatus = urlStatus.hasClass( 'text-success' ),
               registrationRoleInput  = $( '.vendor-customer-registration input[name="role"]:checked' ),
-              submitButton           = $( '.woocommerce-form-register__submit' );
+              submitButton           = form.find( '[type=submit]' ),
+              termsUnticked          = form.find( '.tc_check_box:not(:checked)' ).length > 0;
 
         // Check if the registration role is `seller`.
         if ( 'seller' !== registrationRoleInput.val() ) {
             return;
         }
 
-        // Enable/disable submit button based on shop slug availability.
-        if ( slugAvailabilityStatus ) {
-            submitButton.prop( 'disabled', false );
-        } else {
-            submitButton.prop( 'disabled', true );
-        }
+        // The button stays locked until the URL is available and the terms box is ticked.
+        submitButton.prop( 'disabled', ! slugAvailabilityStatus || termsUnticked );
     }
 };
 

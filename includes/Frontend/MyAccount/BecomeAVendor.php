@@ -106,6 +106,16 @@ class BecomeAVendor {
             }
         }
 
+        // Normalize like wp_update_user() does, so a reformatted taken URL is caught too.
+        $shop_url = isset( $_POST['shopurl'] ) ? dokan_sanitize_shop_url( sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) ) : '';
+
+        // wp_update_user() would silently rename a shop URL another user already has.
+        if ( ! dokan_is_shop_url_available( $shop_url, $user->ID ) ) {
+            $error    = __( 'Shop URL is not available', 'dokan-lite' );
+            $errors[] = $error;
+            wc_add_notice( $error, 'error' );
+        }
+
         if ( $errors ) {
             return;
         }
@@ -117,7 +127,7 @@ class BecomeAVendor {
                 'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
                 'address'  => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : '',
                 'phone'    => isset( $_POST['phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['phone'] ) ) : '',
-                'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) : '',
+                'shopurl'  => $shop_url,
             ]
         );
 
