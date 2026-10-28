@@ -1035,10 +1035,11 @@ class ProductController extends DokanRESTController {
      * @return WP_REST_Response|array|WP_Error
      */
     protected function prepare_data_for_response( $product, $request ) {
-        $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
-        $author_id = get_post_field( 'post_author', $product->get_id() );
-        $store     = dokan()->vendor->get( $author_id );
-        $data      = [
+        $context    = ! empty( $request['context'] ) ? $request['context'] : 'view';
+        $author_id  = get_post_field( 'post_author', $product->get_id() );
+        $store      = dokan()->vendor->get( $author_id );
+        $can_manage = $this->can_view_vendor_product_data( $product );
+        $data       = [
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
             'slug'                  => $product->get_slug( $context ),
@@ -1068,7 +1069,7 @@ class ProductController extends DokanRESTController {
             'total_sales'           => $product->get_total_sales( $context ),
             'virtual'               => $product->is_virtual(),
             'downloadable'          => $product->is_downloadable(),
-            'downloads'             => $this->get_downloads( $product ),
+            'downloads'             => $can_manage ? $this->get_downloads( $product ) : [],
             'download_limit'        => $product->get_download_limit( $context ),
             'download_expiry'       => $product->get_download_expiry( $context ),
             'external_url'          => $product->is_type( 'external' ) ? $product->get_product_url( $context ) : '',
@@ -1123,7 +1124,7 @@ class ProductController extends DokanRESTController {
         $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
         $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
 
-        $earning           = dokan()->commission->get_earning_by_product( $product );
+        $earning           = $can_manage ? dokan()->commission->get_earning_by_product( $product ) : null;
         $data['earning']   = is_numeric( $earning ) ? (float) $earning : null;
         $data['page_view'] = (int) get_post_meta( $product->get_id(), 'pageview', true );
         $data['edit_url']  = dokan_edit_product_url( $product->get_id() );
@@ -1747,6 +1748,23 @@ class ProductController extends DokanRESTController {
         }
 
         return $attributes;
+    }
+
+    /**
+     * Whether the caller may see the product's vendor-only data (download files, earning) on the public product routes.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Product $product Product being serialized.
+     *
+     * @return bool
+     */
+    protected function can_view_vendor_product_data( $product ): bool {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        return is_user_logged_in() && dokan_is_product_author( $product->get_id() );
     }
 
     /**
