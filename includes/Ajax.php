@@ -172,30 +172,20 @@ class Ajax {
 
         global $user_ID;
 
-        $url_slug = isset( $_POST['url_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['url_slug'] ) ) : '';
-        $check    = true;
-        $user     = get_user_by( 'slug', $url_slug );
+        $url_slug        = isset( $_POST['url_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['url_slug'] ) ) : '';
+        $exclude_user_id = 0;
 
-        if ( false !== $user ) {
-            $check = false;
-        }
-
-        // check if a customer wants to migrate, his username should be available
+        // A migrating customer may keep their own nicename.
         if ( is_user_logged_in() && dokan_is_user_customer( $user_ID ) ) {
-            $current_user = wp_get_current_user();
-
-            if ( $user && $current_user->user_nicename === $user->user_nicename ) {
-                $check = true;
-            }
+            $exclude_user_id = (int) $user_ID;
         }
 
+        // An admin editing a vendor may keep that vendor's nicename.
         if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
-            $vendor = get_user_by( 'id', intval( $_POST['vendor_id'] ) );
-
-            if ( $vendor && $user && $vendor->user_nicename === $user->user_nicename ) {
-                $check = true;
-            }
+            $exclude_user_id = intval( $_POST['vendor_id'] );
         }
+
+        $check = dokan_is_shop_url_available( $url_slug, $exclude_user_id );
 
         if ( $check ) {
             wp_send_json_success(

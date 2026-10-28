@@ -4350,6 +4350,35 @@ function dokan_sanitize_phone_number( $phone ) {
 }
 
 /**
+ * Normalize a shop URL the way wp_update_user() normalizes a nicename.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $shop_url Raw shop URL.
+ *
+ * @return string
+ */
+function dokan_sanitize_shop_url( $shop_url ) {
+	return sanitize_title( sanitize_user( $shop_url, true ) );
+}
+
+/**
+ * Check whether a shop URL is free to use as a user nicename.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string $shop_url        Raw shop URL.
+ * @param int    $exclude_user_id User allowed to keep this nicename.
+ *
+ * @return bool
+ */
+function dokan_is_shop_url_available( $shop_url, $exclude_user_id = 0 ) {
+	$owner = get_user_by( 'slug', dokan_sanitize_shop_url( $shop_url ) );
+
+	return ! $owner || $owner->ID === (int) $exclude_user_id;
+}
+
+/**
  * Dokan override author ID from admin
  *
  * @since  2.6.2

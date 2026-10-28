@@ -108,4 +108,11 @@ class BecomeAVendorTest extends DokanTestCase {
         $this->assertTrue( dokan_is_user_seller( $customer_id ) );
         $this->assertSame( 'nila', get_userdata( $customer_id )->user_nicename );
     }
+
+    public function test_a_free_shop_url_is_saved_normalized() {
+        $customer_id = $this->create_customer();
+
+        $this->assertTrue( $this->submit_as( $customer_id, 'My New Shop' ) );
+        $this->assertSame( 'my-new-shop', get_userdata( $customer_id )->user_nicename );
+    }
 }
