@@ -180,8 +180,8 @@ class Ajax {
             $exclude_user_id = (int) $user_ID;
         }
 
-        // An admin editing a vendor may keep that vendor's nicename.
-        if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
+        // An admin editing a vendor may keep that vendor's nicename; is_admin() is always true under admin-ajax.
+        if ( current_user_can( 'manage_woocommerce' ) && isset( $_POST['vendor_id'] ) ) {
             $exclude_user_id = intval( $_POST['vendor_id'] );
         }
 
