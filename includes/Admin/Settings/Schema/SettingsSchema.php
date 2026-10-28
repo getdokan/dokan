@@ -679,7 +679,7 @@ class SettingsSchema {
                 'variant'          => 'combine_input',
                 'section_id'       => 'commission',
                 'title'            => esc_html__( 'Commission Amount', 'dokan-lite' ),
-                'description'      => esc_html__( 'Amount you will get from sales in both percentage and fixed fee.', 'dokan-lite' ),
+                'description'      => esc_html__( 'You get a percentage of each item\'s price plus a fixed fee for every item sold.', 'dokan-lite' ),
                 'dependencies'     => [
                     [
 						'key' => 'commission_type',
@@ -699,16 +699,13 @@ class SettingsSchema {
 					],
                 ],
                 'validations'      => [
-                    [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
+                    [ 'not_empty' => esc_html__( 'Commission Amount needs a percentage and a fixed fee. Enter 0 for none.', 'dokan-lite' ) ],
                 ],
-                // Server-side mirror of the client check (like delivery-time): both percentage and flat fee are required, so the save is blocked if either is empty.
+                // Server-side mirror of the client check: names the empty box and says 0 is allowed.
                 'validation_func'  => function ( $value ) {
                     $percentage = is_array( $value ) ? ( $value['admin_percentage'] ?? '' ) : '';
                     $flat       = is_array( $value ) ? ( $value['additional_fee'] ?? '' ) : '';
-                    if ( '' === trim( (string) $percentage ) || '' === trim( (string) $flat ) ) {
-                        return esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' );
-                    }
-                    return true;
+                    return self::commission_amount_error( esc_html__( 'Commission Amount', 'dokan-lite' ), $percentage, $flat );
                 },
                 'legacy_key'       => [
                     'admin_percentage' => 'dokan_selling.admin_percentage',
@@ -765,7 +762,7 @@ class SettingsSchema {
                 'variant'      => 'category_based_commission',
                 'section_id'   => 'commission',
                 'title'        => esc_html__( 'Commission Amount', 'dokan-lite' ),
-                'description'  => esc_html__( 'Amount you will get from sales in both percentage and fixed fee.', 'dokan-lite' ),
+                'description'  => esc_html__( 'You get a percentage of each item\'s price plus a fixed fee for every item sold.', 'dokan-lite' ),
                 'dependencies' => [
                     [
 						'key' => 'commission_type',
@@ -785,17 +782,14 @@ class SettingsSchema {
 					],
                 ],
                 'validations'  => [
-                    [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
+                    [ 'not_empty' => esc_html__( 'All Categories needs a percentage and a fixed fee. Enter 0 for none.', 'dokan-lite' ) ],
                 ],
-                // Server-side mirror of the client check (like delivery-time): the All-Categories rate needs both percentage and flat fee, so the save is blocked if either is empty.
+                // Server-side mirror of the client check: the All-Categories rate is the default, so it names the empty box and says 0 is allowed.
                 'validation_func' => function ( $value ) {
                     $all        = is_array( $value ) && isset( $value['all'] ) ? $value['all'] : [];
                     $percentage = $all['percentage'] ?? '';
                     $flat       = $all['flat'] ?? '';
-                    if ( '' === trim( (string) $percentage ) || '' === trim( (string) $flat ) ) {
-                        return esc_html__( 'Admin Commission is required.', 'dokan-lite' );
-                    }
-                    return true;
+                    return self::commission_amount_error( esc_html__( 'All Categories', 'dokan-lite' ), $percentage, $flat );
                 },
             ],
 
@@ -2314,6 +2308,39 @@ class SettingsSchema {
         // providers that only Pro registers, so it lives entirely in Pro.
 
         return $elements;
+    }
+
+    /**
+     * Why a commission amount cannot be saved: which box is empty, and that 0 is allowed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $name       Field or category name the message starts with.
+     * @param mixed  $percentage Percentage value.
+     * @param mixed  $flat       Fixed fee value.
+     *
+     * @return string|true The message, or true when both boxes are filled.
+     */
+    private static function commission_amount_error( string $name, $percentage, $flat ) {
+        $percentage_blank = '' === trim( (string) $percentage );
+        $flat_blank       = '' === trim( (string) $flat );
+
+        if ( $percentage_blank && $flat_blank ) {
+            /* translators: %s: field or category name */
+            return sprintf( esc_html__( '%s needs a percentage and a fixed fee. Enter 0 for none.', 'dokan-lite' ), $name );
+        }
+
+        if ( $percentage_blank ) {
+            /* translators: %s: field or category name */
+            return sprintf( esc_html__( '%s needs a percentage. Enter 0 for none.', 'dokan-lite' ), $name );
+        }
+
+        if ( $flat_blank ) {
+            /* translators: %s: field or category name */
+            return sprintf( esc_html__( '%s needs a fixed fee. Enter 0 for none.', 'dokan-lite' ), $name );
+        }
+
+        return true;
     }
 
     /**

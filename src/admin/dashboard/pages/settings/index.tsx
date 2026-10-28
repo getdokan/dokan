@@ -70,6 +70,24 @@ const getLegacyErrorMessage = ( error: unknown ): string => {
     ].join( ' ' );
 };
 
+// Bring the first failing field into view and put the cursor in its first empty box, so a long page doesn't hide what went wrong.
+const focusFirstInvalidField = ( fieldId: string ): void => {
+    window.requestAnimationFrame( () => {
+        const field = document.getElementById( fieldId );
+        if ( ! field ) {
+            return;
+        }
+        field.scrollIntoView( { behavior: 'smooth', block: 'center' } );
+        const inputs = Array.from(
+            field.querySelectorAll< HTMLInputElement >( 'input' )
+        );
+        const target =
+            inputs.find( ( input ) => input.value.trim() === '' ) ??
+            inputs[ 0 ];
+        target?.focus( { preventScroll: true } );
+    } );
+};
+
 const hasElement = (
     elements: SettingsElement[],
     id: string,
@@ -217,14 +235,21 @@ export default function SettingsPage() {
         } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Failed to save settings:', error );
+            const fieldErrors = getFieldErrors( error );
+            const firstErrorId = Object.keys( fieldErrors )[ 0 ];
+            // Say what failed instead of the generic REST message.
             const message =
                 getLegacyErrorMessage( error ) ||
+                ( firstErrorId && fieldErrors[ firstErrorId ] ) ||
                 ( error as { message?: string } )?.message ||
                 __( 'Failed to save settings.', 'dokan-lite' );
             toast.error( message );
+            if ( firstErrorId ) {
+                focusFirstInvalidField( firstErrorId );
+            }
             // Rethrow so plugin-ui keeps the page dirty and shows the field errors.
             throw Object.assign( new Error( message ), {
-                errors: getFieldErrors( error ),
+                errors: fieldErrors,
             } );
         } finally {
             setSaving( false );

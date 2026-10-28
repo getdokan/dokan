@@ -12,7 +12,16 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     getCommissionValue,
     formatValue: formatValueProp,
     currency,
+    highlightEmpty = false,
 } ) => {
+    // Only the All-Categories rate is validated; ring its empty box behind the message. On the wrapper, because dokan-ui's own border classes win on the input itself.
+    const invalidRing = ( type: 'percentage' | 'flat' ): string =>
+        highlightEmpty &&
+        isAllCategory &&
+        String( getCommissionValue( type, categoryId ) || '' ).trim() === ''
+            ? ' rounded ring-1 ring-destructive'
+            : '';
+
     const handlePercentageChange = ( value: string ) => {
         // Handle real-time updates with debounce
         if ( isAllCategory ) {
@@ -33,18 +42,18 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
 
     return (
         <div className="flex items-center">
-            <div className="w-[142px]">
+            <div className={ `w-[142px]${ invalidRing( 'percentage' ) }` }>
                 <DebouncedInput
                     component={ MaskedInput }
                     value={ formatValueProp(
                         getCommissionValue( 'percentage', categoryId ) || ''
                     ) }
+                    input={ { placeholder: '0' } }
                     addOnRight={
                         <span className="text-[#575757] text-sm">%</span>
                     }
-                    onChange={ ( e ) =>
-                        handlePercentageChange( e.target.value )
-                    }
+                    // DebouncedInput hands over the value itself, not an event.
+                    onChange={ handlePercentageChange }
                     onBlur={ ( e ) =>
                         onBlur(
                             e.target.value,
@@ -65,7 +74,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
             <div className="mx-2">
                 <Plus />
             </div>
-            <div className="w-[120px]">
+            <div className={ `w-[120px]${ invalidRing( 'flat' ) }` }>
                 <DebouncedInput
                     component={ MaskedInput }
                     addOnLeft={
@@ -76,7 +85,8 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                     value={ formatValueProp(
                         getCommissionValue( 'flat', categoryId ) || ''
                     ) }
-                    onChange={ ( e ) => handleFlatChange( e.target.value ) }
+                    input={ { placeholder: '0' } }
+                    onChange={ handleFlatChange }
                     onBlur={ ( e ) =>
                         onBlur(
                             e.target.value,

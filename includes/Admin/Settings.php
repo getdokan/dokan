@@ -555,7 +555,7 @@ class Settings {
                     'default' => 'fixed',
                     'min'     => '0',
                     'step'    => 'any',
-                    'desc'    => __( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ),
+                    'desc'    => __( 'You get a percentage of each item\'s price plus a fixed fee for every item sold', 'dokan-lite' ),
                     'sanitize_callback'          => 'wc_format_decimal',
                     'response_sanitize_callback' => 'wc_format_localized_price',
                     'show_if' => [
