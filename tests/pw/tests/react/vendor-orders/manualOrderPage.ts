@@ -39,6 +39,14 @@ export class ManualOrderPage {
         await this.field('order-statuses').waitFor();
     }
 
+    /** Number of empty customer searches the form fires in `ms` while nobody touches it. */
+    async idleCustomerRequests(ms: number): Promise<number> {
+        let count = 0;
+        this.page.on('request', r => decodeURIComponent(r.url()).includes('/dokan/v1/customers?search=&') && count++);
+        await this.page.waitForTimeout(ms);
+        return count;
+    }
+
     async gotoExpectingGate(): Promise<void> {
         await closeAnnouncementModal(this.page);
         await this.page.goto('dashboard/new/#/orders/new');
@@ -66,6 +74,7 @@ export class ManualOrderPage {
         await input.fill(search);
         await loaded;
         await this.options.filter({ hasText: label }).first().click();
+        await expect(this.field('order-customer')).toContainText(label);
     }
 
     private async openProductModal(): Promise<Locator> {

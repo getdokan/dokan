@@ -119,6 +119,14 @@ Run it with `cd tests/pw && npm run test:react`. It needs the auth states from t
 - One owner per oracle. If a legacy spec already holds the precise oracle (for example the `api/calculation.spec.ts` commission matrix), reference it in the failure-mode map instead of duplicating it.
 - Port a legacy test only when its assertion is precise. Otherwise rewrite the oracle. Old pass rates mean nothing if the assertion was vague (for example, the legacy earning helpers ignore quantity).
 
+### Isolation and known bugs
+- **State that must not leak** (subscriptions, limits, onboarding, per-vendor settings): use `createVendor(api)` plus `withUserPage(browser, vendor, ...)`. Don't mutate vendor1/vendor2.
+- **Feature flags that change behaviour for everyone** (e.g. `enable_pricing` makes every vendor without a pack unable to publish): the file is `*.global.spec.ts` and restores the flag in afterAll.
+- **Seed through real code paths** (REST, or WooCommerce/Dokan hooks via `wpEval`). Never write raw meta that mimics what the product does: that tests the test.
+- **Pinning a product bug with `test.fail()`:** first run the test without `test.fail` and confirm it fails for the bug's reason (the exact status or assertion), not a timeout or a setup error. A `test.fail` that fails for any reason hides breakage.
+- **Never use `expect.poll(() => list).toEqual([])` as proof something didn't happen.** It passes before the event fires. Wait for the event (`waitForResponse`) and assert on it.
+- **A known uncaught JS error** from a product bug is tolerated through a `known-js-error` annotation, pushed by the page object when the bug hits every visit. The failure message lists failed REST calls, which usually name the cause.
+
 ### Precision rules (no vague tests)
 - Each test title starts with its failure-mode id: `#4 row status change persists`.
 - Assert the exact value the user relies on. A money cell equals the REST value: `moneyDigits(cell) === moneyDigits(order.total)`. Never use `/\d/`.

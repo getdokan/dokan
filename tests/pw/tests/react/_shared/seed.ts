@@ -1,4 +1,5 @@
 import type { ApiUtils } from '@utils/apiUtils';
+import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 
@@ -28,6 +29,30 @@ export function productIdOf(api: ApiUtils, vendor: Vendor = 'vendor1'): Promise<
         );
     }
     return productIds.get(vendor)!;
+}
+
+export type FreshVendor = { id: string; username: string; password: string; auth: { Authorization: string } };
+
+/** A brand-new vendor no other test touches, for state that must not leak (subscriptions, limits, onboarding). */
+export async function createVendor(api: ApiUtils): Promise<FreshVendor> {
+    const store = payloads.createStore();
+    const [, id] = await api.createStore(store, payloads.adminAuth);
+    const auth = { Authorization: `Basic ${Buffer.from(`${store.user_login}:${store.user_pass}`).toString('base64')}` };
+    return { id: String(id), username: store.user_login, password: store.user_pass, auth };
+}
+
+let category: Promise<number> | undefined;
+
+/** A product category id that exists on the site (vendor products require one). */
+export function categoryId(api: ApiUtils): Promise<number> {
+    category ??= api.get(endPoints.wc.getAllCategories, { headers: payloads.adminAuth, params: { per_page: 1 } }).then(([, body]) => Number(body[0].id));
+    return category;
+}
+
+/** Create a published simple product as `auth` (any vendor); returns the saved product as REST returns it. */
+export async function createProductAs(api: ApiUtils, auth: { Authorization: string }): Promise<{ id: number; status: string; code?: string }> {
+    const [, body] = await api.post(endPoints.createProduct, { headers: auth, data: { ...payloads.createProduct(), categories: [{ id: await categoryId(api) }] } }, false);
+    return body;
 }
 
 /** WordPress user id of a fixture customer (e.g. "customer1"). */

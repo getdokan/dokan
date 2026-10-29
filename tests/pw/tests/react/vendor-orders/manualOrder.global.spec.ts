@@ -31,15 +31,11 @@ test.describe('Vendor manual orders (React)', () => {
         expect(await form.statusOptions()).toEqual(expect.arrayContaining(['Pending payment', 'Processing', 'On hold', 'Completed', 'Cancelled', 'Refunded', 'Failed']));
     });
 
-    test('#M2 saved manual order holds the product, customer, status and note, and belongs to the vendor', { tag: ['@pro', '@vendor', '@p0'] }, async ({ vendorPage, api }) => {
-        // The vendor's customer picker only lists customers who already ordered from this vendor.
-        const customer = await customerId(api, 'customer1');
-        await seedOrder(api, { customer });
+    test('#M2 saved manual order holds the product, status and note, and belongs to the vendor', { tag: ['@pro', '@vendor', '@p0'] }, async ({ vendorPage, api }) => {
         const note = `pw manual order ${Date.now()}`;
         const form = new ManualOrderPage(vendorPage);
         await form.goto();
         await form.addProduct('p1_v1', /p1_v1/);
-        await form.setCustomer('customer1', /customer1/i);
         // Note before status: adding a note resets an unsaved status (#M5).
         await form.addNote(note);
         await form.setStatus('Completed');
@@ -47,7 +43,6 @@ test.describe('Vendor manual orders (React)', () => {
 
         const [, order] = await api.getSingleOrder(form.orderId, authOf('vendor1'));
         expect(order.status).toBe('completed');
-        expect(String(order.customer_id)).toBe(customer);
         expect(order.line_items.map((item: { product_id: number }) => String(item.product_id))).toContain(await productIdOf(api));
 
         const [, notes] = await api.get(endPoints.getAllOrderNotes(form.orderId), { headers: authOf('vendor1') });
@@ -66,6 +61,31 @@ test.describe('Vendor manual orders (React)', () => {
         await form.setStatus('Completed');
         await form.addNote(`pw note ${Date.now()}`);
         expect(await form.status()).toMatch(/completed/i);
+    });
+
+    test('#M6 an idle form does not keep re-requesting customers', { tag: ['@pro', '@vendor', '@p1'] }, async ({ vendorPage }) => {
+        // Known bug (FINDINGS.md #4): ~3.6 GET /dokan/v1/customers?search= per second while idle. Remove test.fail once fixed.
+        test.fail();
+        const form = new ManualOrderPage(vendorPage);
+        await form.goto();
+        // A fixed window is the measurement itself here: counting requests needs a span of time.
+        expect(await form.idleCustomerRequests(5000)).toBeLessThanOrEqual(2);
+    });
+
+    test('#M7 vendor picks a customer and the order is saved for them', { tag: ['@pro', '@vendor', '@p1'] }, async ({ vendorPage, api }) => {
+        // Known bug (FINDINGS.md #4): the endless customer refetch keeps the typed search on "Searching ...",
+        // so the pick fails or races. Remove test.fail once fixed.
+        test.fail();
+        // The vendor's customer picker only lists customers who already ordered from this vendor.
+        const customer = await customerId(api, 'customer1');
+        await seedOrder(api, { customer });
+        const form = new ManualOrderPage(vendorPage);
+        await form.goto();
+        await form.addProduct('p1_v1', /p1_v1/);
+        await form.setCustomer('customer1', /customer1/i);
+        expect(await form.save()).toBeLessThan(400);
+        const [, order] = await api.getSingleOrder(form.orderId, authOf('vendor1'));
+        expect(String(order.customer_id)).toBe(customer);
     });
 
     test('#M3 product search with no match offers nothing', { tag: ['@pro', '@vendor', '@p2'] }, async ({ vendorPage }) => {
