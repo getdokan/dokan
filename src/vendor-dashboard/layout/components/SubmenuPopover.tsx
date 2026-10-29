@@ -54,6 +54,14 @@ const SubmenuPopover = ( {
                 <ul className="flex flex-col">
                     { Object.entries( submenu || {} ).map(
                         ( [ subkey, subitem ]: any ) => {
+                            // If switched off from the menu manager — same rule as the expanded sidebar.
+                            if (
+                                'is_switched_on' in subitem &&
+                                ! subitem.is_switched_on
+                            ) {
+                                return null;
+                            }
+
                             const isSubActive = subkey === activeSubkey;
 
                             return (
