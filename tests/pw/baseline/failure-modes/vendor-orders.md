@@ -24,6 +24,17 @@ Paths are relative to `tests/pw/tests/`. An assertion counts only if it fails wh
 
 Paths starting `react/` are the revamp suite (`npm run test:react`). Legacy paths are kept only where the revamp suite defers to them.
 
+## Manual orders (Pro, same surface)
+
+| # | Failure mode | Role | Layer | Assertion | Verdict |
+|---|---|---|---|---|---|
+| M1 | Form opens with the wrong default or missing statuses | vendor | UI | `react/vendor-orders/manualOrder.global.spec.ts` #M1 | caught |
+| M2 | Saved order loses product, customer, status or note, or another vendor can read it | vendor | UI + REST | #M2 | caught |
+| M3 | Product search offers wrong products | vendor | UI | #M3 (no-match case only) | **PARTIAL** |
+| M4 | Feature reachable when the admin disabled it | vendor | UI | #M4 | caught |
+| M5 | Adding a note discards the unsaved status | vendor | UI | #M5 `test.fail`: **product bug**, see `baseline/FINDINGS.md` #1 | bug pinned |
+| M6 | Vendor can add another vendor's product to a manual order | vendor | API + UI | none | **GAP** |
+
 ## Open (in order)
 
 1. **#3 suborder listing.** Create a multi-vendor order. Each vendor's list must show only its own suborder id, never the parent.
@@ -31,3 +42,4 @@ Paths starting `react/` are the revamp suite (`npm run test:react`). Legacy path
 3. **#10 filters.** Every row returned by the customer and date-range filters matches the filter.
 4. **#11 export.** The legacy suite deferred it because headless Chromium fires no `download` event for the hidden-form POST. Try `page.request` replaying the form POST and asserting the CSV order ids.
 5. **#14 staff (Pro), #15 Lite without Pro.**
+6. **M6** manual order with another vendor's product must be refused.

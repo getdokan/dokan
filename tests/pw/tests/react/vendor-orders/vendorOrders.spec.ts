@@ -14,7 +14,7 @@ test.describe('Vendor orders (React list)', () => {
     });
 
     test("#1 never lists another vendor's order, even searched by id", { tag: ['@lite', '@vendor', '@p0'] }, async ({ api }) => {
-        const [own, other] = await Promise.all([seedOrder(api, 'vendor1'), seedOrder(api, 'vendor2')]);
+        const [own, other] = await Promise.all([seedOrder(api), seedOrder(api, { vendor: 'vendor2' })]);
         await orders.goto();
 
         await expect(await orders.find(other)).toHaveCount(0);
@@ -54,8 +54,8 @@ test.describe('Vendor orders (React list)', () => {
     });
 
     test('#9 status tab lists only orders in that status', { tag: ['@lite', '@vendor', '@p0'] }, async ({ api }) => {
-        await seedOrder(api, 'vendor1', 'wc-processing');
-        await seedOrder(api, 'vendor1', 'wc-on-hold');
+        await seedOrder(api);
+        await seedOrder(api, { status: 'wc-on-hold' });
         await orders.goto();
 
         await orders.table.tab('On hold');
@@ -64,8 +64,22 @@ test.describe('Vendor orders (React list)', () => {
         expect(statuses.every(s => /on hold/i.test(s)), `statuses in the On hold tab: ${statuses.join(', ')}`).toBe(true);
     });
 
+    test('#16 list shows the order, money, status and customer columns', { tag: ['@lite', '@vendor', '@p0'] }, async () => {
+        await orders.goto();
+        await expect(orders.page.locator('table thead th')).toContainText(['Order', 'Order Total', 'Earning', 'Status', 'Customer'], { ignoreCase: true });
+    });
+
+    test('#17 deep link to the list survives a reload', { tag: ['@lite', '@vendor', '@p1'] }, async ({ api }) => {
+        const orderId = await seedOrder(api);
+        await orders.goto();
+        await orders.page.reload();
+        await orders.table.settled();
+        await expect(orders.page).toHaveURL(/#\/orders$/);
+        await expect(await orders.find(orderId)).toHaveCount(1);
+    });
+
     test('#7 row total and earning match the order', { tag: ['@lite', '@vendor', '@p0'] }, async ({ api }) => {
-        const orderId = await seedOrder(api, 'vendor1', 'wc-processing', 3);
+        const orderId = await seedOrder(api, { quantity: 3 });
         const [, order] = await api.getSingleOrder(orderId, authOf('vendor1'));
         await orders.goto();
         await orders.find(orderId);

@@ -11,8 +11,7 @@ const { CI } = process.env;
 // Two projects:
 //  - react         every test seeds and finds its own data, so it runs fully parallel.
 //  - react_global  files named *.global.spec.ts flip marketplace-wide options; they run
-//                  after `react`, so they never race the parallel tests.
-// ponytail: global files can still run side by side with each other; pass --workers=1 once there is more than one.
+//                  one at a time, after `react`, so they never race each other or the parallel tests.
 export default defineConfig({
     ...base,
     testDir: 'tests/react',
@@ -21,6 +20,6 @@ export default defineConfig({
     retries: parseBoolean(CI) ? 1 : 0,
     projects: [
         { name: 'react', testIgnore: /\.global\.spec\.ts$/, fullyParallel: true },
-        { name: 'react_global', testMatch: /\.global\.spec\.ts$/, dependencies: ['react'], fullyParallel: false },
+        { name: 'react_global', testMatch: /\.global\.spec\.ts$/, dependencies: ['react'], workers: 1 },
     ],
 });

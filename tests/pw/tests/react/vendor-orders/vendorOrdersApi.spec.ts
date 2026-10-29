@@ -23,7 +23,7 @@ for (const version of ['v1', 'v2']) {
         let other: string;
 
         test.beforeAll(async ({ api }) => {
-            [own, other] = await Promise.all([seedOrder(api, 'vendor1'), seedOrder(api, 'vendor2')]);
+            [own, other] = await Promise.all([seedOrder(api), seedOrder(api, { vendor: 'vendor2' })]);
         });
 
         test("#1 list excludes another vendor's order", { tag: ['@lite', '@vendor', '@p0'] }, async ({ api }) => {

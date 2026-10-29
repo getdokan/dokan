@@ -63,6 +63,33 @@ An assertion counts only if it would fail when the failure mode happens. "Page r
 
 Every escaped bug gets a regression test at the cheapest layer that catches it, and its row in the register.
 
+## Goal: replace the legacy React tests
+
+The revamp suite replaces the legacy React-UI tests. It doesn't run alongside them for ever. The legacy suite is the starting point: every legacy test is a lead, but its oracle is not trusted until it has been checked.
+
+**Parity ledger** (`node baseline/parity.mjs`):
+- It creates `baseline/parity/<legacy folder>.md` with one row per legacy React test.
+- Every row gets a verdict:
+
+| Verdict | Meaning |
+|---|---|
+| `PORTED <file> #id` | Same oracle, now in the new suite. |
+| `REWRITTEN <file> #id (why)` | The old oracle was vague; the new one is precise. |
+| `OWNED <file>` | A precise oracle already lives elsewhere: another spec, `fixtures.ts`, `api/calculation.spec.ts`. |
+| `DROPPED <reason>` | Catches no risk: implicit, duplicate, or "renders". |
+| `OUT-OF-SCOPE <reason>` | Not React, e.g. the WooCommerce My Account pages. |
+| `TODO <gap>` | Still open. |
+
+- **Deleting a legacy folder** is allowed only when `node baseline/parity.mjs --strict` shows 0 open for that folder, and the failure-mode map for its surface has no open P0 or P1 gaps.
+- **Per surface:**
+  1. Write the failure-mode map.
+  2. Write the ledger verdicts.
+  3. Build the new tests.
+  4. Pass 3 times in a row (`--repeat-each=3 --retries=0`).
+  5. Check the ledger has 0 open.
+  6. Delete the legacy folder in its own PR.
+- **Bugs found:** add a `test.fail()` with a comment naming the bug, and a row in `baseline/FINDINGS.md`. The suite stays green while the bug exists, and the test flips red once the bug is fixed, so the marker gets removed.
+
 ## The revamp suite: `tests/pw/tests/react/`
 
 The revamp suite is a separate tree. Never add revamp tests to `tests/e2e/` or `tests/api/`. Leave the legacy suite as it is.
@@ -71,7 +98,9 @@ The revamp suite is a separate tree. Never add revamp tests to `tests/e2e/` or `
 tests/pw/react.config.ts            extends e2e.config; projects: react (fully parallel), react_global (after it)
 tests/pw/tests/react/
   _shared/fixtures.ts               test/expect: role pages (adminPage, vendorPage, vendor2Page, customerPage), worker `api`
-  _shared/seed.ts                   seedOrder(api, vendor, status, qty), authOf(vendor); add seeders here, once
+  _shared/seed.ts                   seedOrder(api, { vendor, status, quantity, customer }), productIdOf, customerId, authOf;
+                                    fixtures looked up by name (never rely on setup-injected PRODUCT_ID/CUSTOMER_ID)
+  _shared/wp.ts                     wpEval, setDokanSetting (update_option so the 5.2+ legacy mirror runs), setRoleCap
   _shared/dataViewsTable.ts         DataViewsTable: rows, rowByLink, cell(row, header), search, tab, select,
                                     rowAction, bulkAction (REST-gated, confirm handled), moneyDigits()
   <surface>/<surface>Page.ts        thin: goto + surface-specific finders; composes DataViewsTable
