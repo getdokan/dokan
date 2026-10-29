@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import { RefObject, useEffect, useState } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { isRTL } from '@wordpress/i18n';
-import { getActiveSubmenuKey } from './Sidebar';
+import { getActiveSubmenuKey, isSwitchedOff } from './Sidebar';
 
 const SubmenuPopover = ( {
     submenu,
@@ -54,11 +54,7 @@ const SubmenuPopover = ( {
                 <ul className="flex flex-col">
                     { Object.entries( submenu || {} ).map(
                         ( [ subkey, subitem ]: any ) => {
-                            // If switched off from the menu manager — same rule as the expanded sidebar.
-                            if (
-                                'is_switched_on' in subitem &&
-                                ! subitem.is_switched_on
-                            ) {
+                            if ( isSwitchedOff( subitem ) ) {
                                 return null;
                             }
 
