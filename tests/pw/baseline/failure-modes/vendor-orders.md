@@ -6,8 +6,8 @@ Paths are relative to `tests/pw/tests/`. An assertion counts only if it fails wh
 
 | # | Failure mode | Role | Layer | Existing assertion | Verdict |
 |---|---|---|---|---|---|
-| 1 | Vendor A's list shows vendor B's orders (data leak) | vendor | API + UI | none | **GAP** |
-| 2 | Vendor reads or updates vendor B's order by id through `dokan/v1/orders/{id}` | vendor | API | none (`api/orders.spec.ts` covers own orders only) | **GAP** |
+| 1 | Vendor A's list shows vendor B's orders (data leak) | vendor | API + UI | `api/ordersVendorIsolation.spec.ts:37` (list, v1+v2, with own-order guard), `e2e/orders/newOrdersGaps.spec.ts:72` (React search by id) | caught |
+| 2 | Vendor reads or updates vendor B's order by id through `dokan/v1/orders/{id}` | vendor | API | `api/ordersVendorIsolation.spec.ts:50` (read), `:56` (update, order verified untouched) | caught |
 | 3 | Parent order (multi-vendor cart) listed instead of, or as well as, the vendor's suborder | vendor | API + UI | none in React list (`api/calculation.spec.ts:655` checks parent/child money, not listing) | **GAP** |
 | 4 | Row status change does not persist | vendor | UI + REST oracle | `e2e/orders/newOrdersGaps.spec.ts:61`, `newOrders.spec.ts:279` | caught |
 | 5 | Bulk status change misses or over-applies to rows | vendor | UI + REST oracle | `newOrders.spec.ts:204` checks the 2 selected orders completed; does not check an unselected order stayed unchanged | **PARTIAL** |
@@ -18,13 +18,13 @@ Paths are relative to `tests/pw/tests/`. An assertion counts only if it fails wh
 | 10 | Customer, date-range or order-id filter returns wrong rows | vendor | UI | `newOrders.spec.ts:110`, `:118` open the filter only; `:126`, `:144` search by id | **PARTIAL** (filter results not asserted) |
 | 11 | Export contains wrong orders or ignores the active filter | vendor | UI (download) | `newOrders.spec.ts:92` opens the dropdown only | **GAP** |
 | 12 | View goes to the wrong order | vendor | UI | `newOrders.spec.ts:165` checks only that the URL left `#/orders` | **WEAK** |
-| 13 | Customer or guest can call the vendor orders REST | customer/guest | API | none | **GAP** |
+| 13 | Customer or guest can call the vendor orders REST | customer/guest | API | `api/ordersVendorIsolation.spec.ts:65`, `:70` | caught |
 | 14 | Vendor staff without the orders permission sees or changes orders (Pro) | staff | API + UI | `e2e/vendor-staff/newVendorStaff.spec.ts:191` checks only that the Orders menu is visible with the default capability; denial is never tested | **GAP** |
 | 15 | Lite: Pro-only actions or columns shown, or the list breaks without Pro | vendor | UI | none tied to `@liteOnly` | **GAP** |
 
 ## Fix plan (in this order)
 
-1. **#1, #2, #13: vendor isolation (API).** Seed one order for vendor1 and one for vendor2 (`payloads.vendor2Auth`).
+1. ~~**#1, #2, #13: vendor isolation (API).**~~ Done: product holds (cross-vendor read 403, update 400 and the order stays untouched, customer 403, guest 401). Seed one order for vendor1 and one for vendor2 (`payloads.vendor2Auth`).
    - vendor1 `GET /orders` must not include vendor2's order.
    - vendor1 `GET` or `PUT` on vendor2's order must return 403 or 404, and the order must be unchanged.
    - Customer and guest calls must return 401 or 403.

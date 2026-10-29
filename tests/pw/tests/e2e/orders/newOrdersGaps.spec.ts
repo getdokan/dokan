@@ -68,6 +68,26 @@ test.describe('Vendor orders list — behavioral gaps (React)', () => {
         expect(String(order.status), 'order status persisted as completed (REST)').toBe('completed');
     });
 
+    // Revamp P0, Vendor orders failure mode #1 (baseline/failure-modes/vendor-orders.md).
+    test("vendor list never shows another vendor's order, even when searched by id (React)", { tag: ['@lite', '@vendor', '@new-ui', '@p0'] }, async () => {
+        const ownOrderId = await seedOrder('wc-processing');
+        const [, , otherOrderId] = await apiUtils.createOrderWithStatus(
+            process.env.PRODUCT_ID_V2 as string,
+            { ...payloads.createOrder, line_items: [{ product_id: process.env.PRODUCT_ID_V2, quantity: 1 }] },
+            'wc-processing',
+            payloads.vendor2Auth,
+        );
+        await orders.goto();
+
+        await orders.fillSearch(otherOrderId);
+        await expect(orders.orderRowById(otherOrderId)).toHaveCount(0);
+        await expect(orders.emptyState).toBeVisible();
+
+        // Guard: the same search finds the vendor's own order, so the empty result above is isolation, not a broken search.
+        await orders.fillSearch(ownOrderId);
+        await expect(orders.orderRowById(ownOrderId)).toBeVisible();
+    });
+
     test('vendor order revenue equals vendor earning plus admin commission (React)', { tag: ['@lite', '@vendor', '@admin', '@new-ui'] }, async () => {
         // Money oracle (house style §7): for the seeded order, the product revenue
         // (sum of line-item totals) must equal vendor earning + admin commission.
