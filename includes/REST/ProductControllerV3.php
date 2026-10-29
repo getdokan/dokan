@@ -385,7 +385,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Apply the vendor's default product status when a vendor asks for a live status, as the v1 API does.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @param WC_Data $product          Product assembled from the request, not yet saved.
      * @param bool    $status_requested Whether the request sets the product's status.

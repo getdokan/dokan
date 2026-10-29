@@ -90,7 +90,7 @@ class VendorUtil {
     /**
      * Check whether the current user may manage the given user's vendor account on this site.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @param int $user_id Target user ID.
      *

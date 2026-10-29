@@ -39,7 +39,7 @@ class Cart {
     /**
      * Reject coupons while a reverse withdrawal payment is in the cart.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @param bool          $valid
      * @param \WC_Coupon    $coupon

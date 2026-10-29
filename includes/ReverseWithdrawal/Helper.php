@@ -189,7 +189,7 @@ class Helper {
     /**
      * Get the amount an order actually collected towards the reverse withdrawal balance.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @param \WC_Abstract_Order $order
      *

@@ -1,3 +1,12 @@
+### v5.3.3 ( Oct 29, 2026 ) ###
+
+- **fix:** Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.
+- **fix:** Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.
+- **fix:** The store contact form now sends email from the store's own address and uses the visitor's email only for replies, so it can no longer be used to spoof the sender or add extra recipients.
+- **fix:** Prevented subsite admins on a multisite network from changing the selling status of vendors who belong to other sites.
+- **fix:** Reverse withdrawal payments can no longer be discounted with coupons, and the vendor's balance is now credited only with the amount actually paid.
+- **fix:** Products created through the vendor products API now respect the vendor's selling status and are held for review when the vendor isn't allowed to publish directly.
+
 ### v5.3.2 ( Oct 22, 2026 ) ###
 
 - **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.
