@@ -82,10 +82,24 @@ class StoreContactEmailSenderTest extends DokanTestCase {
         $headers = $this->sent[0]['headers'];
 
         // wp_mail() splits Reply-to on commas and headers on newlines, so neither may survive in the name.
-        $this->assertStringContainsString( '<bob@example.org>', $headers );
-        $this->assertStringNotContainsString( ',', $headers );
+        $this->assertSame( 1, preg_match( '/^Reply-to:[^\r\n]*/mi', $headers, $reply_to ) );
+        $this->assertStringContainsString( '<bob@example.org>', $reply_to[0] );
+        $this->assertStringNotContainsString( ',', $reply_to[0] );
         $this->assertDoesNotMatchRegularExpression( '/^Bcc:/mi', $headers );
-        $this->assertSame( 2, substr_count( $headers, "\r\n" ), 'Only Content-Type and Reply-to header lines are expected.' );
+    }
+
+    public function test_filter_added_reply_to_with_bare_newline_is_replaced() {
+        $add_reply_to = static function ( $headers ) {
+            return $headers . "Reply-to: Other <other@example.org>\n";
+        };
+
+        add_filter( 'woocommerce_email_headers', $add_reply_to );
+        do_action( 'dokan_trigger_contact_seller_mail', dokan()->vendor->get( $this->seller_id1 )->get_email(), 'Bob', 'bob@example.org', 'Hi' );
+        remove_filter( 'woocommerce_email_headers', $add_reply_to );
+
+        $this->assertCount( 1, $this->sent );
+        $this->assertSame( 1, substr_count( strtolower( $this->sent[0]['headers'] ), 'reply-to:' ) );
+        $this->assertStringNotContainsString( 'other@example.org', $this->sent[0]['headers'] );
     }
 
     public function test_invalid_email_is_rejected_by_the_rest_route() {

@@ -117,7 +117,7 @@ class ContactSeller extends WC_Email {
      * @return string
      */
     public function get_headers() {
-        $headers = preg_replace( '/^Reply-to:.*\r\n/mi', '', parent::get_headers() );
+        $headers = preg_replace( '/^Reply-to:[^\r\n]*\r?\n/mi', '', parent::get_headers() );
 
         if ( $this->reply_to_email ) {
             $headers .= 'Reply-to: ' . $this->reply_to_name . ' <' . $this->reply_to_email . ">\r\n";
