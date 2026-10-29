@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Install;
 
+use Automattic\WooCommerce\Admin\ReportsSync;
 use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper as ReverseWithdrawalInstallerHelper;
 use WeDevs\Dokan\Rewrites;
@@ -43,6 +44,7 @@ class Installer {
         $was_installed_before = get_option( 'dokan_theme_version', false );
 
         if ( ! $was_installed_before ) {
+            $this->sync_existing_orders_to_order_stats();
             update_option( 'dokan_theme_version', DOKAN_PLUGIN_VERSION );
             update_option( 'dokan_admin_setup_wizard_ready', false );
             set_transient( '_dokan_setup_page_redirect', true, 30 );
@@ -51,6 +53,33 @@ class Installer {
             // It will be removed in 1 january 2027
             update_option( LegacySwitcher::NEW_SETTINGS_OPTION, 'yes' );
         }
+    }
+
+    /**
+     * Backfill dokan_order_stats for orders placed before Dokan was installed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function sync_existing_orders_to_order_stats() {
+        if ( ! dokan()->has_woocommerce() || ! class_exists( ReportsSync::class ) ) {
+            return;
+        }
+
+        $order_ids = wc_get_orders(
+            [
+                'limit'  => 1,
+                'return' => 'ids',
+            ]
+        );
+
+        if ( empty( $order_ids ) ) {
+            return;
+        }
+
+        // Re-importing through WC Analytics fires the hook that fills dokan_order_stats.
+        ReportsSync::regenerate_report_data( null, false );
     }
 
     /**
