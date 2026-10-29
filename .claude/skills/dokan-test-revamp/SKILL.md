@@ -63,6 +63,40 @@ An assertion counts only if it would fail when the failure mode happens. "Page r
 
 Every escaped bug gets a regression test at the cheapest layer that catches it, and its row in the register.
 
+## The revamp suite: `tests/pw/tests/react/`
+
+The revamp suite is a separate tree. Never add revamp tests to `tests/e2e/` or `tests/api/`. Leave the legacy suite as it is.
+
+```
+tests/pw/react.config.ts            extends e2e.config; projects: react (fully parallel), react_global (after it)
+tests/pw/tests/react/
+  _shared/fixtures.ts               test/expect: role pages (adminPage, vendorPage, vendor2Page, customerPage), worker `api`
+  _shared/seed.ts                   seedOrder(api, vendor, status, qty), authOf(vendor); add seeders here, once
+  _shared/dataViewsTable.ts         DataViewsTable: rows, rowByLink, cell(row, header), search, tab, select,
+                                    rowAction, bulkAction (REST-gated, confirm handled), moneyDigits()
+  <surface>/<surface>Page.ts        thin: goto + surface-specific finders; composes DataViewsTable
+  <surface>/<surface>.spec.ts       UI tests
+  <surface>/<surface>Api.spec.ts    REST tests for the same surface
+  <surface>/<x>.global.spec.ts      tests that flip marketplace-wide options (run in react_global)
+```
+
+Run it with `cd tests/pw && npm run test:react`. It needs the auth states from the e2e `auth_setup` project. If tests land on the login page, rerun that project with `--grep "authenticate"`. Reference surface: `vendor-orders/`.
+
+### DRY rules
+- A DataViews list never re-implements search, settle, tabs, row actions or confirms. It uses `DataViewsTable` and passes its REST path. If a list needs something new, add it to `DataViewsTable` once.
+- Logged-in pages come from fixtures. No `browser.newContext({ storageState })` in specs.
+- Seed data through `_shared/seed.ts`. No `createOrderWithStatus` with inline payloads in specs.
+- Reuse `@utils/apiUtils`, `payloads`, `endPoints`, `dbUtils`, `authStates` and `@utils/dataViews` constants. Never copy them.
+- One owner per oracle. If a legacy spec already holds the precise oracle (for example the `api/calculation.spec.ts` commission matrix), reference it in the failure-mode map instead of duplicating it.
+- Port a legacy test only when its assertion is precise. Otherwise rewrite the oracle. Old pass rates mean nothing if the assertion was vague (for example, the legacy earning helpers ignore quantity).
+
+### Precision rules (no vague tests)
+- Each test title starts with its failure-mode id: `#4 row status change persists`.
+- Assert the exact value the user relies on. A money cell equals the REST value: `moneyDigits(cell) === moneyDigits(order.total)`. Never use `/\d/`.
+- A negative test needs a positive guard in the same test. For example, a search for another vendor's order returns empty AND the same search finds the vendor's own order.
+- For mutations, assert the response status AND re-read the state through REST.
+- A filter or tab test asserts that every row matches, not just that one expected row is present.
+
 ## Writing and refactoring tests
 
 1. **Seed through the API, assert through the UI.** Use `ApiUtils` and `payloads` for setup. Don't click through setup.

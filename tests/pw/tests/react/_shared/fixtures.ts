@@ -1,0 +1,31 @@
+import { test as base, expect, type Browser, type Page } from '@utils/test';
+import { request } from '@playwright/test';
+import { ApiUtils } from '@utils/apiUtils';
+import { ADMIN_STORAGE_STATE, VENDOR_STORAGE_STATE, VENDOR2_STORAGE_STATE, CUSTOMER_STORAGE_STATE } from '@utils/authStates';
+
+type RolePages = { adminPage: Page; vendorPage: Page; vendor2Page: Page; customerPage: Page };
+type Worker = { api: ApiUtils };
+
+const rolePage = (storageState: string) => async ({ browser }: { browser: Browser }, use: (p: Page) => Promise<void>) => {
+    const context = await browser.newContext({ storageState });
+    await use(await context.newPage());
+    await context.close();
+};
+
+// One logged-in page per role, opened only when a test asks for it, plus a worker-scoped API client.
+export const test = base.extend<RolePages, Worker>({
+    api: [
+        async ({}, use) => {
+            const api = new ApiUtils(await request.newContext());
+            await use(api);
+            await api.dispose();
+        },
+        { scope: 'worker' },
+    ],
+    adminPage: rolePage(ADMIN_STORAGE_STATE),
+    vendorPage: rolePage(VENDOR_STORAGE_STATE),
+    vendor2Page: rolePage(VENDOR2_STORAGE_STATE),
+    customerPage: rolePage(CUSTOMER_STORAGE_STATE),
+});
+
+export { expect };
