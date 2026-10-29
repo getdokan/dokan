@@ -1035,10 +1035,19 @@ class ProductController extends DokanRESTController {
      * @return WP_REST_Response|array|WP_Error
      */
     protected function prepare_data_for_response( $product, $request ) {
+        // Public routes share this serializer, so vendor-only fields are blanked for other callers.
+        $can_view_private = $this->can_view_private_product_data( $product );
+
         $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
         $author_id = get_post_field( 'post_author', $product->get_id() );
         $store     = dokan()->vendor->get( $author_id );
-        $data      = [
+
+        $purchase_note = '';
+        if ( $can_view_private ) {
+            $purchase_note = 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context );
+        }
+
+        $data = [
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
             'slug'                  => $product->get_slug( $context ),
@@ -1068,7 +1077,7 @@ class ProductController extends DokanRESTController {
             'total_sales'           => $product->get_total_sales( $context ),
             'virtual'               => $product->is_virtual(),
             'downloadable'          => $product->is_downloadable(),
-            'downloads'             => $this->get_downloads( $product ),
+            'downloads'             => $can_view_private ? $this->get_downloads( $product ) : [],
             'download_limit'        => $product->get_download_limit( $context ),
             'download_expiry'       => $product->get_download_expiry( $context ),
             'external_url'          => $product->is_type( 'external' ) ? $product->get_product_url( $context ) : '',
@@ -1100,7 +1109,7 @@ class ProductController extends DokanRESTController {
             'upsell_ids'            => array_map( 'absint', $product->get_upsell_ids( $context ) ),
             'cross_sell_ids'        => array_map( 'absint', $product->get_cross_sell_ids( $context ) ),
             'parent_id'             => $product->get_parent_id( $context ),
-            'purchase_note'         => 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context ),
+            'purchase_note'         => $purchase_note,
             'categories'            => $this->get_taxonomy_terms( $product ),
             'tags'                  => $this->get_taxonomy_terms( $product, 'tag' ),
             'images'                => $this->get_images( $product ),
@@ -1109,7 +1118,7 @@ class ProductController extends DokanRESTController {
             'variations'            => $product->is_type( 'variable' ) ? $product->get_children() : [],
             'grouped_products'      => $product->is_type( 'grouped' ) ? $product->get_children() : [],
             'menu_order'            => $product->get_menu_order( $context ),
-            'meta_data'             => $product->get_meta_data(),
+            'meta_data'             => $can_view_private ? $product->get_meta_data() : $this->get_public_meta_data( $product ),
             'store'                 => [
                 'id'      => $store->get_id(),
                 'name'    => $store->get_shop_name(),
@@ -1117,16 +1126,16 @@ class ProductController extends DokanRESTController {
                 'avatar'  => $store->get_avatar(),
                 'address' => $store->get_address(),
             ],
-            'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
+            'row_actions'           => $can_view_private ? dokan_product_get_row_action( $product->get_id(), false ) : [],
         ];
 
         $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
         $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
 
-        $earning           = dokan()->commission->get_earning_by_product( $product );
+        $earning           = $can_view_private ? dokan()->commission->get_earning_by_product( $product ) : null;
         $data['earning']   = is_numeric( $earning ) ? (float) $earning : null;
         $data['page_view'] = (int) get_post_meta( $product->get_id(), 'pageview', true );
-        $data['edit_url']  = dokan_edit_product_url( $product->get_id() );
+        $data['edit_url']  = $can_view_private ? dokan_edit_product_url( $product->get_id() ) : '';
 
         $data = apply_filters( 'dokan_rest_product_data_prepare', $data, $product->get_id() );
 
@@ -1134,6 +1143,52 @@ class ProductController extends DokanRESTController {
         $response->add_links( $this->prepare_links( $product, $request ) );
 
         return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $response, $product, $request );
+    }
+
+    /**
+     * Whether the current user may see a product's vendor-only fields (download files, earning, purchase note, meta data).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Product $product Product instance.
+     *
+     * @return bool
+     */
+    protected function can_view_private_product_data( $product ): bool {
+        // Defence in depth: a product with post_author 0 would otherwise match an anonymous caller's user id 0.
+        if ( ! is_user_logged_in() ) {
+            return false;
+        }
+
+        return current_user_can( 'manage_woocommerce' )
+            || ( dokan_is_product_author( $product->get_id() ) && current_user_can( 'dokan_view_product_menu' ) );
+    }
+
+    /**
+     * Product meta entries that any caller may see, opted in through `dokan_rest_public_product_meta_keys`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Product $product Product instance.
+     *
+     * @return array
+     */
+    protected function get_public_meta_data( $product ): array {
+        // Buyer-facing meta keys only; nothing is public unless a module opts its key in.
+        $public_keys = (array) apply_filters( 'dokan_rest_public_product_meta_keys', [], $product );
+
+        if ( empty( $public_keys ) ) {
+            return [];
+        }
+
+        return array_values(
+            array_filter(
+                $product->get_meta_data(),
+                function ( $meta ) use ( $public_keys ) {
+                    return in_array( $meta->key, $public_keys, true );
+                }
+            )
+        );
     }
 
     /**
