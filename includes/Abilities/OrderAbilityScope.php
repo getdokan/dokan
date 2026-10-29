@@ -449,7 +449,7 @@ class OrderAbilityScope implements Hookable {
      *
      * @return bool
      */
-    private function can_view_earning( int $vendor_id ): bool {
+    protected function can_view_earning( int $vendor_id ): bool {
         if ( current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
@@ -466,7 +466,7 @@ class OrderAbilityScope implements Hookable {
      *
      * @return array{vendor_earning:?float,admin_commission:?float}
      */
-    private function earning_for( \WC_Order $order ): array {
+    protected function earning_for( \WC_Order $order ): array {
         $commission = dokan()->commission;
         $row        = $commission->get_earning_from_order_table( $order->get_id(), 'seller', true );
 

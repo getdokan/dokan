@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Abilities;
 
+use WeDevs\Dokan\Abilities\Mcp\Access;
 use WeDevs\Dokan\Contracts\Hookable;
 use WP_Ability;
 
@@ -56,14 +57,24 @@ class WooCommerceAliases implements Hookable {
      * @return void
      */
     public function register_aliases(): void {
+        $missing = [];
+
         foreach ( self::ALIASES as $alias => $source_name ) {
             $source = wp_get_ability( $source_name );
 
-            if ( ! $source instanceof WP_Ability || wp_has_ability( $alias ) ) {
+            if ( ! $source instanceof WP_Ability ) {
+                $missing[] = $source_name;
                 continue;
             }
 
-            wp_register_ability( $alias, self::alias_args( $source ) );
+            if ( ! wp_has_ability( $alias ) ) {
+                wp_register_ability( $alias, self::alias_args( $source ) );
+            }
+        }
+
+        // A tool missing from the server is easier to explain from a log line than from a short tools/list.
+        if ( ! empty( $missing ) && Access::is_enabled() ) {
+            dokan_log( '[mcp] WooCommerce abilities not registered, their Dokan tools are unavailable: ' . implode( ', ', $missing ), 'warning' );
         }
     }
 

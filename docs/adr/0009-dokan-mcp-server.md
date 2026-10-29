@@ -52,8 +52,8 @@ profile, so the store admin issues a vendor's or staff member's password from
 that user's profile screen and hands it over.
 
 The settings screens describe the connection with their ordinary field types
-(plugin-ui `info`, `copy_field`, `html` and `notice` variants; legacy `html`
-fields), filled in when the screen is built. No custom React or Vue component,
+(plugin-ui `switch`, `copy_field`, `info` and `notice` variants; legacy
+`switcher` and `html` fields), filled in when the screen is built. No custom React or Vue component,
 no settings-screen REST route, no action links: there is nothing to create or
 revoke from the screen.
 
@@ -75,10 +75,12 @@ that `RequestContext` listens to, so the transport calls
 `RequestContext::flag_mcp_request()` itself after authorizing. Without it the
 permission pre-flight of a WooCommerce order ability would run unscoped.
 
-Only assistants that can send a username and password connect: Claude Code and
-Cursor through a header, Claude Desktop through a local proxy. Hosted connectors
-that sign in through OAuth alone (claude.ai, ChatGPT) cannot, until WordPress or
-WooCommerce offer an OAuth server to rely on. The first draft of this server
+Only assistants that can send a username and password connect: Claude Code,
+Cursor and VS Code through a header, Claude Desktop through a local proxy, and
+claude.ai's custom connector where its request-headers option (in beta) lets it
+send the same `Authorization: Basic` header to a site reachable from Anthropic's
+servers. Hosted connectors that sign in through OAuth alone (ChatGPT) cannot,
+until WordPress or WooCommerce offer an OAuth server to rely on. The first draft of this server
 shipped its own OAuth 2.1 server, consent page and personal tokens; review
 decided Dokan does not own an authentication layer, and they were removed.
 

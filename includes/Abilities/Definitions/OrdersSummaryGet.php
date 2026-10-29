@@ -101,18 +101,66 @@ class OrdersSummaryGet extends AbstractVendorAbility {
             return $denied;
         }
 
-        $vendor_id = self::current_vendor_id();
+        $vendor_id = self::resolve_vendor_id( $input );
 
-        // Only a Store Admin may look at another store; everyone else is pinned to their own.
-        if ( ! empty( $input['vendor_id'] ) && self::is_store_admin() ) {
+        if ( is_wp_error( $vendor_id ) ) {
+            return $vendor_id;
+        }
+
+        $raw = (array) dokan()->order->count_orders( $vendor_id );
+
+        return [
+            'vendor_id' => $vendor_id,
+            'total'     => (int) ( $raw['total'] ?? 0 ),
+            'counts'    => self::counts_by_status( $raw ),
+        ];
+    }
+
+    /**
+     * The store to count for: a vendor or staff member's own, or the one a Store Admin named.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $input Ability input.
+     *
+     * @return int|WP_Error
+     */
+    protected static function resolve_vendor_id( array $input ) {
+        // Everyone below Store Admin is pinned to their own store, whatever they pass.
+        if ( ! self::is_store_admin() ) {
+            return self::current_vendor_id();
+        }
+
+        if ( ! empty( $input['vendor_id'] ) ) {
             $vendor_id = absint( $input['vendor_id'] );
 
             if ( ! dokan_is_user_seller( $vendor_id ) ) {
                 return new WP_Error( 'dokan_ability_invalid_vendor', __( 'The selected vendor_id is not a valid vendor.', 'dokan-lite' ), [ 'status' => 400 ] );
             }
+
+            return $vendor_id;
         }
 
-        $raw    = (array) dokan()->order->count_orders( $vendor_id );
+        $own = self::current_vendor_id();
+
+        // A Store Admin without a store of their own has to say which store they mean.
+        if ( $own <= 0 || ! dokan_is_user_seller( $own ) ) {
+            return new WP_Error( 'dokan_ability_invalid_vendor', __( 'Pass vendor_id: a store admin has to name the store to count orders for.', 'dokan-lite' ), [ 'status' => 400 ] );
+        }
+
+        return $own;
+    }
+
+    /**
+     * Counts keyed by status slug, as agents and the REST API speak it.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $raw Output of `dokan()->order->count_orders()`: keyed `wc-<status>`, plus `total`.
+     *
+     * @return array<string, int>
+     */
+    protected static function counts_by_status( array $raw ): array {
         $counts = [];
 
         foreach ( $raw as $status => $count ) {
@@ -124,10 +172,6 @@ class OrdersSummaryGet extends AbstractVendorAbility {
             $counts[ preg_replace( '/^wc-/', '', (string) $status ) ] = (int) $count;
         }
 
-        return [
-            'vendor_id' => $vendor_id,
-            'total'     => (int) ( $raw['total'] ?? 0 ),
-            'counts'    => $counts,
-        ];
+        return $counts;
     }
 }

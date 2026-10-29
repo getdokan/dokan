@@ -24,6 +24,15 @@ defined( 'ABSPATH' ) || exit;
 class ToolSchemas implements Hookable {
 
     /**
+     * The catalog's ability names, resolved once: the filter below runs for every ability registered.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string[]|null
+     */
+    protected $catalog_ids = null;
+
+    /**
      * Register hooks.
      *
      * @since DOKAN_SINCE
@@ -46,7 +55,11 @@ class ToolSchemas implements Hookable {
      * @return array
      */
     public function make_portable( $args, $name ) {
-        if ( ! is_array( $args ) || ! in_array( $name, Catalog::configured_ability_ids(), true ) ) {
+        if ( null === $this->catalog_ids ) {
+            $this->catalog_ids = Catalog::configured_ability_ids();
+        }
+
+        if ( ! is_array( $args ) || ! in_array( $name, $this->catalog_ids, true ) ) {
             return $args;
         }
 

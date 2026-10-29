@@ -370,7 +370,7 @@ class ProductAbilityScope implements Hookable {
      *
      * @return array
      */
-    private function restrict_delete_to_trash( array $args ): array {
+    protected function restrict_delete_to_trash( array $args ): array {
         if ( ! isset( $args['execute_callback'] ) || ! is_callable( $args['execute_callback'] ) ) {
             return $args;
         }

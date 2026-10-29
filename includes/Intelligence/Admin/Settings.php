@@ -90,7 +90,7 @@ class Settings implements Hookable {
      *
      * @return array<string, array{label:string, desc:string}>
      */
-    private function mcp_connection_fields(): array {
+    protected function mcp_connection_fields(): array {
         $status   = Status::summary();
         $warnings = '';
 

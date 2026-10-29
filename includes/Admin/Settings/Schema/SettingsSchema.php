@@ -2325,7 +2325,7 @@ class SettingsSchema {
      *
      * @return array
      */
-    private static function mcp_subpage(): array {
+    protected static function mcp_subpage(): array {
         $copy         = Status::copy();
         $when_enabled = [
             [
@@ -2420,7 +2420,7 @@ class SettingsSchema {
      *
      * @return array
      */
-    private static function mcp_connection_fields( array $when_enabled ): array {
+    protected static function mcp_connection_fields( array $when_enabled ): array {
         $status  = Status::summary();
         $section = 'mcp_connection_section';
 

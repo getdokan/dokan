@@ -73,7 +73,7 @@ class DisplayFields implements Hookable {
      *
      * @return array
      */
-    private static function without_display_fields( array $values, string $prefix, array $settings ): array {
+    protected static function without_display_fields( array $values, string $prefix, array $settings ): array {
         foreach ( array_keys( $values ) as $key ) {
             if ( is_string( $key ) && 0 === strpos( $key, $prefix ) && ! in_array( $key, $settings, true ) ) {
                 unset( $values[ $key ] );
