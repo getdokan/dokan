@@ -15,7 +15,10 @@ const updatedConfig = {
     cache: {
         type: 'filesystem',
         buildDependencies: {
-            config: [ __filename ],
+            config: [
+                __filename,
+                path.resolve( __dirname, './bin/plugin-ui-i18n-loader.js' ),
+            ],
         },
     },
     watchOptions: {
@@ -143,6 +146,14 @@ const updatedConfig = {
             {
                 test: /\.vue$/,
                 loader: 'vue-loader',
+            },
+            {
+                // Make plugin-ui's hardcoded strings translatable for Dokan without touching the shared toolkit.
+                test: /node_modules[\\/]@wedevs[\\/]plugin-ui[\\/]dist[\\/]index\.js$/,
+                loader: path.resolve(
+                    __dirname,
+                    './bin/plugin-ui-i18n-loader.js'
+                ),
             },
             {
                 test: /\.(less)$/i,
