@@ -55,8 +55,8 @@ class OrdersSummaryGetTest extends DokanTestCase {
         $this->assertSame( 'dokan_ability_invalid_vendor', $missing->get_error_code() );
     }
 
-    public function test_a_store_admin_without_a_store_has_to_name_one() {
-        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'administrator' ] ) );
+    public function test_a_store_admin_has_to_name_the_store() {
+        wp_set_current_user( $this->admin_id );
 
         $result = OrdersSummaryGet::execute( [] );
 
@@ -64,7 +64,7 @@ class OrdersSummaryGetTest extends DokanTestCase {
         $this->assertSame( 'dokan_ability_invalid_vendor', $result->get_error_code() );
         $this->assertSame( 400, $result->get_error_data()['status'] );
 
-        // Naming a store works for them as for any Store Admin.
+        // Named, the store is counted.
         $this->create_single_vendor_order( $this->seller_id1 );
         $this->assertSame( 1, OrdersSummaryGet::execute( [ 'vendor_id' => $this->seller_id1 ] )['total'] );
     }

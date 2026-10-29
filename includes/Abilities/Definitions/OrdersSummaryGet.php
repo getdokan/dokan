@@ -10,8 +10,8 @@ defined( 'ABSPATH' ) || exit;
  * Ability: order counts per status for one store.
  *
  * The cheapest high-value order read: "how many orders are pending or processing" without
- * pulling a single customer row. Vendors and their staff get their own store; a Store Admin may
- * name any store with `vendor_id`.
+ * pulling a single customer row. Vendors and their staff get their own store; a Store Admin names
+ * the store with `vendor_id`.
  *
  * @since DOKAN_SINCE
  */
@@ -38,7 +38,7 @@ class OrdersSummaryGet extends AbstractVendorAbility {
     public static function get_registration_args(): array {
         return [
             'label'               => __( 'Get order summary', 'dokan-lite' ),
-            'description'         => __( 'Order counts per status for a store, without any customer data. Vendors and vendor staff get their own store; a store admin may pass vendor_id to pick a store.', 'dokan-lite' ),
+            'description'         => __( 'Order counts per status for a store, without any customer data. Vendors and vendor staff get their own store; a store admin passes vendor_id to name the store.', 'dokan-lite' ),
             'category'            => 'dokan',
             'input_schema'        => [
                 'type'                 => 'object',
@@ -46,7 +46,7 @@ class OrdersSummaryGet extends AbstractVendorAbility {
                     'vendor_id' => [
                         'type'        => 'integer',
                         'minimum'     => 1,
-                        'description' => __( 'Store to count orders for. Store admins only; vendors always get their own store.', 'dokan-lite' ),
+                        'description' => __( 'Store to count orders for. Required for store admins; vendors always get their own store.', 'dokan-lite' ),
                     ],
                 ],
                 'additionalProperties' => false,
@@ -117,7 +117,7 @@ class OrdersSummaryGet extends AbstractVendorAbility {
     }
 
     /**
-     * The store to count for: a vendor or staff member's own, or the one a Store Admin named.
+     * The store to count for: a vendor or staff member's own, or the one a Store Admin names.
      *
      * @since DOKAN_SINCE
      *
@@ -131,24 +131,18 @@ class OrdersSummaryGet extends AbstractVendorAbility {
             return self::current_vendor_id();
         }
 
-        if ( ! empty( $input['vendor_id'] ) ) {
-            $vendor_id = absint( $input['vendor_id'] );
-
-            if ( ! dokan_is_user_seller( $vendor_id ) ) {
-                return new WP_Error( 'dokan_ability_invalid_vendor', __( 'The selected vendor_id is not a valid vendor.', 'dokan-lite' ), [ 'status' => 400 ] );
-            }
-
-            return $vendor_id;
+        // A Store Admin is the marketplace, not a store: "my orders" means nothing without a vendor_id.
+        if ( empty( $input['vendor_id'] ) ) {
+            return new WP_Error( 'dokan_ability_invalid_vendor', __( 'Pass vendor_id: a store admin names the store to count orders for.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
-        $own = self::current_vendor_id();
+        $vendor_id = absint( $input['vendor_id'] );
 
-        // A Store Admin without a store of their own has to say which store they mean.
-        if ( $own <= 0 || ! dokan_is_user_seller( $own ) ) {
-            return new WP_Error( 'dokan_ability_invalid_vendor', __( 'Pass vendor_id: a store admin has to name the store to count orders for.', 'dokan-lite' ), [ 'status' => 400 ] );
+        if ( ! dokan_is_user_seller( $vendor_id ) ) {
+            return new WP_Error( 'dokan_ability_invalid_vendor', __( 'The selected vendor_id is not a valid vendor.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
-        return $own;
+        return $vendor_id;
     }
 
     /**
