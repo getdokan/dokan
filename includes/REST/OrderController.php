@@ -209,7 +209,7 @@ class OrderController extends DokanRESTController {
         $order = dokan()->order->get( $request->get_param( 'id' ) );
 
         if ( empty( $order ) ) {
-            return new WP_Error( "dokan_rest_invalid_order_id", __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_rest_invalid_order_id', __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $data     = $this->prepare_data_for_response( $order, $request );
@@ -798,17 +798,16 @@ class OrderController extends DokanRESTController {
      * @return boolean
      */
     public function get_single_order_permissions_check( $request ) {
-        if ( current_user_can( 'shop_manager' ) || current_user_can( 'administrator' ) ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
 
-        $seller_id = dokan_get_seller_id_by_order( $request['id'] );
+        $seller_id = (int) dokan_get_seller_id_by_order( $request['id'] );
 
-        if ( $seller_id === get_current_user_id() ) {
-            return true;
-        }
-
-        return false;
+        // Parent orders resolve to vendor 0, the same id a guest has, so 0 must never count as a match.
+        return $seller_id > 0
+            && $seller_id === dokan_get_current_user_id()
+            && current_user_can( 'dokan_view_order' );
     }
 
     /**

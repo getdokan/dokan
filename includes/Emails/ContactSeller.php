@@ -22,7 +22,16 @@ class ContactSeller extends WC_Email {
      *
      * @var string
      */
-    private $from_email;
+    private $reply_to_email = '';
+
+    /**
+     * Reply name
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    private $reply_to_name = '';
 
     /**
      * Constructor.
@@ -83,7 +92,10 @@ class ContactSeller extends WC_Email {
         }
         $this->setup_locale();
 
-        $this->from_email = $contact_email;
+        // The submitter only goes in Reply-to; sending From their address would let anyone spoof the site's domain.
+        $this->reply_to_email = is_email( $contact_email ) ? sanitize_email( $contact_email ) : '';
+        // wp_mail() splits Reply-to on commas, so strip anything that could smuggle in another address.
+        $this->reply_to_name = trim( preg_replace( '/[\r\n,;<>"]+/', ' ', wp_strip_all_tags( $contact_name ) ) );
 
         $seller = get_user_by( 'email', $seller_email );
         $seller = new Vendor( $seller );
@@ -98,12 +110,20 @@ class ContactSeller extends WC_Email {
     }
 
     /**
-     * Get the from address for outgoing emails.
+     * Get email headers, with the contact form submitter as the only Reply-to (also replaces any added via `woocommerce_email_headers`).
+     *
+     * @since DOKAN_SINCE
      *
      * @return string
      */
-    public function get_from_address( $from_email = '' ) {
-        return $this->from_email;
+    public function get_headers() {
+        $headers = preg_replace( '/^Reply-to:[^\r\n]*\r?\n/mi', '', parent::get_headers() );
+
+        if ( $this->reply_to_email ) {
+            $headers .= 'Reply-to: ' . $this->reply_to_name . ' <' . $this->reply_to_email . ">\r\n";
+        }
+
+        return $headers;
     }
 
     /**

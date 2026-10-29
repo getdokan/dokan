@@ -31,6 +31,38 @@ class Cart {
         add_filter( 'woocommerce_get_item_data', [ $this, 'remove_seller_name_from_cart_item' ], 9, 2 );
 
         add_action( 'woocommerce_before_calculate_totals', [ $this, 'woocommerce_custom_price_to_cart_item' ], 99, 1 );
+
+        // reverse withdrawal balance must be paid in full, so coupons can not discount it
+        add_filter( 'woocommerce_coupon_is_valid', [ $this, 'prevent_coupon_on_reverse_withdrawal_payment' ], 10, 3 );
+    }
+
+    /**
+     * Reject coupons while a reverse withdrawal payment is in the cart.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool          $valid
+     * @param \WC_Coupon    $coupon
+     * @param \WC_Discounts $discounts
+     *
+     * @throws \Exception When the cart holds a reverse withdrawal payment; WooCommerce shows the message as the coupon error.
+     *
+     * @return bool
+     */
+    public function prevent_coupon_on_reverse_withdrawal_payment( $valid, $coupon, $discounts ) {
+        $cart = $discounts->get_object();
+
+        if ( ! $valid || ! $cart instanceof \WC_Cart ) {
+            return $valid;
+        }
+
+        foreach ( $cart->get_cart() as $item ) {
+            if ( isset( $item['dokan_reverse_withdrawal_balance'] ) ) {
+                throw new \Exception( esc_html__( 'Coupons can not be applied to a reverse withdrawal payment.', 'dokan-lite' ) );
+            }
+        }
+
+        return $valid;
     }
 
     /**
