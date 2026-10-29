@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Install;
 
-use Automattic\WooCommerce\Admin\Features\Features;
 use Automattic\WooCommerce\Admin\ReportsSync;
 use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore as OrderStatsDataStore;
@@ -67,12 +66,12 @@ class Installer {
     public function maybe_backfill_order_stats() {
         global $wpdb;
 
-        if ( ! dokan()->has_woocommerce() || ! class_exists( ReportsSync::class ) || ! class_exists( Features::class ) ) {
+        if ( ! dokan()->has_woocommerce() || ! class_exists( ReportsSync::class ) ) {
             return;
         }
 
         // WC only consumes the import actions while its analytics feature is on.
-        if ( ! Features::is_enabled( 'analytics' ) ) {
+        if ( 'yes' !== get_option( 'woocommerce_analytics_enabled', 'yes' ) ) {
             return;
         }
 

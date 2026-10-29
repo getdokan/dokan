@@ -22,6 +22,7 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
     protected function tearDown(): void {
         $this->reset_import_queue();
         remove_filter( 'dokan_analytics_backfill_order_stats_on_activation', '__return_false' );
+        update_option( 'woocommerce_analytics_enabled', 'yes' );
         parent::tearDown();
     }
 
@@ -68,6 +69,16 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
     public function test_filter_can_opt_out_of_regeneration() {
         $this->create_order_without_dokan_stats();
         add_filter( 'dokan_analytics_backfill_order_stats_on_activation', '__return_false' );
+        $before = $this->regenerate_count();
+
+        ( new Installer() )->maybe_backfill_order_stats();
+
+        $this->assertSame( $before, $this->regenerate_count() );
+    }
+
+    public function test_no_regeneration_is_scheduled_when_wc_analytics_is_disabled() {
+        $this->create_order_without_dokan_stats();
+        update_option( 'woocommerce_analytics_enabled', 'no' );
         $before = $this->regenerate_count();
 
         ( new Installer() )->maybe_backfill_order_stats();
