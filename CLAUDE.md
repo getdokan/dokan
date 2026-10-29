@@ -21,6 +21,7 @@ The `.claude/skills/` directory contains procedural HOW-TO instructions:
 - **`dokan-git`** — Git and GitHub operations: branching, PR templates, CI checks
 - **`dokan-qa-automation`** — Playwright E2E and REST API test conventions under `tests/pw/`: page objects, tags, ApiUtils, schemas, CI compatibility
 - **`dokan-run-test-suite`** — Run the Playwright suite (local or CI). **Invoke when the team asks to "run the suite", trigger CI, or debug a failed run.**
+- **`dokan-test-revamp`** — Risk-first revamp of the new React UI Playwright suite: risk register (`tests/pw/baseline/`), failure-mode maps, dataset-style settings specs.
 - **`dokan-wp-env-worktrees`** — Configure `wp-env` across git worktrees with isolated (default) or shared databases; resolve port conflicts when running two environments at once.
 
 ## Build & Development Commands
