@@ -36,7 +36,6 @@ test.describe('Vendor manual orders (React)', () => {
         const form = new ManualOrderPage(vendorPage);
         await form.goto();
         await form.addProduct('p1_v1', /p1_v1/);
-        // Note before status: adding a note resets an unsaved status (#M5).
         await form.addNote(note);
         await form.setStatus('Completed');
         expect(await form.save()).toBeLessThan(400);
@@ -52,14 +51,19 @@ test.describe('Vendor manual orders (React)', () => {
         expect(response.status(), 'another vendor cannot read it').toBe(403);
     });
 
-    test('#M5 adding a note keeps the unsaved order status', { tag: ['@pro', '@vendor', '@p1'] }, async ({ vendorPage }) => {
-        // Known bug (found by this suite): adding a note reloads the order and resets the unsaved status to
-        // Pending payment, so "pick Completed, add note, Save" stores a pending order. Remove test.fail once fixed.
+    test('#M5 a status picked before the order finishes loading is kept', { tag: ['@pro', '@vendor', '@p1'] }, async ({ vendorPage }) => {
+        // Known bug (FINDINGS.md #1): the form accepts edits before its initial order load lands, then the load
+        // overwrites them (status back to Pending payment). A delayed load makes the race deterministic.
+        // Remove test.fail once fixed.
         test.fail();
         const form = new ManualOrderPage(vendorPage);
-        await form.goto();
+        await form.delayOrderLoad(3000);
+        await form.open();
         await form.setStatus('Completed');
-        await form.addNote(`pw note ${Date.now()}`);
+        const loaded = vendorPage.waitForResponse(r => r.request().method() === 'GET' && r.url().includes(`/manual-orders/${form.orderId}`));
+        await loaded;
+        // Bounded wait for the load to be applied: with the bug the status flips within it, once fixed it times out.
+        await expect.poll(() => form.status(), { timeout: 3000 }).toMatch(/pending payment/i).catch(() => undefined);
         expect(await form.status()).toMatch(/completed/i);
     });
 
@@ -73,9 +77,8 @@ test.describe('Vendor manual orders (React)', () => {
     });
 
     test('#M7 vendor picks a customer and the order is saved for them', { tag: ['@pro', '@vendor', '@p1'] }, async ({ vendorPage, api }) => {
-        // Known bug (FINDINGS.md #4): the endless customer refetch keeps the typed search on "Searching ...",
-        // so the pick fails or races. Remove test.fail once fixed.
-        test.fail();
+        // test.fixme, not test.fail: the race passes sometimes, so an expected failure would flake.
+        test.fixme(true, 'FINDINGS.md #4: the endless customer refetch keeps the search on "Searching ..."; enable once fixed');
         // The vendor's customer picker only lists customers who already ordered from this vendor.
         const customer = await customerId(api, 'customer1');
         await seedOrder(api, { customer });

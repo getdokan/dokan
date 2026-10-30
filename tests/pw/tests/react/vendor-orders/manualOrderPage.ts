@@ -30,13 +30,35 @@ export class ManualOrderPage {
         return this.page.locator('[class*="-option"]');
     }
 
-    /** Open the form and remember the draft order id the page creates. */
+    /**
+     * Open the form, remember the draft order id the page creates, and wait for the form to load that order.
+     * Edits made before the load lands are overwritten by it (FINDINGS.md #1), so tests about other behaviour
+     * must not race it.
+     */
     async goto(): Promise<void> {
+        await this.open();
+        await this.page.waitForResponse(r => r.request().method() === 'GET' && this.isOrderLoad(r.url()));
+        await this.field('order-statuses').waitFor();
+    }
+
+    /** Open the form and remember the draft id, without waiting for the order load (for racing it on purpose). */
+    async open(): Promise<void> {
         await closeAnnouncementModal(this.page);
         const draft = this.page.waitForResponse(r => r.request().method() === 'POST' && /\/dokan\/v1\/manual-orders(\?|$)/.test(decodeURIComponent(r.url())));
         await this.page.goto('dashboard/new/#/orders/new');
         this.orderId = String((await (await draft).json()).id);
-        await this.field('order-statuses').waitFor();
+    }
+
+    private isOrderLoad(url: string): boolean {
+        return new RegExp(`/dokan/v1/manual-orders/${this.orderId}(\\?|$)`).test(decodeURIComponent(url));
+    }
+
+    /** Hold the form's initial order load for `ms`, as a slow connection would. Call before open(). */
+    async delayOrderLoad(ms: number): Promise<void> {
+        await this.page.route(/\/dokan\/v1\/manual-orders\/\d+(\?|$)/, async route => {
+            if (route.request().method() === 'GET') await new Promise(resolve => setTimeout(resolve, ms));
+            await route.continue();
+        });
     }
 
     /** Number of empty customer searches the form fires in `ms` while nobody touches it. */

@@ -9,6 +9,19 @@ Preconditions for all of them: Dokan Pro active.
 
 ## Confirmed product bugs
 
+### #1 Manual orders: edits made before the form finishes loading the order are silently overwritten
+- **Correction (2026-10-30):** first logged as "adding a note resets the status". Probing showed the note is irrelevant. The form becomes editable before its initial `GET /dokan/v1/manual-orders/{id}` lands, and when that load arrives it resets the form (Order Status back to "Pending payment"). It looked intermittent because it only shows when the load is slower than the user.
+- **Evidence:** 5 probe runs. In the run that reset, the pick was at 7268 ms and the order load at 7878 ms. In the 4 runs that kept the status, the load came before the pick.
+- **Verify:**
+  1. Open Add New Order with DevTools → Network throttled to "Slow 4G".
+  2. Change Order Status to Completed **before** the page finishes loading.
+  3. Wait for the load to finish.
+- **Expected if present:** the status jumps back to "Pending payment". A Save then stores a pending order.
+- **Pinned by:** `react/vendor-orders/manualOrder.global.spec.ts` #M5. It delays the order load by 3 s with `page.route`, then picks a status. With `test.fail` removed it fails 3/3 with `Received: "Pending payment"`.
+- **Confidence:** high (deterministic repro).
+- **Status:** open.
+
+
 ### #3 Vendor subscription: every vendor with a pack gets a 403 and an uncaught error on the Subscription page
 - **Code:** `dokan-pro/modules/subscription/src/js/frontend/components/SubscriptionPacks.tsx:72` loads the pack via `dokan/v1/products/${subscription.subscription_id}`. Packs are admin-owned products, so the vendor products endpoint refuses, and the rejection isn't caught.
 - **Verify:**
@@ -27,7 +40,7 @@ Preconditions for all of them: Dokan Pro active.
   2. Open `/dashboard/new/#/subscription/orders` directly.
 - **Expected if present:** the table shows skeleton rows for ever, and no `vendor-subscription/orders` request is made. The **Subscription Orders tab** inside `#/subscription` works.
 - **Pinned by:** #S9 (`test.fail`).
-- **Confidence:** high from the code, and the test reproduces it. Not yet re-checked by removing `test.fail`, as was done for #3.
+- **Confidence:** high. The code confirms it, and with `test.fail` removed the test fails on 10 skeleton rows with no empty-state text and no orders request.
 - **Status:** open.
 - **Legacy blind spot:** the old test passed because the skeleton table has column headers.
 
@@ -37,21 +50,9 @@ Preconditions for all of them: Dokan Pro active.
   2. Watch the Network tab without touching anything.
 - **Expected if present:** `GET /wp-json/dokan/v1/customers?search=&include=&exclude=&role=all&per_page=10` repeats continuously. Measured **54 requests in 15 s** from one tab.
 - **Knock-on effect:** typing in the Customer field often stays on "Searching ...", because each repeat restarts the async search. Picking a customer is unreliable for real users too.
-- **Pinned by:** `react/vendor-orders/manualOrder.global.spec.ts` #M6 (idle request count) and #M7 (customer pick saved on the order), both `test.fail`.
-- **Confidence:** high (measured directly). #M7 sometimes passes because the race is timing-dependent; see the stabilisation note below.
+- **Pinned by:** `react/vendor-orders/manualOrder.global.spec.ts` #M6 (idle request count, `test.fail`). #M7 (customer pick saved on the order) is `test.fixme` until this is fixed: the race sometimes passes, so an expected failure would flake.
+- **Confidence:** high (measured directly).
 - **Status:** open.
-
-## Intermittent (needs manual confirmation)
-
-### #1 Manual orders: adding a note resets an unsaved Order Status to "Pending payment"
-- **Verify:**
-  1. On Add New Order, set Order Status to **Completed** and don't save.
-  2. Type a note and click **Add note**.
-  3. Look at the status field, then Save and check the order.
-- **Expected if present:** the status reverts to "Pending payment" and the order saves as pending.
-- **Pinned by:** #M5 (`test.fail`).
-- **Confidence:** medium. A standalone script reproduced it (`after pick Completed` → `after note Pending payment`), and early test runs did too. It then passed in 2 of 3 runs on 2026-10-29. It may be timing-dependent, possibly tied to #4; not proven.
-- **Status:** needs confirmation.
 
 ## Suspected (not proven by a test, or possibly intended)
 
@@ -72,12 +73,12 @@ Preconditions for all of them: Dokan Pro active.
 | # | Defect | Effect |
 |---|---|---|
 | L1 | `ApiUtils.getEarningLineItems` / `getCommissionLineItems` price one unit and ignore quantity. | The "earning + commission == revenue" oracle only holds for quantity 1. |
-| L2 | The manual-order status test read the dropdown back from the screen instead of the saved order. | Bug #1 could pass unnoticed. |
+| L2 | The manual-order status test read the dropdown back from the screen instead of the saved order, and never controlled when the order load landed. | Bug #1 passed unnoticed. |
 | L3 | Several tests assert only `/\d/`, `rows > 0`, "columns render" or "the request fired". | Wrong totals, wrong rows, failed saves and stuck loaders stay green (e.g. #2). |
 | L4 | `helpers.exeCommandWpcli` runs `cd $SITE_PATH && wp …` locally; `SITE_PATH` is unset in the local `.env`. | The manual-order setting toggle silently fails locally. The revamp uses `_shared/wp.ts` (wp-env tests-cli). |
 | L5 | `PRODUCT_ID` / `CUSTOMER_ID` exist only inside a run that includes the setup project. | `NO_SETUP=true` runs quietly create throwaway products. The revamp looks fixtures up by name (`_shared/seed.ts`). |
 | L6 | Since 5.2.0 the subscription feature only loads with `enable_pricing` on, but the legacy React subscription spec never turned it on. | Its six tests exercised a disabled feature. |
 
-## Stabilisation note
+## Rule learned
 
-#M5 and #M7 are timing-dependent, so `test.fail` makes them flaky ("expected to fail, but passed"). They must be made deterministic, or moved out of the pinned set, before the manual-order spec is committed as stable.
+Before pinning a bug with `test.fail`, make it deterministic. Control the timing that triggers it (e.g. delay the response with `page.route`), then confirm it fails for the bug's own reason with `test.fail` removed. A race pinned with `test.fail` flakes ("expected to fail, but passed"). If it can't be made deterministic, use `test.fixme` with the finding id.

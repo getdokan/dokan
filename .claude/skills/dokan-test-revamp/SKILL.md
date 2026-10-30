@@ -123,7 +123,11 @@ Run it with `cd tests/pw && npm run test:react`. It needs the auth states from t
 - **State that must not leak** (subscriptions, limits, onboarding, per-vendor settings): use `createVendor(api)` plus `withUserPage(browser, vendor, ...)`. Don't mutate vendor1/vendor2.
 - **Feature flags that change behaviour for everyone** (e.g. `enable_pricing` makes every vendor without a pack unable to publish): the file is `*.global.spec.ts` and restores the flag in afterAll.
 - **Seed through real code paths** (REST, or WooCommerce/Dokan hooks via `wpEval`). Never write raw meta that mimics what the product does: that tests the test.
-- **Pinning a product bug with `test.fail()`:** first run the test without `test.fail` and confirm it fails for the bug's reason (the exact status or assertion), not a timeout or a setup error. A `test.fail` that fails for any reason hides breakage.
+- **Pinning a product bug with `test.fail()`:**
+  - Make the repro deterministic first: control the timing that triggers it, e.g. `page.route` to delay a response.
+  - Then run it without `test.fail` (`--repeat-each=3`) and confirm it fails for the bug's own reason (the exact status or assertion), not a timeout or a setup error.
+  - A race pinned with `test.fail` flakes ("expected to fail, but passed"). If it can't be made deterministic, use `test.fixme(true, 'FINDINGS.md #n ...')` instead.
+- **Hydration races:** forms that are editable before their initial REST load lands get overwritten by that load (FINDINGS #1). Page objects' `goto()` waits for the load, and a separate `open()` exists for racing it on purpose.
 - **Never use `expect.poll(() => list).toEqual([])` as proof something didn't happen.** It passes before the event fires. Wait for the event (`waitForResponse`) and assert on it.
 - **A known uncaught JS error** from a product bug is tolerated through a `known-js-error` annotation, pushed by the page object when the bug hits every visit. The failure message lists failed REST calls, which usually name the cause.
 

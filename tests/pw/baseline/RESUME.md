@@ -1,6 +1,6 @@
 # Revamp: where we left off
 
-Branch `dokan-test-revamp`. Last updated 2026-10-29. Read this together with `.claude/skills/dokan-test-revamp/SKILL.md`, which holds the rules. This file holds the state.
+Branch `dokan-test-revamp`. Last updated 2026-10-30. Read this together with `.claude/skills/dokan-test-revamp/SKILL.md`, which holds the rules. This file holds the state.
 
 ## Goal
 
@@ -11,8 +11,8 @@ Replace the legacy React-UI Playwright tests with a risk-first, DRY suite in `te
 | Surface | Risk | New tests | Ledger | Failure-mode map | State |
 |---|---|---|---|---|---|
 | Vendor orders (list) | P0 | `react/vendor-orders/vendorOrders.spec.ts`, `vendorOrdersApi.spec.ts`, `vendorOrdersCapability.global.spec.ts` | `parity/orders.md`: 4 TODO left | `failure-modes/vendor-orders.md` | stable (3× repeat green) |
-| Manual orders (Pro) | P0 | `react/vendor-orders/manualOrder.global.spec.ts` | `parity/manual-order.md`: 0 open | in `vendor-orders.md` (M1–M7) | **unstable, see Next 1** |
-| Vendor subscription (Pro) | P0 | `react/vendor-subscription/vendorSubscription.global.spec.ts` | `parity/vendor-subscriptions.md`: 0 open | `failure-modes/vendor-subscription.md` | green in the 2× repeat; S12–S16 gaps open |
+| Manual orders (Pro) | P0 | `react/vendor-orders/manualOrder.global.spec.ts` | `parity/manual-order.md`: 0 open | in `vendor-orders.md` (M1–M8) | stable; #M7 `fixme` (bug #4), M8 gap |
+| Vendor subscription (Pro) | P0 | `react/vendor-subscription/vendorSubscription.global.spec.ts` | `parity/vendor-subscriptions.md`: 0 open | `failure-modes/vendor-subscription.md` | stable; S12–S16 gaps open |
 
 Shared layer in `react/_shared/`:
 - `fixtures.ts`: role pages; the PHP-fatal/JS-error guard, which lists failed REST calls; the `known-js-error` annotation; `withUserPage` for fresh users.
@@ -20,23 +20,20 @@ Shared layer in `react/_shared/`:
 - `dataViewsTable.ts`: `DataViewsTable` and `moneyDigits`.
 - `wp.ts`: `wpEval`, `setDokanSetting`, `setRoleCap`.
 
-Bugs found: `baseline/FINDINGS.md` (#2, #3, #4 confirmed; #1 intermittent; S1–S3 suspected).
+Bugs found: `baseline/FINDINGS.md` (#1–#4 confirmed with deterministic pins; S1–S3 suspected).
+
+Last full run (2026-10-30, twice, clean settings): 36 passed, 1 skipped (#M7), 0 failed.
 
 Legacy progress: 44 of 561 legacy React tests have a verdict; 517 are left across 38 folders (`node baseline/parity.mjs`).
 
 ## Next (in order)
 
-1. **Stabilise manual orders.** #M5 (bug #1) and #M7 (bug #4) are timing-dependent, so `test.fail` flips them to "expected to fail, but passed".
-   - Confirm #1 by hand first (steps in FINDINGS.md).
-   - Then either make the repro deterministic (e.g. wait for the note's order refetch before reading the status) or drop `test.fail` and keep the bug only in FINDINGS.
-   - Re-run `--repeat-each=3` until the file is green.
-2. **Re-check #S9 without `test.fail`.** It should fail on skeleton rows, not on a setup error. Same procedure as #S10.
-3. **Close the orders TODOs** (`parity/orders.md`): #10 customer/date filters (assert every row matches), #11 export content, #12 View lands on the right order.
-4. **Subscription gaps:** S13 expiry → product status, S14 pack commission, S12 admin editor UI, S16 allowed categories.
-5. **Next P0/P1 surfaces** by `RISK-REGISTER.md`: Vendor staff, Product editor (`product-form-manager`, 82 legacy tests, the largest), Returns/RMA, Admin settings (`adminSettings`, 98).
+1. **Close the orders TODOs** (`parity/orders.md`): #10 customer/date filters (assert every row matches), #11 export content, #12 View lands on the right order.
+2. **Gaps:** manual orders M8 (another vendor's product refused). Subscription: S13 expiry → product status, S14 pack commission, S12 admin editor UI, S16 allowed categories.
+3. **Next P0/P1 surfaces** by `RISK-REGISTER.md`: Vendor staff, Product editor (`product-form-manager`, 82 legacy tests, the largest), Returns/RMA, Admin settings (`adminSettings`, 98).
    - Per surface: failure-mode map → ledger verdicts → tests → 3× repeat green → ledger 0 open.
-6. **CI:** add a `react.config.ts` job to `.github/workflows/e2e_api_tests.yml`. The suite isn't in CI yet.
-7. Delete legacy folders in separate PRs once their ledger is 0 open.
+4. **CI:** add a `react.config.ts` job to `.github/workflows/e2e_api_tests.yml`. The suite isn't in CI yet.
+5. Delete legacy folders in separate PRs once their ledger is 0 open.
 
 ## How to run
 
