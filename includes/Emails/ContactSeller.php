@@ -27,7 +27,7 @@ class ContactSeller extends WC_Email {
     /**
      * Reply name
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @var string
      */
@@ -112,7 +112,7 @@ class ContactSeller extends WC_Email {
     /**
      * Get email headers, with the contact form submitter as the only Reply-to (also replaces any added via `woocommerce_email_headers`).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @return string
      */

@@ -8,7 +8,7 @@ $social_fields = dokan_get_social_profile_fields();
 /**
  * Filters the social profile links shown on a vendor's store page.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.3
  *
  * @param array                       $social_info Social network key => URL.
  * @param \WeDevs\Dokan\Vendor\Vendor $store_user

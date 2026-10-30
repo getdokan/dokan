@@ -1148,7 +1148,7 @@ class ProductController extends DokanRESTController {
     /**
      * Whether the current user may see a product's vendor-only fields (download files, earning, purchase note, meta data).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @param WC_Product $product Product instance.
      *
@@ -1167,7 +1167,7 @@ class ProductController extends DokanRESTController {
     /**
      * Product meta entries that any caller may see, opted in through `dokan_rest_public_product_meta_keys`.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.3
      *
      * @param WC_Product $product Product instance.
      *
