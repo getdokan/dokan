@@ -213,7 +213,7 @@ rsync -a --delete .../plugin-ui/dist/ .../dokan-lite/node_modules/@wedevs/plugin
 
 ## When to Invoke This Skill
 
-- Adding any new settings field (Lite or Pro).
+- Adding any new settings field (Lite or Pro). Also run `dokan-setting-impact` for what the field must do across the Store Admin, Vendor, and Customer tiers.
 - "Unsupported field type" or other rendering issues in the new admin settings UI.
 - Save/dependency/visibility bugs in the settings page.
 - Onboarding to the settings-rebuild branch.

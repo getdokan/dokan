@@ -32,6 +32,11 @@
 * Steps or issue link
 
 
+### Setting impact
+
+<!-- Required when a setting's reader or writer changes behaviour (default, value, stored shape, enforcement point, surface). Delete for label/help-text-only changes. Template and rules: the dokan-setting-impact skill (dokan-lite/.claude/skills/dokan-setting-impact/SKILL.md). -->
+
+
 ### Changelog entry
 
 *Title*
