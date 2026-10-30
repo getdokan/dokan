@@ -21,6 +21,17 @@ import coreStore from '@dokan/stores/core';
 import { useSelect } from '@wordpress/data';
 import Forbidden from '../layout/403';
 
+// Routes under a dashboard menu the admin switched off (Menu Manager): the sidebar hides them, so the URL must not open them either.
+const isRestrictedRoute = ( pathname: string ): boolean => {
+    const restricted: string[] =
+        ( window as any )?.dokanFrontend?.restrictedRoutes || [];
+    const path = pathname.replace( /^\/+|\/+$/g, '' );
+
+    return restricted.some(
+        ( route ) => path === route || path.startsWith( route + '/' )
+    );
+};
+
 export function withRouter( Component, capabilities = [] ) {
     function ComponentWithRouterProp( props ) {
         const authorised: boolean = useSelect( ( select ) => {
@@ -50,7 +61,7 @@ export function withRouter( Component, capabilities = [] ) {
             useSearchParams,
         };
 
-        if ( ! authorised ) {
+        if ( ! authorised || isRestrictedRoute( location.pathname ) ) {
             return createElement( Forbidden, { ...props, ...routerProps } );
         }
 
