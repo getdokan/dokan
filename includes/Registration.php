@@ -257,9 +257,14 @@ class Registration {
 
         // Intially add values on profile completion progress bar
         $dokan_settings['profile_completion']['store_name']    = 10;
-        $dokan_settings['profile_completion']['phone']         = 10;
         $dokan_settings['profile_completion']['next_todo']     = 'banner_val';
-        $dokan_settings['profile_completion']['progress']      = 20;
+        $dokan_settings['profile_completion']['progress']      = 10;
+
+        // Phone can be optional on the registration block, so it only counts when filled in.
+        if ( '' !== $dokan_settings['phone'] ) {
+            $dokan_settings['profile_completion']['phone']     = 10;
+            $dokan_settings['profile_completion']['progress'] += 10;
+        }
         $dokan_settings['profile_completion']['progress_vals'] = [
             'banner_val'          => 15,
             'profile_picture_val' => 15,
