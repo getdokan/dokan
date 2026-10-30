@@ -53,14 +53,15 @@ test.describe('Vendor manual orders (React)', () => {
 
     test('#M5 a status picked before the order finishes loading is kept', { tag: ['@pro', '@vendor', '@p1'] }, async ({ vendorPage }) => {
         // Known bug (FINDINGS.md #1): the form accepts edits before its initial order load lands, then the load
-        // overwrites them (status back to Pending payment). A delayed load makes the race deterministic.
+        // overwrites them (status back to Pending payment). Holding the load until after the pick makes it deterministic.
         // Remove test.fail once fixed.
         test.fail();
         const form = new ManualOrderPage(vendorPage);
-        await form.delayOrderLoad(3000);
+        const release = await form.holdOrderLoad();
         await form.open();
         await form.setStatus('Completed');
         const loaded = vendorPage.waitForResponse(r => r.request().method() === 'GET' && r.url().includes(`/manual-orders/${form.orderId}`));
+        release();
         await loaded;
         // Bounded wait for the load to be applied: with the bug the status flips within it, once fixed it times out.
         await expect.poll(() => form.status(), { timeout: 3000 }).toMatch(/pending payment/i).catch(() => undefined);

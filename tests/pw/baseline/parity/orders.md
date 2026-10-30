@@ -6,16 +6,16 @@
 | orders/newOrders.spec.ts:65 | vendor order list shows the seeded order row (React) | PORTED react/vendor-orders/vendorOrders.spec.ts #1 (own-order guard), #17 |
 | orders/newOrders.spec.ts:73 | vendor sees the core order columns (React) | PORTED react/vendor-orders/vendorOrders.spec.ts #16 |
 | orders/newOrders.spec.ts:81 | vendor seeded order row shows status badge + total (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #7 (exact total and earning vs REST; old matched any digit) |
-| orders/newOrders.spec.ts:91 | vendor can open the Export dropdown (React) | TODO #11 export content (opening the menu catches nothing) |
+| orders/newOrders.spec.ts:91 | vendor can open the Export dropdown (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #11 (CSV content via intercepted POST; customer-filtered export pins FINDINGS #5) |
 | orders/newOrders.spec.ts:97 | vendor can view the All status tab (React) | DROPPED vague (rows > 0); tab filtering owned by react/vendor-orders/vendorOrders.spec.ts #9 |
 | orders/newOrders.spec.ts:102 | vendor sees the empty state for a non-existent order id search (React) | PORTED react/vendor-orders/vendorOrders.spec.ts #1 |
-| orders/newOrders.spec.ts:109 | vendor can filter orders by Customer via the funnel (React) | TODO #10 assert every returned row matches the customer |
-| orders/newOrders.spec.ts:117 | vendor can filter orders by Date Range via the funnel (React) | TODO #10 assert every returned row is in the range |
+| orders/newOrders.spec.ts:109 | vendor can filter orders by Customer via the funnel (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #10 customer (every row's REST customer_id) |
+| orders/newOrders.spec.ts:117 | vendor can filter orders by Date Range via the funnel (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #10 date range (backdated order excluded) |
 | orders/newOrders.spec.ts:125 | vendor can search orders — narrows to zero rows for a non-existent order id (React) | PORTED react/vendor-orders/vendorOrders.spec.ts #1 |
 | orders/newOrders.spec.ts:143 | vendor can search orders — exact order id keeps the row (React) | PORTED react/vendor-orders/vendorOrders.spec.ts #1, #17 |
 | orders/newOrders.spec.ts:150 | vendor can filter orders by status tab — Processing shows the seeded order (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #9 (every row in the tab has that status) |
-| orders/newOrders.spec.ts:156 | vendor row actions menu exposes View + at least one status-change action (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #4 (status action used and persisted); View: TODO #12 |
-| orders/newOrders.spec.ts:164 | vendor can view order details from the row action (React) | TODO #12 View must land on the clicked order |
+| orders/newOrders.spec.ts:156 | vendor row actions menu exposes View + at least one status-change action (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #4 (status action) and #12 (View) |
+| orders/newOrders.spec.ts:164 | vendor can view order details from the row action (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #12 |
 | orders/newOrders.spec.ts:170 | vendor status-change action issues a non-GET request (React) | REWRITTEN react/vendor-orders/vendorOrders.spec.ts #4 (response < 400 and REST status) |
 | orders/newOrders.spec.ts:176 | vendor order list deep-link survives reload (HashRouter) (React) | PORTED react/vendor-orders/vendorOrders.spec.ts #17 |
 | orders/newOrders.spec.ts:183 | vendor order list renders without a PHP fatal (React) | OWNED react/_shared/fixtures.ts (every role page fails on PHP fatal or uncaught JS error) |

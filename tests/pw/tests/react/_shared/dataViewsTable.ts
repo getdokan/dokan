@@ -41,7 +41,7 @@ export class DataViewsTable {
     }
 
     /** Run `action`, then wait for the list GET it triggers (optionally matching `query`) and for the list to settle. */
-    private async refetch(action: () => Promise<unknown>, query?: string): Promise<void> {
+    async refetch(action: () => Promise<unknown>, query?: string): Promise<void> {
         const loaded = this.page.waitForResponse(
             r => r.request().method() === 'GET' && this.isListCall(r) && (!query || decodeURIComponent(r.url()).includes(query)),
         );
@@ -63,6 +63,12 @@ export class DataViewsTable {
 
     async tab(label: string): Promise<void> {
         await this.refetch(() => this.page.getByRole('tab', { name: new RegExp(`^${label}\\b`) }).click());
+    }
+
+    /** Open the funnel and pick a filter field by its label; its control renders below the toolbar. */
+    async openFilter(label: string): Promise<void> {
+        await this.page.locator('button[title="Filter"]').click();
+        await this.page.locator('.bg-popover').getByRole('button', { name: label, exact: true }).click();
     }
 
     async select(row: Locator): Promise<void> {

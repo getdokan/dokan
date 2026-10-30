@@ -15,9 +15,9 @@ Paths are relative to `tests/pw/tests/`. An assertion counts only if it fails wh
 | 7 | Row shows the wrong order total | vendor | UI | `react/vendor-orders/vendorOrders.spec.ts` #7 (Order Total and Earning cells equal REST `total` / `earning`) | caught |
 | 8 | Earning and commission split wrong for the order | vendor/admin | API | `api/calculation.spec.ts` (assertOrderCalculation matrix). Legacy `newOrdersGaps.spec.ts:71` helpers ignore quantity, so it only holds for qty 1 | caught |
 | 9 | Status tab shows orders of another status | vendor | UI | `react/vendor-orders/vendorOrders.spec.ts` #9 (every row in On hold tab is On hold) | caught |
-| 10 | Customer, date-range or order-id filter returns wrong rows | vendor | UI | `newOrders.spec.ts:110`, `:118` open the filter only; `:126`, `:144` search by id | **PARTIAL** (filter results not asserted) |
-| 11 | Export contains wrong orders or ignores the active filter | vendor | UI (download) | `newOrders.spec.ts:92` opens the dropdown only | **GAP** |
-| 12 | View goes to the wrong order | vendor | UI | `newOrders.spec.ts:165` checks only that the URL left `#/orders` | **WEAK** |
+| 10 | Customer, date-range or order-id filter returns wrong rows | vendor | UI | `react/vendor-orders/vendorOrders.spec.ts` #10 customer (every row's REST `customer_id` matches, guest excluded) and #10 date range (backdated order excluded, every row in range) | caught |
+| 11 | Export contains wrong orders or ignores the active filter | vendor | UI (download) | #11 search-filtered export (CSV ids == [order]) caught; #11 customer-filtered export `test.fail`: **product bug**, FINDINGS #5 | bug pinned |
+| 12 | View goes to the wrong order | vendor | UI | #12 (order link opens `order_id=<id>` and shows `#<id>`) | caught |
 | 13 | Customer or guest can call the vendor orders REST | customer/guest | API | `react/vendor-orders/vendorOrdersApi.spec.ts` #13 (customer 403, guest 401) | caught |
 | 14 | Vendor staff without the orders permission sees or changes orders (Pro) | staff | API + UI | `e2e/vendor-staff/newVendorStaff.spec.ts:191` checks only that the Orders menu is visible with the default capability; denial is never tested | **GAP** |
 | 15 | Lite: Pro-only actions or columns shown, or the list breaks without Pro | vendor | UI | none tied to `@liteOnly` | **GAP** |
@@ -40,8 +40,5 @@ Paths starting `react/` are the revamp suite (`npm run test:react`). Legacy path
 ## Open (in order)
 
 1. **#3 suborder listing.** Create a multi-vendor order. Each vendor's list must show only its own suborder id, never the parent.
-2. **#12 View lands on the right order.** Needs the order details route; it leaves the React app today.
-3. **#10 filters.** Every row returned by the customer and date-range filters matches the filter.
-4. **#11 export.** The legacy suite deferred it because headless Chromium fires no `download` event for the hidden-form POST. Try `page.request` replaying the form POST and asserting the CSV order ids.
 5. **#14 staff (Pro), #15 Lite without Pro.**
 6. **M8** manual order with another vendor's product must be refused.

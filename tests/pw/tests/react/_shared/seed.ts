@@ -2,6 +2,7 @@ import type { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
+import { wpEval } from './wp';
 
 export type Vendor = 'vendor1' | 'vendor2';
 
@@ -55,6 +56,11 @@ export async function createProductAs(api: ApiUtils, auth: { Authorization: stri
     return body;
 }
 
+/** Move an order's creation date `days` into the past (the WooCommerce REST API ignores date_created on update). */
+export function backdateOrder(orderId: string, days: number): void {
+    wpEval(`$o = wc_get_order(${Number(orderId)}); $o->set_date_created(time() - ${Number(days)} * DAY_IN_SECONDS); $o->save();`);
+}
+
 /** WordPress user id of a fixture customer (e.g. "customer1"). */
 export async function customerId(api: ApiUtils, username: string): Promise<string> {
     return String(await api.getCustomerId(username, payloads.adminAuth));
@@ -69,7 +75,8 @@ export async function seedOrder(
     { vendor = 'vendor1', status = 'wc-processing', quantity = 1, customer }: { vendor?: Vendor; status?: string; quantity?: number; customer?: string } = {},
 ): Promise<string> {
     const productId = await productIdOf(api, vendor);
-    const order = { ...payloads.createOrder, line_items: [{ product_id: productId, quantity }], ...(customer ? { customer_id: Number(customer) } : {}) };
+    // customer_id is always explicit: payloads.createOrder defaults it to the setup-written CUSTOMER_ID env var.
+    const order = { ...payloads.createOrder, line_items: [{ product_id: productId, quantity }], customer_id: Number(customer ?? 0) };
     const [, , orderId] = await api.createOrderWithStatus(productId, order, status, VENDORS[vendor].auth);
     return orderId;
 }

@@ -122,6 +122,8 @@ Run it with `cd tests/pw && npm run test:react`. It needs the auth states from t
 ### Isolation and known bugs
 - **State that must not leak** (subscriptions, limits, onboarding, per-vendor settings): use `createVendor(api)` plus `withUserPage(browser, vendor, ...)`. Don't mutate vendor1/vendor2.
 - **Feature flags that change behaviour for everyone** (e.g. `enable_pricing` makes every vendor without a pack unable to publish): the file is `*.global.spec.ts` and restores the flag in afterAll.
+- **Never inherit env-defaulted payload fields.** `payloads.*` read `CUSTOMER_ID` and similar from `.env`, which setup runs rewrite. Set every field the test depends on explicitly, e.g. `customer_id: 0` for a guest order.
+- **Hold, don't delay, to force a race:** `page.route` that awaits a promise the test resolves, not a fixed `setTimeout`. A fixed delay loses on a slow machine.
 - **Seed through real code paths** (REST, or WooCommerce/Dokan hooks via `wpEval`). Never write raw meta that mimics what the product does: that tests the test.
 - **Pinning a product bug with `test.fail()`:**
   - Make the repro deterministic first: control the timing that triggers it, e.g. `page.route` to delay a response.

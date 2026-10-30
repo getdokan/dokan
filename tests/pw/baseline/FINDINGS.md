@@ -17,7 +17,7 @@ Preconditions for all of them: Dokan Pro active.
   2. Change Order Status to Completed **before** the page finishes loading.
   3. Wait for the load to finish.
 - **Expected if present:** the status jumps back to "Pending payment". A Save then stores a pending order.
-- **Pinned by:** `react/vendor-orders/manualOrder.global.spec.ts` #M5. It delays the order load by 3 s with `page.route`, then picks a status. With `test.fail` removed it fails 3/3 with `Received: "Pending payment"`.
+- **Pinned by:** `react/vendor-orders/manualOrder.global.spec.ts` #M5. It holds the order load with `page.route` until after the status pick, then releases it. With `test.fail` removed it fails 3/3 with `Received: "Pending payment"`.
 - **Confidence:** high (deterministic repro).
 - **Status:** open.
 
@@ -54,6 +54,18 @@ Preconditions for all of them: Dokan Pro active.
 - **Confidence:** high (measured directly).
 - **Status:** open.
 
+### #5 Vendor orders: "Export Filtered" ignores the customer filter
+- **Code:** `dokan-lite/includes/Dashboard/Templates/Orders.php` `handle_order_export()` line 258 reads `customer_id` from `$_GET`. Every other filter is read from `$_POST`. The React list (`src/dashboard/orders/OrderList.tsx` `handleExport`) POSTs `customer_id` in the form body to `window.dokan.urls.ordersUrl`, which has no query string, so the handler never sees it. (The legacy dashboard put `customer_id` in the page URL, which is why it once worked there.)
+- **Verify:**
+  1. As a vendor, open `/dashboard/new/#/orders`.
+  2. Filter → Customer → pick a customer.
+  3. Export All → **Export Filtered**.
+- **Expected if present:** the CSV contains the vendor's orders for every customer and guest, not only the chosen customer's.
+- **Pinned by:** `react/vendor-orders/vendorOrders.spec.ts` "#11 filtered export honours the customer filter" (`test.fail`). With `test.fail` removed it fails 3/3, listing a verified guest order (`customer_id` 0) in the export.
+- **Confidence:** high.
+- **Status:** open.
+- **Likely fix:** read `$_POST['customer_id']` like the other filters.
+
 ## Suspected (not proven by a test, or possibly intended)
 
 | # | Surface | Suspicion | Where |
@@ -77,6 +89,7 @@ Preconditions for all of them: Dokan Pro active.
 | L3 | Several tests assert only `/\d/`, `rows > 0`, "columns render" or "the request fired". | Wrong totals, wrong rows, failed saves and stuck loaders stay green (e.g. #2). |
 | L4 | `helpers.exeCommandWpcli` runs `cd $SITE_PATH && wp …` locally; `SITE_PATH` is unset in the local `.env`. | The manual-order setting toggle silently fails locally. The revamp uses `_shared/wp.ts` (wp-env tests-cli). |
 | L5 | `PRODUCT_ID` / `CUSTOMER_ID` exist only inside a run that includes the setup project. | `NO_SETUP=true` runs quietly create throwaway products. The revamp looks fixtures up by name (`_shared/seed.ts`). |
+| L7 | `payloads.createOrder` defaults `customer_id` to the `CUSTOMER_ID` env var, which the auth setup writes into `.env`. | After a setup run, every "guest" order seeded through the shared payload silently belongs to customer1. The revamp seeder always sets `customer_id` explicitly. |
 | L6 | Since 5.2.0 the subscription feature only loads with `enable_pricing` on, but the legacy React subscription spec never turned it on. | Its six tests exercised a disabled feature. |
 
 ## Rule learned

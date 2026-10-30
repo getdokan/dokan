@@ -53,12 +53,18 @@ export class ManualOrderPage {
         return new RegExp(`/dokan/v1/manual-orders/${this.orderId}(\\?|$)`).test(decodeURIComponent(url));
     }
 
-    /** Hold the form's initial order load for `ms`, as a slow connection would. Call before open(). */
-    async delayOrderLoad(ms: number): Promise<void> {
+    /**
+     * Hold the form's initial order load until the returned `release` is called, as an arbitrarily slow
+     * connection would. Call before open().
+     */
+    async holdOrderLoad(): Promise<() => void> {
+        let release!: () => void;
+        const released = new Promise<void>(resolve => (release = resolve));
         await this.page.route(/\/dokan\/v1\/manual-orders\/\d+(\?|$)/, async route => {
-            if (route.request().method() === 'GET') await new Promise(resolve => setTimeout(resolve, ms));
+            if (route.request().method() === 'GET') await released;
             await route.continue();
         });
+        return release;
     }
 
     /** Number of empty customer searches the form fires in `ms` while nobody touches it. */
