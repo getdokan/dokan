@@ -7,10 +7,13 @@ use WeDevs\Dokan\Utilities\VendorUtil;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Who may reach the Dokan MCP server, and whether it is switched on at all.
+ * The marketplace's policy for AI assistants: whether Dokan's tools are exposed over MCP at all,
+ * who may use them, and where an assistant connects.
  *
- * Both switches live in the AI Assist settings (`dokan_ai` section) so the legacy and the new
- * admin settings screens share one source of truth through the settings bridge.
+ * Dokan runs no MCP server. Its abilities are served by the WordPress MCP Adapter's default
+ * server, next to WooCommerce's, and this class only answers policy questions. Both switches live
+ * in the AI Assist settings (`dokan_ai` section) so the legacy and the new admin settings screens
+ * share one source of truth through the settings bridge.
  *
  * @since DOKAN_SINCE
  */
@@ -38,28 +41,35 @@ class Access {
     const SETTING_VENDOR_ACCESS = 'dokan_mcp_vendor_access';
 
     /**
-     * MCP server id on the shared adapter.
+     * Id of the Dokan server on the MCP Adapter.
      *
      * @since DOKAN_SINCE
      */
     const SERVER_ID = 'dokan';
 
     /**
-     * REST namespace of the MCP endpoint.
+     * REST namespace of the Dokan server: the adapter's own, like every server it hosts.
      *
      * @since DOKAN_SINCE
      */
-    const ROUTE_NAMESPACE = 'dokan';
+    const SERVER_NAMESPACE = 'mcp';
 
     /**
-     * REST route of the MCP endpoint, beneath the namespace.
+     * REST route of the Dokan server beneath that namespace.
      *
      * @since DOKAN_SINCE
      */
-    const ROUTE = 'mcp';
+    const SERVER_ROUTE = 'dokan';
 
     /**
-     * Whether the Dokan MCP server is switched on.
+     * REST route of the MCP Adapter's default server, beneath the REST prefix.
+     *
+     * @since DOKAN_SINCE
+     */
+    const DEFAULT_SERVER_ROUTE = 'mcp/mcp-adapter-default-server';
+
+    /**
+     * Whether Dokan's tools are exposed to AI assistants.
      *
      * @since DOKAN_SINCE
      *
@@ -69,17 +79,17 @@ class Access {
         $enabled = 'on' === dokan_get_option( self::SETTING_ENABLED, self::SETTING_SECTION, 'off' );
 
         /**
-         * Filters whether the Dokan MCP server answers at all.
+         * Filters whether Dokan's tools are exposed to AI assistants over MCP.
          *
          * @since DOKAN_SINCE
          *
-         * @param bool $enabled Whether MCP is on.
+         * @param bool $enabled Whether MCP access is on.
          */
         return (bool) apply_filters( 'dokan_mcp_enabled', $enabled );
     }
 
     /**
-     * Whether vendors (and their staff) may connect their own assistants.
+     * Whether vendors (and their staff) may use the tools through an assistant of their own.
      *
      * Off by default: the first release targets the store owner, and a vendor connection is an
      * explicit opt-in by the marketplace.
@@ -92,7 +102,7 @@ class Access {
         $enabled = 'on' === dokan_get_option( self::SETTING_VENDOR_ACCESS, self::SETTING_SECTION, 'off' );
 
         /**
-         * Filters whether vendors may connect to the Dokan MCP server.
+         * Filters whether vendors may use Dokan's tools through an AI assistant.
          *
          * @since DOKAN_SINCE
          *
@@ -102,36 +112,76 @@ class Access {
     }
 
     /**
-     * The MCP endpoint an AI client connects to.
+     * The MCP endpoint an AI client connects to: the Dokan server, one tool per ability.
      *
      * @since DOKAN_SINCE
      *
      * @return string
      */
     public static function endpoint(): string {
-        return rest_url( self::ROUTE_NAMESPACE . '/' . self::ROUTE );
+        /**
+         * Filters the MCP endpoint the settings screens hand out.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string $endpoint The Dokan server's URL.
+         */
+        return (string) apply_filters( 'dokan_mcp_endpoint', rest_url( self::SERVER_NAMESPACE . '/' . self::SERVER_ROUTE ) );
     }
 
     /**
-     * Whether the raw HTTP request targets the MCP endpoint.
-     *
-     * Decided from the request URI rather than a matched REST route, because it is needed while
-     * WordPress is still working out who the user is, before any route has matched. Pretty
-     * permalinks only, like WooCommerce's own REST-key authentication.
+     * The adapter's default server, where the same abilities sit behind its discover and
+     * execute meta-tools next to WooCommerce's.
      *
      * @since DOKAN_SINCE
      *
-     * @return bool
+     * @return string
      */
-    public static function is_request_to_endpoint(): bool {
-        $path = self::ROUTE_NAMESPACE . '/' . self::ROUTE;
-        $uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
-        return (bool) preg_match( '#/' . preg_quote( rest_get_url_prefix() . '/' . $path, '#' ) . '(?:[/?]|$)#', $uri );
+    public static function default_server_endpoint(): string {
+        return rest_url( self::DEFAULT_SERVER_ROUTE );
     }
 
     /**
-     * Whether a user may hold a working MCP connection right now.
+     * Whether an ability is one of Dokan's own.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $ability_name Ability name, e.g. `dokan/current-vendor`.
+     *
+     * @return bool
+     */
+    public static function is_dokan_ability( string $ability_name ): bool {
+        return 0 === strpos( $ability_name, 'dokan/' );
+    }
+
+    /**
+     * Whether Dokan's access policy applies to an ability: its own, and the WooCommerce product
+     * and order abilities it vendor-scopes.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $ability_name Ability name.
+     *
+     * @return bool
+     */
+    public static function governs( string $ability_name ): bool {
+        $governs = self::is_dokan_ability( $ability_name )
+            || 0 === strpos( $ability_name, 'woocommerce/product' )
+            || 0 === strpos( $ability_name, 'woocommerce/order' );
+
+        /**
+         * Filters whether Dokan's AI assistant access policy applies to an ability.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool   $governs      Whether the policy applies.
+         * @param string $ability_name The ability.
+         */
+        return (bool) apply_filters( 'dokan_mcp_governs_ability', $governs, $ability_name );
+    }
+
+    /**
+     * Whether a user may use Dokan's tools through an AI assistant right now.
      *
      * Store Admins always may. A Vendor or Vendor Staff may only while vendor access is on and
      * the store's selling is enabled, so a suspended vendor's assistant stops with the suspension.
@@ -158,7 +208,7 @@ class Access {
         }
 
         /**
-         * Filters whether a user may connect an AI assistant to the Dokan MCP server.
+         * Filters whether a user may use Dokan's tools through an AI assistant.
          *
          * @since DOKAN_SINCE
          *

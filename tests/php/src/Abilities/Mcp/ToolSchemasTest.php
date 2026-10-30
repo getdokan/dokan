@@ -9,11 +9,11 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * @group abilities
  * @group mcp
  *
- * WooCommerce's schemas, as strict MCP clients need them.
+ * The Dokan server's tool schemas, as strict MCP clients need them.
  */
 class ToolSchemasTest extends DokanTestCase {
 
-    public function test_date_time_formats_are_dropped_from_catalog_output_schemas() {
+    public function test_date_time_formats_are_dropped_from_tool_output_schemas() {
         $args = [
             'output_schema' => [
                 'type'       => 'object',
@@ -38,15 +38,15 @@ class ToolSchemasTest extends DokanTestCase {
             ],
         ];
 
-        $portable = ( new ToolSchemas() )->make_portable( $args, 'dokan/products-query' );
+        $portable = ( new ToolSchemas() )->make_portable( $args, 'woocommerce/products-query' );
         $item     = $portable['output_schema']['properties']['products']['items']['properties'];
 
         $this->assertArrayNotHasKey( 'format', $item['date_created'] );
         $this->assertSame( 'string', $item['date_created']['type'] );
         $this->assertSame( 'uri', $item['permalink']['format'] );
 
-        // Abilities outside the catalog are not touched.
-        $this->assertSame( $args, ( new ToolSchemas() )->make_portable( $args, 'woocommerce/products-query' ) );
+        // Abilities the Dokan server does not offer as tools are not touched.
+        $this->assertSame( $args, ( new ToolSchemas() )->make_portable( $args, 'woocommerce/customers-query' ) );
     }
 
     public function test_one_of_branches_are_mirrored_as_top_level_properties() {
@@ -82,7 +82,7 @@ class ToolSchemasTest extends DokanTestCase {
             ],
         ];
 
-        $schema = ( new ToolSchemas() )->make_portable( $args, 'dokan/product-create' )['input_schema'];
+        $schema = ( new ToolSchemas() )->make_portable( $args, 'woocommerce/product-create' )['input_schema'];
 
         $this->assertSame( [ 'product_type_alias', 'name', 'regular_price', 'downloads' ], array_keys( $schema['properties'] ) );
         $this->assertSame( [ 'physical', 'digital' ], $schema['properties']['product_type_alias']['enum'] );
@@ -95,6 +95,6 @@ class ToolSchemasTest extends DokanTestCase {
                 'properties' => [ 'id' => [ 'type' => 'integer' ] ],
             ],
         ];
-        $this->assertSame( $flat, ( new ToolSchemas() )->make_portable( $flat, 'dokan/product-delete' ) );
+        $this->assertSame( $flat, ( new ToolSchemas() )->make_portable( $flat, 'woocommerce/product-delete' ) );
     }
 }

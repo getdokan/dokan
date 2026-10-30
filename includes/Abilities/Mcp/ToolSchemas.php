@@ -7,7 +7,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Makes the WooCommerce ability schemas in the catalog usable by strict MCP clients.
+ * Makes the schemas of the Dokan server's tools usable by strict MCP clients.
  *
  * Clients built on the MCP TypeScript SDK (Claude Desktop through a proxy, the MCP Inspector)
  * validate every result against the tool's output schema with full format checking, and list a
@@ -24,13 +24,13 @@ defined( 'ABSPATH' ) || exit;
 class ToolSchemas implements Hookable {
 
     /**
-     * The catalog's ability names, resolved once: the filter below runs for every ability registered.
+     * The server's tool ability names, resolved once: the filter below runs for every ability registered.
      *
      * @since DOKAN_SINCE
      *
      * @var string[]|null
      */
-    protected $catalog_ids = null;
+    protected $tool_ids = null;
 
     /**
      * Register hooks.
@@ -45,7 +45,7 @@ class ToolSchemas implements Hookable {
     }
 
     /**
-     * Adjust the schemas of a catalog ability.
+     * Adjust the schemas of an ability the Dokan server offers as a tool.
      *
      * @since DOKAN_SINCE
      *
@@ -55,11 +55,11 @@ class ToolSchemas implements Hookable {
      * @return array
      */
     public function make_portable( $args, $name ) {
-        if ( null === $this->catalog_ids ) {
-            $this->catalog_ids = Catalog::configured_ability_ids();
+        if ( null === $this->tool_ids ) {
+            $this->tool_ids = Server::tool_ability_ids();
         }
 
-        if ( ! is_array( $args ) || ! in_array( $name, $this->catalog_ids, true ) ) {
+        if ( ! is_array( $args ) || ! in_array( $name, $this->tool_ids, true ) ) {
             return $args;
         }
 

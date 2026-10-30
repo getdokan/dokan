@@ -2443,7 +2443,7 @@ class SettingsSchema {
                 'type'         => 'section',
                 'subpage_id'   => 'mcp',
                 'title'        => esc_html__( 'Connect an Assistant', 'dokan-lite' ),
-                'description'  => esc_html__( 'An assistant signs in as a WordPress user and acts as that account. WordPress and WooCommerce check the credentials; nothing is stored here.', 'dokan-lite' ),
+                'description'  => esc_html__( 'An assistant signs in as a WordPress user with an application password and acts as that account. WordPress checks the credentials; nothing is stored here.', 'dokan-lite' ),
                 'dependencies' => $when_enabled,
             ],
         ];

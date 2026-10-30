@@ -186,13 +186,21 @@ class ProductAbilityScope implements Hookable {
             return $permission;
         }
 
-        if ( current_user_can( 'manage_woocommerce' ) || 'publish' === get_post_status( $object_id ) ) {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
 
-        // Unpublished: own scope plus the capability behind the dashboard's product list —
-        // the only surface where unpublished products show (ADR-0007 applies to reads too).
-        return dokan_is_product_author( $object_id ) && OwnershipGate::has_read_capability( 'product', 'item' );
+        $is_published = 'publish' === get_post_status( $object_id );
+
+        // A vendor (or their staff) reads their own store only, published or not: another
+        // vendor's listing is that vendor's information, public storefront or no. Unpublished
+        // needs the capability behind the dashboard's product list (ADR-0007 applies to reads).
+        if ( dokan_is_user_seller( dokan_get_current_user_id() ) ) {
+            return dokan_is_product_author( $object_id ) && ( $is_published || OwnershipGate::has_read_capability( 'product', 'item' ) );
+        }
+
+        // Anyone else sees what the storefront shows them.
+        return $is_published;
     }
 
     /**
@@ -406,11 +414,11 @@ class ProductAbilityScope implements Hookable {
         $args['input_schema']['properties']['vendor_id'] = [
             'type'        => 'integer',
             'minimum'     => 1,
-            'description' => __( 'Filter products to a specific vendor (store). For vendors other than your own only published products are returned.', 'dokan-lite' ),
+            'description' => __( 'Store admins: limit the list to one vendor (store). A vendor always gets their own store; naming another store is refused.', 'dokan-lite' ),
         ];
 
         if ( isset( $args['input_schema']['properties']['status'] ) && is_array( $args['input_schema']['properties']['status'] ) ) {
-            $args['input_schema']['properties']['status']['description'] = trim( ( $args['input_schema']['properties']['status']['description'] ?? '' ) . ' ' . __( 'Applies to your own store; another vendor\'s store always returns its published products.', 'dokan-lite' ) );
+            $args['input_schema']['properties']['status']['description'] = trim( ( $args['input_schema']['properties']['status']['description'] ?? '' ) . ' ' . __( 'A vendor sees their own store\'s products in every status the dashboard shows them.', 'dokan-lite' ) );
         }
 
         return $args;
@@ -478,7 +486,11 @@ class ProductAbilityScope implements Hookable {
         }
 
         if ( $is_filter ) {
-            $this->prepare_product_query_scope( $input );
+            $scope = $this->prepare_product_query_scope( $input );
+
+            if ( is_wp_error( $scope ) ) {
+                return $scope;
+            }
         }
 
         try {
@@ -495,28 +507,44 @@ class ProductAbilityScope implements Hookable {
     /**
      * Decide the product-query scope for the current caller and `vendor_id` filter.
      *
-     * Published products are public; a caller only sees unpublished products for their own store
-     * (vendors/staff) or when they are a store admin.
+     * A store admin sees every store, narrowed by `vendor_id` when given. A vendor (or their
+     * staff) is pinned to their own store, in every status the dashboard's product list shows
+     * them; naming another store is refused rather than silently redirected, so an assistant
+     * learns the boundary instead of mistaking its own catalogue for another vendor's. Anyone
+     * else sees published products only, like the storefront.
      *
      * @since 5.0.15
      *
      * @param array $input Ability input.
      *
-     * @return void
+     * @return true|\WP_Error
      */
-    private function prepare_product_query_scope( array $input ): void {
+    private function prepare_product_query_scope( array $input ) {
         $caller        = dokan_get_current_user_id();
-        $is_admin      = current_user_can( 'manage_woocommerce' );
         $vendor_filter = empty( $input['vendor_id'] ) ? 0 : absint( $input['vendor_id'] );
 
-        $this->forced_query_author = $vendor_filter;
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            $this->forced_query_author  = $vendor_filter;
+            $this->force_published_only = false;
 
-        $views_own = $vendor_filter > 0 && $vendor_filter === $caller && dokan_is_user_seller( $caller )
-            && OwnershipGate::has_read_capability( 'product', 'list' );
+            return true;
+        }
 
-        // Limit to published products unless the caller is a store admin or browsing their own
-        // store while holding the capability behind the dashboard's product list.
-        $this->force_published_only = ! $is_admin && ! $views_own;
+        if ( dokan_is_user_seller( $caller ) ) {
+            if ( $vendor_filter > 0 && $vendor_filter !== $caller ) {
+                return new \WP_Error( 'dokan_product_not_in_store', __( 'You can only list your own store\'s products.', 'dokan-lite' ), [ 'status' => 403 ] );
+            }
+
+            $this->forced_query_author  = $caller;
+            $this->force_published_only = ! OwnershipGate::has_read_capability( 'product', 'list' );
+
+            return true;
+        }
+
+        $this->forced_query_author  = $vendor_filter;
+        $this->force_published_only = true;
+
+        return true;
     }
 
     /**

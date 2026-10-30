@@ -9,7 +9,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * @group abilities
  * @group mcp
  *
- * Who may hold a Dokan MCP connection, and the switches behind it.
+ * Who may use Dokan's tools through an AI assistant, and the switches behind it.
  */
 class AccessTest extends DokanTestCase {
 
@@ -68,26 +68,18 @@ class AccessTest extends DokanTestCase {
         $this->assertFalse( Access::user_can_connect( 999999 ) );
     }
 
-    public function test_endpoint_is_the_rest_route_of_the_server() {
-        $this->assertSame( rest_url( 'dokan/mcp' ), Access::endpoint() );
+    public function test_endpoints_are_the_dokan_server_and_the_adapters_default_server() {
+        $this->assertSame( rest_url( 'mcp/dokan' ), Access::endpoint() );
+        $this->assertSame( rest_url( 'mcp/mcp-adapter-default-server' ), Access::default_server_endpoint() );
     }
 
-    public function test_the_endpoint_is_recognised_from_the_raw_request() {
-        $backup = $_SERVER;
+    public function test_dokan_governs_its_own_and_the_scoped_woocommerce_abilities() {
+        $this->assertTrue( Access::governs( 'dokan/current-vendor' ) );
+        $this->assertTrue( Access::governs( 'woocommerce/products-query' ) );
+        $this->assertTrue( Access::governs( 'woocommerce/order-add-note' ) );
 
-        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/mcp';
-        $this->assertTrue( Access::is_request_to_endpoint() );
-
-        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/mcp?foo=bar';
-        $this->assertTrue( Access::is_request_to_endpoint() );
-
-        // Neighbouring routes are not the endpoint.
-        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/mcp-other';
-        $this->assertFalse( Access::is_request_to_endpoint() );
-
-        $_SERVER['REQUEST_URI'] = '/wp-json/dokan/v1/mcp/settings';
-        $this->assertFalse( Access::is_request_to_endpoint() );
-
-        $_SERVER = $backup;
+        $this->assertFalse( Access::governs( 'woocommerce/customers-query' ) );
+        $this->assertFalse( Access::governs( 'core/get-site-info' ) );
+        $this->assertFalse( Access::governs( 'mcp-adapter/discover-abilities' ) );
     }
 }

@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Abilities\Support;
 
-use WeDevs\Dokan\Abilities\Mcp\Access;
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -24,6 +23,20 @@ defined( 'ABSPATH' ) || exit;
  * @since 5.0.15
  */
 class RequestContext {
+
+    /**
+     * Capability filters the MCP Adapter applies while handling a request, in order: the HTTP
+     * transport's permission check, then the default server's discover, get-info and execute
+     * meta-tools. Any of them firing means an MCP client is on the line.
+     *
+     * @since DOKAN_SINCE
+     */
+    const ADAPTER_CAPABILITY_FILTERS = [
+        'mcp_adapter_default_transport_permission_user_capability',
+        'mcp_adapter_discover_abilities_capability',
+        'mcp_adapter_get_ability_info_capability',
+        'mcp_adapter_execute_ability_capability',
+    ];
 
     /**
      * Nesting depth of in-progress ability executions.
@@ -73,10 +86,12 @@ class RequestContext {
         add_action( 'wp_before_execute_ability', [ self::class, 'mark_ability_execution_started' ] );
         add_action( 'wp_after_execute_ability', [ self::class, 'mark_ability_execution_finished' ] );
 
-        // Flag the request as MCP the moment the adapter begins handling a tool call — during its
-        // permission pre-flight, before the target ability's permission callback runs and before
-        // any wp_before_execute_ability window opens. Works for any server on the shared adapter.
-        add_filter( 'mcp_adapter_execute_ability_capability', [ self::class, 'flag_mcp_request' ] );
+        // Flag the request as MCP the moment the adapter starts handling it: the transport's
+        // permission check, then each meta-tool's pre-flight, all before the target ability's own
+        // permission callback runs and before any wp_before_execute_ability window opens.
+        foreach ( self::ADAPTER_CAPABILITY_FILTERS as $filter ) {
+            add_filter( $filter, [ self::class, 'flag_mcp_request' ] );
+        }
     }
 
     /**
@@ -107,6 +122,24 @@ class RequestContext {
         $is_ability_context = (bool) apply_filters( 'dokan_is_ability_context', $is_ability_context, $request_uri );
 
         return $is_ability_context;
+    }
+
+    /**
+     * Whether an MCP client is on the line: the adapter flagged the request, or the request
+     * targets an MCP endpoint.
+     *
+     * Narrower than {@see is_ability_context()}: the Abilities REST API and in-process callers
+     * are an Ability Context but not an MCP request, and only MCP carries the marketplace's
+     * assistant-access policy.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_mcp_request(): bool {
+        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+        return self::$request_is_mcp || self::matches_mcp_endpoint( $request_uri );
     }
 
     /**
@@ -201,10 +234,10 @@ class RequestContext {
     }
 
     /**
-     * Whether the request targets a known MCP endpoint.
+     * Whether the request targets a known MCP endpoint, on a REST request.
      *
-     * Prefers WooCommerce's own detection when present; otherwise (or when it reports false,
-     * as it does for `/dokan/mcp`) falls back to a URI check.
+     * WooCommerce's own `MCPAdapterProvider::is_mcp_request()` is not consulted: 11.3 removed the
+     * endpoint and the method now only reports incorrect usage.
      *
      * @since 5.0.15
      *
@@ -213,15 +246,25 @@ class RequestContext {
      * @return bool
      */
     protected static function matches_mcp_endpoint( string $request_uri ): bool {
-        $provider = '\Automattic\WooCommerce\Internal\MCP\MCPAdapterProvider';
+        return self::is_rest_request() && self::is_mcp_endpoint_uri( $request_uri );
+    }
 
-        if ( class_exists( $provider ) && method_exists( $provider, 'is_mcp_request' ) && $provider::is_mcp_request() ) {
-            return true;
+    /**
+     * Whether a request URI is an MCP endpoint: any server of the WordPress MCP Adapter
+     * (`/wp-json/mcp/<server>`), or WooCommerce's endpoint of 11.2 and earlier.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $request_uri A request URI, with or without a query string.
+     *
+     * @return bool
+     */
+    public static function is_mcp_endpoint_uri( string $request_uri ): bool {
+        if ( '' === $request_uri ) {
+            return false;
         }
 
-        return self::is_rest_request()
-            && '' !== $request_uri
-            && ( Access::is_request_to_endpoint() || (bool) preg_match( '#/woocommerce/mcp(?:/|$)#', $request_uri ) );
+        return (bool) preg_match( '#/' . preg_quote( rest_get_url_prefix(), '#' ) . '/(?:mcp/|woocommerce/mcp(?:/|$))#', $request_uri );
     }
 
     /**

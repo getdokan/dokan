@@ -19,7 +19,7 @@ class DisplayFieldsTest extends DokanTestCase {
             [
                 'mcp_enabled'              => 'on',
                 'mcp_vendor_access'        => 'off',
-                'mcp_connector_url'        => 'https://example.com/wp-json/dokan/mcp',
+                'mcp_connector_url'        => 'https://example.com/wp-json/mcp/mcp-adapter-default-server',
                 'mcp_application_password' => '<p>how to</p>',
                 'mcp_some_future_notice'   => 'x',
                 'ai_product_info_engine'   => 'openai',
@@ -44,7 +44,7 @@ class DisplayFieldsTest extends DokanTestCase {
                 'dokan_mcp_enabled'       => 'on',
                 'dokan_mcp_vendor_access' => 'on',
                 'dokan_mcp_status'        => 'Active',
-                'dokan_mcp_connector_url' => 'https://example.com/wp-json/dokan/mcp',
+                'dokan_mcp_connector_url' => 'https://example.com/wp-json/mcp/mcp-adapter-default-server',
                 'dokan_ai_engine'         => 'openai',
             ],
             Access::SETTING_SECTION

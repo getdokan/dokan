@@ -46,13 +46,22 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertArrayNotHasKey( 'post_status', $query );
     }
 
-    public function test_published_product_is_publicly_readable() {
+    public function test_a_vendor_reads_only_their_own_store_even_when_published() {
         $other_published = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
+        $own_published   = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
 
         $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
-        // A published product is public, even another vendor's.
+        // Another vendor's listing is that vendor's information, published or not.
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'read', $other_published, 'product' ) );
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $own_published, 'product' ) );
+
+        // A store admin and a customer see what the storefront shows them.
+        wp_set_current_user( $this->admin_id );
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_published, 'product' ) );
+
+        wp_set_current_user( $this->customer_id );
         $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_published, 'product' ) );
     }
 
@@ -342,7 +351,7 @@ class ProductAbilityScopeTest extends DokanTestCase {
      *
      * @return array The query args after the product query scope has been applied.
      */
-    private function products_query_scope_for( array $input ): array {
+    private function products_query_scope_for( array $input ) {
         $original = static function () {
             return apply_filters(
                 'woocommerce_product_data_store_cpt_get_products_query',
@@ -387,10 +396,21 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertArrayHasKey( 'vendor_id', $args['input_schema']['properties'] );
     }
 
-    public function test_products_query_with_no_filter_is_published_only_for_vendor() {
+    public function test_products_query_with_no_filter_is_pinned_to_the_vendors_own_store() {
         $this->sut->register_hooks();
         $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
+
+        $query = $this->products_query_scope_for( [] );
+
+        $this->assertSame( $this->seller_id1, $query['author'] );
+        $this->assertArrayNotHasKey( 'post_status', $query );
+    }
+
+    public function test_products_query_with_no_filter_is_published_only_for_a_customer() {
+        $this->sut->register_hooks();
+        $this->force_ability_context();
+        wp_set_current_user( $this->customer_id );
 
         $query = $this->products_query_scope_for( [] );
 
@@ -409,15 +429,23 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertArrayNotHasKey( 'post_status', $query );
     }
 
-    public function test_products_query_filtering_other_vendor_is_published_only() {
+    public function test_products_query_naming_another_store_is_refused_for_a_vendor() {
         $this->sut->register_hooks();
         $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
 
+        $refused = $this->products_query_scope_for( [ 'vendor_id' => $this->seller_id2 ] );
+
+        $this->assertInstanceOf( \WP_Error::class, $refused );
+        $this->assertSame( 'dokan_product_not_in_store', $refused->get_error_code() );
+
+        // A store admin may narrow the list to any store.
+        wp_set_current_user( $this->admin_id );
+
         $query = $this->products_query_scope_for( [ 'vendor_id' => $this->seller_id2 ] );
 
         $this->assertSame( $this->seller_id2, $query['author'] );
-        $this->assertSame( 'publish', $query['post_status'] );
+        $this->assertArrayNotHasKey( 'post_status', $query );
     }
 
     public function test_products_query_admin_sees_all_statuses_for_target_vendor() {
