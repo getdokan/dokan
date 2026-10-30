@@ -68,7 +68,8 @@ const App = () => {
     const mapedRoutes = routes.map( ( route ) => {
         const WithRouterComponent = withRouter(
             route.element,
-            route?.capabilities || [ 'dokandar' ]
+            route?.capabilities || [ 'dokandar' ],
+            route.path
         );
 
         return {

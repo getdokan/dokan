@@ -22,17 +22,19 @@ import { useSelect } from '@wordpress/data';
 import Forbidden from '../layout/403';
 
 // Routes under a dashboard menu the admin switched off (Menu Manager): the sidebar hides them, so the URL must not open them either.
-const isRestrictedRoute = ( pathname: string ): boolean => {
+// Takes the registered route path, never the typed URL: the router matches that case-insensitively and decoded (#settings/Social, %73ocial).
+const isRestrictedRoute = ( routePath: string ): boolean => {
     const restricted: string[] =
         ( window as any )?.dokanFrontend?.restrictedRoutes || [];
-    const path = pathname.replace( /^\/+|\/+$/g, '' );
+    const path = routePath.replace( /^\/+|\/+$/g, '' ).toLowerCase();
 
-    return restricted.some(
-        ( route ) => path === route || path.startsWith( route + '/' )
-    );
+    return restricted.some( ( route ) => {
+        const prefix = route.replace( /^\/+|\/+$/g, '' ).toLowerCase();
+        return path === prefix || path.startsWith( prefix + '/' );
+    } );
 };
 
-export function withRouter( Component, capabilities = [] ) {
+export function withRouter( Component, capabilities = [], routePath = '' ) {
     function ComponentWithRouterProp( props ) {
         const authorised: boolean = useSelect( ( select ) => {
             const store = select( coreStore );
@@ -61,7 +63,7 @@ export function withRouter( Component, capabilities = [] ) {
             useSearchParams,
         };
 
-        if ( ! authorised || isRestrictedRoute( location.pathname ) ) {
+        if ( ! authorised || isRestrictedRoute( routePath ) ) {
             return createElement( Forbidden, { ...props, ...routerProps } );
         }
 

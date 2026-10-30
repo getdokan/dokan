@@ -18,11 +18,14 @@ We decided that Lite owns the two gates and Pro only flips them:
    SPA routes under a switched-off item — the part after `#` of its `url`, so an
    item without a React route contributes nothing — and `Assets` localizes the
    list as `dokanFrontend.restrictedRoutes` on the seller dashboard.
-   `withRouter()` renders the existing `Forbidden` view when the current path
-   equals, or sits below, a restricted route, next to the capability gate it
-   already applies. The list travels with the SPA's own script handle because
-   the legacy vendor layout hosts the same SPA without
-   `vendorDashboardLayoutConfig`.
+   `withRouter()` renders the existing `Forbidden` view when the *registered
+   path of the route the router matched* equals, or sits below, a restricted
+   route, next to the capability gate it already applies. The typed URL is
+   never re-parsed: React Router matches it case-insensitively and decoded,
+   so `#settings/Social` and `#settings/%73ocial` reach the `/settings/social`
+   route, and a gate that compared `location.pathname` opened on exactly those
+   forms. The list travels with the SPA's own script handle because the legacy
+   vendor layout hosts the same SPA without `vendorDashboardLayoutConfig`.
 2. **Store page.** `templates/store-header.php` reads the links through a new
    filter, `dokan_store_social_profiles( array $social_info, Vendor $vendor )`.
    Pro's Elementor tag applies the same filter, and Pro's Menu Manager returns

@@ -95,6 +95,11 @@ test.describe('Menu Manager (React) functionality', () => {
             await NewMenuManagerPage.seedSettingsSubMenus({ social: { is_switched_on: 'no', menu_manager_position: 90 } });
             await menu.gotoRoute('settings/social');
             expect(await menu.isForbidden(), 'the switched-off Social Profile route renders Permission Denied').toBe(true);
+            // React Router matches the hash case-insensitively and decoded, so these reach the same route and must be refused too.
+            await menu.gotoRoute('settings/Social');
+            expect(await menu.isForbidden(), 'a mixed-case hash is refused').toBe(true);
+            await menu.gotoRoute('settings/%73ocial');
+            expect(await menu.isForbidden(), 'a percent-encoded hash is refused').toBe(true);
 
             await NewMenuManagerPage.seedSettingsSubMenus({ social: { is_switched_on: 'yes', menu_manager_position: 90 } });
             await menu.gotoRoute('settings/social');
