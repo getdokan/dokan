@@ -66,6 +66,18 @@ Preconditions for all of them: Dokan Pro active.
 - **Status:** open.
 - **Likely fix:** read `$_POST['customer_id']` like the other filters.
 
+### #6 Vendor staff: staff can list their vendor's orders but cannot open any single one
+- **Code:** `dokan-lite/includes/REST/OrderController.php` `get_single_order_permissions_check()` (line ~805) compares `dokan_get_seller_id_by_order()` with `get_current_user_id()`, which is the staff member's own id. Dokan's staff-aware helper is `dokan_get_current_user_id()`, which resolves staff to their vendor. The list endpoint works because it doesn't go through this check.
+- **Verify:**
+  1. As a vendor, create a staff member (default permissions include `dokan_view_order`).
+  2. With the staff member's credentials: `GET /wp-json/dokan/v1/orders?per_page=1` returns **200**.
+  3. `GET /wp-json/dokan/v1/orders/<one of those ids>` (and `/dokan/v2/orders/<id>`) returns **403**. The vendor gets 200 for the same id.
+- **Impact:** any React screen that loads one order through this endpoint fails for staff, even with full order permissions.
+- **Pinned by:** `react/vendor-staff/vendorStaffApi.spec.ts` #V8 (v1 and v2, `test.fail`; fails on exactly 403).
+- **Confidence:** high (code + REST).
+- **Status:** open.
+- **Likely fix:** `dokan_get_current_user_id()` in the comparison.
+
 ## Suspected (not proven by a test, or possibly intended)
 
 | # | Surface | Suspicion | Where |

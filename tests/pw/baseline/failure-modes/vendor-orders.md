@@ -19,7 +19,7 @@ Paths are relative to `tests/pw/tests/`. An assertion counts only if it fails wh
 | 11 | Export contains wrong orders or ignores the active filter | vendor | UI (download) | #11 search-filtered export (CSV ids == [order]) caught; #11 customer-filtered export `test.fail`: **product bug**, FINDINGS #5 | bug pinned |
 | 12 | View goes to the wrong order | vendor | UI | #12 (order link opens `order_id=<id>` and shows `#<id>`) | caught |
 | 13 | Customer or guest can call the vendor orders REST | customer/guest | API | `react/vendor-orders/vendorOrdersApi.spec.ts` #13 (customer 403, guest 401) | caught |
-| 14 | Vendor staff without the orders permission sees or changes orders (Pro) | staff | API + UI | moved to the Vendor staff surface (needs staff seeding; see `failure-modes/vendor-staff.md` once written) | **deferred** |
+| 14 | Vendor staff without the orders permission sees or changes orders (Pro) | staff | API + UI | `react/vendor-staff/vendorStaffApi.spec.ts` #V1 (REST 403, order unchanged) + `vendorStaff.spec.ts` #V14 (no menu, Permission Denied) | caught |
 | 15 | Lite: Pro-only actions or columns shown, or the list breaks without Pro | vendor | UI | covered by running the `@lite` vendor-orders tests with Pro inactive (`DOKAN_PRO` unset); needs the Lite-only CI job (RESUME Next) | **pending CI** |
 
 Paths starting `react/` are the revamp suite (`npm run test:react`). Legacy paths are kept only where the revamp suite defers to them.
@@ -39,6 +39,5 @@ Paths starting `react/` are the revamp suite (`npm run test:react`). Legacy path
 
 ## Open (in order)
 
-1. #14 with the Vendor staff surface.
-2. #15 in the Lite-only CI job.
-3. M8: a manual order with another vendor's product must be refused.
+1. #15 in the Lite-only CI job.
+2. M8: a manual order with another vendor's product must be refused.

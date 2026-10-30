@@ -10,8 +10,9 @@ Replace the legacy React-UI Playwright tests with a risk-first, DRY suite in `te
 
 | Surface | Risk | New tests | Ledger | Failure-mode map | State |
 |---|---|---|---|---|---|
-| Vendor orders (list) | P0 | `react/vendor-orders/vendorOrders.spec.ts`, `vendorOrdersApi.spec.ts`, `vendorOrdersCapability.global.spec.ts` | `parity/orders.md`: 0 open | `failure-modes/vendor-orders.md` | stable; #14 → Vendor staff, #15 → Lite-only CI job |
+| Vendor orders (list) | P0 | `react/vendor-orders/vendorOrders.spec.ts`, `vendorOrdersApi.spec.ts`, `vendorOrdersCapability.global.spec.ts` | `parity/orders.md`: 0 open | `failure-modes/vendor-orders.md` | stable; #15 → Lite-only CI job |
 | Manual orders (Pro) | P0 | `react/vendor-orders/manualOrder.global.spec.ts` | `parity/manual-order.md`: 0 open | in `vendor-orders.md` (M1–M8) | stable; #M7 `fixme` (bug #4), M8 gap |
+| Vendor staff (Pro) | P1 (impact 5) | `react/vendor-staff/vendorStaffApi.spec.ts`, `vendorStaff.spec.ts`, `vendorStaffModule.global.spec.ts` | `parity/vendor-staff.md`: 0 open | `failure-modes/vendor-staff.md` | stable; V17–V18 gaps open |
 | Vendor subscription (Pro) | P0 | `react/vendor-subscription/vendorSubscription.global.spec.ts` | `parity/vendor-subscriptions.md`: 0 open | `failure-modes/vendor-subscription.md` | stable; S12–S16 gaps open |
 
 Shared layer in `react/_shared/`:
@@ -20,17 +21,17 @@ Shared layer in `react/_shared/`:
 - `dataViewsTable.ts`: `DataViewsTable` and `moneyDigits`.
 - `wp.ts`: `wpEval`, `setDokanSetting`, `setRoleCap`.
 
-Bugs found: `baseline/FINDINGS.md` (#1–#5 confirmed with deterministic pins; S1–S3 suspected).
+Bugs found: `baseline/FINDINGS.md` (#1–#6 confirmed with deterministic pins; S1–S3 suspected).
 
-Last full run (2026-10-30, twice, clean settings): 41 passed, 1 skipped (#M7), 0 failed.
+Last full run (2026-10-30, clean settings): 60 passed, 1 skipped (#M7), 0 failed, about 9 minutes locally.
 
-Legacy progress: 48 of 561 legacy React tests have a verdict; 513 are left across 38 folders (`node baseline/parity.mjs`).
+Legacy progress: 61 of 561 legacy React tests have a verdict; 500 are left across 38 folders (`node baseline/parity.mjs`).
 
 ## Next (in order)
 
-1. **Vendor staff** (P0): start here. Include orders gap #14 (staff without the orders permission).
-2. **Gaps:** manual orders M8 (another vendor's product refused). Subscription: S13 expiry → product status, S14 pack commission, S12 admin editor UI, S16 allowed categories.
-3. **Next P0/P1 surfaces** by `RISK-REGISTER.md`: Vendor staff, Product editor (`product-form-manager`, 82 legacy tests, the largest), Returns/RMA, Admin settings (`adminSettings`, 98).
+1. **Product editor** (P0, `product-form-manager`: 82 legacy tests, the largest). Read memories `pfm-*` and `product-editor-mergeable-keys-coupling` first.
+2. **Gaps:** staff V17–V18 (products/coupons/export/notes capabilities); manual orders M8 (another vendor's product refused). Subscription: S13 expiry → product status, S14 pack commission, S12 admin editor UI, S16 allowed categories.
+3. **Next P0/P1 surfaces** by `RISK-REGISTER.md`: Returns/RMA, Admin settings (`adminSettings`, 98), Withdraw, Reverse withdrawal.
    - Per surface: failure-mode map → ledger verdicts → tests → 3× repeat green → ledger 0 open.
 4. **CI:** add a `react.config.ts` job to `.github/workflows/e2e_api_tests.yml` (Pro run, plus a Lite-only run with `DOKAN_PRO` unset that covers orders #15). The suite isn't in CI yet.
 5. Delete legacy folders in separate PRs once their ledger is 0 open.

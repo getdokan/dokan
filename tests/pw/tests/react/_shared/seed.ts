@@ -101,3 +101,23 @@ export async function seedMultiVendorOrder(api: ApiUtils): Promise<{ parent: str
         String((children as { id: number; line_items: { product_id: number }[] }[]).find(o => o.line_items.some(l => String(l.product_id) === productId))?.id ?? '');
     return { parent, suborders: { vendor1: owner(p1), vendor2: owner(p2) } };
 }
+
+export type Staff = { id: string; username: string; password: string; email: string; name: string; auth: { Authorization: string } };
+
+/** A new vendor staff member of `vendor`, with Dokan's default staff capabilities. */
+export async function createStaff(api: ApiUtils, vendor: Vendor = 'vendor1'): Promise<Staff> {
+    const payload = { ...payloads.createStaff(), first_name: 'Staff', last_name: `PW-${Date.now()}${Math.floor(Math.random() * 1000)}` };
+    const [, id] = await api.createVendorStaff(payload, authOf(vendor));
+    const auth = { Authorization: `Basic ${Buffer.from(`${payload.username}:${payload.password}`).toString('base64')}` };
+    return { id: String(id), username: payload.username, password: payload.password, email: payload.email, name: `${payload.first_name} ${payload.last_name}`, auth };
+}
+
+/** Grant (true) or revoke (false) staff capabilities the way the vendor does (REST). */
+export async function setStaffCaps(api: ApiUtils, staffId: string, caps: Record<string, boolean>, vendor: Vendor = 'vendor1'): Promise<void> {
+    const capabilities = Object.entries(caps).map(([capability, access]) => ({ capability, access }));
+    await api.put(endPoints.updateVendorStaffCapabilities(staffId), { headers: authOf(vendor), data: { capabilities } });
+}
+
+export async function staffCaps(api: ApiUtils, staffId: string, vendor: Vendor = 'vendor1'): Promise<Record<string, boolean>> {
+    return (await api.get(endPoints.getVendorStaffCapabilities(staffId), { headers: authOf(vendor) }))[1];
+}
