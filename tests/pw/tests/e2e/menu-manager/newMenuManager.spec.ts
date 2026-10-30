@@ -1,7 +1,10 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
-import { NewMenuManagerPage } from './newMenuManagerPage';
+import { NewMenuManagerPage, MenuManagerLeftMenu, seededSocialLinks } from './newMenuManagerPage';
 import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
 import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
 
 // ============================================
@@ -105,6 +108,180 @@ test.describe('Menu Manager (React) functionality', () => {
             await menu.gotoRoute('settings/social');
             expect(await menu.routeRendered('#social-fb'), 'the Social Profiles form renders again once the page is switched on').toBe(true);
         });
+    });
+
+    // ---------------------------------------------------------------
+    test.describe('vendor: switched-off routes, flyout and legacy pages', () => {
+        test.describe.configure({ mode: 'serial' });
+
+        const off = (menu_manager_position: number): MenuManagerLeftMenu => ({ is_switched_on: 'no', menu_manager_position });
+        let originalLayout: string;
+        let ctx: BrowserContext;
+        let page: Page;
+        let menu: NewMenuManagerPage;
+
+        test.beforeAll(async () => {
+            originalLayout = (await dbUtils.getOptionValue(dbData.dokan.optionName.appearance))?.vendor_layout_style ?? 'latest';
+        });
+
+        test.afterAll(async () => {
+            await NewMenuManagerPage.setAppearance({ vendor_layout_style: originalLayout as 'latest' | 'legacy' });
+        });
+
+        test.beforeEach(async ({ browser }) => {
+            await NewMenuManagerPage.seedSettingsSubMenus({ social: off(90), seo: off(95) });
+            ctx = await browser.newContext({ storageState: v1 });
+            page = await ctx.newPage();
+            menu = new NewMenuManagerPage(page);
+        });
+
+        test.afterEach(async () => {
+            await page?.close();
+            await ctx?.close();
+        });
+
+        test('restrictedRoutes lists exactly the switched-off SPA routes (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await menu.gotoRoute('settings/store');
+            expect((await menu.restrictedRoutes()).sort()).toEqual(['settings/seo', 'settings/social']);
+        });
+
+        test('a switched-off Store SEO route renders Permission Denied (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await menu.gotoRoute('settings/seo');
+            await expect(menu.forbiddenView()).toBeVisible();
+        });
+
+        for (const route of ['/settings/social/', 'settings/social?tab=x', 'settings/social/anything']) {
+            test(`a route variant under a switched-off page is refused: ${route} (React)`, { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+                await menu.gotoRoute(route);
+                await expect(menu.forbiddenView()).toBeVisible();
+            });
+        }
+
+        test('routes that stay switched on still render (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await menu.gotoRoute('settings/shipping');
+            await expect(page.getByRole('heading', { name: 'Shipping', exact: true })).toBeVisible();
+            await expect(menu.forbiddenView()).toHaveCount(0);
+
+            await menu.gotoRoute('settings/store');
+            await expect(page.getByRole('heading', { name: 'Store Settings' })).toBeVisible();
+            await expect(menu.forbiddenView()).toHaveCount(0);
+        });
+
+        test('Back to Dashboard leaves the Permission Denied view (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await menu.gotoRoute('settings/social');
+            await menu.backToDashboard().click();
+            await expect(page).not.toHaveURL(/settings\/social/);
+            await expect(menu.forbiddenView()).toHaveCount(0);
+        });
+
+        test('a switched-off top-level menu refuses its route and child routes (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await NewMenuManagerPage.seedLeftMenus({ coupons: { is_switched_on: 'no', menu_manager_position: 55, menu_manager_title: '' } });
+            await menu.gotoRoute('coupons');
+            await expect(menu.forbiddenView()).toBeVisible();
+            await menu.gotoRoute('coupons/new');
+            await expect(menu.forbiddenView()).toBeVisible();
+        });
+
+        // React Router matches case-insensitively on the decoded path; the gate compares the raw path (dokan#3481 QA comment).
+        for (const route of ['settings/Social', 'settings/SOCIAL', 'settings/%73ocial', 'Settings/Seo']) {
+            test(`a mixed-case or encoded switched-off route is refused: ${route} (React)`, { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+                test.fail(true, 'Known bypass: isRestrictedRoute() is case- and encoding-sensitive — remove once fixed');
+                await menu.gotoRoute(route);
+                await expect(menu.forbiddenView()).toBeVisible({ timeout: 10000 });
+            });
+        }
+
+        test('the legacy vendor layout refuses a switched-off route too (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await NewMenuManagerPage.setAppearance({ vendor_layout_style: 'legacy' });
+            await menu.gotoRoute('settings/social');
+            expect(await menu.restrictedRoutes()).toContain('settings/social');
+            await expect(menu.forbiddenView()).toBeVisible();
+            await NewMenuManagerPage.setAppearance({ vendor_layout_style: originalLayout as 'latest' | 'legacy' });
+        });
+
+        test('the collapsed-sidebar flyout hides switched-off submenus (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await menu.gotoRoute('settings/store');
+            const flyout = await menu.openCollapsedFlyout('#settings/store');
+            await expect(flyout.getByRole('link', { name: 'Shipping', exact: true })).toBeVisible();
+            await expect(flyout.getByRole('link', { name: 'Social Profile' })).toHaveCount(0);
+            await expect(flyout.getByRole('link', { name: 'Store SEO' })).toHaveCount(0);
+        });
+
+        test('the collapsed-sidebar flyout shows a switched-on submenu again (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await NewMenuManagerPage.seedSettingsSubMenus({ seo: off(95) });
+            await menu.gotoRoute('settings/store');
+            const flyout = await menu.openCollapsedFlyout('#settings/store');
+            await expect(flyout.getByRole('link', { name: 'Social Profile' })).toBeVisible();
+            await expect(flyout.getByRole('link', { name: 'Store SEO' })).toHaveCount(0);
+        });
+
+        test('the collapsed-sidebar flyout marks the active submenu in white (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await menu.gotoRoute('settings/shipping');
+            const flyout = await menu.openCollapsedFlyout('#settings/store');
+            const active = flyout.getByRole('link', { name: 'Shipping', exact: true });
+            await expect(active).toHaveClass(/(^|\s)active(\s|$)/);
+            await expect(active).toHaveCSS('color', 'rgb(255, 255, 255)');
+            await expect(flyout.getByRole('link', { name: 'ShipStation' })).not.toHaveClass(/(^|\s)active(\s|$)/);
+        });
+
+        for (const slug of ['social', 'seo']) {
+            test(`a switched-off legacy settings page is refused server-side: ${slug} (Pro AccessRestriction)`, { tag: ['@pro', '@vendor'] }, async () => {
+                await menu.gotoLegacy(`settings/${slug}/`);
+                await expect(menu.legacyNoPermission()).toBeVisible();
+            });
+        }
+
+        test('a switched-on legacy settings page still renders (Pro AccessRestriction)', { tag: ['@pro', '@vendor'] }, async () => {
+            await menu.gotoLegacy('settings/payment/');
+            await expect(menu.legacyNoPermission()).toHaveCount(0);
+        });
+    });
+
+    // ---------------------------------------------------------------
+    test.describe('guest: store page social links', () => {
+        test.describe.configure({ mode: 'serial' });
+
+        let originalHeader: string;
+        let storeUrl: string;
+        let ctx: BrowserContext;
+        let page: Page;
+        let menu: NewMenuManagerPage;
+
+        test.beforeAll(async () => {
+            originalHeader = (await dbUtils.getOptionValue(dbData.dokan.optionName.appearance))?.store_header_template ?? 'default';
+            const sellerId = await apiUtils.getSellerId(`${process.env.VENDOR}store`, payloads.adminAuth);
+            await apiUtils.updateStore(sellerId, { social: seededSocialLinks }, payloads.adminAuth);
+            storeUrl = (await apiUtils.getSingleStore(sellerId, payloads.adminAuth)).shop_url;
+        });
+
+        test.afterAll(async () => {
+            await NewMenuManagerPage.setAppearance({ store_header_template: originalHeader });
+        });
+
+        test.beforeEach(async ({ browser }) => {
+            ctx = await browser.newContext();
+            page = await ctx.newPage();
+            menu = new NewMenuManagerPage(page);
+        });
+
+        test.afterEach(async () => {
+            await page?.close();
+            await ctx?.close();
+        });
+
+        for (const template of ['default', 'layout1', 'layout2', 'layout3']) {
+            test(`store header hides the vendor social links while Social Profile is off: ${template}`, { tag: ['@pro', '@guest'] }, async () => {
+                await NewMenuManagerPage.setAppearance({ store_header_template: template });
+
+                await NewMenuManagerPage.seedSettingsSubMenus({ social: { is_switched_on: 'no', menu_manager_position: 90 } });
+                await page.goto(storeUrl);
+                await expect(menu.storeSocialLinks()).toHaveCount(0);
+
+                await NewMenuManagerPage.seedSettingsSubMenus({ social: { is_switched_on: 'yes', menu_manager_position: 90 } });
+                await page.goto(storeUrl);
+                await expect(menu.storeSocialLinks()).not.toHaveCount(0);
+            });
+        }
     });
 
     // ---------------------------------------------------------------
