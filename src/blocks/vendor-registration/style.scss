@@ -415,6 +415,12 @@
 			}
 		}
 
+		// Dokan fixes select.dokan-form-control at 35px, which clips the chosen option under this padding.
+		select.dokan-vreg__input {
+			height: auto;
+			min-height: 0;
+		}
+
 		.dokan-vreg__next,
 		.dokan-vreg__submit,
 		.dokan-vreg__login-submit {
