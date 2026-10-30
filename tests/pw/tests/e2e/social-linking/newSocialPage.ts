@@ -6,14 +6,19 @@ import { closeAnnouncementModal, toPath } from '@utils/helpers';
 // ============================================
 // Stable, recognisable handles so the storefront assertion can match the exact
 // link the vendor saved (avoids matching a pre-existing social link).
+// The form validates every network before it saves, and the seeded vendor's
+// bare-domain links (e.g. https://www.flickr.com/) fail that, so cover them all.
 export const newSocialData = {
     handle: 'pwnewui',
     profiles: () => ({
         fb: 'https://facebook.com/pwnewui',
         twitter: 'https://twitter.com/pwnewui',
+        pinterest: 'https://www.pinterest.com/pwnewui',
         linkedin: 'https://linkedin.com/in/pwnewui',
         youtube: 'https://youtube.com/@pwnewui',
         instagram: 'https://instagram.com/pwnewui',
+        flickr: 'https://www.flickr.com/people/pwnewui',
+        threads: 'https://www.threads.net/@pwnewui',
     }),
     invalidUrl: 'not a url',
 } as const;
@@ -62,15 +67,25 @@ export class NewSocialPage {
     get heading(): Locator { return this.page.locator(newSocialSelectors.heading).first(); }
     get fb(): Locator { return this.page.locator(newSocialSelectors.fb).first(); }
     get twitter(): Locator { return this.page.locator(newSocialSelectors.twitter).first(); }
+    get pinterest(): Locator { return this.page.locator(newSocialSelectors.pinterest).first(); }
     get linkedin(): Locator { return this.page.locator(newSocialSelectors.linkedin).first(); }
     get youtube(): Locator { return this.page.locator(newSocialSelectors.youtube).first(); }
     get instagram(): Locator { return this.page.locator(newSocialSelectors.instagram).first(); }
+    get flickr(): Locator { return this.page.locator(newSocialSelectors.flickr).first(); }
+    get threads(): Locator { return this.page.locator(newSocialSelectors.threads).first(); }
     get submitButton(): Locator { return this.page.locator(newSocialSelectors.submit).first(); }
     get successNotice(): Locator { return this.page.locator(newSocialSelectors.successNotice).first(); }
 
     // ---- Navigation ----
     async goto(): Promise<void> {
         await this.page.goto(this.url);
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.waitForReady();
+    }
+
+    // goto() on the URL the page is already on only changes the hash, so the form would keep what was typed.
+    async reload(): Promise<void> {
+        await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
     }
@@ -89,20 +104,24 @@ export class NewSocialPage {
     async fillProfiles(data: Partial<SocialProfiles>): Promise<void> {
         if (data.fb !== undefined) await this.fb.fill(data.fb);
         if (data.twitter !== undefined) await this.twitter.fill(data.twitter);
+        if (data.pinterest !== undefined) await this.pinterest.fill(data.pinterest);
         if (data.linkedin !== undefined) await this.linkedin.fill(data.linkedin);
         if (data.youtube !== undefined) await this.youtube.fill(data.youtube);
         if (data.instagram !== undefined) await this.instagram.fill(data.instagram);
+        if (data.flickr !== undefined) await this.flickr.fill(data.flickr);
+        if (data.threads !== undefined) await this.threads.fill(data.threads);
     }
 
     async submit(): Promise<void> {
         const btn = this.submitButton;
         await btn.waitFor({ state: 'visible' });
         await btn.scrollIntoViewIfNeeded().catch(() => undefined);
-        // The submit handler POSTs the profile and shows a react-hot-toast.
-        await Promise.all([
-            this.page.waitForResponse(r => /dokan\/v[0-9]\/.*(settings|profile|store)/i.test(r.url()) && r.request().method() !== 'GET', { timeout: 15000 }).catch(() => undefined),
+        // The submit handler POSTs the profile and shows a react-hot-toast; an invalid URL blocks the POST, so fail here.
+        const [response] = await Promise.all([
+            this.page.waitForResponse(r => /dokan\/v[0-9]\/.*(settings|profile|store)/i.test(r.url()) && r.request().method() !== 'GET', { timeout: 15000 }),
             btn.click(),
         ]);
+        expect(response.ok(), 'social profile save succeeds').toBe(true);
     }
 
     /** Save + verify persistence: success toast (best-effort) AND values
@@ -111,7 +130,7 @@ export class NewSocialPage {
         await this.fillProfiles(data);
         await this.submit();
         await this.successNotice.waitFor({ state: 'visible', timeout: 8000 }).catch(() => undefined);
-        await this.goto();
+        await this.reload();
         if (data.fb !== undefined) await expect(this.fb).toHaveValue(data.fb);
         if (data.twitter !== undefined) await expect(this.twitter).toHaveValue(data.twitter);
     }
