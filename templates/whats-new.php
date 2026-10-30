@@ -5,7 +5,7 @@
 $changelog = [
     [
         'version'  => 'Version 5.3.3',
-        'released' => '2026-10-29',
+        'released' => '2026-10-30',
         'changes'  => [
             'Fix' => [
                 [
@@ -30,6 +30,14 @@ $changelog = [
                 ],
                 [
                     'title'       => 'Products created through the vendor products API now respect the vendor\'s selling status and are held for review when the vendor isn\'t allowed to publish directly.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'A vendor\'s social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.',
                     'description' => '',
                 ],
             ],

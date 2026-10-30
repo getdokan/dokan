@@ -1,4 +1,4 @@
-### v5.3.3 ( Oct 29, 2026 ) ###
+### v5.3.3 ( Oct 30, 2026 ) ###
 
 - **fix:** Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.
 - **fix:** Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.
@@ -6,6 +6,8 @@
 - **fix:** Prevented subsite admins on a multisite network from changing the selling status of vendors who belong to other sites.
 - **fix:** Reverse withdrawal payments can no longer be discounted with coupons, and the vendor's balance is now credited only with the amount actually paid.
 - **fix:** Products created through the vendor products API now respect the vendor's selling status and are held for review when the vendor isn't allowed to publish directly.
+- **fix:** Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.
+- **fix:** A vendor's social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.
 
 ### v5.3.2 ( Oct 22, 2026 ) ###
 
