@@ -2,7 +2,9 @@
 
 namespace WeDevs\Dokan\Install;
 
+use Automattic\WooCommerce\Admin\ReportsSync;
 use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
+use WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore as OrderStatsDataStore;
 use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper as ReverseWithdrawalInstallerHelper;
 use WeDevs\Dokan\Rewrites;
 use WP_Roles;
@@ -24,6 +26,7 @@ class Installer {
         $this->product_design();
         $this->add_store_name_meta_key_for_admin_users();
         $this->schedule_cron_jobs();
+        $this->maybe_backfill_order_stats();
 
         // does it needs any update?
         if ( dokan()->has_woocommerce() && dokan()->upgrades->is_upgrade_required() ) {
@@ -50,6 +53,61 @@ class Installer {
             // Fresh installs start on the new settings; upgraded sites stay on classic.
             // It will be removed in 1 january 2027
             update_option( LegacySwitcher::NEW_SETTINGS_OPTION, 'yes' );
+        }
+    }
+
+    /**
+     * Backfill dokan_order_stats when orders exist but the table is empty.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function maybe_backfill_order_stats() {
+        global $wpdb;
+
+        if ( ! dokan()->has_woocommerce() || ! class_exists( ReportsSync::class ) ) {
+            return;
+        }
+
+        // WC only consumes the import actions while its analytics feature is on.
+        if ( 'yes' !== get_option( 'woocommerce_analytics_enabled', 'yes' ) ) {
+            return;
+        }
+
+        /**
+         * Filters whether to backfill dokan_order_stats on activation.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $backfill Whether to schedule the WC Analytics regeneration.
+         */
+        if ( ! apply_filters( 'dokan_analytics_backfill_order_stats_on_activation', true ) ) {
+            return;
+        }
+
+        $table = OrderStatsDataStore::get_db_table_name();
+
+        if ( $wpdb->get_var( "SELECT order_id FROM {$table} LIMIT 1" ) ) { // phpcs:ignore WordPress.DB
+            return;
+        }
+
+        $order_ids = wc_get_orders(
+            [
+                'limit'  => 1,
+                'return' => 'ids',
+            ]
+        );
+
+        if ( empty( $order_ids ) ) {
+            return;
+        }
+
+        // Re-importing through WC Analytics fires the hook that fills dokan_order_stats.
+        $result = ReportsSync::regenerate_report_data( null, false );
+
+        if ( is_wp_error( $result ) ) {
+            dokan_log( 'Dokan order stats backfill skipped: ' . $result->get_error_message(), 'warning' );
         }
     }
 
