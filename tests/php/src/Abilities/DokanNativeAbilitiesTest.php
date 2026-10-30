@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test\Abilities;
 
 use WeDevs\Dokan\Abilities\Definitions\CurrentVendor;
+use WeDevs\Dokan\Abilities\Definitions\OrdersSummaryGet;
 use WeDevs\Dokan\Abilities\Definitions\VendorsQuery;
 use WeDevs\Dokan\Abilities\Definitions\VendorStatsGet;
 use WeDevs\Dokan\Abilities\Definitions\WithdrawsQuery;
@@ -81,6 +82,22 @@ class DokanNativeAbilitiesTest extends DokanTestCase {
                     sprintf( '%s input_schema must declare a `default` so null input normalizes to a valid object.', $ability::get_name() )
                 );
                 $this->assertSame( [], $schema['default'], sprintf( '%s input_schema default should be an empty object.', $ability::get_name() ) );
+            }
+        }
+    }
+
+    /**
+     * MCP clients validate a tool's `inputSchema.properties` / `outputSchema.properties` as a JSON
+     * object; an empty PHP array encodes as `[]` and makes the whole tools/list response invalid.
+     */
+    public function test_schemas_never_encode_properties_as_a_json_array() {
+        $abilities = [ CurrentVendor::class, VendorStatsGet::class, WithdrawsQuery::class, VendorsQuery::class, OrdersSummaryGet::class ];
+
+        foreach ( $abilities as $ability ) {
+            $args = $ability::get_registration_args();
+
+            foreach ( [ 'input_schema', 'output_schema' ] as $key ) {
+                $this->assertStringNotContainsString( '"properties":[]', wp_json_encode( $args[ $key ] ), sprintf( '%s %s encodes `properties` as a JSON array.', $ability::get_name(), $key ) );
             }
         }
     }

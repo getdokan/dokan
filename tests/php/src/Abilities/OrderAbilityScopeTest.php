@@ -257,6 +257,9 @@ class OrderAbilityScopeTest extends DokanTestCase {
     }
 
     public function test_multi_vendor_parent_and_sub_orders_are_classified_for_dedup() {
+        // The store admin's view: a vendor never sees a parent id (see the test below).
+        wp_set_current_user( $this->admin_id );
+
         // A multi-vendor order: parent holds the full total, each sub-order one vendor's portion.
         $parent_id  = $this->create_multi_vendor_order();
         $suborder_ids = dokan_get_suborder_ids_by( $parent_id );
@@ -300,5 +303,101 @@ class OrderAbilityScopeTest extends DokanTestCase {
 
         $this->assertSame( 'single', $result['orders'][0]['order_relation'] );
         $this->assertSame( $this->seller_id1, $result['orders'][0]['vendor']['id'] );
+    }
+
+    /**
+     * Mirrors Dokan's REST order update: a vendor may change status only while the "Order Status
+     * Change" selling option is on. Store admins are never subject to it.
+     */
+    public function test_vendor_status_change_honours_the_selling_option() {
+        $this->force_ability_context();
+
+        wp_set_current_user( $this->seller_id1 );
+        $this->assertTrue( $this->sut->honour_order_status_change_setting( true, 'woocommerce/order-update-status' ) );
+
+        dokan_save_legacy_settings_section( 'dokan_selling', [ 'order_status_change' => 'off' ] );
+        $this->flush_settings_caches();
+
+        $refused = $this->sut->honour_order_status_change_setting( true, 'woocommerce/order-update-status' );
+        $this->assertInstanceOf( \WP_Error::class, $refused );
+        $this->assertSame( 'dokan_order_status_change_disabled', $refused->get_error_code() );
+
+        // Other order tools and other actors are untouched.
+        $this->assertTrue( $this->sut->honour_order_status_change_setting( true, 'woocommerce/order-add-note' ) );
+        $this->assertFalse( $this->sut->honour_order_status_change_setting( false, 'woocommerce/order-update-status' ) );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertTrue( $this->sut->honour_order_status_change_setting( true, 'woocommerce/order-update-status' ) );
+    }
+
+    public function test_order_output_carries_the_earning_split_for_those_who_may_see_it() {
+        $order_id = $this->create_single_vendor_order( $this->seller_id1 );
+
+        wp_set_current_user( $this->seller_id1 );
+        $own = $this->sut->add_relationship_to_order( [ 'id' => $order_id ] );
+
+        $this->assertArrayHasKey( 'earning', $own );
+        $this->assertIsFloat( $own['earning']['vendor_earning'] );
+        $this->assertIsFloat( $own['earning']['admin_commission'] );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertArrayHasKey( 'earning', $this->sut->add_relationship_to_order( [ 'id' => $order_id ] ) );
+
+        // Another vendor never sees it; staff only with the sales-overview capability.
+        wp_set_current_user( $this->seller_id2 );
+        $this->assertArrayNotHasKey( 'earning', $this->sut->add_relationship_to_order( [ 'id' => $order_id ] ) );
+
+        $staff_id = $this->create_vendor_staff( $this->seller_id1 );
+        wp_set_current_user( $staff_id );
+        $this->assertArrayNotHasKey( 'earning', $this->sut->add_relationship_to_order( [ 'id' => $order_id ] ) );
+
+        wp_get_current_user()->add_cap( 'dokan_view_sales_overview' );
+        $this->assertArrayHasKey( 'earning', $this->sut->add_relationship_to_order( [ 'id' => $order_id ] ) );
+    }
+
+    public function test_parent_order_has_no_earning_split() {
+        $parent_id = $this->create_multi_vendor_order();
+
+        wp_set_current_user( $this->admin_id );
+        $parent = $this->sut->add_relationship_to_order( [ 'id' => $parent_id ] );
+
+        $this->assertSame( 'parent', $parent['order_relation'] );
+        $this->assertArrayNotHasKey( 'earning', $parent );
+    }
+
+    public function test_a_vendor_hears_why_an_order_ability_was_refused() {
+        $this->force_ability_context();
+        $scope = new OrderAbilityScope();
+
+        wp_set_current_user( $this->seller_id1 );
+        $refused = $scope->explain_vendor_denial( false, 'woocommerce/orders-query' );
+
+        $this->assertInstanceOf( \WP_Error::class, $refused );
+        $this->assertSame( 'dokan_order_not_in_store', $refused->get_error_code() );
+
+        // Granted results, other abilities and store admins pass through untouched.
+        $this->assertTrue( $scope->explain_vendor_denial( true, 'woocommerce/orders-query' ) );
+        $this->assertFalse( $scope->explain_vendor_denial( false, 'woocommerce/products-query' ) );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertFalse( $scope->explain_vendor_denial( false, 'woocommerce/orders-query' ) );
+    }
+
+    public function test_a_vendor_never_learns_the_parent_order_id() {
+        $parent_id    = $this->create_multi_vendor_order();
+        $suborder_ids = dokan_get_suborder_ids_by( $parent_id );
+        $sub_id       = (int) reset( $suborder_ids );
+        $vendor_id    = (int) dokan_get_seller_id_by_order( $sub_id );
+
+        $this->assertGreaterThan( 0, $vendor_id );
+
+        wp_set_current_user( $vendor_id );
+        $seen = $this->sut->add_relationship_to_order( [ 'id' => $sub_id ] );
+
+        $this->assertSame( 'sub_order', $seen['order_relation'] );
+        $this->assertSame( 0, $seen['parent_id'] );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertSame( $parent_id, $this->sut->add_relationship_to_order( [ 'id' => $sub_id ] )['parent_id'] );
     }
 }

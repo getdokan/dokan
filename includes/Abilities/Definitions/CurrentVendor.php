@@ -42,8 +42,8 @@ class CurrentVendor extends AbstractVendorAbility {
             'description'         => __( 'Resolve the authenticated user\'s Dokan identity: whether they are a vendor, vendor staff, or store admin, and which store they act for. Use this to interpret "my" requests such as "my products".', 'dokan-lite' ),
             'category'            => 'dokan',
             'input_schema'        => [
+                // No `properties` key: an empty PHP array encodes as `[]`, which MCP clients reject.
                 'type'                 => 'object',
-                'properties'           => [],
                 'additionalProperties' => false,
                 // Allows the ability to be invoked with no arguments: the Abilities API normalizes a
                 // null input to this default before schema validation (see WP_Ability::normalize_input()).

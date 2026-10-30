@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Intelligence\Admin;
 
+use WeDevs\Dokan\Abilities\Mcp\Status;
 use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\ChatgptResponseService;
@@ -15,6 +16,98 @@ class Settings implements Hookable {
         add_filter( 'dokan_settings_fields', [ $this, 'render_ai_settings' ] );
         add_filter( 'dokan_rest_api_class_map', [ $this, 'rest_api_class_map' ] );
         add_filter( 'dokan_get_settings_values', [ $this, 'remap_retired_model_values' ], 10, 2 );
+        // After Pro's image fields (priority 10), so the MCP block closes the section.
+        add_filter( 'dokan_ai_settings_fields', [ $this, 'render_mcp_settings' ], 20 );
+    }
+
+    /**
+     * AI Assistants (MCP) fields for the legacy settings screen.
+     *
+     * Same option keys as the new settings UI (`dokan_ai.dokan_mcp_*`), so either screen flips
+     * the same switch. The connection is described with `html` fields filled in when the screen
+     * loads; their values are dropped on save by
+     * {@see \WeDevs\Dokan\Abilities\Mcp\DisplayFields::strip_legacy_display_values()}.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $settings_fields Settings fields keyed by section.
+     *
+     * @return array
+     */
+    public function render_mcp_settings( array $settings_fields ): array {
+        $copy         = Status::copy();
+        $when_enabled = [
+            'dokan_mcp_enabled' => [
+                'equal' => 'on',
+            ],
+        ];
+
+        $settings_fields['dokan_ai']['dokan_mcp'] = [
+            'name'          => 'dokan_mcp',
+            'type'          => 'sub_section',
+            'label'         => __( 'AI Assistants (MCP)', 'dokan-lite' ),
+            'description'   => $copy['intro'],
+            'content_class' => 'sub-section-styles',
+        ];
+
+        $settings_fields['dokan_ai']['dokan_mcp_enabled'] = [
+            'name'    => 'dokan_mcp_enabled',
+            'label'   => __( 'Enable AI Assistant Access', 'dokan-lite' ),
+            'desc'    => $copy['enabled'],
+            'type'    => 'switcher',
+            'default' => 'off',
+            'is_lite' => true,
+        ];
+
+        $settings_fields['dokan_ai']['dokan_mcp_vendor_access'] = [
+            'name'    => 'dokan_mcp_vendor_access',
+            'label'   => __( 'Allow Vendors to Connect', 'dokan-lite' ),
+            'desc'    => $copy['vendor_access'],
+            'type'    => 'switcher',
+            'default' => 'off',
+            'is_lite' => true,
+            'show_if' => $when_enabled,
+        ];
+
+        foreach ( $this->mcp_connection_fields() as $name => $field ) {
+            $settings_fields['dokan_ai'][ $name ] = array_merge(
+                $field,
+                [
+                    'name'    => $name,
+                    'type'    => 'html',
+                    'show_if' => $when_enabled,
+                ]
+            );
+        }
+
+        return $settings_fields;
+    }
+
+    /**
+     * The connection as legacy `html` fields: the connector URL, carrying the server status, and a link to create an application password.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string, array{label:string, desc:string}>
+     */
+    protected function mcp_connection_fields(): array {
+        $status   = Status::summary();
+        $warnings = '';
+
+        foreach ( Status::warnings( $status ) as $warning ) {
+            $warnings .= '<br><strong>' . esc_html( $warning['title'] . '. ' . $warning['text'] ) . '</strong>';
+        }
+
+        return [
+            'dokan_mcp_connector_url' => [
+                'label' => __( 'Connector URL', 'dokan-lite' ),
+                'desc'  => '<code>' . esc_html( $status['endpoint'] ) . '</code><br>' . esc_html( Status::connector_description( $status ) ) . $warnings,
+            ],
+            'dokan_mcp_sign_in'       => [
+                'label' => __( 'Sign In', 'dokan-lite' ),
+                'desc'  => esc_html( Status::sign_in_text( $status ) ) . ' ' . sprintf( '<a href="%1$s">%2$s</a>', esc_url( Status::application_passwords_url() ), esc_html__( 'Create one', 'dokan-lite' ) ),
+            ],
+        ];
     }
 
     /**

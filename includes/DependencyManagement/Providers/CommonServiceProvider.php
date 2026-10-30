@@ -29,6 +29,10 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Abilities\ProductAbilityScope::class,
         \WeDevs\Dokan\Abilities\OrderAbilityScope::class,
         \WeDevs\Dokan\Abilities\DokanAbilityRegistrar::class,
+        \WeDevs\Dokan\Abilities\WooCommerceAliases::class,
+        \WeDevs\Dokan\Abilities\Mcp\Server::class,
+        \WeDevs\Dokan\Abilities\Mcp\ToolSchemas::class,
+        \WeDevs\Dokan\Abilities\Mcp\DisplayFields::class,
 	];
 
 	/**

@@ -69,6 +69,13 @@ class ProductAbilityScope implements Hookable {
     private const PRODUCT_CREATE_ABILITIES = [ 'woocommerce/products-create', 'woocommerce/product-create' ];
 
     /**
+     * WooCommerce product-delete ability names whose `force` flag is withheld below Store Admin.
+     *
+     * @var string[]
+     */
+    private const PRODUCT_DELETE_ABILITIES = [ 'woocommerce/product-delete', 'woocommerce/products-delete' ];
+
+    /**
      * WooCommerce product-list ability names that gain an optional `vendor_id` filter.
      *
      * Both layers are named: `/woocommerce/mcp` exposes only the Layer 1 (REST proxy) abilities,
@@ -121,6 +128,9 @@ class ProductAbilityScope implements Hookable {
         // Extend WooCommerce's own product abilities in place: vendor selector on create,
         // and the owning vendor on product output.
         add_filter( 'wp_register_ability_args', [ $this, 'extend_product_abilities' ], 10, 2 );
+
+        // A vendor refused by the ownership gate should hear why, not "access denied for tool".
+        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], 20, 2 );
 
         // Ensure ability-created products are authored to the vendor (matters for vendor staff).
         add_action( 'woocommerce_new_product', [ $this, 'assign_vendor_as_product_author' ], 99 );
@@ -295,6 +305,10 @@ class ProductAbilityScope implements Hookable {
             return $args;
         }
 
+        if ( in_array( $name, self::PRODUCT_DELETE_ABILITIES, true ) ) {
+            return $this->restrict_delete_to_trash( $args );
+        }
+
         $is_create  = in_array( $name, self::PRODUCT_CREATE_ABILITIES, true );
         $is_filter  = in_array( $name, self::PRODUCT_FILTER_ABILITIES, true );
         $has_output = in_array( $name, self::PRODUCT_OUTPUT_ABILITIES, true );
@@ -326,6 +340,56 @@ class ProductAbilityScope implements Hookable {
     }
 
     /**
+     * Turn a bare refusal of a product ability into one that says what a vendor can do about it.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool|\WP_Error $result       The permission decided so far.
+     * @param string         $ability_name The ability being checked.
+     *
+     * @return bool|\WP_Error
+     */
+    public function explain_vendor_denial( $result, $ability_name ) {
+        if ( false !== $result || 0 !== strpos( (string) $ability_name, 'woocommerce/product' ) || ! RequestContext::is_vendor_ability_context() ) {
+            return $result;
+        }
+
+        return new \WP_Error( 'dokan_product_not_in_store', __( 'This product is not in your store, or your account may not manage products.', 'dokan-lite' ), [ 'status' => 403 ] );
+    }
+
+    /**
+     * Keep product deletion below Store Admin to the trash.
+     *
+     * A permanent delete takes a listing's order history and reviews with it. The dashboard lets
+     * a vendor do that with a click they can see; an assistant acting on a sentence should not, so
+     * the MCP exposure review asked for trash only. Store admins keep `force`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Ability registration arguments.
+     *
+     * @return array
+     */
+    protected function restrict_delete_to_trash( array $args ): array {
+        if ( ! isset( $args['execute_callback'] ) || ! is_callable( $args['execute_callback'] ) ) {
+            return $args;
+        }
+
+        $original                 = $args['execute_callback'];
+        $args['execute_callback'] = static function ( $input ) use ( $original ) {
+            $input = (array) $input;
+
+            if ( RequestContext::is_ability_context() && ! current_user_can( 'manage_woocommerce' ) ) {
+                $input['force'] = false;
+            }
+
+            return call_user_func( $original, $input );
+        };
+
+        return $args;
+    }
+
+    /**
      * Add the optional `vendor_id` filter property to a product-list input schema.
      *
      * @since 5.0.15
@@ -344,6 +408,10 @@ class ProductAbilityScope implements Hookable {
             'minimum'     => 1,
             'description' => __( 'Filter products to a specific vendor (store). For vendors other than your own only published products are returned.', 'dokan-lite' ),
         ];
+
+        if ( isset( $args['input_schema']['properties']['status'] ) && is_array( $args['input_schema']['properties']['status'] ) ) {
+            $args['input_schema']['properties']['status']['description'] = trim( ( $args['input_schema']['properties']['status']['description'] ?? '' ) . ' ' . __( 'Applies to your own store; another vendor\'s store always returns its published products.', 'dokan-lite' ) );
+        }
 
         return $args;
     }

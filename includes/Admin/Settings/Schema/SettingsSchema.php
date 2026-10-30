@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Schema;
 
+use WeDevs\Dokan\Abilities\Mcp\Status;
 use WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer;
 use WeDevs\Dokan\Utilities\AdminSettings;
 
@@ -2312,6 +2313,176 @@ class SettingsSchema {
         // Dokan Pro via `dokan_get_admin_settings_schema`
         // (see ProSettingsSchema::ai_assist_settings()). It depends on image
         // providers that only Pro registers, so it lives entirely in Pro.
+
+        return array_merge( $elements, self::mcp_subpage() );
+    }
+
+    /**
+     * AI Assistants (MCP) subpage: the switches that run the Dokan MCP server, then the
+     * connection described with ordinary display fields.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    protected static function mcp_subpage(): array {
+        $copy         = Status::copy();
+        $when_enabled = [
+            [
+                'key'        => 'mcp_enabled',
+                'value'      => 'on',
+                'to_self'    => true,
+                'attribute'  => 'display',
+                'effect'     => 'show',
+                'comparison' => '===',
+            ],
+            [
+                'key'        => 'mcp_enabled',
+                'value'      => 'on',
+                'to_self'    => true,
+                'attribute'  => 'display',
+                'effect'     => 'hide',
+                'comparison' => '!==',
+            ],
+        ];
+
+        $elements = [
+            [
+                'id'          => 'mcp',
+                'type'        => 'subpage',
+                'page_id'     => 'ai_assist',
+                'title'       => esc_html__( 'AI Assistants (MCP)', 'dokan-lite' ),
+                'description' => esc_html( $copy['intro'] ),
+                'priority'    => 200,
+                'doc_link'    => 'https://dokan.co/docs/wordpress/settings/dokan-mcp/',
+            ],
+            [
+                'id'          => 'mcp_section',
+                'type'        => 'section',
+                'subpage_id'  => 'mcp',
+                'title'       => esc_html__( 'AI Assistant Access', 'dokan-lite' ),
+                'description' => esc_html__( 'A connected assistant acts as the person who connected it and can never do more than that account can.', 'dokan-lite' ),
+            ],
+            [
+                'id'            => 'mcp_enabled',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'section_id'    => 'mcp_section',
+                'title'         => esc_html__( 'Enable AI assistant access', 'dokan-lite' ),
+                'description'   => esc_html( $copy['enabled'] ),
+                'default'       => 'off',
+                'enable_state'  => [
+                    'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+                    'value' => 'on',
+                ],
+                'disable_state' => [
+                    'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+                    'value' => 'off',
+                ],
+                'legacy_key'    => 'dokan_ai.dokan_mcp_enabled',
+            ],
+            [
+                'id'            => 'mcp_vendor_access',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'section_id'    => 'mcp_section',
+                'title'         => esc_html__( 'Allow vendors to connect', 'dokan-lite' ),
+                'description'   => esc_html( $copy['vendor_access'] ),
+                'default'       => 'off',
+                'enable_state'  => [
+                    'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+                    'value' => 'on',
+                ],
+                'disable_state' => [
+                    'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+                    'value' => 'off',
+                ],
+                'legacy_key'    => 'dokan_ai.dokan_mcp_vendor_access',
+                'dependencies'  => $when_enabled,
+            ],
+        ];
+
+        return array_merge( $elements, self::mcp_connection_fields( $when_enabled ) );
+    }
+
+    /**
+     * The connection, described with display-only fields whose values are filled in when the
+     * screen is built: the connector URL, which also carries the server status, and a link to
+     * create an application password.
+     *
+     * Nothing here is a setting; the values are dropped on save by
+     * {@see \WeDevs\Dokan\Abilities\Mcp\DisplayFields::strip_display_values()}. There is nothing
+     * to create or revoke from this screen: WordPress and WooCommerce own the credentials.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $when_enabled Dependencies that show an element only while MCP is on.
+     *
+     * @return array
+     */
+    protected static function mcp_connection_fields( array $when_enabled ): array {
+        $status  = Status::summary();
+        $section = 'mcp_connection_section';
+
+        $field = static function ( string $id, string $variant, array $extra ) use ( $section, $when_enabled ): array {
+            return array_merge(
+                [
+                    'id'           => $id,
+                    'type'         => 'field',
+                    'variant'      => $variant,
+                    'section_id'   => $section,
+                    'dependencies' => $when_enabled,
+                ],
+                $extra
+            );
+        };
+
+        $elements = [
+            [
+                'id'           => $section,
+                'type'         => 'section',
+                'subpage_id'   => 'mcp',
+                'title'        => esc_html__( 'Connect an Assistant', 'dokan-lite' ),
+                'description'  => esc_html__( 'An assistant signs in as a WordPress user and acts as that account. WordPress and WooCommerce check the credentials; nothing is stored here.', 'dokan-lite' ),
+                'dependencies' => $when_enabled,
+            ],
+        ];
+
+        foreach ( Status::warnings( $status ) as $key => $warning ) {
+            $elements[] = $field(
+                'mcp_' . $key . '_notice',
+                'notice',
+                [
+                    'notice_type'        => 'warning',
+                    'notice_title'       => esc_html( $warning['title'] ),
+                    'notice_description' => esc_html( $warning['text'] ),
+                ]
+            );
+        }
+
+        // The icon beside the title doubles as the server status.
+        $elements[] = $field(
+            'mcp_connector_url',
+            'copy_field',
+            [
+                'title'       => esc_html__( 'Connector URL', 'dokan-lite' ),
+                'icon'        => $status['live'] ? 'CircleCheck' : 'CircleX',
+                'is_danger'   => ! $status['live'],
+                'description' => esc_html( Status::connector_description( $status ) ),
+                'value'       => $status['endpoint'],
+            ]
+        );
+
+        $elements[] = $field(
+            'mcp_sign_in',
+            'info',
+            [
+                'show_icon'  => true,
+                'title'      => esc_html( Status::sign_in_text( $status ) ),
+                'link_title' => esc_html__( 'Create one', 'dokan-lite' ),
+                'link_url'   => Status::application_passwords_url(),
+            ]
+        );
 
         return $elements;
     }

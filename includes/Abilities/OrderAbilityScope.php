@@ -100,6 +100,53 @@ class OrderAbilityScope implements Hookable {
         // Annotate order-list output with the Dokan parent / Suborder relationship and owning
         // vendor, so totals can be summed without double-counting a parent and its Suborders.
         add_filter( 'wp_register_ability_args', [ $this, 'extend_order_abilities' ], 10, 2 );
+
+        // Vendors may only change order status when the marketplace allows it, as on the dashboard.
+        add_filter( 'wp_ability_permission_result', [ $this, 'honour_order_status_change_setting' ], 10, 2 );
+
+        // A vendor refused by the ownership gate should hear why, not "access denied for tool".
+        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], 20, 2 );
+    }
+
+    /**
+     * Turn a bare refusal of an order ability into one that says what a vendor can do about it.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool|\WP_Error $result       The permission decided so far.
+     * @param string         $ability_name The ability being checked.
+     *
+     * @return bool|\WP_Error
+     */
+    public function explain_vendor_denial( $result, $ability_name ) {
+        if ( false !== $result || 0 !== strpos( (string) $ability_name, 'woocommerce/order' ) || ! RequestContext::is_vendor_ability_context() ) {
+            return $result;
+        }
+
+        return new \WP_Error( 'dokan_order_not_in_store', __( 'This order is not your store\'s, or your account may not manage orders.', 'dokan-lite' ), [ 'status' => 403 ] );
+    }
+
+    /**
+     * Refuse `woocommerce/order-update-status` to vendors when the "Order Status Change" selling
+     * option is off, mirroring Dokan's own REST order update.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool|\WP_Error $result       The permission decided so far.
+     * @param string         $ability_name The ability being checked.
+     *
+     * @return bool|\WP_Error
+     */
+    public function honour_order_status_change_setting( $result, $ability_name ) {
+        if ( true !== $result || 'woocommerce/order-update-status' !== $ability_name || ! RequestContext::is_vendor_ability_context() ) {
+            return $result;
+        }
+
+        if ( 'on' === dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) ) {
+            return $result;
+        }
+
+        return new \WP_Error( 'dokan_order_status_change_disabled', __( 'Vendors are not allowed to change order status on this marketplace.', 'dokan-lite' ), [ 'status' => 403 ] );
     }
 
     /**
@@ -290,7 +337,7 @@ class OrderAbilityScope implements Hookable {
         return [
             'parent_id'      => [
                 'type'        => 'integer',
-                'description' => __( 'Parent order ID, or 0 for a top-level order.', 'dokan-lite' ),
+                'description' => __( 'Parent order ID as seen by a store admin; 0 for a top-level order, and always 0 for a vendor, whose view ends at their own orders.', 'dokan-lite' ),
             ],
             'order_relation' => [
                 'type'        => 'string',
@@ -303,6 +350,14 @@ class OrderAbilityScope implements Hookable {
                 'properties'  => [
                     'id'         => [ 'type' => 'integer' ],
                     'store_name' => [ 'type' => 'string' ],
+                ],
+            ],
+            'earning'        => [
+                'type'        => 'object',
+                'description' => __( 'What the vendor earns on this order and what the marketplace keeps as commission. Present for store admins and the owning vendor; vendor staff need the sales-overview permission.', 'dokan-lite' ),
+                'properties'  => [
+                    'vendor_earning'   => [ 'type' => [ 'number', 'null' ] ],
+                    'admin_commission' => [ 'type' => [ 'number', 'null' ] ],
                 ],
             ],
         ];
@@ -372,11 +427,64 @@ class OrderAbilityScope implements Hookable {
         // A parent multi-vendor order belongs to no single vendor; Suborders / single orders do.
         $vendor_id = 'parent' === $relation ? 0 : absint( dokan_get_seller_id_by_order( $order ) );
 
-        $order_data['parent_id']      = $parent_id;
+        // A vendor's view ends at their own order: the parent, and through it the siblings, are the marketplace's.
+        $order_data['parent_id']      = current_user_can( 'manage_woocommerce' ) ? $parent_id : 0;
         $order_data['order_relation'] = $relation;
         $order_data['vendor']         = VendorPayload::for_user( $vendor_id );
 
+        // Money stays with the owner unless shared: a parent order has no single earning.
+        if ( 'parent' !== $relation && $this->can_view_earning( $vendor_id ) ) {
+            $order_data['earning'] = $this->earning_for( $order );
+        }
+
         return $order_data;
+    }
+
+    /**
+     * Whether the caller may see an order's earning split.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id The owning vendor.
+     *
+     * @return bool
+     */
+    protected function can_view_earning( int $vendor_id ): bool {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        return $vendor_id > 0 && dokan_get_current_user_id() === $vendor_id && OwnershipGate::has_read_capability( 'shop_order', 'earning' );
+    }
+
+    /**
+     * The earning split of a single-vendor order or Suborder.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Order $order The order.
+     *
+     * @return array{vendor_earning:?float,admin_commission:?float}
+     */
+    protected function earning_for( \WC_Order $order ): array {
+        $commission = dokan()->commission;
+        $row        = $commission->get_earning_from_order_table( $order->get_id(), 'seller', true );
+
+        // One row answers both sides; only legacy orders (saved admin fee, or no row) take the slow path.
+        if ( is_array( $row ) && '' === (string) $order->get_meta( '_dokan_admin_fee', true ) ) {
+            return [
+                'vendor_earning'   => $row['net_amount'],
+                'admin_commission' => $row['order_total'] - $row['net_amount'],
+            ];
+        }
+
+        $vendor = $commission->get_earning_by_order( $order, 'seller' );
+        $admin  = $commission->get_earning_by_order( $order, 'admin' );
+
+        return [
+            'vendor_earning'   => is_numeric( $vendor ) ? (float) $vendor : null,
+            'admin_commission' => is_numeric( $admin ) ? (float) $admin : null,
+        ];
     }
 
     /**
