@@ -8,7 +8,7 @@ Paths are relative to `tests/pw/tests/`. An assertion counts only if it fails wh
 |---|---|---|---|---|---|
 | 1 | Vendor A's list shows vendor B's orders (data leak) | vendor | API + UI | `react/vendor-orders/vendorOrdersApi.spec.ts` #1 (v1+v2), `react/vendor-orders/vendorOrders.spec.ts` #1 | caught |
 | 2 | Vendor reads or updates vendor B's order by id through `dokan/v1/orders/{id}` | vendor | API | `react/vendor-orders/vendorOrdersApi.spec.ts` #2 read (403) and update (refused, order untouched) | caught |
-| 3 | Parent order (multi-vendor cart) listed instead of, or as well as, the vendor's suborder | vendor | API + UI | none in React list (`api/calculation.spec.ts:655` checks parent/child money, not listing) | **GAP** |
+| 3 | Parent order (multi-vendor cart) listed instead of, or as well as, the vendor's suborder | vendor | API + UI | `react/vendor-orders/vendorOrdersApi.spec.ts` #3 (each vendor lists only its suborder, never the parent or the other suborder; parent read by id refused) + `vendorOrders.spec.ts` #3 (React search) | caught |
 | 4 | Row status change does not persist | vendor | UI + REST oracle | `react/vendor-orders/vendorOrders.spec.ts` #4 (UI status cell + REST) | caught |
 | 5 | Bulk status change misses or over-applies to rows | vendor | UI + REST oracle | `react/vendor-orders/vendorOrders.spec.ts` #5 (selected completed, unselected stays processing) | caught |
 | 6 | Status change allowed when the admin disabled the capability | vendor | UI + REST oracle | `react/vendor-orders/vendorOrdersCapability.global.spec.ts` #6 (flat `vendor_can_change_order_status` off) | caught |
@@ -19,8 +19,8 @@ Paths are relative to `tests/pw/tests/`. An assertion counts only if it fails wh
 | 11 | Export contains wrong orders or ignores the active filter | vendor | UI (download) | #11 search-filtered export (CSV ids == [order]) caught; #11 customer-filtered export `test.fail`: **product bug**, FINDINGS #5 | bug pinned |
 | 12 | View goes to the wrong order | vendor | UI | #12 (order link opens `order_id=<id>` and shows `#<id>`) | caught |
 | 13 | Customer or guest can call the vendor orders REST | customer/guest | API | `react/vendor-orders/vendorOrdersApi.spec.ts` #13 (customer 403, guest 401) | caught |
-| 14 | Vendor staff without the orders permission sees or changes orders (Pro) | staff | API + UI | `e2e/vendor-staff/newVendorStaff.spec.ts:191` checks only that the Orders menu is visible with the default capability; denial is never tested | **GAP** |
-| 15 | Lite: Pro-only actions or columns shown, or the list breaks without Pro | vendor | UI | none tied to `@liteOnly` | **GAP** |
+| 14 | Vendor staff without the orders permission sees or changes orders (Pro) | staff | API + UI | moved to the Vendor staff surface (needs staff seeding; see `failure-modes/vendor-staff.md` once written) | **deferred** |
+| 15 | Lite: Pro-only actions or columns shown, or the list breaks without Pro | vendor | UI | covered by running the `@lite` vendor-orders tests with Pro inactive (`DOKAN_PRO` unset); needs the Lite-only CI job (RESUME Next) | **pending CI** |
 
 Paths starting `react/` are the revamp suite (`npm run test:react`). Legacy paths are kept only where the revamp suite defers to them.
 
@@ -39,6 +39,6 @@ Paths starting `react/` are the revamp suite (`npm run test:react`). Legacy path
 
 ## Open (in order)
 
-1. **#3 suborder listing.** Create a multi-vendor order. Each vendor's list must show only its own suborder id, never the parent.
-5. **#14 staff (Pro), #15 Lite without Pro.**
-6. **M8** manual order with another vendor's product must be refused.
+1. #14 with the Vendor staff surface.
+2. #15 in the Lite-only CI job.
+3. M8: a manual order with another vendor's product must be refused.

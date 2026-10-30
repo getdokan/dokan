@@ -1,5 +1,5 @@
 import { test, expect } from '../_shared/fixtures';
-import { seedOrder, authOf, customerId, backdateOrder } from '../_shared/seed';
+import { seedOrder, seedMultiVendorOrder, authOf, customerId, backdateOrder } from '../_shared/seed';
 import { moneyDigits } from '../_shared/dataViewsTable';
 import { VendorOrdersPage, csvOrderIds } from './vendorOrdersPage';
 
@@ -146,5 +146,13 @@ test.describe('Vendor orders (React list)', () => {
         await (await orders.find(orderId)).getByRole('link', { name: `#${orderId}`, exact: true }).click();
         await expect(orders.page).toHaveURL(new RegExp(`[?&]order_id=${orderId}(&|$)`));
         await expect(orders.page.getByText(new RegExp(`#\\s*${orderId}\\b`)).first()).toBeVisible();
+    });
+
+    test('#3 the list shows the vendor\'s suborder of a multi-vendor order, not the parent', { tag: ['@lite', '@vendor', '@p0'] }, async ({ api }) => {
+        const { parent, suborders } = await seedMultiVendorOrder(api);
+        await orders.goto();
+        await expect(await orders.find(parent)).toHaveCount(0);
+        await expect(await orders.find(suborders.vendor2)).toHaveCount(0);
+        await expect(await orders.find(suborders.vendor1)).toHaveCount(1);
     });
 });

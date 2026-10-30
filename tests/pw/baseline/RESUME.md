@@ -10,7 +10,7 @@ Replace the legacy React-UI Playwright tests with a risk-first, DRY suite in `te
 
 | Surface | Risk | New tests | Ledger | Failure-mode map | State |
 |---|---|---|---|---|---|
-| Vendor orders (list) | P0 | `react/vendor-orders/vendorOrders.spec.ts`, `vendorOrdersApi.spec.ts`, `vendorOrdersCapability.global.spec.ts` | `parity/orders.md`: 0 open | `failure-modes/vendor-orders.md` | stable; #3 suborders, #14 staff, #15 Lite-only open |
+| Vendor orders (list) | P0 | `react/vendor-orders/vendorOrders.spec.ts`, `vendorOrdersApi.spec.ts`, `vendorOrdersCapability.global.spec.ts` | `parity/orders.md`: 0 open | `failure-modes/vendor-orders.md` | stable; #14 → Vendor staff, #15 → Lite-only CI job |
 | Manual orders (Pro) | P0 | `react/vendor-orders/manualOrder.global.spec.ts` | `parity/manual-order.md`: 0 open | in `vendor-orders.md` (M1–M8) | stable; #M7 `fixme` (bug #4), M8 gap |
 | Vendor subscription (Pro) | P0 | `react/vendor-subscription/vendorSubscription.global.spec.ts` | `parity/vendor-subscriptions.md`: 0 open | `failure-modes/vendor-subscription.md` | stable; S12–S16 gaps open |
 
@@ -28,11 +28,11 @@ Legacy progress: 48 of 561 legacy React tests have a verdict; 513 are left acros
 
 ## Next (in order)
 
-1. **Orders gaps:** #3 suborder listing (multi-vendor order shows each vendor only its suborder), #14 staff without the orders permission (Pro), #15 Lite without Pro.
+1. **Vendor staff** (P0): start here. Include orders gap #14 (staff without the orders permission).
 2. **Gaps:** manual orders M8 (another vendor's product refused). Subscription: S13 expiry → product status, S14 pack commission, S12 admin editor UI, S16 allowed categories.
 3. **Next P0/P1 surfaces** by `RISK-REGISTER.md`: Vendor staff, Product editor (`product-form-manager`, 82 legacy tests, the largest), Returns/RMA, Admin settings (`adminSettings`, 98).
    - Per surface: failure-mode map → ledger verdicts → tests → 3× repeat green → ledger 0 open.
-4. **CI:** add a `react.config.ts` job to `.github/workflows/e2e_api_tests.yml`. The suite isn't in CI yet.
+4. **CI:** add a `react.config.ts` job to `.github/workflows/e2e_api_tests.yml` (Pro run, plus a Lite-only run with `DOKAN_PRO` unset that covers orders #15). The suite isn't in CI yet.
 5. Delete legacy folders in separate PRs once their ledger is 0 open.
 
 ## How to run

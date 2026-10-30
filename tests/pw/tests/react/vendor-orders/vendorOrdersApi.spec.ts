@@ -6,7 +6,7 @@
 //COVERAGE_TAG: PUT /dokan/v2/orders/(?P<id>[\d]+)
 
 import { test, expect } from '../_shared/fixtures';
-import { seedOrder, authOf } from '../_shared/seed';
+import { seedOrder, seedMultiVendorOrder, authOf } from '../_shared/seed';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
@@ -59,5 +59,22 @@ for (const version of ['v1', 'v2']) {
         });
     });
 }
+
+test("#3 a multi-vendor order lists only the vendor's own suborder, never the parent", { tag: ['@lite', '@vendor', '@p0'] }, async ({ api }) => {
+    const { parent, suborders } = await seedMultiVendorOrder(api);
+    expect(suborders.vendor1, 'Dokan split the order per vendor').not.toBe('');
+    expect(suborders.vendor2, 'Dokan split the order per vendor').not.toBe('');
+
+    const listed = async (vendor: 'vendor1' | 'vendor2', search: string) => ids((await api.get(endPoints.getAllOrders, { headers: authOf(vendor), params: { search } }))[1]);
+    expect(await listed('vendor1', suborders.vendor1)).toContain(suborders.vendor1);
+    expect(await listed('vendor1', parent), 'parent order in vendor1 list').not.toContain(parent);
+    expect(await listed('vendor1', suborders.vendor2), "vendor2's suborder in vendor1 list").not.toContain(suborders.vendor2);
+    expect(await listed('vendor2', suborders.vendor2)).toContain(suborders.vendor2);
+    expect(await listed('vendor2', parent), 'parent order in vendor2 list').not.toContain(parent);
+
+    // The parent carries the other vendor's line items, so reading it by id would leak them.
+    const [response] = await api.get(endPoints.getSingleOrder(parent), { headers: authOf('vendor1') }, false);
+    expect(response.status(), 'vendor1 reading the parent order').toBeGreaterThanOrEqual(400);
+});
 
 // #8 (earning + commission) is owned by tests/api/calculation.spec.ts (assertOrderCalculation over the commission matrix).

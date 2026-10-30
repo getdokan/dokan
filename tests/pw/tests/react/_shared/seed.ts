@@ -80,3 +80,24 @@ export async function seedOrder(
     const [, , orderId] = await api.createOrderWithStatus(productId, order, status, VENDORS[vendor].auth);
     return orderId;
 }
+
+/**
+ * A guest order with one product from each fixture vendor. Dokan splits it into one suborder per vendor under
+ * the parent. Returns the parent id and each vendor's suborder id (matched by line-item product).
+ */
+export async function seedMultiVendorOrder(api: ApiUtils): Promise<{ parent: string; suborders: Record<Vendor, string> }> {
+    const [p1, p2] = await Promise.all([productIdOf(api, 'vendor1'), productIdOf(api, 'vendor2')]);
+    const [, , parent] = await api.createOrderWc({
+        ...payloads.createOrder,
+        customer_id: 0,
+        status: 'processing',
+        line_items: [
+            { product_id: p1, quantity: 1 },
+            { product_id: p2, quantity: 1 },
+        ],
+    });
+    const [, children] = await api.get(endPoints.wc.getAllOrders, { headers: payloads.adminAuth, params: { parent } });
+    const owner = (productId: string) =>
+        String((children as { id: number; line_items: { product_id: number }[] }[]).find(o => o.line_items.some(l => String(l.product_id) === productId))?.id ?? '');
+    return { parent, suborders: { vendor1: owner(p1), vendor2: owner(p2) } };
+}
