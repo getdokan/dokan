@@ -21,6 +21,12 @@ settings, the REST `/stores` resource. Exactly one Store per Vendor — a facet 
 the Vendor, not a separate entity.
 _Avoid_: Shop, storefront
 
+**Vendor Dashboard**:
+The private workspace where a Vendor and their Vendor Staff run the Store: its
+pages, settings screens, and the actions behind them. The Vendor-facing
+counterpart of the Customer-facing Store.
+_Avoid_: vendor panel, seller dashboard, seller center
+
 **Store Admin**:
 An operator of the marketplace: may read and write any Vendor's data and set the
 Operating Terms Vendors are subject to. The canonical admin of the authorization
@@ -43,6 +49,11 @@ _Avoid_: staff, sub-vendor, employee
 A buyer. Holds no vendor-facing permission and sees only public catalogue data
 and their own purchases.
 _Avoid_: client, user, account
+
+**Guest**:
+A visitor who is not logged in. Sees only what a Store shows publicly; a Guest
+who checks out is a Customer.
+_Avoid_: visitor, anonymous user
 
 ### Authorization
 
