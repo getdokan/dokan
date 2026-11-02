@@ -149,7 +149,7 @@ class AnswersAdmin implements Hookable {
 
         foreach ( $fields as $key => $field ) {
             // Only answers the admin changed, so a field added later never blocks saving the profile.
-            if ( array_key_exists( $key, $answers ) && $this->is_changed( $field, $answers[ $key ] ) ) {
+            if ( array_key_exists( $key, $answers ) && $this->answers->is_changed( $field, $answers[ $key ] ) ) {
                 $valid = $this->submission->validate_custom_answer( $field, $answers[ $key ] );
 
                 if ( is_wp_error( $valid ) ) {
@@ -157,36 +157,6 @@ class AnswersAdmin implements Hookable {
                 }
             }
         }
-    }
-
-    /**
-     * Whether a posted answer differs from the saved one.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $field  Field with its saved `value`.
-     * @param mixed $answer Posted answer.
-     *
-     * @return bool
-     */
-    protected function is_changed( array $field, $answer ): bool {
-        $normalize = function ( $value ) {
-            if ( is_array( $value ) ) {
-                $values = array_map( 'strval', array_filter( $value, 'is_scalar' ) );
-                sort( $values );
-
-                return $values;
-            }
-
-            return is_scalar( $value ) ? trim( (string) $value ) : '';
-        };
-
-        // A checkbox is ticked or not: saved "no" and an unticked box ("") are the same answer.
-        if ( 'checkbox' === ( $field['type'] ?? '' ) ) {
-            return in_array( 'yes', (array) $normalize( $answer ), true ) !== in_array( 'yes', (array) $normalize( $field['value'] ?? '' ), true );
-        }
-
-        return $normalize( $answer ) !== $normalize( $field['value'] ?? '' );
     }
 
     /**
@@ -205,20 +175,7 @@ class AnswersAdmin implements Hookable {
             return;
         }
 
-        $fields = $this->answers->get_fields( (int) $user_id );
-
-        // Only changed answers, so an untouched answer a later rule rejects can't make the save drop the admin's edits.
-        $changed = array_filter(
-            $answers,
-            function ( $answer, $key ) use ( $fields ) {
-                return isset( $fields[ $key ] ) && $this->is_changed( $fields[ $key ], $answer );
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
-
-        if ( $changed ) {
-            $this->answers->update( (int) $user_id, $changed );
-        }
+        $this->answers->update_changed( (int) $user_id, $answers );
     }
 
     /**

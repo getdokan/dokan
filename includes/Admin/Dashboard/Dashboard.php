@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Admin\Dashboard;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\VendorRegistration\FieldIndex;
 
 /**
  * Admin dashboard class.
@@ -370,6 +371,8 @@ class Dashboard implements Hookable {
                     'currency'  => dokan_get_container()->get( 'scripts' )->get_localized_price(),
                     'states'    => WC()->countries->get_allowed_country_states(),
                     'countries' => WC()->countries->get_allowed_countries(),
+                    // Whether any page holds the Vendor Registration Form block, so the vendor page can show sign-up answers.
+                    'hasVendorRegistrationForm' => (bool) dokan_get_container()->get( FieldIndex::class )->get_block_posts(),
                     'nonce'     => wp_create_nonce( 'dokan_admin' ),
                     'store_banner_dimension'                   => [
                         'width'       => $banner_width,

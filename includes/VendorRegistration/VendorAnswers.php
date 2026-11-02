@@ -187,6 +187,59 @@ class VendorAnswers {
     }
 
     /**
+     * Save only the answers that differ from the saved ones, so an untouched answer a newer rule rejects never blocks an edit.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int   $user_id Vendor ID.
+     * @param array $answers Posted answers keyed by meta key.
+     *
+     * @return true|WP_Error
+     */
+    public function update_changed( int $user_id, array $answers ) {
+        $fields  = $this->get_fields( $user_id );
+        $changed = [];
+
+        foreach ( $answers as $key => $answer ) {
+            if ( isset( $fields[ $key ] ) && $this->is_changed( $fields[ $key ], $answer ) ) {
+                $changed[ $key ] = $answer;
+            }
+        }
+
+        return $changed ? $this->update( $user_id, $changed ) : true;
+    }
+
+    /**
+     * Whether a posted answer differs from the saved one.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $field  Field with its saved `value`.
+     * @param mixed $answer Posted answer.
+     *
+     * @return bool
+     */
+    public function is_changed( array $field, $answer ): bool {
+        $normalize = function ( $value ) {
+            if ( is_array( $value ) ) {
+                $values = array_map( 'strval', array_filter( $value, 'is_scalar' ) );
+                sort( $values );
+
+                return $values;
+            }
+
+            return is_scalar( $value ) ? trim( (string) $value ) : '';
+        };
+
+        // A checkbox is ticked or not: saved "no" and an unticked box ("") are the same answer.
+        if ( 'checkbox' === ( $field['type'] ?? '' ) ) {
+            return in_array( 'yes', (array) $normalize( $answer ), true ) !== in_array( 'yes', (array) $normalize( $field['value'] ?? '' ), true );
+        }
+
+        return $normalize( $answer ) !== $normalize( $field['value'] ?? '' );
+    }
+
+    /**
      * Turn a saved answer into display text, using option labels for choice fields.
      *
      * @since DOKAN_SINCE
