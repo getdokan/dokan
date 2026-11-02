@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Filter Bar",
     "category": "dokan",
-    "description": "Store count, search, sorting and view controls for the store list.",
+    "description": "Search, sort and view options for the store list.",
     "keywords": [
         "vendor",
         "store",

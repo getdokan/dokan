@@ -26,7 +26,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Social Icon Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <RangeControl
                         label={ __( 'Icon size (px)', 'dokan-lite' ) }
                         value={ attributes.iconSize ?? 24 }

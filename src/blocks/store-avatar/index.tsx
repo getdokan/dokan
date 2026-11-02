@@ -30,7 +30,7 @@ registerBlockType( metadata.name, {
         >
             <InspectorControls>
                 <PanelBody
-                    title={ __( 'Profile Picture Settings', 'dokan-lite' ) }
+                    title={ __( 'Settings', 'dokan-lite' ) }
                 >
                     <SelectControl
                         label={ __( 'Shape', 'dokan-lite' ) }

@@ -40,7 +40,7 @@ const Edit = ( {
     return (
         <>
             <InspectorControls>
-                <PanelBody title={ __( 'Sidebar Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <ToggleControl
                         label={ __( 'Sticky on scroll', 'dokan-lite' ) }
                         help={ __(

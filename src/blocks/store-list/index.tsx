@@ -171,7 +171,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Store List Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <RangeControl
                         label={ __( 'Stores per page', 'dokan-lite' ) }
                         value={ attributes.perPage }
@@ -219,7 +219,7 @@ registerBlockType( metadata.name, {
                     <TextControl
                         label={ __( 'Fallback store name', 'dokan-lite' ) }
                         help={ __(
-                            'Shown when a vendor has not named their store. Leave empty to show nothing.',
+                            'Used when a store has no name.',
                             'dokan-lite'
                         ) }
                         value={ attributes.defaultStoreName }
@@ -358,7 +358,7 @@ registerBlockType( metadata.name, {
                             <TextControl
                                 label={ __( 'Address label', 'dokan-lite' ) }
                                 help={ __(
-                                    'Shown before the address. Leave empty for none.',
+                                    'Leave empty for no label.',
                                     'dokan-lite'
                                 ) }
                                 value={ attributes.addressLabel ?? '' }

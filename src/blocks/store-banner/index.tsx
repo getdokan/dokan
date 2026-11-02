@@ -29,12 +29,12 @@ registerBlockType( metadata.name, {
         >
             <InspectorControls>
                 <PanelBody
-                    title={ __( 'Store Banner Settings', 'dokan-lite' ) }
+                    title={ __( 'Settings', 'dokan-lite' ) }
                 >
                     <RangeControl
                         label={ __( 'Height (px)', 'dokan-lite' ) }
                         help={ __(
-                            'Set to 0 to use the marketplace default banner height.',
+                            'Set to 0 for the default height.',
                             'dokan-lite'
                         ) }
                         value={ attributes.height ?? 0 }

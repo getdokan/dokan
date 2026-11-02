@@ -2,7 +2,7 @@
 /**
  * Title: Store Header, Split
  * Slug: dokan/single-store-header-split
- * Description: A store header with no banner: a large profile picture beside the name, info and social links.
+ * Description: No banner. Large picture beside the details.
  * Categories: dokan-store
  * Block Types: dokan/store-name, dokan/store-avatar
  * Keywords: store, vendor, header, split

@@ -111,7 +111,7 @@ registerBlockType( metadata.name, {
             >
                 <InspectorControls>
                     <PanelBody
-                        title={ __( 'Filter Bar Settings', 'dokan-lite' ) }
+                        title={ __( 'Settings', 'dokan-lite' ) }
                     >
                         { sections.map( ( section ) => (
                             <Fragment key={ section.toggle }>

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Tabs",
     "category": "dokan",
-    "description": "Navigation between the store's tabs, such as Products and Terms and Conditions.",
+    "description": "Links to the store's tabs, like Products and Terms.",
     "keywords": [
         "dokan",
         "store",

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Categories",
     "category": "dokan",
-    "description": "The product categories this vendor sells in.",
+    "description": "Categories this store sells in.",
     "keywords": [
         "dokan",
         "store",

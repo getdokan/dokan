@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store List",
     "category": "dokan",
-    "description": "Display a grid of vendor stores.",
+    "description": "A grid of stores.",
     "keywords": [
         "vendor",
         "store",

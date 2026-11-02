@@ -2,7 +2,7 @@
 /**
  * Title: Store Header, No Banner
  * Slug: dokan/single-store-header-minimal
- * Description: A compact store header with no banner: profile picture, name and info on the left, social links on the right.
+ * Description: No banner. Details left, social links right.
  * Categories: dokan-store
  * Block Types: dokan/store-name
  * Keywords: store, vendor, header, compact

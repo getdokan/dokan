@@ -61,7 +61,7 @@ class Templates implements Hookable {
             'dokan//' . self::TEMPLATE_SLUG,
             [
                 'title'       => __( 'Single Store', 'dokan-lite' ),
-                'description' => __( 'Displays a vendor store page with the store header and products.', 'dokan-lite' ),
+                'description' => __( 'A store page with header and products.', 'dokan-lite' ),
                 'content'     => file_get_contents( $content_file ), // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
                 'plugin'      => 'dokan-lite',
             ]

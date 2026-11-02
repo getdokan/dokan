@@ -67,7 +67,7 @@ $dokan_section_placeholder = static function ( $message ) {
 if ( ! $section instanceof AbstractProductSection ) {
     if ( $resolver->is_editor_preview() ) {
         $dokan_section_placeholder(
-            __( 'This product section is no longer available. It may belong to an extension that is not active.', 'dokan-lite' )
+            __( 'This section isn\'t available. Its extension may be off.', 'dokan-lite' )
         );
     }
 

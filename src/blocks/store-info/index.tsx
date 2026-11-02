@@ -140,7 +140,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Store Info Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     { LINES.map( ( line ) => (
                         <ToggleControl
                             key={ line.toggle }
@@ -202,7 +202,7 @@ registerBlockType( metadata.name, {
                                 <TextControl
                                     label={ line.title }
                                     help={ __(
-                                        'Label shown before the value. Leave empty for none.',
+                                        'Leave empty for no label.',
                                         'dokan-lite'
                                     ) }
                                     placeholder={ line.labelPlaceholder }

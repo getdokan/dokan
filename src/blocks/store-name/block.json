@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Name",
     "category": "dokan",
-    "description": "Displays the vendor's store name as a heading.",
+    "description": "The store's name.",
     "keywords": [ "dokan", "store", "vendor", "name", "heading" ],
     "textdomain": "dokan-lite",
     "attributes": {

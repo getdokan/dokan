@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Sidebar",
     "category": "dokan",
-    "description": "A container for store widgets, replacing the classic store sidebar on block themes.",
+    "description": "Holds store widgets on block themes.",
     "keywords": [
         "dokan",
         "store",

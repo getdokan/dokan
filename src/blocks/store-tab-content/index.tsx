@@ -49,7 +49,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Tab Content Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <RangeControl
                         label={ __( 'Columns', 'dokan-lite' ) }
                         help={ __(
@@ -91,7 +91,7 @@ registerBlockType( metadata.name, {
                     <TextControl
                         label={ __( 'No products message', 'dokan-lite' ) }
                         help={ __(
-                            'Shown when the vendor has no products. Leave empty for the default wording.',
+                            'Leave empty for the default.',
                             'dokan-lite'
                         ) }
                         placeholder={ __(

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Tab Content",
     "category": "dokan",
-    "description": "Displays the body of the store's active tab: the vendor's products, terms and conditions, or an extension's tab.",
+    "description": "Shows the content of the open tab.",
     "keywords": [
         "dokan",
         "store",
