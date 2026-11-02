@@ -20,7 +20,9 @@ The `.claude/skills/` directory contains procedural HOW-TO instructions:
 - **`dokan-code-review`** — Code review standards: critical violations to flag, PR checklist verification, severity levels
 - **`dokan-git`** — Git and GitHub operations: branching, PR templates, CI checks
 - **`dokan-qa-automation`** — Playwright E2E and REST API test conventions under `tests/pw/`: page objects, tags, ApiUtils, schemas, CI compatibility
+- **`dokan-setting-impact`** — Settings ripple across the Store Admin → Vendor → Customer tiers: impact map plus Plan / Build / Review / Test gates. **Invoke when planning any change that adds, changes, or reads configuration a Store Admin sets.**
 - **`dokan-run-test-suite`** — Run the Playwright suite (local or CI). **Invoke when the team asks to "run the suite", trigger CI, or debug a failed run.**
+- **`dokan-wp-env-worktrees`** — Configure `wp-env` across git worktrees with isolated (default) or shared databases; resolve port conflicts when running two environments at once.
 
 ## Build & Development Commands
 
@@ -48,6 +50,11 @@ npm run test:phpunit       # Start env, run tests, stop env
 npm run env:start          # Start wp-env
 npm run env:stop           # Stop wp-env
 ```
+
+> `.wp-env.json` is the committed, shared base config (CI reads it — don't edit
+> it for local needs). Put per-machine/per-worktree settings (ports, a
+> `../dokan-pro` mount, LAN site URL) in `.wp-env.override.json`, which is
+> gitignored. See the `dokan-wp-env-worktrees` skill for worktree setup.
 
 ## Architecture
 

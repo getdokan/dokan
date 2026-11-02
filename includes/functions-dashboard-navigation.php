@@ -166,6 +166,37 @@ function dokan_get_dashboard_nav(): array {
 }
 
 /**
+ * SPA routes under a dashboard menu the admin switched off (Menu Manager, Pro).
+ *
+ * Legacy pages are refused server-side on `dokan_dashboard_shortcode_query_vars`; the hash
+ * router cannot be, so the vendor dashboard gets this list and renders "no permission" itself.
+ *
+ * @since 5.3.3
+ *
+ * @return string[] Routes without surrounding slashes, e.g. `settings/social`.
+ */
+function dokan_get_restricted_dashboard_routes(): array {
+    $routes = [];
+
+    foreach ( dokan_get_dashboard_nav() as $menu ) {
+        foreach ( array_merge( [ $menu ], array_values( $menu['submenu'] ?? [] ) ) as $item ) {
+            // Items the Menu Manager never touched carry no flag.
+            if ( ! array_key_exists( 'is_switched_on', $item ) || $item['is_switched_on'] ) {
+                continue;
+            }
+
+            $hash = wp_parse_url( $item['url'] ?? '', PHP_URL_FRAGMENT );
+
+            if ( $hash ) {
+                $routes[] = trim( strtok( $hash, '?' ), '/' );
+            }
+        }
+    }
+
+    return array_values( array_unique( array_filter( $routes ) ) );
+}
+
+/**
  * Checking menu permissions
  *
  * @since 2.7.3

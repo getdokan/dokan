@@ -16,6 +16,8 @@ This skill provides guidance for developing Dokan Lite backend PHP code accordin
 -   Modifying existing backend PHP code
 -   Adding hooks, filters, or REST endpoints
 
+**Settings:** when the change adds, changes, or reads a setting, also load `dokan-setting-impact` and run its Build gate.
+
 ## References
 
 -   [`references/authorization.md`](./references/authorization.md) — roles,
