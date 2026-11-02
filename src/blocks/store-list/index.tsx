@@ -1,4 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
+import { storeBlockIcon } from '../shared/block-icons';
 import { InspectorControls, useSettings } from '@wordpress/block-editor';
 import {
     FontSizePicker,
@@ -165,6 +166,7 @@ const ALIGNMENTS = [
 ];
 
 registerBlockType( metadata.name, {
+    icon: storeBlockIcon( metadata.name ),
     edit: ( { attributes, setAttributes } ) => (
         <SSREdit
             name={ metadata.name }

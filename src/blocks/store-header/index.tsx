@@ -1,4 +1,5 @@
 import { createBlock, parse, registerBlockType } from '@wordpress/blocks';
+import { storeBlockIcon } from '../shared/block-icons';
 import { InspectorControls } from '@wordpress/block-editor';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
@@ -212,6 +213,7 @@ const Edit = ( {
 };
 
 registerBlockType( metadata.name, {
+    icon: storeBlockIcon( metadata.name ),
     edit: Edit,
     save: () => null,
 } );
