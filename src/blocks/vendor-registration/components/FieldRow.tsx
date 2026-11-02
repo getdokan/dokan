@@ -13,9 +13,6 @@ interface Props {
     onEdit: () => void;
     onChange: ( patch: Partial< Row > ) => void;
     onRemove: () => void;
-    // Unset when the row can't move that way.
-    onMoveUp?: () => void;
-    onMoveDown?: () => void;
     onDragStart: ( event: DragEvent< HTMLDivElement > ) => void;
     onDragOver: ( event: DragEvent< HTMLDivElement > ) => void;
     onDragEnd: () => void;
@@ -28,8 +25,6 @@ export default function FieldRow( {
     onEdit,
     onChange,
     onRemove,
-    onMoveUp,
-    onMoveDown,
     onDragStart,
     onDragOver,
     onDragEnd,
@@ -159,16 +154,6 @@ export default function FieldRow( {
                                       title: __( 'Edit', 'dokan-lite' ),
                                       onClick: onEdit,
                                   },
-                            {
-                                title: __( 'Move up', 'dokan-lite' ),
-                                isDisabled: ! onMoveUp,
-                                onClick: () => onMoveUp?.(),
-                            },
-                            {
-                                title: __( 'Move down', 'dokan-lite' ),
-                                isDisabled: ! onMoveDown,
-                                onClick: () => onMoveDown?.(),
-                            },
                             ...( row.custom
                                 ? [
                                       {

@@ -326,35 +326,6 @@ export default function FieldsPanel() {
                                             removeRow( setup, row.id )
                                         )
                                     }
-                                    // Keyboard alternative to dragging; moveRow() counts the row's own slot, hence +2 down.
-                                    onMoveUp={
-                                        rowIndex > 0
-                                            ? () =>
-                                                  updateSetup(
-                                                      moveRow(
-                                                          setup,
-                                                          row.id,
-                                                          section.id,
-                                                          rowIndex - 1,
-                                                          data
-                                                      )
-                                                  )
-                                            : undefined
-                                    }
-                                    onMoveDown={
-                                        rowIndex < section.rows.length - 1
-                                            ? () =>
-                                                  updateSetup(
-                                                      moveRow(
-                                                          setup,
-                                                          row.id,
-                                                          section.id,
-                                                          rowIndex + 2,
-                                                          data
-                                                      )
-                                                  )
-                                            : undefined
-                                    }
                                     onDragStart={ ( event ) => {
                                         event.dataTransfer.effectAllowed =
                                             'move';

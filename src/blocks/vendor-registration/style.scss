@@ -413,6 +413,12 @@
 				outline: 2px solid var(--dokan-vreg-accent);
 				outline-offset: 1px;
 			}
+
+			// E.g. the email back from social login: shown, not editable.
+			&[readonly] {
+				color: var(--dokan-vreg-muted);
+				cursor: not-allowed;
+			}
 		}
 
 		// Dokan fixes select.dokan-form-control at 35px, which clips the chosen option under this padding.
