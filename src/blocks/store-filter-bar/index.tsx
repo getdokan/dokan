@@ -1,4 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
+import { storeBlockIcon } from '../shared/block-icons';
 import { Fragment } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
@@ -77,6 +78,7 @@ const PANEL_TEXTS = [
 ];
 
 registerBlockType( metadata.name, {
+    icon: storeBlockIcon( metadata.name ),
     edit: ( { attributes, setAttributes } ) => {
         const hidden: string[] = attributes.hiddenSortOptions ?? [];
         const labels: Record< string, string > = attributes.filterLabels ?? {};

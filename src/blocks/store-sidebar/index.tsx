@@ -1,4 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
+import { storeBlockIcon } from '../shared/block-icons';
 import {
     InnerBlocks,
     InspectorControls,
@@ -61,6 +62,7 @@ const Edit = ( {
 };
 
 registerBlockType( metadata.name, {
+    icon: storeBlockIcon( metadata.name ),
     edit: Edit,
     save: () => <InnerBlocks.Content />,
 } );
