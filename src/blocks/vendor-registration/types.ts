@@ -78,6 +78,8 @@ export interface Row {
     hidden: boolean;
     locked: boolean;
     metaKey: string;
+    // Set when the key was picked from the saved fields; the server lets only such rows share a key.
+    reused?: boolean;
     options: FieldOption[];
     labels: Record< string, string >;
     registry?: RegistryRow;

@@ -40,12 +40,18 @@ class FieldIndex {
      *
      * @since DOKAN_SINCE
      *
+     * @param int $except_post_id Leave out this post's blocks, e.g. the page being saved.
+     *
      * @return array<string, array> Keyed by meta key: `key`, `label`, `type`, `options`, `pages`, `answers`, `removed`.
      */
-    public function get_fields(): array {
+    public function get_fields( int $except_post_id = 0 ): array {
         $fields = [];
 
         foreach ( $this->get_block_posts() as $post ) {
+            if ( $post->ID === $except_post_id ) {
+                continue;
+            }
+
             foreach ( $this->find_blocks( parse_blocks( $post->post_content ) ) as $block ) {
                 $setup = $this->setup->build( (array) ( $block['attrs'] ?? [] ) );
 
@@ -205,7 +211,7 @@ class FieldIndex {
      *
      * @return array[]
      */
-    protected function find_blocks( array $blocks ): array {
+    public function find_blocks( array $blocks ): array {
         $found = [];
 
         foreach ( $blocks as $block ) {

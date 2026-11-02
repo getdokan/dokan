@@ -868,7 +868,9 @@ class FormRenderer {
                         [
                             'type'     => 'email',
                             'readonly' => 'readonly',
-                        ]
+                        ],
+                        /* translators: %s: platform name, e.g. Google */
+                        sprintf( __( 'From your %s account.', 'dokan-lite' ), (string) ( $context['platform'] ?? '' ) )
                     );
                     break;
                 }
