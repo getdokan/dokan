@@ -1092,8 +1092,10 @@ class Assets {
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
 
+        // The hash router can't be gated server-side like the legacy pages, so it gets the switched-off routes.
         $dokan_frontend = [
-            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            'currency'         => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            'restrictedRoutes' => is_user_logged_in() && dokan_is_seller_dashboard() ? dokan_get_restricted_dashboard_routes() : [],
         ];
 
         // localize dokan frontend script

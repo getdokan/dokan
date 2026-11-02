@@ -203,11 +203,20 @@ export const actions = {
             dispatch( actions.setSubmitting( productId, true ) );
             try {
                 const product = select.getProduct( productId );
-                await apiFetch( {
+                const saved = ( await apiFetch( {
                     path: `dokan/v3/products/${ productId ? productId : '' }`,
                     method: productId ? 'PUT' : 'POST',
                     data: product,
-                } );
+                } ) ) as Record< string, any >;
+
+                // The server may hold a requested publish for review, so keep the editor's status in sync with what was saved.
+                if ( productId && saved?.status ) {
+                    dispatch(
+                        actions.updateProduct( productId, {
+                            status: saved.status,
+                        } )
+                    );
+                }
 
                 if ( productId ) {
                     const variations = select.getVariations( productId ) || [];
@@ -232,6 +241,8 @@ export const actions = {
                         );
                     }
                 }
+
+                return saved;
             } catch ( err ) {
                 dispatch( actions.setError( err as Error ) );
                 throw err;

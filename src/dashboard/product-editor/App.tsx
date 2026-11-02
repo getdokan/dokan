@@ -72,32 +72,51 @@ const App = ( { params }: { params: { productId: string } } ) => {
 
     const productUrl = formEditor?.view_product_url;
 
-    const fetchProductFields = useCallback( async () => {
-        const id = Number( params.productId );
-        // Preselect a product type when the create URL carries a `?type=` hint
-        // (e.g. "Add New Auction Product" links to #/products/create?type=auction).
-        const type =
-            new URLSearchParams(
-                window.location.hash.split( '?' )[ 1 ] ?? ''
-            ).get( 'type' ) ?? '';
-        setInitLoading( true );
-        try {
-            const response = await apiFetch< ProductEditorData >( {
-                path: `/dokan/v3/products/init/fields?id=${ id || '' }${
-                    type ? `&type=${ encodeURIComponent( type ) }` : ''
-                }`,
-            } );
-            setFormEditor( response );
-            ( window as any ).dokanProductEditor = response;
-        } catch ( err: any ) {
-            setError(
-                err?.message || __( 'An unknown error occurred', 'dokan-lite' )
-            );
-            setFormEditor( null );
-        } finally {
-            setInitLoading( false );
-        }
-    }, [ params.productId ] );
+    const fetchProductFields = useCallback(
+        async ( silent = false ) => {
+            const id = Number( params.productId );
+            // Preselect a product type when the create URL carries a `?type=` hint
+            // (e.g. "Add New Auction Product" links to #/products/create?type=auction).
+            const type =
+                new URLSearchParams(
+                    window.location.hash.split( '?' )[ 1 ] ?? ''
+                ).get( 'type' ) ?? '';
+            // A background refresh keeps the form on screen instead of swapping in the loader.
+            if ( ! silent ) {
+                setInitLoading( true );
+            }
+            try {
+                const response = await apiFetch< ProductEditorData >( {
+                    path: `/dokan/v3/products/init/fields?id=${ id || '' }${
+                        type ? `&type=${ encodeURIComponent( type ) }` : ''
+                    }`,
+                } );
+                setFormEditor( response );
+                ( window as any ).dokanProductEditor = response;
+            } catch ( err: any ) {
+                setError(
+                    err?.message ||
+                        __( 'An unknown error occurred', 'dokan-lite' )
+                );
+                setFormEditor( null );
+            } finally {
+                setInitLoading( false );
+            }
+        },
+        [ params.productId ]
+    );
+
+    // The status choices depend on the saved status, so refresh them when the server held a requested publish for review.
+    const onSubmit = useCallback(
+        async ( e: any ) => {
+            const requestedStatus = product?.status;
+            const saved = await submitHandler( e );
+            if ( saved?.status && saved.status !== requestedStatus ) {
+                void fetchProductFields( true );
+            }
+        },
+        [ product?.status, submitHandler, fetchProductFields ]
+    );
 
     const ActionButton = useCallback( () => {
         if ( error || isInitLoading ) {
@@ -137,7 +156,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
                         variant="primary"
                         loading={ isLoading }
                         disabled={ ! isValid || isLoading }
-                        onClick={ submitHandler }
+                        onClick={ onSubmit }
                         label={
                             isNewProduct
                                 ? __( 'Save Changes', 'dokan-lite' )
@@ -169,7 +188,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
         isInitLoading,
         error,
         productUrl,
-        submitHandler,
+        onSubmit,
         valueForPrompt,
     ] );
 
@@ -202,14 +221,14 @@ const App = ( { params }: { params: { productId: string } } ) => {
             <InternalError
                 title={ __( 'Failed to load product data', 'dokan-lite' ) }
                 message={ error }
-                onRefresh={ fetchProductFields }
+                onRefresh={ () => fetchProductFields() }
             />
         );
     }
 
     return (
         <div className="dokan-product-product-editor dokan-layout">
-            <form onSubmit={ submitHandler }>
+            <form onSubmit={ onSubmit }>
                 <DataForm
                     data={ product }
                     fields={ fields }

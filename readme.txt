@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.3.2
+Stable tag: 5.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -379,6 +379,16 @@ A. Please report security bugs found in the source code of the plugin through th
 
 == Changelog ==
 
+= v5.3.3 ( Oct 30, 2026 ) =
+- **fix:** Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.
+- **fix:** Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.
+- **fix:** The store contact form now sends email from the store's own address and uses the visitor's email only for replies, so it can no longer be used to spoof the sender or add extra recipients.
+- **fix:** Prevented subsite admins on a multisite network from changing the selling status of vendors who belong to other sites.
+- **fix:** Reverse withdrawal payments can no longer be discounted with coupons, and the vendor's balance is now credited only with the amount actually paid.
+- **fix:** Products created through the vendor products API now respect the vendor's selling status and are held for review when the vendor isn't allowed to publish directly.
+- **fix:** Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.
+- **fix:** A vendor's social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.
+
 = v5.3.2 ( Oct 22, 2026 ) =
 - **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.
 - **fix:** Saving a vendor from the WordPress Users screen no longer resets their custom commission to the global rate.
@@ -403,12 +413,5 @@ A. Please report security bugs found in the source code of the plugin through th
 
 = v5.2.1 ( Sep 30, 2026 ) =
 - **fix:** Fixed the setup wizard failing to load due to an outdated UI package.
-
-= v5.2.0 ( Sep 30, 2026 ) =
-- **new:** Revamped the Dokan admin Settings with a redesigned layout and reorganized menus for easier navigation.
-- **new:** The revamped settings screen is opt-in: your existing settings carry over and stay in sync, and you can switch back to the classic screen at any time.
-- **new:** Extensions can add their own settings to the new settings screen through the `dokan_get_admin_settings_schema` filter.
-- **fix:** Prevented vendors from using the commission calculator to read another vendor's commission or earnings, and limited it to accounts that can manage products.
-- **fix:** The v3 order downloads REST endpoint no longer throws a fatal error for orders that grant download access to existing products.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

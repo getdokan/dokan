@@ -128,6 +128,24 @@ class Order {
             return;
         }
 
+        $scale = 10 ** wc_get_price_decimals();
+
+        // Credit only what the order collected, otherwise a discount coupon clears the debt for less than it is worth.
+        $collected = Helper::get_collected_amount_from_order( $order );
+
+        if ( (int) round( $amount * $scale ) > (int) round( $collected * $scale ) ) {
+            $order->add_order_note(
+                sprintf(
+                    /* translators: 1: reverse withdrawal balance in the order, 2: amount actually collected and credited */
+                    __( 'Reverse withdrawal payment of %1$s was discounted, so only the %2$s collected was credited.', 'dokan-lite' ),
+                    wp_strip_all_tags( html_entity_decode( wc_price( $amount ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ),
+                    wp_strip_all_tags( html_entity_decode( wc_price( $collected ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) )
+                )
+            );
+
+            $amount = $collected;
+        }
+
         $vendor_id = $order->get_customer_id();
 
         /*
@@ -147,8 +165,6 @@ class Order {
              * the credit — see `Helper::add_payment_to_cart()`.
              */
             $due = (float) apply_filters( 'dokan_reverse_withdrawal_payable_amount', $due, $vendor_id, 'completion' );
-
-            $scale = 10 ** wc_get_price_decimals();
 
             if ( $amount > $due ) {
                 // Only a shortfall the vendor can actually see is worth a note — anything smaller is display rounding.
