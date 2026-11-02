@@ -89,13 +89,28 @@ class FieldKeyGuard implements Hookable {
      * @return bool Whether any key changed.
      */
     public function fix_blocks( array &$blocks, int $post_id ): bool {
-        $known    = $this->get_known_fields( $post_id );
-        $previous = $this->get_previous_rows( $post_id );
-        $used     = [];
-        $changed  = false;
+        $used = [];
+
+        return $this->fix_rows( $blocks, $this->get_known_fields( $post_id ), $this->get_previous_rows( $post_id ), $used );
+    }
+
+    /**
+     * Walk the blocks, nested ones included, resolving each custom row's key against the page's one index.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $blocks   Parsed blocks, changed in place.
+     * @param array $known    Fields used elsewhere.
+     * @param array $previous This page's last saved rows.
+     * @param array $used     Keys given to rows so far, as keys; shared across the page's blocks.
+     *
+     * @return bool Whether any key changed.
+     */
+    protected function fix_rows( array &$blocks, array $known, array $previous, array &$used ): bool {
+        $changed = false;
 
         foreach ( $blocks as &$block ) {
-            if ( ! empty( $block['innerBlocks'] ) && $this->fix_blocks( $block['innerBlocks'], $post_id ) ) {
+            if ( ! empty( $block['innerBlocks'] ) && $this->fix_rows( $block['innerBlocks'], $known, $previous, $used ) ) {
                 $changed = true;
             }
 

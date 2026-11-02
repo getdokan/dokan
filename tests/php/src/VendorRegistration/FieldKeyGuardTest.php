@@ -395,6 +395,20 @@ class FieldKeyGuardTest extends DokanTestCase {
         $this->assertSame( 'dokan_vreg_website_2', $this->saved_rows( $page )['b']['metaKey'] );
     }
 
+    public function test_blocks_nested_in_a_group_are_checked_too() {
+        $this->page( [ [ 'id' => 'a', 'metaKey' => 'dokan_vreg_website' ] ] );
+
+        $page = $this->factory()->post->create(
+            [
+                'post_type'    => 'page',
+                'post_status'  => 'publish',
+                'post_content' => "<!-- wp:group -->\n<div class=\"wp-block-group\">" . $this->content( [ [ 'id' => 'b', 'metaKey' => 'dokan_vreg_website' ] ] ) . "</div>\n<!-- /wp:group -->",
+            ]
+        );
+
+        $this->assertStringContainsString( '"metaKey":"dokan_vreg_website_2"', get_post( $page )->post_content );
+    }
+
     public function test_pages_without_a_clash_are_not_rewritten() {
         $content = $this->content(
             [
