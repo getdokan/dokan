@@ -40,11 +40,11 @@ const Edit = ( {
     return (
         <>
             <InspectorControls>
-                <PanelBody title={ __( 'Sidebar Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <ToggleControl
                         label={ __( 'Sticky on scroll', 'dokan-lite' ) }
                         help={ __(
-                            'Keeps the sidebar in view while the products scroll. Themes with their own sticky header may need the offset adjusted.',
+                            'Keeps the sidebar in view while scrolling.',
                             'dokan-lite'
                         ) }
                         checked={ !! attributes.isSticky }

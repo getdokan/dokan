@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Profile Picture",
     "category": "dokan",
-    "description": "Displays the vendor's store profile picture.",
+    "description": "The store's profile picture.",
     "keywords": [
         "dokan",
         "store",

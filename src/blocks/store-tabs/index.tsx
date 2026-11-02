@@ -72,7 +72,7 @@ registerBlockType( metadata.name, {
                     <PanelBody title={ __( 'Tabs', 'dokan-lite' ) }>
                         <p>
                             { __(
-                                'Rename a tab or give it an icon. The store template is shared, so a change here applies to every store page.',
+                                'Rename tabs or add icons. Changes apply to every store page.',
                                 'dokan-lite'
                             ) }
                         </p>

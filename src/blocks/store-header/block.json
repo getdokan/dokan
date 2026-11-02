@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Header",
     "category": "dokan",
-    "description": "The store header, in any of the layouts a marketplace can choose from.",
+    "description": "The store's header, in your chosen layout.",
     "keywords": [
         "dokan",
         "store",

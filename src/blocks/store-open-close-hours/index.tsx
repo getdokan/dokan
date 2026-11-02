@@ -49,7 +49,7 @@ registerBlockType( metadata.name, {
                     <TextControl
                         label={ __( 'Closed day text', 'dokan-lite' ) }
                         help={ __(
-                            'Shown for days the store is closed. Leave empty for the default wording.',
+                            'Leave empty for the default.',
                             'dokan-lite'
                         ) }
                         placeholder={ __( 'Off Day', 'dokan-lite' ) }

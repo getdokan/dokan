@@ -140,7 +140,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Store Info Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     { LINES.map( ( line ) => (
                         <ToggleControl
                             key={ line.toggle }
@@ -183,7 +183,7 @@ registerBlockType( metadata.name, {
 
                     <Notice status="info" isDismissible={ false }>
                         { __(
-                            'These toggles can only hide a field. Fields hidden by the marketplace privacy settings, or by the vendor, stay hidden regardless.',
+                            'These can only hide fields. Anything hidden by privacy settings or the vendor stays hidden.',
                             'dokan-lite'
                         ) }
                     </Notice>
@@ -202,7 +202,7 @@ registerBlockType( metadata.name, {
                                 <TextControl
                                     label={ line.title }
                                     help={ __(
-                                        'Label shown before the value. Leave empty for none.',
+                                        'Leave empty for no label.',
                                         'dokan-lite'
                                     ) }
                                     placeholder={ line.labelPlaceholder }
@@ -244,7 +244,7 @@ registerBlockType( metadata.name, {
                             <TextControl
                                 label={ __( 'Open text', 'dokan-lite' ) }
                                 help={ __(
-                                    'A message the vendor wrote still shows first.',
+                                    'The vendor\'s own message shows first.',
                                     'dokan-lite'
                                 ) }
                                 placeholder={ __( 'Store Open', 'dokan-lite' ) }

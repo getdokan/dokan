@@ -26,7 +26,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Social Icon Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <RangeControl
                         label={ __( 'Icon size (px)', 'dokan-lite' ) }
                         value={ attributes.iconSize ?? 24 }
@@ -51,7 +51,7 @@ registerBlockType( metadata.name, {
                     <ToggleControl
                         label={ __( 'Show network names', 'dokan-lite' ) }
                         help={ __(
-                            'Names are always available to screen readers.',
+                            'Screen readers always read the names.',
                             'dokan-lite'
                         ) }
                         checked={ !! attributes.showLabels }

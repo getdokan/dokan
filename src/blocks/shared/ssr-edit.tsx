@@ -96,7 +96,7 @@ const SSREdit = ( {
                         </Button>
                         <p>
                             { __(
-                                'Returns this block\u2019s own settings to their defaults. Colors or typography set through the style panels reset from those panels.',
+                                'Resets this block\u2019s settings. Reset colors and fonts from the Styles panel.',
                                 'dokan-lite'
                             ) }
                         </p>

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Location",
     "category": "dokan",
-    "description": "A map of the vendor's store location.",
+    "description": "Map of where the store is.",
     "keywords": [
         "dokan",
         "store",

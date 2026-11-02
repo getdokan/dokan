@@ -313,6 +313,6 @@ class PreviewVendor extends Vendor {
      * @return string
      */
     public function get_store_tnc() {
-        return __( 'The terms and conditions the vendor sets from the dashboard will show here.', 'dokan-lite' );
+        return __( 'The vendor\'s terms and conditions show here.', 'dokan-lite' );
     }
 }

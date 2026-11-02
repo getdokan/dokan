@@ -49,7 +49,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Tab Content Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <RangeControl
                         label={ __( 'Columns', 'dokan-lite' ) }
                         help={ __(
@@ -77,7 +77,7 @@ registerBlockType( metadata.name, {
                     <SelectControl
                         label={ __( 'Preview tab', 'dokan-lite' ) }
                         help={ __(
-                            'Which tab the editor previews, with sample data. On the store page this block shows the tab the visitor opens.',
+                            'The tab to preview here. Visitors see the tab they open.',
                             'dokan-lite'
                         ) }
                         value={ attributes.previewTab ?? 'products' }
@@ -91,7 +91,7 @@ registerBlockType( metadata.name, {
                     <TextControl
                         label={ __( 'No products message', 'dokan-lite' ) }
                         help={ __(
-                            'Shown when the vendor has no products. Leave empty for the default wording.',
+                            'Leave empty for the default.',
                             'dokan-lite'
                         ) }
                         placeholder={ __(

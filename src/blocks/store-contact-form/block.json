@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Contact Form",
     "category": "dokan",
-    "description": "A form letting customers message the vendor.",
+    "description": "Lets customers message the store.",
     "keywords": [
         "dokan",
         "store",

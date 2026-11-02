@@ -2,7 +2,7 @@
 /**
  * Title: Store Header, Panel
  * Slug: dokan/single-store-header-panel
- * Description: The classic default store header: a panel holding the profile picture, name and details beside the store banner.
+ * Description: Classic header: details panel beside the banner.
  * Categories: dokan-store
  * Block Types: dokan/store-banner, dokan/store-name
  * Keywords: store, vendor, header, panel, classic, default
