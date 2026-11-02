@@ -73,7 +73,7 @@ if ( ! $vendor->get_id() ) {
         printf(
             '<div %1$s><p class="dokan-info">%2$s</p></div>',
             get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
-            esc_html__( 'Store opening hours are switched off in Dokan settings, so this block will not appear on the store page.', 'dokan-lite' )
+            esc_html__( 'Opening hours are off in Dokan settings. This block won\'t show.', 'dokan-lite' )
         );
 
         return;

@@ -92,7 +92,7 @@ if ( 'on' !== dokan_get_option( 'contact_seller', 'dokan_general', 'on' ) ) {
         printf(
             '<div %1$s><p class="dokan-info">%2$s</p></div>',
             get_block_wrapper_attributes( [ 'class' => 'is-editor-placeholder' ] ),
-            esc_html__( 'Contacting vendors is switched off in Dokan settings, so this block will not appear on the store page.', 'dokan-lite' )
+            esc_html__( 'Contact form is off in Dokan settings. This block won\'t show.', 'dokan-lite' )
         );
     }
 

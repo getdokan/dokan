@@ -82,7 +82,7 @@ if ( ! $section instanceof AbstractProductSection ) {
 if ( ! $section->is_enabled() ) {
     if ( $resolver->is_editor_preview() ) {
         $dokan_section_placeholder(
-            __( 'This product section is hidden in Appearance settings, so it will not appear on the store page.', 'dokan-lite' )
+            __( 'This section is hidden in Appearance settings. It won\'t show.', 'dokan-lite' )
         );
     }
 

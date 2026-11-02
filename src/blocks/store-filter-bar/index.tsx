@@ -28,7 +28,7 @@ const sections = [
         textLabel: __( 'Store count text', 'dokan-lite' ),
         // translators: %s is typed by the editor and marks where the store count appears.
         help: __(
-            'Use %s where the number should appear. Leave empty for the default wording. The number follows the first Store List block on the page.',
+            'Put %s where the number goes. Leave empty for the default.',
             'dokan-lite'
         ),
         // translators: %s is the number of stores.
@@ -38,7 +38,7 @@ const sections = [
         toggle: 'showSearch',
         label: __( 'Show filter panel', 'dokan-lite' ),
         toggleHelp: __(
-            'The Filter button and the panel it opens — vendor search, plus any filters extensions add such as category, rating or location.',
+            'Shows the Filter button and its panel: search, plus filters like category, rating or location.',
             'dokan-lite'
         ),
         text: 'filterButtonText',
@@ -54,7 +54,7 @@ const sections = [
     },
     {
         toggle: 'showViewToggle',
-        label: __( 'Show grid/list view toggle', 'dokan-lite' ),
+        label: __( 'Show grid/list switch', 'dokan-lite' ),
     },
 ];
 

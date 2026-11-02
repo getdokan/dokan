@@ -78,12 +78,11 @@ const cardElements = () =>
     [
         {
             key: 'showAvatar',
-            label: __( 'Store avatar', 'dokan-lite' ),
-            help: __( 'The round store icon on each card.', 'dokan-lite' ),
+            label: __( 'Store picture', 'dokan-lite' ),
         },
         {
             key: 'showFeatured',
-            label: __( 'Featured tag', 'dokan-lite' ),
+            label: __( 'Featured badge', 'dokan-lite' ),
         },
         {
             key: 'showOpenClose',
@@ -208,7 +207,7 @@ registerBlockType( metadata.name, {
                         <TextControl
                             label={ __( 'Store categories', 'dokan-lite' ) }
                             help={ __(
-                                'Comma separated store category slugs. Requires the store category feature.',
+                                'Store categories to show, separated by commas. Needs store categories turned on.',
                                 'dokan-lite'
                             ) }
                             value={ attributes.category }
@@ -293,7 +292,7 @@ registerBlockType( metadata.name, {
                     <SelectControl
                         label={ __( 'Store picture position', 'dokan-lite' ) }
                         help={ __(
-                            'Grid view. The address and phone keep clear of the picture.',
+                            'Applies to grid view.',
                             'dokan-lite'
                         ) }
                         value={ attributes.avatarPosition ?? '' }

@@ -84,7 +84,7 @@ if ( ! $vendor->get_id() ) {
         printf(
             '<div %1$s><p class="dokan-info">%2$s</p></div>',
             $dokan_wrapper( 'is-editor-placeholder' ),
-            esc_html__( 'The store map is switched off or has no map API key in Dokan settings, so this block will not appear on the store page.', 'dokan-lite' )
+            esc_html__( 'Map is off or has no API key in Dokan settings. This block won\'t show.', 'dokan-lite' )
         );
 
         return;

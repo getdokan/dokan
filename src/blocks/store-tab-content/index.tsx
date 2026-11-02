@@ -77,7 +77,7 @@ registerBlockType( metadata.name, {
                     <SelectControl
                         label={ __( 'Preview tab', 'dokan-lite' ) }
                         help={ __(
-                            'Which tab the editor previews, with sample data. On the store page this block shows the tab the visitor opens.',
+                            'The tab to preview here. Visitors see the tab they open.',
                             'dokan-lite'
                         ) }
                         value={ attributes.previewTab ?? 'products' }

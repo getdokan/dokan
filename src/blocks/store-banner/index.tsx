@@ -50,7 +50,7 @@ registerBlockType( metadata.name, {
                     <RangeControl
                         label={ __( 'Focal point — horizontal', 'dokan-lite' ) }
                         help={ __(
-                            'Which part of the banner stays visible when it is cropped.',
+                            'Which part stays visible when the banner is cropped.',
                             'dokan-lite'
                         ) }
                         value={ attributes.focalX ?? 50 }
@@ -89,7 +89,7 @@ registerBlockType( metadata.name, {
                         <RangeControl
                             label={ __( 'Overlay strength', 'dokan-lite' ) }
                             help={ __(
-                                'How much of the banner the overlay colour covers.',
+                                'How strong the overlay is.',
                                 'dokan-lite'
                             ) }
                             value={ attributes.overlayOpacity ?? 40 }

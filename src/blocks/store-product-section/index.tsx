@@ -66,7 +66,7 @@ registerBlockType( metadata.name, {
                     <TextControl
                         label={ __( 'No products message', 'dokan-lite' ) }
                         help={ __(
-                            'Shown on the store page when this section has no products. Leave empty to hide the section instead, as today.',
+                            'Shown when there are no products. Leave empty to hide the section.',
                             'dokan-lite'
                         ) }
                         value={ attributes.emptyText ?? '' }
@@ -79,7 +79,7 @@ registerBlockType( metadata.name, {
 
                     <Notice status="warning" isDismissible={ false }>
                         { __(
-                            'Store pages already render every enabled product section automatically, above the product grid. To place this section yourself, first hide it under Appearance → Customize → Store, or it will appear twice.',
+                            'Store pages already show this section. Hide it in Appearance → Customize → Store first, or it shows twice.',
                             'dokan-lite'
                         ) }
                     </Notice>
