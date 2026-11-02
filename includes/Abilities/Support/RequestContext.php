@@ -205,6 +205,7 @@ class RequestContext {
      * Matches the REST route WordPress dispatches (`rest_route`), not the raw request URI.
      *
      * @since 5.0.15
+     * @since DOKAN_SINCE Reads the dispatched REST route instead of the request URI.
      *
      * @return bool
      */
