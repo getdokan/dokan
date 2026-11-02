@@ -60,7 +60,7 @@ export default function FieldEditor( {
         termsPageId,
         setAttributes,
     } = useEditorContext();
-    const [ reused, setReused ] = useState( false );
+    const [ reused, setReused ] = useState( !! row.reused );
     const [ skipped, setSkipped ] = useState( false );
 
     const postId = useCurrentPostId();
@@ -104,6 +104,7 @@ export default function FieldEditor( {
         setReused( true );
         update( {
             metaKey: field.key,
+            reused: true,
             type: field.type,
             label: field.label,
             options: field.options.length ? field.options : row.options,
@@ -112,7 +113,10 @@ export default function FieldEditor( {
 
     const unreuse = () => {
         setReused( false );
-        update( { metaKey: keyFromLabel( row.label, taken, data ) } );
+        update( {
+            metaKey: keyFromLabel( row.label, taken, data ),
+            reused: false,
+        } );
     };
 
     const isTerms = 'terms' === row.id;

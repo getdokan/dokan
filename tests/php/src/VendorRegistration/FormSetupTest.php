@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Test\VendorRegistration;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\VendorRegistration\FormRenderer;
+use WeDevs\Dokan\VendorRegistration\FieldKeyGuard;
 use WeDevs\Dokan\VendorRegistration\FormSetup;
 
 /**
@@ -512,6 +513,9 @@ class FormSetupTest extends DokanTestCase {
     }
 
     public function test_two_custom_rows_cannot_share_a_meta_key() {
+        // Saving renames the second key (FieldKeyGuard); here the setup itself must cope with a clash.
+        remove_filter( 'wp_insert_post_data', [ dokan_get_container()->get( FieldKeyGuard::class ), 'check_keys' ] );
+
         $setup = $this->setup->get_for_page(
             $this->page_with_block(
                 [

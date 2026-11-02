@@ -9,6 +9,7 @@ use WeDevs\Dokan\VendorRegistration\Block;
 use WeDevs\Dokan\VendorRegistration\CustomerUpgrade;
 use WeDevs\Dokan\VendorRegistration\EditorData;
 use WeDevs\Dokan\VendorRegistration\FieldIndex;
+use WeDevs\Dokan\VendorRegistration\FieldKeyGuard;
 use WeDevs\Dokan\VendorRegistration\FieldRegistry;
 use WeDevs\Dokan\VendorRegistration\FormRenderer;
 use WeDevs\Dokan\VendorRegistration\FormSetup;
@@ -40,6 +41,7 @@ class VendorRegistrationServiceProvider extends BaseServiceProvider {
         CustomerUpgrade::class,
         EditorData::class,
         FieldIndex::class,
+        FieldKeyGuard::class,
         MyAccountForm::class,
         VendorAnswers::class,
         AnswersAdmin::class,
@@ -63,6 +65,7 @@ class VendorRegistrationServiceProvider extends BaseServiceProvider {
         $this->add_tags( $this->share_with_implements_tags( CustomerUpgrade::class )->addArgument( Submission::class ), $this->tags );
         $this->add_tags( $this->share_with_implements_tags( EditorData::class )->addArguments( [ FieldRegistry::class, FormRenderer::class ] ), $this->tags );
         $this->add_tags( $this->share_with_implements_tags( FieldIndex::class )->addArguments( [ FormSetup::class, FieldRegistry::class ] ), $this->tags );
+        $this->add_tags( $this->share_with_implements_tags( FieldKeyGuard::class )->addArguments( [ FieldIndex::class, FieldRegistry::class ] ), $this->tags );
         $this->add_tags( $this->share_with_implements_tags( MyAccountForm::class )->addArguments( [ FormSetup::class, FormRenderer::class ] ), $this->tags );
         $this->add_tags( $this->share_with_implements_tags( VendorAnswers::class )->addArguments( [ FormSetup::class, Submission::class ] ), $this->tags );
         $this->add_tags( $this->share_with_implements_tags( AnswersAdmin::class )->addArguments( [ VendorAnswers::class, Submission::class ] ), $this->tags );
