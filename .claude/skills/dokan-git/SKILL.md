@@ -23,6 +23,7 @@ When creating PRs, follow the template at `.github/pull_request_template.md`.
 - Appropriate labels assigned
 - Changelog entry with before/after description
 - Screenshots for visual changes
+- `### Setting impact` map when a setting's reader or writer changes behaviour (see `dokan-setting-impact`)
 
 ### Review Criteria
 

@@ -21,7 +21,20 @@ import coreStore from '@dokan/stores/core';
 import { useSelect } from '@wordpress/data';
 import Forbidden from '../layout/403';
 
-export function withRouter( Component, capabilities = [] ) {
+// Routes under a dashboard menu the admin switched off (Menu Manager): the sidebar hides them, so the URL must not open them either.
+// Takes the registered route path, never the typed URL: the router matches that case-insensitively and decoded (#settings/Social, %73ocial).
+const isRestrictedRoute = ( routePath: string ): boolean => {
+    const restricted: string[] =
+        ( window as any )?.dokanFrontend?.restrictedRoutes || [];
+    const path = routePath.replace( /^\/+|\/+$/g, '' ).toLowerCase();
+
+    return restricted.some( ( route ) => {
+        const prefix = route.replace( /^\/+|\/+$/g, '' ).toLowerCase();
+        return path === prefix || path.startsWith( prefix + '/' );
+    } );
+};
+
+export function withRouter( Component, capabilities = [], routePath = '' ) {
     function ComponentWithRouterProp( props ) {
         const authorised: boolean = useSelect( ( select ) => {
             const store = select( coreStore );
@@ -50,7 +63,7 @@ export function withRouter( Component, capabilities = [] ) {
             useSearchParams,
         };
 
-        if ( ! authorised ) {
+        if ( ! authorised || isRestrictedRoute( routePath ) ) {
             return createElement( Forbidden, { ...props, ...routerProps } );
         }
 

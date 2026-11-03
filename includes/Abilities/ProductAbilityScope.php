@@ -166,9 +166,11 @@ class ProductAbilityScope implements Hookable {
     }
 
     /**
-     * Permission for a single product: published is public; otherwise owner or admin only.
+     * Permission for a single product: published is readable by any signed-in caller; otherwise
+     * owner or admin only.
      *
      * @since 5.0.15
+     * @since DOKAN_SINCE An anonymous caller keeps WooCommerce's own answer.
      *
      * @param bool   $permission Incoming permission.
      * @param string $context    Request context.
@@ -183,6 +185,11 @@ class ProductAbilityScope implements Hookable {
 
         // Collection reads are governed by the query scoping.
         if ( 'read' !== $context || $object_id <= 0 ) {
+            return $permission;
+        }
+
+        // Every MCP transport authenticates before a tool runs, so an anonymous caller is never granted here.
+        if ( ! is_user_logged_in() ) {
             return $permission;
         }
 
