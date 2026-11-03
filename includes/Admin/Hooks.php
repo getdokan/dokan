@@ -39,6 +39,10 @@ class Hooks {
 
         add_action( 'woocommerce_product_bulk_edit_end', [ $this, 'add_product_commission_bulk_edit_field' ] );
         add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'save_custom_bulk_edit_field' ], 10, 1 );
+
+        // Downloadable files a vendor submitted for approval
+        add_action( 'woocommerce_product_options_general_product_data', [ $this, 'render_pending_downloadable_files' ], 99 );
+        add_action( 'admin_notices', [ $this, 'pending_downloadable_files_notice' ] );
     }
 
     /**
@@ -268,5 +272,176 @@ class Hooks {
         }
 
         ProductHooks::save_per_product_commission_options( $product->get_id(), $_REQUEST ); // phpcs:ignore
+    }
+
+    /**
+     * Show the downloadable files a vendor submitted for approval below the live files.
+     *
+     * The WooCommerce product data panel lists the approved files that customers
+     * currently hold; the pending replacement is rendered read-only underneath so the
+     * admin can review what publishing will deliver.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function render_pending_downloadable_files() {
+        $post = get_post();
+
+        if ( ! $post instanceof WP_Post || 'product' !== $post->post_type ) {
+            return;
+        }
+
+        $staged = $this->collect_staged_downloadable_files( $post->ID );
+
+        if ( ! $staged ) {
+            return;
+        }
+        ?>
+        <div class="options_group dokan-pending-downloadable-files">
+            <p class="form-field">
+                <label><?php esc_html_e( 'Awaiting approval', 'dokan-lite' ); ?></label>
+                <span class="description">
+                    <strong><?php esc_html_e( 'This pending update carries downloadable changes that have not been delivered yet.', 'dokan-lite' ); ?></strong><br>
+                    <?php esc_html_e( 'Customers who already purchased keep the files listed above until you publish this product; publishing delivers the changes below to them.', 'dokan-lite' ); ?>
+                </span>
+            </p>
+            <?php foreach ( $staged as $entry ) : ?>
+                <p class="form-field">
+                    <label><?php echo esc_html( $entry['label'] ); ?></label>
+                    <span class="description">
+                        <?php if ( $entry['submitted_by'] ) : ?>
+                            <em>
+                                <?php
+                                printf(
+                                    /* translators: %s: display name of the user who submitted the pending files. */
+                                    esc_html__( 'Submitted by %s', 'dokan-lite' ),
+                                    esc_html( $entry['submitted_by'] )
+                                );
+                                ?>
+                            </em><br>
+                        <?php endif; ?>
+                        <?php if ( 'no' === $entry['flag'] ) : ?>
+                            <?php esc_html_e( 'Downloads are being switched off for this product. Publishing will revoke the downloads of existing customers.', 'dokan-lite' ); ?><br>
+                        <?php elseif ( 'yes' === $entry['flag'] ) : ?>
+                            <?php esc_html_e( 'Downloads are being switched back on for this product.', 'dokan-lite' ); ?><br>
+                        <?php endif; ?>
+                        <?php if ( is_array( $entry['files'] ) && empty( $entry['files'] ) ) : ?>
+                            <?php esc_html_e( 'All downloadable files were removed. Publishing will revoke the downloads of existing customers.', 'dokan-lite' ); ?>
+                        <?php elseif ( is_array( $entry['files'] ) ) : ?>
+                            <?php foreach ( $entry['files'] as $file ) : ?>
+                                <?php
+                                $file_url = isset( $file['file'] ) ? $file['file'] : '';
+                                // The real filename leads, not the vendor's label. The label is a
+                                // free-text field the media picker never rewrites (WooCommerce
+                                // behaves the same way), so after a file swap it still reads as the
+                                // previous file - and an administrator would be reviewing a name
+                                // that does not belong to the file they are about to approve.
+                                $real_name  = wc_get_filename_from_url( $file_url );
+                                $shown_name = isset( $file['name'] ) ? $file['name'] : '';
+                                ?>
+                                <strong><?php echo esc_html( $real_name ? $real_name : $file_url ); ?></strong>
+                                <?php if ( '' !== $shown_name && $shown_name !== $real_name ) : ?>
+                                    <?php
+                                    printf(
+                                        /* translators: %s: the label shown to customers for this download. */
+                                        esc_html__( '(shown to customers as "%s")', 'dokan-lite' ),
+                                        esc_html( $shown_name )
+                                    );
+                                    ?>
+                                <?php endif; ?>
+                                <br>
+                                <a href="<?php echo esc_url( $file_url ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $file_url ); ?></a><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </span>
+                </p>
+            <?php endforeach; ?>
+            <p class="form-field">
+                <label>&nbsp;</label>
+                <span class="description">
+                    <button type="submit" name="dokan_discard_pending_downloads" value="1" class="button">
+                        <?php esc_html_e( 'Discard pending files', 'dokan-lite' ); ?>
+                    </button><br>
+                    <?php esc_html_e( 'Rejects the changes above and keeps the currently approved files. The product itself is saved as usual.', 'dokan-lite' ); ?>
+                </span>
+            </p>
+        </div>
+        <?php
+    }
+
+    /**
+     * Warn the admin on the product edit screen when replacement files await approval.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function pending_downloadable_files_notice() {
+        $screen = get_current_screen();
+        $post   = get_post();
+
+        if ( ! $screen || 'product' !== $screen->id || ! $post instanceof WP_Post || 'product' !== $post->post_type ) {
+            return;
+        }
+
+        if ( ! $this->collect_staged_downloadable_files( $post->ID ) ) {
+            return;
+        }
+        ?>
+        <div class="notice notice-warning">
+            <p><?php esc_html_e( 'This product has replacement downloadable files awaiting your approval. Existing customers keep the currently approved files until you publish; review the pending files under General → Downloadable files before publishing.', 'dokan-lite' ); ?></p>
+        </div>
+        <?php
+    }
+
+    /**
+     * Collect the staged downloadable file sets of a product and its variations.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id Product ID.
+     *
+     * @return array<int, array{id:int, label:string, files:array|null, flag:string|null, submitted_by:string}>
+     */
+    protected function collect_staged_downloadable_files( $product_id ) {
+        $product = wc_get_product( $product_id );
+
+        if ( ! $product ) {
+            return [];
+        }
+
+        $ids = [ $product_id ];
+
+        if ( $product->is_type( 'variable' ) ) {
+            $ids = array_merge( $ids, array_map( 'absint', $product->get_children() ) );
+        }
+
+        $entries = [];
+
+        foreach ( $ids as $id ) {
+            $files = dokan_get_staged_downloadable_files( $id );
+            $flag  = dokan_get_staged_downloadable_flag( $id );
+
+            if ( null === $files && null === $flag ) {
+                continue;
+            }
+
+            $author = (int) get_post_meta( $id, '_dokan_pending_downloadable_files_author', true );
+            $user   = $author ? get_userdata( $author ) : false;
+
+            $entries[] = [
+                'id'           => $id,
+                'files'        => $files,
+                'flag'         => $flag,
+                'submitted_by' => $user ? $user->display_name : '',
+                'label'        => $id === $product_id
+                    ? __( 'Pending files', 'dokan-lite' )
+                    /* translators: %s: variation name. */
+                    : sprintf( __( 'Pending files — %s', 'dokan-lite' ), wc_get_product( $id ) ? wc_get_product( $id )->get_name() : $id ),
+            ];
+        }
+
+        return $entries;
     }
 }
