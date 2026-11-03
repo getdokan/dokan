@@ -10,7 +10,7 @@ namespace WeDevs\Dokan\Admin\Dashboard\Pages;
  *
  * @since DOKAN_SINCE
  *
- * @todo BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); only the menu entry auto-hides.
+ * @todo BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off.
  */
 class BlackFriday extends AbstractPage {
 
@@ -27,37 +27,6 @@ class BlackFriday extends AbstractPage {
      * @since DOKAN_SINCE
      */
     const HANDLE = 'dokan-black-friday';
-
-    /**
-     * Moment the campaign ends (UTC); the page and menu entry disappear after this.
-     *
-     * @since DOKAN_SINCE
-     */
-    const CAMPAIGN_ENDS_AT = '2026-12-05T23:59:59+00:00';
-
-    /**
-     * Register hooks only while the campaign runs.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function register_hooks(): void {
-        if ( self::is_campaign_active() ) {
-            parent::register_hooks();
-        }
-    }
-
-    /**
-     * Whether the campaign is still running.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    public static function is_campaign_active(): bool {
-        return time() <= strtotime( self::CAMPAIGN_ENDS_AT );
-    }
 
     /**
      * Build a campaign link tagged with the BFCM UTM parameters.
@@ -92,11 +61,6 @@ class BlackFriday extends AbstractPage {
      * @inheritDoc
      */
     public function menu( string $capability, string $position ): array {
-        // Menu.php asks for the entry directly, so the campaign gate in register_hooks() does not cover it.
-        if ( ! self::is_campaign_active() ) {
-            return [];
-        }
-
         $badge = $this->has_pro_page() ? esc_html__( '75% OFF', 'dokan-lite' ) : esc_html__( '60% OFF', 'dokan-lite' );
 
         return [
