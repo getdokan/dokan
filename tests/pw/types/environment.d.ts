@@ -30,6 +30,8 @@ declare global {
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
+            DOKAN_PLAN: string;
+            EXPECTED_MODULE_COUNT: string;
             VONAGE_API_KEY: string;
             VONAGE_API_SECRET: string;
             FB_APP_ID: string;

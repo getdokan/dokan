@@ -9,6 +9,7 @@ import { dbUtils } from '@utils/dbUtils';
 // ============================================
 const {
     LICENSE_KEY,
+    DOKAN_PLAN,
     DB_HOST_NAME,
     DB_USER_NAME,
     DB_USER_PASSWORD,
@@ -36,8 +37,9 @@ export const testData = {
         remaining: 42,
         activation_limit: 50,
         expiry_days: 329,
-        title: 'Business',
-        source_id: 'dokan-business',
+        // The package workflow (DOKAN_PLAN set) restores this seed after license specs, so it must keep the lane's plan.
+        title: DOKAN_PLAN ? DOKAN_PLAN.charAt(0).toUpperCase() + DOKAN_PLAN.slice(1) : 'Business',
+        source_id: `dokan-${DOKAN_PLAN || 'business'}`,
         recurring: 1,
     },
 };
