@@ -40,25 +40,39 @@ class RequestContextTest extends DokanTestCase {
         $request_uris = [
             '/wp-json' . $route . '?x=/dokan/mcp/',
             '/wp-json' . $route . '?x=/woocommerce/mcp',
+            '/wp-json' . $route . '?x=/wp-json/mcp/mcp-adapter-default-server',
             '/wp-json/woocommerce/mcp/?rest_route=' . $route,
+            '/wp-json/mcp/mcp-adapter-default-server?rest_route=' . $route,
         ];
 
         foreach ( $request_uris as $request_uri ) {
             $this->serve_rest_request( $request_uri, $route );
 
             $this->assertFalse( RequestContext::is_ability_context(), $request_uri );
+            $this->assertFalse( RequestContext::is_mcp_request(), $request_uri );
         }
     }
 
     public function test_dispatched_mcp_route_is_an_ability_context() {
-        foreach ( [ '/woocommerce/mcp', '/WooCommerce/MCP', '/dokan/mcp' ] as $route ) {
+        $routes = [
+            '/mcp/mcp-adapter-default-server',
+            '/MCP/Mcp-Adapter-Default-Server',
+            '/mcp/another-server',
+            '/woocommerce/mcp',
+            '/WooCommerce/MCP',
+        ];
+
+        foreach ( $routes as $route ) {
             $this->serve_rest_request( '/wp-json' . $route, $route );
 
             $this->assertTrue( RequestContext::is_ability_context(), $route );
+            $this->assertTrue( RequestContext::is_mcp_request(), $route );
         }
 
-        $this->serve_rest_request( '/wp-json/woocommerce/mcpx', '/woocommerce/mcpx' );
+        foreach ( [ '/woocommerce/mcpx', '/mcpx/server', '/dokan/mcp', '/dokan/v1/stores' ] as $route ) {
+            $this->serve_rest_request( '/wp-json' . $route, $route );
 
-        $this->assertFalse( RequestContext::is_ability_context() );
+            $this->assertFalse( RequestContext::is_ability_context(), $route );
+        }
     }
 }

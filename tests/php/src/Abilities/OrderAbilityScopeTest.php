@@ -250,10 +250,14 @@ class OrderAbilityScopeTest extends DokanTestCase {
 
         $enriched = $this->sut->add_relationship_to_order( [ 'id' => $order_id ] );
 
-        $this->assertSame( 0, $enriched['parent_id'] );
+        // Only a Store Admin is told about parents; everyone else gets no parent_id at all.
+        $this->assertArrayNotHasKey( 'parent_id', $enriched );
         $this->assertSame( 'single', $enriched['order_relation'] );
         $this->assertSame( $this->seller_id1, $enriched['vendor']['id'] );
         $this->assertSame( dokan()->vendor->get( $this->seller_id1 )->get_shop_name(), $enriched['vendor']['store_name'] );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertSame( 0, $this->sut->add_relationship_to_order( [ 'id' => $order_id ] )['parent_id'] );
     }
 
     public function test_multi_vendor_parent_and_sub_orders_are_classified_for_dedup() {
@@ -395,9 +399,80 @@ class OrderAbilityScopeTest extends DokanTestCase {
         $seen = $this->sut->add_relationship_to_order( [ 'id' => $sub_id ] );
 
         $this->assertSame( 'sub_order', $seen['order_relation'] );
-        $this->assertSame( 0, $seen['parent_id'] );
+        $this->assertArrayNotHasKey( 'parent_id', $seen );
 
         wp_set_current_user( $this->admin_id );
         $this->assertSame( $parent_id, $this->sut->add_relationship_to_order( [ 'id' => $sub_id ] )['parent_id'] );
+    }
+
+    public function test_a_single_order_entity_is_annotated_like_a_row() {
+        $order_id = $this->create_single_vendor_order( $this->seller_id1 );
+
+        $args = $this->sut->extend_order_abilities(
+            [
+                'output_schema'    => [
+                    'type'       => 'object',
+                    'properties' => [
+						'order' => [
+							'type' => 'object',
+							'properties' => [ 'id' => [ 'type' => 'integer' ] ],
+						],
+					],
+                ],
+                'execute_callback' => static function () use ( $order_id ) {
+                    return [ 'order' => [ 'id' => $order_id ] ];
+                },
+            ],
+            'woocommerce/order-add-note'
+        );
+
+        $this->assertArrayHasKey( 'order_relation', $args['output_schema']['properties']['order']['properties'] );
+
+        $result = call_user_func( $args['execute_callback'], [] );
+
+        $this->assertSame( 'single', $result['order']['order_relation'] );
+        $this->assertSame( $this->seller_id1, $result['order']['vendor']['id'] );
+    }
+
+    /**
+     * The selling option and the explanation live in the permission callback itself, so they
+     * hold on every WordPress with the Abilities API.
+     */
+    public function test_the_permission_callback_is_wrapped_for_vendors() {
+        $this->force_ability_context();
+
+        $args = $this->sut->extend_order_abilities(
+            [
+                'permission_callback' => '__return_false',
+                'execute_callback'    => '__return_empty_array',
+            ],
+            'woocommerce/order-notes-query'
+        );
+
+        wp_set_current_user( $this->seller_id1 );
+        $refused = call_user_func( $args['permission_callback'], [] );
+
+        $this->assertInstanceOf( \WP_Error::class, $refused );
+        $this->assertSame( 'dokan_order_not_in_store', $refused->get_error_code() );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertFalse( call_user_func( $args['permission_callback'], [] ) );
+
+        dokan_save_legacy_settings_section( 'dokan_selling', [ 'order_status_change' => 'off' ] );
+        $this->flush_settings_caches();
+
+        $args = $this->sut->extend_order_abilities(
+            [
+                'permission_callback' => '__return_true',
+                'execute_callback'    => '__return_empty_array',
+            ],
+            'woocommerce/order-update-status'
+        );
+
+        wp_set_current_user( $this->seller_id1 );
+        $this->assertSame( 'dokan_order_status_change_disabled', call_user_func( $args['permission_callback'], [] )->get_error_code() );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertTrue( call_user_func( $args['permission_callback'], [] ) );
     }
 }

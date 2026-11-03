@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Abilities;
 
+use WeDevs\Dokan\Abilities\Support\AbilityArgs;
 use WeDevs\Dokan\Abilities\Support\OwnershipGate;
 use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Abilities\Support\VendorPayload;
@@ -69,14 +70,24 @@ class OrderAbilityScope implements Hookable {
      * @var string[]
      */
     private const ORDER_OUTPUT_ABILITIES = [
-        // Layer 2.
+        // Layer 2: a collection (`orders`) or a single entity (`order`).
         'woocommerce/orders-query',
+        'woocommerce/order-update-status',
+        'woocommerce/order-add-note',
         // Layer 1.
         'woocommerce/orders-list',
         'woocommerce/orders-get',
         'woocommerce/orders-create',
         'woocommerce/orders-update',
     ];
+
+    /**
+     * Order abilities registered without an execute callback, by name: their output is
+     * annotated on WordPress 7.1's result filter instead of a wrapped callback.
+     *
+     * @var string[]
+     */
+    private array $filtered_abilities = [];
 
     /**
      * Register hooks.
@@ -97,19 +108,24 @@ class OrderAbilityScope implements Hookable {
         add_filter( 'woocommerce_orders_table_datastore_get_orders_query', [ $this, 'scope_orders_query' ], 99 );
         add_filter( 'woocommerce_rest_orders_prepare_object_query', [ $this, 'scope_rest_orders_query' ], 99 );
 
-        // Annotate order-list output with the Dokan parent / Suborder relationship and owning
-        // vendor, so totals can be summed without double-counting a parent and its Suborders.
+        // Annotate order output with the Dokan parent / Suborder relationship, owning vendor and
+        // earning, and decide what a vendor may do and hears when refused.
         add_filter( 'wp_register_ability_args', [ $this, 'extend_order_abilities' ], 10, 2 );
 
-        // Vendors may only change order status when the marketplace allows it, as on the dashboard.
+        // WordPress 7.1 also filters the permission result: the same decisions, a second time.
         add_filter( 'wp_ability_permission_result', [ $this, 'honour_order_status_change_setting' ], 10, 2 );
-
-        // A vendor refused by the ownership gate should hear why, not "access denied for tool".
         add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], 20, 2 );
+
+        // The abilities that cannot be wrapped (see $filtered_abilities) are annotated on
+        // WordPress 7.1's result filter.
+        add_filter( 'wp_ability_execute_result', [ $this, 'enrich_filtered_result' ], 10, 2 );
     }
 
     /**
      * Turn a bare refusal of an order ability into one that says what a vendor can do about it.
+     *
+     * Applied inside the wrapped permission callback and again on `wp_ability_permission_result`;
+     * an explained refusal passes through the second time.
      *
      * @since DOKAN_SINCE
      *
@@ -271,20 +287,53 @@ class OrderAbilityScope implements Hookable {
      * @return array
      */
     public function extend_order_abilities( $args, $name ) {
-        if ( ! is_array( $args ) || ! in_array( $name, self::ORDER_OUTPUT_ABILITIES, true ) ) {
+        $name = (string) $name;
+
+        if ( ! is_array( $args ) || 0 !== strpos( $name, 'woocommerce/order' ) ) {
+            return $args;
+        }
+
+        // Works on every WordPress with the Abilities API; the 7.1 result filter repeats it.
+        $args = AbilityArgs::wrap_permission(
+            $args,
+            function ( $result ) use ( $name ) {
+                return $this->explain_vendor_denial( $this->honour_order_status_change_setting( $result, $name ), $name );
+            }
+        );
+
+        if ( ! in_array( $name, self::ORDER_OUTPUT_ABILITIES, true ) ) {
             return $args;
         }
 
         $args = $this->inject_order_output_schema( $args );
 
-        if ( isset( $args['execute_callback'] ) && is_callable( $args['execute_callback'] ) ) {
-            $original                 = $args['execute_callback'];
-            $args['execute_callback'] = function ( $input ) use ( $original ) {
-                return $this->enrich_order_result( call_user_func( $original, $input ) );
-            };
+        if ( AbilityArgs::has_execute_callback( $args ) ) {
+            return AbilityArgs::wrap_execute(
+                $args,
+                function ( callable $original, $input ) {
+                    return $this->enrich_order_result( call_user_func( $original, $input ) );
+                }
+            );
         }
 
+        $this->filtered_abilities[] = $name;
+
         return $args;
+    }
+
+    /**
+     * Annotate the result of an order ability that could not be wrapped. Hooked to
+     * `wp_ability_execute_result` (WordPress 7.1).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $result       Ability result.
+     * @param string $ability_name Ability name.
+     *
+     * @return mixed
+     */
+    public function enrich_filtered_result( $result, $ability_name ) {
+        return in_array( (string) $ability_name, $this->filtered_abilities, true ) ? $this->enrich_order_result( $result ) : $result;
     }
 
     /**
@@ -316,8 +365,10 @@ class OrderAbilityScope implements Hookable {
             }
         }
 
-        // Layer 1 single entity: the order payload itself.
-        if ( isset( $props['id'] ) ) {
+        // Single entity: Layer 2 wraps it in `order`, Layer 1 returns the order itself.
+        if ( isset( $props['order']['properties'] ) && is_array( $props['order']['properties'] ) ) {
+            $props['order']['properties'] = array_merge( $props['order']['properties'], $annotations );
+        } elseif ( isset( $props['id'] ) ) {
             $props = array_merge( $props, $annotations );
         }
 
@@ -337,7 +388,7 @@ class OrderAbilityScope implements Hookable {
         return [
             'parent_id'      => [
                 'type'        => 'integer',
-                'description' => __( 'Parent order ID as seen by a store admin; 0 for a top-level order, and always 0 for a vendor, whose view ends at their own orders.', 'dokan-lite' ),
+                'description' => __( 'Store admins only: the parent order of a sub-order, 0 for a top-level order. Absent for a vendor, whose view ends at their own orders.', 'dokan-lite' ),
             ],
             'order_relation' => [
                 'type'        => 'string',
@@ -386,6 +437,13 @@ class OrderAbilityScope implements Hookable {
             }
         }
 
+        // Layer 2 single entity.
+        if ( isset( $result['order'] ) && is_array( $result['order'] ) ) {
+            $result['order'] = $this->add_relationship_to_order( $result['order'] );
+
+            return $result;
+        }
+
         // Layer 1 single entity: the order payload itself.
         if ( isset( $result['id'] ) ) {
             return $this->add_relationship_to_order( $result );
@@ -427,8 +485,14 @@ class OrderAbilityScope implements Hookable {
         // A parent multi-vendor order belongs to no single vendor; Suborders / single orders do.
         $vendor_id = 'parent' === $relation ? 0 : absint( dokan_get_seller_id_by_order( $order ) );
 
-        // A vendor's view ends at their own order: the parent, and through it the siblings, are the marketplace's.
-        $order_data['parent_id']      = current_user_can( 'manage_woocommerce' ) ? $parent_id : 0;
+        // A vendor's view ends at their own order: the parent, and through it the siblings, are the
+        // marketplace's, so a vendor gets no parent_id at all rather than a misleading 0.
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            $order_data['parent_id'] = $parent_id;
+        } else {
+            unset( $order_data['parent_id'] );
+        }
+
         $order_data['order_relation'] = $relation;
         $order_data['vendor']         = VendorPayload::for_user( $vendor_id );
 

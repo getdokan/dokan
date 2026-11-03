@@ -82,12 +82,12 @@ transport that reached it is not the boundary.
 _Avoid_: MCP request, MCP context
 
 **Connection**:
-An AI client signed in to the WordPress MCP Adapter, on the Dokan server or
-the adapter's default server, as exactly one WordPress user, with an
-Application Password of that user. Dokan issues no credential and owns no
-transport; it only decides whether that user may use Dokan's tools over MCP
-(`Access::user_can_connect()`) and scopes every tool call to them. A Connection can never do more than its account can; there is no
-site-wide or shared key.
+An AI client signed in to the WordPress MCP Adapter's default server as exactly
+one WordPress user, with an Application Password of that user. Dokan runs no
+server, issues no credential and owns no transport; it only decides whether that
+user may use the marketplace tools over MCP (`Access::user_can_connect()`) and
+scopes every tool call to them. A Connection can never do more than its account
+can; there is no site-wide or shared key.
 _Avoid_: pairing, shared token, site key, personal token
 
 **Selling Activation**:

@@ -19,23 +19,25 @@ class Status {
      *
      * @since DOKAN_SINCE
      *
-     * @return array{enabled:bool,vendor_access:bool,adapter_available:bool,default_server:bool,live:bool,https:bool,endpoint:string}
+     * @return array
      */
     public static function summary(): array {
         $enabled   = Access::is_enabled();
         $available = self::adapter_available();
+        $feature   = self::woocommerce_feature_on();
 
         /** This filter is documented in the MCP Adapter plugin. */
         $default_server = (bool) apply_filters( 'mcp_adapter_create_default_server', true );
 
         return [
-            'enabled'           => $enabled,
-            'vendor_access'     => Access::vendor_access_enabled(),
-            'adapter_available' => $available,
-            'default_server'    => $default_server,
-            'live'              => $enabled && $available && $default_server,
-            'https'             => wc_site_is_https(),
-            'endpoint'          => Access::endpoint(),
+            'enabled'             => $enabled,
+            'vendor_access'       => Access::vendor_access_enabled(),
+            'adapter_available'   => $available,
+            'woocommerce_feature' => $feature,
+            'default_server'      => $default_server,
+            'live'                => $enabled && $available && $feature && $default_server,
+            'https'               => wc_site_is_https(),
+            'endpoint'            => Access::endpoint(),
         ];
     }
 
@@ -51,6 +53,35 @@ class Status {
     }
 
     /**
+     * Whether this WooCommerce bundles the MCP Adapter: 10.9 to 11.2 do, behind their
+     * "MCP Integration" feature; 11.3 dropped it in favour of the standalone plugin.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function woocommerce_bundles_adapter(): bool {
+        return function_exists( 'WC' ) && version_compare( (string) WC()->version, '11.3', '<' );
+    }
+
+    /**
+     * Whether WooCommerce lets its bundled adapter run. Always true from 11.3, where the
+     * standalone plugin boots itself.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function woocommerce_feature_on(): bool {
+        if ( ! self::woocommerce_bundles_adapter() ) {
+            return true;
+        }
+
+        return class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' )
+            && \Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled( 'mcp_integration' );
+    }
+
+    /**
      * The copy both settings screens share for the switches, unescaped.
      *
      * @since DOKAN_SINCE
@@ -60,7 +91,7 @@ class Status {
     public static function copy(): array {
         return [
             'intro'         => __( 'Connect assistants such as Claude, Cursor or VS Code to your marketplace through the Model Context Protocol. Dokan serves its tools through the WordPress MCP Adapter, alongside the WooCommerce tools.', 'dokan-lite' ),
-            'enabled'       => __( 'Offer the marketplace tools (vendors, products, orders, withdrawals) to connected assistants, each as a tool the assistant lists and asks approval for.', 'dokan-lite' ),
+            'enabled'       => __( 'Offer the marketplace tools (vendors, products, orders, withdrawals) to connected assistants. The vendor limits on the WooCommerce product and order tools apply either way.', 'dokan-lite' ),
             'vendor_access' => __( 'Vendors and their staff can connect an assistant with an application password of their own. Each connection only reaches that vendor\'s own store.', 'dokan-lite' ),
         ];
     }
@@ -70,17 +101,24 @@ class Status {
      *
      * @since DOKAN_SINCE
      *
-     * @param array $summary Output of {@see self::summary()}.
+     * @param array $summary The snapshot from {@see summary()}.
      *
-     * @return array<string, array{title:string,text:string}> Keyed `adapter`, `default_server` and/or `https`.
+     * @return array<string, array{title:string,text:string}>
      */
     public static function warnings( array $summary ): array {
         $warnings = [];
 
         if ( ! $summary['adapter_available'] ) {
             $warnings['adapter'] = [
-                'title' => __( 'The MCP Adapter plugin is not active', 'dokan-lite' ),
-                'text'  => __( 'Install and activate the MCP Adapter plugin from WordPress.org (wp plugin install mcp-adapter --activate). WooCommerce and Dokan both serve their tools through it.', 'dokan-lite' ),
+                'title' => __( 'The MCP Adapter is not available', 'dokan-lite' ),
+                'text'  => self::woocommerce_bundles_adapter()
+                    ? __( 'Update WooCommerce, or install and activate the MCP Adapter plugin from WordPress.org (wp plugin install mcp-adapter --activate). WooCommerce and Dokan both serve their tools through it.', 'dokan-lite' )
+                    : __( 'From WooCommerce 11.3 the adapter is a separate plugin: install and activate the MCP Adapter plugin from WordPress.org (wp plugin install mcp-adapter --activate). WooCommerce and Dokan both serve their tools through it.', 'dokan-lite' ),
+            ];
+        } elseif ( ! $summary['woocommerce_feature'] ) {
+            $warnings['woocommerce_feature'] = [
+                'title' => __( 'WooCommerce\'s MCP integration is switched off', 'dokan-lite' ),
+                'text'  => __( 'Turn on WooCommerce > Settings > Advanced > Features > MCP Integration, or install and activate the MCP Adapter plugin. Nothing serves the tools until one of them runs the adapter.', 'dokan-lite' ),
             ];
         } elseif ( ! $summary['default_server'] ) {
             $warnings['default_server'] = [
@@ -104,7 +142,7 @@ class Status {
      *
      * @since DOKAN_SINCE
      *
-     * @param array $summary Output of {@see self::summary()}.
+     * @param array $summary The snapshot from {@see summary()}.
      *
      * @return string
      */
@@ -116,7 +154,7 @@ class Status {
             ? __( 'Live', 'dokan-lite' )
             : __( 'Off', 'dokan-lite' );
 
-        return __( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication. The same tools are also reachable through the adapter\'s default server, behind its discover-abilities tool.', 'dokan-lite' ) . ' ' . $who . ' (' . $state . ')';
+        return __( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication. The assistant finds and runs the marketplace tools through the server\'s discover-abilities and execute-ability tools, beside the WooCommerce ones.', 'dokan-lite' ) . ' ' . $who . ' (' . $state . ')';
     }
 
     /**
@@ -124,7 +162,7 @@ class Status {
      *
      * @since DOKAN_SINCE
      *
-     * @param array $summary Output of {@see self::summary()}.
+     * @param array $summary The snapshot from {@see summary()}.
      *
      * @return string
      */

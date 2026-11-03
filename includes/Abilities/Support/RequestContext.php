@@ -137,8 +137,6 @@ class RequestContext {
      * @return bool
      */
     public static function is_mcp_request(): bool {
-        $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-
         return self::$request_is_mcp || self::matches_mcp_endpoint();
     }
 
@@ -183,8 +181,8 @@ class RequestContext {
      * pre-flight, *before* it checks the target ability's own permission callback. Marking the
      * request here lets the per-object permission grant (e.g. allowing a vendor to read their own
      * orders) recognize the MCP context even though no `wp_before_execute_ability` window is open
-     * yet. Works for any MCP server built on the shared adapter (WooCommerce, a future Dokan
-     * server, or a third-party such as MCP Site Manager).
+     * yet. Works for any server built on the shared adapter: its default server, or a third
+     * party's such as MCP Site Manager.
      *
      * @since 5.0.15
      *

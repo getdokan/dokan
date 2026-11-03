@@ -30,8 +30,6 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Abilities\OrderAbilityScope::class,
         \WeDevs\Dokan\Abilities\DokanAbilityRegistrar::class,
         \WeDevs\Dokan\Abilities\Mcp\Gate::class,
-        \WeDevs\Dokan\Abilities\Mcp\Server::class,
-        \WeDevs\Dokan\Abilities\Mcp\ToolSchemas::class,
         \WeDevs\Dokan\Abilities\Mcp\DisplayFields::class,
 	];
 

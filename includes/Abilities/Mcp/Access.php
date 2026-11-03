@@ -21,50 +21,21 @@ class Access {
 
     /**
      * Legacy settings section holding the MCP switches.
-     *
-     * @since DOKAN_SINCE
      */
     const SETTING_SECTION = 'dokan_ai';
 
     /**
      * Master switch option key.
-     *
-     * @since DOKAN_SINCE
      */
     const SETTING_ENABLED = 'dokan_mcp_enabled';
 
     /**
      * Vendor access option key.
-     *
-     * @since DOKAN_SINCE
      */
     const SETTING_VENDOR_ACCESS = 'dokan_mcp_vendor_access';
 
     /**
-     * Id of the Dokan server on the MCP Adapter.
-     *
-     * @since DOKAN_SINCE
-     */
-    const SERVER_ID = 'dokan';
-
-    /**
-     * REST namespace of the Dokan server: the adapter's own, like every server it hosts.
-     *
-     * @since DOKAN_SINCE
-     */
-    const SERVER_NAMESPACE = 'mcp';
-
-    /**
-     * REST route of the Dokan server beneath that namespace.
-     *
-     * @since DOKAN_SINCE
-     */
-    const SERVER_ROUTE = 'dokan';
-
-    /**
      * REST route of the MCP Adapter's default server, beneath the REST prefix.
-     *
-     * @since DOKAN_SINCE
      */
     const DEFAULT_SERVER_ROUTE = 'mcp/mcp-adapter-default-server';
 
@@ -83,7 +54,7 @@ class Access {
          *
          * @since DOKAN_SINCE
          *
-         * @param bool $enabled Whether MCP access is on.
+         * @param bool $enabled Whether the master switch is on.
          */
         return (bool) apply_filters( 'dokan_mcp_enabled', $enabled );
     }
@@ -106,13 +77,14 @@ class Access {
          *
          * @since DOKAN_SINCE
          *
-         * @param bool $enabled Whether vendor access is on.
+         * @param bool $enabled Whether the vendor access switch is on.
          */
         return (bool) apply_filters( 'dokan_mcp_vendor_access_enabled', $enabled );
     }
 
     /**
-     * The MCP endpoint an AI client connects to: the Dokan server, one tool per ability.
+     * The MCP endpoint an AI client connects to: the adapter's default server, where Dokan's
+     * abilities sit behind its discover and execute meta-tools next to WooCommerce's.
      *
      * @since DOKAN_SINCE
      *
@@ -124,21 +96,9 @@ class Access {
          *
          * @since DOKAN_SINCE
          *
-         * @param string $endpoint The Dokan server's URL.
+         * @param string $endpoint The MCP Adapter's default server URL.
          */
-        return (string) apply_filters( 'dokan_mcp_endpoint', rest_url( self::SERVER_NAMESPACE . '/' . self::SERVER_ROUTE ) );
-    }
-
-    /**
-     * The adapter's default server, where the same abilities sit behind its discover and
-     * execute meta-tools next to WooCommerce's.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public static function default_server_endpoint(): string {
-        return rest_url( self::DEFAULT_SERVER_ROUTE );
+        return (string) apply_filters( 'dokan_mcp_endpoint', rest_url( self::DEFAULT_SERVER_ROUTE ) );
     }
 
     /**
@@ -146,7 +106,7 @@ class Access {
      *
      * @since DOKAN_SINCE
      *
-     * @param string $ability_name Ability name, e.g. `dokan/current-vendor`.
+     * @param string $ability_name Ability name.
      *
      * @return bool
      */
@@ -175,20 +135,22 @@ class Access {
          * @since DOKAN_SINCE
          *
          * @param bool   $governs      Whether the policy applies.
-         * @param string $ability_name The ability.
+         * @param string $ability_name Ability name.
          */
         return (bool) apply_filters( 'dokan_mcp_governs_ability', $governs, $ability_name );
     }
 
     /**
-     * Whether a user may use Dokan's tools through an AI assistant right now.
+     * Whether a user may use the marketplace tools through an AI assistant right now.
      *
-     * Store Admins always may. A Vendor or Vendor Staff may only while vendor access is on and
-     * the store's selling is enabled, so a suspended vendor's assistant stops with the suspension.
+     * Store Admins always may. A Vendor or Vendor Staff may only while both switches are on and
+     * the store's selling is enabled: the settings screen offers vendor access beneath the master
+     * switch, so a master switch that is off closes vendor access with it, and a suspended
+     * vendor's assistant stops with the suspension.
      *
      * @since DOKAN_SINCE
      *
-     * @param int $user_id User to check.
+     * @param int $user_id User ID.
      *
      * @return bool
      */
@@ -199,7 +161,7 @@ class Access {
 
         if ( user_can( $user_id, 'manage_woocommerce' ) ) {
             $allowed = true;
-        } elseif ( self::vendor_access_enabled() ) {
+        } elseif ( self::is_enabled() && self::vendor_access_enabled() ) {
             // A vendor resolves to themselves, staff to their parent vendor.
             $vendor_id = VendorUtil::get_vendor_id_for_user( $user_id );
             $allowed   = $vendor_id > 0 && dokan_is_user_seller( $vendor_id ) && dokan_is_seller_enabled( $vendor_id );
@@ -208,12 +170,12 @@ class Access {
         }
 
         /**
-         * Filters whether a user may use Dokan's tools through an AI assistant.
+         * Filters whether a user may use the marketplace tools through an AI assistant.
          *
          * @since DOKAN_SINCE
          *
          * @param bool $allowed Whether the user may connect.
-         * @param int  $user_id The user.
+         * @param int  $user_id User ID.
          */
         return (bool) apply_filters( 'dokan_mcp_user_can_connect', $allowed, $user_id );
     }

@@ -12,7 +12,7 @@ use WP_Error;
  * @group mcp
  *
  * The marketplace's AI assistant policy, applied where the MCP Adapter's default server looks:
- * the exposure flag of Dokan's abilities and the permission result of every governed ability.
+ * the exposure flag of Dokan's abilities and the permission callback of every governed ability.
  */
 class GateTest extends DokanTestCase {
 
@@ -38,13 +38,13 @@ class GateTest extends DokanTestCase {
 
     public function test_dokan_abilities_are_exposed_only_while_the_switch_is_on() {
         $args = [
-			'meta' => [
-				'mcp' => [
-					'public' => true,
-					'type' => 'tool',
-				],
-			],
-		];
+            'meta' => [
+                'mcp' => [
+                    'public' => true,
+                    'type'   => 'tool',
+                ],
+            ],
+        ];
 
         $this->assertFalse( $this->gate->follow_the_switch( $args, 'dokan/current-vendor' )['meta']['mcp']['public'] );
 
@@ -81,12 +81,18 @@ class GateTest extends DokanTestCase {
         $this->assertTrue( $this->gate->authorize( true, 'woocommerce/orders-query' ) );
     }
 
-    public function test_a_vendor_needs_vendor_access_over_mcp() {
+    public function test_a_vendor_needs_both_switches_over_mcp() {
         RequestContext::flag_mcp_request();
-        add_filter( 'dokan_mcp_enabled', '__return_true' );
         wp_set_current_user( $this->seller_id1 );
 
-        foreach ( [ 'dokan/current-vendor', 'woocommerce/orders-query', 'woocommerce/product-update' ] as $ability ) {
+        // Vendor access alone is not enough: the master switch closes it too.
+        add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
+        $this->assertSame( 'dokan_mcp_not_allowed', $this->gate->authorize( true, 'woocommerce/orders-query' )->get_error_code() );
+
+        remove_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
+        add_filter( 'dokan_mcp_enabled', '__return_true' );
+
+        foreach ( [ 'dokan/current-vendor', 'woocommerce/orders-query', 'woocommerce/order-notes-query', 'woocommerce/product-update' ] as $ability ) {
             $refused = $this->gate->authorize( true, $ability );
 
             $this->assertInstanceOf( WP_Error::class, $refused, $ability );
@@ -111,10 +117,46 @@ class GateTest extends DokanTestCase {
 
         wp_set_current_user( $this->customer_id );
         $this->assertSame( 'dokan_mcp_not_allowed', $this->gate->authorize( true, 'dokan/current-vendor' )->get_error_code() );
+        $this->assertSame( 'dokan_mcp_not_allowed', $this->gate->authorize( true, 'woocommerce/products-query' )->get_error_code() );
 
         dokan()->vendor->get( $this->seller_id1 )->make_inactive();
         wp_set_current_user( $this->seller_id1 );
         $this->assertSame( 'dokan_mcp_not_allowed', $this->gate->authorize( true, 'woocommerce/products-query' )->get_error_code() );
+    }
+
+    /**
+     * The policy lives in the permission callback itself, so it holds on every WordPress with
+     * the Abilities API, not only where the 7.1 permission-result filter exists.
+     */
+    public function test_the_policy_is_wrapped_into_the_permission_callback() {
+        $calls = 0;
+        $args  = [
+            'permission_callback' => static function () use ( &$calls ) {
+                ++$calls;
+
+                return true;
+            },
+        ];
+
+        $guarded = $this->gate->guard_registration( $args, 'woocommerce/orders-query' );
+        $this->assertNotSame( $args['permission_callback'], $guarded['permission_callback'] );
+
+        // Not an MCP request: the ability's own answer stands.
+        wp_set_current_user( $this->seller_id1 );
+        $this->assertTrue( call_user_func( $guarded['permission_callback'], [] ) );
+        $this->assertSame( 1, $calls );
+
+        RequestContext::flag_mcp_request();
+        $refused = call_user_func( $guarded['permission_callback'], [] );
+
+        $this->assertInstanceOf( WP_Error::class, $refused );
+        $this->assertSame( 'dokan_mcp_not_allowed', $refused->get_error_code() );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertTrue( call_user_func( $guarded['permission_callback'], [] ) );
+
+        // An ability outside the policy keeps its callback as registered.
+        $this->assertSame( $args['permission_callback'], $this->gate->guard_registration( $args, 'core/get-site-info' )['permission_callback'] );
     }
 
     public function test_the_adapters_capability_filters_flag_the_request() {
@@ -131,23 +173,18 @@ class GateTest extends DokanTestCase {
         }
     }
 
-    public function test_adapter_server_routes_are_recognised_on_rest_requests_only() {
-        $this->assertTrue( RequestContext::is_mcp_endpoint_uri( '/wp-json/mcp/mcp-adapter-default-server' ) );
-        $this->assertTrue( RequestContext::is_mcp_endpoint_uri( '/wp-json/mcp/another-server?foo=bar' ) );
-        $this->assertTrue( RequestContext::is_mcp_endpoint_uri( '/wp-json/woocommerce/mcp' ) );
+    public function test_the_instructions_are_appended_to_the_default_server_description() {
+        $config = [ 'server_description' => 'Default MCP server.' ];
 
-        $this->assertFalse( RequestContext::is_mcp_endpoint_uri( '/wp-json/dokan/v1/stores' ) );
-        $this->assertFalse( RequestContext::is_mcp_endpoint_uri( '/wp-json/mcp' ) );
-        $this->assertFalse( RequestContext::is_mcp_endpoint_uri( '/wp-json/dokan/mcp' ) );
-        $this->assertFalse( RequestContext::is_mcp_endpoint_uri( '' ) );
+        // Switched off, the adapter's description is left alone.
+        $this->assertSame( $config, $this->gate->add_instructions( $config ) );
 
-        // The URI alone is not enough: PHPUnit is not serving a REST request.
-        $backup                 = $_SERVER;
-        $_SERVER['REQUEST_URI'] = '/wp-json/mcp/mcp-adapter-default-server';
+        add_filter( 'dokan_mcp_enabled', '__return_true' );
+        $described = $this->gate->add_instructions( $config )['server_description'];
 
-        $this->assertFalse( RequestContext::is_mcp_request() );
-
-        $_SERVER = $backup;
+        $this->assertStringStartsWith( 'Default MCP server. ', $described );
+        $this->assertStringContainsString( 'dokan/current-vendor', $described );
+        $this->assertStringNotContainsString( "\n", Gate::instructions() );
     }
 
     public function test_only_dokan_tool_calls_over_mcp_leave_a_trail() {

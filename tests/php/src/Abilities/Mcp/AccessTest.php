@@ -36,15 +36,19 @@ class AccessTest extends DokanTestCase {
         $this->assertTrue( Access::user_can_connect( $this->admin_id ) );
     }
 
-    public function test_vendor_needs_the_vendor_access_switch() {
+    public function test_vendor_needs_both_switches() {
         $this->assertFalse( Access::user_can_connect( $this->seller_id1 ) );
 
+        // Vendor access sits beneath the master switch on the settings screen: off closes both.
         add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
+        $this->assertFalse( Access::user_can_connect( $this->seller_id1 ) );
 
+        add_filter( 'dokan_mcp_enabled', '__return_true' );
         $this->assertTrue( Access::user_can_connect( $this->seller_id1 ) );
     }
 
     public function test_suspended_vendor_cannot_connect() {
+        add_filter( 'dokan_mcp_enabled', '__return_true' );
         add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
 
         dokan()->vendor->get( $this->seller_id1 )->make_inactive();
@@ -53,6 +57,7 @@ class AccessTest extends DokanTestCase {
     }
 
     public function test_vendor_staff_follow_their_vendor() {
+        add_filter( 'dokan_mcp_enabled', '__return_true' );
         add_filter( 'dokan_mcp_vendor_access_enabled', '__return_true' );
 
         $staff_id = $this->create_vendor_staff( $this->seller_id1 );
@@ -68,9 +73,8 @@ class AccessTest extends DokanTestCase {
         $this->assertFalse( Access::user_can_connect( 999999 ) );
     }
 
-    public function test_endpoints_are_the_dokan_server_and_the_adapters_default_server() {
-        $this->assertSame( rest_url( 'mcp/dokan' ), Access::endpoint() );
-        $this->assertSame( rest_url( 'mcp/mcp-adapter-default-server' ), Access::default_server_endpoint() );
+    public function test_the_endpoint_is_the_adapters_default_server() {
+        $this->assertSame( rest_url( 'mcp/mcp-adapter-default-server' ), Access::endpoint() );
     }
 
     public function test_dokan_governs_its_own_and_the_scoped_woocommerce_abilities() {
