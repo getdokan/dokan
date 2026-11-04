@@ -5,7 +5,7 @@ Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivend
 Requires at least: 7.0
 Tested up to: 7.1
 WC requires at least: 8.5.0
-WC tested up to: 11.3.0
+WC tested up to: 11.0.1
 Requires PHP: 7.4
 Stable tag: 5.3.3
 License: GPLv2 or later
