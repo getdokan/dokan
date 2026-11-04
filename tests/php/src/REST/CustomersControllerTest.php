@@ -943,6 +943,30 @@ class CustomersControllerTest extends DokanTestCase {
     }
 
     /**
+     * The customer IDs SQL is filterable, and an empty filtered value lists no one instead of breaking the query.
+     */
+    public function test_customer_ids_sql_by_seller_filter() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $only_first_customer = function () {
+            return 'SELECT ' . (int) $this->customers[0];
+        };
+        add_filter( 'dokan_order_customer_ids_sql_by_seller', $only_first_customer );
+        $response = $this->get_request( 'customers', [ 'role' => 'all' ] );
+        remove_filter( 'dokan_order_customer_ids_sql_by_seller', $only_first_customer );
+
+        $this->assertSame( [ $this->customers[0] ], wp_list_pluck( $response->get_data(), 'id' ) );
+
+        add_filter( 'dokan_order_customer_ids_sql_by_seller', '__return_empty_string' );
+        $response = $this->get_request( 'customers', [ 'role' => 'all' ] );
+        remove_filter( 'dokan_order_customer_ids_sql_by_seller', '__return_empty_string' );
+
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
+    }
+
+    /**
      * Helper method for making requests
      */
     protected function request( $method, $endpoint, $data = [] ): WP_REST_Response {

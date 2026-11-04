@@ -11,7 +11,6 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 use WP_User_Query;
-use WeDevs\Dokan\Utilities\OrderUtil;
 
 class CustomersController extends WC_REST_Customers_Controller {
 
@@ -253,52 +252,7 @@ class CustomersController extends WC_REST_Customers_Controller {
             return;
         }
 
-        $query->query_where .= " AND {$wpdb->users}.ID IN ( " . $this->get_vendor_customer_ids_sql( $vendor_id ) . ' )';
-    }
-
-    /**
-     * SQL selecting the registered customers who have an order from the vendor.
-     *
-     * Matches dokan_customer_has_order_from_this_seller() defaults, without the dokan_get_vendor_orders_* filters.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int $vendor_id Vendor ID.
-     *
-     * @return string
-     */
-    protected function get_vendor_customer_ids_sql( int $vendor_id ): string {
-        global $wpdb;
-
-        $statuses = array_keys( wc_get_order_statuses() );
-        if ( empty( $statuses ) ) {
-            return 'SELECT 0';
-        }
-
-        $status_placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
-        $args                = array_merge( [ (string) $vendor_id ], $statuses );
-
-        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-        if ( OrderUtil::is_hpos_enabled() ) {
-            $orders_table = OrderUtil::get_order_table_name();
-            $meta_table   = OrderUtil::get_table_for_order_meta();
-
-            return $wpdb->prepare(
-                "SELECT DISTINCT o.customer_id FROM {$orders_table} o
-                INNER JOIN {$meta_table} m ON m.order_id = o.id AND m.meta_key = '_dokan_vendor_id'
-                WHERE m.meta_value = %s AND o.type = 'shop_order' AND o.customer_id > 0 AND o.status IN ({$status_placeholders})",
-                $args
-            );
-        }
-
-        return $wpdb->prepare(
-            "SELECT DISTINCT CAST( cu.meta_value AS UNSIGNED ) FROM {$wpdb->posts} p
-            INNER JOIN {$wpdb->postmeta} v ON v.post_id = p.ID AND v.meta_key = '_dokan_vendor_id'
-            INNER JOIN {$wpdb->postmeta} cu ON cu.post_id = p.ID AND cu.meta_key = '_customer_user'
-            WHERE v.meta_value = %s AND p.post_type = 'shop_order' AND cu.meta_value > 0 AND p.post_status IN ({$status_placeholders})",
-            $args
-        );
-        // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $query->query_where .= " AND {$wpdb->users}.ID IN ( " . dokan()->order->get_customer_ids_sql_by_seller( $vendor_id ) . ' )';
     }
 
     /**
