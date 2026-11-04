@@ -501,7 +501,7 @@ class Manager {
          *
          * @since DOKAN_SINCE
          *
-         * @param string $sql       Single-column SELECT of user IDs.
+         * @param string $sql       Prepared, single-column SELECT of user IDs; it is inserted into the user query's WHERE clause as-is.
          * @param int    $seller_id Seller ID.
          */
         $sql = apply_filters( 'dokan_order_customer_ids_sql_by_seller', $sql, $seller_id );
