@@ -231,6 +231,8 @@ class CustomersController extends WC_REST_Customers_Controller {
      */
     public function mark_vendor_customer_query( $prepared_args ) {
         $prepared_args['dokan_vendor_customers'] = dokan_get_current_user_id();
+        // The users cache salt isn't bumped by order writes, so a cached result could miss a newly related customer.
+        $prepared_args['cache_results'] = false;
 
         return $prepared_args;
     }
@@ -245,9 +247,10 @@ class CustomersController extends WC_REST_Customers_Controller {
      * @return void
      */
     public function restrict_query_to_vendor_customers( $query ) {
-        $vendor_id = absint( $query->get( 'dokan_vendor_customers' ) );
-        if ( $vendor_id ) {
-            dokan()->order->restrict_user_query_to_seller_customers( $query, $vendor_id );
+        $vendor_id = $query->get( 'dokan_vendor_customers' );
+        if ( null !== $vendor_id ) {
+            // A tagged query always gets restricted; an unknown vendor matches no one.
+            dokan()->order->restrict_user_query_to_seller_customers( $query, absint( $vendor_id ) );
         }
     }
 

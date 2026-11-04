@@ -7,6 +7,7 @@ use WC_Order;
 use WC_Order_Item_Coupon;
 use WC_Order_Refund;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Models\DataStore\VendorCustomerStore;
 use WeDevs\Dokan\Utilities\OrderUtil;
 use WeDevs\Dokan\Vendor\Coupon;
 use WP_Error;
@@ -464,37 +465,7 @@ class Manager {
      * @return string Single-column SELECT of user IDs, for use in an `IN ( ... )` clause.
      */
     public function get_customer_ids_sql_by_seller( int $seller_id ): string {
-        global $wpdb;
-
-        $sql      = 'SELECT 0';
-        $statuses = array_keys( wc_get_order_statuses() );
-
-        if ( $seller_id && ! empty( $statuses ) ) {
-            $status_placeholders = implode( ',', array_fill( 0, count( $statuses ), '%s' ) );
-            $args                = array_merge( [ (string) $seller_id ], $statuses );
-
-            // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-            if ( OrderUtil::is_hpos_enabled() ) {
-                $orders_table = OrderUtil::get_order_table_name();
-                $meta_table   = OrderUtil::get_table_for_order_meta();
-
-                $sql = $wpdb->prepare(
-                    "SELECT DISTINCT o.customer_id FROM {$orders_table} o
-                    INNER JOIN {$meta_table} m ON m.order_id = o.id AND m.meta_key = '_dokan_vendor_id'
-                    WHERE m.meta_value = %s AND o.type = 'shop_order' AND o.customer_id > 0 AND o.status IN ({$status_placeholders})",
-                    $args
-                );
-            } else {
-                $sql = $wpdb->prepare(
-                    "SELECT DISTINCT CAST( cu.meta_value AS UNSIGNED ) FROM {$wpdb->posts} p
-                    INNER JOIN {$wpdb->postmeta} v ON v.post_id = p.ID AND v.meta_key = '_dokan_vendor_id'
-                    INNER JOIN {$wpdb->postmeta} cu ON cu.post_id = p.ID AND cu.meta_key = '_customer_user'
-                    WHERE v.meta_value = %s AND p.post_type = 'shop_order' AND cu.meta_value > 0 AND p.post_status IN ({$status_placeholders})",
-                    $args
-                );
-            }
-            // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-        }
+        $sql = dokan()->get_container()->get( VendorCustomerStore::class )->get_customer_ids_sql_by_seller( $seller_id );
 
         /**
          * Filter the SQL selecting a seller's customer IDs.
