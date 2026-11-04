@@ -325,6 +325,55 @@ class SuborderCustomerEmailTest extends DokanTestCase {
         $this->assertContains( [ 'customer_on_hold_order', $suborder_ids[1], false ], $this->decisions );
     }
 
+    public function test_flag_lifetime_filter_expires_a_flag_sooner() {
+        add_filter(
+            'dokan_synced_status_email_flag_lifetime',
+            static function () {
+                return HOUR_IN_SECONDS;
+            }
+        );
+        $this->maybe_defer( true );
+        [ $parent, $suborder_ids ] = $this->create_order( 'pending' );
+        $parent->update_status( 'on-hold' );
+        $this->take_deferred_emails();
+        $this->reset_request_state();
+
+        $expired = wc_get_order( $suborder_ids[0] );
+        $flags   = $expired->get_meta( EmailHooks::SYNCED_STATUS_META );
+        $flags[0]['time'] -= HOUR_IN_SECONDS;
+        $expired->update_meta_data( EmailHooks::SYNCED_STATUS_META, $flags );
+        $expired->save_meta_data();
+
+        foreach ( $suborder_ids as $suborder_id ) {
+            WC()->mailer()->emails['WC_Email_Customer_On_Hold_Order']->trigger( $suborder_id, wc_get_order( $suborder_id ) );
+        }
+
+        $this->assertSame( [ $suborder_ids[0] ], $this->sent_for( 'customer_on_hold_order' ) );
+    }
+
+    public function test_status_emails_filter_can_let_a_synced_status_email_through() {
+        add_filter(
+            'dokan_synced_status_customer_emails',
+            static function ( array $emails ) {
+                unset( $emails['customer_completed_order'] );
+
+                return $emails;
+            }
+        );
+        $this->maybe_defer( true );
+        [ $parent, $suborder_ids ] = $this->create_order( 'processing' );
+        $this->next_request();
+
+        $parent->update_status( 'completed' );
+        $this->next_request();
+
+        $expected = array_merge( [ $parent->get_id() ], $suborder_ids );
+        sort( $expected );
+
+        $this->assertSame( $expected, $this->sent_for( 'customer_completed_order' ) );
+        $this->assertNoFlagsLeft( $expected );
+    }
+
     public function test_deferred_emails_run_in_one_request_are_not_dropped() {
         $this->maybe_defer( true );
         $order_ids = [];

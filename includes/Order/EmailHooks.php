@@ -33,7 +33,7 @@ class EmailHooks {
     const AUTO_COMPLETED = 'auto-completed';
 
     /**
-     * Seconds a flag stays valid, so a queued email that never runs cannot block later emails.
+     * Default seconds a flag stays valid, so a queued email that never runs cannot block later emails.
      *
      * @since DOKAN_SINCE
      */
@@ -52,9 +52,9 @@ class EmailHooks {
         add_action( 'woocommerce_order_status_failed_to_processing', [ $this, 'prevent_sending_multiple_email' ] );
 
         // Deferred emails skip the guard above, so they are checked at send time instead.
-        add_filter( 'woocommerce_email_enabled_customer_on_hold_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
-        add_filter( 'woocommerce_email_enabled_customer_processing_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
-        add_filter( 'woocommerce_email_enabled_customer_completed_order', [ $this, 'skip_synced_status_email' ], 10, 2 );
+        foreach ( array_keys( self::synced_status_emails() ) as $email_id ) {
+            add_filter( "woocommerce_email_enabled_{$email_id}", [ $this, 'skip_synced_status_email' ], 10, 2 );
+        }
 
         add_filter( 'woocommerce_email_recipient_cancelled_order', [ $this, 'send_email_for_order_cancellation' ], 10, 2 );
         add_filter( 'woocommerce_email_headers', [ $this, 'add_reply_to_vendor_email_on_wc_customer_note_mail' ], 10, 3 );
@@ -163,7 +163,10 @@ class EmailHooks {
      * @return bool Whether a flag was added.
      */
     protected static function add_flag( WC_Order $order, string $status ): bool {
-        if ( ! self::emails_are_deferred() || ! in_array( $status, [ 'on-hold', 'processing', 'completed', self::AUTO_COMPLETED ], true ) ) {
+        $statuses   = self::synced_status_emails();
+        $statuses[] = self::AUTO_COMPLETED;
+
+        if ( ! self::emails_are_deferred() || ! in_array( $status, $statuses, true ) ) {
             return false;
         }
 
@@ -192,6 +195,48 @@ class EmailHooks {
     }
 
     /**
+     * Customer order emails skipped for a status Dokan syncs onto an order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string, string> WooCommerce email ID => order status.
+     */
+    protected static function synced_status_emails(): array {
+        $emails = [
+            'customer_on_hold_order'    => 'on-hold',
+            'customer_processing_order' => 'processing',
+            'customer_completed_order'  => 'completed',
+        ];
+
+        /**
+         * Filter the customer order emails skipped for a status Dokan syncs onto an order.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array<string, string> $emails WooCommerce email ID => order status.
+         */
+        return apply_filters( 'dokan_synced_status_customer_emails', $emails );
+    }
+
+    /**
+     * Seconds a flag stays valid.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return int
+     */
+    protected static function flag_lifetime(): int {
+        /**
+         * Filter how long a synced-status email flag stays valid.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param int $lifetime Seconds, a day by default.
+         */
+        return (int) apply_filters( 'dokan_synced_status_email_flag_lifetime', self::FLAG_LIFETIME );
+    }
+
+    /**
      * Get an order's flags that have not expired.
      *
      * @since DOKAN_SINCE
@@ -201,10 +246,11 @@ class EmailHooks {
      * @return array<int, array{status: string, time: int}>
      */
     protected static function get_flags( WC_Order $order ): array {
-        $flags = array_filter(
+        $lifetime = self::flag_lifetime();
+        $flags    = array_filter(
             (array) $order->get_meta( self::SYNCED_STATUS_META ),
-            static function ( $flag ) {
-                return is_array( $flag ) && isset( $flag['status'], $flag['time'] ) && time() - (int) $flag['time'] < self::FLAG_LIFETIME;
+            static function ( $flag ) use ( $lifetime ) {
+                return is_array( $flag ) && isset( $flag['status'], $flag['time'] ) && time() - (int) $flag['time'] < $lifetime;
             }
         );
 
@@ -233,13 +279,8 @@ class EmailHooks {
      * @return bool
      */
     public function skip_synced_status_email( $enabled, $order ) {
-        $email_statuses = [
-            'woocommerce_email_enabled_customer_on_hold_order'    => 'on-hold',
-            'woocommerce_email_enabled_customer_processing_order' => 'processing',
-            'woocommerce_email_enabled_customer_completed_order'  => 'completed',
-        ];
-
-        $email_status = $email_statuses[ current_filter() ] ?? '';
+        $email_id     = str_replace( 'woocommerce_email_enabled_', '', current_filter() );
+        $email_status = self::synced_status_emails()[ $email_id ] ?? '';
 
         if ( ! $email_status || ! $order instanceof WC_Order ) {
             return $enabled;
