@@ -511,6 +511,22 @@ class Manager {
     }
 
     /**
+     * Limit a user query to the registered customers who have an order from a seller.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_User_Query $query     User query, from its `pre_user_query` action.
+     * @param int            $seller_id Seller ID.
+     *
+     * @return void
+     */
+    public function restrict_user_query_to_seller_customers( \WP_User_Query $query, int $seller_id ): void {
+        global $wpdb;
+
+        $query->query_where .= " AND {$wpdb->users}.ID IN ( " . $this->get_customer_ids_sql_by_seller( $seller_id ) . ' )';
+    }
+
+    /**
      * Get all child orders of a parent order
      *
      * @param int|WC_Order $parent_order

@@ -245,14 +245,10 @@ class CustomersController extends WC_REST_Customers_Controller {
      * @return void
      */
     public function restrict_query_to_vendor_customers( $query ) {
-        global $wpdb;
-
         $vendor_id = absint( $query->get( 'dokan_vendor_customers' ) );
-        if ( ! $vendor_id ) {
-            return;
+        if ( $vendor_id ) {
+            dokan()->order->restrict_user_query_to_seller_customers( $query, $vendor_id );
         }
-
-        $query->query_where .= " AND {$wpdb->users}.ID IN ( " . dokan()->order->get_customer_ids_sql_by_seller( $vendor_id ) . ' )';
     }
 
     /**
