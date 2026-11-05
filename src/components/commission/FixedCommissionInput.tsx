@@ -52,7 +52,6 @@ const FixedCommissionInput = ( {
 
     const formatValue = useCallback(
         ( value: number | string ): string => {
-            // 0 is a real answer ("no percentage"), so it must show as 0, not as an empty box.
             if ( value === '' ) {
                 return '';
             }
@@ -139,7 +138,7 @@ const FixedCommissionInput = ( {
     // Check if we have title, description, or validation error
     const hasContent = title || description || validationError;
 
-    // Ring the empty box behind the message, so it's clear which one to fill in. On a wrapper, because dokan-ui's own border classes win on the input itself.
+    // Outline the wrapper, because dokan-ui's own border classes win on the input.
     const invalidRing = ( value: number | string ): string =>
         validationError && String( value ?? '' ).trim() === ''
             ? 'rounded ring-1 ring-destructive'
@@ -212,9 +211,7 @@ const FixedCommissionInput = ( {
                                     numeralDecimalScale:
                                         currency?.precision ?? 2,
                                 } }
-                                // `!m-0` kills WordPress admin's `input { margin: 0 1px }`,
-                                // which otherwise pushes a 1px gap into the seam with
-                                // the addon and breaks the shared frame.
+                                // `!m-0` removes WP admin's 1px input margin, which would split the input from its addon.
                                 className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !border-r-0 !rounded-r-none` }
                             />
                         </div>
@@ -246,10 +243,7 @@ const FixedCommissionInput = ( {
                                     numeralDecimalScale:
                                         currency?.precision ?? 2,
                                 } }
-                                // Keep the left border — dokan-ui's addOnLeft span ships
-                                // `border-r-0`, so the input has to draw the seam — and
-                                // `!m-0` removes WP admin's 1px input margin that would
-                                // otherwise hold the two halves apart.
+                                // Keep the left border: dokan-ui's addOnLeft span has none on its right, so the input draws the seam.
                                 className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !rounded-l-none` }
                             />
                         </div>

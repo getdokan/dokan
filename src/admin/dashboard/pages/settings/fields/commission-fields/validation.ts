@@ -3,9 +3,8 @@ import { __, sprintf } from '@wordpress/i18n';
 const isBlank = ( value: unknown ): boolean =>
     value === undefined || value === null || String( value ).trim() === '';
 
-// plugin-ui can't validate the object-shaped commission values, so mirror the server `validation_func` here.
+// plugin-ui can't validate the object-shaped commission values, so mirror the legacy rule here (the server `validation_func` enforces the same).
 
-// Names the field (or category) and the empty box, and says that 0 is a valid answer.
 export const missingCommissionError = (
     name: string,
     percentage: unknown,
@@ -42,12 +41,15 @@ export const missingCommissionError = (
 };
 
 // Fixed commission requires both the percentage and the flat fee.
-export const fixedCommissionError = ( value?: {
-    admin_percentage?: string | number;
-    additional_fee?: string;
-} ): string =>
+export const fixedCommissionError = (
+    value?: {
+        admin_percentage?: string | number;
+        additional_fee?: string;
+    },
+    name: string = __( 'Commission Amount', 'dokan-lite' )
+): string =>
     missingCommissionError(
-        __( 'Commission Amount', 'dokan-lite' ),
+        name,
         value?.admin_percentage,
         value?.additional_fee
     );

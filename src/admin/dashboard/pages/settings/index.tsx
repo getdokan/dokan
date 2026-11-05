@@ -70,20 +70,23 @@ const getLegacyErrorMessage = ( error: unknown ): string => {
     ].join( ' ' );
 };
 
-// Bring the first failing field into view and put the cursor in its first empty box, so a long page doesn't hide what went wrong.
+// Take the admin to the first empty box of the failing field, which can sit far above Save.
 const focusFirstInvalidField = ( fieldId: string ): void => {
     window.requestAnimationFrame( () => {
         const field = document.getElementById( fieldId );
         if ( ! field ) {
             return;
         }
-        field.scrollIntoView( { behavior: 'smooth', block: 'center' } );
         const inputs = Array.from(
             field.querySelectorAll< HTMLInputElement >( 'input' )
         );
         const target =
             inputs.find( ( input ) => input.value.trim() === '' ) ??
             inputs[ 0 ];
+        ( target ?? field ).scrollIntoView( {
+            behavior: 'smooth',
+            block: 'center',
+        } );
         target?.focus( { preventScroll: true } );
     } );
 };
@@ -237,7 +240,6 @@ export default function SettingsPage() {
             console.error( 'Failed to save settings:', error );
             const fieldErrors = getFieldErrors( error );
             const firstErrorId = Object.keys( fieldErrors )[ 0 ];
-            // Say what failed instead of the generic REST message.
             const message =
                 getLegacyErrorMessage( error ) ||
                 ( firstErrorId && fieldErrors[ firstErrorId ] ) ||

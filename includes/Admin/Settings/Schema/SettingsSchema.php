@@ -679,7 +679,7 @@ class SettingsSchema {
                 'variant'          => 'combine_input',
                 'section_id'       => 'commission',
                 'title'            => esc_html__( 'Commission Amount', 'dokan-lite' ),
-                'description'      => esc_html__( 'You get a percentage of each item\'s price plus a fixed fee for every item sold.', 'dokan-lite' ),
+                'description'      => __( 'You get a percentage of each item\'s price plus a fixed fee for every item sold.', 'dokan-lite' ),
                 'dependencies'     => [
                     [
 						'key' => 'commission_type',
@@ -701,7 +701,7 @@ class SettingsSchema {
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Commission Amount needs a percentage and a fixed fee. Enter 0 for none.', 'dokan-lite' ) ],
                 ],
-                // Server-side mirror of the client check: names the empty box and says 0 is allowed.
+                // Server-side mirror of the client check (like delivery-time): both percentage and flat fee are required, so the save is blocked if either is empty.
                 'validation_func'  => function ( $value ) {
                     $percentage = is_array( $value ) ? ( $value['admin_percentage'] ?? '' ) : '';
                     $flat       = is_array( $value ) ? ( $value['additional_fee'] ?? '' ) : '';
@@ -762,7 +762,7 @@ class SettingsSchema {
                 'variant'      => 'category_based_commission',
                 'section_id'   => 'commission',
                 'title'        => esc_html__( 'Commission Amount', 'dokan-lite' ),
-                'description'  => esc_html__( 'You get a percentage of each item\'s price plus a fixed fee for every item sold.', 'dokan-lite' ),
+                'description'  => __( 'You get a percentage of each item\'s price plus a fixed fee for every item sold.', 'dokan-lite' ),
                 'dependencies' => [
                     [
 						'key' => 'commission_type',
@@ -784,7 +784,7 @@ class SettingsSchema {
                 'validations'  => [
                     [ 'not_empty' => esc_html__( 'All Categories needs a percentage and a fixed fee. Enter 0 for none.', 'dokan-lite' ) ],
                 ],
-                // Server-side mirror of the client check: the All-Categories rate is the default, so it names the empty box and says 0 is allowed.
+                // Server-side mirror of the client check (like delivery-time): the All-Categories rate needs both percentage and flat fee, so the save is blocked if either is empty.
                 'validation_func' => function ( $value ) {
                     $all        = is_array( $value ) && isset( $value['all'] ) ? $value['all'] : [];
                     $percentage = $all['percentage'] ?? '';

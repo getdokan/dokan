@@ -281,7 +281,6 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
         getCommissionValue: getCommissionValueCallback,
         formatValue: formatValueCallback,
         currency,
-        // Only the All-Categories rate is validated; outline its empty box behind the message.
         highlightEmpty: !! validationError,
     };
 

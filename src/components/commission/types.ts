@@ -35,7 +35,6 @@ export interface SettingsElement {
 export interface CommissionInputsProps {
     categoryId: string | number;
     isAllCategory?: boolean;
-    /** Outline an empty All-Categories box while its validation message shows. */
     highlightEmpty?: boolean;
     onCommissionChange: (
         value: string,

@@ -14,7 +14,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     currency,
     highlightEmpty = false,
 } ) => {
-    // Only the All-Categories rate is validated; ring its empty box behind the message. On the wrapper, because dokan-ui's own border classes win on the input itself.
+    // Outline the wrapper, because dokan-ui's own border classes win on the input.
     const invalidRing = ( type: 'percentage' | 'flat' ): string =>
         highlightEmpty &&
         isAllCategory &&
@@ -52,7 +52,6 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                     addOnRight={
                         <span className="text-[#575757] text-sm">%</span>
                     }
-                    // DebouncedInput hands over the value itself, not an event.
                     onChange={ handlePercentageChange }
                     onBlur={ ( e ) =>
                         onBlur(
