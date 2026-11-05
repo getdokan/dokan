@@ -21,21 +21,21 @@ class EmailHooks {
     /**
      * Order meta holding the customer emails to skip while WooCommerce defers emails.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      */
     const SYNCED_STATUS_META = '_dokan_synced_status';
 
     /**
      * Flag for an auto-completed Suborder whose completed email is still queued.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      */
     const AUTO_COMPLETED = 'auto-completed';
 
     /**
      * Default seconds a flag stays valid, so a queued email that never runs cannot block later emails.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      */
     const FLAG_LIFETIME = DAY_IN_SECONDS;
 
@@ -100,7 +100,7 @@ class EmailHooks {
     /**
      * Flag a status Dokan is about to save onto an order, so its deferred customer email is skipped.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WC_Order $order  Parent order or Suborder.
      * @param string   $status Status being synced, with or without the "wc-" prefix.
@@ -119,7 +119,7 @@ class EmailHooks {
     /**
      * Mark a Suborder Dokan is about to auto-complete, while its completed email is still queued.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WC_Order $order Suborder being auto-completed.
      *
@@ -132,7 +132,7 @@ class EmailHooks {
     /**
      * Skip the queued completed email of an auto-completed Suborder.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WC_Order $order Suborder.
      *
@@ -155,7 +155,7 @@ class EmailHooks {
     /**
      * Add one flag per queued email to skip.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WC_Order $order  Order object.
      * @param string   $status Status of the email to skip.
@@ -181,7 +181,7 @@ class EmailHooks {
     /**
      * Build a flag for a status, stamped with the current time.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param string $status Flagged status.
      *
@@ -197,7 +197,7 @@ class EmailHooks {
     /**
      * Customer order emails skipped for a status Dokan syncs onto an order.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @return array<string, string> WooCommerce email ID => order status.
      */
@@ -211,7 +211,7 @@ class EmailHooks {
         /**
          * Filter the customer order emails skipped for a status Dokan syncs onto an order.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.4
          *
          * @param array<string, string> $emails WooCommerce email ID => order status.
          */
@@ -221,7 +221,7 @@ class EmailHooks {
     /**
      * Seconds a flag stays valid.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @return int
      */
@@ -229,7 +229,7 @@ class EmailHooks {
         /**
          * Filter how long a synced-status email flag stays valid.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.4
          *
          * @param int $lifetime Seconds, a day by default.
          */
@@ -239,7 +239,7 @@ class EmailHooks {
     /**
      * Get an order's flags that have not expired.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WC_Order $order Order object.
      *
@@ -260,7 +260,7 @@ class EmailHooks {
     /**
      * Whether WooCommerce queues transactional emails instead of sending them right away.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @return bool
      */
@@ -271,7 +271,7 @@ class EmailHooks {
     /**
      * Disable a customer order email when Dokan flagged its status on the order.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param bool          $enabled Whether the email is enabled.
      * @param WC_Order|null $order   Order the email is for.
@@ -310,7 +310,7 @@ class EmailHooks {
     /**
      * Save the remaining flags of an order.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WC_Order $order Order object.
      * @param array    $flags Flags to keep.

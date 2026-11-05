@@ -137,7 +137,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
     /**
      * Fill the email with sample data for the WooCommerce email preview and "Send a test email".
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WC_Email $email The email being previewed.
      *
@@ -165,7 +165,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
      *
      * The invoice covers the previous calendar month.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param string $store_name Store name shown in the subject and body.
      *

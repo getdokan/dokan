@@ -160,7 +160,7 @@ class ProductAbilityScope implements Hookable {
      * owner or admin only.
      *
      * @since 5.0.15
-     * @since DOKAN_SINCE An anonymous caller keeps WooCommerce's own answer.
+     * @since 5.3.4 An anonymous caller keeps WooCommerce's own answer.
      *
      * @param bool   $permission Incoming permission.
      * @param string $context    Request context.

@@ -2313,7 +2313,7 @@ class SettingsSchema {
     /**
      * Why a commission amount cannot be saved: which box is empty, and that 0 is allowed.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param string $name       Field or category name the message starts with.
      * @param mixed  $percentage Percentage value.

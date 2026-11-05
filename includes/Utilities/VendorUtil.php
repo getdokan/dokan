@@ -90,7 +90,7 @@ class VendorUtil {
     /**
      * Normalize a shop URL the way wp_update_user() normalizes a nicename.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param string $shop_url Raw shop URL.
      *
@@ -103,7 +103,7 @@ class VendorUtil {
     /**
      * Check whether a shop URL is free to use as a user nicename.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param string $shop_url        Raw shop URL.
      * @param int    $exclude_user_id User allowed to keep this nicename.
@@ -124,7 +124,7 @@ class VendorUtil {
         /**
          * Filter whether a shop URL may be used, so reserved slugs can be refused.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.4
          *
          * @param bool   $available       Whether the URL is free.
          * @param string $shop_url        Normalized shop URL.

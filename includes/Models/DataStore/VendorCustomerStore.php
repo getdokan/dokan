@@ -7,7 +7,7 @@ use WeDevs\Dokan\Utilities\OrderUtil;
 /**
  * Read-only data store for the registered customers who have an order from a vendor.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.4
  */
 class VendorCustomerStore extends BaseDataStore {
 
@@ -30,7 +30,7 @@ class VendorCustomerStore extends BaseDataStore {
      *
      * Matches dokan_customer_has_order_from_this_seller() defaults, without the dokan_get_vendor_orders_* filters.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param int $seller_id Seller ID.
      *

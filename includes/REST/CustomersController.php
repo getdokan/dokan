@@ -223,7 +223,7 @@ class CustomersController extends WC_REST_Customers_Controller {
     /**
      * Tag the customer list query with the vendor, so only that query gets restricted.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param array $prepared_args WP_User_Query arguments.
      *
@@ -240,7 +240,7 @@ class CustomersController extends WC_REST_Customers_Controller {
     /**
      * Limit the customer list to the vendor's own customers in SQL, so the rows and the total headers match.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param WP_User_Query $query User query.
      *
