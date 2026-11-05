@@ -53,7 +53,7 @@ class RecommendedPlugins {
             [
                 'type'        => 'cartpilot',
                 'title'       => fn() => __( 'CartPilot AI', 'dokan-lite' ),
-                'description' => fn() => __( 'Let shoppers speak or type to an AI sales agent that sells for every vendor', 'dokan-lite' ),
+                'description' => fn() => __( 'Let shoppers speak or type to an AI sales agent that sells for all vendors', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/cartpilot.svg',
                 'img_alt'     => fn() => __( 'CartPilot logo', 'dokan-lite' ),
                 'slug'        => 'cartpilot',
