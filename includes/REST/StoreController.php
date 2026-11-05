@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Traits\VendorAuthorizable;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WeDevs\Dokan\Vendor\Vendor;
 use WP_Error;
 use WP_Query;
@@ -910,18 +911,10 @@ class StoreController extends WP_REST_Controller {
         if ( ! empty( $params['store_slug'] ) ) {
             $store_slug = sanitize_text_field( $params['store_slug'] );
 
-            if ( get_user_by( 'slug', $store_slug ) ) {
-                $response = [
-                    'url'       => $store_slug,
-                    'available' => false,
-                ];
-
-                return rest_ensure_response( $response );
-            }
-
+            // Normalized like wp_insert_user() does, so a reformatted taken URL is caught too.
             $response = [
-                'url'       => sanitize_title( $store_slug ),
-                'available' => true,
+                'url'       => VendorUtil::sanitize_shop_url( $store_slug ),
+                'available' => VendorUtil::is_shop_url_available( $store_slug ),
             ];
 
             return rest_ensure_response( $response );

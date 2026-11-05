@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Vendor;
 
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WP_User_Query;
 use WeDevs\Dokan\Vendor\Vendor;
@@ -215,6 +216,12 @@ class Manager {
 
         $vendor_data = wp_parse_args( $data, $defaults );
         $vendor_data['role'] = 'seller'; // this value can't be edited
+
+        // wp_insert_user() would silently rename a shop URL another user already has.
+        if ( ! empty( $vendor_data['user_nicename'] ) && ! VendorUtil::is_shop_url_available( wc_clean( $vendor_data['user_nicename'] ) ) ) {
+            return new WP_Error( 'shop-url-error', __( 'Shop URL is not available', 'dokan-lite' ) );
+        }
+
         $vendor_id   = wp_insert_user( $vendor_data );
 
         if ( is_wp_error( $vendor_id ) ) {
@@ -356,10 +363,17 @@ class Manager {
         }
 
         if ( ! empty( $data['user_nicename'] ) ) {
+            $user_nicename = VendorUtil::sanitize_shop_url( wc_clean( $data['user_nicename'] ) );
+
+            // wp_update_user() would silently rename a shop URL another user already has.
+            if ( ! VendorUtil::is_shop_url_available( $user_nicename, $vendor->get_id() ) ) {
+                return new WP_Error( 'shop-url-error', __( 'Shop URL is not available', 'dokan-lite' ) );
+            }
+
             wp_update_user(
                 [
                     'ID'            => $vendor->get_id(),
-                    'user_nicename' => wc_clean( $data['user_nicename'] ),
+                    'user_nicename' => $user_nicename,
                 ]
             );
         }

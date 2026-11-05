@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Frontend\MyAccount;
 
+use WeDevs\Dokan\Utilities\VendorUtil;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
@@ -107,10 +109,10 @@ class BecomeAVendor {
         }
 
         // Normalize like wp_update_user() does, so a reformatted taken URL is caught too.
-        $shop_url = isset( $_POST['shopurl'] ) ? dokan_sanitize_shop_url( sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) ) : '';
+        $shop_url = isset( $_POST['shopurl'] ) ? VendorUtil::sanitize_shop_url( sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) ) : '';
 
         // wp_update_user() would silently rename a shop URL another user already has.
-        if ( ! dokan_is_shop_url_available( $shop_url, $user->ID ) ) {
+        if ( ! VendorUtil::is_shop_url_available( $shop_url, $user->ID ) ) {
             $error    = __( 'Shop URL is not available', 'dokan-lite' );
             $errors[] = $error;
             wc_add_notice( $error, 'error' );

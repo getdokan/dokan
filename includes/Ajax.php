@@ -4,6 +4,7 @@ namespace WeDevs\Dokan;
 
 use WC_Customer;
 use WC_Data_Store;
+use WeDevs\Dokan\Utilities\VendorUtil;
 
 /**
  * Ajax handler for Dokan
@@ -175,8 +176,8 @@ class Ajax {
         $url_slug        = isset( $_POST['url_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['url_slug'] ) ) : '';
         $exclude_user_id = 0;
 
-        // A migrating customer may keep their own nicename.
-        if ( is_user_logged_in() && dokan_is_user_customer( $user_ID ) ) {
+        // A user becoming a vendor may keep their own nicename, as the Become a Vendor handler allows.
+        if ( is_user_logged_in() && ! dokan_is_user_seller( $user_ID ) ) {
             $exclude_user_id = (int) $user_ID;
         }
 
@@ -185,13 +186,13 @@ class Ajax {
             $exclude_user_id = intval( $_POST['vendor_id'] );
         }
 
-        $check = dokan_is_shop_url_available( $url_slug, $exclude_user_id );
+        $check = VendorUtil::is_shop_url_available( $url_slug, $exclude_user_id );
 
         if ( $check ) {
             wp_send_json_success(
                 [
                     'message' => __( 'Available', 'dokan-lite' ),
-                    'url'     => sanitize_user( $url_slug ),
+                    'url'     => VendorUtil::sanitize_shop_url( $url_slug ),
                 ]
             );
         }
