@@ -705,7 +705,7 @@ class SettingsSchema {
                 'validation_func'  => function ( $value ) {
                     $percentage = is_array( $value ) ? ( $value['admin_percentage'] ?? '' ) : '';
                     $flat       = is_array( $value ) ? ( $value['additional_fee'] ?? '' ) : '';
-                    return self::commission_amount_error( esc_html__( 'Commission Amount', 'dokan-lite' ), $percentage, $flat );
+                    return self::commission_amount_error( __( 'Commission Amount', 'dokan-lite' ), $percentage, $flat );
                 },
                 'legacy_key'       => [
                     'admin_percentage' => 'dokan_selling.admin_percentage',
@@ -789,7 +789,7 @@ class SettingsSchema {
                     $all        = is_array( $value ) && isset( $value['all'] ) ? $value['all'] : [];
                     $percentage = $all['percentage'] ?? '';
                     $flat       = $all['flat'] ?? '';
-                    return self::commission_amount_error( esc_html__( 'All Categories', 'dokan-lite' ), $percentage, $flat );
+                    return self::commission_amount_error( __( 'All Categories', 'dokan-lite' ), $percentage, $flat );
                 },
             ],
 
@@ -2327,17 +2327,17 @@ class SettingsSchema {
 
         if ( $percentage_blank && $flat_blank ) {
             /* translators: %s: field or category name */
-            return sprintf( esc_html__( '%s needs a percentage and a fixed fee. Enter 0 for none.', 'dokan-lite' ), $name );
+            return sprintf( __( '%s needs a percentage and a fixed fee. Enter 0 for none.', 'dokan-lite' ), $name );
         }
 
         if ( $percentage_blank ) {
             /* translators: %s: field or category name */
-            return sprintf( esc_html__( '%s needs a percentage. Enter 0 for none.', 'dokan-lite' ), $name );
+            return sprintf( __( '%s needs a percentage. Enter 0 for none.', 'dokan-lite' ), $name );
         }
 
         if ( $flat_blank ) {
             /* translators: %s: field or category name */
-            return sprintf( esc_html__( '%s needs a fixed fee. Enter 0 for none.', 'dokan-lite' ), $name );
+            return sprintf( __( '%s needs a fixed fee. Enter 0 for none.', 'dokan-lite' ), $name );
         }
 
         return true;
