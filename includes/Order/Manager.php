@@ -458,7 +458,7 @@ class Manager {
      *
      * Matches dokan_customer_has_order_from_this_seller() defaults, without the dokan_get_vendor_orders_* filters.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param int $seller_id Seller ID.
      *
@@ -470,7 +470,7 @@ class Manager {
         /**
          * Filter the SQL selecting a seller's customer IDs.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.4
          *
          * @param string $sql       Prepared, single-column SELECT of user IDs; it is inserted into the user query's WHERE clause as-is.
          * @param int    $seller_id Seller ID.
@@ -484,7 +484,7 @@ class Manager {
     /**
      * Limit a user query to the registered customers who have an order from a seller.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param \WP_User_Query $query     User query, from its `pre_user_query` action.
      * @param int            $seller_id Seller ID.

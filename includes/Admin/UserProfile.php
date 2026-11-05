@@ -522,7 +522,7 @@ class UserProfile {
     /**
      * Report a store URL another user already has on the admin profile screen.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param \WP_Error $errors Errors shown on the profile screen.
      * @param bool      $update Whether an existing user is being saved.

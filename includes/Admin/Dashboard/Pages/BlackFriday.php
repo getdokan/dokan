@@ -8,7 +8,7 @@ namespace WeDevs\Dokan\Admin\Dashboard\Pages;
  * Owns the seasonal "Black Friday" submenu entry. On Lite the page sells Pro; when Dokan Pro
  * ships its own upgrade page for the same route, this class only contributes the menu entry.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.4
  *
  * @todo BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026), together with assets/images/black-friday; nothing switches itself off.
  */
@@ -17,21 +17,21 @@ class BlackFriday extends AbstractPage {
     /**
      * Dashboard route (also the URL fragment `#/black-friday`).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      */
     const ROUTE = 'black-friday';
 
     /**
      * Script and style handle.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      */
     const HANDLE = 'dokan-black-friday';
 
     /**
      * Purchase page for Lite users during BFCM.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @var string
      */
@@ -40,7 +40,7 @@ class BlackFriday extends AbstractPage {
     /**
      * Build a campaign link tagged with the BFCM UTM parameters.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param string $content Value for `utm_content`, identifying the clicked CTA.
      * @param string $url     Destination; defaults to the Dokan pricing page.
@@ -130,7 +130,7 @@ class BlackFriday extends AbstractPage {
     /**
      * Register the Lite page assets.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @return void
      */
@@ -162,7 +162,7 @@ class BlackFriday extends AbstractPage {
     /**
      * Whether Dokan Pro renders its own upgrade page on this route.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @return bool
      */
@@ -173,7 +173,7 @@ class BlackFriday extends AbstractPage {
          * Keyed on the Pro page itself rather than on Pro being active. An older Pro
          * without the page hides the campaign entirely, see is_hidden().
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.4
          *
          * @param bool $has_pro_page Whether a Pro page is registered for the route.
          */
@@ -186,7 +186,7 @@ class BlackFriday extends AbstractPage {
      * An older Pro without its own upgrade page must not fall back to the Lite
      * offer, since that pitches the free-user deal to a paying Pro customer.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @return bool
      */

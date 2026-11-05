@@ -602,7 +602,7 @@ class Helper {
      *
      * Billing day and due period both count from the first day of the month.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.4
      *
      * @param \DateTimeImmutable $current_date
      *

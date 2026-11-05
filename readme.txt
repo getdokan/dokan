@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.3.3
+Stable tag: 5.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -379,6 +379,20 @@ A. Please report security bugs found in the source code of the plugin through th
 
 == Changelog ==
 
+= v5.3.4 ( Nov 05, 2026 ) =
+- **new:** Added a Black Friday 2026 offers page to the Dokan admin.
+- **update:** Added CartPilot and FlyAffiliate to the setup wizard's recommended add-ons, with a Show More option for the extra add-ons.
+- **update:** Added CartPilot and FlyAffiliate to the admin Extensions page.
+- **fix:** Prevented unauthenticated visitors from reading private product data through a crafted request made to look like an MCP request.
+- **fix:** The vendor customer list now counts only the vendor's own customers, so its totals and pages match the list and searches no longer reveal other registered users.
+- **fix:** Customers who buy from several vendors no longer receive duplicate order emails when WooCommerce's deferred emails feature is turned on.
+- **fix:** Improved compatibility with WooCommerce 11.3 so the vendor analytics pages keep their layout and no longer log deprecation warnings.
+- **fix:** Vendor registration forms no longer accept a shop URL that already belongs to another vendor.
+- **fix:** The new vendor dashboard order list no longer shows order status actions when the admin has turned off order status changes for vendors.
+- **fix:** The Reverse Withdrawal Invoice email now works in the WooCommerce email preview and test email instead of showing an error.
+- **fix:** Vendor dashboard reports no longer show "Something went wrong" after an update because a browser or CDN served outdated files.
+- **fix:** The commission settings now name the empty field and explain that 0 is allowed when a commission amount is missing.
+
 = v5.3.3 ( Oct 30, 2026 ) =
 - **fix:** Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.
 - **fix:** Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.
@@ -410,8 +424,5 @@ A. Please report security bugs found in the source code of the plugin through th
 - **fix:** Prevented vendors from storing serialized PHP objects in product meta through the products REST endpoint, closing a PHP object injection vulnerability.
 - **fix:** Vendor store maps now open on the default location set in the Geolocation settings, and saving store settings no longer removes a vendor from geolocation search results.
 - **fix:** The setup guide now shows an error with a retry option when a step fails to load or save instead of silently moving on, and stops you from continuing while the required admin commission is empty.
-
-= v5.2.1 ( Sep 30, 2026 ) =
-- **fix:** Fixed the setup wizard failing to load due to an outdated UI package.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
