@@ -33,6 +33,15 @@ class RecommendedPlugins {
                 'basename'    => 'flycrm/flycrm.php',
             ],
             [
+                'type'        => 'flyaffiliate',
+                'title'       => fn() => __( 'FlyAffiliate', 'dokan-lite' ),
+                'description' => fn() => __( 'Let vendors run affiliate programs that bring in more sales', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/flyaffiliate.svg',
+                'img_alt'     => fn() => __( 'FlyAffiliate logo', 'dokan-lite' ),
+                'slug'        => 'flyaffiliate',
+                'basename'    => 'flyaffiliate/flyaffiliate.php',
+            ],
+            [
                 'type'        => 'wepos',
                 'title'       => fn() => __( 'wePos', 'dokan-lite' ),
                 'description' => fn() => __( 'Run your counter and online store from one fast POS system', 'dokan-lite' ),
@@ -40,15 +49,6 @@ class RecommendedPlugins {
                 'img_alt'     => fn() => __( 'wePos logo', 'dokan-lite' ),
                 'slug'        => 'wepos',
                 'basename'    => 'wepos/wepos.php',
-            ],
-            [
-                'type'        => 'wemail',
-                'title'       => fn() => __( 'weMail', 'dokan-lite' ),
-                'description' => fn() => __( 'Send campaigns and automate email marketing inside WordPress', 'dokan-lite' ),
-                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
-                'img_alt'     => fn() => __( 'weMail logo', 'dokan-lite' ),
-                'slug'        => 'wemail',
-                'basename'    => 'wemail/wemail.php',
             ],
             [
                 'type'        => 'cartpilot',
@@ -76,6 +76,15 @@ class RecommendedPlugins {
                 'img_alt'     => fn() => __( 'weDocs logo', 'dokan-lite' ),
                 'slug'        => 'wedocs',
                 'basename'    => 'wedocs/wedocs.php',
+            ],
+            [
+                'type'        => 'wemail',
+                'title'       => fn() => __( 'weMail', 'dokan-lite' ),
+                'description' => fn() => __( 'Send campaigns and automate email marketing inside WordPress', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
+                'img_alt'     => fn() => __( 'weMail logo', 'dokan-lite' ),
+                'slug'        => 'wemail',
+                'basename'    => 'wemail/wemail.php',
             ],
             [
                 'type'        => 'wc_conversion_tracking',
