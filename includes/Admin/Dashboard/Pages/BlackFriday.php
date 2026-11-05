@@ -29,6 +29,15 @@ class BlackFriday extends AbstractPage {
     const HANDLE = 'dokan-black-friday';
 
     /**
+     * Purchase page for Lite users during BFCM.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    const DEAL_URL = 'https://dokan.co/wordpress/pricing/';
+
+    /**
      * Build a campaign link tagged with the BFCM UTM parameters.
      *
      * @since DOKAN_SINCE
@@ -61,6 +70,10 @@ class BlackFriday extends AbstractPage {
      * @inheritDoc
      */
     public function menu( string $capability, string $position ): array {
+        if ( $this->is_hidden() ) {
+            return [];
+        }
+
         $badge = $this->has_pro_page() ? esc_html__( '75% OFF', 'dokan-lite' ) : esc_html__( '60% OFF', 'dokan-lite' );
 
         return [
@@ -79,23 +92,23 @@ class BlackFriday extends AbstractPage {
      * @inheritDoc
      */
     public function settings(): array {
-        if ( $this->has_pro_page() ) {
+        if ( $this->has_pro_page() || $this->is_hidden() ) {
             return [];
         }
 
         $plans = [];
         foreach ( [ 'starter', 'professional', 'business', 'enterprise' ] as $plan ) {
-            $plans[ $plan ] = self::cta_url( 'plan-' . $plan );
+            $plans[ $plan ] = self::cta_url( 'plan-' . $plan, self::DEAL_URL );
         }
 
         return [
             'assets_url' => DOKAN_PLUGIN_ASSEST . '/images/black-friday',
             'urls'       => [
-                'claim_deal'        => self::cta_url( 'hero-claim-deal' ),
-                'entrepreneur_pack' => self::cta_url( 'entrepreneur-pack' ),
-                'enterprise_bundle' => self::cta_url( 'enterprise-bundle' ),
+                'claim_deal'        => self::cta_url( 'hero-claim-deal', self::DEAL_URL ),
+                'entrepreneur_pack' => self::cta_url( 'entrepreneur-pack', self::DEAL_URL ),
+                'enterprise_bundle' => self::cta_url( 'enterprise-bundle', self::DEAL_URL ),
                 'plans'             => $plans,
-                'book_call'         => self::cta_url( 'book-a-call', 'https://dokan.co/contact/' ),
+                'book_call'         => self::cta_url( 'book-a-call', 'https://calendly.com/dokan-support/30min?back=1' ),
             ],
         ];
     }
@@ -104,14 +117,14 @@ class BlackFriday extends AbstractPage {
      * @inheritDoc
      */
     public function scripts(): array {
-        return $this->has_pro_page() ? [] : [ self::HANDLE ];
+        return $this->has_pro_page() || $this->is_hidden() ? [] : [ self::HANDLE ];
     }
 
     /**
      * @inheritDoc
      */
     public function styles(): array {
-        return $this->has_pro_page() ? [] : [ self::HANDLE ];
+        return $this->has_pro_page() || $this->is_hidden() ? [] : [ self::HANDLE ];
     }
 
     /**
@@ -157,13 +170,27 @@ class BlackFriday extends AbstractPage {
         /**
          * Filters whether Dokan Pro replaces the Lite Black Friday page.
          *
-         * Keyed on the Pro page itself rather than on Pro being active, so an older Pro
-         * without the page still gets the Lite page instead of an empty route.
+         * Keyed on the Pro page itself rather than on Pro being active. An older Pro
+         * without the page hides the campaign entirely, see is_hidden().
          *
          * @since DOKAN_SINCE
          *
          * @param bool $has_pro_page Whether a Pro page is registered for the route.
          */
         return (bool) apply_filters( 'dokan_black_friday_pro_page', false );
+    }
+
+    /**
+     * Whether the campaign page is hidden.
+     *
+     * An older Pro without its own upgrade page must not fall back to the Lite
+     * offer, since that pitches the free-user deal to a paying Pro customer.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function is_hidden(): bool {
+        return dokan()->is_pro_exists() && ! $this->has_pro_page();
     }
 }
