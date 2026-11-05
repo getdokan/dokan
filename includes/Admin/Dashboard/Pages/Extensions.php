@@ -178,7 +178,7 @@ class Extensions extends AbstractPage {
             ],
             [
                 'slug'        => 'cartpilot',
-                'title'       => esc_html__( 'CartPilot Ai', 'dokan-lite' ),
+                'title'       => esc_html__( 'CartPilot AI', 'dokan-lite' ),
                 'description' => esc_html__( 'Turn visitors into buyers with an AI sales agent that chats or talks with shoppers across your marketplace, answers questions instantly, recommends the right vendor products, and closes the sale while you sleep.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/cartpilot.svg',
                 'button_type' => 'install',
