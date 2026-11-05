@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Admin\Dashboard;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\VendorRegistration\FieldIndex;
 
 /**
  * Admin dashboard class.
@@ -370,6 +371,8 @@ class Dashboard implements Hookable {
                     'currency'  => dokan_get_container()->get( 'scripts' )->get_localized_price(),
                     'states'    => WC()->countries->get_allowed_country_states(),
                     'countries' => WC()->countries->get_allowed_countries(),
+                    // Whether any page holds the Vendor Registration Form block, so the vendor page can show sign-up answers.
+                    'hasVendorRegistrationForm' => $this->is_dokan_admin_request() && (bool) dokan_get_container()->get( FieldIndex::class )->get_block_posts(),
                     'nonce'     => wp_create_nonce( 'dokan_admin' ),
                     'store_banner_dimension'                   => [
                         'width'       => $banner_width,
@@ -591,6 +594,22 @@ class Dashboard implements Hookable {
         global $plugin_page;
 
         return is_string( $plugin_page ) && in_array( $plugin_page, $page_slugs, true );
+    }
+
+    /**
+     * Whether this request is for a Dokan admin page, judged from the query so it works on `init`, before `$plugin_page` is set.
+     *
+     * The dashboard data is built on `init` for every request; lookups that query the database belong behind this.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected function is_dokan_admin_request(): bool {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only picks which admin page is loading.
+        $page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+        return is_admin() && in_array( $page, [ 'dokan', 'dokan-dashboard' ], true );
     }
 
     /**
