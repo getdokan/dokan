@@ -14,6 +14,7 @@ import {
   getProductLabels,
   getVariationLabels,
 } from "../../../lib/async-requests";
+import { searchFilterSettings } from "../../../utils/search-filter-settings";
 
 const VARIATIONS_REPORT_CHARTS_FILTER =
   "dokan_analytics_variations_report_charts";
@@ -88,18 +89,22 @@ export const filters = applyFilters(VARIATIONS_REPORT_FILTERS_FILTER, [
             component: "Search",
             value: "single_variation",
             path: ["select_variation"],
-            settings: {
-              type: "variations",
-              param: "variations",
-              getLabels: getVariationLabels,
-              labels: {
+            settings: searchFilterSettings(
+              {
+                type: "variations",
                 placeholder: __(
                   "Type to search for a variation",
                   'dokan-lite'
                 ),
-                button: __("Single variation", 'dokan-lite'),
               },
-            },
+              {
+                param: "variations",
+                getLabels: getVariationLabels,
+                labels: {
+                  button: __("Single variation", 'dokan-lite'),
+                },
+              }
+            ),
           },
         ],
       },
@@ -107,21 +112,25 @@ export const filters = applyFilters(VARIATIONS_REPORT_FILTERS_FILTER, [
         label: __("Comparison", 'dokan-lite'),
         chartMode: "item-comparison",
         value: "compare-variations",
-        settings: {
-          type: "variations",
-          param: "variations",
-          getLabels: getVariationLabels,
-          labels: {
-            helpText: __(
-              "Check at least two variations below to compare",
-              'dokan-lite'
-            ),
+        settings: searchFilterSettings(
+          {
+            type: "variations",
             placeholder: __("Search for variations to compare", 'dokan-lite'),
-            title: __("Compare Variations", 'dokan-lite'),
-            update: __("Compare", 'dokan-lite'),
           },
-          onClick: addCesSurveyForAnalytics,
-        },
+          {
+            param: "variations",
+            getLabels: getVariationLabels,
+            labels: {
+              helpText: __(
+                "Check at least two variations below to compare",
+                'dokan-lite'
+              ),
+              title: __("Compare Variations", 'dokan-lite'),
+              update: __("Compare", 'dokan-lite'),
+            },
+            onClick: addCesSurveyForAnalytics,
+          }
+        ),
       },
       {
         label: __("Advanced filters", 'dokan-lite'),

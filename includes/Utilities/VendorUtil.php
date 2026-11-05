@@ -88,6 +88,52 @@ class VendorUtil {
     }
 
     /**
+     * Normalize a shop URL the way wp_update_user() normalizes a nicename.
+     *
+     * @since 5.3.4
+     *
+     * @param string $shop_url Raw shop URL.
+     *
+     * @return string
+     */
+    public static function sanitize_shop_url( string $shop_url ): string {
+        return sanitize_title( sanitize_user( $shop_url, true ) );
+    }
+
+    /**
+     * Check whether a shop URL is free to use as a user nicename.
+     *
+     * @since 5.3.4
+     *
+     * @param string $shop_url        Raw shop URL.
+     * @param int    $exclude_user_id User allowed to keep this nicename.
+     *
+     * @return bool
+     */
+    public static function is_shop_url_available( string $shop_url, int $exclude_user_id = 0 ): bool {
+        $shop_url = self::sanitize_shop_url( $shop_url );
+
+        // wp_insert_user() refuses both, and the callers that ignore that error would save a URL the user never chose.
+        if ( '' === $shop_url || mb_strlen( $shop_url ) > 50 ) {
+            return false;
+        }
+
+        $owner     = get_user_by( 'slug', $shop_url );
+        $available = ! $owner || $owner->ID === $exclude_user_id;
+
+        /**
+         * Filter whether a shop URL may be used, so reserved slugs can be refused.
+         *
+         * @since 5.3.4
+         *
+         * @param bool   $available       Whether the URL is free.
+         * @param string $shop_url        Normalized shop URL.
+         * @param int    $exclude_user_id User allowed to keep this nicename.
+         */
+        return (bool) apply_filters( 'dokan_is_shop_url_available', $available, $shop_url, $exclude_user_id );
+    }
+
+    /**
      * Check whether the current user may manage the given user's vendor account on this site.
      *
      * @since 5.3.3
