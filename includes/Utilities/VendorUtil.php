@@ -111,7 +111,13 @@ class VendorUtil {
      * @return bool
      */
     public static function is_shop_url_available( string $shop_url, int $exclude_user_id = 0 ): bool {
-        $shop_url  = self::sanitize_shop_url( $shop_url );
+        $shop_url = self::sanitize_shop_url( $shop_url );
+
+        // wp_insert_user() refuses both, and the callers that ignore that error would save a URL the user never chose.
+        if ( '' === $shop_url || mb_strlen( $shop_url ) > 50 ) {
+            return false;
+        }
+
         $owner     = get_user_by( 'slug', $shop_url );
         $available = ! $owner || $owner->ID === $exclude_user_id;
 

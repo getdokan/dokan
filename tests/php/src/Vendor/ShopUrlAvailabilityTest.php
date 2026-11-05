@@ -54,6 +54,25 @@ class ShopUrlAvailabilityTest extends DokanTestCase {
         $this->assertFalse( VendorUtil::is_shop_url_available( $shop_url ) );
     }
 
+    public static function unusable_url_provider(): array {
+        return [
+            'punctuation only' => [ '!!!' ],
+            'non-latin'        => [ 'দোকান' ],
+            'over 50 chars'    => [ str_repeat( 'a', 51 ) ],
+        ];
+    }
+
+    /**
+     * @dataProvider unusable_url_provider
+     */
+    public function test_a_url_wordpress_would_refuse_is_unavailable( string $shop_url ) {
+        $this->assertFalse( VendorUtil::is_shop_url_available( $shop_url ) );
+    }
+
+    public function test_a_fifty_character_url_is_still_allowed() {
+        $this->assertTrue( VendorUtil::is_shop_url_available( str_repeat( 'a', 50 ) ) );
+    }
+
     public function test_the_excluded_user_may_keep_their_own_url() {
         $vendor_id = $this->create_taken_vendor();
 
@@ -118,10 +137,40 @@ class ShopUrlAvailabilityTest extends DokanTestCase {
             ]
         );
 
-        $result = dokan()->vendor->update( $vendor_id, [ 'user_nicename' => 'Taken Shop' ] );
+        $result = dokan()->vendor->update(
+            $vendor_id,
+            [
+                'first_name'    => 'Changed',
+                'user_nicename' => 'Taken Shop',
+            ]
+        );
 
         $this->assertWPError( $result );
+        $this->assertSame( 400, $result->get_error_data()['status'] );
         $this->assertSame( 'other-shop', get_userdata( $vendor_id )->user_nicename );
+        // Nothing is written when the request is rejected.
+        $this->assertSame( '', get_userdata( $vendor_id )->first_name );
+    }
+
+    public function test_the_rest_update_returns_a_client_error_for_a_taken_url() {
+        $this->create_taken_vendor();
+        $vendor_id = $this->factory()->user->create(
+            [
+                'role'          => 'seller',
+                'user_nicename' => 'other-shop',
+            ]
+        );
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'administrator' ] ) );
+
+        $request = new WP_REST_Request( 'PUT', '/dokan/v1/stores/' . $vendor_id );
+        $request->set_param( 'id', $vendor_id );
+        $request->set_param( 'user_nicename', 'Taken Shop' );
+
+        $result = ( new StoreController() )->update_store( $request );
+
+        $this->assertWPError( $result );
+        $this->assertSame( 'shop-url-error', $result->get_error_code() );
+        $this->assertSame( 400, $result->get_error_data()['status'] );
     }
 
     public function test_updating_a_vendor_saves_a_free_url_normalized() {

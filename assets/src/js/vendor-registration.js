@@ -105,8 +105,10 @@ var Dokan_Vendor_Registration = {
         var chk_value = $( this ).val();
 
         if ( $( this ).prop( "checked" ) ) {
-            // A taken shop URL keeps the submit button locked.
-            if ( $( this ).closest( 'form' ).find( '#url-alart-mgs' ).hasClass( 'text-danger' ) ) {
+            const form = $( this ).closest( 'form' );
+
+            // A taken shop URL or a weak password keeps the submit button locked.
+            if ( form.find( '#url-alart-mgs' ).hasClass( 'text-danger' ) || form.find( '.woocommerce-password-strength' ).is( '.short:visible, .bad:visible' ) ) {
                 return;
             }
 
@@ -169,9 +171,10 @@ var Dokan_Vendor_Registration = {
             if ( resp.success === true ) {
                 $('#url-alart').removeClass('text-danger').addClass('text-success');
                 $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan.seller.available);
-                // An unticked terms box keeps the button locked.
-                const termsUnticked = form.find( '.tc_check_box:not(:checked)' ).length > 0;
-                submitButton.prop( 'disabled', termsUnticked );
+                // An unticked terms box or a weak password keeps the button locked.
+                const termsUnticked = form.find( '.tc_check_box:not(:checked)' ).length > 0,
+                      weakPassword  = form.find( '.woocommerce-password-strength' ).is( '.short:visible, .bad:visible' );
+                submitButton.prop( 'disabled', termsUnticked || weakPassword );
             } else {
                 $('#url-alart').removeClass('text-success').addClass('text-danger');
                 $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
