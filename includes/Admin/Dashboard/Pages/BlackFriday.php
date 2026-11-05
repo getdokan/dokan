@@ -29,6 +29,15 @@ class BlackFriday extends AbstractPage {
     const HANDLE = 'dokan-black-friday';
 
     /**
+     * Purchase page for Lite users during BFCM.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    const DEAL_URL = 'https://dokan.co/wordpress/pricing/';
+
+    /**
      * Build a campaign link tagged with the BFCM UTM parameters.
      *
      * @since DOKAN_SINCE
@@ -89,15 +98,15 @@ class BlackFriday extends AbstractPage {
 
         $plans = [];
         foreach ( [ 'starter', 'professional', 'business', 'enterprise' ] as $plan ) {
-            $plans[ $plan ] = self::cta_url( 'plan-' . $plan );
+            $plans[ $plan ] = self::cta_url( 'plan-' . $plan, self::DEAL_URL );
         }
 
         return [
             'assets_url' => DOKAN_PLUGIN_ASSEST . '/images/black-friday',
             'urls'       => [
-                'claim_deal'        => self::cta_url( 'hero-claim-deal' ),
-                'entrepreneur_pack' => self::cta_url( 'entrepreneur-pack' ),
-                'enterprise_bundle' => self::cta_url( 'enterprise-bundle' ),
+                'claim_deal'        => self::cta_url( 'hero-claim-deal', self::DEAL_URL ),
+                'entrepreneur_pack' => self::cta_url( 'entrepreneur-pack', self::DEAL_URL ),
+                'enterprise_bundle' => self::cta_url( 'enterprise-bundle', self::DEAL_URL ),
                 'plans'             => $plans,
                 'book_call'         => self::cta_url( 'book-a-call', 'https://calendly.com/dokan-support/30min?back=1' ),
             ],
