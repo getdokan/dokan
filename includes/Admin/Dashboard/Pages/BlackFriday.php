@@ -10,7 +10,7 @@ namespace WeDevs\Dokan\Admin\Dashboard\Pages;
  *
  * @since DOKAN_SINCE
  *
- * @todo BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off.
+ * @todo BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026), together with assets/images/black-friday; nothing switches itself off.
  */
 class BlackFriday extends AbstractPage {
 
@@ -27,15 +27,6 @@ class BlackFriday extends AbstractPage {
      * @since DOKAN_SINCE
      */
     const HANDLE = 'dokan-black-friday';
-
-    /**
-     * Purchase page for Lite users during BFCM.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var string
-     */
-    const DEAL_URL = 'https://dokan.co/wordpress/pricing/';
 
     /**
      * Build a campaign link tagged with the BFCM UTM parameters.
@@ -98,15 +89,15 @@ class BlackFriday extends AbstractPage {
 
         $plans = [];
         foreach ( [ 'starter', 'professional', 'business', 'enterprise' ] as $plan ) {
-            $plans[ $plan ] = self::cta_url( 'plan-' . $plan, self::DEAL_URL );
+            $plans[ $plan ] = self::cta_url( 'plan-' . $plan );
         }
 
         return [
             'assets_url' => DOKAN_PLUGIN_ASSEST . '/images/black-friday',
             'urls'       => [
-                'claim_deal'        => self::cta_url( 'hero-claim-deal', self::DEAL_URL ),
-                'entrepreneur_pack' => self::cta_url( 'entrepreneur-pack', self::DEAL_URL ),
-                'enterprise_bundle' => self::cta_url( 'enterprise-bundle', self::DEAL_URL ),
+                'claim_deal'        => self::cta_url( 'hero-claim-deal' ),
+                'entrepreneur_pack' => self::cta_url( 'entrepreneur-pack' ),
+                'enterprise_bundle' => self::cta_url( 'enterprise-bundle' ),
                 'plans'             => $plans,
                 'book_call'         => self::cta_url( 'book-a-call', 'https://calendly.com/dokan-support/30min?back=1' ),
             ],
