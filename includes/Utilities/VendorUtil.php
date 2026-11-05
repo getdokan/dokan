@@ -132,4 +132,22 @@ class VendorUtil {
          */
         return (bool) apply_filters( 'dokan_is_shop_url_available', $available, $shop_url, $exclude_user_id );
     }
+
+    /**
+     * Check whether the current user may manage the given user's vendor account on this site.
+     *
+     * @since 5.3.3
+     *
+     * @param int $user_id Target user ID.
+     *
+     * @return bool
+     */
+    public static function current_user_can_manage_vendor( int $user_id ): bool {
+        if ( ! is_multisite() || is_super_admin() ) {
+            return true;
+        }
+
+        // User meta is network-wide, so a subsite admin must stay within their own site's members.
+        return is_user_member_of_blog( $user_id ) && ! is_super_admin( $user_id );
+    }
 }

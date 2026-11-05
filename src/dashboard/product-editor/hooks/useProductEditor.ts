@@ -19,7 +19,7 @@ type ProductEditorValue = {
     fields: any[];
     formItems: FormItem[];
     onChange: ( newData: Record< string, any > ) => void;
-    submitHandler: ( e: any ) => Promise< void >;
+    submitHandler: ( e: any ) => Promise< Record< string, any > | undefined >;
     isLoading: boolean;
     defaultAttributes: DefaultAttribute[];
     getDefaultValue: (
@@ -165,15 +165,37 @@ export function useProductEditor(
                 e.stopPropagation();
             }
             try {
-                await saveProduct( productId );
+                const requestedStatus = product?.status;
+                const saved = await saveProduct( productId );
 
                 // Lets features persist their own data once the product has been saved.
                 doAction( 'dokan_product_editor_after_save', productId );
 
-                toast( {
-                    type: 'success',
-                    title: __( 'Product saved successfully.', 'dokan-lite' ),
-                } );
+                // A vendor who can't publish directly is held for review, so say so instead of a plain success.
+                if (
+                    'pending' === saved?.status &&
+                    saved.status !== requestedStatus
+                ) {
+                    toast( {
+                        type: 'info',
+                        title: __(
+                            'Product submitted for review.',
+                            'dokan-lite'
+                        ),
+                        subtitle: __(
+                            'It will be published once the marketplace approves it.',
+                            'dokan-lite'
+                        ),
+                    } );
+                } else {
+                    toast( {
+                        type: 'success',
+                        title: __(
+                            'Product saved successfully.',
+                            'dokan-lite'
+                        ),
+                    } );
+                }
 
                 // Reload so the server-rendered data (is_new_product, status, etc.) refreshes.
                 if ( isNewProduct ) {
@@ -181,6 +203,8 @@ export function useProductEditor(
                         // @ts-ignore
                         window.dokanProductEditor.products_url;
                 }
+
+                return saved;
             } catch ( err: any ) {
                 toast( {
                     type: 'error',
@@ -191,7 +215,7 @@ export function useProductEditor(
                 throw err;
             }
         },
-        [ productId, saveProduct, toast, isNewProduct ]
+        [ productId, product?.status, saveProduct, toast, isNewProduct ]
     );
 
     return {

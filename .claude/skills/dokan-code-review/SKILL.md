@@ -88,6 +88,10 @@ Per entity, the expected gates (ownership half + capability half):
 -   **Direct REST calls in tests** — Use helper methods (`$this->get_request()`, `$this->post_request()`).
 -   **Missing E2E tags** — Playwright tests must have tags (`@lite`, `@pro`, `@admin`).
 
+### Settings
+
+-   **Setting change without a verified impact map** — When the diff adds, changes, or reads a setting, load `dokan-setting-impact` and run its Review gate: the PR description carries a `### Setting impact` map, and every Store Admin → Vendor → Customer surface on it is honoured by the code. Cite the rule ID (e.g. `V2`) in each finding.
+
 ## PR Checklist Verification
 
 Verify against the PR template (`.github/pull_request_template.md`):

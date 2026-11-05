@@ -7,6 +7,8 @@ description: Add or modify Dokan frontend code (React, TypeScript, Vue, Tailwind
 
 This skill provides guidance for developing Dokan Lite frontend code.
 
+**Settings:** when the change adds, changes, or reads a setting (routes, nav, cards, Store renderers), also load `dokan-setting-impact` and run its Build gate.
+
 ## Tech Stack
 
 | Technology | Usage | Files |

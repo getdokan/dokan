@@ -4,6 +4,46 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.3',
+        'released' => '2026-10-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The store contact form now sends email from the store\'s own address and uses the visitor\'s email only for replies, so it can no longer be used to spoof the sender or add extra recipients.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented subsite admins on a multisite network from changing the selling status of vendors who belong to other sites.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Reverse withdrawal payments can no longer be discounted with coupons, and the vendor\'s balance is now credited only with the amount actually paid.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Products created through the vendor products API now respect the vendor\'s selling status and are held for review when the vendor isn\'t allowed to publish directly.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'A vendor\'s social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.3.2',
         'released' => '2026-10-22',
         'changes'  => [

@@ -42,15 +42,15 @@ test.describe('Social Profiles (React) functionality', () => {
             const data = newSocialData.profiles();
             await social.fillProfiles(data);
             await social.submit();
-            await social.goto();
+            await social.reload();
             await expect(social.fb).toHaveValue(data.fb);
             await expect(social.linkedin).toHaveValue(data.linkedin);
         });
 
         test('vendor can clear a social link (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
-            await social.saveAndVerifyPersisted({ instagram: newSocialData.profiles().instagram });
+            await social.saveAndVerifyPersisted(newSocialData.profiles());
             await social.clearField('instagram');
-            await social.goto();
+            await social.reload();
             await expect(social.instagram).toHaveValue('');
         });
     });
