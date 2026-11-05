@@ -51,13 +51,13 @@ class RecommendedPlugins {
                 'basename'    => 'wemail/wemail.php',
             ],
             [
-                'type'        => 'wc_conversion_tracking',
-                'title'       => fn() => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                'description' => fn() => __( 'Advanced WooCommerce conversion tracking for every ad platform', 'dokan-lite' ),
-                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
-                'img_alt'     => fn() => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
-                'slug'        => 'woocommerce-conversion-tracking',
-                'basename'    => 'woocommerce-conversion-tracking/conversion-tracking.php',
+                'type'        => 'cartpilot',
+                'title'       => fn() => __( 'CartPilot', 'dokan-lite' ),
+                'description' => fn() => __( 'Let shoppers speak or type to an AI sales agent that sells for every vendor', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/cartpilot.svg',
+                'img_alt'     => fn() => __( 'CartPilot logo', 'dokan-lite' ),
+                'slug'        => 'cartpilot',
+                'basename'    => 'cartpilot/cartpilot.php',
             ],
             [
                 'type'        => 'store_growth',
@@ -76,6 +76,15 @@ class RecommendedPlugins {
                 'img_alt'     => fn() => __( 'weDocs logo', 'dokan-lite' ),
                 'slug'        => 'wedocs',
                 'basename'    => 'wedocs/wedocs.php',
+            ],
+            [
+                'type'        => 'wc_conversion_tracking',
+                'title'       => fn() => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                'description' => fn() => __( 'Advanced WooCommerce conversion tracking for every ad platform', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
+                'img_alt'     => fn() => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
+                'slug'        => 'woocommerce-conversion-tracking',
+                'basename'    => 'woocommerce-conversion-tracking/conversion-tracking.php',
             ],
         ];
     }
