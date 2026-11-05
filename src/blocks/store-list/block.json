@@ -1,0 +1,197 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-list",
+    "version": "1.0.0",
+    "title": "Store List",
+    "category": "dokan",
+    "description": "Display a grid of vendor stores.",
+    "keywords": [
+        "vendor",
+        "store",
+        "stores",
+        "marketplace",
+        "dokan"
+    ],
+    "textdomain": "dokan-lite",
+    "attributes": {
+        "perPage": {
+            "type": "number",
+            "default": 10
+        },
+        "columns": {
+            "type": "number",
+            "default": 3
+        },
+        "featured": {
+            "type": "boolean",
+            "default": false
+        },
+        "category": {
+            "type": "string",
+            "default": ""
+        },
+        "storeIds": {
+            "type": "array",
+            "default": []
+        },
+        "withProductsOnly": {
+            "type": "boolean",
+            "default": false
+        },
+        "orderby": {
+            "type": "string",
+            "default": ""
+        },
+        "order": {
+            "type": "string",
+            "default": ""
+        },
+        "showAvatar": {
+            "type": "boolean",
+            "default": true
+        },
+        "defaultStoreName": {
+            "type": "string",
+            "default": ""
+        },
+        "showFeatured": {
+            "type": "boolean",
+            "default": true
+        },
+        "showOpenClose": {
+            "type": "boolean",
+            "default": true
+        },
+        "showRating": {
+            "type": "boolean",
+            "default": true
+        },
+        "showAddress": {
+            "type": "boolean",
+            "default": true
+        },
+        "showPhone": {
+            "type": "boolean",
+            "default": true
+        },
+        "featuredText": {
+            "type": "string",
+            "default": ""
+        },
+        "openText": {
+            "type": "string",
+            "default": ""
+        },
+        "closedText": {
+            "type": "string",
+            "default": ""
+        },
+        "visitStoreText": {
+            "type": "string",
+            "default": ""
+        },
+        "noVendorText": {
+            "type": "string",
+            "default": ""
+        },
+        "prevText": {
+            "type": "string",
+            "default": ""
+        },
+        "nextText": {
+            "type": "string",
+            "default": ""
+        },
+        "phoneIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "addressIcon": {
+            "type": "string",
+            "default": ""
+        },
+        "addressLabel": {
+            "type": "string",
+            "default": ""
+        },
+        "avatarShape": {
+            "type": "string",
+            "default": "circle"
+        },
+        "avatarPosition": {
+            "type": "string",
+            "default": ""
+        },
+        "cardAlign": {
+            "type": "string",
+            "default": ""
+        },
+        "cardBackgroundColor": {
+            "type": "string",
+            "default": ""
+        },
+        "storeNameColor": {
+            "type": "string",
+            "default": ""
+        },
+        "storeDetailsColor": {
+            "type": "string",
+            "default": ""
+        },
+        "storeNameSize": {
+            "type": "string",
+            "default": ""
+        },
+        "storeDetailsSize": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "supports": {
+        "align": [
+            "wide",
+            "full"
+        ],
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true
+        },
+        "typography": {
+            "fontSize": true,
+            "__experimentalFontFamily": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
+        "html": false
+    },
+    "styles": [
+        {
+            "name": "default",
+            "label": "Default",
+            "isDefault": true
+        },
+        {
+            "name": "shadow",
+            "label": "Shadow"
+        },
+        {
+            "name": "bordered",
+            "label": "Bordered"
+        },
+        {
+            "name": "flat",
+            "label": "Flat"
+        }
+    ],
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}

@@ -1,0 +1,280 @@
+// Front-end + editor styles for dokan/store-list.
+
+@use "sass:math";
+
+// Below this a card can no longer show a banner, name and address legibly.
+$dokan-store-card-min-width: 260px;
+$dokan-store-max-columns: 6;
+
+.wp-block-dokan-store-list {
+	// Dokan sizes the cards off the viewport, which is wrong for a block: the same grid can sit in a narrow
+	// column, and in the editor it renders inside an iframe far narrower than the browser window. Sizing off
+	// the block's own width makes the editor preview match what visitors get.
+	container-type: inline-size;
+	container-name: dokan-store-list;
+
+	#dokan-seller-listing-wrap:not(.list-view) ul.dokan-seller-wrap > li.dokan-single-seller {
+		width: 100% !important;
+		float: none !important;
+	}
+
+	// Columns is a maximum, not a promise: the grid drops to as many columns as the block is actually wide
+	// enough for, rather than collapsing to one. Each step is emitted widest-last so the largest one that fits
+	// wins. Dokan's own widths are viewport media queries ending in `!important`, hence the same here — scoped
+	// to the block, leaving the `[dokan-stores]` shortcode alone.
+	@for $columns from 2 through $dokan-store-max-columns {
+
+		@for $fits from 2 through $columns {
+
+			@container dokan-store-list (min-width: #{$fits * $dokan-store-card-min-width}) {
+				#dokan-seller-listing-wrap:not(.list-view) ul.dokan-seller-wrap > li.dokan-single-seller.coloum-#{$columns} {
+					width: math.div(100%, $fits) !important;
+					float: left !important;
+				}
+			}
+		}
+	}
+
+	// Dokan pulls the listing 15px out on both sides to absorb the cards' own
+	// gutters. The cards land back on the block edge; the pagination has no
+	// gutter of its own, so it would start 15px outside the block.
+	#dokan-seller-listing-wrap .pagination-container {
+		padding-inline: 15px;
+	}
+
+	// Dokan draws the pagination in fixed greys; once the block has its own
+	// colours, the page links follow them. Untouched blocks keep the greys.
+	&.has-text-color .pagination-wrap ul.pagination > li > a,
+	&.has-text-color .pagination-wrap ul.pagination > li > span {
+		color: inherit;
+	}
+
+	&.has-background .pagination-wrap ul.pagination > li > a,
+	&.has-background .pagination-wrap ul.pagination > li > span:not(.current) {
+		background-color: transparent;
+	}
+
+	// List view stacks the cards whatever the Columns setting says.
+	#dokan-seller-listing-wrap.list-view ul.dokan-seller-wrap > li.dokan-single-seller {
+		width: 100% !important;
+		float: none !important;
+	}
+
+	// --- Card appearance settings. Every rule below is gated on a class or
+	// custom property the block only emits once the setting is changed, so an
+	// untouched block renders exactly as before. Selectors carry the listing id
+	// because Dokan's own card rules do, and these have to win against them.
+
+	// Store picture shape. The classic card draws a circle on both the white
+	// frame and the picture inside it, so both change together.
+	&.has-avatar-rounded #dokan-seller-listing-wrap .seller-avatar,
+	&.has-avatar-rounded #dokan-seller-listing-wrap .seller-avatar img {
+		border-radius: 8px !important;
+	}
+
+	&.has-avatar-square #dokan-seller-listing-wrap .seller-avatar,
+	&.has-avatar-square #dokan-seller-listing-wrap .seller-avatar img {
+		border-radius: 0 !important;
+	}
+
+	/*! rtl:begin:ignore */
+	// Card text alignment and picture position are physical sides, like WordPress's
+	// own alignment classes, so the RTL stylesheet keeps them as they are.
+
+	// Card text alignment: the details and the name on every card.
+	@each $align in left, center, right {
+		&.has-card-align-#{$align} #dokan-seller-listing-wrap .store-data-container,
+		&.has-card-align-#{$align} #dokan-seller-listing-wrap .store-data h2 {
+			text-align: $align;
+		}
+	}
+
+	&.has-card-align-center #dokan-seller-listing-wrap .featured-label {
+		margin-inline: auto;
+	}
+
+	&.has-card-align-right #dokan-seller-listing-wrap .featured-label {
+		margin-left: auto;
+	}
+
+	&.has-card-align-left #dokan-seller-listing-wrap .featured-label {
+		margin-right: auto;
+	}
+	/*! rtl:end:ignore */
+
+	// Card styles. The default is today's flat-on-white card.
+	&.is-style-shadow #dokan-seller-listing-wrap .store-wrapper {
+		border-radius: 6px;
+		overflow: hidden;
+		box-shadow:
+			0 10px 15px -3px rgba(0, 0, 0, 0.12),
+			0 4px 6px -4px rgba(0, 0, 0, 0.08);
+	}
+
+	&.is-style-bordered #dokan-seller-listing-wrap .store-wrapper {
+		border: 1px solid rgba(0, 0, 0, 0.12);
+		border-radius: 6px;
+		overflow: hidden;
+	}
+
+	&.is-style-flat #dokan-seller-listing-wrap .store-wrapper,
+	&.is-style-flat #dokan-seller-listing-wrap .store-wrapper .store-footer {
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+	}
+
+	// Card background: the footer strip in grid view, the whole card in list view.
+	&.has-card-background #dokan-seller-listing-wrap.grid-view .store-footer,
+	&.has-card-background #dokan-seller-listing-wrap.list-view .store-wrapper {
+		background: var(--dokan-store-card-background);
+	}
+
+	// Link colour reaches the store name; an explicit Store name colour, below, still wins.
+	&.has-store-link-color #dokan-seller-listing-wrap .store-data h2 a {
+		color: var(--dokan-store-link-color) !important;
+	}
+
+	// Store name / details colours, once picked; `!important` beats Dokan's deep card rules.
+	&.has-store-name-color #dokan-seller-listing-wrap .store-data h2 a {
+		color: var(--dokan-store-name-color) !important;
+		text-shadow: none !important;
+	}
+
+	&.has-store-details-color #dokan-seller-listing-wrap .store-data .store-address,
+	&.has-store-details-color #dokan-seller-listing-wrap .store-data .store-phone {
+		color: var(--dokan-store-details-color) !important;
+		text-shadow: none !important;
+	}
+
+	// Store name / details sizes, once picked; they replace Dokan's fixed 25px and 15px.
+	&.has-store-name-size #dokan-seller-listing-wrap .store-data h2,
+	&.has-store-name-size #dokan-seller-listing-wrap .store-data h2 a {
+		font-size: var(--dokan-store-name-size) !important;
+	}
+
+	&.has-store-details-size #dokan-seller-listing-wrap .store-data .store-address,
+	&.has-store-details-size #dokan-seller-listing-wrap .store-data .store-phone {
+		font-size: var(--dokan-store-details-size) !important;
+	}
+
+	/*! rtl:begin:ignore */
+	// Store picture position (grid view); unset keeps Dokan's own placement, mirrored in RTL.
+	// Corner the lowered picture takes at the banner's foot (positions always grow the banner).
+	$dokan-avatar-room: 90px;
+	$dokan-avatar-height: 40px;
+
+	&.has-avatar-position-left #dokan-seller-listing-wrap.grid-view .store-footer .seller-avatar {
+		top: -40px !important;
+		left: 20px !important;
+		right: auto !important;
+		transform: none !important;
+	}
+
+	&.has-avatar-position-right #dokan-seller-listing-wrap.grid-view .store-footer .seller-avatar {
+		top: -40px !important;
+		right: 20px !important;
+		left: auto !important;
+		transform: none !important;
+	}
+
+	// The footer's buttons sit on the side away from the picture, in either direction.
+	&.has-avatar-position-left #dokan-seller-listing-wrap.grid-view .store-footer {
+		text-align: right;
+	}
+
+	&.has-avatar-position-right #dokan-seller-listing-wrap.grid-view .store-footer {
+		text-align: left;
+	}
+
+	// Centre moves below the banner, above the buttons, so it never covers text.
+	&.has-avatar-position-center #dokan-seller-listing-wrap.grid-view .store-footer .seller-avatar {
+		top: 8px !important;
+		left: 50% !important;
+		right: auto !important;
+		transform: translateX(-50%) !important;
+	}
+
+	&.has-avatar-position-center #dokan-seller-listing-wrap.grid-view .store-footer {
+		padding-top: 100px;
+	}
+
+	// A zero-width float down to the picture, then a picture-sized one in the corner: text wraps only there.
+	@each $side in left, right {
+		&.has-avatar-position-#{$side} #dokan-seller-listing-wrap.grid-view .store-data-container {
+			height: 100%;
+			box-sizing: border-box;
+
+			&::before {
+				content: "";
+				float: $side;
+				width: 0;
+				height: calc(100% - #{$dokan-avatar-height});
+			}
+
+			.store-data::before {
+				content: "";
+				float: $side;
+				clear: $side;
+				width: $dokan-avatar-room;
+				height: $dokan-avatar-height;
+			}
+		}
+	}
+	/*! rtl:end:ignore */
+
+
+	// The banner grows with its text: banner and text share one grid row, the footer the next.
+	// Cards in a row stretch to the tallest, so a taller card cannot snag the floats below it.
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view ul.dokan-seller-wrap {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view ul.dokan-seller-wrap > li.dokan-single-seller {
+		display: flex;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-wrapper {
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 1fr auto;
+		width: 100%;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-header,
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-content {
+		grid-area: 1 / 1;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-content {
+		position: relative;
+		height: auto;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-banner {
+		height: 100%;
+	}
+
+	&.has-growing-banner #dokan-seller-listing-wrap.grid-view .store-footer {
+		grid-area: 2 / 1;
+	}
+
+	// An address icon of its own replaces list view's built-in pin.
+	#dokan-seller-listing-wrap.list-view .store-address.has-address-icon::before {
+		display: none !important;
+	}
+
+	// Address icon and label sit inline before the address text.
+	#dokan-seller-listing-wrap .store-address {
+
+		> i {
+			margin-inline-end: 0.35em;
+		}
+
+		.store-address-label {
+			margin-inline-end: 0.35em;
+			font-weight: 600;
+		}
+	}
+}

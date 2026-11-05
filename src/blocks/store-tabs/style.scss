@@ -1,0 +1,139 @@
+/*
+ * Front-end + editor styles for dokan/store-tabs.
+ *
+ * The `.dokan-modules-button` list is kept as a class name because Pro's share,
+ * support and live-chat buttons render their own markup into it and style
+ * themselves against it. The tab list is fresh — see
+ * docs/adr/0009-store-header-blocks-emit-fresh-markup.md.
+ */
+
+.wp-block-dokan-store-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--wp--style--block-gap, 1em);
+
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--wp--style--block-gap, 1em);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	/*
+	 * Pro's button row. It renders opposite the tabs, matching the classic page
+	 * and the Elementor templates — and stays out of the flow when Pro is absent.
+	 */
+	.dokan-modules-button {
+		order: 1;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	.dokan-store-tab {
+		margin: 0;
+
+		a {
+			display: inline-block;
+			color: inherit;
+			text-decoration: none;
+			padding-block: 0.5em;
+			border-block-end: 2px solid transparent;
+		}
+
+		&.is-active a,
+		a:hover,
+		a:focus {
+			border-block-end-color: currentcolor;
+		}
+
+		// Active tab colour: the underline, and the pill or box fill below. Unset,
+		// it falls back to the text colour as it always has.
+		&.is-active a {
+			color: var(--dokan-tab-active-color, inherit);
+			border-block-end-color: var(--dokan-tab-active-color, currentcolor);
+		}
+
+		.dokan-store-tab-icon {
+			margin-inline-end: 0.4em;
+		}
+	}
+
+	// --- Alignment --------------------------------------------------------
+	// From the typography text-align support. The tab list moves; Pro's button
+	// row stays at the far end, so a centred tab list sits between them.
+	&.has-text-align-center {
+		justify-content: center;
+
+		.dokan-store-tab-list {
+			justify-content: center;
+			flex: 1 1 auto;
+		}
+	}
+
+	&.has-text-align-right {
+		justify-content: flex-end;
+
+		.dokan-store-tab-list {
+			justify-content: flex-end;
+			flex: 1 1 auto;
+		}
+	}
+
+	// WordPress's alignment classes keep their side in RTL, where flex-start is the right.
+	[dir="rtl"] &.has-text-align-right,
+	[dir="rtl"] &.has-text-align-right .dokan-store-tab-list {
+		justify-content: flex-start;
+	}
+
+	[dir="rtl"] &.has-text-align-left,
+	[dir="rtl"] &.has-text-align-left .dokan-store-tab-list {
+		justify-content: flex-end;
+	}
+
+	[dir="rtl"] &.has-text-align-left .dokan-store-tab-list {
+		flex: 1 1 auto;
+	}
+
+	// --- Styles -----------------------------------------------------------
+	// Underline is the default drawn above. Pills and Boxed fill the tab instead;
+	// the fill is the active tab colour when set, else the marketplace theme colour.
+	&.is-style-pills .dokan-store-tab a,
+	&.is-style-boxed .dokan-store-tab a {
+		padding: 0.5em 1em;
+		border-block-end: 0;
+	}
+
+	&.is-style-pills .dokan-store-tab a {
+		border-radius: 999px;
+	}
+
+	&.is-style-boxed .dokan-store-tab a {
+		border: 1px solid rgba(128, 128, 128, 0.3);
+		border-radius: 4px;
+	}
+
+	&.is-style-pills .dokan-store-tab a:hover,
+	&.is-style-pills .dokan-store-tab a:focus,
+	&.is-style-boxed .dokan-store-tab a:hover,
+	&.is-style-boxed .dokan-store-tab a:focus {
+		background: rgba(128, 128, 128, 0.12);
+	}
+
+	&.is-style-pills .dokan-store-tab.is-active a,
+	&.is-style-boxed .dokan-store-tab.is-active a,
+	&.is-style-pills .dokan-store-tab.is-active a:hover,
+	&.is-style-pills .dokan-store-tab.is-active a:focus,
+	&.is-style-boxed .dokan-store-tab.is-active a:hover,
+	&.is-style-boxed .dokan-store-tab.is-active a:focus {
+		background: var(--dokan-tab-active-color, var(--dokan-button-background-color, #7047eb));
+		border-color: var(--dokan-tab-active-color, var(--dokan-button-background-color, #7047eb));
+		color: var(--dokan-tab-active-text-color, var(--dokan-button-text-color, #fff));
+	}
+}

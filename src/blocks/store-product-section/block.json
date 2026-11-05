@@ -1,0 +1,64 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/store-product-section",
+    "version": "1.0.0",
+    "title": "Store Product Section",
+    "category": "dokan",
+    "description": "A curated section of the vendor's products: featured, latest, best selling or top rated.",
+    "keywords": [
+        "dokan",
+        "store",
+        "vendor",
+        "products",
+        "featured",
+        "latest",
+        "best selling",
+        "top rated"
+    ],
+    "textdomain": "dokan-lite",
+    "attributes": {
+        "sectionId": {
+            "type": "string",
+            "default": "featured"
+        },
+        "title": {
+            "type": "string",
+            "default": ""
+        },
+        "emptyText": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ],
+        "spacing": {
+            "margin": true,
+            "padding": true
+        },
+        "color": {
+            "text": true,
+            "background": true,
+            "link": true,
+            "heading": true
+        },
+        "typography": {
+            "fontSize": true,
+            "lineHeight": true,
+            "textAlign": true,
+            "__experimentalFontFamily": true,
+            "__experimentalDefaultControls": {
+                "fontSize": true
+            }
+        }
+    },
+    "example": {},
+    "editorScript": "file:./index.js",
+    "style": "file:./style-index.css",
+    "render": "file:./render.php"
+}
