@@ -340,6 +340,26 @@
     .dokan-pro-features-menu-text {
         color: #f18500;
     }
+
+    // TODO BFCM-2026-REMOVE: seasonal "Black Friday" entry (label left, discount pill right); remove with the page.
+    .wp-submenu a:has(> .dokan-black-friday-menu-badge) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .dokan-black-friday-menu-badge {
+        flex-shrink: 0;
+        padding: 2px 5px;
+        border-radius: 999px;
+        background: #d9431b;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        line-height: 1.2;
+    }
 }
 
 #adminmenu {

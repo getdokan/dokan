@@ -241,7 +241,8 @@ class RequestContext {
      * method now only reports incorrect usage.
      *
      * @since 5.0.15
-     * @since DOKAN_SINCE Reads the dispatched REST route instead of the request URI.
+     * @since 5.3.4 Reads the dispatched REST route instead of the request URI.
+     * @since DOKAN_SINCE Also matches the servers of the WordPress MCP Adapter.
      *
      * @return bool
      */

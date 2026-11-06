@@ -442,7 +442,7 @@ class StoreController extends WP_REST_Controller {
         $updated_store_id = dokan()->vendor->update( $store->get_id(), $params );
 
         if ( is_wp_error( $updated_store_id ) ) {
-            return new WP_Error( $updated_store_id->get_error_code(), $updated_store_id->get_error_message() );
+            return new WP_Error( $updated_store_id->get_error_code(), $updated_store_id->get_error_message(), $updated_store_id->get_error_data() );
         }
 
         $store = dokan()->vendor->get( $updated_store_id );
@@ -505,7 +505,7 @@ class StoreController extends WP_REST_Controller {
         $store = dokan()->vendor->create( $params );
 
         if ( is_wp_error( $store ) ) {
-            return new WP_Error( $store->get_error_code(), $store->get_error_message() );
+            return new WP_Error( $store->get_error_code(), $store->get_error_message(), $store->get_error_data() );
         }
 
         do_action( 'dokan_rest_stores_create_store', $store, $request );
@@ -917,18 +917,10 @@ class StoreController extends WP_REST_Controller {
         if ( ! empty( $params['store_slug'] ) ) {
             $store_slug = sanitize_text_field( $params['store_slug'] );
 
-            if ( get_user_by( 'slug', $store_slug ) ) {
-                $response = [
-                    'url'       => $store_slug,
-                    'available' => false,
-                ];
-
-                return rest_ensure_response( $response );
-            }
-
+            // Normalized like wp_insert_user() does, so a reformatted taken URL is caught too.
             $response = [
-                'url'       => sanitize_title( $store_slug ),
-                'available' => true,
+                'url'       => VendorUtil::sanitize_shop_url( $store_slug ),
+                'available' => VendorUtil::is_shop_url_available( $store_slug ),
             ];
 
             return rest_ensure_response( $response );

@@ -71,6 +71,7 @@ const updatedConfig = {
     output: {
         path: path.resolve( __dirname, './assets/js' ),
         filename: '[name].js',
+        chunkFilename: '[name].js?ver=[chunkhash]',
         clean: true,
         devtoolNamespace: 'dokan',
         // library: { // Bind every entryChunkName to dokan global window object

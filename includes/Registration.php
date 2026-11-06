@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan;
 
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 
 /**
@@ -181,8 +182,8 @@ class Registration {
                 }
             }
 
-            // Check if the shop URL already not in use.
-            if ( ! empty( get_user_by( 'slug', $shop_url ) ) ) {
+            // Normalized like wp_insert_user() does, so a reformatted taken URL is caught too.
+            if ( ! VendorUtil::is_shop_url_available( $shop_url ) ) {
                 return new WP_Error( 'shop-url-error', __( 'Shop URL is not available', 'dokan-lite' ) );
             }
         }
