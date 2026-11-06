@@ -82,9 +82,18 @@
         padding-top: 1.5rem !important;
     }
 
+    // plugin-ui's copy field keeps its copy action as a bare <button> over the input's right end, so the theme's generic button chrome (grey fill, padding) paints a block inside the input; hand the box back to the icon.
+    input[data-slot='input'][readonly] + button {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
     // plugin-ui DataViews ships a standalone-grid frame (rounded shadow + 48px gutters); strip it so rows sit flat and flush inside the settings card (!important: both stylesheets flag these).
     .dokan-vendor-store-locations,
-    .dokan-vendor-vacation-history {
+    .dokan-vendor-vacation-history,
+    .dokan-vendor-app-passwords {
         .pui-root-dataviews {
             border: 0 !important;
             border-radius: 0 !important;
@@ -111,8 +120,9 @@
         }
     }
 
-    // Locations gets its above-the-table divider from the section's divide-y (its switch is a separate field block); the history header + table share one block, so draw the same line here.
-    .dokan-vendor-vacation-history .pui-root-dataviews {
+    // Locations gets its above-the-table divider from the section's divide-y (its switch is a separate field block); the history and application-password headers share one block with their table, so draw the same line here.
+    .dokan-vendor-vacation-history .pui-root-dataviews,
+    .dokan-vendor-app-passwords .pui-root-dataviews {
         border-top: 1px solid #e5e7eb !important;
     }
 

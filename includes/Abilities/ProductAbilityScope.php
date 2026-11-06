@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Abilities;
 
+use WeDevs\Dokan\Abilities\Support\AbilityArgs;
 use WeDevs\Dokan\Abilities\Support\OwnershipGate;
 use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Abilities\Support\VendorPayload;
@@ -62,11 +63,27 @@ class ProductAbilityScope implements Hookable {
     private bool $force_published_only = false;
 
     /**
+     * Product abilities registered without an execute callback, by name: WooCommerce 11.3's
+     * product-create and product-update attach theirs after registration, so their vendor
+     * handling rides on WordPress 7.1's input and result filters instead of a wrapped callback.
+     *
+     * @var array<string, array{create:bool,output:bool}>
+     */
+    private array $filtered_abilities = [];
+
+    /**
      * WooCommerce product-create ability names this class extends in place.
      *
      * @var string[]
      */
     private const PRODUCT_CREATE_ABILITIES = [ 'woocommerce/products-create', 'woocommerce/product-create' ];
+
+    /**
+     * WooCommerce product-delete ability names whose `force` flag is withheld below Store Admin.
+     *
+     * @var string[]
+     */
+    private const PRODUCT_DELETE_ABILITIES = [ 'woocommerce/product-delete', 'woocommerce/products-delete' ];
 
     /**
      * WooCommerce product-list ability names that gain an optional `vendor_id` filter.
@@ -118,9 +135,18 @@ class ProductAbilityScope implements Hookable {
         add_filter( 'woocommerce_product_data_store_cpt_get_products_query', [ $this, 'scope_products_query' ], 99 );
         add_filter( 'woocommerce_rest_product_object_query', [ $this, 'scope_rest_products_query' ], 99 );
 
-        // Extend WooCommerce's own product abilities in place: vendor selector on create,
-        // and the owning vendor on product output.
+        // Extend WooCommerce's own product abilities in place: vendor selector on create, the
+        // owning vendor on product output, and a refusal a vendor can act on.
         add_filter( 'wp_register_ability_args', [ $this, 'extend_product_abilities' ], 10, 2 );
+
+        // WordPress 7.1 also filters the permission result: the same explanation, a second time.
+        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], 20, 2 );
+
+        // The abilities that cannot be wrapped (see $filtered_abilities) are handled on WordPress
+        // 7.1's input and result filters.
+        add_filter( 'wp_ability_normalize_input', [ $this, 'normalize_filtered_input' ], 10, 2 );
+        add_filter( 'wp_ability_execute_result', [ $this, 'enrich_filtered_result' ], 10, 2 );
+        add_action( 'wp_after_execute_ability', [ $this, 'release_forced_author' ] );
 
         // Ensure ability-created products are authored to the vendor (matters for vendor staff).
         add_action( 'woocommerce_new_product', [ $this, 'assign_vendor_as_product_author' ], 99 );
@@ -302,12 +328,26 @@ class ProductAbilityScope implements Hookable {
             return $args;
         }
 
+        $name       = (string) $name;
+        $is_delete  = in_array( $name, self::PRODUCT_DELETE_ABILITIES, true );
         $is_create  = in_array( $name, self::PRODUCT_CREATE_ABILITIES, true );
         $is_filter  = in_array( $name, self::PRODUCT_FILTER_ABILITIES, true );
         $has_output = in_array( $name, self::PRODUCT_OUTPUT_ABILITIES, true );
 
-        if ( ! $is_create && ! $is_filter && ! $has_output ) {
+        if ( ! $is_delete && ! $is_create && ! $is_filter && ! $has_output ) {
             return $args;
+        }
+
+        // Works on every WordPress with the Abilities API; the 7.1 result filter repeats it.
+        $args = AbilityArgs::wrap_permission(
+            $args,
+            function ( $result ) use ( $name ) {
+                return $this->explain_vendor_denial( $result, $name );
+            }
+        );
+
+        if ( $is_delete ) {
+            return $this->restrict_delete_to_trash( $args );
         }
 
         if ( $is_create ) {
@@ -322,14 +362,147 @@ class ProductAbilityScope implements Hookable {
             $args = $this->inject_vendor_output_schema( $args );
         }
 
-        if ( isset( $args['execute_callback'] ) && is_callable( $args['execute_callback'] ) ) {
-            $original                 = $args['execute_callback'];
-            $args['execute_callback'] = function ( $input ) use ( $original, $is_create, $is_filter, $has_output ) {
-                return $this->run_product_ability( $original, (array) $input, $is_create, $is_filter, $has_output );
-            };
+        if ( AbilityArgs::has_execute_callback( $args ) ) {
+            return AbilityArgs::wrap_execute(
+                $args,
+                function ( callable $original, $input ) use ( $is_create, $is_filter, $has_output ) {
+                    return $this->run_product_ability( $original, (array) $input, $is_create, $is_filter, $has_output );
+                }
+            );
+        }
+
+        // Nothing to wrap (WooCommerce 11.3 product-create / product-update): the input and
+        // result filters take over. A list filter cannot be applied that way, so it stays unset.
+        if ( $is_create || $has_output ) {
+            $this->filtered_abilities[ $name ] = [
+                'create' => $is_create,
+                'output' => $has_output,
+            ];
         }
 
         return $args;
+    }
+
+    /**
+     * Resolve the vendor for a product-create ability that could not be wrapped, and keep
+     * `vendor_id` away from WooCommerce, which rejects fields it does not know.
+     *
+     * Hooked to `wp_ability_normalize_input` (WordPress 7.1), which runs before validation and
+     * the permission check; a `WP_Error` returned here halts the ability.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $input        Ability input.
+     * @param string $ability_name Ability name.
+     *
+     * @return mixed
+     */
+    public function normalize_filtered_input( $input, $ability_name ) {
+        $name = (string) $ability_name;
+
+        if ( ! isset( $this->filtered_abilities[ $name ] ) || ! is_array( $input ) ) {
+            return $input;
+        }
+
+        if ( ! $this->filtered_abilities[ $name ]['create'] ) {
+            return $input;
+        }
+
+        $vendor_id = $this->resolve_create_vendor( $input );
+
+        if ( is_wp_error( $vendor_id ) ) {
+            return $vendor_id;
+        }
+
+        $this->forced_product_author = $vendor_id;
+        unset( $input['vendor_id'] );
+
+        return $input;
+    }
+
+    /**
+     * Enrich the result of a product ability that could not be wrapped.
+     *
+     * Hooked to `wp_ability_execute_result` (WordPress 7.1), which fires for an error result too,
+     * so the forced author is released either way.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $result       Ability result.
+     * @param string $ability_name Ability name.
+     *
+     * @return mixed
+     */
+    public function enrich_filtered_result( $result, $ability_name ) {
+        $name = (string) $ability_name;
+
+        if ( ! isset( $this->filtered_abilities[ $name ] ) ) {
+            return $result;
+        }
+
+        $this->forced_product_author = 0;
+
+        return $this->filtered_abilities[ $name ]['output'] ? $this->enrich_product_result( $result ) : $result;
+    }
+
+    /**
+     * Release the forced author once an ability has run. Hooked to `wp_after_execute_ability`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function release_forced_author(): void {
+        $this->forced_product_author = 0;
+    }
+
+    /**
+     * Turn a bare refusal of a product ability into one that says what a vendor can do about it.
+     *
+     * Applied inside the wrapped permission callback and again on `wp_ability_permission_result`;
+     * an explained refusal passes through the second time.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool|\WP_Error $result       The permission decided so far.
+     * @param string         $ability_name The ability being checked.
+     *
+     * @return bool|\WP_Error
+     */
+    public function explain_vendor_denial( $result, $ability_name ) {
+        if ( false !== $result || 0 !== strpos( (string) $ability_name, 'woocommerce/product' ) || ! RequestContext::is_vendor_ability_context() ) {
+            return $result;
+        }
+
+        return new \WP_Error( 'dokan_product_not_in_store', __( 'This product is not in your store, or your account may not manage products.', 'dokan-lite' ), [ 'status' => 403 ] );
+    }
+
+    /**
+     * Keep product deletion below Store Admin to the trash.
+     *
+     * A permanent delete takes a listing's order history and reviews with it. The dashboard lets
+     * a vendor do that with a click they can see; an assistant acting on a sentence should not, so
+     * the MCP exposure review asked for trash only. Store admins keep `force`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Ability registration arguments.
+     *
+     * @return array
+     */
+    protected function restrict_delete_to_trash( array $args ): array {
+        return AbilityArgs::wrap_execute(
+            $args,
+            static function ( callable $original, $input ) {
+                $input = (array) $input;
+
+                if ( RequestContext::is_ability_context() && ! current_user_can( 'manage_woocommerce' ) ) {
+                    $input['force'] = false;
+                }
+
+                return call_user_func( $original, $input );
+            }
+        );
     }
 
     /**
@@ -349,8 +522,12 @@ class ProductAbilityScope implements Hookable {
         $args['input_schema']['properties']['vendor_id'] = [
             'type'        => 'integer',
             'minimum'     => 1,
-            'description' => __( 'Filter products to a specific vendor (store). For vendors other than your own only published products are returned.', 'dokan-lite' ),
+            'description' => __( 'Limit the list to one vendor (store). A vendor passing their own id also gets their unpublished products; for any other store, and without this filter, only published products are returned.', 'dokan-lite' ),
         ];
+
+        if ( isset( $args['input_schema']['properties']['status'] ) && is_array( $args['input_schema']['properties']['status'] ) ) {
+            $args['input_schema']['properties']['status']['description'] = trim( ( $args['input_schema']['properties']['status']['description'] ?? '' ) . ' ' . __( 'A vendor only gets unpublished products of their own store, by also passing their own vendor_id.', 'dokan-lite' ) );
+        }
 
         return $args;
     }
@@ -414,6 +591,9 @@ class ProductAbilityScope implements Hookable {
             }
 
             $this->forced_product_author = $vendor_id;
+
+            // WooCommerce rejects fields it does not know; the vendor is applied on save instead.
+            unset( $input['vendor_id'] );
         }
 
         if ( $is_filter ) {

@@ -64,8 +64,9 @@ class OwnershipGate {
             'list' => 'dokan_view_product_menu',
         ],
         'shop_order' => [
-            'item' => 'dokan_view_order',
-            'list' => 'dokan_view_order_menu',
+            'item'    => 'dokan_view_order',
+            'list'    => 'dokan_view_order_menu',
+            'earning' => 'dokan_view_sales_overview',
         ],
     ];
 
