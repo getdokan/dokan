@@ -11,8 +11,8 @@ use WP_Error;
  * @group abilities
  * @group mcp
  *
- * The marketplace's AI assistant policy, applied where the MCP Adapter's default server looks:
- * the exposure flag of Dokan's abilities and the permission callback of every governed ability.
+ * The marketplace's AI assistant policy in the Abilities layer: the permission callback of every
+ * governed ability, on whichever MCP server runs it.
  */
 class GateTest extends DokanTestCase {
 
@@ -34,28 +34,6 @@ class GateTest extends DokanTestCase {
         RequestContext::reset();
 
         parent::tear_down();
-    }
-
-    public function test_dokan_abilities_are_exposed_only_while_the_switch_is_on() {
-        $args = [
-            'meta' => [
-                'mcp' => [
-                    'public' => true,
-                    'type'   => 'tool',
-                ],
-            ],
-        ];
-
-        $this->assertFalse( $this->gate->follow_the_switch( $args, 'dokan/current-vendor' )['meta']['mcp']['public'] );
-
-        add_filter( 'dokan_mcp_enabled', '__return_true' );
-
-        $this->assertTrue( $this->gate->follow_the_switch( $args, 'dokan/current-vendor' )['meta']['mcp']['public'] );
-        $this->assertSame( 'tool', $this->gate->follow_the_switch( $args, 'dokan/current-vendor' )['meta']['mcp']['type'] );
-
-        // An ability registered without MCP meta gets the flag too; WooCommerce's are left alone.
-        $this->assertTrue( $this->gate->follow_the_switch( [], 'dokan/vendors-query' )['meta']['mcp']['public'] );
-        $this->assertSame( $args, $this->gate->follow_the_switch( $args, 'woocommerce/orders-query' ) );
     }
 
     public function test_the_gate_is_inert_outside_an_mcp_request() {
@@ -171,20 +149,6 @@ class GateTest extends DokanTestCase {
             $this->assertSame( 'read', apply_filters( $filter, 'read', null ), $filter );
             $this->assertTrue( RequestContext::is_mcp_request(), $filter );
         }
-    }
-
-    public function test_the_instructions_are_appended_to_the_default_server_description() {
-        $config = [ 'server_description' => 'Default MCP server.' ];
-
-        // Switched off, the adapter's description is left alone.
-        $this->assertSame( $config, $this->gate->add_instructions( $config ) );
-
-        add_filter( 'dokan_mcp_enabled', '__return_true' );
-        $described = $this->gate->add_instructions( $config )['server_description'];
-
-        $this->assertStringStartsWith( 'Default MCP server. ', $described );
-        $this->assertStringContainsString( 'dokan/current-vendor', $described );
-        $this->assertStringNotContainsString( "\n", Gate::instructions() );
     }
 
     public function test_only_dokan_tool_calls_over_mcp_leave_a_trail() {

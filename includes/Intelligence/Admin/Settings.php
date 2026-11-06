@@ -21,7 +21,7 @@ class Settings implements Hookable {
     }
 
     /**
-     * AI Assistants (MCP) fields for the legacy settings screen.
+     * MCP Server fields for the legacy settings screen.
      *
      * Same option keys as the new settings UI (`dokan_ai.dokan_mcp_*`), so either screen flips
      * the same switch. The connection is described with `html` fields filled in when the screen
@@ -45,7 +45,7 @@ class Settings implements Hookable {
         $settings_fields['dokan_ai']['dokan_mcp'] = [
             'name'          => 'dokan_mcp',
             'type'          => 'sub_section',
-            'label'         => __( 'AI Assistants (MCP)', 'dokan-lite' ),
+            'label'         => __( 'MCP Server', 'dokan-lite' ),
             'description'   => $copy['intro'],
             'content_class' => 'sub-section-styles',
         ];
@@ -105,7 +105,7 @@ class Settings implements Hookable {
             ],
             'dokan_mcp_sign_in'       => [
                 'label' => __( 'Sign In', 'dokan-lite' ),
-                'desc'  => esc_html( Status::sign_in_text( $status ) ) . ' ' . sprintf( '<a href="%1$s">%2$s</a>', esc_url( Status::application_passwords_url() ), esc_html__( 'Create one', 'dokan-lite' ) ),
+                'desc'  => esc_html( Status::sign_in_text( $status ) ) . ' ' . sprintf( '<a href="%1$s">%2$s</a>', esc_url( Status::application_passwords_url() ), esc_html__( 'Create yours', 'dokan-lite' ) ),
             ],
         ];
     }

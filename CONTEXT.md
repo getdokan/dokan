@@ -82,12 +82,16 @@ transport that reached it is not the boundary.
 _Avoid_: MCP request, MCP context
 
 **Connection**:
-An AI client signed in to the WordPress MCP Adapter's default server as exactly
-one WordPress user, with an Application Password of that user. Dokan runs no
-server, issues no credential and owns no transport; it only decides whether that
-user may use the marketplace tools over MCP (`Access::user_can_connect()`) and
-scopes every tool call to them. A Connection can never do more than its account
-can; there is no site-wide or shared key.
+An AI client signed in to Dokan's MCP server (`/wp-json/dokan/mcp`, registered on
+the WordPress MCP Adapter) as exactly one WordPress user, with an Application
+Password of that user. WordPress checks the credential and Dokan issues or stores
+none; Dokan decides whether that user may connect (`Access::user_can_connect()`)
+and scopes every tool call to them. A Vendor creates the Application Password on
+the Vendor Dashboard (Settings → Store → AI Assistant), since wp-admin is closed
+to them; the "token" that screen lets them copy is that same password with the
+username, encoded for the `Authorization: Basic` header, not a credential of its
+own. A Connection can never do more than its account can; there is no
+site-wide or shared key, and a WooCommerce REST API key is not a credential here.
 _Avoid_: pairing, shared token, site key, personal token
 
 **Selling Activation**:

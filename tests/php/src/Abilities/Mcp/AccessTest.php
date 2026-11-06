@@ -73,8 +73,16 @@ class AccessTest extends DokanTestCase {
         $this->assertFalse( Access::user_can_connect( 999999 ) );
     }
 
-    public function test_the_endpoint_is_the_adapters_default_server() {
-        $this->assertSame( rest_url( 'mcp/mcp-adapter-default-server' ), Access::endpoint() );
+    public function test_the_endpoint_is_dokans_own_server() {
+        $this->assertSame( rest_url( 'dokan/mcp' ), Access::endpoint() );
+
+        add_filter( 'dokan_mcp_endpoint', static fn() => 'https://example.test/somewhere' );
+
+        $this->assertSame( 'https://example.test/somewhere', Access::endpoint() );
+    }
+
+    public function test_nothing_is_a_request_to_the_endpoint_outside_rest() {
+        $this->assertFalse( Access::is_request_to_endpoint() );
     }
 
     public function test_dokan_governs_its_own_and_the_scoped_woocommerce_abilities() {

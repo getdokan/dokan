@@ -22,23 +22,39 @@ class Status {
      * @return array
      */
     public static function summary(): array {
-        $enabled   = Access::is_enabled();
-        $available = self::adapter_available();
-        $feature   = self::woocommerce_feature_on();
-
-        /** This filter is documented in the MCP Adapter plugin. */
-        $default_server = (bool) apply_filters( 'mcp_adapter_create_default_server', true );
+        $enabled = Access::is_enabled();
 
         return [
             'enabled'             => $enabled,
             'vendor_access'       => Access::vendor_access_enabled(),
-            'adapter_available'   => $available,
-            'woocommerce_feature' => $feature,
-            'default_server'      => $default_server,
-            'live'                => $enabled && $available && $feature && $default_server,
+            'adapter_available'   => self::adapter_available(),
+            'woocommerce_feature' => self::woocommerce_feature_on(),
+            'live'                => $enabled && self::server_can_run(),
             'https'               => wc_site_is_https(),
             'endpoint'            => Access::endpoint(),
         ];
+    }
+
+    /**
+     * Whether something on this site runs the MCP Adapter, so Dokan's server can be registered
+     * on it. Says nothing about the switches.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function server_can_run(): bool {
+        /**
+         * Filters whether the MCP Adapter runs on this site, so Dokan's server is registered on it.
+         *
+         * For a site that boots the adapter in a way Dokan cannot see, such as its own bootstrap
+         * of the copy WooCommerce bundles.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $can_run Whether the adapter is loaded and something runs it.
+         */
+        return (bool) apply_filters( 'dokan_mcp_server_can_run', self::adapter_available() && self::woocommerce_feature_on() );
     }
 
     /**
@@ -65,15 +81,28 @@ class Status {
     }
 
     /**
-     * Whether WooCommerce lets its bundled adapter run. Always true from 11.3, where the
-     * standalone plugin boots itself.
+     * Whether the standalone MCP Adapter plugin is active. It boots the adapter by itself,
+     * whatever WooCommerce's feature flag says.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function standalone_adapter_active(): bool {
+        // Only the plugin's own bootstrap loads this class; WooCommerce starts its bundled copy without it.
+        return class_exists( '\WP\MCP\Plugin', false );
+    }
+
+    /**
+     * Whether WooCommerce lets its bundled adapter run. Always true from 11.3, and with the
+     * standalone plugin active, since the plugin boots the adapter itself.
      *
      * @since DOKAN_SINCE
      *
      * @return bool
      */
     public static function woocommerce_feature_on(): bool {
-        if ( ! self::woocommerce_bundles_adapter() ) {
+        if ( ! self::woocommerce_bundles_adapter() || self::standalone_adapter_active() ) {
             return true;
         }
 
@@ -90,9 +119,9 @@ class Status {
      */
     public static function copy(): array {
         return [
-            'intro'         => __( 'Connect assistants such as Claude, Cursor or VS Code to your marketplace through the Model Context Protocol. Dokan serves its tools through the WordPress MCP Adapter, alongside the WooCommerce tools.', 'dokan-lite' ),
+            'intro'         => __( 'Connect assistants such as Claude, Cursor or VS Code to your marketplace through the Model Context Protocol. Dokan runs its own MCP server on the WordPress MCP Adapter, at the connector URL below.', 'dokan-lite' ),
             'enabled'       => __( 'Offer the marketplace tools (vendors, products, orders, withdrawals) to connected assistants. The vendor limits on the WooCommerce product and order tools apply either way.', 'dokan-lite' ),
-            'vendor_access' => __( 'Vendors and their staff can connect an assistant with an application password of their own. Each connection only reaches that vendor\'s own store.', 'dokan-lite' ),
+            'vendor_access' => __( 'Vendors and their staff can connect an assistant with an application password they create in their dashboard, under Settings > Store > AI Assistant. Each connection can only manage that vendor\'s own store.', 'dokan-lite' ),
         ];
     }
 
@@ -112,18 +141,13 @@ class Status {
             $warnings['adapter'] = [
                 'title' => __( 'The MCP Adapter is not available', 'dokan-lite' ),
                 'text'  => self::woocommerce_bundles_adapter()
-                    ? __( 'Update WooCommerce, or install and activate the MCP Adapter plugin from WordPress.org (wp plugin install mcp-adapter --activate). WooCommerce and Dokan both serve their tools through it.', 'dokan-lite' )
-                    : __( 'From WooCommerce 11.3 the adapter is a separate plugin: install and activate the MCP Adapter plugin from WordPress.org (wp plugin install mcp-adapter --activate). WooCommerce and Dokan both serve their tools through it.', 'dokan-lite' ),
+                    ? __( 'Update WooCommerce, or install and activate the MCP Adapter plugin from WordPress.org (wp plugin install mcp-adapter --activate). Dokan registers its MCP server on it.', 'dokan-lite' )
+                    : __( 'From WooCommerce 11.3 the adapter is a separate plugin: install and activate the MCP Adapter plugin from WordPress.org (wp plugin install mcp-adapter --activate). Dokan registers its MCP server on it.', 'dokan-lite' ),
             ];
         } elseif ( ! $summary['woocommerce_feature'] ) {
             $warnings['woocommerce_feature'] = [
                 'title' => __( 'WooCommerce\'s MCP integration is switched off', 'dokan-lite' ),
                 'text'  => __( 'Turn on WooCommerce > Settings > Advanced > Features > MCP Integration, or install and activate the MCP Adapter plugin. Nothing serves the tools until one of them runs the adapter.', 'dokan-lite' ),
-            ];
-        } elseif ( ! $summary['default_server'] ) {
-            $warnings['default_server'] = [
-                'title' => __( 'The MCP Adapter\'s default server is switched off', 'dokan-lite' ),
-                'text'  => __( 'Something on this site disables it through the mcp_adapter_create_default_server filter. Dokan\'s tools are only reachable through that server.', 'dokan-lite' ),
             ];
         }
 
@@ -148,13 +172,13 @@ class Status {
      */
     public static function connector_description( array $summary ): string {
         $who   = $summary['vendor_access']
-            ? __( 'Vendors use the same URL with their own login.', 'dokan-lite' )
+            ? __( 'Vendors use the same URL with their own username and application password.', 'dokan-lite' )
             : __( 'Only store admins can connect while vendor access is off.', 'dokan-lite' );
         $state = $summary['live']
             ? __( 'Live', 'dokan-lite' )
             : __( 'Off', 'dokan-lite' );
 
-        return __( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication. The assistant finds and runs the marketplace tools through the server\'s discover-abilities and execute-ability tools, beside the WooCommerce ones.', 'dokan-lite' ) . ' ' . $who . ' (' . $state . ')';
+        return __( 'Add this to the assistant as an HTTP MCP server, signed in with HTTP Basic authentication: a WordPress username and an application password. WooCommerce REST API keys are not accepted.', 'dokan-lite' ) . ' ' . $who . ' (' . $state . ')';
     }
 
     /**
@@ -167,17 +191,21 @@ class Status {
      * @return string
      */
     public static function sign_in_text( array $summary ): string {
-        $parts = [ __( 'Assistants sign in with a WordPress application password', 'dokan-lite' ) ];
+        $parts = [];
 
         if ( $summary['vendor_access'] ) {
-            $parts[] = __( 'Vendors: create theirs under Users › Edit', 'dokan-lite' );
+            $parts[] = __( 'Vendors create their application password in their dashboard, under Settings › Store › AI Assistant', 'dokan-lite' );
         }
+
+        // Last, because both screens put the Store Admin's own "Create yours" link right after this sentence.
+        $parts[] = __( 'Assistants sign in with a WordPress application password', 'dokan-lite' );
 
         return implode( ' | ', $parts );
     }
 
     /**
-     * Where a user creates an application password for themselves.
+     * Where a Store Admin creates an application password for themselves. Vendors have no access
+     * to wp-admin and create theirs in the Vendor Dashboard ({@see VendorSettings}).
      *
      * @since DOKAN_SINCE
      *

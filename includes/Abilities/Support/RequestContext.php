@@ -181,8 +181,8 @@ class RequestContext {
      * pre-flight, *before* it checks the target ability's own permission callback. Marking the
      * request here lets the per-object permission grant (e.g. allowing a vendor to read their own
      * orders) recognize the MCP context even though no `wp_before_execute_ability` window is open
-     * yet. Works for any server built on the shared adapter: its default server, or a third
-     * party's such as MCP Site Manager.
+     * yet. Works for any server built on the shared adapter: its default server, Dokan's own, or a
+     * third party's such as MCP Site Manager.
      *
      * @since 5.0.15
      *
@@ -235,9 +235,10 @@ class RequestContext {
      * Whether the request is being served by a known MCP endpoint.
      *
      * Matches the REST route WordPress dispatches (`rest_route`), not the raw request URI: any
-     * server of the WordPress MCP Adapter (`/mcp/<server>`), or WooCommerce's endpoint of 11.2 and
-     * earlier. WooCommerce's own `MCPAdapterProvider::is_mcp_request()` is not consulted: 11.3
-     * removed the endpoint and the method now only reports incorrect usage.
+     * server of the WordPress MCP Adapter (`/mcp/<server>`), Dokan's own (`/dokan/mcp`), or
+     * WooCommerce's endpoint of 11.2 and earlier. WooCommerce's own
+     * `MCPAdapterProvider::is_mcp_request()` is not consulted: 11.3 removed the endpoint and the
+     * method now only reports incorrect usage.
      *
      * @since 5.0.15
      * @since DOKAN_SINCE Reads the dispatched REST route instead of the request URI.
@@ -245,14 +246,28 @@ class RequestContext {
      * @return bool
      */
     protected static function matches_mcp_endpoint(): bool {
+        // Case-insensitive because WordPress matches REST routes case-insensitively.
+        return (bool) preg_match( '#^/(?:mcp|woocommerce/mcp|dokan/mcp)(?:/|$)#i', self::served_rest_route() );
+    }
+
+    /**
+     * The REST route WordPress is serving, or an empty string outside a REST request.
+     *
+     * Read from the parsed query (`rest_route`), which a query string cannot fake the way it can
+     * fake a match on the request URI.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function served_rest_route(): string {
         if ( ! self::is_rest_request() ) {
-            return false;
+            return '';
         }
 
         $route = $GLOBALS['wp']->query_vars['rest_route'] ?? '';
 
-        // Case-insensitive because WordPress matches REST routes case-insensitively.
-        return is_string( $route ) && preg_match( '#^/(?:mcp|woocommerce/mcp)(?:/|$)#i', $route );
+        return is_string( $route ) ? $route : '';
     }
 
     /**

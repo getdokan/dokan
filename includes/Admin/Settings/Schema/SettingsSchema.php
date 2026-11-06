@@ -2318,7 +2318,7 @@ class SettingsSchema {
     }
 
     /**
-     * AI Assistants (MCP) subpage: the switches that run the Dokan MCP server, then the
+     * MCP Server subpage: the switches that run the Dokan MCP server, then the
      * connection described with ordinary display fields.
      *
      * @since DOKAN_SINCE
@@ -2351,7 +2351,8 @@ class SettingsSchema {
                 'id'          => 'mcp',
                 'type'        => 'subpage',
                 'page_id'     => 'ai_assist',
-                'title'       => esc_html__( 'AI Assistants (MCP)', 'dokan-lite' ),
+                // Named for what it switches on: "AI Assistant" is already Dokan's name for content generation, the subpage beside this one.
+                'title'       => esc_html__( 'MCP Server', 'dokan-lite' ),
                 'description' => esc_html( $copy['intro'] ),
                 'priority'    => 200,
                 'doc_link'    => 'https://dokan.co/docs/wordpress/settings/dokan-mcp/',
@@ -2479,7 +2480,7 @@ class SettingsSchema {
             [
                 'show_icon'  => true,
                 'title'      => esc_html( Status::sign_in_text( $status ) ),
-                'link_title' => esc_html__( 'Create one', 'dokan-lite' ),
+                'link_title' => esc_html__( 'Create yours', 'dokan-lite' ),
                 'link_url'   => Status::application_passwords_url(),
             ]
         );

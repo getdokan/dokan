@@ -2,18 +2,18 @@
 
 namespace WeDevs\Dokan\Abilities\Mcp;
 
+use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Utilities\VendorUtil;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The marketplace's policy for AI assistants: whether Dokan's tools are exposed over MCP at all,
- * who may use them, and where an assistant connects.
+ * The marketplace's policy for AI assistants: whether Dokan's MCP server answers at all, who may
+ * use it, and where an assistant connects.
  *
- * Dokan runs no MCP server. Its abilities are served by the WordPress MCP Adapter's default
- * server, next to WooCommerce's, and this class only answers policy questions. Both switches live
- * in the AI Assist settings (`dokan_ai` section) so the legacy and the new admin settings screens
- * share one source of truth through the settings bridge.
+ * {@see Server} registers the endpoint on the WordPress MCP Adapter; this class only answers
+ * policy questions. Both switches live in the AI Assist settings (`dokan_ai` section) so the
+ * legacy and the new admin settings screens share one source of truth through the settings bridge.
  *
  * @since DOKAN_SINCE
  */
@@ -35,9 +35,19 @@ class Access {
     const SETTING_VENDOR_ACCESS = 'dokan_mcp_vendor_access';
 
     /**
-     * REST route of the MCP Adapter's default server, beneath the REST prefix.
+     * Identifier of Dokan's server on the MCP Adapter.
      */
-    const DEFAULT_SERVER_ROUTE = 'mcp/mcp-adapter-default-server';
+    const SERVER_ID = 'dokan-mcp';
+
+    /**
+     * REST namespace of Dokan's MCP endpoint.
+     */
+    const ROUTE_NAMESPACE = 'dokan';
+
+    /**
+     * REST route of Dokan's MCP endpoint, beneath its namespace.
+     */
+    const ROUTE = 'mcp';
 
     /**
      * Whether Dokan's tools are exposed to AI assistants.
@@ -83,8 +93,7 @@ class Access {
     }
 
     /**
-     * The MCP endpoint an AI client connects to: the adapter's default server, where Dokan's
-     * abilities sit behind its discover and execute meta-tools next to WooCommerce's.
+     * The MCP endpoint an AI client connects to: Dokan's own server on the MCP Adapter.
      *
      * @since DOKAN_SINCE
      *
@@ -96,9 +105,25 @@ class Access {
          *
          * @since DOKAN_SINCE
          *
-         * @param string $endpoint The MCP Adapter's default server URL.
+         * @param string $endpoint The URL of Dokan's MCP server.
          */
-        return (string) apply_filters( 'dokan_mcp_endpoint', rest_url( self::DEFAULT_SERVER_ROUTE ) );
+        return (string) apply_filters( 'dokan_mcp_endpoint', rest_url( self::ROUTE_NAMESPACE . '/' . self::ROUTE ) );
+    }
+
+    /**
+     * Whether WordPress is serving Dokan's MCP endpoint right now.
+     *
+     * Decided on the REST route WordPress dispatches, never on the request URI, so a URL that
+     * merely mentions the endpoint in its query string does not count.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_request_to_endpoint(): bool {
+        $route = '#^/' . preg_quote( self::ROUTE_NAMESPACE . '/' . self::ROUTE, '#' ) . '(?:/|$)#i';
+
+        return (bool) preg_match( $route, RequestContext::served_rest_route() );
     }
 
     /**

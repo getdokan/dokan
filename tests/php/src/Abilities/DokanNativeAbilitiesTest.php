@@ -54,7 +54,8 @@ class DokanNativeAbilitiesTest extends DokanTestCase {
             $this->assertTrue( is_callable( $args['execute_callback'] ) );
             $this->assertTrue( is_callable( $args['permission_callback'] ) );
             $this->assertTrue( $args['meta']['show_in_rest'] );
-            $this->assertTrue( $args['meta']['mcp']['public'] );
+            // Offered by Dokan's own MCP server only, never by the adapter's default server.
+            $this->assertFalse( $args['meta']['mcp']['public'] );
             $this->assertTrue( $args['meta']['annotations']['readonly'] );
         }
     }
