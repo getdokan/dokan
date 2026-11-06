@@ -31,6 +31,7 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Abilities\DokanAbilityRegistrar::class,
         \WeDevs\Dokan\Abilities\Mcp\Gate::class,
         \WeDevs\Dokan\Abilities\Mcp\Server::class,
+        \WeDevs\Dokan\Abilities\Mcp\VendorSettings::class,
         \WeDevs\Dokan\Abilities\Mcp\DisplayFields::class,
 	];
 
