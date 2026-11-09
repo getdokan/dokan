@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET, RECAPTCHA_SITE_KEY, RECAPTCHA_SECRET_KEY } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY, DOKAN_PLAN, CATEGORY_ID, TALKJS_APP_ID, TALKJS_APP_SECRET, PRINTFUL_APP_ID, PRINTFUL_APP_SECRET, RECAPTCHA_SITE_KEY, RECAPTCHA_SECRET_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -2168,8 +2168,9 @@ export const dbData = {
             remaining: 42,
             activation_limit: 50,
             expiry_days: 329,
-            title: 'Business',
-            source_id: 'dokan-business',
+            // The package workflow (DOKAN_PLAN set) restores this seed after license specs, so it must keep the lane's plan.
+            title: DOKAN_PLAN ? DOKAN_PLAN.charAt(0).toUpperCase() + DOKAN_PLAN.slice(1) : 'Business',
+            source_id: `dokan-${DOKAN_PLAN || 'business'}`,
             recurring: 1,
         },
 
