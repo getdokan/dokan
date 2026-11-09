@@ -162,8 +162,14 @@ class OrdersSummaryGet extends AbstractVendorAbility {
                 continue;
             }
 
+            $status = (string) $status;
+
             // Stored as `wc-processing`; agents and the REST API speak `processing`.
-            $counts[ preg_replace( '/^wc-/', '', (string) $status ) ] = (int) $count;
+            if ( 0 === strpos( $status, 'wc-' ) ) {
+                $status = substr( $status, 3 );
+            }
+
+            $counts[ $status ] = (int) $count;
         }
 
         return $counts;

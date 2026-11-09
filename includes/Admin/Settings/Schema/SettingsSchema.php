@@ -2449,7 +2449,8 @@ class SettingsSchema {
                 'notice',
                 [
                     'notice_type'        => 'warning',
-                    'notice_title'       => esc_html( $warning['title'] ),
+                    // plugin-ui renders a notice title as text, so an escaped apostrophe would show as an entity; the description is HTML.
+                    'notice_title'       => $warning['title'],
                     'notice_description' => esc_html( $warning['text'] ),
                 ]
             );
@@ -2473,7 +2474,8 @@ class SettingsSchema {
             'info',
             [
                 'show_icon'  => true,
-                'title'      => esc_html( Status::sign_in_text( $status ) ),
+                // Rendered as text by plugin-ui, like a notice title.
+                'title'      => Status::sign_in_text( $status ),
                 'link_title' => esc_html__( 'Create yours', 'dokan-lite' ),
                 'link_url'   => Status::application_passwords_url(),
             ]

@@ -174,4 +174,23 @@ class GateTest extends DokanTestCase {
 
         $this->assertSame( [ [ 'dokan/current-vendor', $this->admin_id ] ], $calls );
     }
+
+    public function test_a_refusal_through_execute_keeps_cores_generic_message() {
+        if ( ! function_exists( 'wp_get_ability' ) ) {
+            $this->markTestSkipped( 'The Abilities API is not available.' );
+        }
+
+        // Core replaces a WP_Error from a permission check with its own message and reports
+        // incorrect usage. The MCP adapter asks check_permissions() first, so a client still
+        // hears the reason; a caller that goes straight to execute() does not.
+        $this->setExpectedIncorrectUsage( 'WP_Ability::execute' );
+
+        RequestContext::flag_mcp_request();
+        wp_set_current_user( $this->seller_id1 );
+
+        $result = wp_get_ability( 'dokan/current-vendor' )->execute();
+
+        $this->assertInstanceOf( WP_Error::class, $result );
+        $this->assertSame( 'ability_invalid_permissions', $result->get_error_code() );
+    }
 }

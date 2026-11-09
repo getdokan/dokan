@@ -194,7 +194,7 @@ class Status {
         $parts = [];
 
         if ( $summary['vendor_access'] ) {
-            $parts[] = __( 'Vendors create their application password in their dashboard, under Settings › Store › AI Assistant', 'dokan-lite' );
+            $parts[] = __( 'Vendors create their application password in their dashboard, under Settings > Store > AI Assistant', 'dokan-lite' );
         }
 
         // Last, because both screens put the Store Admin's own "Create yours" link right after this sentence.

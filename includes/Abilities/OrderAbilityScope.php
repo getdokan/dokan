@@ -146,6 +146,10 @@ class OrderAbilityScope implements Hookable {
      * Refuse `woocommerce/order-update-status` to vendors when the "Order Status Change" selling
      * option is off, mirroring Dokan's own REST order update.
      *
+     * Only a Vendor or Vendor Staff in an Ability Context is refused; a Store Admin, and any
+     * caller outside an Ability Context, keeps WooCommerce's answer. The option is read the way
+     * `REST\OrderController` reads it.
+     *
      * @since DOKAN_SINCE
      *
      * @param bool|\WP_Error $result       The permission decided so far.

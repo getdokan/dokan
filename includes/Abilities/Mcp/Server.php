@@ -117,11 +117,13 @@ class Server implements Hookable {
     }
 
     /**
-     * Whether this request needs the server: the endpoint itself, or WP-CLI so the adapter's
-     * commands see it.
+     * Whether this request needs the server: a REST request to the endpoint itself, or WP-CLI so
+     * the adapter's commands see it.
      *
-     * Building a tool per ability on every REST request would tax the whole dashboard for an
-     * endpoint only an assistant calls.
+     * WordPress knows the dispatched route before it fires `rest_api_init`, so the check is exact.
+     * Building a tool per ability on every other request (the REST server is also built for
+     * editor preloads in wp-admin) would tax the whole dashboard for an endpoint only an
+     * assistant calls.
      *
      * @since DOKAN_SINCE
      *
@@ -129,11 +131,6 @@ class Server implements Hookable {
      */
     public static function serves_this_request(): bool {
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
-            return true;
-        }
-
-        // Something built the REST server before WordPress parsed the request, so the route is unknown: register rather than lose the endpoint.
-        if ( ! did_action( 'parse_request' ) ) {
             return true;
         }
 

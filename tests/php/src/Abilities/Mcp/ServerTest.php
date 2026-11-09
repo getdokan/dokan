@@ -27,8 +27,24 @@ class ServerTest extends DokanTestCase {
 
     public function tear_down() {
         RequestContext::reset();
+        unset( $GLOBALS['wp']->query_vars['rest_route'] );
 
         parent::tear_down();
+    }
+
+    /**
+     * Simulate WordPress serving a REST request to Dokan's own route.
+     *
+     * Defines REST_REQUEST, so a test calling this must run in its own process.
+     *
+     * @return void
+     */
+    private function serve_dokan_mcp_route(): void {
+        if ( ! defined( 'REST_REQUEST' ) ) {
+            define( 'REST_REQUEST', true );
+        }
+
+        $GLOBALS['wp']->query_vars['rest_route'] = '/' . Access::ROUTE_NAMESPACE . '/' . Access::ROUTE;
     }
 
     /**
@@ -134,10 +150,16 @@ class ServerTest extends DokanTestCase {
         $this->assertNotContains( 'dokan/coupons-query', Server::tools() );
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function test_the_server_is_created_on_the_adapter_with_the_named_tools() {
         if ( ! function_exists( 'wp_has_ability' ) ) {
             $this->markTestSkipped( 'The Abilities API is not available.' );
         }
+
+        $this->serve_dokan_mcp_route();
 
         $registered = null;
         add_action(
@@ -168,7 +190,13 @@ class ServerTest extends DokanTestCase {
         $this->assertSame( $args[9], $registered );
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function test_a_failed_registration_is_not_announced() {
+        $this->serve_dokan_mcp_route();
+
         $announced = 0;
         add_action(
             'dokan_mcp_server_registered',
@@ -177,10 +205,22 @@ class ServerTest extends DokanTestCase {
             }
         );
 
-        ( new Server() )->register_server( $this->fake_adapter( new WP_Error( 'invalid_server', 'Nope.' ) ) );
+        $adapter = $this->fake_adapter( new WP_Error( 'invalid_server', 'Nope.' ) );
+
+        ( new Server() )->register_server( $adapter );
         ( new Server() )->register_server( 'not an adapter' );
 
+        $this->assertCount( 1, $adapter->calls );
         $this->assertSame( 0, $announced );
+    }
+
+    public function test_the_server_is_not_built_for_another_request() {
+        $adapter = $this->fake_adapter();
+
+        // Not a REST request to the endpoint: the adapter is never asked.
+        ( new Server() )->register_server( $adapter );
+
+        $this->assertSame( [], $adapter->calls );
     }
 
     public function test_nobody_connects_without_signing_in() {

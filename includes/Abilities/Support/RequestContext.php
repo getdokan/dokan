@@ -39,6 +39,14 @@ class RequestContext {
     ];
 
     /**
+     * REST routes that serve MCP: the servers of the WordPress MCP Adapter (`/mcp/<server>`),
+     * Dokan's own server, and WooCommerce's endpoint of 11.2 and earlier.
+     *
+     * @since DOKAN_SINCE
+     */
+    const MCP_ROUTES = [ '/mcp', '/dokan/mcp', '/woocommerce/mcp' ];
+
+    /**
      * Nesting depth of in-progress ability executions.
      *
      * @var int
@@ -247,8 +255,32 @@ class RequestContext {
      * @return bool
      */
     protected static function matches_mcp_endpoint(): bool {
-        // Case-insensitive because WordPress matches REST routes case-insensitively.
-        return (bool) preg_match( '#^/(?:mcp|woocommerce/mcp|dokan/mcp)(?:/|$)#i', self::served_rest_route() );
+        foreach ( self::MCP_ROUTES as $route ) {
+            if ( self::serves_route( $route ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether WordPress is serving this REST route, or a route beneath it.
+     *
+     * Compared case-insensitively, as WordPress matches routes: `/dokan/mcp` covers `/Dokan/MCP/`
+     * but not `/dokan/mcpx`.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $route A REST route with its leading slash, e.g. `/dokan/mcp`.
+     *
+     * @return bool
+     */
+    public static function serves_route( string $route ): bool {
+        $served = strtolower( self::served_rest_route() );
+        $route  = strtolower( rtrim( $route, '/' ) );
+
+        return '' !== $route && ( $served === $route || 0 === strpos( $served, $route . '/' ) );
     }
 
     /**

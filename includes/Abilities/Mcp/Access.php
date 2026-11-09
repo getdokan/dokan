@@ -121,9 +121,7 @@ class Access {
      * @return bool
      */
     public static function is_request_to_endpoint(): bool {
-        $route = '#^/' . preg_quote( self::ROUTE_NAMESPACE . '/' . self::ROUTE, '#' ) . '(?:/|$)#i';
-
-        return (bool) preg_match( $route, RequestContext::served_rest_route() );
+        return RequestContext::serves_route( '/' . self::ROUTE_NAMESPACE . '/' . self::ROUTE );
     }
 
     /**

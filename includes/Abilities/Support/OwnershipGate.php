@@ -183,7 +183,7 @@ class OwnershipGate {
      * @since 5.0.15
      *
      * @param string $object_type Post type: `product` or `shop_order`.
-     * @param string $view        `item` for a single record, `list` for a collection.
+     * @param string $view        `item` for a single record, `list` for a collection, `earning` for an order's earning split.
      *
      * @return bool
      */
@@ -203,7 +203,7 @@ class OwnershipGate {
          *
          * @param string $capability  Required capability, or an empty string for none.
          * @param string $object_type Post type being read.
-         * @param string $view        `item` for a single record, `list` for a collection.
+         * @param string $view        `item` for a single record, `list` for a collection, `earning` for an order's earning split.
          */
         $capability = (string) apply_filters(
             'dokan_ability_read_capability',

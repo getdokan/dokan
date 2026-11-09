@@ -57,10 +57,6 @@ class RequestContextTest extends DokanTestCase {
     }
 
     public function test_dokans_server_is_only_built_for_its_own_route() {
-        // WordPress has parsed the request, so the route below is the one being served.
-        remove_all_actions( 'parse_request' );
-        do_action( 'parse_request' );
-
         foreach ( [ '/dokan/mcp', '/Dokan/MCP', '/dokan/mcp/' ] as $route ) {
             $this->serve_rest_request( '/wp-json' . $route, $route );
 
@@ -76,10 +72,10 @@ class RequestContextTest extends DokanTestCase {
         }
     }
 
-    public function test_dokans_server_is_built_when_the_route_is_not_known_yet() {
-        // Something built the REST server before WordPress parsed the request.
-        $this->assertSame( 0, did_action( 'parse_request' ) );
-        $this->assertTrue( Server::serves_this_request() );
+    public function test_dokans_server_is_not_built_outside_a_rest_request() {
+        // wp-admin builds the REST server too (editor preloads), where no assistant can reach the endpoint.
+        $this->assertFalse( Access::is_request_to_endpoint() );
+        $this->assertFalse( Server::serves_this_request() );
     }
 
     public function test_dispatched_mcp_route_is_an_ability_context() {

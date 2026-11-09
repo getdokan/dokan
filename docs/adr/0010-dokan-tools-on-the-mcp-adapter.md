@@ -20,8 +20,10 @@ Dokan keeps one endpoint, registered the adapter's way. On `mcp_adapter_init`
 `/wp-json/dokan/mcp` (namespace `dokan`, route `mcp`), beside the adapter's
 default server at `/wp-json/mcp/mcp-adapter-default-server`, which Dokan does
 not create, configure or switch off. Dokan boots no adapter: whether one runs is
-WooCommerce's and the adapter's call. The server is built only for a request to
-its own route (or WP-CLI), decided on the REST route WordPress dispatches.
+WooCommerce's and the adapter's call. The server is built only for a REST request
+to its own route (or under WP-CLI), decided on the REST route WordPress
+dispatches, which it knows before `rest_api_init` fires; the REST server that
+wp-admin builds for editor preloads never gets it.
 
 A server registered on the adapter gets no ability by itself; only the default
 server discovers abilities, by their MCP exposure flag. So `Mcp\Server` gathers

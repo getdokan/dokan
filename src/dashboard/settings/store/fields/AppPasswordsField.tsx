@@ -669,7 +669,7 @@ const AppPasswordsField = ( { element }: { element: SettingsElement } ) => {
                                     autoComplete="off"
                                     className="min-h-[42px]"
                                     placeholder={ __(
-                                        'ex - Claude',
+                                        'e.g. Claude',
                                         'dokan-lite'
                                     ) }
                                     value={ draftName }
@@ -709,7 +709,7 @@ const AppPasswordsField = ( { element }: { element: SettingsElement } ) => {
                 <DokanModal
                     isOpen
                     namespace="dokan-vendor-app-password-revoke"
-                    className="!w-[350px] sm:!w-[480px]"
+                    className="w-[350px]! sm:w-[480px]!"
                     onClose={ () => setPendingRevoke( null ) }
                     onConfirm={ revoke }
                     dialogTitle={ __(
@@ -735,7 +735,7 @@ const AppPasswordsField = ( { element }: { element: SettingsElement } ) => {
                 <DokanModal
                     isOpen
                     namespace="dokan-vendor-app-password-revoke-all"
-                    className="!w-[350px] sm:!w-[480px]"
+                    className="w-[350px]! sm:w-[480px]!"
                     onClose={ () => setConfirmingRevokeAll( false ) }
                     onConfirm={ revokeAll }
                     dialogTitle={ __(
