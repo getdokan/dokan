@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use WC_Product;
 use WC_Product_Simple;
 use WC_REST_Products_Controller;
+use WeDevs\Dokan\Commission\Settings\Product as ProductCommissionSettings;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\Model;
 use WeDevs\Dokan\ProductEditor\Elements;
@@ -342,6 +343,24 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * @return WC_Data|WP_Error
      */
     protected function prepare_object_for_database( $request, $creating = false ) {
+        // The per-product admin commission is admin-only; drop those keys from a vendor's submitted
+        // meta before WooCommerce stores it, so a vendor can't set the marketplace's cut of their sales.
+        if ( is_array( $request['meta_data'] ) && ! current_user_can( 'manage_woocommerce' ) ) {
+            $admin_only_meta = ProductCommissionSettings::admin_only_meta_keys();
+
+            $request->set_param(
+                'meta_data',
+                array_values(
+                    array_filter(
+                        $request['meta_data'],
+                        static function ( $meta ) use ( $admin_only_meta ) {
+                            return ! in_array( $meta['key'] ?? '', $admin_only_meta, true );
+                        }
+                    )
+                )
+            );
+        }
+
         $product = parent::prepare_object_for_database( $request, $creating );
 
         if ( is_wp_error( $product ) ) {

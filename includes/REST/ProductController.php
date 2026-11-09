@@ -17,6 +17,7 @@ use WC_Product_Download;
 use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 use WeDevs\Dokan\Product\ProductAttribute;
+use WeDevs\Dokan\Commission\Settings\Product as ProductCommissionSettings;
 
 /**
  * Store API Controller
@@ -1517,11 +1518,20 @@ class ProductController extends DokanRESTController {
 
         // Allow set meta_data.
         if ( is_array( $request['meta_data'] ) ) {
+            $admin_only_meta    = ProductCommissionSettings::admin_only_meta_keys();
+            $can_set_commission = current_user_can( 'manage_woocommerce' );
+
             foreach ( $request['meta_data'] as $meta ) {
                 // A serialized PHP object left in meta would be revived by a later maybe_unserialize() call; never store one.
                 if ( ProductAttribute::contains_php_object( $meta['value'] ) ) {
                     continue;
                 }
+
+                // The per-product admin commission is the marketplace's own cut; only a store admin may set it, as the product admin screen does.
+                if ( ! $can_set_commission && in_array( $meta['key'], $admin_only_meta, true ) ) {
+                    continue;
+                }
+
                 $product->update_meta_data( $meta['key'], $meta['value'], isset( $meta['id'] ) ? $meta['id'] : '' );
             }
         }

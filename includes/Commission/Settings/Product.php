@@ -24,6 +24,25 @@ class Product implements InterfaceSetting {
         }
     }
 
+    /**
+     * Per-product commission meta keys only a store admin may set.
+     *
+     * These decide the marketplace's own cut of a product's sales, so the product admin screen
+     * gates them behind manage_woocommerce. The vendor product REST endpoints must keep the same
+     * gate — a vendor who could write them could set their own commission, even a negative fee
+     * that pays them more than the order total.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string[]
+     */
+    public static function admin_only_meta_keys(): array {
+        return [
+            '_per_product_admin_commission',
+            '_per_product_admin_commission_type',
+            '_per_product_admin_additional_fee',
+        ];
+    }
 
     /**
      * Returns product commission settings data.
