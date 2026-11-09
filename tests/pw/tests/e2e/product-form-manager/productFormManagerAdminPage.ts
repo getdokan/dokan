@@ -522,6 +522,20 @@ export class ProductFormManager {
         }
     }
 
+    /**
+     * Pick a product type in the Default Block filter (e.g. "Auction"). A custom
+     * field added while a type is selected is scoped to that type; "All Types" is
+     * the default. Call it before addCustomField().
+     */
+    async setTypeFilter(typeLabel: string): Promise<void> {
+        // The filter is a Radix select (a `combobox` button), not the react-select
+        // used by the field-type picker.
+        await this.page.getByRole('combobox').filter({ hasText: 'All Types' }).first().click();
+        const option = this.page.getByRole('option', { name: typeLabel, exact: true }).first();
+        await option.waitFor({ state: 'visible', timeout: 5000 });
+        await option.click();
+    }
+
     // ========================================================================
     // ADMIN: card / row scoping
     // ========================================================================
