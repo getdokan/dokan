@@ -1,6 +1,6 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
-import { AdminVendorCreatePage, adminVendorCreateData } from './adminVendorCreatePage';
+import { AdminVendorCreatePage, adminVendorCreateData, adminVendorCreateSelectors } from './adminVendorCreatePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { faker } from '@faker-js/faker';
@@ -194,6 +194,72 @@ test.describe('Admin Vendor Create functionality', () => {
             await createVendor.goto();
             await createVendor.fillEmail(adminVendorCreateData.existing.email);
             expect(await createVendor.isNotAvailableShown(), 'a taken email is flagged Not Available').toBe(true);
+        });
+    });
+
+    // ----------------------------------------
+    // Regression coverage for getdokan/dokan-pro#6259: debounced fields lost
+    // input on tab switch / fast typing, and a failed save gave no visible cue.
+    test.describe('input retention and error focus (dokan-pro#6259)', () => {
+        let ctx: BrowserContext;
+        let page: Page;
+        let createVendor: AdminVendorCreatePage;
+
+        test.beforeEach(async ({ browser }) => {
+            ctx = await browser.newContext({ storageState: a1 });
+            page = await ctx.newPage();
+            createVendor = new AdminVendorCreatePage(page);
+        });
+
+        test.afterEach(async () => {
+            await page?.close();
+            await ctx?.close();
+        });
+
+        test('a username typed right before switching tabs survives the round trip', { tag: ['@lite', '@admin'] }, async () => {
+            await createVendor.goto();
+            await createVendor.typeFast(createVendor.usernameInput, 'avc_tabswitch');
+            // Switch inside the debounce window: the pending value must be flushed, not dropped.
+            await createVendor.tab(/^Commission$/).click();
+            await page.waitForTimeout(300);
+            await createVendor.clickTab(/^General$/);
+            await expect(createVendor.usernameInput, 'username is still there after the tab round trip').toHaveValue('avc_tabswitch');
+        });
+
+        test('a social URL typed right before switching tabs survives the round trip', { tag: ['@lite', '@admin'] }, async () => {
+            await createVendor.goto();
+            await createVendor.clickTab(/^Social Options$/);
+            await createVendor.typeFast(createVendor.socialInput('fb'), 'https://facebook.com/avc_tabswitch');
+            await createVendor.tab(/^General$/).click();
+            await page.waitForTimeout(300);
+            await createVendor.clickTab(/^Social Options$/);
+            await expect(createVendor.socialInput('fb'), 'social URL is still there after the tab round trip').toHaveValue('https://facebook.com/avc_tabswitch');
+        });
+
+        test('store name, email and username typed back-to-back all survive the availability checks', { tag: ['@lite', '@admin'] }, async () => {
+            const tag = faker.string.alphanumeric(6).toLowerCase();
+            await createVendor.goto();
+            await createVendor.typeFast(createVendor.storeNameInput, `AVC Race ${tag}`);
+            await createVendor.typeFast(createVendor.emailInput, `avc_race_${tag}@example.test`);
+            await createVendor.typeFast(createVendor.usernameInput, `avc_race_${tag}`);
+            // Store URL, email and username each report Available for unique input.
+            // Waiting on all three indicators also means every availability response has landed.
+            await expect(createVendor.reactRoot.locator(adminVendorCreateSelectors.available), 'all three availability indicators resolve').toHaveCount(3, { timeout: 12000 });
+            // Only now is a lost value provable: a stale write-back would already have happened.
+            await expect(createVendor.storeNameInput, 'store name kept').toHaveValue(`AVC Race ${tag}`);
+            await expect(createVendor.emailInput, 'email kept').toHaveValue(`avc_race_${tag}@example.test`);
+            await expect(createVendor.usernameInput, 'username kept').toHaveValue(`avc_race_${tag}`);
+        });
+
+        test('submitting with errors from another tab switches to General and focuses the first invalid field', { tag: ['@lite', '@admin'] }, async () => {
+            await createVendor.goto();
+            await createVendor.clickTab(/^Commission$/);
+            const posted = await createVendor.submitAndDetectPost(1500);
+            expect(posted, 'validation blocks the POST').toBe(false);
+            expect(await createVendor.isTabActive(/^General$/), 'form jumps back to the General tab').toBe(true);
+            expect(await createVendor.hasFieldError(/Store Name is required/i), 'the required-field error is visible').toBe(true);
+            expect(await createVendor.activeElementId(), 'first invalid field receives focus').toBe('store-name');
+            expect(await createVendor.isInViewport(createVendor.storeNameInput), 'first invalid field is scrolled into view').toBe(true);
         });
     });
 

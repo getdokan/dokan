@@ -17,6 +17,7 @@ import { Settings } from './form/types';
 
 function Create( props: any ) {
     const [ saving, setSaving ] = useState( false );
+    const [ focusErrorsTrigger, setFocusErrorsTrigger ] = useState( 0 );
     const { navigate } = props;
     const initialData = {
         store_name: '',
@@ -74,6 +75,9 @@ function Create( props: any ) {
         );
 
         if ( validatedErrors.length > 0 || ! shouldSubmit ) {
+            if ( validatedErrors.length > 0 ) {
+                setFocusErrorsTrigger( ( n ) => n + 1 );
+            }
             return;
         }
 
@@ -149,7 +153,11 @@ function Create( props: any ) {
                 </div>
             </div>
 
-            <Form vendor={ vendor } requiredFields={ requiredFields } />
+            <Form
+                vendor={ vendor }
+                requiredFields={ requiredFields }
+                focusErrorsTrigger={ focusErrorsTrigger }
+            />
 
             <div className="flex flex-row justify-end mt-6">
                 <div className="sm:w-full md:w-1/2 flex flex-row justify-end gap-3">

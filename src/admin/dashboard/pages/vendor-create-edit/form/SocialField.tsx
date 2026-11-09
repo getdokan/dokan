@@ -54,6 +54,7 @@ export const SocialField = ( {
                 </div>
                 <div className="w-full">
                     <DebouncedInput
+                        flushOnUnmount
                         value={ value }
                         onChange={ handleChange }
                         input={ {
