@@ -151,6 +151,69 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertSame( $this->seller_id1, (int) get_post_field( 'post_author', $product->get_id() ) );
     }
 
+    public function test_a_vendor_without_direct_publishing_is_held_for_review() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        $this->force_ability_context();
+        wp_set_current_user( $this->seller_id1 );
+        $this->sut->register_hooks();
+
+        // A create that names no status, which WooCommerce would publish.
+        $product = new \WC_Product_Simple();
+        $product->set_name( 'Unreviewed product' );
+        $product->save();
+        $this->assertSame( 'pending', get_post_status( $product->get_id() ) );
+
+        // Asking for publish afterwards changes nothing.
+        $product->set_status( 'publish' );
+        $product->save();
+        $this->assertSame( 'pending', get_post_status( $product->get_id() ) );
+
+        // Once the Store Admin has approved it, an edit that leaves the status alone keeps it live.
+        wp_update_post(
+            [
+                'ID'          => $product->get_id(),
+                'post_status' => 'publish',
+            ]
+        );
+        $approved = wc_get_product( $product->get_id() );
+        $approved->set_regular_price( '12' );
+        $approved->save();
+        $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+    }
+
+    public function test_direct_publishing_vendors_and_store_admins_publish() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+        update_user_meta( $this->seller_id1, 'dokan_publishing', 'yes' );
+
+        $this->force_ability_context();
+        $this->sut->register_hooks();
+
+        foreach ( [ $this->seller_id1, $this->admin_id ] as $user_id ) {
+            wp_set_current_user( $user_id );
+
+            $product = new \WC_Product_Simple();
+            $product->set_name( 'Trusted product' );
+            $product->save();
+
+            $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+        }
+    }
+
+    public function test_products_saved_outside_an_ability_context_are_not_held() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        wp_set_current_user( $this->seller_id1 );
+        $this->sut->register_hooks();
+
+        $product = new \WC_Product_Simple();
+        $product->set_name( 'Dashboard product' );
+        $product->save();
+
+        // The dashboard and REST API apply their own rule; this one only follows the Ability.
+        $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+    }
+
     public function test_product_author_untouched_when_not_mcp_request() {
         $staff_id = $this->create_vendor_staff( $this->seller_id1 );
 

@@ -150,6 +150,9 @@ class ProductAbilityScope implements Hookable {
 
         // Ensure ability-created products are authored to the vendor (matters for vendor staff).
         add_action( 'woocommerce_new_product', [ $this, 'assign_vendor_as_product_author' ], 99 );
+
+        // A vendor without direct publishing gets the marketplace's review, whichever ability saves the product.
+        add_action( 'woocommerce_before_product_object_save', [ $this, 'hold_for_review' ] );
     }
 
     /**
@@ -306,6 +309,42 @@ class ProductAbilityScope implements Hookable {
                 'post_author' => $vendor_id,
             ]
         );
+    }
+
+    /**
+     * Keep a Vendor's product from going live unreviewed, as Dokan's REST API and dashboard do.
+     *
+     * Inside an Ability Context, a product a Vendor or Vendor Staff creates, or moves to a live
+     * status, takes the marketplace's new-product status unless the Vendor publishes directly. A
+     * Store Admin is left alone, and so is an edit that does not change the status.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Data $product Product about to be saved.
+     *
+     * @return void
+     */
+    public function hold_for_review( $product ): void {
+        if ( ! $product instanceof \WC_Product || $product->is_type( 'variation' ) || ! RequestContext::is_vendor_ability_context() ) {
+            return;
+        }
+
+        $is_new = 0 === $product->get_id();
+
+        // WooCommerce publishes a new product that names no status.
+        $status = $is_new && ! $product->get_status() ? 'publish' : $product->get_status();
+
+        if ( ! in_array( $status, [ 'publish', 'future' ], true ) || ( ! $is_new && ! array_key_exists( 'status', $product->get_changes() ) ) ) {
+            return;
+        }
+
+        // A disabled vendor always gets pending, as on the REST API.
+        $vendor_id = dokan_get_current_user_id();
+        $allowed   = dokan_is_seller_enabled( $vendor_id ) ? dokan_get_default_product_status( $vendor_id ) : 'pending';
+
+        if ( 'publish' !== $allowed ) {
+            $product->set_status( $allowed );
+        }
     }
 
     /**
