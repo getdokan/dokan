@@ -23,27 +23,30 @@ class V_5_0_0 extends DokanUpgrader {
 
         $table_name = $wpdb->prefix . 'dokan_order_stats';
 
-        // @codingStandardsIgnoreStart
+        // New column => the column it is placed after.
         $columns_to_add = [
-            'vendor_shipping_tax' => "ALTER TABLE `{$table_name}` ADD COLUMN `vendor_shipping_tax` double NOT NULL DEFAULT '0' AFTER `vendor_discount`",
-            'vendor_order_tax'    => "ALTER TABLE `{$table_name}` ADD COLUMN `vendor_order_tax` double NOT NULL DEFAULT '0' AFTER `vendor_shipping_tax`",
-            'admin_earning'       => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_earning` double NOT NULL DEFAULT '0' AFTER `vendor_order_tax`",
-            'admin_shipping_tax'  => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_shipping_tax` double NOT NULL DEFAULT '0' AFTER `admin_discount`",
-            'admin_order_tax'     => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_order_tax` double NOT NULL DEFAULT '0' AFTER `admin_shipping_tax`",
+            'vendor_shipping_tax' => 'vendor_discount',
+            'vendor_order_tax'    => 'vendor_shipping_tax',
+            'admin_earning'       => 'vendor_order_tax',
+            'admin_shipping_tax'  => 'admin_discount',
+            'admin_order_tax'     => 'admin_shipping_tax',
         ];
 
+        // @codingStandardsIgnoreStart
         $existing_columns = $wpdb->get_col( "SHOW COLUMNS FROM `{$table_name}`", 0 );
+        $changes          = [];
 
-        foreach ( $columns_to_add as $col_name => $alter_query ) {
+        foreach ( $columns_to_add as $col_name => $after ) {
             if ( ! in_array( $col_name, $existing_columns, true ) ) {
-                $wpdb->query( $alter_query );
+                $changes[] = "ADD COLUMN `{$col_name}` double NOT NULL DEFAULT '0' AFTER `{$after}`";
             }
         }
 
         // Update the order_type column comment to include new types.
-        $wpdb->query(
-            "ALTER TABLE `{$table_name}` MODIFY COLUMN `order_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = Dokan Parent Order, 1 = Dokan Single Vendor Order, 2 = Dokan Suborder, 3 = Refund of Dokan Parent Order, 4 = Refund of Dokan Suborder, 5 = Refund of Dokan Single Order, 6 = Advertisement Product Order, 7 = Advertisement Refund Order, 8 = Subscription Order, 9 = Subscription Refund Order'"
-        );
+        $changes[] = "MODIFY COLUMN `order_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = Dokan Parent Order, 1 = Dokan Single Vendor Order, 2 = Dokan Suborder, 3 = Refund of Dokan Parent Order, 4 = Refund of Dokan Suborder, 5 = Refund of Dokan Single Order, 6 = Advertisement Product Order, 7 = Advertisement Refund Order, 8 = Subscription Order, 9 = Subscription Refund Order'";
+
+        // One statement: the table is rebuilt at most once, and the columns are added together or not at all.
+        $wpdb->query( "ALTER TABLE `{$table_name}` " . implode( ', ', $changes ) );
         // @codingStandardsIgnoreEnd
     }
 
