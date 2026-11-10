@@ -34,6 +34,12 @@ class RequestContextTest extends DokanTestCase {
 
         $_SERVER['REQUEST_URI']                  = $request_uri;
         $GLOBALS['wp']->query_vars['rest_route'] = $route;
+
+        // WordPress serves REST from inside `parse_request`, so the route is known by then.
+        if ( ! did_action( 'parse_request' ) ) {
+            remove_all_actions( 'parse_request' );
+            do_action( 'parse_request' );
+        }
     }
 
     public function test_request_uri_does_not_identify_an_mcp_request() {
@@ -74,6 +80,8 @@ class RequestContextTest extends DokanTestCase {
 
     public function test_dokans_server_is_not_built_outside_a_rest_request() {
         // wp-admin builds the REST server too (editor preloads), where no assistant can reach the endpoint.
+        set_current_screen( 'dashboard' );
+
         $this->assertFalse( Access::is_request_to_endpoint() );
         $this->assertFalse( Server::serves_this_request() );
     }

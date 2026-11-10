@@ -217,10 +217,31 @@ class ServerTest extends DokanTestCase {
     public function test_the_server_is_not_built_for_another_request() {
         $adapter = $this->fake_adapter();
 
-        // Not a REST request to the endpoint: the adapter is never asked.
+        // WordPress has parsed the request and it is not one to the endpoint: the adapter is never asked.
+        remove_all_actions( 'parse_request' );
+        do_action( 'parse_request' );
         ( new Server() )->register_server( $adapter );
 
         $this->assertSame( [], $adapter->calls );
+    }
+
+    public function test_the_server_is_built_while_the_route_is_still_unknown() {
+        if ( ! function_exists( 'wp_has_ability' ) ) {
+            $this->markTestSkipped( 'The Abilities API is not available.' );
+        }
+
+        $adapter = $this->fake_adapter();
+
+        // A plugin built the REST server before WordPress parsed the request: the endpoint must not be lost.
+        ( new Server() )->register_server( $adapter );
+        $this->assertCount( 1, $adapter->calls );
+
+        // wp-admin parses no request and never serves the endpoint.
+        set_current_screen( 'dashboard' );
+        ( new Server() )->register_server( $adapter );
+        set_current_screen( 'front' );
+
+        $this->assertCount( 1, $adapter->calls );
     }
 
     public function test_nobody_connects_without_signing_in() {
