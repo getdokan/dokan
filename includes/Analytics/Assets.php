@@ -117,9 +117,9 @@ class Assets implements Hookable {
             true
         );
 
+		// WooCommerce 11.3 dropped the wc-admin-layout stylesheet, and an unregistered dependency makes WordPress skip this style.
 		$dep = array(
 			'wc-components',
-			'wc-admin-layout',
 			'wc-customer-effort-score',
 			// 'wc-product-editor',
 			'wp-components',

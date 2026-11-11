@@ -35,6 +35,7 @@ export interface SettingsElement {
 export interface CommissionInputsProps {
     categoryId: string | number;
     isAllCategory?: boolean;
+    highlightEmpty?: boolean;
     onCommissionChange: (
         value: string,
         type: 'percentage' | 'flat',
