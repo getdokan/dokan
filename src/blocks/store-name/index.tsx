@@ -30,7 +30,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody title={ __( 'Store Name Settings', 'dokan-lite' ) }>
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <SelectControl
                         label={ __( 'Heading level', 'dokan-lite' ) }
                         value={ String( attributes.level ?? 1 ) }

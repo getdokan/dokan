@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Opening Hours",
     "category": "dokan",
-    "description": "The vendor's weekly opening hours.",
+    "description": "The store's weekly hours.",
     "keywords": [
         "dokan",
         "store",

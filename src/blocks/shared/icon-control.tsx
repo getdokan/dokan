@@ -96,7 +96,7 @@ const IconControl = ( {
                 <TextControl
                     label={ __( 'Icon class', 'dokan-lite' ) }
                     help={ __(
-                        'A Font Awesome class list, for example "fas fa-phone".',
+                        'Font Awesome class, e.g. "fas fa-phone".',
                         'dokan-lite'
                     ) }
                     value={ draft }

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Info",
     "category": "dokan",
-    "description": "Displays the vendor's address, phone, email, rating and opening hours.",
+    "description": "Address, phone, email, rating and hours.",
     "keywords": [
         "dokan",
         "store",

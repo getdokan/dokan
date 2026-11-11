@@ -2,7 +2,7 @@
 /**
  * Title: Store Header
  * Slug: dokan/single-store-header-default
- * Description: Store banner with the profile picture, name, info and social links below it.
+ * Description: Banner on top, store details below.
  * Categories: dokan-store
  * Block Types: dokan/store-banner, dokan/store-name
  * Keywords: store, vendor, header, banner

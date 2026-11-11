@@ -184,7 +184,7 @@ const Edit = ( {
                     { ! attributes.headerLayout && (
                         <Notice status="info" isDismissible={ false }>
                             { __(
-                                'Following the layout chosen in Dokan settings. Pick one here to override it for this template only.',
+                                'Uses the layout from Dokan settings. Pick one to change it for this template only.',
                                 'dokan-lite'
                             ) }
                         </Notice>
@@ -202,7 +202,7 @@ const Edit = ( {
                     </Button>
                     <p>
                         { __(
-                            'Splits the header into separate blocks — picture, name, details, social links and banner — so each can be edited on its own. The layout dropdown no longer applies afterwards.',
+                            'Breaks the header into separate blocks you can edit one by one. The layout choice above stops working after this.',
                             'dokan-lite'
                         ) }
                     </p>

@@ -2,7 +2,7 @@
 /**
  * Title: Store Header, Stacked
  * Slug: dokan/single-store-header-stacked
- * Description: A centred store header: banner, then profile picture, name, info and social links stacked beneath it.
+ * Description: Banner, then everything centred below.
  * Categories: dokan-store
  * Block Types: dokan/store-banner, dokan/store-name
  * Keywords: store, vendor, header, centered, stacked

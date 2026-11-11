@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Store Banner",
     "category": "dokan",
-    "description": "Displays the vendor's store banner image.",
+    "description": "The store's banner image.",
     "keywords": [
         "dokan",
         "store",

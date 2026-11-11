@@ -2,7 +2,7 @@
 /**
  * Title: Store Listing
  * Slug: dokan/store-listing-default
- * Description: The store listing page: filter bar and the vendor grid.
+ * Description: Filter bar and store grid.
  * Categories: dokan-store-listing
  * Block Types: dokan/store-list
  * Viewport Width: 1100

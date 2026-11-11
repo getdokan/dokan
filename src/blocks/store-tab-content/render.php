@@ -269,7 +269,7 @@ if ( $dokan_query->have_posts() ) {
     printf(
         '<p class="dokan-info">%s</p>',
         $dokan_preview
-            ? esc_html__( 'The vendor\'s products appear here once the shop has published products.', 'dokan-lite' )
+            ? esc_html__( 'Products show here once the store has some.', 'dokan-lite' )
             : esc_html( Styles::text( $attributes['noProductsText'], __( 'No products were found of this vendor!', 'dokan-lite' ) ) )
     );
 }

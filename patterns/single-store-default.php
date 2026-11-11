@@ -2,7 +2,7 @@
 /**
  * Title: Single Store Page
  * Slug: dokan/single-store-default
- * Description: A complete vendor store page: header, tab navigation, products and a store sidebar.
+ * Description: Full store page: header, tabs, products and sidebar.
  * Categories: dokan-store
  * Block Types: dokan/store-tab-content
  * Keywords: store, vendor, page, layout
