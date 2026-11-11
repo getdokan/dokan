@@ -23,7 +23,10 @@ not create, configure or switch off. Dokan boots no adapter: whether one runs is
 WooCommerce's and the adapter's call. The server is built only for a REST request
 to its own route (or under WP-CLI), decided on the REST route WordPress
 dispatches, which it knows before `rest_api_init` fires; the REST server that
-wp-admin builds for editor preloads never gets it.
+wp-admin builds for editor preloads never gets it. When something builds the
+REST server before WordPress has parsed the request, the route is not known
+yet, so outside wp-admin the server is registered on that request rather than
+lost.
 
 A server registered on the adapter gets no ability by itself; only the default
 server discovers abilities, by their MCP exposure flag. So `Mcp\Server` gathers
@@ -135,6 +138,11 @@ served by the default server and by any third-party one:
   `parent_id` at all (a Store Admin's does): the parent and, through it, the
   sibling Suborders are the marketplace's, and a `0` would read as "a top-level
   order".
+- **A vendor without direct publishing does not go live through a tool.** A
+  product created through an ability, or moved to a live status, takes the
+  marketplace's new-product status, and the Store Admin gets the pending-review
+  email once, as from the dashboard. A product that is already live stays live
+  when it is edited, as on a REST edit that names no status.
 - **Every WooCommerce order ability is covered by name prefix**, including
   ones added after this decision such as `woocommerce/order-notes-query`
   (11.3): the ownership check, the vendor-access policy and the explained

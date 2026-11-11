@@ -180,6 +180,73 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $approved->set_regular_price( '12' );
         $approved->save();
         $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+
+        // So does one that names the status it already has, as a REST edit without a status does.
+        $approved->set_status( 'publish' );
+        $approved->set_name( 'Reviewed product' );
+        $approved->save();
+        $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+    }
+
+    public function test_scheduled_products_staff_and_disabled_vendors_are_held_too() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        $this->force_ability_context();
+        $this->sut->register_hooks();
+
+        // Scheduling is a way to go live later, so it is held like publish.
+        wp_set_current_user( $this->seller_id1 );
+        $scheduled = new \WC_Product_Simple();
+        $scheduled->set_name( 'Scheduled product' );
+        $scheduled->set_status( 'future' );
+        $scheduled->save();
+        $this->assertSame( 'pending', get_post_status( $scheduled->get_id() ) );
+
+        // Vendor Staff answer to their Vendor's publishing right, not their own.
+        wp_set_current_user( $this->create_vendor_staff( $this->seller_id1 ) );
+        $by_staff = new \WC_Product_Simple();
+        $by_staff->set_name( 'Staff product' );
+        $by_staff->save();
+        $this->assertSame( 'pending', get_post_status( $by_staff->get_id() ) );
+
+        // A vendor who publishes directly loses that with their selling.
+        update_user_meta( $this->seller_id1, 'dokan_publishing', 'yes' );
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'no' );
+        wp_set_current_user( $this->seller_id1 );
+        $disabled = new \WC_Product_Simple();
+        $disabled->set_name( 'Disabled vendor product' );
+        $disabled->save();
+        $this->assertSame( 'pending', get_post_status( $disabled->get_id() ) );
+    }
+
+    public function test_the_store_admin_is_told_once_about_a_held_product() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        $this->force_ability_context();
+        wp_set_current_user( $this->seller_id1 );
+        $this->sut->register_hooks();
+
+        reset_phpmailer_instance();
+
+        $product = new \WC_Product_Simple();
+        $product->set_name( 'Unreviewed product' );
+        $product->save();
+
+        // The pending-review email went out, and marked the product as announced.
+        $mailer = tests_retrieve_phpmailer_instance();
+        $this->assertCount( 1, $mailer->mock_sent );
+        $this->assertStringContainsString( 'Unreviewed product', $mailer->get_sent()->subject );
+        $this->assertSame( 'yes', get_post_meta( $product->get_id(), '_dokan_new_product_email_sent', true ) );
+
+        // Held again later, the same product is not announced a second time.
+        $held = wc_get_product( $product->get_id() );
+        $held->set_status( 'draft' );
+        $held->save();
+        $held->set_status( 'publish' );
+        $held->save();
+
+        $this->assertSame( 'pending', get_post_status( $product->get_id() ) );
+        $this->assertCount( 1, $mailer->mock_sent );
     }
 
     public function test_direct_publishing_vendors_and_store_admins_publish() {

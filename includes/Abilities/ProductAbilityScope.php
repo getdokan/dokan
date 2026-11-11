@@ -72,6 +72,13 @@ class ProductAbilityScope implements Hookable {
     private array $filtered_abilities = [];
 
     /**
+     * The product the save in progress holds for review, by object id; 0 when none.
+     *
+     * @var int
+     */
+    private int $held_product = 0;
+
+    /**
      * WooCommerce product-create ability names this class extends in place.
      *
      * @var string[]
@@ -153,6 +160,7 @@ class ProductAbilityScope implements Hookable {
 
         // A vendor without direct publishing gets the marketplace's review, whichever ability saves the product.
         add_action( 'woocommerce_before_product_object_save', [ $this, 'hold_for_review' ] );
+        add_action( 'woocommerce_after_product_object_save', [ $this, 'announce_held_product' ] );
     }
 
     /**
@@ -312,11 +320,12 @@ class ProductAbilityScope implements Hookable {
     }
 
     /**
-     * Keep a Vendor's product from going live unreviewed, as Dokan's REST API and dashboard do.
+     * Keep a Vendor's product from going live unreviewed.
      *
      * Inside an Ability Context, a product a Vendor or Vendor Staff creates, or moves to a live
-     * status, takes the marketplace's new-product status unless the Vendor publishes directly. A
-     * Store Admin is left alone, and so is an edit that does not change the status.
+     * status, takes the marketplace's new-product status unless the Vendor publishes directly.
+     * A product that is already live stays live when it is edited, as on a REST edit that names
+     * no status. A Store Admin is left alone.
      *
      * @since DOKAN_SINCE
      *
@@ -329,12 +338,12 @@ class ProductAbilityScope implements Hookable {
             return;
         }
 
-        $is_new = 0 === $product->get_id();
+        // WooCommerce publishes a product that names no status.
+        $status       = $product->get_status() ? $product->get_status() : 'publish';
+        $goes_live    = in_array( $status, [ 'publish', 'future' ], true );
+        $status_moved = 0 === $product->get_id() || array_key_exists( 'status', $product->get_changes() );
 
-        // WooCommerce publishes a new product that names no status.
-        $status = $is_new && ! $product->get_status() ? 'publish' : $product->get_status();
-
-        if ( ! in_array( $status, [ 'publish', 'future' ], true ) || ( ! $is_new && ! array_key_exists( 'status', $product->get_changes() ) ) ) {
+        if ( ! $goes_live || ! $status_moved ) {
             return;
         }
 
@@ -342,8 +351,44 @@ class ProductAbilityScope implements Hookable {
         $vendor_id = dokan_get_current_user_id();
         $allowed   = dokan_is_seller_enabled( $vendor_id ) ? dokan_get_default_product_status( $vendor_id ) : 'pending';
 
-        if ( 'publish' !== $allowed ) {
-            $product->set_status( $allowed );
+        if ( 'publish' === $allowed ) {
+            return;
+        }
+
+        $product->set_status( $allowed );
+
+        // The pending-review email sends while this flag is "no", and once per product, as from the dashboard.
+        if ( ! $product->get_meta( '_dokan_new_product_email_sent' ) ) {
+            $product->update_meta_data( '_dokan_new_product_email_sent', 'no' );
+        }
+
+        $this->held_product = spl_object_id( $product );
+    }
+
+    /**
+     * Tell the Store Admin a product is waiting for review, once it is stored.
+     *
+     * The dashboard and the REST API announce it through `dokan_new_product_added`, which carries
+     * their form data; an ability has none, so the email is triggered by itself.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Data $product Product that was just saved.
+     *
+     * @return void
+     */
+    public function announce_held_product( $product ): void {
+        if ( ! $product instanceof \WC_Product || spl_object_id( $product ) !== $this->held_product ) {
+            return;
+        }
+
+        // Cleared first: the email saves the product again.
+        $this->held_product = 0;
+
+        $emails = WC()->mailer()->get_emails();
+
+        if ( isset( $emails['Dokan_Email_New_Product_Pending'] ) ) {
+            $emails['Dokan_Email_New_Product_Pending']->trigger( $product->get_id() );
         }
     }
 

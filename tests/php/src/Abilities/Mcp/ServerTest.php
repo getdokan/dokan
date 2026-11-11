@@ -45,6 +45,12 @@ class ServerTest extends DokanTestCase {
         }
 
         $GLOBALS['wp']->query_vars['rest_route'] = '/' . Access::ROUTE_NAMESPACE . '/' . Access::ROUTE;
+
+        // WordPress has parsed the request by the time it dispatches a route, so the route above decides.
+        if ( ! did_action( 'parse_request' ) ) {
+            remove_all_actions( 'parse_request' );
+            do_action( 'parse_request' );
+        }
     }
 
     /**
