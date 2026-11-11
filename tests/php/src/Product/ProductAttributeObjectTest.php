@@ -29,6 +29,23 @@ class ProductAttributeObjectTest extends DokanTestCase {
 		$this->assertTrue( ProductAttribute::contains_php_object( $payload ) );
 	}
 
+	public function test_detects_a_whitespace_prefixed_serialized_object() {
+		// A leading space still counts as serialized, so the probe must trim too or it misses the object.
+		$this->assertTrue( ProductAttribute::contains_php_object( ' ' . serialize( new \stdClass() ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+		$this->assertTrue( ProductAttribute::contains_php_object( "\n" . serialize( new \stdClass() ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+	}
+
+	public function test_detects_a_whitespace_prefixed_array_nested_object() {
+		$payload = serialize( // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+			[
+				'pa_color' => [ 'value' => 'red|blue' ],
+				'evil'     => new \stdClass(),
+			]
+		);
+
+		$this->assertTrue( ProductAttribute::contains_php_object( "\t" . $payload ) );
+	}
+
 	public function test_passes_a_legitimate_serialized_attribute_array() {
 		$payload = serialize( // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 			[
