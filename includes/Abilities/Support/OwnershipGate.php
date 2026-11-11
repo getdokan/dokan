@@ -64,8 +64,9 @@ class OwnershipGate {
             'list' => 'dokan_view_product_menu',
         ],
         'shop_order' => [
-            'item' => 'dokan_view_order',
-            'list' => 'dokan_view_order_menu',
+            'item'    => 'dokan_view_order',
+            'list'    => 'dokan_view_order_menu',
+            'earning' => 'dokan_view_sales_overview',
         ],
     ];
 
@@ -182,7 +183,7 @@ class OwnershipGate {
      * @since 5.0.15
      *
      * @param string $object_type Post type: `product` or `shop_order`.
-     * @param string $view        `item` for a single record, `list` for a collection.
+     * @param string $view        `item` for a single record, `list` for a collection, `earning` for an order's earning split.
      *
      * @return bool
      */
@@ -202,7 +203,7 @@ class OwnershipGate {
          *
          * @param string $capability  Required capability, or an empty string for none.
          * @param string $object_type Post type being read.
-         * @param string $view        `item` for a single record, `list` for a collection.
+         * @param string $view        `item` for a single record, `list` for a collection, `earning` for an order's earning split.
          */
         $capability = (string) apply_filters(
             'dokan_ability_read_capability',
@@ -212,6 +213,22 @@ class OwnershipGate {
         );
 
         return '' === $capability || current_user_can( $capability );
+    }
+
+    /**
+     * Whether a refusal still needs explaining: a bare `false` on one of the named abilities,
+     * given to a Vendor or Vendor Staff in an Ability Context.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $result         The permission decided so far.
+     * @param string $ability_name   The ability being checked.
+     * @param string $ability_prefix The abilities the caller explains, e.g. `woocommerce/order`.
+     *
+     * @return bool
+     */
+    public static function is_bare_vendor_refusal( $result, string $ability_name, string $ability_prefix ): bool {
+        return false === $result && 0 === strpos( $ability_name, $ability_prefix ) && RequestContext::is_vendor_ability_context();
     }
 
     /**

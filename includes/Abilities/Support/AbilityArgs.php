@@ -1,0 +1,97 @@
+<?php
+
+namespace WeDevs\Dokan\Abilities\Support;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Wraps the callbacks in an ability's registration arguments, on `wp_register_ability_args`.
+ *
+ * Every caller of the ability (an MCP server, the Abilities REST API, WP-CLI, another plugin)
+ * then runs through the wrapper, on every WordPress with the Abilities API; the `wp_ability_*`
+ * result filters of WordPress 7.1 are layered on top where they exist.
+ *
+ * @since DOKAN_SINCE
+ */
+class AbilityArgs {
+
+    /**
+     * Callback order on `wp_register_ability_args`: Dokan's scope classes shape an ability first
+     * and the assistant-access policy wraps last, so it has the final say. Add-ons such as Dokan
+     * Pro sit between, at 20.
+     */
+    const SCOPE_PRIORITY  = 10;
+    const POLICY_PRIORITY = 30;
+
+    /**
+     * Callback order on `wp_ability_permission_result` (WordPress 7.1): the access policy, then
+     * Dokan's own rules, then the explanation of a refusal.
+     */
+    const POLICY_RESULT_PRIORITY  = 5;
+    const RULE_RESULT_PRIORITY    = 10;
+    const EXPLAIN_RESULT_PRIORITY = 20;
+
+    /**
+     * Whether the registration arguments carry an execute callback that can be wrapped.
+     *
+     * WooCommerce 11.3's product-create and product-update attach theirs after this filter has
+     * run (`ActionableAbility::prepare_properties()`), so they cannot be wrapped here.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Ability registration arguments.
+     *
+     * @return bool
+     */
+    public static function has_execute_callback( array $args ): bool {
+        return isset( $args['execute_callback'] ) && is_callable( $args['execute_callback'] );
+    }
+
+    /**
+     * Run `$around( $original, $input )` in place of the execute callback.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array    $args   Ability registration arguments.
+     * @param callable $around Receives the original callback and the input; returns the result.
+     *
+     * @return array
+     */
+    public static function wrap_execute( array $args, callable $around ): array {
+        if ( ! self::has_execute_callback( $args ) ) {
+            return $args;
+        }
+
+        $original = $args['execute_callback'];
+
+        $args['execute_callback'] = static function ( $input = null ) use ( $original, $around ) {
+            return $around( $original, $input );
+        };
+
+        return $args;
+    }
+
+    /**
+     * Run `$decide( $result, $input )` on what the permission callback decided.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array    $args   Ability registration arguments.
+     * @param callable $decide Receives the callback's result and the input; returns the final one.
+     *
+     * @return array
+     */
+    public static function wrap_permission( array $args, callable $decide ): array {
+        if ( ! isset( $args['permission_callback'] ) || ! is_callable( $args['permission_callback'] ) ) {
+            return $args;
+        }
+
+        $original = $args['permission_callback'];
+
+        $args['permission_callback'] = static function ( $input = null ) use ( $original, $decide ) {
+            return $decide( call_user_func( $original, $input ), $input );
+        };
+
+        return $args;
+    }
+}

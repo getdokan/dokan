@@ -54,6 +54,13 @@ class ProductAbilityScopeTest extends DokanTestCase {
 
         // A published product is public, even another vendor's.
         $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_published, 'product' ) );
+
+        // A store admin and a customer see it too, as on the storefront.
+        wp_set_current_user( $this->admin_id );
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_published, 'product' ) );
+
+        wp_set_current_user( $this->customer_id );
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_published, 'product' ) );
     }
 
     public function test_published_product_is_not_granted_to_anonymous_callers() {
@@ -142,6 +149,136 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $product->save();
 
         $this->assertSame( $this->seller_id1, (int) get_post_field( 'post_author', $product->get_id() ) );
+    }
+
+    public function test_a_vendor_without_direct_publishing_is_held_for_review() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        $this->force_ability_context();
+        wp_set_current_user( $this->seller_id1 );
+        $this->sut->register_hooks();
+
+        // A create that names no status, which WooCommerce would publish.
+        $product = new \WC_Product_Simple();
+        $product->set_name( 'Unreviewed product' );
+        $product->save();
+        $this->assertSame( 'pending', get_post_status( $product->get_id() ) );
+
+        // Asking for publish afterwards changes nothing.
+        $product->set_status( 'publish' );
+        $product->save();
+        $this->assertSame( 'pending', get_post_status( $product->get_id() ) );
+
+        // Once the Store Admin has approved it, an edit that leaves the status alone keeps it live.
+        wp_update_post(
+            [
+                'ID'          => $product->get_id(),
+                'post_status' => 'publish',
+            ]
+        );
+        $approved = wc_get_product( $product->get_id() );
+        $approved->set_regular_price( '12' );
+        $approved->save();
+        $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+
+        // So does one that names the status it already has, as a REST edit without a status does.
+        $approved->set_status( 'publish' );
+        $approved->set_name( 'Reviewed product' );
+        $approved->save();
+        $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+    }
+
+    public function test_scheduled_products_staff_and_disabled_vendors_are_held_too() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        $this->force_ability_context();
+        $this->sut->register_hooks();
+
+        // Scheduling is a way to go live later, so it is held like publish.
+        wp_set_current_user( $this->seller_id1 );
+        $scheduled = new \WC_Product_Simple();
+        $scheduled->set_name( 'Scheduled product' );
+        $scheduled->set_status( 'future' );
+        $scheduled->save();
+        $this->assertSame( 'pending', get_post_status( $scheduled->get_id() ) );
+
+        // Vendor Staff answer to their Vendor's publishing right, not their own.
+        wp_set_current_user( $this->create_vendor_staff( $this->seller_id1 ) );
+        $by_staff = new \WC_Product_Simple();
+        $by_staff->set_name( 'Staff product' );
+        $by_staff->save();
+        $this->assertSame( 'pending', get_post_status( $by_staff->get_id() ) );
+
+        // A vendor who publishes directly loses that with their selling.
+        update_user_meta( $this->seller_id1, 'dokan_publishing', 'yes' );
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'no' );
+        wp_set_current_user( $this->seller_id1 );
+        $disabled = new \WC_Product_Simple();
+        $disabled->set_name( 'Disabled vendor product' );
+        $disabled->save();
+        $this->assertSame( 'pending', get_post_status( $disabled->get_id() ) );
+    }
+
+    public function test_the_store_admin_is_told_once_about_a_held_product() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        $this->force_ability_context();
+        wp_set_current_user( $this->seller_id1 );
+        $this->sut->register_hooks();
+
+        reset_phpmailer_instance();
+
+        $product = new \WC_Product_Simple();
+        $product->set_name( 'Unreviewed product' );
+        $product->save();
+
+        // The pending-review email went out, and marked the product as announced.
+        $mailer = tests_retrieve_phpmailer_instance();
+        $this->assertCount( 1, $mailer->mock_sent );
+        $this->assertStringContainsString( 'Unreviewed product', $mailer->get_sent()->subject );
+        $this->assertSame( 'yes', get_post_meta( $product->get_id(), '_dokan_new_product_email_sent', true ) );
+
+        // Held again later, the same product is not announced a second time.
+        $held = wc_get_product( $product->get_id() );
+        $held->set_status( 'draft' );
+        $held->save();
+        $held->set_status( 'publish' );
+        $held->save();
+
+        $this->assertSame( 'pending', get_post_status( $product->get_id() ) );
+        $this->assertCount( 1, $mailer->mock_sent );
+    }
+
+    public function test_direct_publishing_vendors_and_store_admins_publish() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+        update_user_meta( $this->seller_id1, 'dokan_publishing', 'yes' );
+
+        $this->force_ability_context();
+        $this->sut->register_hooks();
+
+        foreach ( [ $this->seller_id1, $this->admin_id ] as $user_id ) {
+            wp_set_current_user( $user_id );
+
+            $product = new \WC_Product_Simple();
+            $product->set_name( 'Trusted product' );
+            $product->save();
+
+            $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
+        }
+    }
+
+    public function test_products_saved_outside_an_ability_context_are_not_held() {
+        update_user_meta( $this->seller_id1, 'dokan_enable_selling', 'yes' );
+
+        wp_set_current_user( $this->seller_id1 );
+        $this->sut->register_hooks();
+
+        $product = new \WC_Product_Simple();
+        $product->set_name( 'Dashboard product' );
+        $product->save();
+
+        // The dashboard and REST API apply their own rule; this one only follows the Ability.
+        $this->assertSame( 'publish', get_post_status( $product->get_id() ) );
     }
 
     public function test_product_author_untouched_when_not_mcp_request() {
@@ -296,6 +433,92 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertSame( $this->seller_id1, (int) get_post_field( 'post_author', $result['id'] ) );
     }
 
+    public function test_vendor_id_never_reaches_woocommerce() {
+        $this->force_ability_context();
+        $this->sut->register_hooks();
+        wp_set_current_user( $this->admin_id );
+
+        $received = null;
+        $args     = $this->sut->extend_product_abilities(
+            [
+                'input_schema'     => [
+                    'type'       => 'object',
+                    'properties' => [],
+                ],
+                'execute_callback' => static function ( $input ) use ( &$received ) {
+                    $received = $input;
+
+                    return [ 'id' => 0 ];
+                },
+            ],
+            'woocommerce/product-create'
+        );
+
+        call_user_func(
+            $args['execute_callback'], [
+				'name' => 'X',
+				'vendor_id' => $this->seller_id1,
+			]
+        );
+
+        $this->assertSame( [ 'name' => 'X' ], $received );
+    }
+
+    /**
+     * WooCommerce 11.3 registers product-create without an execute callback, so the vendor is
+     * resolved on the input filter and the output annotated on the result filter.
+     */
+    public function test_an_unwrappable_create_ability_is_handled_on_the_input_and_result_filters() {
+        $this->force_ability_context();
+        $this->sut->register_hooks();
+
+        $args = $this->sut->extend_product_abilities(
+            [
+                'input_schema'  => [
+                    'type'       => 'object',
+                    'properties' => [],
+                ],
+                'output_schema' => [
+                    'type'       => 'object',
+                    'properties' => [
+						'product' => [
+							'type' => 'object',
+							'properties' => [ 'id' => [ 'type' => 'integer' ] ],
+						],
+					],
+                ],
+            ],
+            'woocommerce/product-create'
+        );
+
+        $this->assertArrayNotHasKey( 'execute_callback', $args );
+        $this->assertArrayHasKey( 'vendor_id', $args['input_schema']['properties'] );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertSame( 'dokan_ability_vendor_required', $this->sut->normalize_unwrapped_input( [ 'name' => 'X' ], 'woocommerce/product-create' )->get_error_code() );
+
+        $input = $this->sut->normalize_unwrapped_input(
+            [
+				'name' => 'X',
+				'vendor_id' => $this->seller_id1,
+			], 'woocommerce/product-create'
+        );
+        $this->assertSame( [ 'name' => 'X' ], $input );
+
+        // The product WooCommerce now saves is authored to the selected vendor.
+        $product = new \WC_Product_Simple();
+        $product->set_name( 'Created on the filters' );
+        $product->save();
+        $this->assertSame( $this->seller_id1, (int) get_post_field( 'post_author', $product->get_id() ) );
+
+        $result = $this->sut->enrich_unwrapped_result( [ 'product' => [ 'id' => $product->get_id() ] ], 'woocommerce/product-create' );
+        $this->assertSame( $this->seller_id1, $result['product']['vendor']['id'] );
+
+        // Other abilities and other input pass through untouched.
+        $this->assertSame( [ 'id' => 1 ], $this->sut->normalize_unwrapped_input( [ 'id' => 1 ], 'woocommerce/products-query' ) );
+        $this->assertSame( [ 'x' => 1 ], $this->sut->enrich_unwrapped_result( [ 'x' => 1 ], 'woocommerce/products-query' ) );
+    }
+
     public function test_extend_injects_vendor_into_products_query_output_schema() {
         $args = $this->sut->extend_product_abilities(
             [
@@ -402,6 +625,18 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->sut->register_hooks();
         $this->force_ability_context();
         wp_set_current_user( $this->seller_id1 );
+
+        $query = $this->products_query_scope_for( [] );
+
+        // Every store's published products, like the storefront: no author pin.
+        $this->assertArrayNotHasKey( 'author', $query );
+        $this->assertSame( 'publish', $query['post_status'] );
+    }
+
+    public function test_products_query_with_no_filter_is_published_only_for_a_customer() {
+        $this->sut->register_hooks();
+        $this->force_ability_context();
+        wp_set_current_user( $this->customer_id );
 
         $query = $this->products_query_scope_for( [] );
 
@@ -643,5 +878,62 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $result = call_user_func( $this->wrapped_create_callback(), [ 'name' => 'X' ] );
 
         $this->assertSame( $this->admin_id, (int) get_post_field( 'post_author', $result['id'] ) );
+    }
+
+    /**
+     * Wrap a product-delete callback that records the input it received.
+     *
+     * @param array|null $seen Filled with the input the callback received.
+     *
+     * @return callable
+     */
+    private function wrapped_delete_callback( ?array &$seen ): callable {
+        $args = $this->sut->extend_product_abilities(
+            [
+                'execute_callback' => static function ( $input ) use ( &$seen ) {
+                    $seen = (array) $input;
+
+                    return [ 'deleted' => true ];
+                },
+            ],
+            'woocommerce/product-delete'
+        );
+
+        return $args['execute_callback'];
+    }
+
+    public function test_a_vendor_hears_why_a_product_ability_was_refused() {
+        $this->force_ability_context();
+        $scope = new ProductAbilityScope();
+
+        wp_set_current_user( $this->seller_id1 );
+        $refused = $scope->explain_vendor_denial( false, 'woocommerce/product-update' );
+
+        $this->assertInstanceOf( \WP_Error::class, $refused );
+        $this->assertSame( 'dokan_product_not_in_store', $refused->get_error_code() );
+
+        // Granted results, other abilities and store admins pass through untouched.
+        $this->assertTrue( $scope->explain_vendor_denial( true, 'woocommerce/product-update' ) );
+        $this->assertFalse( $scope->explain_vendor_denial( false, 'woocommerce/customers-query' ) );
+
+        wp_set_current_user( $this->admin_id );
+        $this->assertFalse( $scope->explain_vendor_denial( false, 'woocommerce/product-update' ) );
+    }
+
+    public function test_vendors_delete_to_the_trash_only() {
+        $this->force_ability_context();
+        $seen  = null;
+        $input = [
+            'id'    => 1,
+            'force' => true,
+        ];
+
+        wp_set_current_user( $this->seller_id1 );
+        call_user_func( $this->wrapped_delete_callback( $seen ), $input );
+        $this->assertFalse( $seen['force'] );
+
+        wp_set_current_user( $this->admin_id );
+        call_user_func( $this->wrapped_delete_callback( $seen ), $input );
+        $this->assertTrue( $seen['force'] );
     }
 }
