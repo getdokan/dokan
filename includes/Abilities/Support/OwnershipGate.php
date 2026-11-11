@@ -216,6 +216,22 @@ class OwnershipGate {
     }
 
     /**
+     * Whether a refusal still needs explaining: a bare `false` on one of the named abilities,
+     * given to a Vendor or Vendor Staff in an Ability Context.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $result         The permission decided so far.
+     * @param string $ability_name   The ability being checked.
+     * @param string $ability_prefix The abilities the caller explains, e.g. `woocommerce/order`.
+     *
+     * @return bool
+     */
+    public static function is_bare_vendor_refusal( $result, string $ability_name, string $ability_prefix ): bool {
+        return false === $result && 0 === strpos( $ability_name, $ability_prefix ) && RequestContext::is_vendor_ability_context();
+    }
+
+    /**
      * Whether the caller holds the Dokan capability for this write.
      *
      * @since 5.0.15

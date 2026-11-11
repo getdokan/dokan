@@ -35,9 +35,9 @@ class Gate implements Hookable {
 
         // After the scope classes (priority 10) have shaped the registration arguments, so the
         // policy wraps their permission wrappers and decides last.
-        add_filter( 'wp_register_ability_args', [ $this, 'guard_registration' ], 30, 2 );
+        add_filter( 'wp_register_ability_args', [ $this, 'guard_registration' ], AbilityArgs::POLICY_PRIORITY, 2 );
         // WordPress 7.1 also filters the permission result: the same decision, taken first there.
-        add_filter( 'wp_ability_permission_result', [ $this, 'authorize' ], 5, 2 );
+        add_filter( 'wp_ability_permission_result', [ $this, 'authorize' ], AbilityArgs::POLICY_RESULT_PRIORITY, 2 );
 
         add_action( 'wp_ability_invoked', [ $this, 'record_invocation' ], 10, 2 );
     }
@@ -89,11 +89,11 @@ class Gate implements Hookable {
         }
 
         if ( Access::is_dokan_ability( $name ) && ! Access::is_enabled() ) {
-            return new WP_Error( 'dokan_mcp_disabled', __( 'AI assistant access to Dokan is switched off. Turn it on under Dokan > Settings > AI Assist > MCP Server.', 'dokan-lite' ), [ 'status' => 403 ] );
+            return Access::disabled_error();
         }
 
         if ( ! Access::user_can_connect( get_current_user_id() ) ) {
-            return new WP_Error( 'dokan_mcp_not_allowed', __( 'This account may not use marketplace tools through an AI assistant. Store admins always can; vendors and their staff only while AI assistant access and "Allow vendors to connect" are both on and their store is enabled.', 'dokan-lite' ), [ 'status' => 403 ] );
+            return Access::not_allowed_error();
         }
 
         return $result;

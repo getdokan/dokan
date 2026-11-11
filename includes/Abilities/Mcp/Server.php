@@ -134,7 +134,7 @@ class Server implements Hookable {
             return true;
         }
 
-        // A plugin built the REST server before WordPress parsed the request, so the route is unknown: register rather than lose the endpoint (wp-admin parses none and never serves it).
+        // Something built the REST server before WordPress parsed the request, so the route is unknown: register anyway. wp-admin never serves it.
         if ( ! did_action( 'parse_request' ) && ! is_admin() ) {
             return true;
         }
@@ -250,11 +250,11 @@ class Server implements Hookable {
         }
 
         if ( ! Access::is_enabled() ) {
-            return new WP_Error( 'dokan_mcp_disabled', __( 'AI assistant access to Dokan is switched off. A store admin can turn it on under Dokan > Settings > AI Assist > MCP Server.', 'dokan-lite' ), [ 'status' => 403 ] );
+            return Access::disabled_error();
         }
 
         if ( ! Access::user_can_connect( $user_id ) ) {
-            return new WP_Error( 'dokan_mcp_not_allowed', __( 'This account may not connect an AI assistant. Store admins always can; vendors and their staff only while "Allow vendors to connect" is on and their store is enabled.', 'dokan-lite' ), [ 'status' => 403 ] );
+            return Access::not_allowed_error();
         }
 
         return true;

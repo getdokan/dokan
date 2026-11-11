@@ -87,7 +87,7 @@ class OrderAbilityScope implements Hookable {
      *
      * @var string[]
      */
-    private array $filtered_abilities = [];
+    private array $unwrapped_abilities = [];
 
     /**
      * Register hooks.
@@ -110,15 +110,15 @@ class OrderAbilityScope implements Hookable {
 
         // Annotate order output with the Dokan parent / Suborder relationship, owning vendor and
         // earning, and decide what a vendor may do and hears when refused.
-        add_filter( 'wp_register_ability_args', [ $this, 'extend_order_abilities' ], 10, 2 );
+        add_filter( 'wp_register_ability_args', [ $this, 'extend_order_abilities' ], AbilityArgs::SCOPE_PRIORITY, 2 );
 
         // WordPress 7.1 also filters the permission result: the same decisions, a second time.
-        add_filter( 'wp_ability_permission_result', [ $this, 'honour_order_status_change_setting' ], 10, 2 );
-        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], 20, 2 );
+        add_filter( 'wp_ability_permission_result', [ $this, 'honour_order_status_change_setting' ], AbilityArgs::RULE_RESULT_PRIORITY, 2 );
+        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], AbilityArgs::EXPLAIN_RESULT_PRIORITY, 2 );
 
-        // The abilities that cannot be wrapped (see $filtered_abilities) are annotated on
+        // The abilities that cannot be wrapped (see $unwrapped_abilities) are annotated on
         // WordPress 7.1's result filter.
-        add_filter( 'wp_ability_execute_result', [ $this, 'enrich_filtered_result' ], 10, 2 );
+        add_filter( 'wp_ability_execute_result', [ $this, 'enrich_unwrapped_result' ], 10, 2 );
     }
 
     /**
@@ -135,7 +135,7 @@ class OrderAbilityScope implements Hookable {
      * @return bool|\WP_Error
      */
     public function explain_vendor_denial( $result, $ability_name ) {
-        if ( false !== $result || 0 !== strpos( (string) $ability_name, 'woocommerce/order' ) || ! RequestContext::is_vendor_ability_context() ) {
+        if ( ! OwnershipGate::is_bare_vendor_refusal( $result, (string) $ability_name, 'woocommerce/order' ) ) {
             return $result;
         }
 
@@ -320,7 +320,7 @@ class OrderAbilityScope implements Hookable {
             );
         }
 
-        $this->filtered_abilities[] = $name;
+        $this->unwrapped_abilities[] = $name;
 
         return $args;
     }
@@ -336,8 +336,8 @@ class OrderAbilityScope implements Hookable {
      *
      * @return mixed
      */
-    public function enrich_filtered_result( $result, $ability_name ) {
-        return in_array( (string) $ability_name, $this->filtered_abilities, true ) ? $this->enrich_order_result( $result ) : $result;
+    public function enrich_unwrapped_result( $result, $ability_name ) {
+        return in_array( (string) $ability_name, $this->unwrapped_abilities, true ) ? $this->enrich_order_result( $result ) : $result;
     }
 
     /**

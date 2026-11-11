@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Abilities\Mcp;
 
 use WeDevs\Dokan\Abilities\Support\RequestContext;
 use WeDevs\Dokan\Utilities\VendorUtil;
+use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -201,5 +202,27 @@ class Access {
          * @param int  $user_id User ID.
          */
         return (bool) apply_filters( 'dokan_mcp_user_can_connect', $allowed, $user_id );
+    }
+
+    /**
+     * What an assistant is told while the master switch is off.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_Error
+     */
+    public static function disabled_error(): WP_Error {
+        return new WP_Error( 'dokan_mcp_disabled', __( 'AI assistant access to Dokan is switched off. A store admin can turn it on under Dokan > Settings > AI Assist > MCP Server.', 'dokan-lite' ), [ 'status' => 403 ] );
+    }
+
+    /**
+     * What an assistant is told when its account may not connect.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_Error
+     */
+    public static function not_allowed_error(): WP_Error {
+        return new WP_Error( 'dokan_mcp_not_allowed', __( 'This account may not use the marketplace tools through an AI assistant. Store admins always can; vendors and their staff only while AI assistant access and "Allow vendors to connect" are both on and their store is enabled.', 'dokan-lite' ), [ 'status' => 403 ] );
     }
 }

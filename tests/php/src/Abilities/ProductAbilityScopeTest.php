@@ -495,9 +495,9 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertArrayHasKey( 'vendor_id', $args['input_schema']['properties'] );
 
         wp_set_current_user( $this->admin_id );
-        $this->assertSame( 'dokan_ability_vendor_required', $this->sut->normalize_filtered_input( [ 'name' => 'X' ], 'woocommerce/product-create' )->get_error_code() );
+        $this->assertSame( 'dokan_ability_vendor_required', $this->sut->normalize_unwrapped_input( [ 'name' => 'X' ], 'woocommerce/product-create' )->get_error_code() );
 
-        $input = $this->sut->normalize_filtered_input(
+        $input = $this->sut->normalize_unwrapped_input(
             [
 				'name' => 'X',
 				'vendor_id' => $this->seller_id1,
@@ -511,12 +511,12 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $product->save();
         $this->assertSame( $this->seller_id1, (int) get_post_field( 'post_author', $product->get_id() ) );
 
-        $result = $this->sut->enrich_filtered_result( [ 'product' => [ 'id' => $product->get_id() ] ], 'woocommerce/product-create' );
+        $result = $this->sut->enrich_unwrapped_result( [ 'product' => [ 'id' => $product->get_id() ] ], 'woocommerce/product-create' );
         $this->assertSame( $this->seller_id1, $result['product']['vendor']['id'] );
 
         // Other abilities and other input pass through untouched.
-        $this->assertSame( [ 'id' => 1 ], $this->sut->normalize_filtered_input( [ 'id' => 1 ], 'woocommerce/products-query' ) );
-        $this->assertSame( [ 'x' => 1 ], $this->sut->enrich_filtered_result( [ 'x' => 1 ], 'woocommerce/products-query' ) );
+        $this->assertSame( [ 'id' => 1 ], $this->sut->normalize_unwrapped_input( [ 'id' => 1 ], 'woocommerce/products-query' ) );
+        $this->assertSame( [ 'x' => 1 ], $this->sut->enrich_unwrapped_result( [ 'x' => 1 ], 'woocommerce/products-query' ) );
     }
 
     public function test_extend_injects_vendor_into_products_query_output_schema() {

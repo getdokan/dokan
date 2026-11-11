@@ -69,7 +69,7 @@ class ProductAbilityScope implements Hookable {
      *
      * @var array<string, array{create:bool,output:bool}>
      */
-    private array $filtered_abilities = [];
+    private array $unwrapped_abilities = [];
 
     /**
      * The product the save in progress holds for review, by object id; 0 when none.
@@ -144,15 +144,15 @@ class ProductAbilityScope implements Hookable {
 
         // Extend WooCommerce's own product abilities in place: vendor selector on create, the
         // owning vendor on product output, and a refusal a vendor can act on.
-        add_filter( 'wp_register_ability_args', [ $this, 'extend_product_abilities' ], 10, 2 );
+        add_filter( 'wp_register_ability_args', [ $this, 'extend_product_abilities' ], AbilityArgs::SCOPE_PRIORITY, 2 );
 
         // WordPress 7.1 also filters the permission result: the same explanation, a second time.
-        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], 20, 2 );
+        add_filter( 'wp_ability_permission_result', [ $this, 'explain_vendor_denial' ], AbilityArgs::EXPLAIN_RESULT_PRIORITY, 2 );
 
-        // The abilities that cannot be wrapped (see $filtered_abilities) are handled on WordPress
+        // The abilities that cannot be wrapped (see $unwrapped_abilities) are handled on WordPress
         // 7.1's input and result filters.
-        add_filter( 'wp_ability_normalize_input', [ $this, 'normalize_filtered_input' ], 10, 2 );
-        add_filter( 'wp_ability_execute_result', [ $this, 'enrich_filtered_result' ], 10, 2 );
+        add_filter( 'wp_ability_normalize_input', [ $this, 'normalize_unwrapped_input' ], 10, 2 );
+        add_filter( 'wp_ability_execute_result', [ $this, 'enrich_unwrapped_result' ], 10, 2 );
         add_action( 'wp_after_execute_ability', [ $this, 'release_forced_author' ] );
 
         // Ensure ability-created products are authored to the vendor (matters for vendor staff).
@@ -408,17 +408,13 @@ class ProductAbilityScope implements Hookable {
      * @return array
      */
     public function extend_product_abilities( $args, $name ) {
-        if ( ! is_array( $args ) ) {
-            return $args;
-        }
-
         $name       = (string) $name;
         $is_delete  = in_array( $name, self::PRODUCT_DELETE_ABILITIES, true );
         $is_create  = in_array( $name, self::PRODUCT_CREATE_ABILITIES, true );
         $is_filter  = in_array( $name, self::PRODUCT_FILTER_ABILITIES, true );
         $has_output = in_array( $name, self::PRODUCT_OUTPUT_ABILITIES, true );
 
-        if ( ! $is_delete && ! $is_create && ! $is_filter && ! $has_output ) {
+        if ( ! is_array( $args ) || ! ( $is_delete || $is_create || $is_filter || $has_output ) ) {
             return $args;
         }
 
@@ -434,17 +430,9 @@ class ProductAbilityScope implements Hookable {
             return $this->restrict_delete_to_trash( $args );
         }
 
-        if ( $is_create ) {
-            $args = $this->inject_vendor_id_schema( $args );
-        }
-
-        if ( $is_filter ) {
-            $args = $this->inject_vendor_filter_schema( $args );
-        }
-
-        if ( $has_output ) {
-            $args = $this->inject_vendor_output_schema( $args );
-        }
+        $args = $is_create ? $this->inject_vendor_id_schema( $args ) : $args;
+        $args = $is_filter ? $this->inject_vendor_filter_schema( $args ) : $args;
+        $args = $has_output ? $this->inject_vendor_output_schema( $args ) : $args;
 
         if ( AbilityArgs::has_execute_callback( $args ) ) {
             return AbilityArgs::wrap_execute(
@@ -455,10 +443,9 @@ class ProductAbilityScope implements Hookable {
             );
         }
 
-        // Nothing to wrap (WooCommerce 11.3 product-create / product-update): the input and
-        // result filters take over. A list filter cannot be applied that way, so it stays unset.
+        // Nothing to wrap: the 7.1 input and result filters take over. A list filter cannot be applied that way.
         if ( $is_create || $has_output ) {
-            $this->filtered_abilities[ $name ] = [
+            $this->unwrapped_abilities[ $name ] = [
                 'create' => $is_create,
                 'output' => $has_output,
             ];
@@ -481,14 +468,14 @@ class ProductAbilityScope implements Hookable {
      *
      * @return mixed
      */
-    public function normalize_filtered_input( $input, $ability_name ) {
+    public function normalize_unwrapped_input( $input, $ability_name ) {
         $name = (string) $ability_name;
 
-        if ( ! isset( $this->filtered_abilities[ $name ] ) || ! is_array( $input ) ) {
+        if ( ! isset( $this->unwrapped_abilities[ $name ] ) || ! is_array( $input ) ) {
             return $input;
         }
 
-        if ( ! $this->filtered_abilities[ $name ]['create'] ) {
+        if ( ! $this->unwrapped_abilities[ $name ]['create'] ) {
             return $input;
         }
 
@@ -517,16 +504,16 @@ class ProductAbilityScope implements Hookable {
      *
      * @return mixed
      */
-    public function enrich_filtered_result( $result, $ability_name ) {
+    public function enrich_unwrapped_result( $result, $ability_name ) {
         $name = (string) $ability_name;
 
-        if ( ! isset( $this->filtered_abilities[ $name ] ) ) {
+        if ( ! isset( $this->unwrapped_abilities[ $name ] ) ) {
             return $result;
         }
 
         $this->forced_product_author = 0;
 
-        return $this->filtered_abilities[ $name ]['output'] ? $this->enrich_product_result( $result ) : $result;
+        return $this->unwrapped_abilities[ $name ]['output'] ? $this->enrich_product_result( $result ) : $result;
     }
 
     /**
@@ -554,7 +541,7 @@ class ProductAbilityScope implements Hookable {
      * @return bool|\WP_Error
      */
     public function explain_vendor_denial( $result, $ability_name ) {
-        if ( false !== $result || 0 !== strpos( (string) $ability_name, 'woocommerce/product' ) || ! RequestContext::is_vendor_ability_context() ) {
+        if ( ! OwnershipGate::is_bare_vendor_refusal( $result, (string) $ability_name, 'woocommerce/product' ) ) {
             return $result;
         }
 

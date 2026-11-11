@@ -17,6 +17,22 @@ defined( 'ABSPATH' ) || exit;
 class AbilityArgs {
 
     /**
+     * Callback order on `wp_register_ability_args`: Dokan's scope classes shape an ability first
+     * and the assistant-access policy wraps last, so it has the final say. Add-ons such as Dokan
+     * Pro sit between, at 20.
+     */
+    const SCOPE_PRIORITY  = 10;
+    const POLICY_PRIORITY = 30;
+
+    /**
+     * Callback order on `wp_ability_permission_result` (WordPress 7.1): the access policy, then
+     * Dokan's own rules, then the explanation of a refusal.
+     */
+    const POLICY_RESULT_PRIORITY  = 5;
+    const RULE_RESULT_PRIORITY    = 10;
+    const EXPLAIN_RESULT_PRIORITY = 20;
+
+    /**
      * Whether the registration arguments carry an execute callback that can be wrapped.
      *
      * WooCommerce 11.3's product-create and product-update attach theirs after this filter has
