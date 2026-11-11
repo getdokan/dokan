@@ -62,6 +62,10 @@ if ( $rendering ) {
     return;
 }
 
+if ( ! isset( $layouts[ $layout ] ) ) {
+    return; // Every layout was filtered out.
+}
+
 $pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( $layouts[ $layout ] );
 
 if ( ! $pattern || empty( $pattern['content'] ) ) {

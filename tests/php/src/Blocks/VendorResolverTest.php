@@ -39,21 +39,35 @@ class VendorResolverTest extends DokanTestCase {
     /**
      * @test
      */
-    public function it_resolves_the_vendor_pinned_by_the_block() {
+    public function it_ignores_a_store_id_pinned_in_block_attributes() {
         $seller_id = $this->factory()->seller->create();
-        $vendor    = $this->resolver->resolve( [], [ 'storeId' => $seller_id ] );
+        $admin_id  = $this->factory()->user->create( [ 'role' => 'administrator' ] );
 
-        $this->assertInstanceOf( Vendor::class, $vendor );
-        $this->assertSame( $seller_id, $vendor->get_id() );
+        $this->assertNull( $this->resolver->resolve( [], [ 'storeId' => $seller_id ] ) );
+        $this->assertNull( $this->resolver->resolve( [], [ 'storeId' => $admin_id ] ) );
     }
 
     /**
      * @test
      */
-    public function it_resolves_the_vendor_from_block_context() {
-        $seller_id = $this->factory()->seller->create();
-        $vendor    = $this->resolver->resolve( [ 'dokan/storeId' => $seller_id ] );
+    public function it_ignores_a_store_id_passed_through_block_context() {
+        $admin_id = $this->factory()->user->create( [ 'role' => 'administrator' ] );
 
+        $this->assertNull( $this->resolver->resolve( [ 'dokan/storeId' => $admin_id ] ) );
+    }
+
+    /**
+     * @test
+     */
+    public function it_follows_the_viewed_store_over_a_pinned_store_id() {
+        $seller_id = $this->factory()->seller->create();
+        $admin_id  = $this->factory()->user->create( [ 'role' => 'administrator' ] );
+
+        set_query_var( $this->store_var, get_user_by( 'id', $seller_id )->user_nicename );
+
+        $vendor = $this->resolver->resolve( [ 'dokan/storeId' => $admin_id ], [ 'storeId' => $admin_id ] );
+
+        $this->assertInstanceOf( Vendor::class, $vendor );
         $this->assertSame( $seller_id, $vendor->get_id() );
     }
 

@@ -22,34 +22,19 @@ class VendorResolver {
     /**
      * Resolve the vendor for a block render.
      *
-     * Resolution order: the vendor the block explicitly targets, the vendor
-     * provided through block context, the vendor whose store page is being
-     * viewed, then a preview stand-in inside the editor.
+     * Resolution order: the vendor whose store page is being viewed, then a
+     * preview stand-in inside the editor. Blocks never pin a vendor through an
+     * attribute or block context, so saved markup cannot point a block at an
+     * arbitrary user.
      *
      * @since DOKAN_SINCE
      *
-     * @param array $block_context Block context (checks `dokan/storeId`).
-     * @param array $attributes    Block attributes (checks `storeId`).
+     * @param array $block_context Block context. Unused, kept for the render.php call shape.
+     * @param array $attributes    Block attributes. Unused, kept for the render.php call shape.
      *
      * @return Vendor|null Null means "render nothing" (front end, outside any store context).
      */
-    public function resolve( array $block_context = [], array $attributes = [] ): ?Vendor {
-        if ( ! empty( $attributes['storeId'] ) ) {
-            $vendor = dokan()->vendor->get( absint( $attributes['storeId'] ) );
-
-            if ( $vendor->get_id() ) {
-                return $vendor;
-            }
-        }
-
-        if ( ! empty( $block_context['dokan/storeId'] ) ) {
-            $vendor = dokan()->vendor->get( absint( $block_context['dokan/storeId'] ) );
-
-            if ( $vendor->get_id() ) {
-                return $vendor;
-            }
-        }
-
+    public function resolve( array $block_context = [], array $attributes = [] ): ?Vendor { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
         $store_slug = get_query_var( dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ) );
 
         if ( ! empty( $store_slug ) ) {

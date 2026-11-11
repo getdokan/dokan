@@ -212,6 +212,8 @@
 
         url.searchParams.set( 'stores_orderby', event.target.value );
         url.searchParams.delete( 'paged' );
+        // The list paginates by path (/page/N/), so drop that too.
+        url.pathname = url.pathname.replace( /\/page\/\d+\/?$/, '/' );
 
         window.location.assign( url.toString() );
     } );

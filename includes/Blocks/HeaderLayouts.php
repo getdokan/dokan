@@ -62,9 +62,10 @@ class HeaderLayouts {
      * @param string     $layout  Block setting; empty for the marketplace default.
      * @param array|null $layouts Map from get_layouts(), when the caller already has it.
      *
-     * @return string A key of get_layouts().
+     * @return string A key of get_layouts(), or an empty string when the filter removed them all.
      */
     public static function resolve( string $layout, ?array $layouts = null ): string {
+        $layouts = $layouts ?? self::get_layouts();
         $layout = sanitize_key( $layout );
 
         if ( '' === $layout ) {
@@ -78,6 +79,11 @@ class HeaderLayouts {
             ][ $classic ] ?? 'panel';
         }
 
-        return isset( ( $layouts ?? self::get_layouts() )[ $layout ] ) ? $layout : 'panel';
+        if ( isset( $layouts[ $layout ] ) ) {
+            return $layout;
+        }
+
+        // `dokan_store_header_layouts` may have removed `panel` too.
+        return isset( $layouts['panel'] ) ? 'panel' : (string) array_key_first( $layouts );
     }
 }

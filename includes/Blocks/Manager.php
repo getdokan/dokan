@@ -108,12 +108,21 @@ class Manager implements Hookable {
 
         $filter = dokan()->get_container()->get( \WeDevs\Dokan\Vendor\StoreListsFilter::class );
 
-        remove_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
+        // Re-add only if it was hooked, so a theme that removed it keeps it removed.
+        $priority = has_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
 
-        /** This action is documented in templates/store-lists.php */
-        do_action( 'dokan_store_lists_filter_form', $stores );
+        if ( false !== $priority ) {
+            remove_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ], $priority );
+        }
 
-        add_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
+        try {
+            /** This action is documented in templates/store-lists.php */
+            do_action( 'dokan_store_lists_filter_form', $stores );
+        } finally {
+            if ( false !== $priority ) {
+                add_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ], $priority );
+            }
+        }
     }
 
     /**

@@ -110,7 +110,8 @@ if ( '' === $items ) {
  * Run it in store context so callbacks gating on dokan_is_store_page() work
  * when the block sits on an ordinary page.
  */
-$buttons = $resolver->render_in_store_context(
+// Fire once per page: a second tabs block would duplicate the buttons and their DOM ids.
+$buttons = did_action( 'dokan_after_store_tabs' ) ? '' : $resolver->render_in_store_context(
     $vendor,
     function () use ( $store_id ) {
         /** This action is documented in templates/store-header.php */

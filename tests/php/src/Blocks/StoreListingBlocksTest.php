@@ -80,6 +80,47 @@ class StoreListingBlocksTest extends DokanTestCase {
     /**
      * @test
      */
+    public function it_keeps_dokan_own_listener_off_when_a_theme_removed_it() {
+        $filter = dokan()->get_container()->get( StoreListsFilter::class );
+
+        remove_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
+
+        ob_start();
+        Manager::dispatch_store_lists_filter_form(
+            [
+				'users' => [],
+				'count' => 0,
+			]
+        );
+        ob_end_clean();
+
+        $this->assertFalse( has_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] ) );
+    }
+
+    /**
+     * @test
+     */
+    public function it_restores_dokan_own_listener_at_its_original_priority() {
+        $filter = dokan()->get_container()->get( StoreListsFilter::class );
+
+        remove_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] );
+        add_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ], 25 );
+
+        ob_start();
+        Manager::dispatch_store_lists_filter_form(
+            [
+				'users' => [],
+				'count' => 0,
+			]
+        );
+        ob_end_clean();
+
+        $this->assertSame( 25, has_action( 'dokan_store_lists_filter_form', [ $filter, 'filter_area' ] ) );
+    }
+
+    /**
+     * @test
+     */
     public function it_registers_the_store_listing_extension_registry_script() {
         $this->assertTrue( wp_script_is( 'dokan-blocks-store-listing', 'registered' ) );
     }

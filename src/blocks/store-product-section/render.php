@@ -53,6 +53,13 @@ if ( ! $vendor ) {
     return; // Not a store context and not an editor preview — render nothing.
 }
 
+// Sections belong to the Products tab, not Terms or Pro's tabs; an empty tab means a non-store page.
+$dokan_current_tab = dokan_get_current_store_tab( $vendor->get_id() );
+
+if ( ! $resolver->is_editor_preview() && '' !== $dokan_current_tab && 'products' !== $dokan_current_tab ) {
+    return;
+}
+
 $section_id = sanitize_key( $attributes['sectionId'] );
 $section    = dokan()->product_sections->{$section_id} ?? null;
 

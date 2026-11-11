@@ -41,7 +41,9 @@
 
             const self = storeLists;
 
-            self.form = document.forms.dokan_store_lists_filter_form;
+            // A page can hold several filter bars, each with its own form; refill every one.
+            self.forms = $( 'form[name="dokan_store_lists_filter_form"]' ).toArray();
+            self.form = self.forms.length ? self.forms[ 0 ] : null;
 
             const view = self.getLocal( 'dokan-layout' );
 
@@ -67,15 +69,16 @@
                 });
 
                 if ( openTheForm ) {
-                    $( '#dokan-store-listing-filter-form-wrap' ).slideToggle();
+                    $( '[id="dokan-store-listing-filter-form-wrap"]' ).slideToggle();
                 }
             }
 
-            if ( $( "#dokan-store-listing-filter-form-wrap" ).length ) {
+            if ( $( '[id="dokan-store-listing-filter-form-wrap"]' ).length ) {
                 $('.store-search-input').on( 'keypress', function (e) {
                     var key = e.which;
                     if( key == 13 ) {
-                        $( "#dokan-store-listing-filter-form-wrap" ).submit();
+                        // Submit the bar the visitor typed in, not the first one on the page.
+                        $( this ).closest( 'form' ).trigger( 'submit' );
                         return false;
                     }
                 });
@@ -274,7 +277,8 @@
 
         setParams: function( key, value ) {
             const self = storeLists;
-            const elements = self.form ? self.form.elements : '';
+            const forms = self.forms || ( self.form ? [ self.form ] : [] );
+            const elements = forms.reduce( ( all, form ) => all.concat( [ ...form.elements ] ), [] );
             const sortingForm = document.forms.stores_sorting;
             const sortingFormElements = sortingForm ? sortingForm.elements : '';
 
@@ -297,7 +301,7 @@
                 // for backward compatibility we'll allow `store_category[]` query_var.
                 if ( key[0].includes( 'store_categories[' ) || key[0].includes( 'store_category[' ) ) {
                     const trimedValue = value[0].split( ' ' ).join( '-' );
-                    const cateItem = $( `[data-slug=${trimedValue}]` );
+                    const cateItem = $( `[data-slug="${ CSS.escape( trimedValue ) }"]` );
                     // A page can hold more than one filter bar; read the name off one item, or the texts concatenate.
                     const cateName = cateItem.first().text().trim();
 
@@ -308,10 +312,10 @@
                     cateItem.addClass( 'dokan-btn-theme' );
 
                 } else if ( key[0] === 'rating' ) {
-                    const trimedValue = value[0].split( ' ' ).join( '-' );
+                    const trimedValue = CSS.escape( value[0].split( ' ' ).join( '-' ) );
 
-                    $( `[data-${key[0]}=${trimedValue}]` ).addClass( 'active' );
-                    $( `[data-rating=${trimedValue}]` ).parent().addClass( 'selected' );
+                    $( `[data-rating="${ trimedValue }"]` ).addClass( 'active' );
+                    $( `[data-rating="${ trimedValue }"]` ).parent().addClass( 'selected' );
                 }
             });
 

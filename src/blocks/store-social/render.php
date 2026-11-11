@@ -53,7 +53,8 @@ if ( ! $vendor ) {
 }
 
 $social_fields = dokan_get_social_profile_fields();
-$social_info   = $vendor->get_social_profiles();
+/** This filter is documented in templates/store-header.php */
+$social_info = apply_filters( 'dokan_store_social_profiles', $vendor->get_social_profiles(), $vendor );
 
 if ( empty( $social_fields ) || empty( $social_info ) ) {
     return;
