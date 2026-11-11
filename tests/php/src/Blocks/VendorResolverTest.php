@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test\Blocks;
 
 use RuntimeException;
+use WeDevs\Dokan\Blocks\PreviewVendor;
 use WeDevs\Dokan\Blocks\VendorResolver;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Vendor\Vendor;
@@ -99,6 +100,59 @@ class VendorResolverTest extends DokanTestCase {
     public function it_renders_nothing_outside_any_store_context_on_the_front_end() {
         $this->assertFalse( $this->resolver->is_editor_preview() );
         $this->assertNull( $this->resolver->resolve() );
+    }
+
+    /**
+     * @test
+     */
+    public function it_previews_inside_the_admin_editor() {
+        set_current_screen( 'edit-page' );
+
+        $this->assertTrue( $this->resolver->is_editor_preview() );
+        $this->assertInstanceOf( PreviewVendor::class, $this->resolver->resolve() );
+
+        set_current_screen( 'front' );
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_leak_the_preview_vendor_into_admin_ajax() {
+        set_current_screen( 'edit-page' );
+        add_filter( 'wp_doing_ajax', '__return_true' );
+
+        $this->assertFalse( $this->resolver->is_editor_preview(), 'admin-ajax requests come from the front end.' );
+        $this->assertNull( $this->resolver->resolve() );
+
+        set_current_screen( 'front' );
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_leak_the_preview_vendor_into_rest_rendered_content() {
+        wp_set_current_user( $this->factory()->user->create( [ 'role' => 'administrator' ] ) );
+
+        $page_id = $this->factory()->post->create(
+            [
+				'post_type'    => 'page',
+				'post_status'  => 'publish',
+				'post_content' => '<!-- wp:dokan/store-name /--><!-- wp:dokan/store-info /-->',
+			]
+        );
+
+        foreach ( [ 'view', 'edit' ] as $context ) {
+            $request = new \WP_REST_Request( 'GET', '/wp/v2/pages/' . $page_id );
+            $request->set_param( 'context', $context );
+
+            $response = rest_do_request( $request );
+            $rendered = $response->get_data()['content']['rendered'] ?? null;
+
+            $this->assertSame( 200, $response->get_status() );
+            $this->assertIsString( $rendered );
+            $this->assertStringNotContainsString( 'Store Name', $rendered, "No preview store over REST ({$context})." );
+            $this->assertStringNotContainsString( 'dokan-store-info', $rendered, "No preview store info over REST ({$context})." );
+        }
     }
 
     /**

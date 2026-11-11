@@ -15,7 +15,9 @@
 	// Colours set on this block win over the ones baked into the header pattern,
 	// which carries its own group colours for the panel layout. Nothing changes
 	// while the block's colour settings are untouched.
-	&.has-background > .wp-block-group.has-background {
+	// The second selector is for the editor: only its wrapper has the colour.
+	&.has-background > .wp-block-group.has-background,
+	&.has-background .wp-block-dokan-store-header > .wp-block-group.has-background {
 		background-color: transparent !important;
 		background-image: none !important;
 	}

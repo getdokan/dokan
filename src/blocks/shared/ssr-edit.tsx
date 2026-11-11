@@ -4,6 +4,48 @@ import { Button, Disabled, PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import ServerSideRender from '@wordpress/server-side-render';
 
+/**
+ * Drop the block support styles that add up when applied twice.
+ *
+ * useBlockProps() already puts them on the editor wrapper, and the server render
+ * prints them again on its own wrapper. Text colour, typography (text align) and
+ * link colour are kept: they look the same applied twice, and the markup reads them.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param attributes Block attributes.
+ */
+export const withoutStackingSupports = (
+    attributes: Record< string, unknown >
+): Record< string, unknown > => {
+    const {
+        backgroundColor,
+        gradient,
+        borderColor,
+        style,
+        ...rest
+    } = attributes;
+
+    if ( ! style || typeof style !== 'object' ) {
+        return rest;
+    }
+
+    const { spacing, border, shadow, color, ...restStyle } = style as Record<
+        string,
+        any
+    >;
+
+    if ( color && typeof color === 'object' ) {
+        const { background, gradient: colorGradient, ...restColor } = color;
+
+        if ( Object.keys( restColor ).length ) {
+            restStyle.color = restColor;
+        }
+    }
+
+    return { ...rest, style: restStyle };
+};
+
 type SSREditProps = {
     name: string;
     attributes: Record< string, unknown >;
@@ -45,6 +87,7 @@ const SSREdit = ( {
     interactive = false,
 }: SSREditProps ) => {
     const blockProps = useBlockProps();
+    const previewAttributes = withoutStackingSupports( attributes );
 
     const resetAll = () => {
         const type = getBlockType( name );
@@ -104,12 +147,15 @@ const SSREdit = ( {
                 </InspectorControls>
             ) }
             { interactive ? (
-                <ServerSideRender block={ name } attributes={ attributes } />
+                <ServerSideRender
+                    block={ name }
+                    attributes={ previewAttributes }
+                />
             ) : (
                 <Disabled>
                     <ServerSideRender
                         block={ name }
-                        attributes={ attributes }
+                        attributes={ previewAttributes }
                     />
                 </Disabled>
             ) }

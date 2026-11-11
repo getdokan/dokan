@@ -166,6 +166,115 @@ class StorePageBlocksTest extends DokanTestCase {
     }
 
     /**
+     * A seller with a phone number and the given email setting.
+     *
+     * @param string $show_email Vendor's own `show_email` setting.
+     *
+     * @return int
+     */
+    protected function create_seller_with_contact( string $show_email ): int {
+        $seller_id = $this->factory()->seller->create();
+        $profile   = (array) get_user_meta( $seller_id, 'dokan_profile_settings', true );
+
+        $profile['phone']      = '5551234567';
+        $profile['show_email'] = $show_email;
+
+        update_user_meta( $seller_id, 'dokan_profile_settings', $profile );
+
+        return $seller_id;
+    }
+
+    /**
+     * Set the admin's "hide vendor info" privacy options.
+     *
+     * @param array $hidden Field => 'field' for each hidden field.
+     *
+     * @return void
+     */
+    protected function hide_vendor_info( array $hidden ): void {
+        $appearance = (array) get_option( 'dokan_appearance', [] );
+
+        $appearance['hide_vendor_info'] = $hidden;
+
+        update_option( 'dokan_appearance', $appearance );
+    }
+
+    /**
+     * @test
+     */
+    public function store_info_shows_the_email_only_when_the_vendor_allows_it() {
+        $hidden_id = $this->create_seller_with_contact( 'no' );
+        $shown_id  = $this->create_seller_with_contact( 'yes' );
+
+        $this->view_store( get_user_by( 'id', $hidden_id )->user_nicename );
+        $this->assertStringNotContainsString( 'dokan-store-email', $this->render( 'dokan/store-info' ) );
+
+        $this->view_store( get_user_by( 'id', $shown_id )->user_nicename );
+        $this->assertStringContainsString( 'dokan-store-email', $this->render( 'dokan/store-info' ) );
+    }
+
+    /**
+     * @test
+     */
+    public function store_info_honours_the_admin_privacy_options_over_block_and_vendor_settings() {
+        $seller_id = $this->create_seller_with_contact( 'yes' );
+
+        $this->view_store( get_user_by( 'id', $seller_id )->user_nicename );
+
+        $html = $this->render( 'dokan/store-info' );
+        $this->assertStringContainsString( 'dokan-store-phone', $html );
+        $this->assertStringContainsString( 'dokan-store-email', $html );
+
+        $this->hide_vendor_info(
+            [
+				'email' => 'email',
+				'phone' => 'phone',
+			]
+        );
+
+        // The block asks for both fields; the admin's privacy option still wins.
+        $html = $this->render(
+            'dokan/store-info',
+            [
+				'showEmail' => true,
+				'showPhone' => true,
+			]
+        );
+
+        $this->assertStringNotContainsString( 'dokan-store-phone', $html );
+        $this->assertStringNotContainsString( 'dokan-store-email', $html );
+        $this->assertStringNotContainsString( '5551234567', $html );
+    }
+
+    /**
+     * @test
+     */
+    public function store_tab_content_restores_the_global_post_and_the_woocommerce_loop() {
+        $page_id = $this->factory()->post->create(
+            [
+				'post_type'  => 'page',
+				'post_title' => 'Host page',
+			]
+        );
+
+        $this->factory()->product->create_simple_product();
+
+        $this->go_to( get_permalink( $page_id ) );
+        the_post();
+
+        // The editor preview renders its own product query over the page's main query.
+        set_current_screen( 'edit-page' );
+
+        $html = $this->render( 'dokan/store-tab-content', [ 'columns' => 3 ] );
+
+        $this->assertStringContainsString( 'seller-items', $html, 'The preview renders a product loop.' );
+        $this->assertSame( $page_id, get_the_ID(), 'The global $post points back at the host page.' );
+        $this->assertTrue( empty( $GLOBALS['woocommerce_loop'] ), 'The WooCommerce loop state is reset.' );
+
+        set_current_screen( 'front' );
+    }
+
+    /**
      * @test
      */
     public function the_product_section_renders_only_on_the_products_tab() {
