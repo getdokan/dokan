@@ -428,32 +428,38 @@ class OrderAbilityScope implements Hookable {
      * @return mixed
      */
     private function enrich_order_result( $result ) {
-        if ( ! is_array( $result ) ) {
-            return $result;
-        }
+        return is_array( $result ) ? $this->map_orders( $result, [ $this, 'add_relationship_to_order' ] ) : $result;
+    }
 
-        // Collections: Layer 2 returns `orders`, the Layer 1 REST proxy wraps rows in `data`.
-        foreach ( [ 'orders', 'data' ] as $collection ) {
-            if ( isset( $result[ $collection ] ) && is_array( $result[ $collection ] ) ) {
-                $result[ $collection ] = array_map( [ $this, 'add_relationship_to_order' ], $result[ $collection ] );
+    /**
+     * Run a callback on every order in an ability result, wherever the result keeps them.
+     *
+     * A list is `orders` on the Layer 2 abilities and `data` on the Layer 1 REST proxy; a single
+     * order is wrapped in `order` on Layer 2 and is the result itself on Layer 1.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array    $result Ability result.
+     * @param callable $shape  Receives one order payload and returns it.
+     *
+     * @return array
+     */
+    private function map_orders( array $result, callable $shape ): array {
+        foreach ( [ 'orders', 'data' ] as $list ) {
+            if ( isset( $result[ $list ] ) && is_array( $result[ $list ] ) ) {
+                $result[ $list ] = array_map( $shape, $result[ $list ] );
 
                 return $result;
             }
         }
 
-        // Layer 2 single entity.
         if ( isset( $result['order'] ) && is_array( $result['order'] ) ) {
-            $result['order'] = $this->add_relationship_to_order( $result['order'] );
+            $result['order'] = call_user_func( $shape, $result['order'] );
 
             return $result;
         }
 
-        // Layer 1 single entity: the order payload itself.
-        if ( isset( $result['id'] ) ) {
-            return $this->add_relationship_to_order( $result );
-        }
-
-        return $result;
+        return isset( $result['id'] ) ? call_user_func( $shape, $result ) : $result;
     }
 
     /**

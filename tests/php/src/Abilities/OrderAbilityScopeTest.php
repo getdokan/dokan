@@ -405,6 +405,47 @@ class OrderAbilityScopeTest extends DokanTestCase {
         $this->assertSame( $parent_id, $this->sut->add_relationship_to_order( [ 'id' => $sub_id ] )['parent_id'] );
     }
 
+    public function test_the_rest_proxy_shapes_are_annotated_too() {
+        $order_id = $this->create_single_vendor_order( $this->seller_id1 );
+
+        // The pre-11.3 list keeps its rows in `data`.
+        $list = $this->sut->extend_order_abilities(
+            [
+                'execute_callback' => static function () use ( $order_id ) {
+                    return [ 'data' => [ [ 'id' => $order_id ] ] ];
+                },
+            ],
+            'woocommerce/orders-list'
+        );
+        $rows = call_user_func( $list['execute_callback'], [] );
+        $this->assertSame( 'single', $rows['data'][0]['order_relation'] );
+        $this->assertSame( $this->seller_id1, $rows['data'][0]['vendor']['id'] );
+
+        // Its single order is the result itself.
+        $single = $this->sut->extend_order_abilities(
+            [
+                'execute_callback' => static function () use ( $order_id ) {
+                    return [ 'id' => $order_id ];
+                },
+            ],
+            'woocommerce/orders-get'
+        );
+        $order = call_user_func( $single['execute_callback'], [] );
+        $this->assertSame( 'single', $order['order_relation'] );
+        $this->assertSame( $this->seller_id1, $order['vendor']['id'] );
+
+        // A result that holds no order is returned as it is.
+        $other = $this->sut->extend_order_abilities(
+            [
+                'execute_callback' => static function () {
+                    return [ 'deleted' => true ];
+                },
+            ],
+            'woocommerce/orders-get'
+        );
+        $this->assertSame( [ 'deleted' => true ], call_user_func( $other['execute_callback'], [] ) );
+    }
+
     public function test_a_single_order_entity_is_annotated_like_a_row() {
         $order_id = $this->create_single_vendor_order( $this->seller_id1 );
 
