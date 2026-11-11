@@ -69,8 +69,9 @@ browser's base64 encoding of `username:password`, which is what an MCP client
 sends after `Authorization: Basic`. The token is that Application Password in
 another spelling, not a second credential; Dokan neither issues nor stores it,
 so a password listed later has none to offer (the list carries no token
-column), and making one available again would mean keeping the password. It is always the signed-in user's own (Vendor Staff
-create theirs), and the wp-admin block stays as it is. The tab is the Vendor
+column), and making one available again would mean keeping the password. It is
+always the signed-in user's own (Vendor Staff create theirs), and the wp-admin
+block stays as it is. The tab is the Vendor
 Dashboard's side of "Allow vendors to connect": it is offered only while both
 switches are on and that account may connect, to a Store Admin as well, who can
 connect either way and creates theirs on the profile screen. It lives on the
@@ -107,7 +108,10 @@ served by the default server and by any third-party one:
   classes and `Gate` wrap `permission_callback` and `execute_callback` in place
   on `wp_register_ability_args` (WordPress 6.9), and apply the same decisions a
   second time on WordPress 7.1's `wp_ability_permission_result`; both are
-  idempotent. WooCommerce 11.3's product-create and product-update attach their
+  idempotent. The order of the callbacks is named in `AbilityArgs`: on
+  registration Dokan's scoping runs at priority 10, add-ons such as Dokan Pro
+  at 20 and the access policy at 30, so the policy wraps everything else.
+  WooCommerce 11.3's product-create and product-update attach their
   execute callback after registration (`ActionableAbility`), so they cannot be
   wrapped: for them the vendor is resolved and `vendor_id` stripped on
   `wp_ability_normalize_input`, and the owning vendor added on
@@ -142,7 +146,21 @@ served by the default server and by any third-party one:
   product created through an ability, or moved to a live status, takes the
   marketplace's new-product status, and the Store Admin gets the pending-review
   email once, as from the dashboard. A product that is already live stays live
-  when it is edited, as on a REST edit that names no status.
+  when it is edited, as on a REST edit that names no status. An add-on's own
+  limit on the same save runs after the hold, so it only sees a product that is
+  still going live (Dokan Pro's Vendor Subscription product limit, dokan-pro
+  ADR-0010).
+- **A vendor's tools follow the marketplace's other rules too.**
+  `woocommerce/order-update-status` is refused while the "Order Status Change"
+  selling option is off, as on Dokan's REST API. A product delete below Store
+  Admin goes to the trash whatever `force` says: a permanent delete takes the
+  listing's order history and reviews with it, and an assistant acting on a
+  sentence should not do that. An order's output carries what the vendor earns
+  and what the marketplace keeps (`earning`) for a Store Admin and the owning
+  vendor; Vendor Staff need the sales-overview capability, and a parent order
+  carries none. `dokan/orders-summary-get`, added with this decision, counts a
+  store's orders by status without any customer data: a Vendor always gets
+  their own store, a Store Admin names one.
 - **Every WooCommerce order ability is covered by name prefix**, including
   ones added after this decision such as `woocommerce/order-notes-query`
   (11.3): the ownership check, the vendor-access policy and the explained
@@ -186,7 +204,10 @@ An Application Password is not an MCP-only credential: it signs its user in on
 every REST route with that user's own capabilities. Giving Vendors a button to
 create one makes what a Vendor can already do with a browser session scriptable,
 no more; it also means every REST route's own Vendor scoping matters as much as
-the Abilities layer's.
+the Abilities layer's. One such route is open at the time of this decision and
+is not changed by it: WooCommerce's `/wc/v3/products` lists other stores'
+unpublished products to a Vendor, where Dokan's own product routes and the
+product tools do not.
 
 WooCommerce 11.3 turned `MCPAdapterProvider::is_mcp_request()` into a
 `doing_it_wrong` stub. `RequestContext` no longer calls it.
