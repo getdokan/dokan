@@ -232,15 +232,24 @@ if ( $dokan_query->have_posts() ) {
         if ( $dokan_own_page ) {
             dokan_content_nav( 'nav-below' );
         } else {
-            echo wp_kses_post(
-                paginate_links(
-                    [
-                        'total'   => (int) $dokan_query->max_num_pages,
-                        'current' => max( 1, absint( get_query_var( 'paged' ) ) ),
-                        'type'    => 'list',
-                    ]
-                )
+            $dokan_pagination = paginate_links(
+                [
+                    'total'   => (int) $dokan_query->max_num_pages,
+                    'current' => max( 1, absint( get_query_var( 'paged' ) ) ),
+                    'type'    => 'list',
+                ]
             );
+
+            // woocommerce.css only styles the list under `nav.woocommerce-pagination`
+            // (inside the wrapper's `woocommerce` class); a bare list falls back to
+            // the theme's bulleted <ul>.
+            if ( $dokan_pagination ) {
+                printf(
+                    '<nav class="woocommerce-pagination" aria-label="%1$s">%2$s</nav>',
+                    esc_attr__( 'Product Pagination', 'dokan-lite' ),
+                    wp_kses_post( $dokan_pagination )
+                );
+            }
         }
     }
 
