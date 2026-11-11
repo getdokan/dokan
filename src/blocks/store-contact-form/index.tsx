@@ -1,4 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
+import { storeBlockIcon } from '../shared/block-icons';
 import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -45,6 +46,7 @@ const TEXTS = [
 ];
 
 registerBlockType( metadata.name, {
+    icon: storeBlockIcon( metadata.name ),
     edit: ( {
         attributes,
         setAttributes,

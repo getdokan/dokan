@@ -1,4 +1,5 @@
 import { registerBlockType } from '@wordpress/blocks';
+import { storeBlockIcon } from '../shared/block-icons';
 import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -18,6 +19,7 @@ const LEVELS = [ 1, 2, 3, 4, 5, 6 ].map( ( level ) => ( {
 } ) );
 
 registerBlockType( metadata.name, {
+    icon: storeBlockIcon( metadata.name ),
     edit: ( {
         attributes,
         setAttributes,
