@@ -7,10 +7,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Wraps the callbacks in an ability's registration arguments, on `wp_register_ability_args`.
  *
- * The ability keeps its name, schemas and metadata, so every caller (an MCP server, the Abilities
- * REST API, WP-CLI, another plugin) runs through the wrapper. Wrapping on registration works on
- * every WordPress version with the Abilities API; the `wp_ability_*` result filters of WordPress
- * 7.1 are layered on top where they exist.
+ * Every caller of the ability (an MCP server, the Abilities REST API, WP-CLI, another plugin)
+ * then runs through the wrapper, on every WordPress with the Abilities API; the `wp_ability_*`
+ * result filters of WordPress 7.1 are layered on top where they exist.
  *
  * @since DOKAN_SINCE
  */

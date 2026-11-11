@@ -9,12 +9,9 @@ use WP_Error;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The marketplace's policy for AI assistants: whether Dokan's MCP server answers at all, who may
- * use it, and where an assistant connects.
- *
- * {@see Server} registers the endpoint on the WordPress MCP Adapter; this class only answers
- * policy questions. Both switches live in the AI Assist settings (`dokan_ai` section) so the
- * legacy and the new admin settings screens share one source of truth through the settings bridge.
+ * The marketplace's policy for AI assistants: whether Dokan's MCP server answers, who may use
+ * it, and where an assistant connects. Both switches live in the `dokan_ai` settings section,
+ * which the legacy and the new settings screens share (ADR-0010).
  *
  * @since DOKAN_SINCE
  */
@@ -167,10 +164,8 @@ class Access {
     /**
      * Whether a user may use the marketplace tools through an AI assistant right now.
      *
-     * Store Admins always may. A Vendor or Vendor Staff may only while both switches are on and
-     * the store's selling is enabled: the settings screen offers vendor access beneath the master
-     * switch, so a master switch that is off closes vendor access with it, and a suspended
-     * vendor's assistant stops with the suspension.
+     * Store Admins always may. A Vendor or Vendor Staff only while both switches are on and the
+     * store's selling is enabled, so a suspended vendor's assistant stops with the suspension.
      *
      * @since DOKAN_SINCE
      *

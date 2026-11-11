@@ -10,16 +10,10 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Registers Dokan's MCP server on the WordPress MCP Adapter, beside the adapter's default server.
  *
- * The adapter runs the protocol and WordPress signs the user in (an application password over
- * HTTP Basic); Dokan adds a route, a list of tools and one question at the door: may this account
- * connect ({@see Access}). Nothing here boots the adapter, touches its default server or accepts
- * any other credential.
- *
- * A server registered on the adapter gets no ability by itself, so the tools are gathered here:
- * everything the adapter's default server offers on this site (the abilities WordPress,
- * WooCommerce and others mark public for MCP), under their own names, and Dokan's own abilities,
- * which are offered nowhere else. The vendor rules live in the Abilities layer and follow the
- * WooCommerce product and order abilities to whichever server runs them.
+ * The adapter runs the protocol and WordPress signs the user in; Dokan adds the route, the list
+ * of tools and one question at the door: may this account connect ({@see Access}). The vendor
+ * rules live in the Abilities layer and follow the abilities to whichever server runs them
+ * (ADR-0010).
  *
  * @since DOKAN_SINCE
  */
@@ -120,10 +114,8 @@ class Server implements Hookable {
      * Whether this request needs the server: a REST request to the endpoint itself, or WP-CLI so
      * the adapter's commands see it.
      *
-     * WordPress normally knows the dispatched route before it fires `rest_api_init`, so the check
-     * is exact. Building a tool per ability on every other request (the REST server is also built
-     * for editor preloads in wp-admin) would tax the whole dashboard for an endpoint only an
-     * assistant calls.
+     * Building a tool per ability on every other request would tax the whole site for an endpoint
+     * only an assistant calls.
      *
      * @since DOKAN_SINCE
      *

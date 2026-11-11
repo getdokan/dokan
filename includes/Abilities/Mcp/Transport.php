@@ -11,9 +11,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * The MCP Adapter's HTTP transport with the marketplace's rule at the door.
  *
- * The adapter also takes a permission callback for a server, but it reduces whatever the callback
- * answers to yes or no. Answering here keeps the reason, so an assistant that is turned away can
- * tell the user why. Only loaded once the adapter asks for it, so the parent class always exists.
+ * The adapter's own permission callback reduces the answer to yes or no; answering here keeps
+ * the reason, so an assistant that is turned away can tell the user why. Loaded only when the
+ * adapter asks for it, so the parent class always exists.
  *
  * @since DOKAN_SINCE
  */

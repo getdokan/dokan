@@ -10,11 +10,9 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Gives a Vendor a place to create the application password their AI assistant signs in with.
  *
- * WordPress offers application passwords on the profile screen, which lives in wp-admin where
- * Vendors are not admitted. This adds an "AI Assistant" tab to the Vendor Dashboard's Store
- * settings instead; the field on it talks straight to WordPress's own application-password REST
- * route, so WordPress keeps deciding who may create, list and revoke one, and whether the feature
- * is available at all. Dokan stores nothing and never sees a password.
+ * WordPress offers that on the profile screen in wp-admin, where Vendors are not admitted. The
+ * tab's field talks to WordPress's own application-password REST route, so WordPress decides
+ * who may create, list and revoke one; Dokan stores nothing and never sees a password.
  *
  * @since DOKAN_SINCE
  */
@@ -129,12 +127,9 @@ class VendorSettings implements Hookable {
     }
 
     /**
-     * Whether the tab is offered to a user: the Store Admin has switched on both AI assistant
-     * access and vendor connections, something serves the endpoint, and this account may connect.
-     *
-     * The tab is the Vendor Dashboard's side of "Allow vendors to connect", so it follows that
-     * switch for whoever opens the dashboard. A Store Admin can connect either way and creates
-     * their own application password on their profile.
+     * Whether the tab is offered to a user: both switches are on, something serves the endpoint
+     * and this account may connect. The tab follows "Allow vendors to connect" for whoever opens
+     * the dashboard; a Store Admin creates their own application password on their profile.
      *
      * @since DOKAN_SINCE
      *

@@ -9,10 +9,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Keeps the connection block's display-only values out of the stored settings.
  *
- * Both settings screens describe the MCP connection (status, connector URL, how to sign in) in
- * ordinary fields whose values are filled in when the screen is built. Nothing in them is a
- * setting, but the new UI submits every field of a page on save and the legacy screen posts its
- * section as a whole, so the display-only fields are named here and dropped before the write.
+ * The new UI submits every field of a page and the legacy screen posts its whole section, so
+ * the fields that only describe the connection are named here and dropped before the write.
  *
  * @since DOKAN_SINCE
  */

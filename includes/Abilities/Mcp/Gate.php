@@ -10,14 +10,9 @@ use WP_Error;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Applies the marketplace's AI assistant policy in the Abilities layer, where WordPress and the
- * MCP Adapter already decide permissions.
- *
- * Dokan's own server asks {@see Access} at the door, but the WooCommerce product and order
- * abilities are also served by the adapter's default server and by any third-party one. So the
- * permission callback of every governed ability is wrapped: over MCP, on whichever server, a user
- * the policy does not admit is refused with a reason. Nothing here runs a server, authenticates
- * anybody or touches a request that is not an MCP tool call.
+ * Applies the marketplace's AI assistant policy to every governed ability, on whichever MCP
+ * server runs it: the WooCommerce product and order abilities are also served by the adapter's
+ * default server and by third-party ones, where Dokan's door ({@see Transport}) does not stand.
  *
  * @since DOKAN_SINCE
  */
@@ -68,11 +63,10 @@ class Gate implements Hookable {
     }
 
     /**
-     * Refuse a governed ability over MCP to anyone the policy does not admit.
+     * Refuse a governed ability over MCP to anyone the policy does not admit, with the reason.
      *
-     * Runs on the permission decision, so the adapter's pre-flight and the execution both see the
-     * refusal, and the client reads why. Outside an MCP request the result passes through
-     * untouched: the Abilities REST API and in-process callers keep the abilities' own rules.
+     * Outside an MCP request the result passes through: the Abilities REST API and in-process
+     * callers keep the abilities' own rules.
      *
      * @since DOKAN_SINCE
      *
