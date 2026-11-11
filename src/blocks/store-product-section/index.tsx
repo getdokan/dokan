@@ -1,0 +1,93 @@
+import { registerBlockType } from '@wordpress/blocks';
+import { storeBlockIcon } from '../shared/block-icons';
+import { InspectorControls } from '@wordpress/block-editor';
+import {
+    PanelBody,
+    SelectControl,
+    TextControl,
+    Notice,
+} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import SSREdit from '../shared/ssr-edit';
+import type { StoreBlockEditProps } from '../shared/types';
+import metadata from './block.json';
+import './style.scss';
+
+type StoreProductSectionAttributes = {
+    sectionId: string;
+    title: string;
+    emptyText: string;
+};
+
+const SECTIONS = [
+    { value: 'featured', label: __( 'Featured Products', 'dokan-lite' ) },
+    { value: 'latest', label: __( 'Latest Products', 'dokan-lite' ) },
+    {
+        value: 'best_selling',
+        label: __( 'Best Selling Products', 'dokan-lite' ),
+    },
+    { value: 'top_rated', label: __( 'Top Rated Products', 'dokan-lite' ) },
+];
+
+registerBlockType( metadata.name, {
+    icon: storeBlockIcon( metadata.name ),
+    edit: ( {
+        attributes,
+        setAttributes,
+    }: StoreBlockEditProps< StoreProductSectionAttributes > ) => (
+        <SSREdit
+            name={ metadata.name }
+            attributes={ attributes }
+            setAttributes={ setAttributes }
+        >
+            <InspectorControls>
+                <PanelBody
+                    title={ __( 'Settings', 'dokan-lite' ) }
+                >
+                    <SelectControl
+                        label={ __( 'Section', 'dokan-lite' ) }
+                        value={ attributes.sectionId ?? 'featured' }
+                        options={ SECTIONS }
+                        onChange={ ( sectionId ) =>
+                            setAttributes( { sectionId } )
+                        }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                        label={ __( 'Heading', 'dokan-lite' ) }
+                        help={ __(
+                            'Leave empty to use the section default.',
+                            'dokan-lite'
+                        ) }
+                        value={ attributes.title ?? '' }
+                        onChange={ ( title ) => setAttributes( { title } ) }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                        label={ __( 'No products message', 'dokan-lite' ) }
+                        help={ __(
+                            'Shown when there are no products. Leave empty to hide the section.',
+                            'dokan-lite'
+                        ) }
+                        value={ attributes.emptyText ?? '' }
+                        onChange={ ( emptyText ) =>
+                            setAttributes( { emptyText } )
+                        }
+                        __next40pxDefaultSize
+                        __nextHasNoMarginBottom
+                    />
+
+                    <Notice status="warning" isDismissible={ false }>
+                        { __(
+                            'Store pages already show this section. Hide it in Appearance → Customize → Store first, or it shows twice.',
+                            'dokan-lite'
+                        ) }
+                    </Notice>
+                </PanelBody>
+            </InspectorControls>
+        </SSREdit>
+    ),
+    save: () => null,
+} );
