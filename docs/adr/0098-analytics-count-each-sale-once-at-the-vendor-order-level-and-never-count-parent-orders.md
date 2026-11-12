@@ -23,7 +23,7 @@ Dokan therefore keeps a companion table, `{prefix}dokan_order_stats`, that class
 
 Types 6-9 are assigned only when an add-on answers the `dokan_get_order_type` filter (`lite:includes/Analytics/Reports/OrderType.php:113-137`); see [ADR-0096](./0096-advertisement-and-vendor-subscription-orders-are-recorded-in-analytics-without-a-vendor-and-with-only-their-fees-as-admin-earning.md).
 
-**Analytics queries include only Vendor-order-level types.** Each report's `QueryFilter` joins `dokan_order_stats` on `order_id` (`BaseQueryFilter::add_join_subquery()`, `lite:includes/Analytics/Reports/BaseQueryFilter.php:27-35`) and adds `order_type IN (...)` (`add_where_subquery()`, `:44-54`). The list comes from `get_order_and_refund_types_to_include()` (`:90-98`), which returns `OrderType::get_vendor_order_types()` = types 1, 2, 4, 5, 6, 7, 8, 9 (`lite:includes/Analytics/Reports/OrderType.php:158-169`), because `should_filter_by_vendor_id()` always returns `true` (`lite:includes/Analytics/Reports/BaseQueryFilter.php:81-83`). The "admin" list (`get_admin_order_types()`, types 0, 1, 3, 5, `OrderType.php:144-151`) is defined but never selected by any shipped filter. The same type list applies whether a Vendor or a Store Admin is looking.
+**Analytics queries include only Vendor-order-level types.** Each report's `QueryFilter` joins `dokan_order_stats` on `order_id` (`BaseQueryFilter::add_join_subquery()`, `lite:includes/Analytics/Reports/BaseQueryFilter.php:27-35`) and adds `order_type IN (...)` (`add_where_subquery()`, `:44-54`). The list comes from `get_order_and_refund_types_to_include()` (`:90-98`), which returns `OrderType::get_vendor_order_types()` = types 1, 2, 4, 5, 6, 7, 8, 9 (`lite:includes/Analytics/Reports/OrderType.php:158-169`; selected through `should_filter_by_vendor_id()`, `lite:includes/Analytics/Reports/BaseQueryFilter.php:81-83`). The same type list applies whether a Vendor or a Store Admin is looking.
 
 So in every Dokan-filtered WooCommerce Analytics report:
 
@@ -55,29 +55,26 @@ A customer checks out with Vendor A's item at 60.00 and Vendor B's item at 40.00
 | 101 | 60.00 | 2 (Suborder) | yes |
 | 102 | 40.00 | 2 (Suborder) | yes |
 
-The Store Admin's WooCommerce Analytics revenue report shows gross sales 100.00 and 2 orders (one per Vendor order), not 200.00 and 3 orders. Vendor A's report shows 60.00 and 1 order.
+The Store Admin's WooCommerce Analytics revenue report shows total sales 100.00 and 2 orders (one per Vendor order), not 200.00 and 3 orders. Vendor A's report shows 60.00 and 1 order.
 
 ## Edge cases
 
 - **A customer sees one order, the Store Admin's Analytics shows two.** Order counts are Vendor-order counts, which is what the Commission and Earning columns relate to.
 - **Refunds made directly on a parent Order** (type 3) never appear in any Dokan-filtered Analytics report. CONTEXT.md already puts such refunds outside the model.
 - **Single-vendor Orders for products the marketplace owner sells** are type 1 like any other single-vendor Order and are counted.
-- **The coupons report** keeps WooCommerce's own `amount` and `orders_count` columns: `Coupons\QueryFilter::modify_admin_report_columns()` (`lite:includes/Analytics/Reports/Coupons/QueryFilter.php:43-58`) would change them but is never hooked.
 - **Orders with no `dokan_order_stats` row** (for example, imported before the table existed and never re-imported) drop out of every report because the join is an inner `JOIN`.
 
 ## Why
 
-The `parent_id` comment in `Orders\QueryFilter` and the existence of separate admin and Vendor type lists show the intent: count Vendor orders so that Commission and Earning line up with order rows, and never count the same sale twice. Counting at the Vendor order level also matches Lite ADR 0004 (the Vendor order is authoritative, the parent is a mirror). Why Store Admins also get the Vendor list instead of the admin list is not recorded.
+The `parent_id` comment in `Orders\QueryFilter` shows the intent: count Vendor orders so that Commission and Earning line up with order rows, and never count the same sale twice. Counting at the Vendor order level also matches Lite ADR 0004 (the Vendor order is authoritative, the parent is a mirror).
 
 ## Consequences & risks
 
 - Store Admin totals agree with the sum of all Vendors' totals, plus marketplace-owned orders.
 - WooCommerce Analytics order counts differ from the WooCommerce order list, which shows parent Orders and (optionally) Suborders.
-- The unused `get_admin_order_types()` list invites a future change that would switch Store Admins to parent-level counting; doing so would change every admin total and drop the per-Vendor Commission columns' meaning.
 
 ## Recommendations
 
-- Remove `should_filter_by_vendor_id()` and the unused admin type lists, or document them as reserved, so the Vendor-order-level rule is explicit.
-- Either hook or delete `Coupons\QueryFilter::modify_admin_report_columns()`.
+None.
 
 _Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._

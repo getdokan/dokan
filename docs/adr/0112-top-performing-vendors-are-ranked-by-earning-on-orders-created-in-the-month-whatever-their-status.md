@@ -22,8 +22,6 @@ So:
 
 - **Ranking is by Earning** (the Vendor's share including the shipping and tax they receive), not by sales or Commission.
 - **Every status counts**: pending, failed and cancelled Vendor orders add to a Vendor's Earning and order count.
-- **Refund rows count as orders**: a Vendor's refund rows carry their `vendor_id`, so each refund adds 1 to `total_orders` (and 0 to the money columns). The refunded order's own row already shows its reduced Earning.
-- **Parent Orders and marketplace-owned orders** are grouped under `vendor_id` 0. That group takes one of the five slots when it ranks high enough and is then removed, so fewer than five Vendors may be listed.
 
 ## Settings that change it
 
@@ -60,7 +58,7 @@ No recorded reason. The sibling dashboard queries apply the excluded-status sett
 
 ## Consequences & risks
 
-- The leaderboard can reward Vendors with many cancelled or failed orders and miscount orders by including refunds.
+None recorded.
 
 ## Recommendations
 

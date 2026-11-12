@@ -41,7 +41,6 @@ A 22.00 refund (20.00 of the item, 2.00 of the shipping) is processed later; `or
 
 - Refunded Vendor orders are excluded altogether, even partially refunded ones that were later set to "Refunded".
 - Pending, cancelled and failed Vendor orders are excluded.
-- On an HPOS store dates are compared in UTC, on a posts store in site time, so day boundaries differ.
 
 ## Why
 

@@ -37,7 +37,7 @@ Settings: date type left at `date_paid`; excluded statuses at the default; only 
 
 Vendor A receives Vendor order #301 for 80.00 created on 30 June, paid by bank transfer and marked processing on 2 July.
 
-- Vendor A's Reports → Revenue for June: 0.00. For July: 80.00 gross sales, Earning 72.00.
+- Vendor A's Reports → Revenue for June: 0.00. For July: 80.00 total sales, Earning 72.00.
 - The Store Admin's dashboard sales chart (Dokan query, creation date) for June: 80.00 for this order; for July: nothing.
 - On 5 August Vendor A refunds 20.00 of the line item. WooCommerce's refund row (−20.00) is dated 5 August: the August revenue report shows −20.00 of sales. The Earning on the July row is recalculated to 54.00 (see [ADR-0100](./0100-commission-and-earning-in-analytics-are-the-vendor-orders-figures-after-refunds-while-refunds-reduce-sales-as-separate-rows.md)).
 

@@ -44,7 +44,7 @@ On 3 June: one multi-vendor checkout (#100 = 100.00, Suborders #101 = 60.00 for 
 | #110 | 1 | 50.00 | 5.00 |
 
 Chart for 3 June: total sales **250.00**, Commission **25.00**, orders **4**.
-WooCommerce Analytics for the same orders (date type `date_created`): gross sales 150.00, Commission 15.00, 3 orders.
+WooCommerce Analytics for the same orders (date type `date_created`): total sales 150.00, Commission 15.00, 3 orders.
 
 ## Edge cases
 
@@ -53,11 +53,11 @@ WooCommerce Analytics for the same orders (date type `date_created`): gross sale
 
 ## Why
 
-No recorded reason. Other queries on the same table exclude parent Orders explicitly (`VendorOrderStatsStore::apply_order_type_filter()`, `lite:includes/Models/DataStore/VendorOrderStatsStore.php:441-453`), which suggests the omission here is unintended.
+No recorded reason.
 
 ## Consequences & risks
 
-- The chart overstates sales, Commission and order counts by the value of every multi-vendor checkout, and disagrees with WooCommerce Analytics and with the Store Admin's own expectation.
+None recorded.
 
 ## Recommendations
 

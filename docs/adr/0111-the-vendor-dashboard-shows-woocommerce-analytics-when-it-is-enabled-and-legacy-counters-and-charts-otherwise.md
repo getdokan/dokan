@@ -22,13 +22,13 @@ Dokan has two generations of Vendor reporting. Since 4.0.0 the Vendor dashboard 
 - The figures follow the legacy rules: [ADR-0108](./0108-the-legacy-dashboard-net-sales-counter-is-the-order-total-after-refunds-of-processing-on-hold-and-completed-vendor-orders.md), [ADR-0107](./0107-the-legacy-dashboard-earning-counter-is-ledger-earnings-in-withdraw-statuses-minus-approved-refunds.md), [ADR-0109](./0109-the-legacy-dashboard-order-counter-counts-vendor-orders-in-withdraw-statuses-plus-refunded-ones.md) and [ADR-0110](./0110-the-legacy-vendor-sales-chart-plots-gross-totals-of-processing-on-hold-and-completed-vendor-orders-by-creation-date.md).
 - Lite's legacy report helpers (`includes/reports.php`) are loaded only when the premium add-on is not active (`lite:dokan-class.php:290-292`); add-ons may supply their own versions of the same pluggable functions (`dokan_get_order_report_data()`, `dokan_dashboard_sales_overview()`), which then change the legacy chart's rules.
 
-**Independent of the switch:** the analytics lookup table `dokan_order_stats` is filled only while WooCommerce imports orders into Analytics (`ScheduleListener`, `lite:includes/Analytics/Reports/Orders/Stats/ScheduleListener.php:28-31`). The admin dashboard widgets that read it (sales chart, active and top Vendors) show nothing useful on a site where WooCommerce Analytics has never imported orders.
+**The admin dashboard depends on the same switch.** Its sales chart, active Vendors and top Vendors read `dokan_order_stats`, which receives orders only while WooCommerce Analytics is enabled (`ScheduleListener`, `lite:includes/Analytics/Reports/Orders/Stats/ScheduleListener.php:28-31`; `ReportsSync::init()`, `wc:src/Internal/Admin/FeaturePlugin.php:176-178`). With the switch off they stop updating, and they show nothing useful on a site where WooCommerce Analytics has never imported orders.
 
 Widgets are also gated per capability: the counters need `dokan_view_sales_overview` and the chart needs `dokan_view_sales_report_chart` (`lite:includes/Dashboard/Templates/Dashboard.php:62-70`, `:251-258`), and any widget can be switched off through `dokan_dashboard_widget_applicable`.
 
 ## Settings that change it
 
-- `woocommerce_analytics_enabled` (WooCommerce → Settings → Advanced → Features → Analytics). `yes`: analytics app. Anything else: legacy widgets.
+- `woocommerce_analytics_enabled` (WooCommerce → Settings → Advanced → Features → Analytics). `yes`: analytics app, and the admin dashboard widgets keep receiving new orders. Anything else: legacy widgets, and the admin dashboard widgets stop updating.
 - Filter `dokan_is_analytics_enabled` overrides the option in code.
 
 ## Worked example

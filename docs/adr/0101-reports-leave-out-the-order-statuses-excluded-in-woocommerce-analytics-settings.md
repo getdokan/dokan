@@ -30,6 +30,7 @@ Admin dashboard counters that are not revenue (order cancellation rate, new cust
   - A status in the list: orders and their refunds in that status are left out of every WooCommerce Analytics report and of the Dokan queries marked "always" above.
   - A status not in the list: those orders count.
 - Filters `woocommerce_analytics_excluded_order_statuses` and `dokan_analytics_excluded_order_statuses` can change the list in code.
+- Not a setting: an order-status filter chosen on a report (`status_is` or `status_is_not`) is a request parameter and replaces the list for that query (`wc:src/Admin/API/Reports/DataStore.php:1428-1431`).
 
 ## Worked example
 
@@ -37,15 +38,14 @@ Settings: excluded statuses left at the default; WooCommerce date type `date_cre
 
 In one month Vendor A has three Vendor orders: #201 completed 50.00, #202 processing 30.00 and #203 pending payment 20.00.
 
-- Vendor A's WooCommerce Analytics revenue: 50.00 + 30.00 = 80.00 gross sales, 2 orders, total Earning 45.00 + 27.00 = 72.00.
+- Vendor A's WooCommerce Analytics revenue: 50.00 + 30.00 = 80.00 total sales, 2 orders, total Earning 45.00 + 27.00 = 72.00.
 - The Store Admin's dashboard sales chart for that month adds the same 80.00 for Vendor A's orders.
-- If the Store Admin removes "Pending payment" from the excluded list, #203 is counted: 100.00 gross sales and 3 orders in both places.
+- If the Store Admin removes "Pending payment" from the excluded list, #203 is counted: 100.00 total sales and 3 orders in both places.
 
 ## Edge cases
 
 - **Processing and on-hold orders count by default.** Unlike the Vendor Balance, which counts only Vendor orders in the withdraw order statuses (see [ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md)), analytics revenue includes processing and on-hold orders.
 - **Refunded orders count** (the refunded status is not excluded by default); their refund rows offset them.
-- **Top-performing Vendors ignore the setting**, so a cancelled or failed order still adds to a Vendor's ranking (see [ADR-0112](./0112-top-performing-vendors-are-ranked-by-earning-on-orders-created-in-the-month-whatever-their-status.md)).
 - **`checkout-draft`** is added to the exclusion list by Dokan's own queries, while WooCommerce's list adds only `auto-draft` and `trash`. Because Dokan adds it before applying `woocommerce_analytics_excluded_order_statuses`, a callback on that filter can still remove it.
 
 ## Why

@@ -21,14 +21,17 @@ Write paths and their checks:
 | REST `POST /dokan/v1/stores` and `PUT /dokan/v1/stores/<id>` → `Vendor\Manager::create()` / `update()` | Operating Terms are applied only inside `if ( current_user_can( 'manage_woocommerce' ) )` (`lite:includes/Vendor/Manager.php:272-300`, `:381-424`). A Vendor may call `PUT /stores/<own id>` for their profile, but `enabled`, `trusted` and `featured` are ignored for them | `enabled` → activate/deactivate when changed (`:382-389`); `featured` → `dokan_feature_seller`; `trusted` → `dokan_publishing` |
 | Vendor dashboard store settings | The save handler writes only profile fields (store name, address, phone, banner, terms, hours); no Operating Term is among them (`lite:includes/Dashboard/Templates/Settings.php:716-731`) | — |
 | Reverse withdrawal (automatic, no user action) | Runs only when the Store Admin has enabled the "disable Vendor" failed-payment action for overdue reverse withdrawal balances (Lite ADR 0015) | `make_inactive()` when the balance becomes overdue and `make_active()` once it is paid (`lite:includes/ReverseWithdrawal/FailedActions.php:52-55`, `:83-86`, `:106-145`) |
+| Sign-up (automatic, no user action) | Follows the Enable Selling setting, which only the Store Admin sets ([ADR-0066](./0066-a-new-vendors-selling-is-enabled-automatically-or-left-pending-according-to-the-enable-selling-setting.md)) | `make_active()` under `automatically`; under `manually` the Vendor stays Pending |
 
 All approval and disabling goes through `Vendor::make_active()` / `Vendor::make_inactive()`, which carry the side effects described in [ADR-0070](./0070-disabling-a-vendor-puts-their-published-products-into-pending-review-and-re-enabling-restores-only-those.md) and [ADR-0071](./0071-enabling-a-vendors-selling-can-be-vetoed-by-an-add-on-but-disabling-cannot.md).
+
+On a multisite network a Store Admin who is not a super admin can approve, disable, trust or feature only users who are members of the current site and are not super admins themselves (`VendorUtil::current_user_can_manage_vendor()`, `lite:includes/Utilities/VendorUtil.php:145-152`). This check runs in the Users list "Approve Vendors" bulk action and in the REST store update, status and batch endpoints (`lite:includes/Admin/UserList.php:155`, `lite:includes/REST/StoreController.php:389`, `:1057`, `:1098`).
 
 Reading: the public REST store response hides `enabled` from callers who cannot access the Store (`StoreController::get_restricted_fields_for_view()`, `lite:includes/REST/StoreController.php:805-823`).
 
 ## Settings that change it
 
-None. Who counts as a Store Admin is decided by WordPress capability assignments; by default `administrator` and `shop_manager` hold `manage_woocommerce`.
+None directly. Who counts as a Store Admin is decided by WordPress capability assignments; by default `administrator` and `shop_manager` hold `manage_woocommerce`. Automatic approval at sign-up follows the Enable Selling setting (see the Sign-up row above).
 
 ## Worked example
 
@@ -36,24 +39,18 @@ Not a money rule. Vendor V, who is Pending, sends `PUT /dokan/v1/stores/<V>` wit
 
 ## Edge cases
 
-- **Omitted keys reset trusted and featured.** For a Store Admin, `Vendor\Manager::update()` writes `dokan_feature_seller = no` and `dokan_publishing = no` whenever `featured` / `trusted` are absent or false in the payload (`lite:includes/Vendor/Manager.php:391-401`). A partial admin update that only changes, say, the phone number clears both flags. `enabled` is different: it is applied only when present (`:382`).
-- **The status endpoints do not check the current state.** `PUT /stores/<id>/status` and `/batch` call `make_active()` / `make_inactive()` even when the Vendor is already in that state, which re-runs the product status job and re-fires `dokan_vendor_enabled` / `dokan_vendor_disabled`.
-- **Batch delete does nothing.** The `/batch` endpoint's `delete` list calls `dokan()->vendor->get( $id )->delete()` (`lite:includes/REST/StoreController.php:1104-1108`), but `Vendor` has no `delete()` method; the magic `__call()` only answers `get_*` names (`lite:includes/Vendor/Vendor.php:116-126`), so the call returns `null` and no Vendor is deleted. Single deletion through `DELETE /stores/<id>` works (see [ADR-0069](./0069-deleting-a-vendor-without-reassigning-their-content-permanently-deletes-their-products.md)).
 - A user who is both a Vendor and a Store Admin can approve and trust themselves, because the check is on capability, not role.
 
 ## Why
 
-CONTEXT.md defines these as Operating Terms; "the line they draw is between the marketplace and its Vendors, not between admin tiers".
+CONTEXT.md defines these as Operating Terms; "the line they draw is between the marketplace and its Vendors, not between admin tiers". The multisite condition dates from 5.3.3.
 
 ## Consequences & risks
 
 - The capability check lives in each request handler, not in `make_active()` / `make_inactive()` or the meta writers, so every new write path must repeat it.
-- Admin tooling that sends partial store updates must always include `trusted` and `featured`, or it will silently revoke them.
 
 ## Recommendations
 
-- Change `Vendor\Manager::update()` to touch `dokan_publishing` and `dokan_feature_seller` only when the key is present, matching how `enabled` is handled.
-- Either implement `Vendor::delete()` (delegating to `Vendor\Manager::delete()`) or remove `delete` from the batch endpoint's allowed statuses.
 - Consider moving "may change Operating Terms" into the abilities layer described in Lite ADR 0006.
 
 _Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._

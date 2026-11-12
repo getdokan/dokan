@@ -18,7 +18,7 @@ A registration request may create a Vendor only when the form it came from offer
 - **Role written to the user.** `Registration::set_new_vendor_names()` (`lite:includes/Registration.php:200-219`, on `woocommerce_new_customer_data`, applied at `wc:includes/wc-user-functions.php:163`) sets `role` to the posted role only if it is allowed, otherwise to `customer` (`:206`).
 - **Dedicated forms.** `[dokan-vendor-registration]` (`Shortcodes\VendorRegistration`) and `[dokan-vendor-onboarding-registration]` print the marker through `dokan_vendor_reg_form_start` (`Registration::render_vendor_form_marker()`, `:64-66`). If a theme override of the form template does not fire that action, `Registration::inject_vendor_form_marker()` (`:81-95`) adds the marker to any rendered form that contains a `role` input. Both shortcodes return "You are already logged in" for logged-in users (`lite:includes/Shortcodes/VendorRegistration.php:18`).
 - **WordPress's own sign-up page is not a Vendor path.** `dokan_redirect_to_register()` (`lite:includes/functions.php:1152-1161`, on `login_init`) redirects `wp-login.php?action=register` to the WooCommerce My Account page.
-- **Requests that skip Dokan's validation.** Checkout registrations, WP-CLI and REST requests return early from `validate_registration()` (`:145-151`). The intended rule is that an account created at checkout is a Customer: a checkout form carries no `woocommerce-register` nonce, so `set_new_vendor_names()` leaves the role WooCommerce chose (`customer`) untouched (`:201-203`).
+- **Checkout sign-ups are Customers.** A checkout form carries no `woocommerce-register` nonce, so `set_new_vendor_names()` leaves the role WooCommerce chose (`customer`) untouched (`:201-203`).
 
 ## Settings that change it
 

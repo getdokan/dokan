@@ -59,7 +59,7 @@ With both recipients left at `seller`: `admin_commission` = 10.00 and `vendor_ea
 
 ## Why
 
-`get_admin_commission()` is marked deprecated in favour of the net-earning model, but it remains what the stats writer stores. No recorded reason for folding fees into the reported Commission.
+No recorded reason for folding fees into the reported Commission.
 
 ## Consequences & risks
 

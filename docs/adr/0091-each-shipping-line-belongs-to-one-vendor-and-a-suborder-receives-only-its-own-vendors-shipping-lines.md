@@ -28,7 +28,7 @@ Order #100 (parent): Vendor A's package chose Flat rate 8.00 (shipping tax 0.80)
 ## Edge cases
 
 - **Several lines for one Vendor.** If one Vendor's items were split into several packages (an extension on `dokan_cart_shipping_packages` can do this), every line tagged with that Vendor is copied and the Suborder's shipping total is their sum.
-- **No matching line.** When no parent shipping line carries the Vendor's `seller_id` (for example a Vendor whose items were all virtual, or lines created without the tag), the Suborder gets no shipping line and a shipping total of 0. The legacy filter `dokan_shipping_method` (deprecated since 3.7.19) is still applied to the first slot (`lite:includes/Order/Manager.php:777-786`); because that slot then holds an empty string, the "no shipping methods" early return at `:791` does not fire, the loop skips the non-shipping entry, and the total is set to 0.
+- **No matching line.** When no parent shipping line carries the Vendor's `seller_id` (for example a Vendor whose items were all virtual, or lines created without the tag), the Suborder gets no shipping line and a shipping total of 0.
 - **Untagged lines are lost to Suborders.** A shipping line on the parent without `seller_id` (for example one added manually to the parent in WP Admin before the split, or produced by a package that had no `seller_id`) is copied to no Suborder.
 - **Re-splitting.** `maybe_split_orders( $id, true )` deletes existing Suborders and rebuilds them from the parent's current lines (`lite:includes/Order/Manager.php:916-922`).
 
@@ -44,7 +44,6 @@ The Suborder is the Vendor's own order record. Copying only the lines charged fo
 
 ## Recommendations
 
-- Remove the deprecated `dokan_shipping_method` slot so that an empty result reaches the explicit early return and is logged as "No shipping method found".
 - Log a warning when a parent shipping line has no `seller_id`, since its amount is silently excluded from every Suborder.
 
 _Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._

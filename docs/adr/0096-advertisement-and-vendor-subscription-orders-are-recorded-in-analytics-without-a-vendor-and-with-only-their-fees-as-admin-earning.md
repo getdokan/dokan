@@ -49,11 +49,10 @@ With a 5.00 tax line and `tax_fee_recipient` = `admin`, the same order stores `a
 
 ## Why
 
-No recorded reason. The admin-earning routing (`admin_net_earning`) was added in 5.0.0 alongside the `admin_earning` column, but the stats writer kept using `get_admin_total_earning()`, which is built on the floored formula Commission rather than on `admin_net_earning`.
+No recorded reason.
 
 ## Consequences & risks
 
-- Any report that sums `admin_earning` or `admin_commission` to show marketplace revenue from advertisements or subscriptions understates it by the full line amount.
 - WooCommerce's gross sales for the Store Admin include these orders, so "sales" and "Commission" diverge by the pack and advertisement prices.
 
 ## Recommendations

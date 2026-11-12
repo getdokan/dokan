@@ -42,7 +42,6 @@ Cart: Vendor A sells a standard-rated gadget; Vendor B sells a reduced-rate chil
 - **Zero-cost rates** (free shipping, free local pickup) are skipped; they carry no tax.
 - **Per-item tax** (`calc_tax = per_item`) is never touched.
 - **Methods that do not pass `package` to `add_rate()`** produce an empty package contents list, so the rule leaves WooCommerce's taxes in place.
-- **WooCommerce's `woocommerce_shipping_tax_class` filter** (added in WooCommerce 10.5) is not applied to the package-based choice, so extensions using it only influence packages that fall back to WooCommerce's calculation.
 - Add-ons may further adjust shipping taxes on `woocommerce_package_rates` after this rule runs.
 
 ## Why
@@ -57,6 +56,5 @@ The `@since 4.2.4` code was added so that each Vendor's shipping tax follows the
 ## Recommendations
 
 - Respect a non-`inherit` `woocommerce_shipping_tax_class` before applying the package-based choice, or document the override in the admin UI.
-- Apply WooCommerce's `woocommerce_shipping_tax_class` filter to the package-based class so third-party tax extensions keep working.
 
 _Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._

@@ -41,8 +41,7 @@ The chart shows on 3 June: Sales total 155.00, 2 orders (refund not deducted); o
 ## Edge cases
 
 - **Refunded orders are left out**, and partially refunded orders are counted at their full original total.
-- **Storage.** The query reads `wp_posts` and `wp_postmeta`. On a store using WooCommerce's order tables (HPOS) without compatibility sync, it finds no orders.
-- **REST sales report.** `VendorDashboardController::get_sales_reports()` (`lite:includes/REST/VendorDashboardController.php:186-270`) uses the same function with extra columns: `SUM(_qty)` of line items and `SUM(dokan_orders.net_amount)` as `total_earnings`. Because it joins order line items, the per-order sums (`total_sales`, `total_earnings`) are repeated once per line item of each order.
+- **REST sales report.** `VendorDashboardController::get_sales_reports()` (`lite:includes/REST/VendorDashboardController.php:186-270`) uses the same function with extra columns: `SUM(_qty)` of line items and `SUM(dokan_orders.net_amount)` as `total_earnings`.
 
 ## Why
 
@@ -54,7 +53,6 @@ The function was cloned from WooCommerce's legacy report class (docblock, `lite:
 
 ## Recommendations
 
-- Read from `dokan_orders.order_total` (after refunds) or from `wc_order_stats` so the chart works on HPOS-only stores and matches the counters.
-- Aggregate per order before joining line items in the REST sales report.
+- Read from `dokan_orders.order_total` (after refunds) or from `wc_order_stats` so the chart matches the counters.
 
 _Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._

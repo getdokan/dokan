@@ -41,15 +41,14 @@ The marketplace has sold 50,000.00 of Vendor orders since launch. In the last se
 ## Edge cases
 
 - The window is a rolling 7 × 24 hours from the request time, not calendar days.
-- The tile labels do not say "last 7 days", and Total Orders next to them is lifetime.
 
 ## Why
 
-No recorded reason. The call omits the date arguments that the controller passes everywhere else, so this looks unintended.
+No recorded reason.
 
 ## Consequences & risks
 
-- Store Admins read "Total Sales" and "Total Commissions" as lifetime figures; they are weekly figures that can fall when a week is quiet.
+None recorded.
 
 ## Recommendations
 

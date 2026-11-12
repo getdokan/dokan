@@ -45,7 +45,6 @@ erDiagram
 
 ## Risks
 
-- **Two definitions of "Vendor" in queries.** `dokan_is_user_seller()` accepts any `dokandar` holder, including `shop_manager`, while `Vendor\Manager::get_vendors()` defaults to `role__in = [ 'seller', 'administrator' ]`. A shop manager therefore passes Vendor checks but does not appear in default Vendor listings. This asymmetry is observable in code; this ADR records it without resolving it.
 - **Mirrored meta can drift.** `dokan_store_name` is kept in step by `Vendor::apply_changes()`, registration and the installer. Code that writes `dokan_profile_settings` directly with `update_user_meta()` bypasses the mirror.
 - **Absent means Pending.** Under the `manually` approval setting, a new Vendor commonly has no `dokan_enable_selling` row at all. Queries that look for `dokan_enable_selling = no` miss Pending Vendors; `Manager::exclude_approved_vendors()` uses a `NOT EXISTS` subquery for this reason.
 
@@ -53,11 +52,9 @@ erDiagram
 
 - Treat `dokan_is_user_seller()` and `dokan_get_current_user_id()` as the only supported way to answer "is this a Vendor" and "which Vendor is acting". Avoid new direct role checks against `seller`.
 - If a new Store field must be filterable or sortable in SQL, add a dedicated scalar meta key written in `Vendor::apply_changes()` rather than querying inside the serialized blob.
-- Consider aligning the default `role__in` of `Vendor\Manager::get_vendors()` with the capability-based definition, or document the difference where listings are built. Doing so changes which users appear in store listings, so it is a behavioural change that needs its own review.
 
 ## Known gaps
 
-- Whether any third-party code relies on `shop_manager` being excluded from default Vendor listings was not investigated.
 - The full list of SQL queries that depend on `dokan_store_name` existing for admin users (the reason given in the installer docblock) was not enumerated.
 
 _Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._

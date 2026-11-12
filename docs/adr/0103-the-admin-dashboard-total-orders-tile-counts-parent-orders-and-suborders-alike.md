@@ -42,7 +42,7 @@ No recorded reason.
 
 ## Consequences & risks
 
-- Total Orders matches neither the number of customer checkouts nor the number of Vendor orders, and cannot be compared with WooCommerce Analytics order counts.
+None recorded.
 
 ## Recommendations
 

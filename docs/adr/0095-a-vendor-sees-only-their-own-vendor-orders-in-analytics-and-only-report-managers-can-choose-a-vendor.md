@@ -24,7 +24,7 @@ When the id is not 0, `add_where_subquery_for_vendor_filter()` appends `dokan_or
 
 **Caches are per Vendor.** WooCommerce caches report results by query arguments; Dokan adds the Vendor id to those arguments so one Vendor's cached totals are never served to another (`CacheKeyModifier::apply_seller_filter()`, `lite:includes/Analytics/Reports/CacheKeyModifier.php:72`; `DataStoreCacheModifier::add_query_param()`, `lite:includes/Analytics/Reports/DataStoreCacheModifier.php:61`).
 
-**Access to the endpoints.** WooCommerce requires `view_woocommerce_reports` to read reports. Dokan grants `read` on the `reports`, `settings` and `product_cat` REST objects to any user for whom `dokan_is_user_seller()` is true (`VendorDashboardManager::woocommerce_rest_check_permissions()`, `lite:includes/Analytics/VendorDashboardManager.php:35-48`), so the Vendor dashboard can call the same endpoints. The intended rule is that every figure a Vendor reads through them is limited to their own Vendor orders and products.
+**Access to the endpoints.** WooCommerce requires `view_woocommerce_reports` to read reports. Dokan grants `read` on the `reports`, `settings` and `product_cat` REST objects to any user for whom `dokan_is_user_seller()` is true (`VendorDashboardManager::woocommerce_rest_check_permissions()`, `lite:includes/Analytics/VendorDashboardManager.php:35-48`), so the Vendor dashboard can call the same endpoints. Every figure a Vendor reads through them is limited to their own Vendor orders and products.
 
 ## Settings that change it
 
@@ -34,9 +34,9 @@ None. The `sellers` argument is a request parameter, honoured only for users wit
 
 Using the checkout from the Vendor-order-level ADR (Suborders #101 for Vendor A at 60.00 and #102 for Vendor B at 40.00):
 
-- Vendor A opens Reports → Revenue: `get_vendor_id()` returns A's id, the query adds `vendor_id = A`, gross sales = 60.00.
+- Vendor A opens Reports → Revenue: `get_vendor_id()` returns A's id, the query adds `vendor_id = A`, total sales = 60.00.
 - A staff member of Vendor A opens the same page: `dokan_get_current_user_id()` returns A's id, same result.
-- The Store Admin opens WooCommerce → Analytics → Revenue with no filter: Vendor id 0, gross sales = 100.00. With `?sellers=<B>`: 40.00.
+- The Store Admin opens WooCommerce → Analytics → Revenue with no filter: Vendor id 0, total sales = 100.00. With `?sellers=<B>`: 40.00.
 
 ## Edge cases
 

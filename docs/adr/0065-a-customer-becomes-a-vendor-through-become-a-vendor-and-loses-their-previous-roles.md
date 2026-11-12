@@ -12,7 +12,8 @@ A logged-in user who is not already a Vendor can submit the Become a Vendor form
 
 - **Where.** A call to action is rendered under the My Account dashboard for non-Vendors (`BecomeAVendor::render_become_a_vendor_section()` on `woocommerce_after_my_account`, `lite:includes/Frontend/MyAccount/BecomeAVendor.php:141-148`; fired at `wc:templates/myaccount/dashboard.php:79`). The form lives on the `account-migration` My Account endpoint (`:157-205`) or the `[dokan-customer-migration]` shortcode.
 - **Who may submit.** `BecomeAVendor::become_a_seller_form_handler()` (`lite:includes/Frontend/MyAccount/BecomeAVendor.php:73-132`, on `template_redirect`) requires the `account_migration` nonce (`:74`), a logged-in user (`:81-85`) and a user who is not already a Vendor by `dokan_is_user_seller()` (`:87-91`). Administrators and shop managers hold the `dokandar` capability, so they count as Vendors and are refused; when an administrator opens the `account-migration` endpoint, `load_customer_to_vendor_update_template()` shows an error telling them to use the admin settings instead of rendering the form (`:169-170`).
-- **Required fields.** `fname`, `shopname`, `phone` by default, filterable through `dokan_customer_migration_required_fields` (`:93-107`). Last name, store URL and address are optional on this path.
+- **Required fields.** `fname`, `shopname`, `phone` by default, filterable through `dokan_customer_migration_required_fields` (`:93-107`). Last name and address are optional on this path.
+- **Store URL.** The posted `shopurl` must pass the same availability check as registration (see [ADR-0076](./0076-vendor-registration-requires-store-details-and-a-unique-store-url-that-becomes-the-store-slug.md)). An empty value is refused with "Shop URL is not available", so a store URL is needed on this path too. The Customer's own current slug counts as available (`lite:includes/Frontend/MyAccount/BecomeAVendor.php:111-119`).
 - **Role change.** `dokan_user_update_to_seller()` (`lite:includes/functions.php:4414-4461`, pluggable through `function_exists`) removes `customer` and then every other current role (`:4423-4428`), adds `seller` (`:4431`), sets `user_nicename` from the posted store URL (`:4433-4438`), saves first and last name, and saves store name, phone and address through the `Vendor` setters.
 - **Operating Terms.** Selling Activation follows the Enable Selling setting by calling `make_active()` or `make_inactive()` directly (`:4451-4455`; see [ADR-0066](./0066-a-new-vendors-selling-is-enabled-automatically-or-left-pending-according-to-the-enable-selling-setting.md)). Direct Publishing is explicitly written as `no` (`:4457`).
 - **After.** `dokan_new_seller_created` fires (`:4459`), which triggers the admin's new-Vendor email (`Emails\NewSeller`, hooked at `lite:includes/Emails/NewSeller.php:38`; heading "New Vendor Registered - {seller_name}"). The user is redirected to the Vendor setup wizard, or to the Vendor dashboard when the welcome wizard is disabled (`lite:includes/Frontend/MyAccount/BecomeAVendor.php:124-131`, filter `dokan_customer_migration_redirect`).
@@ -29,18 +30,15 @@ The "Show Register as a Vendor" setting does not affect this path.
 
 ## Worked example
 
-Setting Enable Selling = `manually`. Customer Mitu (roles: `customer`, `subscriber`) fills in first name, store name "Mitu Tea" and phone, leaving the store URL empty, and submits. Both roles are removed and `seller` is added. Because the store URL was empty, `wp_update_user()` receives an empty `user_nicename` and WordPress derives it from her username. `dokan_enable_selling = no` and `dokan_publishing = no` are written, the admin is sent the new-Vendor email, and Mitu lands on the setup wizard as a Pending Vendor. Her previous orders as a Customer stay attached to her account.
+Setting Enable Selling = `manually`. Customer Mitu (roles: `customer`, `subscriber`) fills in first name, store name "Mitu Tea", phone and store URL `mitu-tea`, and submits. No other user has the slug `mitu-tea`, so the availability check passes. Both roles are removed and `seller` is added. Her `user_nicename` becomes `mitu-tea`, so the Store is served at `/store/mitu-tea/` (with the default store base). `dokan_enable_selling = no` and `dokan_publishing = no` are written, the admin is sent the new-Vendor email, and Mitu lands on the setup wizard as a Pending Vendor. Her previous orders as a Customer stay attached to her account.
 
 ## Edge cases
 
 - **Roles are replaced, not added.** A user with any other role (for example `editor` or a membership role) loses it on upgrade. Only users who do not hold `dokandar` reach this point.
-- **No store URL uniqueness check.** Unlike registration, the handler does not reject a taken store URL. WordPress's `wp_insert_user()` silently appends `-2`, `-3`… to keep `user_nicename` unique, so the Vendor may get a different URL from the one they typed.
-- **No `dokan_profile_settings` reset.** The Store is built through the `Vendor` setters and `save()`, so profile-completion data is not seeded the way registration seeds it.
-- Under `manually`, `dokan_vendor_disabled` fires for the new Vendor (see the Enable Selling ADR above).
 
 ## Why
 
-No recorded rationale for replacing all roles. The code removes `customer` explicitly and then every remaining role, which suggests the intent was "a Vendor account carries only the Vendor role".
+No recorded rationale for replacing all roles. The code removes `customer` explicitly and then every remaining role, which suggests the intent was "a Vendor account carries only the Vendor role". The store URL check on this path dates from 5.3.4.
 
 ## Consequences & risks
 
@@ -50,6 +48,5 @@ No recorded rationale for replacing all roles. The code removes `customer` expli
 ## Recommendations
 
 - Consider keeping roles other than `customer`, or making the removal list filterable, so upgrading does not strip unrelated access.
-- Apply the same store URL availability check as registration, so the Vendor sees an error instead of a silently changed URL.
 
 _Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._

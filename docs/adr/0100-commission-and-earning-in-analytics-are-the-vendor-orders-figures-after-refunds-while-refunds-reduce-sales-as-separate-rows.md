@@ -37,7 +37,7 @@ Settings: only a global Commission formula, `fixed` 10 % + 0 flat; no tax, no sh
    - Row #101 now holds Commission 3.00 and Earning 27.00. Row #103 holds Commission 0 and Earning 0.
 3. Vendor A's revenue report:
 
-| Period | Gross sales | Total Earning | Total Commission |
+| Period | Total sales | Total Earning | Total Commission |
 |---|---|---|---|
 | March | 60.00 | 27.00 | 3.00 |
 | April | −30.00 | 0.00 | 0.00 |
