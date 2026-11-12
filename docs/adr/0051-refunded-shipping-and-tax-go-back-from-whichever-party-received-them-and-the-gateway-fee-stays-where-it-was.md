@@ -16,8 +16,8 @@ The admin total mirrors it (`get_admin_total_refund()`, `:309-317`): prorated Co
 
 1. **Shipping.** The sum of the refund's `shipping` lines (`:394-398`) goes entirely to the party named by the order's shipping Fee recipient (`Fees::get_shipping_fee_recipient()`, `lite:includes/Fees.php:155`), and to nobody else (`:388`). It is not split by Commission.
 2. **Product tax and shipping tax.** The refund's `tax` lines are read for their `tax_total` and `shipping_tax_total` (`get_refunded_tax_totals()`, `:464-479`). Product tax goes to the tax Fee recipient (`Fees::get_tax_fee_recipient()`, `lite:includes/Fees.php:188`); shipping tax goes to the shipping-tax Fee recipient (`Fees::get_shipping_tax_fee_recipient()`, `lite:includes/Fees.php:220`) (`:357-376`).
-3. **The recipients are the ones frozen on the order.** All three getters read the order's `shipping_fee_recipient`, `tax_fee_recipient` and `shipping_tax_fee_recipient` meta first, so a refund uses the recipients in force when the order was first calculated, not today's settings (Lite ADR 0013).
-4. **Gateway fee: not returned unless a gateway integration says so.** The portion of a gateway fee "returned" on refund is whatever the `dokan_refund_gateway_fee` filter returns, and its default is **0** for both parties (`:417-455`, filter at `:454`). The filter receives, as a convenience, the recipient's prorated share of the fee it bore: `fee × |refund total| ÷ order total` (`:426-428`), where the Vendor's borne fee is the `dokan_gateway_fee` order meta when `dokan_gateway_fee_paid_by` is `seller`, and the admin's is that meta when paid by `admin` or else the `dokan_admin_gateway_fee` meta (`:497-509`). So by default whoever paid the processing fee at sale time still carries it after the refund.
+3. **The recipients are the ones frozen on the order.** All three getters read the order's `shipping_fee_recipient`, `tax_fee_recipient` and `shipping_tax_fee_recipient` meta first, so a refund uses the recipients in force when the order was first calculated, not today's settings (Lite ADR 0013). If an order has no stored recipient yet, the getter resolves it at refund time from today's option and filter, stores it and saves the order (`lite:includes/Fees.php:164-172`, `:197-205`, `:222-232`); from then on that value is frozen.
+4. **Gateway fee: not returned unless a gateway integration says so.** The portion of a gateway fee "returned" on refund is whatever the `dokan_refund_gateway_fee` filter returns, and its default is **0** for both parties (`:417-455`, filter at `:454`). The filter receives, as a convenience, the recipient's prorated share of the fee it bore: `fee × |refund total| ÷ order total` (`:426-428`), where the Vendor's borne fee is the `dokan_gateway_fee` order meta when `dokan_gateway_fee_paid_by` is `seller`, and the admin's is that meta when paid by `admin` or else the `dokan_admin_gateway_fee` meta (`:497-509`). So by default whoever paid the processing fee at sale time still carries it in `dokan_orders.net_amount` after the refund. Whether the Vendor also carries it in the Balance depends on the ledger debit, which holds the Earning either before or after the fee ([ADR-0048](./0048-each-refund-is-booked-as-a-separate-dokan-refund-credit-on-the-vendor-balance.md), rule 3).
 5. **Parent Orders give back nothing.** Every portion is 0 when the refunded order has Suborders (`has_sub_orders()`, `:329-333`, checked at `:288`, `:358`, `:388`, `:418`).
 
 ## Settings that change it
@@ -42,7 +42,7 @@ A full itemised refund of 121.00 (product line 100.00 with its 10.00 tax, shippi
 | All `admin` | 90.00 | 10.00 + 10.00 + 1.00 + 10.00 = **31.00** |
 | Shipping `admin`, tax and shipping tax `seller` | 90.00 + 10.00 + 1.00 = **101.00** | 10.00 + 10.00 = 20.00 |
 
-In every row the two figures sum to 121.00. The 3.80 gateway fee is not in either figure: with the default filter the Vendor still carries it. If a gateway integration hooks `dokan_refund_gateway_fee` and returns the prorated share it was given (3.80 × 121.00 ÷ 121.00 = 3.80) for the `seller` recipient, the Vendor gives back 111.00 − 3.80 = 107.20 in the first row.
+In every row the two figures sum to 121.00. The 3.80 gateway fee is not in either figure. With the default filter, `dokan_orders.net_amount` ends at −3.80, so the Vendor carries the fee there. In the Balance it depends on the order's ledger debit (static reading, [ADR-0048](./0048-each-refund-is-booked-as-a-separate-dokan-refund-credit-on-the-vendor-balance.md) rule 3): at the gross figure 111.00 (written by `handle_order_edit()`, `lite:includes/Order/VendorBalanceUpdateHandler.php:54`), debit − credit = 0 and the Vendor carries nothing; at the net figure 107.20 (written by `Fees::calculate_gateway_fee()`, `lite:includes/Fees.php:78-98`), the Balance ends at −3.80. If a gateway integration hooks `dokan_refund_gateway_fee` and returns the prorated share it was given (3.80 × 121.00 ÷ 121.00 = 3.80) for the `seller` recipient, the Vendor gives back 111.00 − 3.80 = 107.20 in the first row.
 
 Partial example (defaults): refund only the shipping line 10.00 and its 1.00 tax. Vendor gives back 10.00 + 1.00 = 11.00; the admin gives back 0.
 
@@ -59,10 +59,10 @@ The class comment states the intent: line-item portions are prorated from the or
 ## Consequences & risks
 
 - With default settings a Vendor gives back shipping and tax in full on refund, because they received them in full at sale time.
-- A Vendor who bore a gateway fee loses that fee on a refunded order unless the gateway integration reports a fee return. Vendors sometimes read this as "Dokan charged me for a refund".
+- A Vendor who bore a gateway fee loses that fee in `dokan_orders.net_amount` on a refunded order unless the gateway integration reports a fee return. Vendors sometimes read this as "Dokan charged me for a refund". In the Balance the outcome depends on which writer last set the order's debit, so the statement and the reports can disagree by the fee.
 
 ## Recommendations
 
 - Show the per-party breakdown (product, shipping, tax, gateway fee) on the refund note or in the Vendor's statement, so Vendors can see why the refund figure differs from the customer's refund amount.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

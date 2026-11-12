@@ -54,4 +54,4 @@ No recorded decision. Deducting the charge from the request keeps the Balance ar
 - If charge income must be reported, record it explicitly (for example as its own field summed by reports) rather than deriving it from serialized `details`.
 - Recompute and re-store `charge` and `receivable` whenever an admin changes a request's amount or method.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

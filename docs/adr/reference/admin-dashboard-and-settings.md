@@ -22,7 +22,7 @@ Related reading:
 - [bootstrap-and-container.md](bootstrap-and-container.md) for the container and service-provider mechanics this document relies on.
 - [withdraw-and-reverse-withdrawal.md](withdraw-and-reverse-withdrawal.md) and [orders-commission-fees.md](orders-commission-fees.md) for the money flows whose emails and statistics are described here.
 
-**Related ADRs:** [ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md) (flat settings store), [ADR-0003](../0003-settings-legacy-mirror-mode.md) (Legacy mirror), [ADR-0005 (canonical admin capability)](../0005-canonical-admin-capability.md), [ADR-0007](../0007-staff-actions-gated-by-dokan-capabilities.md) (Vendor Staff gated by Dokan capabilities), [ADR-0014](../0014-marketplace-money-lives-in-custom-tables-not-post-types.md) (money in custom tables, read by the `Models` layer and vendor analytics).
+**Related ADRs:** [ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md) (flat settings store), [ADR-0003](../0003-settings-legacy-mirror-mode.md) (Legacy mirror), [ADR-0005 (canonical admin capability)](../0005-canonical-admin-capability.md), [ADR-0007](../0007-staff-actions-gated-by-dokan-capabilities.md) (Vendor Staff gated by Dokan capabilities), [ADR-0009](../0009-switched-off-dashboard-menus-close-their-routes-and-store-links.md) (switched-off dashboard menus close their routes), [ADR-0014](../0014-marketplace-money-lives-in-custom-tables-not-post-types.md) (money in custom tables, read by the `Models` layer and vendor analytics).
 
 ---
 
@@ -41,7 +41,7 @@ Every subsystem in this document is wired through the Lite DI container. Two loa
 | `ServiceProvider` | `lite:includes/DependencyManagement/Providers/ServiceProvider.php:16` | Named aliases including `email` (`Emails\Manager`, line 28), `dashboard` (`Dashboard\Manager`, line 37), `dummy_data_importer` (line 44), `admin_notices` (`Admin\Notices\Manager`, line 50); boots every provider below (lines 60-75) | `container-service` tag, Path B |
 | `AdminServiceProvider` | `lite:includes/DependencyManagement/Providers/AdminServiceProvider.php:9` | `Admin\Hooks`, `Admin\Menu`, `Admin\AdminBar`, `Admin\Pointers`, `Admin\Settings`, `Admin\UserProfile`, `Admin\UserList`, `Admin\SetupWizard`, `Admin\Status\Status` | `admin-service` tag, Path B (admin requests only) |
 | `AdminSettingsServiceProvider` | `lite:includes/DependencyManagement/Providers/AdminSettingsServiceProvider.php:16` | `SettingsRegistry`, `SchemaValidator`, `SettingsRepository`, `LegacySettingsBridge`, `LegacySettingsRepository`, `BridgeBootstrap`, `LegacyMirror`; passes the shared `SettingsRepository` (and, for `LegacySettingsRepository`, the shared `LegacySettingsBridge`) as explicit constructor arguments, because the container does not autowire (lines 39-55); binds the two repository interfaces to the shared concrete instances (lines 62-67) | `BridgeBootstrap` and `LegacyMirror` are `Hookable` (Path A); the rest are lazy |
-| `AdminDashboardServiceProvider` | `lite:includes/DependencyManagement/Providers/AdminDashboardServiceProvider.php:24` | `Admin\Dashboard\Dashboard`, `LegacySwitcher`, and the page services (`Modules`, `Tools`, `Status`, `ProFeatures`, `Withdraw`, `Vendors`, `ReverseWithdrawal`, `Extensions`, `SetupGuide`, `Settings`) | All `Hookable`, Path A |
+| `AdminDashboardServiceProvider` | `lite:includes/DependencyManagement/Providers/AdminDashboardServiceProvider.php:25` | `Admin\Dashboard\Dashboard`, `LegacySwitcher`, and the page services (`Modules`, `Tools`, `Status`, `ProFeatures`, the seasonal `BlackFriday` page (line 45), `Withdraw`, `Vendors`, `ReverseWithdrawal`, `Extensions`, `SetupGuide`, `Settings`) | All `Hookable`, Path A |
 | `AdminSetupGuideServiceProvider` | `lite:includes/DependencyManagement/Providers/AdminSetupGuideServiceProvider.php:15` | `AdminSetupGuide` and the steps `BasicStep`, `CommissionStep`, `WithdrawStep`, `AppearanceStep` | Steps are `Hookable` (Path A); `AdminSetupGuide` is lazy |
 | `CommonServiceProvider` | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:23` | `VendorNavMenuChecker` (among others) | `common-service`, Path B |
 | `AnalyticsServiceProvider` | `lite:includes/DependencyManagement/Providers/AnalyticsServiceProvider.php:11` | `ScheduleListener`, every `QueryFilter`, `DataStoreModifier`, `CacheKeyModifier`, `DataStoreCacheModifier`, `Analytics\Assets`, `VendorDashboardManager`, `Analytics\Settings` | All `Hookable`, Path A |
@@ -63,32 +63,32 @@ Procedural files: `includes/reports.php` is required only when `dokan_pro()` doe
 
 | Entry point | Location | Trigger |
 |---|---|---|
-| `Admin\Menu::add_admin_menu()` | `lite:includes/Admin/Menu.php:30` | `admin_menu` (constructor, line 19) |
+| `Admin\Menu::add_admin_menu()` | `lite:includes/Admin/Menu.php:31` | `admin_menu` (constructor, line 19) |
 | `Admin\Dashboard\Dashboard::register_hooks()` | `lite:includes/Admin/Dashboard/Dashboard.php:52` | Path A |
 | `Admin\Dashboard\Dashboard::register_menu()` | `lite:includes/Admin/Dashboard/Dashboard.php:98` | `dokan_admin_menu` priority 99 |
 | `Admin\Dashboard\LegacySwitcher::register_hooks()` | `lite:includes/Admin/Dashboard/LegacySwitcher.php:46` | Path A |
 | `Admin\Notices\Manager::__construct()` | `lite:includes/Admin/Notices/Manager.php:20` | `admin_notices` alias in `ServiceProvider` |
 | `Admin\Hooks::__construct()` | `lite:includes/Admin/Hooks.php:27` | `admin-service` |
 | `Admin\UserProfile::__construct()` | `lite:includes/Admin/UserProfile.php:14` | `admin-service` |
-| `Admin\UserList::__construct()` | `lite:includes/Admin/UserList.php:18` | `admin-service` |
+| `Admin\UserList::__construct()` | `lite:includes/Admin/UserList.php:20` | `admin-service` |
 | `Admin\AdminBar::__construct()` | `lite:includes/Admin/AdminBar.php:24` | `admin-service` |
 | `Admin\Pointers::__construct()` | `lite:includes/Admin/Pointers.php:33` | `admin-service` |
 | `Admin\Status\Status::describe()` | `lite:includes/Admin/Status/Status.php:40` | Called by `AdminDashboardController` for `GET dokan/v1/admin/dashboard/status` |
-| `Admin\Tools\ToolsActions` | `lite:includes/Admin/Tools/ToolsActions.php:62` | Instantiated on demand in `Ajax` (`lite:includes/Ajax.php:78`, `:95`, `:116`) and by `ToolsController` |
+| `Admin\Tools\ToolsActions` | `lite:includes/Admin/Tools/ToolsActions.php:62` | Instantiated on demand in `Ajax` (`lite:includes/Ajax.php:79`, `:96`, `:117`) and by `ToolsController` |
 
 ### 2.3 Key classes
 
 | Class | File | Responsibility |
 |---|---|---|
-| `Admin\Menu` | `lite:includes/Admin/Menu.php:9` | Registers the `dokan` top-level page (renders `#dokan-admin-panel-header` and `#dokan-vue-admin`), appends hash-routed submenu entries (Dashboard, Withdraw, Reverse Withdrawal, Vendors, Tools, Help, Settings) and positions the `ProFeatures` and `Extensions` page services via `append_dashboard_page_submenu()` (line 149). |
-| `Admin\Dashboard\Dashboard` | `lite:includes/Admin/Dashboard/Dashboard.php:14` | Registers the hidden-in-menu `dokan-dashboard` submenu (renders `#dokan-admin-dashboard`), collects `Pageable` services through `dokan_admin_dashboard_pages`, builds the localized `dokanAdminDashboardSettings` object, registers the React admin bundles. |
+| `Admin\Menu` | `lite:includes/Admin/Menu.php:10` | Registers the `dokan` top-level page (renders `#dokan-admin-panel-header` and `#dokan-vue-admin`), appends hash-routed submenu entries (Dashboard, Withdraw, Reverse Withdrawal, Vendors, Tools, Help, Settings), positions the `ProFeatures`, seasonal `BlackFriday` and `Extensions` page services via `append_dashboard_page_submenu()` (line 153), and adds an external "Chat with us" link when Dokan Pro is absent (lines 118-130). |
+| `Admin\Dashboard\Dashboard` | `lite:includes/Admin/Dashboard/Dashboard.php:14` | Registers the `dokan-dashboard` submenu page with a visible "Dashboard" title at position 1 (`lite:includes/Admin/Dashboard/Dashboard.php:105-113`; renders `#dokan-admin-dashboard`; `LegacySwitcher` blanks the title of whichever of the two Dashboard entries is not preferred, `LegacySwitcher.php:77-93`), collects `Pageable` services through `dokan_admin_dashboard_pages`, builds the localized `dokanAdminDashboardSettings` object, registers the React admin bundles. |
 | `Admin\Dashboard\Pages\AbstractPage` | `lite:includes/Admin/Dashboard/Pages/AbstractPage.php:8` | Base for every React admin page; `register_hooks()` enlists the page on `dokan_admin_dashboard_pages`. Contract in `Pageable` (`lite:includes/Admin/Dashboard/Pageable.php:12`). |
 | `Admin\Dashboard\LegacySwitcher` | `lite:includes/Admin/Dashboard/LegacySwitcher.php:14` | Chooses per page between the legacy Vue screen and the new React screen, filters the `dokan` submenu accordingly (`handle_dokan_admin_submenu()`, line 58) and handles the `switch_admin_panel` redirect (`handle_dashboard_redirect()`, line 118). Also decides vendor-side legacy preferences for the product editor and store settings (lines 270 and 303). |
 | `Admin\Notices\Manager` | `lite:includes/Admin/Notices/Manager.php` | Instantiates `WhatsNew`, `PluginReview`, `LimitedTimePromotion`, `UpgradeToV4`, `NewSettingsNotice`; renders `#dokan-admin-notices`; adds permalink, logo-update, plugin-update and vendor-onboarding-page notices to `dokan_admin_notices`. |
 | `Admin\Notices\Helper` | `lite:includes/Admin/Notices/Helper.php:21` | `dokan_get_admin_notices()` applies `dokan_admin_notices` and sorts by priority; `dokan_get_promo_notices()` (line 40) applies `dokan_admin_promo_notices`. Feeds `AdminNoticeController`. |
-| `Admin\Hooks` | `lite:includes/Admin/Hooks.php:20` | Vendor meta box on the product edit screen, product-author override on save, vendor search AJAX for the author picker, per-product Commission bulk-edit field, page-setting cleanup on save, and the pending-to-publish notification bridge. |
-| `Admin\UserProfile` | `lite:includes/Admin/UserProfile.php` | Renders and saves Dokan Store fields on the WordPress user profile for Store Admins. |
-| `Admin\UserList` | `lite:includes/Admin/UserList.php` | Adds a "pending vendors" view and approve/disable bulk actions to `users.php`. |
+| `Admin\Hooks` | `lite:includes/Admin/Hooks.php:20` | Vendor meta box on the product edit screen, product-author override on save, vendor search AJAX for the author picker, per-product Commission bulk-edit field, the `dokan_pages` merge on save (`update_pages()`, line 219: `array_replace_recursive` of the submitted row over the stored one; classic AJAX save only, see 3.4), and the pending-to-publish notification bridge. |
+| `Admin\UserProfile` | `lite:includes/Admin/UserProfile.php` | Renders and saves Dokan Store fields on the WordPress user profile for Store Admins. Since 5.3.4 it reports a taken store URL on `user_profile_update_errors` (`validate_store_url()`, line 533), and `save_meta_fields()` renames `user_nicename` only when the URL is available (lines 592-603). |
+| `Admin\UserList` | `lite:includes/Admin/UserList.php` | Adds a "pending vendors" view and an "Approve Vendors" bulk action (offered only on that view) to `users.php`. Approval skips users the current admin cannot manage (`VendorUtil::current_user_can_manage_vendor()`, line 155: on multisite, a non-super-admin only approves members of the current site who are not super admins). |
 | `Admin\Status\Status` and `Admin\Status\*` | `lite:includes/Admin/Status/Status.php` | Composite element tree (Page, Tab, Section, Table, ...) describing the status report; extended through `dokan_status_after_describing_elements`. |
 | `Admin\Tools\ToolsActions` | `lite:includes/Admin/Tools/ToolsActions.php` | Create default Dokan pages, check their existence, clear Dokan caches (fires `dokan_caches_cleared`). |
 | `Admin\WithdrawLogExporter` | `lite:includes/Admin/WithdrawLogExporter.php` | CSV exporter for Withdraw logs; used by `WithdrawController` (`lite:includes/REST/WithdrawController.php:376`) and `Withdraw\Hooks` (`lite:includes/Withdraw/Hooks.php:47`). |
@@ -96,9 +96,9 @@ Procedural files: `includes/reports.php` is required only when `dokan_pro()` doe
 
 ### 2.4 Execution flow
 
-**Menu assembly.** `Menu::add_admin_menu()` returns early unless the user has `dokan_admin_menu_capability()` (`manage_woocommerce` by default, filterable through `dokan_menu_capability`, `lite:includes/functions.php:40`). It adds the `dokan` page and appends the Dashboard, Withdraw, Reverse Withdrawal and Vendors hash-routed entries, then fires `dokan_admin_menu`. After that action it appends Tools and Help, fires `dokan_admin_menu_after_help`, positions the `ProFeatures` page, appends Settings, fires `dokan_admin_menu_after_settings` and positions the `Extensions` page. `Dashboard::register_menu()` listens at priority 99, adds the `dokan-dashboard` submenu page and appends one `admin.php?page=dokan-dashboard#/{route}` entry per non-hidden `Pageable`. After the `admin_menu` callbacks, `LegacySwitcher::handle_dokan_admin_submenu()` (priority 20) deduplicates the menu by title: for each page it keeps either the legacy entry (`admin.php?page=dokan#/...`) or the React entry (`admin.php?page=dokan-dashboard#/...`).
+**Menu assembly.** `Menu::add_admin_menu()` returns early unless the user has `dokan_admin_menu_capability()` (`manage_woocommerce` by default, filterable through `dokan_menu_capability`, `lite:includes/functions.php:40`). It adds the `dokan` page and appends the Dashboard, Withdraw, Reverse Withdrawal and Vendors hash-routed entries, then fires `dokan_admin_menu`. The classic Withdraw entry is always the plain title "Withdraw": `add_admin_menu()` builds a pending-count badge from `dokan_get_withdraw_count()` (`lite:includes/Admin/Menu.php:40-48`) but never uses it (line 63); only the React Withdraw page's menu title carries the badge (`lite:includes/Admin/Dashboard/Pages/Withdraw.php:21-31`). After `dokan_admin_menu` it appends Tools and Help, fires `dokan_admin_menu_after_help`, positions the `ProFeatures` page, positions the seasonal `BlackFriday` page (line 99; Dokan Pro swaps the page content through `pro:includes/Admin/BlackFriday/AdminMenu.php`), appends Settings, fires `dokan_admin_menu_after_settings` and positions the `Extensions` page. Without Dokan Pro it finally appends an external "Chat with us" link (lines 118-130). `Dashboard::register_menu()` listens at priority 99, adds the `dokan-dashboard` submenu page and appends one `admin.php?page=dokan-dashboard#/{route}` entry per non-hidden `Pageable`. After the `admin_menu` callbacks, `LegacySwitcher::handle_dokan_admin_submenu()` (priority 20) deduplicates the menu by title: for each page it keeps either the legacy entry (`admin.php?page=dokan#/...`) or the React entry (`admin.php?page=dokan-dashboard#/...`).
 
-**Legacy/new preference.** For the Settings page the preference is site-wide: `is_legacy_settings_page()` returns true unless the option `dokan_new_settings_page_enabled` equals `yes` (`LegacySwitcher.php:170`), so the classic settings screen is the default and the React settings screen is opt-in. For other pages the preference is a transient `dokan_legacy_{slug}_page`; `get_custom_transient_key()` (line 239) maps some page keys to shorter slugs through the `dokan_admin_legacy_url_map` filter. Switching is a GET to any admin URL with `dokan_action=switch_admin_panel`, `legacy_key`, optional `switch_to`, and a `dokan_admin_switching_nonce` parameter holding a nonce for the `dokan_switch_admin_panel` action (`LegacySwitcher::handle_dashboard_redirect`).
+**Legacy/new preference.** For the Settings page the preference is site-wide: `is_legacy_settings_page()` returns true unless the option `dokan_new_settings_page_enabled` equals `yes` (`LegacySwitcher.php:170`), so the classic settings screen is the default and the React settings screen is opt-in. For other pages the preference is a transient `dokan_legacy_{slug}_page`, and with no transient the React screen wins, so Withdraw, Vendors, Pro Refunds and the other dual pages default to React while Settings defaults to classic. Two code paths build the transient name differently: the switch (`handle_dashboard_redirect()`, line 135) and `is_legacy_page()` map the `legacy_key` through `get_custom_transient_key()` (line 239, filter `dokan_admin_legacy_url_map`, for example `refund` → `refunds`), while the menu dedupe reads `'dokan_legacy_' . sanitize_title_with_dashes( menu title ) . '_page'` directly (line 72), so the two agree only when the mapped slug equals the sanitized menu title. Switching is a GET to any admin URL with `dokan_action=switch_admin_panel`, `legacy_key`, optional `switch_to`, and a `dokan_admin_switching_nonce` parameter holding a nonce for the `dokan_switch_admin_panel` action (`LegacySwitcher::handle_dashboard_redirect`).
 
 ```mermaid
 flowchart TD
@@ -107,7 +107,7 @@ flowchart TD
     C --> D["do_action dokan_admin_menu"]
     D --> E["Dashboard::register_menu (prio 99)"]
     E --> F["add_submenu_page 'dokan-dashboard' + one entry per Pageable"]
-    D --> G["Tools / Help / dokan_admin_menu_after_help / ProFeatures / Settings / dokan_admin_menu_after_settings / Extensions"]
+    D --> G["Tools / Help / dokan_admin_menu_after_help / ProFeatures / BlackFriday / Settings / dokan_admin_menu_after_settings / Extensions / Chat with us (no Pro)"]
     F --> H["LegacySwitcher::handle_dokan_admin_submenu (prio 20)"]
     G --> H
     H --> I{"Settings entry?"}
@@ -116,6 +116,10 @@ flowchart TD
     J --> L["keep legacy OR React entry"]
     K --> L
 ```
+
+**Dokan Pro entries.** On `dokan_admin_menu`, `pro:includes/Admin/Admin.php:105` (`load_admin_settings()`) adds classic Announcements, Refunds (`#/refund?status=pending`, with a pending badge from `dokan_get_refund_count()`, lines 108-120), Reports and Modules entries. The React Refunds page is `pro:includes/Refund/AdminMenu.php` (an `AbstractPage`, route `refund`, menu capability, same badge); the switcher maps its `legacy_key` `refund` to the transient slug `refunds`. Pro's other React pages are also `AbstractPage` subclasses (Announcements, Reports, License, Black Friday, and module pages such as Product Advertising, Seller Badge, Wholesale, Store Support, Vendor Verification, Request for Quotation, Subscription).
+
+**Product edit screen.** The author picker AJAX (`search_vendors()`) returns users with the `seller`, `administrator` or `shop_manager` role (`lite:includes/Admin/Hooks.php:121-125`). `override_product_author_by_admin()` changes the author only when a Vendor is posted, the product already resolves to a Vendor, and the two differ (lines 172-191). The Commission bulk edit (`save_custom_bulk_edit_field()`, lines 251-271) needs `manage_woocommerce` and `dokan_override_bulk_product_commission=1`, and skips `product_pack`, `external` and `grouped` products (filter `dokan_excluded_product_types_for_bulk_edit`) and the advertisement and reverse-withdrawal base products.
 
 **Notices.** Notices are data, not HTML. Each notice class adds an array to `dokan_admin_notices`; the Vue app mounted in `#dokan-admin-notices` fetches them from `GET dokan/v1/admin/notices/admin` (and promotions from `.../notices/promo`). Dismiss/postpone actions are AJAX handlers that write options or transients (section 2.6).
 
@@ -167,8 +171,8 @@ Hooks consumed by [Lite] (WordPress core unless noted):
 | `woocommerce_product_bulk_edit_end` [WooCommerce] | `Admin\Hooks::add_product_commission_bulk_edit_field` | `wc:includes/admin/views/html-bulk-edit-product.php:380`. |
 | `woocommerce_product_bulk_edit_save` [WooCommerce] | `Admin\Hooks::save_custom_bulk_edit_field` | `wc:includes/admin/class-wc-admin-post-types.php:692`. |
 | `post_types_to_delete_with_user` | `Admin\Hooks::add_wc_post_types_to_delete_user` | |
-| `dokan_save_settings_value` | `Admin\Hooks::update_pages` | Lite-fired filter, see section 3. |
-| `show_user_profile`, `edit_user_profile`, `personal_options_update`, `edit_user_profile_update` | `UserProfile` | |
+| `dokan_save_settings_value` | `Admin\Hooks::update_pages` | Lite-fired filter, applied only by the classic AJAX save; see section 3. |
+| `show_user_profile`, `edit_user_profile`, `personal_options_update`, `edit_user_profile_update`, `user_profile_update_errors` | `UserProfile` | |
 | `views_users`, `pre_get_users`, `bulk_actions-users`, `handle_bulk_actions-users` | `UserList` | |
 | `wp_before_admin_bar_render`, `admin_bar_menu` (35) | `AdminBar` | |
 
@@ -177,7 +181,7 @@ Hooks consumed by [Lite] (WordPress core unless noted):
 | Key | Type | Written by | Meaning |
 |---|---|---|---|
 | `dokan_new_settings_page_enabled` | option | `LegacySwitcher::switch_settings_page` | `yes` = React settings screen; absent = classic screen. |
-| `dokan_legacy_{slug}_page` | transient | `LegacySwitcher::handle_dashboard_redirect` | Per-page legacy preference. |
+| `dokan_legacy_{slug}_page` | transient | `LegacySwitcher::handle_dashboard_redirect` | Per-page legacy preference (15 days); absent = React screen. |
 | `dokan_legacy_dashboard_page` | option (legacy) | none; deleted by `handle_dashboard_redirect` | Superseded by the transients. `SetupWizard::register_admin_scripts` still reads it to pick the onboarding app's return URL. |
 | `dismiss_dokan_admin_logo_update_notice` | option | `Notices\Manager::dismiss_dokan_admin_logo_update_notice` (through the private `dismiss_notice()` helper) | Logo-update notice dismissed. |
 | `dokan_review_notice_hidden`, `dokan_review_notice_postponed`, `dokan_installed_time` | option | `PluginReview` (and installer for `dokan_installed_time`) | Review notice state. |
@@ -186,7 +190,7 @@ Hooks consumed by [Lite] (WordPress core unless noted):
 | `promo_notices` | Dokan cache transient | `Notices\Helper::dokan_get_promo_notices` | Cached promotion feed, one day. |
 | `dokan_new_settings_notice_postponed` (`NewSettingsNotice::POSTPONED_TRANSIENT`) | transient | `NewSettingsNotice::postpone_notice` | Postpones the "new settings" notice. |
 | `dokan_pointer_{screen}` | option | `Pointers::dismiss_screen` | Pointer tour dismissed. |
-| User meta `dokan_profile_settings`, `dokan_publishing`, `dokan_feature_seller`, `dokan_store_name` | user meta | `UserProfile::save_meta_fields` (`lite:includes/Admin/UserProfile.php:528`) | Store profile and Operating Terms edited from the WP profile screen. Selling activation goes through `dokan()->vendor->activate()` / `deactivate()` only when the posted value differs from the current one. The screen does not write the Vendor-level Commission meta (`dokan_admin_percentage`, `dokan_admin_percentage_type`), so saving it leaves the Vendor's Commission unchanged; that meta is written by `Vendor\Manager` and `Commission\Settings\Vendor::save` (see [database.md](database.md)). |
+| User meta `dokan_profile_settings`, `dokan_publishing`, `dokan_feature_seller`, `dokan_store_name` | user meta | `UserProfile::save_meta_fields` (`lite:includes/Admin/UserProfile.php:560`) | Store profile and Operating Terms edited from the WP profile screen. Selling activation goes through `dokan()->vendor->activate()` / `deactivate()` only when the posted value differs from the current one. The screen does not write the Vendor-level Commission meta (`dokan_admin_percentage`, `dokan_admin_percentage_type`), so saving it leaves the Vendor's Commission unchanged; that meta is written by `Vendor\Manager` and `Commission\Settings\Vendor::save` (see [database.md](database.md)). |
 
 ### 2.7 REST / AJAX endpoints
 
@@ -218,7 +222,7 @@ Product meta save and bulk edit hooks (2.5). The Status page reads WooCommerce s
 
 ### 2.10 Dependencies
 
-Internal: container, `Admin\Settings` (localized data), `Withdraw` (pending count in the menu via `dokan_get_withdraw_count()`), `Vendor` manager (`UserList` bulk actions). External: WordPress admin APIs, WooCommerce admin screens, the React admin bundle (`dokan-admin-dashboard`, `dokan-admin-panel-header`, `dokan-admin-switching` script handles registered in `Dashboard::register_scripts`).
+Internal: container, `Admin\Settings` (localized data), `Withdraw` (pending-count badge on the React Withdraw menu entry via `dokan_get_withdraw_count()`; the classic entry shows no count), `Vendor` manager (`UserList` bulk actions). External: WordPress admin APIs, WooCommerce admin screens, the React admin bundle (`dokan-admin-dashboard`, `dokan-admin-panel-header`, `dokan-admin-switching` script handles registered in `Dashboard::register_scripts`).
 
 ### 2.11 Extension points
 
@@ -312,7 +316,9 @@ sequenceDiagram
     RC->>RC: "do_action dokan_rest_after_saving_settings, then registry clear_cache"
 ```
 
-Notes on the REST write: request keys may be dot paths (`page.subpage.field_id`); only the leaf id is used. Unknown ids are ignored. A field that fails validation blocks the save unless it is hidden by its dependency rules (`is_field_hidden()`), in which case the stored value is kept. The response is the full processed schema, filtered through `dokan_rest_admin_settings_response`.
+Notes on the REST write: request keys may be dot paths (`page.subpage.field_id`); only the leaf id is used. Unknown ids are ignored. A field that fails validation blocks the save unless it is hidden by its dependency rules (`is_field_hidden()`), in which case the stored value is kept. The response is the full processed schema, filtered through `dokan_rest_admin_settings_response`. The React screen posts every field of the saved subpage, not only the changed ones (`lite:src/admin/dashboard/pages/settings/index.tsx:225-236` with the scope values from the plugin-ui settings component), so the first save of a subpage persists the defaults it displayed.
+
+**Classic save listeners on REST saves.** `Admin\Settings` loads only in wp-admin, so `LegacyMirror::before_save()` resolves it from the container (`lite:includes/Admin/Settings/Migration/LegacyMirror.php:469`) before firing `dokan_before_saving_settings` per legacy section. That makes `Admin\Settings::set_withdraw_limit_value_validation()` (`lite:includes/Admin/Settings.php:1116-1143`) run on React saves too. The REST `number` sanitizer accepts negatives (`lite:includes/REST/AdminSettingsController.php:572-574`) and `minimum_withdraw_limit` declares no `min_value`, so a negative minimum is stopped only by that listener, which answers with `wp_send_json_error( ..., 400 )` and exits: an admin-ajax-shaped body, not a REST `WP_Error` (code reading). The `dokan_save_settings_value` normalizers do not run on REST saves at all: `Admin\Settings::validate_fixed_price_values()` (clamps a flat `admin_percentage` outside 0-100 back to the stored value, line 95) and `Admin\Hooks::update_pages()` are applied only in the classic `save_settings_value()` (line 171).
 
 **Read paths.**
 
@@ -394,6 +400,35 @@ Consumed by [Lite] in this subsystem: `option_{section}` and `default_option_{se
 | `dokan_general`, `dokan_selling`, `dokan_withdraw`, `dokan_reverse_withdrawal`, `dokan_pages`, `dokan_appearance`, `dokan_privacy`, `dokan_ai` (and module sections) | options | Legacy keys. With the mirror on they hold mapped values plus unmapped keys; with it off they hold unmapped keys only. |
 | `dokan_admin_settings_legacy_snapshot` | option | Reconciliation baseline (canonical-id space). `LegacyMirror::SNAPSHOT_KEY`. |
 | `dokan_new_settings_page_enabled` | option | Which admin settings screen is shown (2.6). |
+
+**Withdraw settings.** Lite fields live on Transaction → Withdraw (subpage `withdraw_charge`, `lite:includes/Admin/Settings/Schema/SettingsSchema.php:797-999`, plus `withdraw_order_status_field()` at line 1261); Pro fields are appended to the same subpage (`pro:includes/Admin/Settings/Schema/ProSettingsSchema.php:438`, `withdraw_settings()`).
+
+| Canonical id | Legacy key (`dokan_withdraw.*`) | Schema default | Notes |
+|---|---|---|---|
+| `paypal_withdraw`, `bank_transfer_withdraw` | `withdraw_methods.paypal`, `withdraw_methods.bank` | `on`, `off` | `WithdrawMethodToggleTransformer`. |
+| `paypal_withdraw_charges`, `bank_transfer_withdraw_charges` | `withdraw_charges.paypal`, `withdraw_charges.bank` | | `WithdrawChargeTransformer`. |
+| `minimum_withdraw_limit` | `withdraw_limit` | `50` | Number, no `min_value`. |
+| `withdraw_order_status` | `withdraw_order_status.{status}` | `[ 'wc-processing' ]` (line 1283) | Multicheck, one slot per status (`MulticheckArrayTransformer`). |
+| `include_cod_payments_in_balance` | `exclude_cod_payment` | `on` (Include) | `InvertOnOffTransformer`; legacy default `off`. Also decides whether refunds of COD orders touch the Balance (`lite:includes/Order/RefundHandler.php:103`, `lite:includes/Order/Hooks.php:147`, `:300`), see [ADR-0058](../0058-cash-on-delivery-earnings-stay-out-of-the-withdrawable-balance-only-while-exclude-cod-payments-is-on.md). |
+| `withdraw_threshold` [Pro] | `withdraw_date_limit` | `0` | Lite reads it (`lite:includes/functions.php:4062`), see [ADR-0063](../0063-the-withdraw-threshold-delays-each-earning-by-a-fixed-number-of-days-counted-from-checkout.md). |
+| `withdraw_option_visibility` [Pro] | `hide_withdraw_option` | `off` | Lite reads it (`lite:includes/REST/VendorDashboardController.php:417`). |
+| `manual_withdraw_enabled`, `schedule_disbursement_enabled` [Pro] | `disbursement.manual`, `disbursement.schedule` | `on`, `off` | Schedule fields map to `disbursement_schedule.*`, `weekly_schedule`, `{monthly,biweekly,quarterly}_schedule.*`. |
+| `custom_withdraw`, `custom_method_name`, `custom_method_type`, `custom_withdraw_charges` [Pro] | `withdraw_methods.dokan_custom`, `withdraw_method_name`, `withdraw_method_type`, `withdraw_charges.dokan_custom` | `on` for the toggle | Custom method. Skrill uses `withdraw_methods.skrill` / `withdraw_charges.skrill`. |
+
+Pro payment-gateway modules (Stripe, Stripe Express, PayPal Marketplace, MangoPay, Razorpay, Paystack) add their withdraw methods through `dokan_get_admin_settings_schema` (`*WithdrawSettingsSchema` classes).
+
+**Withdraw defaults diverge.** Nothing seeds `dokan_admin_settings` or `dokan_withdraw` on install. The bridge overlays only canonical keys that are present (`LegacySettingsBridge::hydrate_legacy_from_new()`, `lite:includes/Admin/Settings/Migration/LegacySettingsBridge.php:337-368`), while the React screen shows the schema default for any unsaved field (`lite:includes/Admin/Settings/Schema/SettingsRegistry.php:367`). Until a Withdraw save, the four places disagree:
+
+| Setting | React schema | Classic field | Legacy wizard | Runtime fallback |
+|---|---|---|---|---|
+| Minimum withdraw | `50` | `'50'` (`lite:includes/Admin/Settings.php:747`) | `50` (`lite:includes/Admin/SetupWizard.php:672`) | `0` (`lite:includes/Withdraw/Manager.php:488`, `lite:includes/REST/WithdrawController.php:431`, `lite:includes/Dashboard/Templates/Withdraw.php:455`) |
+| Order status for withdraw | `wc-processing` | `wc-completed` (`lite:includes/Admin/Settings.php:758-760`) | `wc-completed` (`lite:includes/Admin/SetupWizard.php:673`) | `wc-completed`, plus `wc-refunded` always (`dokan_withdraw_get_active_order_status()`, `lite:includes/Withdraw/functions.php:356-357`) |
+
+So a fresh site enforces no minimum and counts only completed orders while both admin screens show 50 (and the React screen shows processing). The first React save of the Withdraw subpage persists the displayed values (3.4). See [ADR-0057](../0057-a-withdraw-must-be-at-least-the-minimum-withdraw-limit-and-at-most-the-balance-and-there-is-no-maximum-limit.md) and [ADR-0064](../0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md).
+
+**Refund settings.** Lite has no refund-specific field; refunds follow `include_cod_payments_in_balance` above. The Pro RMA module adds Moderation → RMA (`pro:modules/rma/includes/Admin/Schema/RmaSettingsSchema.php:37-157`): `rma_order_status` (default `wc-completed`), `rma_refund_requests` → `dokan_rma.rma_enable_refund_request` (default `off`), `rma_coupon_requests` → `rma_enable_coupon_request` (default `off`), `rma_refund_policy` → `rma_policy`, `rma_reasons`.
+
+**Product settings.** The Lite `product` page is an empty shell (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:2887-2898`) filled only by Pro modules (Printful, Product Advertising, Wholesale, Request for Quotation). Lite's product fields sit in Vendor → Vendor Capabilities (`dokan_selling.*`, lines 1442-1544): `one_page_product_creation` → `one_step_product_create`, `vendor_new_product_popup` → `disable_product_popup` (inverted), `vendor_can_change_order_status` → `order_status_change`, `vendor_select_any_product_category` → `dokan_any_category_selection`. Pro adds to the same section (`pro:includes/Admin/Settings/Schema/ProSettingsSchema.php:192`, `vendor_settings()`): `vendor_product_type_mode` → `dokan_general.global_digital_mode` (default `sell_both`), `product_status` (default `pending`; Lite reads it at `lite:includes/functions.php:544`), `vendor_can_duplicate_products`, `allow_vendor_create_manual_order`, `vendor_product_category_selection_mode`, `vendor_can_create_product_tags`, `add_new_attribute_values`, `vendor_can_manage_product_reviews`, `discount_settings`; and `guest_product_enquiry` → `enable_guest_user_enquiry` in General (line 160). `SettingsSchema::get_schema()` drops fields marked `is_lite => false` when Pro is inactive (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:37-66`); no Lite field carries the flag yet.
 
 ### 3.7 REST / AJAX endpoints
 
@@ -492,6 +527,8 @@ sequenceDiagram
 
 The legacy step handlers (`dokan_setup_store_save`, `dokan_setup_selling_save`, `dokan_setup_commission_save`, `dokan_setup_withdraw_save`) still exist and save through `dokan_save_legacy_settings_section()`, so they also land in the canonical store. `dokan_setup_recommended_save` writes WooCommerce registration options and installs plugins instead (4.9). They run only when a POST with `save_step` and a valid `dokan-setup` nonce reaches `setup_wizard()`.
 
+Opening the admin wizard switches the vendor dashboard to the new UI. `setup_wizard_header()` fires `dokan_setup_wizard_styles` (`lite:includes/Admin/SetupWizard.php:403`) on every render of the shell, and `FullWidthVendorLayout::update_layout_style()` (hooked at `lite:includes/Shortcodes/FullWidthVendorLayout.php:29`, body lines 65-76, admin requests only) writes `vendor_layout_style`, `vendor_product_editor` and `vendor_store_settings` = `latest` into `dokan_appearance`. From then on Products and Settings → Store link to the React screens (`lite:includes/functions-dashboard-navigation.php:35`, `:37`), although the schema default of both editor fields is `legacy` (5.6).
+
 ### 4.5 Hooks
 
 Fired by [Lite]: `dokan_admin_setup_wizard_steps` (filter), `dokan_setup_wizard_enqueue_scripts`, `dokan_setup_wizard_styles`, `dokan_admin_setup_wizard_save_step_store`, `dokan_admin_setup_wizard_save_step_setup_selling`, `dokan_admin_setup_wizard_save_step_setup_commission`, `dokan_setup_wizard_view_withdraw_methods`, `dokan_setup_wizard_save_withdraw_options` (filter), `dokan_share_essentials_updated`, `dokan_admin_onboarding_schema` (filter), `dokan_before_save_admin_onboarding`, `dokan_admin_onboarding_response` (filter), `dokan_after_save_admin_onboarding`, `dokan_admin_setup_guide_steps` (filter), `dokan_admin_setup_guide_steps_mapper` (filter), `dokan_admin_setup_guide_is_setup_complete` (filter), `{storage_key}_skippable` (filter, per step). `AdminOnboardingController::create_onboarding` also fires WooCommerce's `woocommerce_flush_rewrite_rules` action (WooCommerce fires the same action in `wc:includes/class-wc-install.php:683`).
@@ -555,7 +592,8 @@ Add a setup-guide step by subclassing `Steps\AbstractStep`, declaring `$id`, `$p
 | `Shortcodes\Dashboard::render_shortcode()` | `lite:includes/Shortcodes/Dashboard.php:23` |
 | `Rewrites::register_rule()` | `lite:includes/Rewrites.php` (query vars via `dokan_query_var_filter`) |
 | `dokan_get_dashboard_nav()` | `lite:includes/functions-dashboard-navigation.php:32` |
-| `dokan_dashboard_nav()` | `lite:includes/functions-dashboard-navigation.php:198` |
+| `dokan_get_restricted_dashboard_routes()` (since 5.3.3) | `lite:includes/functions-dashboard-navigation.php:178` |
+| `dokan_dashboard_nav()` | `lite:includes/functions-dashboard-navigation.php:229` |
 | `dokan_get_navigation_url()` | `lite:includes/functions.php:2113` |
 | `dokan_is_seller_dashboard()` | `lite:includes/functions.php:193` |
 | `VendorNavMenuChecker::__construct()` | `lite:includes/VendorNavMenuChecker.php:54` |
@@ -598,9 +636,11 @@ flowchart TD
 
 Every template calls `do_action( 'dokan_dashboard_content_before' )`, on which `Templates\Main::dashboard_side_navigation()` renders `global/dashboard-nav` with the active menu (filterable through `dokan_dashboard_nav_active`).
 
-**Navigation build.** `dokan_get_dashboard_nav()` defines `dashboard`, `products`, `orders`, `withdraw`, `settings` (with `store` and `payment` submenus), applies `dokan_get_dashboard_settings_nav` and `dokan_get_dashboard_nav`, assigns default positions (190 for menus, 200 for submenus), applies `dokan_dashboard_nav_submenu` per menu, sorts by `pos`, and removes entries whose `permission` capability the user lacks (`dokan_check_menu_permission()`, line 176). A menu whose submenus are all filtered out is dropped. When WooCommerce Analytics is enabled, the Dashboard item links to `?path=%2Fanalytics%2FOverview`.
+**Navigation build.** `dokan_get_dashboard_nav()` defines `dashboard`, `products`, `orders`, `withdraw`, `settings` (with `store` and `payment` submenus), applies `dokan_get_dashboard_settings_nav` and `dokan_get_dashboard_nav`, assigns default positions (190 for menus, 200 for submenus), applies `dokan_dashboard_nav_submenu` per menu, sorts by `pos`, and removes entries whose `permission` capability the user lacks (`dokan_check_menu_permission()`, line 207). A menu whose submenus are all filtered out is dropped. When WooCommerce Analytics is enabled, the Dashboard item links to `?path=%2Fanalytics%2FOverview`.
 
 **React route rewriting.** `VendorNavMenuChecker::convert_to_react_menu()` runs on `dokan_get_dashboard_nav` at priority 999. For an item with `react_route`, it checks the template dependency list (for example `settings/store` depends on `settings/store-form`, `settings/store-time`, `settings/address-form`, `maps/dokan-maps-with-search`; `withdraw` depends on ten `withdraw/*` templates). If none of those templates is overridden by the theme or by a `dokan_get_template_part` filter, the URL becomes `dokan_get_navigation_url( 'new' ) . '#' . $route`. `maybe_rewrite_to_react_route()` applies the same mapping to `dokan_get_navigation_url( $name )` calls.
+
+**Switched-off menus.** Dokan Pro's Menu Manager marks menu items `is_switched_on => false`. `dokan_get_restricted_dashboard_routes()` collects the hash routes of those items (and their submenus), and `Assets` localizes them as `dokanFrontend.restrictedRoutes` on the vendor dashboard (`lite:includes/Assets.php:1100`); the React router renders its 403 screen for a matching route or any sub-route (`lite:src/routing/index.tsx:26-35`, `:66-67`). Legacy PHP routes are refused server-side by Pro's `AccessRestriction::restrict_access()` on `dokan_dashboard_shortcode_query_vars` priority 9 (`pro:includes/MenuManager/Hooks.php:22`), which returns a `WP_Error` that the shortcode renders as an error message. See [ADR-0009](../0009-switched-off-dashboard-menus-close-their-routes-and-store-links.md).
 
 ### 5.5 Hooks
 
@@ -629,7 +669,8 @@ Consumed by [Lite]: `dokan_get_dashboard_nav` (999, `VendorNavMenuChecker`; `Tem
 | Key | Type | Meaning |
 |---|---|---|
 | `dokan_pages` → `dashboard` | legacy setting | Page id hosting `[dokan-dashboard]`; read by `dokan_get_navigation_url()` and `dokan_is_seller_dashboard()`. |
-| `dokan_appearance` → `vendor_product_editor`, `vendor_store_settings` | legacy setting | Read by `LegacySwitcher::is_product_editor_legacy_preferred()` / `is_store_settings_legacy_preferred()`; the value `latest` selects the React screen, anything else the legacy PHP screen. |
+| `dokan_appearance` → `vendor_product_editor`, `vendor_store_settings` | legacy setting | Read by `LegacySwitcher::is_product_editor_legacy_preferred()` / `is_store_settings_legacy_preferred()`; for a logged-in user the value `latest` selects the React screen, anything else the legacy PHP screen. With no current user (cron, emails) both return `false`, so the React screen is assumed (`lite:includes/Admin/Dashboard/LegacySwitcher.php:276-278`, `:309-311`). The canonical default is `legacy` (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:1619`, `:1642`), but the admin setup wizard writes `latest` (4.4). |
+| `dokan_appearance` → `vendor_layout_style` | legacy setting | `latest` serves the full-width React vendor dashboard layout (`FullWidthVendorLayout::is_latest_layout()`; schema default `legacy`, `lite:includes/Admin/Settings/Schema/SettingsSchema.php:1596`); also set to `latest` by the admin setup wizard. |
 | `dokan_profile_settings` | user meta | Store profile written by `Templates\Settings`. |
 
 ### 5.7 REST / AJAX endpoints
@@ -642,7 +683,7 @@ Consumed by [Lite]: `dokan_get_dashboard_nav` (999, `VendorNavMenuChecker`; `Tem
 
 ### 5.8 Permissions & capabilities
 
-The shortcode requires a Vendor (`dokan_is_user_seller()`). Each screen checks a Dokan capability from `dokan_get_all_caps()` (`lite:includes/functions.php:2835`): `dokan_view_overview_menu`, `dokan_view_product_menu`, `dokan_add_product`, `dokan_view_order_menu`, `dokan_view_withdraw_menu`, `dokan_view_store_settings_menu`, `dokan_view_store_payment_menu`. Menu items carry the same capability in `permission` and are hidden when it is missing. Vendor Staff act within their Vendor's scope because data access uses `dokan_get_current_user_id()` ([ADR-0007](../0007-staff-actions-gated-by-dokan-capabilities.md)).
+The shortcode requires a Vendor (`dokan_is_user_seller()`). Each screen checks a Dokan capability from `dokan_get_all_caps()` (`lite:includes/functions.php:2835`): `dokan_view_overview_menu`, `dokan_view_product_menu`, `dokan_add_product`, `dokan_view_order_menu`, `dokan_view_withdraw_menu`, `dokan_view_store_settings_menu`, `dokan_view_store_payment_menu`. Menu items carry the same capability in `permission` and are hidden when it is missing. Menus switched off in Pro's Menu Manager are also closed as routes, on both the legacy and the React dashboard (5.4). Vendor Staff act within their Vendor's scope because data access uses `dokan_get_current_user_id()` ([ADR-0007](../0007-staff-actions-gated-by-dokan-capabilities.md)).
 
 ### 5.9 WooCommerce touchpoints
 
@@ -898,7 +939,7 @@ WooCommerce fires `woocommerce_email_classes` in `wc:includes/class-wc-emails.ph
 | `Dokan_Email_Reverse_Withdrawal_Invoice` | `ReverseWithdrawalInvoice` | `reverse_withdrawal_invoice` | `emails/reverse-withdrawal-invoice.php` | `dokan_reverse_withdrawal_invoice_email_sent` (30) | Vendor |
 | `Dokan_Email_Vendor_Product_Review` | `VendorProductReview` | `dokan_product_review` | `emails/vendor-product-review.php` | `wp_set_comment_status`, `comment_post` (35) | Vendor |
 
-Trigger sources in Lite: `dokan_new_product_added` / `dokan_product_updated` from `dokan_save_product()` (`lite:includes/Product/functions.php:155`), the legacy dashboard form handlers, `REST\Manager` and `ProductControllerV3`; `dokan_new_seller_created` from `Registration` (`lite:includes/Registration.php:284`) and `lite:includes/functions.php:4459`; `dokan_withdraw_created` from `Withdraw::save()` (`lite:includes/Withdraw/Withdraw.php:481`); `dokan_withdraw_request_{status}` from `lite:includes/Withdraw/Withdraw.php:523`; `dokan_trigger_contact_seller_mail` from `Ajax` (`lite:includes/Ajax.php:450`); `dokan_reverse_withdrawal_invoice_email_sent` from `ReverseWithdrawal\BackgroundProcess\AsyncRequests` (line 97).
+Trigger sources in Lite: `dokan_new_product_added` / `dokan_product_updated` from `dokan_save_product()` (`lite:includes/Product/functions.php:155`), the legacy dashboard form handlers, `REST\Manager` and `ProductControllerV3`; `dokan_new_seller_created` from `Registration` (`lite:includes/Registration.php:285`) and `lite:includes/functions.php:4459`; `dokan_withdraw_created` from `Withdraw::save()` (`lite:includes/Withdraw/Withdraw.php:481`); `dokan_withdraw_request_{status}` from `lite:includes/Withdraw/Withdraw.php:523`; `dokan_trigger_contact_seller_mail` from `Ajax` (`lite:includes/Ajax.php:441`); `dokan_reverse_withdrawal_invoice_email_sent` from `ReverseWithdrawal\BackgroundProcess\AsyncRequests` (line 97).
 
 ### 8.4 Execution flow
 
@@ -969,7 +1010,7 @@ Add an email by filtering `dokan_email_classes` with a `WC_Email` subclass; add 
 
 ### 9.2 Entry points & bootstrap
 
-`Captcha\Manager::register_hooks()` (`lite:includes/Captcha/Manager.php:27`); providers enlist in `AbstractProvider::register_hooks()` (`lite:includes/Captcha/AbstractProvider.php:58`). Assets are registered from `Assets` (`lite:includes/Assets.php:993`).
+`Captcha\Manager::register_hooks()` (`lite:includes/Captcha/Manager.php:27`); providers enlist in `AbstractProvider::register_hooks()` (`lite:includes/Captcha/AbstractProvider.php:58`). Assets are registered from `Assets` (`lite:includes/Assets.php:995`).
 
 ### 9.3 Key classes
 
@@ -1150,11 +1191,11 @@ Permissions: inherited from callers. WooCommerce touchpoints: `WC_Data`, `SqlQue
 ## Known gaps
 
 - The per-report `QueryFilter` and `WcDataStore` subclasses under `includes/Analytics/Reports/{Products,Variations,Categories,Taxes,Coupons,Customers,Stock}` were not read individually; only the Orders filter, `BaseQueryFilter`, the modifiers and the Orders stats data store were verified.
-- The individual semantics of each `Settings\Migration\Transformer\*` class, and the complete list of canonical field ids and `legacy_key` mappings in `SettingsSchema` (2,872 lines), are not enumerated here.
+- The individual semantics of each `Settings\Migration\Transformer\*` class, and the complete list of canonical field ids and `legacy_key` mappings in `SettingsSchema` (2,899 lines), are not enumerated here beyond the withdraw, refund and product fields in 3.6.
 - `Admin\Status\*` element classes, `Admin\Promotion` and `AdminExtensionsController::check_install_permission` were not read in detail.
-- `Emails\Manager::register_email_actions()` registers `dokan_after_withdraw_request`, while `VendorWithdrawRequest` hooks `dokan_withdraw_created`, which is not in that list. Whether the WooCommerce mailer is always instantiated before `dokan_withdraw_created` fires (so the trigger is attached) was not determined from source. Likewise, how deferred transactional emails (`woocommerce_defer_transactional_emails`) interact with Dokan emails that listen on the raw action rather than on `{action}_notification` was not verified.
+- `Emails\Manager::register_email_actions()` registers `dokan_after_withdraw_request`, while `VendorWithdrawRequest` hooks `dokan_withdraw_created`, which is not in that list. Whether the WooCommerce mailer is always instantiated before `dokan_withdraw_created` fires (so the trigger is attached) was not determined from source. Likewise, how deferred transactional emails (`woocommerce_defer_transactional_emails`) interact with Dokan emails that listen on the raw action rather than on `{action}_notification` was not verified. (Deferral is handled for WooCommerce's own customer status emails on synced orders: since 5.3.4 `Order\EmailHooks` checks them at send time through `woocommerce_email_enabled_{id}` and the `_dokan_synced_status` order meta, `lite:includes/Order/EmailHooks.php:54-57`, `:281`.)
 - The JavaScript consumers of `dokan_admin_localize_script`, `dokanAdminDashboardSettings`, `onboardingData` and the React setup guide were not traced; endpoint usage is inferred from PHP route registration only.
 - The `AdminSetupGuideController` request/response shapes were not read in detail.
 - The legacy wizard redirect targets `index.php?page=dokan-setup` while the hidden page is registered with an empty parent slug; the resulting URL resolution is WordPress behaviour and was not traced further.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

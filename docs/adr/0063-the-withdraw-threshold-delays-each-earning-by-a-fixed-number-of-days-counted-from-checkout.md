@@ -47,7 +47,7 @@ No recorded decision. Storing the maturity date on the row avoids a scheduled jo
 
 ## Consequences & risks
 
-- Any help text that describes the threshold as counting from order completion does not match the code, which counts from checkout. For orders that take longer than the threshold to complete, the hold is effectively zero after completion.
+- Pro's help text describes the threshold as counting from order completion ("Number of days to wait after order completion before allowing withdrawal.", `pro:includes/Admin/Settings/Schema/ProSettingsSchema.php:452`), which does not match the code, which counts from checkout. For orders that take longer than the threshold to complete, the hold is effectively zero after completion.
 - Raising the threshold to respond to a fraud wave does not protect Earnings already recorded.
 
 ## Recommendations
@@ -55,4 +55,4 @@ No recorded decision. Storing the maturity date on the row avoids a scheduled jo
 - If the hold is meant to run from completion, move the stamp to the transition into an active status rather than reading a shifted date at query time; the unused `$date` in `get_balance()` suggests that design was once considered.
 - Describe the setting in the UI as "days after the order is placed" until the behaviour changes.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

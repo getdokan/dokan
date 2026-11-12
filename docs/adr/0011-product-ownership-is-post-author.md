@@ -18,7 +18,7 @@ Every marketplace feature needs to know which Vendor a product belongs to: the s
 
 Writers keep the column correct where WordPress or WooCommerce would otherwise assign the wrong user:
 
-- WooCommerce's product data store inserts with `post_author = get_current_user_id()` inside the `woocommerce_new_product_data` filter (`wc:includes/data-stores/class-wc-product-data-store-cpt.php:209`). Dokan's editor flows create an `auto-draft` and set `post_author` to `dokan_get_current_user_id()` explicitly, so a Vendor Staff member's product is authored to the Vendor.
+- WooCommerce's product data store inserts with `post_author = get_current_user_id()` inside the `woocommerce_new_product_data` filter (`wc:includes/data-stores/class-wc-product-data-store-cpt.php:209`). The two `auto-draft` editor flows set `post_author` to `dokan_get_current_user_id()` explicitly, so a Vendor Staff member's product is authored to the Vendor: the legacy editor (`lite:templates/products/edit-product-single.php:57-73`) and the React editor's `init/fields` (`lite:includes/REST/ProductControllerV3.php:639-652`). The full add form inserts without `post_author` (`lite:includes/Dashboard/Templates/Products.php:331-345`), and quick-create goes through `Product\Manager::create()` with WooCommerce's default (`lite:includes/Product/functions.php:147`), so both author the product to the acting user. Dokan Pro's Vendor Staff module re-authors a staff user's product to the Vendor on `dokan_new_product_added` and `dokan_product_updated` and records `_staff_id` (`pro:modules/vendor-staff/includes/class-staffs.php:23`, `:25`, `:411-438`).
 - `Product\Hooks::set_new_variation_author_to_vendor` (`lite:includes/Product/Hooks.php:73`) filters `woocommerce_new_product_variation_data` (fired at `wc:includes/data-stores/class-wc-product-variation-data-store-cpt.php:137`) so a new variation inherits its parent's Vendor even when a Store Admin creates it.
 - `dokan_override_product_author()` (`lite:includes/functions.php:4363`) lets a Store Admin reassign a product and its variations from the WP-admin Vendor meta box.
 - `DokanRESTController::update_post_author_if_needed()` (`lite:includes/Abstracts/DokanRESTController.php:510`) and `ProductAbilityScope::assign_vendor_as_product_author` (on `woocommerce_new_product`, fired at `wc:includes/data-stores/class-wc-product-data-store-cpt.php:263`) re-author REST- and ability-created products.
@@ -35,7 +35,7 @@ Lite also filters `woocommerce_register_post_type_product` (`lite:includes/wc-te
 
 ## Risks
 
-- **Default authorship is the current user.** Any product creation path that relies on WooCommerce's default (`get_current_user_id()`) and does not correct the author assigns the product to the acting user. For Vendor Staff on a path that does not re-author, the product would belong to the staff user rather than the Vendor. The products architecture document lists `ProductControllerV3::create_item` as a path whose staff re-authoring was not traced.
+- **Default authorship is the current user.** Any product creation path that relies on WooCommerce's default (`get_current_user_id()`) and does not correct the author assigns the product to the acting user. For Vendor Staff on a path that does not re-author, the product would belong to the staff user rather than the Vendor. In Lite the full add form, quick-create and `POST dokan/v3/products` rely on that default; they are corrected only by Dokan Pro's Vendor Staff module, which listens to `dokan_new_product_added`, and `ProductControllerV3::create_item` fires it (`lite:includes/REST/ProductControllerV3.php:297`).
 - **Variations need their own author.** Lookups fall back to the parent only when a variation has no author. A variation with a stale, non-empty author resolves to that user, which is why the variation-author filter and the background realignment exist.
 - **Order line items are resolved at read time.** `dokan_get_sellers_by()` reads the product's current `post_author`. A product reassigned between cart and split, or a deleted product, changes or loses the attribution.
 
@@ -46,7 +46,7 @@ Lite also filters `woocommerce_register_post_type_product` (`lite:includes/wc-te
 
 ## Known gaps
 
-- Whether every product creation path (legacy form, React editor, REST v1/v2/v3, Abilities, importers) re-authors Vendor Staff products to the Vendor was not exhaustively traced; see the Known gaps in `docs/adr/reference/products.md`.
+- Staff re-authoring was traced for the legacy editor, React editor, full add form, quick-create, REST v1 (`update_post_author_if_needed()`) and v3 (Pro's listener on `dokan_new_product_added`) and Abilities (`ProductAbilityScope`); importers and native WooCommerce REST creates were not traced.
 - How third-party importers (for example WooCommerce's CSV importer) set `post_author` for Vendor products was not investigated.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

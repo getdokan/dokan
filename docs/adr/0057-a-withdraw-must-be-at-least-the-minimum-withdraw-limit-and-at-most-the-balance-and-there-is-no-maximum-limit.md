@@ -10,7 +10,7 @@ Admins set a "Minimum Withdraw Limit" so they are not asked to pay out tiny amou
 
 `Withdraw\Manager::is_valid_approval_request()` (`lite:includes/Withdraw/Manager.php:29`) accepts a Withdraw only if every check below passes, in this order:
 
-1. **Amount present.** A missing amount fails with `dokan_withdraw_empty` ("Withdraw amount required", `:40-42`). The check runs on the amount already formatted to two decimals (`:34`); a positive minimum (check 3) is what keeps very small requests out.
+1. **Amount present.** A missing or blank amount fails with `dokan_withdraw_empty` ("Withdraw amount required", `:40-42`). The check runs on the amount already formatted to two decimals (`:34`), so `0` becomes `"0.00"`, which is not empty and passes. A positive minimum (check 3) or a fixed charge (check 7) is what keeps zero and very small requests out. The AJAX handler rejects a raw `0` before formatting (`lite:includes/Withdraw/Hooks.php:184-186`) but not `0.00`; the REST API rejects neither.
 2. **Amount at most the Balance.** The amount, rounded to 2 decimals, must not exceed the Balance in integer cents (`:33-34`, `:44-50`), otherwise `dokan_withdraw_not_enough_balance`. The Balance is defined in [ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md).
 3. **Amount at least the minimum.** `amount < withdraw_limit` fails with `dokan_withdraw_amount` ("Withdraw amount must be greater than or equal to …") (`:52-55`). The minimum is read by `Manager::get_withdraw_limit()` (`:487-489`).
 4. **Method usable.** See [ADR-0055](./0055-a-withdraw-can-use-only-a-method-the-admin-enabled-and-the-vendor-has-filled-in.md) (`:57-59`).
@@ -29,7 +29,7 @@ The same validator runs at creation (AJAX `lite:includes/Withdraw/Hooks.php:205`
 
 | Setting | Key | Default | Effect |
 |---|---|---|---|
-| Minimum Withdraw Limit | `dokan_withdraw[withdraw_limit]` (flat: `minimum_withdraw_limit`) | Never saved: `0` (reader default, `lite:includes/Withdraw/Manager.php:488`). The settings screens and the setup wizard pre-fill `50` (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:957`, `lite:includes/Admin/Settings.php:747`, `lite:includes/Admin/SetupWizard.php:672`), which is stored when the admin saves. | `0` or blank: no minimum, any positive amount up to the Balance. A positive value: requests below it are rejected. A negative value is refused on save (`lite:includes/Admin/Settings.php:1116-1128`; the new settings screen runs the same check through `LegacyMirror::before_save()`, `lite:includes/Admin/Settings/Migration/LegacyMirror.php:456-484`). |
+| Minimum Withdraw Limit | `dokan_withdraw[withdraw_limit]` (flat: `minimum_withdraw_limit`) | Never saved: `0` (reader default, `lite:includes/Withdraw/Manager.php:488`; the REST balance endpoint and the vendor dashboard fall back to `0` too, `lite:includes/REST/WithdrawController.php:431`, `lite:includes/Dashboard/Templates/Withdraw.php:455`). The settings screens and the setup wizard pre-fill `50` (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:951`, `lite:includes/Admin/Settings.php:747`, `lite:includes/Admin/SetupWizard.php:672`), which is stored when the admin saves (the new screen sends every field of the subpage it saves, `lite:src/admin/dashboard/pages/settings/index.tsx:225-236`). Nothing writes the option on install, so a site whose admin never saved the Withdraw settings enforces no minimum while the screens show 50. | `0` or blank: no minimum; any amount up to the Balance passes, including `0.00` when the method has no fixed charge. A positive value: requests below it are rejected. A negative value is refused on save (`lite:includes/Admin/Settings.php:1116-1128`; the new settings screen runs the same check through `LegacyMirror::before_save()`, `lite:includes/Admin/Settings/Migration/LegacyMirror.php:456-484`). |
 
 ## Worked example
 
@@ -45,8 +45,9 @@ Same Vendor, but the admin raises the minimum to 150 while a 120.00 request is p
 
 ## Edge cases
 
-- **Rounding.** The amount and Balance are compared after `wc_format_decimal( …, 2 )`, so sub-cent amounts are rounded before comparison, while the stored amount keeps the precision the caller sent.
+- **Rounding.** The amount and Balance are compared after `wc_format_decimal( …, 2 )`, so sub-cent amounts are rounded before comparison, while the stored amount keeps the caller's value up to the four decimals of the `amount` column (`decimal(19,4)`, `lite:includes/Install/Installer.php:354`); the AJAX path passes it on as a float (`lite:includes/Withdraw/Hooks.php:188`).
 - **Minimum stored as blank.** A blank limit is treated as no minimum.
+- **Zero requests.** With no minimum and no fixed charge, a request for `0.00` is valid and creates a pending row that takes the Vendor's single pending slot.
 - **Admin requests on behalf of a Vendor** go through the same validator; being an admin does not bypass the minimum or the Balance.
 
 ## Why
@@ -63,4 +64,4 @@ No recorded decision for the absence of a maximum. The minimum exists to avoid m
 - If a maximum is requested, implement it as a `dokan_withdraw_is_valid_request` rule with its own setting so it is checked at both creation and approval.
 - Align the reader default (`0`) with the screens' default (`50`), or document that an unsaved site has no minimum.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

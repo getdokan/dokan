@@ -27,13 +27,14 @@ Vendor Balance 300.00, minimum limit 50, no charges.
 1. The Vendor requests 200.00. A pending row is created. The dashboard still shows a Balance of 300.00 and no request form.
 2. The Vendor calls `POST dokan/v1/withdraw` for 100.00: rejected with HTTP 400.
 3. A refund credit of 150.00 is recorded. The Balance becomes 150.00.
-4. The admin tries to approve the 200.00 request: validation fails with `dokan_withdraw_not_enough_balance`. The request remains pending, and the Vendor still cannot create a new one until the admin or the Vendor cancels it.
+4. The admin tries to approve the 200.00 request: validation fails with `dokan_withdraw_not_enough_balance`. A single `PUT dokan/v1/withdraw/{id}` returns that message as `dokan_rest_withdraw_error`, HTTP 400 (`lite:includes/REST/WithdrawController.php:588-592`); the batch endpoint the admin screen uses returns only the id under `failed.approved`, and the screen refreshes the list without showing it (`lite:src/admin/dashboard/pages/withdraw/index.tsx:748-757`). The request remains pending, and the Vendor still cannot create a new one until the admin or the Vendor cancels it.
 5. The Vendor cancels it and requests 150.00, which the admin approves. The Balance becomes 0.00.
 
 ## Edge cases
 
 - **Admins can still edit the pending row** (amount, method, note) through the REST update endpoint; edits are validated like an approval but do not create a second row.
-- **Vendor staff** act for their Vendor (`dokan_get_current_user_id()` resolves to the Vendor on the AJAX path), so a staff member and the Vendor share the single slot.
+- **Vendor staff** act for their Vendor (`dokan_get_current_user_id()` resolves to the Vendor on the AJAX path), so a staff member and the Vendor share the single slot. Staff cannot cancel the request, though: the dashboard cancel link and `GET`/`PUT dokan/v1/withdraw/{id}` check ownership against `get_current_user_id()`, the staff member's own id (`lite:includes/Dashboard/Templates/Withdraw.php:126`, `:137`; `lite:includes/REST/WithdrawController.php:206-207`), so only the Vendor or the admin can free the slot.
+- **Only creation checks the slot.** The admin `PUT dokan/v1/withdraw/{id}` never calls `has_pending_request()` (`lite:includes/REST/WithdrawController.php:539-614`), so it can set a cancelled or approved request back to pending while another request of the same Vendor is pending. The batch Approve also accepts a cancelled id, because the validator rejects only an already approved row (`:693-713`).
 
 ## Why
 
@@ -42,10 +43,10 @@ No recorded decision. A single open request keeps the admin's approval queue to 
 ## Consequences & risks
 
 - A stale pending request blocks the Vendor until someone cancels it; Vendors can cancel their own ([ADR-0059](./0059-only-a-pending-withdraw-can-be-cancelled-and-cancelling-never-changes-the-balance.md)).
-- Because the Balance is not held, a request can become unpayable between creation and approval; the admin learns this only when approval fails.
+- Because the Balance is not held, a request can become unpayable between creation and approval; the admin learns this only when approval fails, and on the admin screen not even then, because batch failures are not shown.
 
 ## Recommendations
 
 - Show "requested, awaiting approval" separately from the available Balance in the dashboard so Vendors do not read an unchanged Balance as a failed request.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

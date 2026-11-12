@@ -35,7 +35,7 @@ The Vendor's stored order Earning (`dokan_orders.net_amount`) is recalculated on
 | Commission formula of the line (product, Vendor, global or category, as frozen on the order item) | global setting at the time of the sale | Determines the line Commission that is prorated. Changing it after the sale has no effect on refunds (Lite ADR 0013). |
 | WooCommerce *Number of decimals* (`woocommerce_price_num_decimals`) | 2 | Precision to which the admin part of each refunded line is rounded. |
 
-Filters: `dokan_order_line_item_commission_strategies` (only before the first calculation, per Lite ADR 0013); `dokan_vendor_earning_in_refund` can replace the whole Vendor figure.
+Filters: `dokan_order_line_item_commission_strategies` fires on every recalculation, including the one each refund triggers (`lite:includes/Commission/OrderLineItemCommission.php:122-125`); the freezing in Lite ADR 0013 comes from the default `OrderItem` strategy, so a callback that returns another strategy also changes what refunds reverse. `dokan_vendor_earning_in_refund` can replace the whole Vendor figure. The order-level filters `dokan_order_vendor_net_earning` and `dokan_order_admin_net_commission` (since 5.3.1, `lite:includes/Commission/OrderCommission.php:120`, `:131`) are **not** applied to refunds: `calculate_for_refund()` sums the unfiltered per-line parts, so a callback that changes an order's Earning is not mirrored in its refunds.
 
 ## Worked example
 
@@ -51,6 +51,8 @@ Sale: one line, 1 × 33.33. Commission = round(33.33 × 7.5 %) = round(2.49975) 
 
 Refund #2 is computed against the original 2.50 and 33.33, not against what was left after refund #1.
 
+Rounding per refund: had the same line been refunded as 3 × 11.11, each admin part would be round(2.50 ÷ 33.33 × 11.11) = round(0.83333) = 0.83 and each Vendor part 10.28. The totals are 2.49 and 30.84, one cent off the original split (see Consequences).
+
 Flat fee: Commission `fixed` 0 % + 2.00 per unit, line 2 × 20.00 (total 40.00), Commission 4.00, Earning 36.00. A refund of one unit (20.00) reverses admin round(4.00 ÷ 40.00 × 20.00) = 2.00 and Vendor 18.00. A refund of 5.00 on the same line (a price adjustment, quantity 0) reverses admin 0.50 and Vendor 4.50.
 
 ## Edge cases
@@ -58,7 +60,7 @@ Flat fee: Commission `fixed` 0 % + 2.00 per unit, line 2 × 20.00 (total 40.00),
 - **Refund line amount, not quantity, drives the split.** A refund that enters quantity 1 but a reduced amount is prorated by the amount. Quantity only matters for restocking.
 - **Fee lines are not part of this calculation.** `OrderCommission::calculate_for_refund()` iterates `$refund->get_items()`, which returns product lines only, so a refunded order-fee line contributes nothing to the Vendor part. See [ADR-0050](./0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md).
 - **Admin-funded discounts.** The line total used as the denominator is the total after coupons, so a refund is prorated against what the customer actually paid for the line, as the code comment in `adjust_refunds()` notes (`lite:includes/Commission/OrderLineItemCommission.php:202-205`). When an admin-funded coupon made the line Commission negative (a subsidy), the admin part of a refund is negative too, and the Vendor part is larger than the refunded amount.
-- A refund line whose `_refunded_item_id` does not match a line of the order is not handled by this calculation: the line lookup finds no Commission for it (`lite:includes/Commission/OrderCommission.php:491-495`). WooCommerce always writes a matching id for refunds it creates (`wc:includes/wc-order-functions.php:637`), so this only arises with hand-crafted refunds.
+- **A refund line with no matching Commission breaks the refund handler.** When `_refunded_item_id` does not match a calculated line, the lookup returns `null` (`lite:includes/Commission/OrderCommission.php:491-495`) and calling `calculate_for_refund_item()` on it throws an `\Error`; an empty meta value throws a `TypeError` on the `int` parameter. Both escape the `catch ( \Exception )` at `:187`, and so escape `woocommerce_order_refunded` after the refund is saved and any gateway call has been made. The same happens for a real line whose sale-time calculation threw, because such lines are left out of the line lookup (`:98-108`). WooCommerce always writes a matching id for refunds it creates (`wc:includes/wc-order-functions.php:637`), so the unmatched-id case only arises with hand-crafted refunds.
 
 ## Why
 
@@ -67,10 +69,10 @@ The code comment in `Calculator::calculate_for_refund()` gives the reason for th
 ## Consequences & risks
 
 - The admin never keeps Commission on refunded product value, and never returns more than the line produced. Marketplaces that want a non-refundable Commission (for example "the flat fee is kept on refunds") cannot express that through settings.
-- Because the admin part is rounded per refund, many small partial refunds on the same line can differ from the original Commission by a cent in total.
+- Because the admin part is rounded per refund, several partial refunds of one line can reverse a cent more or less than the original split. The `dokan_refund` credits then no longer equal the Earning debit, so a fully refunded order can leave a Balance of ±0.01 (−0.01 in the 3 × 11.11 example: credits 30.84 against an Earning of 30.83). `dokan_orders.net_amount` is computed from one cumulative proration of everything refunded so far on the line (`lite:includes/Commission/OrderLineItemCommission.php:200-218`), so it ends at 0.00 and can differ from the ledger by a cent part-way (after two refunds of 11.11: `net_amount` 10.28, ledger 10.27).
 
 ## Recommendations
 
 - If a "keep the flat fee on refund" policy is ever requested, implement it in `Calculator::calculate_for_refund()` behind an explicit setting, so that it applies equally to the Balance credit and to `dokan_orders.net_amount`.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

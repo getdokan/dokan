@@ -8,10 +8,10 @@ With cash on delivery (WooCommerce gateway id `cod`) the customer pays the Vendo
 
 ## Rule
 
-- **The exclusion is decided on every Vendor order status change.** `Order\Hooks::on_order_status_change()` (`lite:includes/Order/Hooks.php:95`) computes `exclude = (exclude_cod_payment === 'on') && payment method === 'cod'` (`:145-147`), passes it through the `dokan_order_should_exclude_from_vendor_balance` filter (`:160-167`), and when it is true returns before updating the Earning row's `status` (`:169-171`, update at `:174-180`).
+- **The exclusion is decided on every Vendor order status change.** `Order\Hooks::on_order_status_change()` (`lite:includes/Order/Hooks.php:95`) computes `exclude = (exclude_cod_payment === 'on') && payment method === 'cod'` (`:147-149`), passes it through the `dokan_order_should_exclude_from_vendor_balance` filter (`:162-169`), and when it is true returns before updating the Earning row's `status` (`:171-173`, update at `:176-185`).
 - **An excluded Earning never matches an active status.** Earning rows are inserted with an empty `status` (`lite:includes/Order/functions.php:273-282`; see [ADR-0040](./0040-a-vendor-order-earning-is-written-to-the-vendor-balance-ledger-once-when-the-order-is-created-not-when-it-is-paid.md)). Because the status is never synced for an excluded COD order, the row keeps whatever status it last had (empty for orders created while the setting is on), never reaches an active withdraw order status and never counts toward the Balance ([ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md)).
-- **Only the Balance is affected.** Before the exclusion check, the same listener still updates `dokan_orders.order_status` (`lite:includes/Order/Hooks.php:117-123`) and copies the status to Suborders (`:125-138`). The `dokan_orders` row, used by reports and the Vendor's order list, keeps the real status and the Earning.
-- **Which payment method is tested.** The check uses the payment method of the Vendor order whose status changed. Suborders copy the parent's payment method at creation, so all Vendor orders of a COD Order are excluded. The filter `dokan_order_should_exclude_from_vendor_balance` receives the order, its id, the new `wc-` status and the raw setting, so it can decide per order and per status change.
+- **Only the Balance is affected.** Before the exclusion check, the same listener still updates `dokan_orders.order_status` (`lite:includes/Order/Hooks.php:117-123`) and copies the status to Suborders (`:125-140`). The `dokan_orders` row, used by reports and the Vendor's order list, keeps the real status and the Earning.
+- **Which payment method is tested.** The check uses the payment method of the Vendor order whose status changed. Suborders copy the parent's payment method at creation, so all Vendor orders of a COD Order are excluded. The filter `dokan_order_should_exclude_from_vendor_balance` receives the computed decision, the order, its id, the new `wc-` status and whether the setting is on (a boolean, `'on' === exclude_cod_payment`, `lite:includes/Order/Hooks.php:147`), so it can decide per order and per status change.
 - **Refunds of excluded COD orders write no Refund credit.** The refund side of the same setting is a refund rule and is recorded in [ADR-0052](./0052-refunds-of-excluded-cash-on-delivery-orders-never-touch-the-vendor-balance.md): the Vendor's Balance is never debited for money that never entered it.
 - **The setting is not retroactive.** It acts on the next status change of each order, not on rows already synced.
 - **Reverse withdrawal is independent of this setting.** The Commission debit for a COD order is written on completion when Reverse withdrawal is enabled for the `cod` gateway, whatever `exclude_cod_payment` says (Lite ADR 0015). The two settings must be combined deliberately; see the worked example.
@@ -20,8 +20,8 @@ With cash on delivery (WooCommerce gateway id `cod`) the customer pays the Vendo
 
 | Setting | Key | Default | Effect |
 |---|---|---|---|
-| Exclude COD Payments (legacy screen) | `dokan_withdraw[exclude_cod_payment]` | `off` (`lite:includes/Admin/Settings.php:764-770`; reader default at `lite:includes/Order/Hooks.php:145`) | `on`: COD Earnings and COD Refunds stay out of the Balance. `off`: COD orders behave like any other order. |
-| Include COD payments in balance (new screen) | flat key `include_cod_payments_in_balance` | `on` (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:979-1003`) | The inverse of the legacy key through `InvertOnOffTransformer`: `on` here equals `exclude_cod_payment = off`. |
+| Exclude COD Payments (legacy screen) | `dokan_withdraw[exclude_cod_payment]` | `off` (`lite:includes/Admin/Settings.php:764-770`; reader default at `lite:includes/Order/Hooks.php:147`) | `on`: COD Earnings and COD Refunds stay out of the Balance. `off`: COD orders behave like any other order. |
+| Include COD payments in balance (new screen) | flat key `include_cod_payments_in_balance` | `on` (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:973-997`) | The inverse of the legacy key through `InvertOnOffTransformer`: `on` here equals `exclude_cod_payment = off`. |
 | Reverse withdrawal | `dokan_reverse_withdrawal[enabled]` and its gateway list | `off`; gateway list `cod` when enabled | Records the Commission as a debt owed by the Vendor (Lite ADR 0015). |
 
 ## Worked example
@@ -50,6 +50,7 @@ Ledger view of the same order (single-vendor COD Order #400, 100.00 from Vendor 
 - **Turning the setting on after a COD order was completed** leaves that order's row at `wc-completed`, so its Earning keeps counting. Later status changes (for example to Refunded) are no longer synced.
 - **Turning the setting off** makes the next status change of each COD order sync normally; an order already completed while the setting was on keeps an empty status until it changes status again.
 - **Other direct-payment gateways** (`bacs`, `cheque` and others) are not covered by the setting, which tests for `cod` only. Code can widen it through `dokan_order_should_exclude_from_vendor_balance` and `dokan_refund_should_insert_into_vendor_balance`; point-of-sale integrations use these filters for their own cash orders.
+- **Trashing and restoring an order bypasses the exclusion.** `OrderEventListener` writes the order's current status onto its Earning row on `woocommerce_trash_order` and `woocommerce_untrash_order` with no COD test (`lite:includes/Order/OrderEventListener.php:11-12`, `:75-100`). Restoring a completed COD order from the trash therefore brings its excluded Earning into the Balance.
 - **Existing rows are not rewritten** when the setting changes. A clean switch needs a status change on each affected order.
 - **The parent of a multi-vendor COD Order** has no ledger row, so nothing changes there; the exclusion applies to each Suborder's own status change.
 
@@ -68,4 +69,4 @@ No recorded decision beyond the setting's description: "If an order is paid with
 - Consider an explicit `excluded` status on the ledger row so exclusion is visible and not dependent on the empty initial status.
 - Record the exclusion decision on the order (for example as order meta at creation) and apply it to that order for its whole life, so later changes of the setting cannot leave half-updated rows.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

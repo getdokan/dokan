@@ -17,10 +17,10 @@ Some Vendors want to show products without selling them online (made-to-order go
   4. Otherwise, if the owning Vendor's store setting has `hide_add_to_cart_button = on`, the product is not purchasable.
   5. Otherwise the original value stands.
 - **Where the settings live.**
-  - Per product: post meta `_dokan_catalog_mode` = `['hide_add_to_cart_button' => on|off, 'hide_product_price' => on|off]`. A variation reads its parent's meta (`Helper::get_catalog_mode_data_by_product()`, `lite:includes/CatalogMode/Helper.php:163-187`). Saved from the product editor's catalog mode section by `Dashboard\Products::save_catalog_mode_data()` on `dokan_new_product_added` / `dokan_product_updated` (`lite:includes/CatalogMode/Dashboard/Products.php:32-33`, body `:80-100`), and in bulk by the "Enable/Disable Catalog Mode" bulk actions, which edit only the Vendor's own products (`Dashboard\ProductBulkEdit::save_bulk_edit_catalog_mode_data()`, `lite:includes/CatalogMode/Dashboard/ProductBulkEdit.php:61-113`, Ownership check at `:76-78`).
+  - Per product: post meta `_dokan_catalog_mode` = `['hide_add_to_cart_button' => on|off, 'hide_product_price' => on|off]`. A variation reads its parent's meta (`Helper::get_catalog_mode_data_by_product()`, `lite:includes/CatalogMode/Helper.php:163-187`). Saved from the legacy product editor's catalog mode section (rendered on `dokan_product_edit_after_options`, `lite:includes/CatalogMode/Dashboard/Products.php:30`) by `Dashboard\Products::save_catalog_mode_data()` on `dokan_new_product_added` / `dokan_product_updated`, only when that section's `_dokan_catalog_mode_frontend_nonce` is posted (`:32-33`, body `:80-100`, nonce check `:81`); the React product editor has no catalog mode field, and in bulk by the "Enable/Disable Catalog Mode" bulk actions, which edit only the Vendor's own products (`Dashboard\ProductBulkEdit::save_bulk_edit_catalog_mode_data()`, `lite:includes/CatalogMode/Dashboard/ProductBulkEdit.php:61-113`, Ownership check at `:76-78`).
   - Per Vendor: the `catalog_mode` key of the store profile settings (`dokan_profile_settings`), saved from Vendor dashboard → Settings → Store by `Dashboard\Settings::save_settings_fields()` (through the `dokan_store_profile_settings_args` filter, `lite:includes/CatalogMode/Dashboard/Settings.php:34`, body `:119-137`).
   - Defaults for both are `off` (`Helper::get_defaults()`, `lite:includes/CatalogMode/Helper.php:129-136`, filter `dokan_catalog_mode_default_vendor_settings`; the Vendor value passes through `dokan_catalog_mode_vendor_settings`).
-- The per-product editor section is shown only to users with `dokandar` (not to Vendor Staff) and not for `auction` products (`lite:includes/CatalogMode/Dashboard/Products.php:45-56`).
+- The per-product editor section is shown only to users with `dokandar` and not for `auction` products (`lite:includes/CatalogMode/Dashboard/Products.php:45-56`). The code comment says this keeps Vendor Staff out, but Dokan Pro's Vendor Staff module grants staff users `dokandar` (`pro:modules/vendor-staff/includes/class-staffs.php:157`, `:266`; `pro:modules/vendor-staff/module.php:334`), so staff see and save the section too.
 
 ## Settings that change it
 
@@ -29,7 +29,7 @@ Some Vendors want to show products without selling them online (made-to-order go
 | `dokan_selling['catalog_mode_hide_add_to_cart_button']`. In the current admin settings UI this is the inverted switch "Add to Cart Button Visibility" (`catalog_mode_add_to_cart_button_visibility`, `lite:includes/Admin/Settings/Schema/SettingsSchema.php:197-217`, stored through `InvertOnOffTransformer`). In the legacy settings screen it is "Remove Add to Cart Button" (`lite:includes/CatalogMode/Admin/Settings.php:44-50`). | legacy `on` / `off` (new UI: visibility `off` / `on`) | legacy `off` = new UI visibility `on` | Legacy `on` (new UI "visibility" switched **off**): catalog mode is available to Vendors. Legacy `off`: catalog mode is unavailable everywhere and existing product/Vendor catalog settings are ignored. |
 | Vendor store setting "Remove Add to Cart Button" (`catalog_mode.hide_add_to_cart_button`) | `on` / `off` | `off` | `on`: every product of the Vendor is unpurchasable. |
 | Product setting `_dokan_catalog_mode.hide_add_to_cart_button` | `on` / `off` | `off` | `on`: this product is unpurchasable. |
-| Filter `dokan_catalog_mode_hide_add_to_cart_button` | `yes` / `no` | `yes` | `no`: the product is exempt from catalog mode, whatever the product or Vendor setting says. |
+| Filter `dokan_catalog_mode_hide_add_to_cart_button` | `yes` / `no` | `yes` | `no`: the product is exempt from catalog mode, whatever the product or Vendor setting says. Dokan Pro's Request for Quotation module hooks it (`pro:modules/request-for-quotation/includes/CatalogMode.php:42`). |
 
 ## Worked example
 
@@ -42,7 +42,7 @@ The admin switches "Add to Cart Button Visibility" off (legacy `catalog_mode_hid
 ## Edge cases
 
 - **No per-product opt-out.** A product setting of `off` does not override a Vendor-level `on`; only the `dokan_catalog_mode_hide_add_to_cart_button` filter can exempt a product.
-- **Vendor Staff** cannot see the per-product section but can still use the bulk catalog mode actions if they hold both `dokan_delete_product` (checked by the shared bulk-action dispatcher, `Product\Hooks::bulk_product_status_change()`, `lite:includes/Product/Hooks.php:253-256`) and `dokan_edit_product` (checked by the catalog mode handler, `lite:includes/CatalogMode/Dashboard/ProductBulkEdit.php:62-64`).
+- **Vendor Staff** see the per-product section (see the Rule) and can use the bulk catalog mode actions if they hold both `dokan_delete_product` (checked by the shared bulk-action dispatcher, `Product\Hooks::bulk_product_status_change()`, `lite:includes/Product/Hooks.php:253-256`) and `dokan_edit_product` (checked by the catalog mode handler, `lite:includes/CatalogMode/Dashboard/ProductBulkEdit.php:62-64`).
 - **Reverse withdrawal.** A Vendor who fails to pay a Reverse withdrawal balance can be put into a separate, forced catalog mode by the "Disable Add to Cart Button" failure action. That runs its own `woocommerce_is_purchasable` filter regardless of this setting (`ReverseWithdrawal\Hooks::hide_add_to_cart_button`, `lite:includes/ReverseWithdrawal/Hooks.php:36`, `:126-145`); see Lite ADR 0015.
 - **Cart contents.** Making a product unpurchasable stops new additions; items already in a buyer's cart are handled by WooCommerce's own purchasable checks at cart and checkout.
 
@@ -59,4 +59,4 @@ The two-layer design keeps the decision with the operator (whether the marketpla
 
 - Consider a per-product "exclude from store catalog mode" option, since the current precedence only lets a product add restrictions, not remove them.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._

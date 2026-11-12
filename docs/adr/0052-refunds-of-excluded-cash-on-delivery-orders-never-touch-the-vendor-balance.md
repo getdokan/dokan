@@ -11,9 +11,9 @@ With cash on delivery (COD) the Vendor usually collects the money from the custo
 When the "exclude COD payments" setting is on, a refund of a Vendor order paid with the `cod` gateway writes **no** `dokan_refund` row:
 
 - `RefundHandler::exclude_cod_payment()` (`lite:includes/Order/RefundHandler.php:94`) is attached to `dokan_refund_should_insert_into_vendor_balance` (`:19`). It returns false when `dokan_withdraw[exclude_cod_payment]` is `on` and the order's payment method is `cod` (`:103-108`, `:132-134`), so `insert_into_balance_table()` returns before inserting (`:214-216`).
-- This mirrors the sale side: for the same orders, `Order\Hooks::on_order_status_change` never moves the order's `dokan_orders` ledger row into a counted status (`lite:includes/Order/Hooks.php:144-170`), so the sale never reaches the Balance either.
+- This mirrors the sale side: for the same orders, `Order\Hooks::on_order_status_change` never moves the order's `dokan_orders` ledger row into a counted status (`lite:includes/Order/Hooks.php:147-173`), so the sale never reaches the Balance either.
 
-Both decisions are filterable, through **different** filters: `dokan_order_should_exclude_from_vendor_balance` on the sale side (`lite:includes/Order/Hooks.php:160`) and `dokan_order_refund_should_exclude_from_vendor_balance` on the refund side (`lite:includes/Order/RefundHandler.php:122-130`). Other payment flows (the code comment names wePOS) use these filters to treat their own cash orders the same way.
+Both decisions are filterable, through **different** filters: `dokan_order_should_exclude_from_vendor_balance` on the sale side (`lite:includes/Order/Hooks.php:163`) and `dokan_order_refund_should_exclude_from_vendor_balance` on the refund side (`lite:includes/Order/RefundHandler.php:122-130`). Other payment flows (the code comment names wePOS) use these filters to treat their own cash orders the same way.
 
 The rule applies to every caller of `dokan_refund_adjust_vendor_balance`, so add-ons that book refunds through that action inherit it.
 
@@ -36,21 +36,23 @@ Settings: global Commission `fixed`, `admin_percentage = 10`, `additional_fee = 
 
 ## Edge cases
 
-- **Turning the setting on or off after the sale.** The sale side is decided at each status change and the refund side at refund time. An order sold while the setting was `off` (sale counted) and refunded after it was switched `on` gets no refund credit, so the Vendor keeps the Earning. The reverse (sold `on`, refunded `off`) books a refund credit for a sale that was never counted. For a partial refund the Vendor's Balance therefore goes down by money that was never added. A full refund also moves the order to *Refunded*; with the setting now `off`, that status change moves the sale row into the always-counted `wc-refunded` status (`lite:includes/Order/Hooks.php:173-183`), so the sale debit and the refund credit cancel out.
+- **Turning the setting on or off after the sale.** The sale side is decided at each status change and the refund side at refund time. An order sold while the setting was `off` (sale counted) and refunded after it was switched `on` gets no refund credit, so the Vendor keeps the Earning. The reverse (sold `on`, refunded `off`) books a refund credit for a sale that was never counted. For a partial refund the Vendor's Balance therefore goes down by money that was never added. A full refund also moves the order to *Refunded*; with the setting now `off`, that status change moves the sale row into the always-counted `wc-refunded` status (`lite:includes/Order/Hooks.php:176-185`), so the sale debit and the refund credit cancel out.
+- **Reverse withdrawal is not reduced by Lite refunds.** With Reverse withdrawal enabled, Lite records the admin's Commission as a debt when an order paid with an enabled gateway (by default only `cod`) reaches *Completed* (`lite:includes/ReverseWithdrawal/Hooks.php:187-239`). Only Dokan Pro writes an `order_refund` credit against that debt, on `dokan_pro_refund_approved` (`pro:includes/ReverseWithdrawal.php:44`, `:160`). In Lite a refunded COD order therefore leaves the full Commission owed, whatever `exclude_cod_payment` is set to.
 - **One filter overridden, the other not.** Because the two sides use different filter names, an integration that hooks only one of them can count the sale but skip the refund, or the opposite.
 
 ## Why
 
-The sale-side code comment states the purpose: "If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance" (`lite:includes/Order/Hooks.php:140-142`). The refund side applies the same test so that a refund never removes money that was never added.
+The sale-side code comment states the purpose: "If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance" (`lite:includes/Order/Hooks.php:143`). The refund side applies the same test so that a refund never removes money that was never added.
 
 ## Consequences & risks
 
 - COD refunds are settled between Vendor and customer outside Dokan's ledger when the setting is on; statements show neither the sale nor the refund in the Balance.
 - Changing the setting on a live marketplace affects in-flight COD orders asymmetrically, as described above.
+- In Lite with Reverse withdrawal on, a Vendor still owes the Commission of a completed COD order after refunding it in full.
 
 ## Recommendations
 
 - Record the setting's value on the order at sale time (like Fee recipients in Lite ADR 0013) and use the recorded value at refund time.
 - Give the two filters a shared name, or have the refund side default to the sale side's decision, so integrations cannot desynchronise them.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._
