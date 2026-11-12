@@ -47,6 +47,10 @@ class Hooks {
         add_action( 'woocommerce_before_single_product', [ $this, 'own_product_not_purchasable_notice' ] );
         // product review action hook
         add_action( 'comment_notification_recipients', [ $this, 'product_review_notification_recipients' ], 10, 2 );
+        // A vendor's REST save must not write raw meta under a key WooCommerce owns, e.g. _product_attributes.
+        add_filter( 'woocommerce_rest_pre_insert_product_object', [ $this, 'drop_internal_meta_from_rest_save' ] );
+        add_filter( 'woocommerce_rest_pre_insert_product_variation_object', [ $this, 'drop_internal_meta_from_rest_save' ] );
+        add_filter( 'dokan_rest_pre_insert_product_variation_object', [ $this, 'drop_internal_meta_from_rest_save' ] );
         // Init Product Cache Class
         new VendorStoreInfo();
         new ProductCache();
@@ -78,6 +82,35 @@ class Hooks {
         }
 
         return $data;
+    }
+
+    /**
+     * Drop WooCommerce's internal product meta keys from the raw meta of a REST save, unless a Store Admin sends it.
+     *
+     * Keys such as `_product_attributes` are written through their own product fields. Sent as raw meta
+     * they become a row of their own, which code reading that key can pick up in place of the real value.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Data $product Product or variation assembled from the request, not yet saved.
+     *
+     * @return \WC_Data
+     */
+    public function drop_internal_meta_from_rest_save( $product ) {
+        if ( ! $product instanceof WC_Product || current_user_can( 'manage_woocommerce' ) ) {
+            return $product;
+        }
+
+        $internal_keys = \WC_Data_Store::load( 'product' )->get_internal_meta_keys();
+
+        // WooCommerce leaves its own rows for these keys out of this list, so an entry found here came with the request.
+        foreach ( $product->get_meta_data() as $meta ) {
+            if ( in_array( $meta->key, $internal_keys, true ) ) {
+                $product->delete_meta_data( $meta->key );
+            }
+        }
+
+        return $product;
     }
 
     /**
