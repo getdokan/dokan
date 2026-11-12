@@ -91,12 +91,12 @@ class Hooks {
      *
      * @since DOKAN_SINCE
      *
-     * @param \WC_Data         $product Product or variation assembled from the request, not yet saved.
-     * @param \WP_REST_Request $request Request the save came from.
+     * @param \WC_Data              $product Product or variation assembled from the request, not yet saved.
+     * @param \WP_REST_Request|null $request Request the save came from.
      *
      * @return \WC_Data
      */
-    public function drop_unsafe_meta_from_rest_save( $product, $request ) {
+    public function drop_unsafe_meta_from_rest_save( $product, $request = null ) {
         if ( ! $product instanceof WC_Product || empty( $request['meta_data'] ) || current_user_can( 'manage_woocommerce' ) ) {
             return $product;
         }
