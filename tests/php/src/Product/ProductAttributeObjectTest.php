@@ -46,6 +46,19 @@ class ProductAttributeObjectTest extends DokanTestCase {
 		$this->assertTrue( ProductAttribute::contains_php_object( "\t" . $payload ) );
 	}
 
+	public function test_detects_an_object_wrapped_in_further_serialized_strings() {
+		// Every extra serialized layer is only one more decode away from a live object.
+		$once = serialize( serialize( new \stdClass() ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+
+		$this->assertTrue( ProductAttribute::contains_php_object( $once ) );
+		$this->assertTrue( ProductAttribute::contains_php_object( serialize( $once ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+		$this->assertFalse( ProductAttribute::contains_php_object( serialize( serialize( [ 'color' => 'red' ] ) ) ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+	}
+
+	public function test_judges_a_value_that_only_looks_serialized_without_a_php_warning() {
+		$this->assertFalse( ProductAttribute::contains_php_object( 'O:8:"stdClass":9:{}' ) );
+	}
+
 	public function test_passes_a_legitimate_serialized_attribute_array() {
 		$payload = serialize( // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
 			[

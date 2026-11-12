@@ -114,6 +114,22 @@ class ProductRestUnsafeMetaTest extends DokanTestCase {
                 'key'   => '_vendor_object',
                 'value' => $this->serialized_object(),
             ],
+            [
+                'key'   => '_vendor_padded_object',
+                'value' => "\n " . $this->serialized_object(),
+            ],
+            [
+                'key'   => '_vendor_wrapped_object',
+                'value' => serialize( $this->serialized_object() ), // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+            ],
+            [
+                'key'   => '_vendor_escaped_object',
+                'value' => [ '\\' . $this->serialized_object() ],
+            ],
+            [
+                'key'   => '_vendor_slashed_object',
+                'value' => [ addslashes( $this->serialized_object() ) ],
+            ],
         ];
     }
 
@@ -129,7 +145,10 @@ class ProductRestUnsafeMetaTest extends DokanTestCase {
         $this->assertSame( $this->serialized_array(), get_post_meta( $post_id, '_vendor_array', true ) );
         $this->assertNotContains( 'raw attributes', $this->stored_values( $post_id, '_product_attributes' ) );
         $this->assertNotContains( '999999', $this->stored_values( $post_id, '_thumbnail_id' ) );
-        $this->assertSame( [], $this->stored_values( $post_id, '_vendor_object' ) );
+
+        foreach ( [ '_vendor_object', '_vendor_padded_object', '_vendor_wrapped_object', '_vendor_escaped_object', '_vendor_slashed_object' ] as $key ) {
+            $this->assertSame( [], $this->stored_values( $post_id, $key ), "$key must not be stored." );
+        }
     }
 
     /**
@@ -153,6 +172,7 @@ class ProductRestUnsafeMetaTest extends DokanTestCase {
             'dokan/v2' => [ '/dokan/v2/products/', true ],
             'dokan/v3' => [ '/dokan/v3/products/', false ],
             'wc/v3'    => [ '/wc/v3/products/', false ],
+            'wc/v2'    => [ '/wc/v2/products/', false ],
         ];
     }
 
@@ -260,6 +280,31 @@ class ProductRestUnsafeMetaTest extends DokanTestCase {
         $this->assertNotContains( 'raw attributes', $this->stored_values( $product_id, '_product_attributes' ) );
         // The row the request tried to rename is left exactly as it was stored.
         $this->assertSame( [ '_vendor_note', 'mine' ], [ $row->meta_key, $row->meta_value ] );
+    }
+
+    /**
+     * An entry that names a stored row by its ID and sends no key has no key to be judged by, so the row must stay as stored.
+     */
+    public function test_an_entry_without_a_key_cannot_rewrite_a_stored_row(): void {
+        $product_id = $this->vendor_product();
+        $meta_id    = add_post_meta( $product_id, '_vendor_note', 'mine' );
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->json_request(
+            'PUT',
+            '/wc/v3/products/' . $product_id,
+            [
+                'meta_data' => [
+                    [
+                        'id'    => $meta_id,
+                        'value' => $this->serialized_object(),
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( [ 'mine' ], $this->stored_values( $product_id, '_vendor_note' ) );
     }
 
     /**

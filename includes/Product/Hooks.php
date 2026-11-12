@@ -112,7 +112,10 @@ class Hooks {
                 continue;
             }
 
-            if ( ! in_array( $meta->key, $internal_keys, true ) && ! ProductAttribute::contains_php_object( $meta->value ) ) {
+            // WordPress strips slashes from an array value as it stores it, so that form is judged as well.
+            $holds_object = ProductAttribute::contains_php_object( $meta->value ) || ProductAttribute::contains_php_object( wp_unslash( $meta->value ) );
+
+            if ( ! in_array( $meta->key, $internal_keys, true ) && ! $holds_object ) {
                 continue;
             }
 
