@@ -85,11 +85,9 @@ class Hooks {
     }
 
     /**
-     * Ignore unsafe raw meta in a product or variation REST save, unless a Store Admin sends it.
+     * Keep unsafe raw meta out of a product or variation REST save, unless a Store Admin sends it.
      *
-     * Two kinds of entry are unsafe. One sits under a key WooCommerce owns, such as `_product_attributes`:
-     * it becomes a row of its own, which code reading that key can pick up in place of the real value.
-     * The other holds a serialized PHP object, which a later maybe_unserialize() call would revive.
+     * Unsafe is a key WooCommerce owns, such as `_product_attributes`, or a value holding a serialized PHP object.
      *
      * @since DOKAN_SINCE
      *
@@ -104,25 +102,13 @@ class Hooks {
         }
 
         $internal_keys = \WC_Data_Store::load( 'product' )->get_internal_meta_keys();
-        $sent_keys     = array_column( array_filter( (array) $request['meta_data'], 'is_array' ), 'key' );
 
         foreach ( $product->get_meta_data() as $meta ) {
-            // Only an entry the request itself sent is judged; meta set by other code is left alone.
-            if ( ! in_array( $meta->key, $sent_keys, true ) ) {
-                continue;
+            if ( in_array( $meta->key, $internal_keys, true ) || ProductAttribute::contains_php_object( $meta->value ) ) {
+                // Unsafe meta goes back to what is stored, which for a new entry is nothing.
+                $meta->key   = $meta->get_data()['key'];
+                $meta->value = $meta->id ? $meta->get_data()['value'] : null;
             }
-
-            // WordPress strips slashes from an array value as it stores it, so that form is judged as well.
-            $holds_object = ProductAttribute::contains_php_object( $meta->value ) || ProductAttribute::contains_php_object( wp_unslash( $meta->value ) );
-
-            if ( ! in_array( $meta->key, $internal_keys, true ) && ! $holds_object ) {
-                continue;
-            }
-
-            // A new entry is not saved; a row the request rewrote goes back to what is stored.
-            $stored      = $meta->get_data();
-            $meta->key   = $meta->id ? $stored['key'] : $meta->key;
-            $meta->value = $meta->id ? $stored['value'] : null;
         }
 
         return $product;

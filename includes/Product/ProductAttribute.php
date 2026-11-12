@@ -51,9 +51,9 @@ class ProductAttribute {
      * @return bool
      */
     public static function contains_php_object( $value ) {
-        // Decode every layer, trimmed like is_serialized()/maybe_unserialize() do, so a padded or re-wrapped payload cannot slip past this probe yet still revive when readers decode it.
-        while ( is_string( $value ) && is_serialized( $value ) ) {
-            $value = @unserialize( trim( $value ), [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize, WordPress.PHP.NoSilencedErrors.Discouraged
+        if ( is_string( $value ) && is_serialized( $value ) ) {
+            // is_serialized() trims before it decides, so the trimmed value is what gets decoded.
+            $value = unserialize( trim( $value ), [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
         }
 
         if ( is_object( $value ) ) {
