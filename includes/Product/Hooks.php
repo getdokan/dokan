@@ -47,6 +47,10 @@ class Hooks {
         add_action( 'woocommerce_before_single_product', [ $this, 'own_product_not_purchasable_notice' ] );
         // product review action hook
         add_action( 'comment_notification_recipients', [ $this, 'product_review_notification_recipients' ], 10, 2 );
+        // Every REST route that saves a product or variation passes one of these, Dokan Pro's variations route included.
+        add_filter( 'woocommerce_rest_pre_insert_product_object', [ $this, 'drop_unsafe_meta_from_rest_save' ], 10, 2 );
+        add_filter( 'woocommerce_rest_pre_insert_product_variation_object', [ $this, 'drop_unsafe_meta_from_rest_save' ], 10, 2 );
+        add_filter( 'dokan_rest_pre_insert_product_variation_object', [ $this, 'drop_unsafe_meta_from_rest_save' ], 10, 2 );
         // Init Product Cache Class
         new VendorStoreInfo();
         new ProductCache();
@@ -78,6 +82,36 @@ class Hooks {
         }
 
         return $data;
+    }
+
+    /**
+     * Keep unsafe raw meta out of a product or variation REST save, unless a Store Admin sends it.
+     *
+     * Unsafe is a key WooCommerce owns, such as `_product_attributes`, or a value holding a serialized PHP object.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Data              $product Product or variation assembled from the request, not yet saved.
+     * @param \WP_REST_Request|null $request Request the save came from.
+     *
+     * @return \WC_Data
+     */
+    public function drop_unsafe_meta_from_rest_save( $product, $request = null ) {
+        if ( ! $product instanceof WC_Product || empty( $request['meta_data'] ) || current_user_can( 'manage_woocommerce' ) ) {
+            return $product;
+        }
+
+        $internal_keys = \WC_Data_Store::load( 'product' )->get_internal_meta_keys();
+
+        foreach ( $product->get_meta_data() as $meta ) {
+            if ( in_array( $meta->key, $internal_keys, true ) || ProductAttribute::contains_php_object( $meta->value ) ) {
+                // Unsafe meta goes back to what is stored, which for a new entry is nothing.
+                $meta->key   = $meta->get_data()['key'];
+                $meta->value = $meta->id ? $meta->get_data()['value'] : null;
+            }
+        }
+
+        return $product;
     }
 
     /**

@@ -52,7 +52,8 @@ class ProductAttribute {
      */
     public static function contains_php_object( $value ) {
         if ( is_string( $value ) && is_serialized( $value ) ) {
-            $value = unserialize( $value, [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+            // is_serialized() trims before it decides, so the trimmed value is what gets decoded.
+            $value = unserialize( trim( $value ), [ 'allowed_classes' => false ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
         }
 
         if ( is_object( $value ) ) {
