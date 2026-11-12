@@ -8,14 +8,15 @@ use WP_REST_Request;
 use WP_REST_Response;
 
 /**
- * A REST product save can't write raw meta under a key WooCommerce owns, unless a Store Admin sends it.
+ * A product or variation REST save ignores raw meta that sits under a key WooCommerce owns or that
+ * holds a serialized PHP object, unless a Store Admin sends it.
  *
  * @group dokan-security
  * @group dokan-authorization
  *
- * @covers \WeDevs\Dokan\Product\Hooks::drop_internal_meta_from_rest_save
+ * @covers \WeDevs\Dokan\Product\Hooks::drop_unsafe_meta_from_rest_save
  */
-class ProductInternalMetaKeysTest extends DokanTestCase {
+class ProductRestUnsafeMetaTest extends DokanTestCase {
 
     /**
      * Setup test environment.
@@ -69,7 +70,25 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
     }
 
     /**
-     * Raw meta mixing one ordinary key with two keys WooCommerce owns.
+     * A serialized PHP object, as a client would send it.
+     *
+     * @return string
+     */
+    protected function serialized_object(): string {
+        return serialize( new \stdClass() ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+    }
+
+    /**
+     * A serialized plain array, which is legitimate meta.
+     *
+     * @return string
+     */
+    protected function serialized_array(): string {
+        return serialize( [ 'color' => 'red' ] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize
+    }
+
+    /**
+     * Raw meta mixing two ordinary entries with the two kinds that must be ignored.
      *
      * @return array
      */
@@ -80,6 +99,10 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
                 'value' => 'kept',
             ],
             [
+                'key'   => '_vendor_array',
+                'value' => $this->serialized_array(),
+            ],
+            [
                 'key'   => '_product_attributes',
                 'value' => 'raw attributes',
             ],
@@ -87,7 +110,26 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
                 'key'   => '_thumbnail_id',
                 'value' => '999999',
             ],
+            [
+                'key'   => '_vendor_object',
+                'value' => $this->serialized_object(),
+            ],
         ];
+    }
+
+    /**
+     * Assert the ordinary entries of mixed_meta() were stored and the unsafe ones were not.
+     *
+     * @param int $post_id Product or variation ID.
+     *
+     * @return void
+     */
+    protected function assert_only_safe_meta_stored( int $post_id ): void {
+        $this->assertSame( [ 'kept' ], $this->stored_values( $post_id, '_vendor_note' ) );
+        $this->assertSame( $this->serialized_array(), get_post_meta( $post_id, '_vendor_array', true ) );
+        $this->assertNotContains( 'raw attributes', $this->stored_values( $post_id, '_product_attributes' ) );
+        $this->assertNotContains( '999999', $this->stored_values( $post_id, '_thumbnail_id' ) );
+        $this->assertSame( [], $this->stored_values( $post_id, '_vendor_object' ) );
     }
 
     /**
@@ -120,7 +162,7 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
      * @param string $route     Route base.
      * @param bool   $v1_schema Whether the route uses the v1 schema.
      */
-    public function test_vendor_update_keeps_ordinary_meta_and_drops_internal_keys( string $route, bool $v1_schema ): void {
+    public function test_vendor_update_stores_only_safe_meta( string $route, bool $v1_schema ): void {
         if ( $v1_schema ) {
             $this->expect_mixed_type_notice();
         }
@@ -131,12 +173,10 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
         $response = $this->json_request( 'PUT', $route . $product_id, [ 'meta_data' => $this->mixed_meta() ] );
 
         $this->assertSame( 200, $response->get_status() );
-        $this->assertSame( [ 'kept' ], $this->stored_values( $product_id, '_vendor_note' ) );
-        $this->assertNotContains( 'raw attributes', $this->stored_values( $product_id, '_product_attributes' ) );
-        $this->assertNotContains( '999999', $this->stored_values( $product_id, '_thumbnail_id' ) );
+        $this->assert_only_safe_meta_stored( $product_id );
     }
 
-    public function test_vendor_create_drops_internal_keys(): void {
+    public function test_vendor_create_stores_only_safe_meta(): void {
         wp_set_current_user( $this->seller_id1 );
 
         $response = $this->json_request(
@@ -150,11 +190,47 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
         );
 
         $this->assertSame( 201, $response->get_status() );
+        $this->assert_only_safe_meta_stored( (int) $response->get_data()['id'] );
+    }
 
-        $product_id = (int) $response->get_data()['id'];
+    public function test_vendor_variation_update_stores_only_safe_meta(): void {
+        $product_id   = $this->vendor_product();
+        $variation_id = wp_insert_post(
+            [
+                'post_type'   => 'product_variation',
+                'post_parent' => $product_id,
+                'post_status' => 'publish',
+                'post_author' => $this->seller_id1,
+            ]
+        );
+        wp_set_object_terms( $product_id, 'variable', 'product_type' );
+        wp_set_current_user( $this->seller_id1 );
 
-        $this->assertSame( [ 'kept' ], $this->stored_values( $product_id, '_vendor_note' ) );
-        $this->assertNotContains( 'raw attributes', $this->stored_values( $product_id, '_product_attributes' ) );
+        $response = $this->json_request( 'PUT', "/wc/v3/products/$product_id/variations/$variation_id", [ 'meta_data' => $this->mixed_meta() ] );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assert_only_safe_meta_stored( $variation_id );
+    }
+
+    /**
+     * Dokan Pro's variations route hands its variation to this filter, so the rule holds there without a Pro change.
+     */
+    public function test_dokan_variation_filter_stores_only_safe_meta(): void {
+        $product_id = $this->vendor_product();
+        $variation  = new \WC_Product_Variation();
+        $variation->set_parent_id( $product_id );
+
+        $request = new WP_REST_Request( 'POST', "/dokan/v1/products/$product_id/variations" );
+        $request->set_param( 'meta_data', $this->mixed_meta() );
+
+        foreach ( $this->mixed_meta() as $meta ) {
+            $variation->update_meta_data( $meta['key'], $meta['value'] );
+        }
+
+        wp_set_current_user( $this->seller_id1 );
+        $variation = apply_filters( 'dokan_rest_pre_insert_product_variation_object', $variation, $request, true );
+
+        $this->assert_only_safe_meta_stored( $variation->save() );
     }
 
     public function test_an_existing_row_cannot_be_renamed_to_an_internal_key(): void {
@@ -178,10 +254,44 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
             ]
         );
 
+        $row = get_metadata_by_mid( 'post', $meta_id );
+
         $this->assertSame( 200, $response->get_status() );
         $this->assertNotContains( 'raw attributes', $this->stored_values( $product_id, '_product_attributes' ) );
-        // The row the request tried to rename is removed rather than kept under the internal key.
-        $this->assertFalse( get_metadata_by_mid( 'post', $meta_id ) );
+        // The row the request tried to rename is left exactly as it was stored.
+        $this->assertSame( [ '_vendor_note', 'mine' ], [ $row->meta_key, $row->meta_value ] );
+    }
+
+    /**
+     * Meta another plugin stored as an object is not the request's to lose, whether or not the request names its key.
+     */
+    public function test_a_stored_row_holding_an_object_survives_a_vendor_save(): void {
+        $product_id = $this->vendor_product();
+        add_post_meta( $product_id, '_third_party_state', new \stdClass() );
+        $stored = $this->stored_values( $product_id, '_third_party_state' );
+        wp_set_current_user( $this->seller_id1 );
+
+        $bodies = [
+            [
+                [
+                    'key'   => '_vendor_note',
+                    'value' => 'kept',
+                ],
+            ],
+            [
+                [
+                    'key'   => '_third_party_state',
+                    'value' => $this->serialized_object(),
+                ],
+            ],
+        ];
+
+        foreach ( $bodies as $meta_data ) {
+            $response = $this->json_request( 'PUT', '/wc/v3/products/' . $product_id, [ 'meta_data' => $meta_data ] );
+
+            $this->assertSame( 200, $response->get_status() );
+            $this->assertSame( $stored, $this->stored_values( $product_id, '_third_party_state' ) );
+        }
     }
 
     public function test_vendor_attributes_field_still_saves(): void {
@@ -206,26 +316,6 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
         $this->assertSame( [ 'material' ], array_keys( (array) get_post_meta( $product_id, '_product_attributes', true ) ) );
     }
 
-    public function test_vendor_variation_update_drops_internal_keys(): void {
-        $product_id   = $this->vendor_product();
-        $variation_id = wp_insert_post(
-            [
-                'post_type'   => 'product_variation',
-                'post_parent' => $product_id,
-                'post_status' => 'publish',
-                'post_author' => $this->seller_id1,
-            ]
-        );
-        wp_set_object_terms( $product_id, 'variable', 'product_type' );
-        wp_set_current_user( $this->seller_id1 );
-
-        $response = $this->json_request( 'PUT', "/wc/v3/products/$product_id/variations/$variation_id", [ 'meta_data' => $this->mixed_meta() ] );
-
-        $this->assertSame( 200, $response->get_status() );
-        $this->assertSame( [ 'kept' ], $this->stored_values( $variation_id, '_vendor_note' ) );
-        $this->assertNotContains( 'raw attributes', $this->stored_values( $variation_id, '_product_attributes' ) );
-    }
-
     public function test_store_admin_keeps_raw_meta(): void {
         $product_id = $this->vendor_product();
         wp_set_current_user( $this->admin_id );
@@ -234,5 +324,6 @@ class ProductInternalMetaKeysTest extends DokanTestCase {
 
         $this->assertSame( 200, $response->get_status() );
         $this->assertContains( 'raw attributes', $this->stored_values( $product_id, '_product_attributes' ) );
+        $this->assertCount( 1, $this->stored_values( $product_id, '_vendor_object' ) );
     }
 }
