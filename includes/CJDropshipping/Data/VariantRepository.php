@@ -29,7 +29,8 @@ class VariantRepository {
         $data    = array_intersect_key( $data, array_flip( $allowed ) );
 
         if ( isset( $data['props'] ) && is_array( $data['props'] ) ) {
-            $data['props'] = implode( ',', array_map( 'sanitize_key', $data['props'] ) );
+            // CJ's freight API expects its own upper-case property names, e.g. COMMON.
+            $data['props'] = implode( ',', array_filter( array_map( static fn( $prop ) => preg_replace( '/[^A-Za-z_]/', '', (string) $prop ), $data['props'] ) ) );
         }
 
         $data['updated_at'] = current_time( 'mysql', true );

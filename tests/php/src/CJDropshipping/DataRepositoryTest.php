@@ -59,7 +59,7 @@ class DataRepositoryTest extends DokanTestCase {
 
         $this->assertSame( 'pid-1', $row['pid'] );
         $this->assertEquals( 3.5, (float) $row['cost_usd'] );
-        $this->assertSame( 'common,electronic', $row['props'] );
+        $this->assertSame( 'COMMON,ELECTRONIC', $row['props'] );
         $this->assertCount( 1, $this->variants->for_product( 'pid-1' ) );
     }
 

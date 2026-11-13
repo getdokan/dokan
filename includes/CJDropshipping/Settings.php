@@ -116,6 +116,38 @@ class Settings {
     }
 
     /**
+     * Default text vendors confirm before selling CJ products (E8).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function default_vendor_terms(): string {
+        return implode(
+            "\n",
+            [
+                __( 'You pay CJ for each order when you place it on CJ. Your earning reaches your balance only when the order is completed, and you withdraw it under the marketplace\'s normal payout rules.', 'dokan-lite' ),
+                __( 'The CJ shipping price at checkout is an estimate. If CJ charges more when you place the order, you pay the difference.', 'dokan-lite' ),
+                __( 'If a buyer is refunded, getting your money back from CJ is up to you, through CJ\'s own dispute process.', 'dokan-lite' ),
+                __( 'To fulfil an order, you give the buyer\'s name and address to CJ.', 'dokan-lite' ),
+            ]
+        );
+    }
+
+    /**
+     * Text vendors confirm before selling CJ products; the admin can edit it (E8).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function vendor_terms(): string {
+        $text = trim( (string) self::get( 'vendor_terms', '' ) );
+
+        return '' !== $text ? $text : self::default_vendor_terms();
+    }
+
+    /**
      * Units held back from CJ's warehouse stock before selling (C6).
      *
      * @since DOKAN_SINCE

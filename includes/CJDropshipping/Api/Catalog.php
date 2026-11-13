@@ -251,6 +251,45 @@ class Catalog {
     }
 
     /**
+     * Warehouse countries for the "Ships from" filter, from CJ's free warehouse list.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string, string> Country code => country name.
+     */
+    public function warehouses(): array {
+        $cached = get_transient( 'dokan_cj_warehouses' );
+
+        if ( is_array( $cached ) && $cached ) {
+            return $cached;
+        }
+
+        $countries = [];
+
+        try {
+            foreach ( (array) $this->client->get( 'product/globalWarehouseList', [], Points::INTERACTIVE ) as $row ) {
+                $code = strtoupper( (string) ( $row['countryCode'] ?? '' ) );
+
+                if ( 2 === strlen( $code ) && empty( $row['disabled'] ) ) {
+                    $countries[ $code ] = WC()->countries->get_countries()[ $code ] ?? $code;
+                }
+            }
+        } catch ( ApiException $e ) {
+            $countries = [];
+        }
+
+        if ( ! $countries ) {
+            foreach ( [ 'CN', 'US', 'GB', 'DE', 'FR', 'IT', 'ES', 'TH', 'ID', 'AU', 'BR' ] as $code ) {
+                $countries[ $code ] = WC()->countries->get_countries()[ $code ] ?? $code;
+            }
+        } else {
+            set_transient( 'dokan_cj_warehouses', $countries, DAY_IN_SECONDS );
+        }
+
+        return $countries;
+    }
+
+    /**
      * Account details, used to check a connection.
      *
      * @since DOKAN_SINCE

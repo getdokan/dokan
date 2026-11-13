@@ -159,6 +159,21 @@ class SettingsSchema implements Hookable {
             ],
         ];
 
+        $fields[] = [
+            'id'           => 'cj_vendor_terms',
+            'type'         => 'field',
+            'variant'      => 'textarea',
+            'section_id'   => 'cj_connection_section',
+            'title'        => __( 'What vendors confirm before selling CJ products', 'dokan-lite' ),
+            'description'  => __( 'Vendors tick "I understand" under this text once, before their first import. One point per line.', 'dokan-lite' ),
+            'default'      => Settings::default_vendor_terms(),
+            'legacy_key'   => [
+                'option' => Settings::OPTION,
+                'field'  => 'vendor_terms',
+            ],
+            'dependencies' => $enabled_only,
+        ];
+
         // CJ prices in US dollars; other stores need a rate (epic §1).
         if ( function_exists( 'get_woocommerce_currency' ) && 'USD' !== get_woocommerce_currency() ) {
             $fields[] = [
