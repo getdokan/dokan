@@ -169,6 +169,10 @@ class Dokan_Uninstaller {
             'dokan_advertised_products',
             'dokan_table_rate_shipping',
             'dokan_distance_rate_shipping',
+            'dokan_cj_variants',
+            'dokan_cj_variant_stock',
+            'dokan_cj_product_links',
+            'dokan_cj_order_refs',
         ];
     }
 
