@@ -2,6 +2,7 @@ import { useEffect, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { DokanButton, PriceHtml } from '@dokan/components';
+import ImportForm from './ImportForm';
 import type { CJProduct, CJStatus } from './types';
 
 type Props = {
@@ -51,7 +52,7 @@ export const warehouseSummary = (
 };
 
 // A CJ product's variants, cost and stock per warehouse; the import form comes next.
-const ProductDetails = ( { pid, warehouseNames, onClose }: Props ) => {
+const ProductDetails = ( { pid, status, warehouseNames, onClose }: Props ) => {
     const [ product, setProduct ] = useState< CJProduct | null >( null );
     const [ error, setError ] = useState( '' );
 
@@ -165,6 +166,8 @@ const ProductDetails = ( { pid, warehouseNames, onClose }: Props ) => {
                                 ) ) }
                             </tbody>
                         </table>
+
+                        <ImportForm product={ product } status={ status } />
                     </>
                 ) }
             </div>

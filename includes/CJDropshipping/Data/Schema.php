@@ -11,7 +11,7 @@ use WeDevs\Dokan\Contracts\Hookable;
  */
 class Schema implements Hookable {
 
-    public const VERSION        = '1.0.0';
+    public const VERSION        = '1.0.1';
     public const VERSION_OPTION = 'dokan_cj_db_version';
 
     /**
@@ -116,6 +116,7 @@ class Schema implements Hookable {
                 pid varchar(64) NOT NULL DEFAULT '',
                 created_at datetime NOT NULL,
                 PRIMARY KEY  (product_id),
+                UNIQUE KEY vendor_vid (vendor_id,vid),
                 KEY vid (vid),
                 KEY pid (pid),
                 KEY vendor_id (vendor_id),

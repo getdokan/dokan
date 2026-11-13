@@ -8,6 +8,8 @@ export type CJStatus = {
     terms: string[];
     warehouses: Record< string, string >;
     currency: string;
+    variable: boolean;
+    categories: { id: number; name: string }[];
 };
 
 export type CJSearchItem = {

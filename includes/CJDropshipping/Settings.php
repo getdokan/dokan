@@ -48,19 +48,6 @@ class Settings {
     }
 
     /**
-     * Store categories vendors may import into; empty means all.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int[]
-     */
-    public static function allowed_categories(): array {
-        $value = self::get( 'allowed_categories', [] );
-
-        return array_values( array_filter( array_map( 'absint', (array) $value ) ) );
-    }
-
-    /**
      * Destination countries where CJ items can't be sold (E4).
      *
      * @since DOKAN_SINCE

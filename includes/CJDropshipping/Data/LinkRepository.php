@@ -22,12 +22,14 @@ class LinkRepository {
      * @param string $vid        CJ variant id.
      * @param string $pid        CJ product id.
      *
-     * @return void
+     * @return bool False when the vendor already sells this variant.
      */
-    public function link( int $product_id, int $parent_id, int $vendor_id, string $vid, string $pid ): void {
+    public function link( int $product_id, int $parent_id, int $vendor_id, string $vid, string $pid ): bool {
         global $wpdb;
 
-        $wpdb->replace( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+        // UNIQUE( vendor_id, vid ) turns a double-submitted import into a failed insert.
+        $suppress = $wpdb->suppress_errors( true );
+        $inserted = $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             Schema::tables()['links'],
             [
                 'product_id' => $product_id,
@@ -39,9 +41,17 @@ class LinkRepository {
             ]
         );
 
+        $wpdb->suppress_errors( $suppress );
+
+        if ( ! $inserted ) {
+            return false;
+        }
+
         // Marker meta lets cheap checks skip the table; copies drop it (B2).
         update_post_meta( $parent_id, self::LINKED_META, 1 );
         wp_cache_delete( $product_id, 'dokan_cj_links' );
+
+        return true;
     }
 
     /**

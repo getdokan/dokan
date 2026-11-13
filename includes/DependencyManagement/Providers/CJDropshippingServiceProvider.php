@@ -6,6 +6,7 @@ use WeDevs\Dokan\CJDropshipping\Admin\Monitor;
 use WeDevs\Dokan\CJDropshipping\Admin\SettingsSchema;
 use WeDevs\Dokan\CJDropshipping\REST\Registrar;
 use WeDevs\Dokan\CJDropshipping\Vendor\Navigation;
+use WeDevs\Dokan\CJDropshipping\Product\Hooks as ProductHooks;
 use WeDevs\Dokan\CJDropshipping\Data\Cleanup;
 use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
 use WeDevs\Dokan\CJDropshipping\Data\OrderRefRepository;
@@ -29,6 +30,7 @@ class CJDropshippingServiceProvider extends BaseServiceProvider {
         SettingsSchema::class,
         Registrar::class,
         Navigation::class,
+        ProductHooks::class,
         LinkRepository::class,
         VariantRepository::class,
         OrderRefRepository::class,

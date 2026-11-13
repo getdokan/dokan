@@ -6,6 +6,7 @@ use WeDevs\Dokan\CJDropshipping\Api\ApiException;
 use WeDevs\Dokan\CJDropshipping\Api\Catalog;
 use WeDevs\Dokan\CJDropshipping\Api\ProductDetails;
 use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
+use WeDevs\Dokan\CJDropshipping\Product\Importer;
 use WeDevs\Dokan\CJDropshipping\Settings;
 use WeDevs\Dokan\CJDropshipping\Status;
 use WeDevs\Dokan\CJDropshipping\Vendor\Access;
@@ -99,6 +100,64 @@ class VendorController extends DokanBaseVendorController {
         );
 
         register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/earning', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_earning' ],
+                    'permission_callback' => [ $this, 'can_import' ],
+                    'args'                => [
+                        'price'       => [
+                            'type'     => 'number',
+                            'required' => true,
+                            'minimum'  => 0,
+                        ],
+                        'cost'        => [
+                            'type'     => 'number',
+                            'required' => true,
+                            'minimum'  => 0,
+                        ],
+                        'category_id' => [
+                            'type'    => 'integer',
+                            'default' => 0,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/import', [
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'import' ],
+                    'permission_callback' => [ $this, 'can_add_products' ],
+                    'args'                => [
+                        'pid'          => [
+                            'type'              => 'string',
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'vids'         => [
+                            'type'     => 'array',
+                            'required' => true,
+                            'items'    => [ 'type' => 'string' ],
+                        ],
+                        'prices'       => [
+                            'type'                 => 'object',
+                            'required'             => true,
+                            'additionalProperties' => [ 'type' => 'number' ],
+                        ],
+                        'category_ids' => [
+                            'type'     => 'array',
+                            'required' => true,
+                            'items'    => [ 'type' => 'integer' ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/catalog/(?P<pid>[A-Za-z0-9\-_]+)', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
@@ -148,6 +207,75 @@ class VendorController extends DokanBaseVendorController {
     }
 
     /**
+     * Permission: may import, and may add products at all.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool|WP_Error
+     */
+    public function can_add_products() {
+        $can_import = $this->can_import();
+
+        if ( true !== $can_import ) {
+            return $can_import;
+        }
+
+        if ( ! current_user_can( 'dokan_add_product' ) ) {
+            return new WP_Error( 'dokan_cj_cannot_add', __( 'You are not allowed to add products.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        return true;
+    }
+
+    /**
+     * Commission and what the vendor keeps at a price.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request.
+     *
+     * @return WP_REST_Response
+     */
+    public function get_earning( $request ) {
+        return rest_ensure_response( Importer::earning( get_current_user_id(), (float) $request['price'], (float) $request['cost'], (int) $request['category_id'] ) );
+    }
+
+    /**
+     * Import a CJ product into the vendor's store.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request.
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function import( $request ) {
+        $product_id = ( new Importer() )->import(
+            get_current_user_id(),
+            [
+                'pid'          => $request['pid'],
+                'vids'         => $request['vids'],
+                'prices'       => $request['prices'],
+                'category_ids' => $request['category_ids'],
+            ]
+        );
+
+        if ( is_wp_error( $product_id ) ) {
+            return $product_id;
+        }
+
+        $product = wc_get_product( $product_id );
+
+        return rest_ensure_response(
+            [
+                'product_id' => $product_id,
+                'status'     => $product ? $product->get_status() : '',
+                'edit_url'   => dokan_get_navigation_url( 'products/' . $product_id . '/edit', true ),
+            ]
+        );
+    }
+
+    /**
      * What the vendor dashboard needs to show the CJ page.
      *
      * @since DOKAN_SINCE
@@ -168,7 +296,9 @@ class VendorController extends DokanBaseVendorController {
                 'default_markup' => Settings::default_markup(),
                 'terms'          => array_values( array_filter( array_map( 'trim', explode( "\n", Settings::vendor_terms() ) ) ) ),
                 'warehouses'     => '' === $reason && Status::is_connected() ? ( new Catalog() )->warehouses() : [],
-                'currency'       => get_woocommerce_currency_symbol(),
+                'currency'       => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES | ENT_HTML5 ),
+                'variable'       => Importer::supports_variable(),
+                'categories'     => '' === $reason ? self::categories() : [],
             ]
         );
     }
@@ -254,6 +384,37 @@ class VendorController extends DokanBaseVendorController {
         unset( $variant );
 
         return rest_ensure_response( $details );
+    }
+
+    /**
+     * Store categories the vendor may import into; Pro narrows them to the plan (B12).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array[] id, name.
+     */
+    public static function categories(): array {
+        $terms = get_terms(
+            [
+                'taxonomy'   => 'product_cat',
+                'hide_empty' => false,
+                'orderby'    => 'name',
+            ]
+        );
+
+        if ( is_wp_error( $terms ) ) {
+            return [];
+        }
+
+        $categories = array_map(
+            static fn( $term ) => [
+                'id'   => (int) $term->term_id,
+                'name' => html_entity_decode( $term->name, ENT_QUOTES | ENT_HTML5 ),
+            ],
+            $terms
+        );
+
+        return (array) apply_filters( 'dokan_cj_import_categories', $categories, get_current_user_id() );
     }
 
     /**
