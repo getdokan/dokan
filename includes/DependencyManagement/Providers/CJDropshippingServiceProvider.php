@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
+use WeDevs\Dokan\CJDropshipping\Admin\Monitor;
 use WeDevs\Dokan\CJDropshipping\Data\Cleanup;
 use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
 use WeDevs\Dokan\CJDropshipping\Data\OrderRefRepository;
@@ -21,6 +22,7 @@ class CJDropshippingServiceProvider extends BaseServiceProvider {
     protected $services = [
         Schema::class,
         Cleanup::class,
+        Monitor::class,
         LinkRepository::class,
         VariantRepository::class,
         OrderRefRepository::class,
