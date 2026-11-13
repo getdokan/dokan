@@ -63,6 +63,11 @@ class VendorOnboardingRegistration extends DokanShortcode {
      * @return string
      */
     add_filter( 'woocommerce_login_redirect', function( $redirect_to, $user ) {
+        // The registration block's login box returns to its own page.
+        if ( ! empty( $_POST['dokan_vreg_login'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verified the login nonce.
+            return $redirect_to;
+        }
+
         if ( ! empty( $_GET['redirect_to'] ) ) { // phpcs:ignore
             $redirect_to = esc_url( wp_unslash( $_GET['redirect_to'] ) ); // phpcs:ignore
         } 
