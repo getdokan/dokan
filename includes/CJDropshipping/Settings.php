@@ -74,6 +74,48 @@ class Settings {
     }
 
     /**
+     * Whether only CJ's own shelf counts as stock; default counts supplier stock too (F6).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function counts_warehouse_only(): bool {
+        return 'warehouse' === self::get( 'stock_source', 'all' );
+    }
+
+    /**
+     * Whether buyers see "Ships from <country>" instead of "Standard shipping".
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function shows_warehouse_country(): bool {
+        return 'on' === self::get( 'show_warehouse_country', 'off' );
+    }
+
+    /**
+     * Convert a CJ US dollar amount to the store currency, with the safety margin.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param float $usd Amount in US dollars.
+     *
+     * @return float
+     */
+    public static function to_store_currency( float $usd ): float {
+        if ( 'USD' === get_woocommerce_currency() ) {
+            return $usd;
+        }
+
+        $rate   = max( 0.0, (float) self::get( 'usd_rate', 1 ) );
+        $margin = max( 0.0, (float) self::get( 'currency_margin', 3 ) );
+
+        return (float) apply_filters( 'dokan_cj_to_store_currency', $usd * $rate * ( 1 + $margin / 100 ), $usd );
+    }
+
+    /**
      * Units held back from CJ's warehouse stock before selling (C6).
      *
      * @since DOKAN_SINCE

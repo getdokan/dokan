@@ -225,7 +225,7 @@ class Monitor implements Hookable {
      * @return string
      */
     public static function settings_url(): string {
-        return admin_url( 'admin.php?page=dokan-dashboard#/settings?page=product&subpage=cj_dropshipping' );
+        return admin_url( 'admin.php?page=dokan-dashboard#/settings?page_id=product&subpage_id=cj_dropshipping' );
     }
 
     /**
