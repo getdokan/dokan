@@ -123,57 +123,55 @@ class Catalog {
     }
 
     /**
-     * Shipping quotes for items from one warehouse to one destination.
+     * Shipping quotes for several warehouse groups in one call (10 points).
      *
      * @since DOKAN_SINCE
      *
-     * @param array $request warehouse, country, zip, items (vid, sku, quantity, weight, volume), props.
+     * @param array[] $requests Each: warehouse, country, zip, items (vid, sku, quantity, weight, volume), props.
      *
-     * @return array[] CJ quote rows.
+     * @return array[] CJ quote rows; each row's origin is in srcAreaCode or srcArea.shortCode.
      * @throws ApiException When CJ fails.
      */
-    public function freight( array $request ): array {
-        $weight = 0;
-        $volume = 0.0;
-        $skus   = [];
-        $trial  = [];
+    public function freight( array $requests ): array {
+        $dtos = [];
 
-        foreach ( $request['items'] as $item ) {
-            $quantity = max( 1, (int) $item['quantity'] );
-            $weight  += (int) ceil( (float) $item['weight'] ) * $quantity;
-            $volume  += (float) $item['volume'] * $quantity;
-            $skus[]   = (string) $item['sku'];
-            $trial[]  = [
-                'sku'         => (string) $item['sku'],
-                'vid'         => (string) $item['vid'],
-                'skuQuantity' => $quantity,
-                'skuWeight'   => (int) ceil( (float) $item['weight'] ),
-                'skuVolume'   => (float) $item['volume'],
-            ];
+        foreach ( $requests as $request ) {
+            $weight = 0;
+            $volume = 0.0;
+            $skus   = [];
+            $trial  = [];
+
+            foreach ( $request['items'] as $item ) {
+                $quantity = max( 1, (int) $item['quantity'] );
+                $weight  += max( 1, (int) ceil( (float) $item['weight'] ) ) * $quantity;
+                $volume  += (float) $item['volume'] * $quantity;
+                $skus[]   = (string) $item['sku'];
+                $trial[]  = [
+                    'sku'         => (string) $item['sku'],
+                    'vid'         => (string) $item['vid'],
+                    'skuQuantity' => $quantity,
+                    'skuWeight'   => max( 1, (int) ceil( (float) $item['weight'] ) ),
+                    'skuVolume'   => (float) $item['volume'],
+                ];
+            }
+
+            $dtos[] = array_filter(
+                [
+                    'srcAreaCode'         => (string) $request['warehouse'],
+                    'destAreaCode'        => (string) $request['country'],
+                    'zip'                 => (string) ( $request['zip'] ?? '' ),
+                    'weight'              => max( 1, $weight ),
+                    'wrapWeight'          => max( 1, $weight ),
+                    'volume'              => $volume,
+                    'productProp'         => array_values( array_unique( $request['props'] ? $request['props'] : [ 'COMMON' ] ) ),
+                    'skuList'             => $skus,
+                    'freightTrialSkuList' => $trial,
+                ],
+                static fn( $value ) => '' !== $value
+            );
         }
 
-        $data = $this->client->post(
-            'logistic/freightCalculateTip',
-            [
-                'reqDTOS' => [
-                    array_filter(
-                        [
-                            'srcAreaCode'          => (string) $request['warehouse'],
-                            'destAreaCode'         => (string) $request['country'],
-                            'zip'                  => (string) ( $request['zip'] ?? '' ),
-                            'weight'               => max( 1, $weight ),
-                            'wrapWeight'           => max( 1, $weight ),
-                            'volume'               => $volume,
-                            'productProp'          => array_values( array_unique( $request['props'] ?? [ 'COMMON' ] ) ),
-                            'skuList'              => $skus,
-                            'freightTrialSkuList'  => $trial,
-                        ],
-                        static fn( $value ) => '' !== $value
-                    ),
-                ],
-            ],
-            Points::CHECKOUT
-        );
+        $data = $this->client->post( 'logistic/freightCalculateTip', [ 'reqDTOS' => $dtos ], Points::CHECKOUT );
 
         return is_array( $data ) ? $data : [];
     }
@@ -191,6 +189,34 @@ class Catalog {
     public function register_webhooks( string $url ): void {
         $topic = [
             'type'         => 'ENABLE',
+            'callbackUrls' => [ $url ],
+        ];
+
+        $this->client->post(
+            'webhook/set',
+            [
+                'product'   => $topic,
+                'stock'     => $topic,
+                'order'     => $topic,
+                'logistics' => $topic,
+            ],
+            Points::CHECKOUT
+        );
+    }
+
+    /**
+     * Stop CJ's pushes to this site.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $url Webhook URL; CJ asks for it even when cancelling.
+     *
+     * @return void
+     * @throws ApiException When CJ fails.
+     */
+    public function cancel_webhooks( string $url ): void {
+        $topic = [
+            'type'         => 'CANCEL',
             'callbackUrls' => [ $url ],
         ];
 

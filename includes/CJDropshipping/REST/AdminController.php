@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\CJDropshipping\REST;
 
 use WeDevs\Dokan\CJDropshipping\Api\ApiException;
 use WeDevs\Dokan\CJDropshipping\Connection;
+use WeDevs\Dokan\CJDropshipping\Sync\Webhooks;
 use WeDevs\Dokan\REST\DokanBaseAdminController;
 use WP_Error;
 use WP_REST_Request;
@@ -55,6 +56,16 @@ class AdminController extends DokanBaseAdminController {
                 [
                     'methods'             => WP_REST_Server::DELETABLE,
                     'callback'            => [ $this, 'disconnect' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/webhooks', [
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'register_webhooks' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
@@ -126,6 +137,23 @@ class AdminController extends DokanBaseAdminController {
         $connection->disconnect();
 
         return rest_ensure_response( $connection->summary() );
+    }
+
+    /**
+     * Point CJ's product and stock pushes at this site (F4); the admin confirmed in the UI.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function register_webhooks() {
+        try {
+            ( new Webhooks() )->register();
+        } catch ( ApiException $e ) {
+            return self::to_error( $e );
+        }
+
+        return rest_ensure_response( ( new Connection() )->summary() );
     }
 
     /**

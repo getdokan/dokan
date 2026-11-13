@@ -77,6 +77,11 @@ class Queue {
      * @return bool
      */
     public static function is_pending( string $hook, ?array $args = null ): bool {
+        // Counts a running action too, so a long batch can't get a second recurring chain.
+        if ( function_exists( 'as_has_scheduled_action' ) ) {
+            return as_has_scheduled_action( $hook, $args, self::GROUP );
+        }
+
         return (bool) WC()->queue()->get_next( $hook, $args, self::GROUP );
     }
 

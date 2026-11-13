@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import StartStep from './StartStep';
 import Catalog from './Catalog';
+import Alerts from './Alerts';
 import type { CJStatus } from './types';
 
 // Vendor CJ Dropshipping page: start step, then catalog search and import.
@@ -40,7 +41,12 @@ const CJDropshipping = () => {
             </p>
         );
     } else {
-        body = <Catalog status={ status } />;
+        body = (
+            <>
+                <Alerts status={ status } onChange={ setStatus } />
+                <Catalog status={ status } />
+            </>
+        );
     }
 
     return (

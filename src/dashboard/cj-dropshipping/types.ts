@@ -10,6 +10,16 @@ export type CJStatus = {
     currency: string;
     variable: boolean;
     categories: { id: number; name: string }[];
+    alerts: CJAlert[];
+};
+
+export type CJAlert = {
+    type: string;
+    product_id: number;
+    message: string;
+    created_at: number;
+    product_name: string;
+    edit_url: string;
 };
 
 export type CJSearchItem = {

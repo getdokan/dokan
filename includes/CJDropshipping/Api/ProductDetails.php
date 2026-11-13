@@ -70,11 +70,30 @@ class ProductDetails {
      */
     public function mark_removed( string $pid ): void {
         foreach ( $this->variants->for_product( $pid ) as $variant ) {
-            $this->variants->save( $variant['vid'], [ 'status' => VariantRepository::STATUS_REMOVED ] );
-            $this->variants->save_stock( $variant['vid'], [] );
+            $this->mark_variant_removed( $variant['vid'] );
         }
 
         delete_transient( 'dokan_cj_product_' . md5( $pid ) );
+    }
+
+    /**
+     * Mark one variant as gone: no stock, and checked now so it leaves the head of the sync queue.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $vid CJ variant id.
+     *
+     * @return void
+     */
+    public function mark_variant_removed( string $vid ): void {
+        $this->variants->save(
+            $vid,
+            [
+                'status'    => VariantRepository::STATUS_REMOVED,
+                'synced_at' => current_time( 'mysql', true ),
+            ]
+        );
+        $this->variants->save_stock( $vid, [] );
     }
 
     /**

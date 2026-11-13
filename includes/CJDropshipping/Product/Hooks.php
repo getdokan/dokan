@@ -57,6 +57,39 @@ class Hooks implements Hookable {
         add_filter( 'woocommerce_product_export_skip_meta_keys', [ $this, 'skip_export_meta' ] );
         add_filter( 'woocommerce_get_availability_text', [ $this, 'hide_stock_number' ], 20, 2 );
         add_action( Importer::IMAGES_HOOK, [ $this, 'import_images' ] );
+        add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_rest_flags' ], 20, 2 );
+        add_filter( 'dokan_rest_prepare_product_object', [ $this, 'add_rest_flags' ], 20, 2 );
+    }
+
+    /**
+     * Tell the vendor product list which CJ products are removed by CJ or off sale.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_REST_Response $response Response.
+     * @param WC_Product        $product  Product.
+     *
+     * @return \WP_REST_Response
+     */
+    public function add_rest_flags( $response, $product ) {
+        if ( ! $product instanceof WC_Product || ! $this->links->is_cj_product( $product->get_id() ) ) {
+            return $response;
+        }
+
+        $removed = false;
+
+        foreach ( $this->links->for_parent( $product->get_id() ) as $link ) {
+            $removed = $removed || (bool) get_post_meta( (int) $link['product_id'], '_dokan_cj_removed', true );
+        }
+
+        $data             = $response->get_data();
+        $data['dokan_cj'] = [
+            'removed'         => $removed,
+            'off_sale_reason' => (string) get_post_meta( $product->get_id(), Drafts::DRAFT_REASON_META, true ),
+        ];
+        $response->set_data( $data );
+
+        return $response;
     }
 
     /**

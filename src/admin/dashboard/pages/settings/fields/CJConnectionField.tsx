@@ -1,5 +1,5 @@
 import { useEffect, useState } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { Badge, Button, Input, type SettingsElement } from '@wedevs/plugin-ui';
 
@@ -11,6 +11,12 @@ type Connection = {
     days_active: number;
     error: string;
     reactivate_url: string;
+    webhook_url: string;
+    webhooks: {
+        registered_at: number;
+        subscribed: number;
+        failed: number;
+    } | null;
     points: { remaining?: number; total?: number };
     points_left: number;
 };
@@ -28,6 +34,7 @@ export default function CJConnectionField( { element }: Props ) {
     const [ busy, setBusy ] = useState( false );
     const [ error, setError ] = useState( '' );
     const [ confirming, setConfirming ] = useState( false );
+    const [ confirmingWebhooks, setConfirmingWebhooks ] = useState( false );
 
     useEffect( () => {
         apiFetch< Connection >( { path: PATH } )
@@ -71,6 +78,16 @@ export default function CJConnectionField( { element }: Props ) {
                 method: 'POST',
             } )
         );
+
+    const registerWebhooks = () => {
+        setConfirmingWebhooks( false );
+        run(
+            apiFetch< Connection >( {
+                path: 'dokan/v1/admin/cj-dropshipping/webhooks',
+                method: 'POST',
+            } )
+        );
+    };
 
     const disconnect = () => {
         setConfirming( false );
@@ -206,6 +223,76 @@ export default function CJConnectionField( { element }: Props ) {
                             ? __( 'Connecting…', 'dokan-lite' )
                             : __( 'Connect', 'dokan-lite' ) }
                     </Button>
+                </div>
+            ) }
+
+            { 'connected' === state && (
+                <div
+                    className="flex flex-col gap-2 rounded-md border border-border p-3 text-sm"
+                    data-testid="cj-webhooks"
+                >
+                    <span className="font-medium">
+                        { __( 'Instant stock updates', 'dokan-lite' ) }
+                    </span>
+                    { connection?.webhooks ? (
+                        <span>
+                            { sprintf(
+                                /* translators: %d: number of CJ products CJ pushes changes for */
+                                _n(
+                                    'On: CJ sends stock and product changes for %d product. The daily check keeps running.',
+                                    'On: CJ sends stock and product changes for %d products. The daily check keeps running.',
+                                    connection.webhooks.subscribed,
+                                    'dokan-lite'
+                                ),
+                                connection.webhooks.subscribed
+                            ) }
+                        </span>
+                    ) : (
+                        <span className="text-muted-foreground">
+                            { __(
+                                'Off: stock and cost are checked on a schedule. Turn this on so CJ tells the marketplace about stock changes right away. Your site must be reachable over HTTPS.',
+                                'dokan-lite'
+                            ) }
+                        </span>
+                    ) }
+                    { ! confirmingWebhooks ? (
+                        <div>
+                            <Button
+                                variant="outline"
+                                onClick={ () => setConfirmingWebhooks( true ) }
+                                disabled={ busy }
+                            >
+                                { connection?.webhooks
+                                    ? __( 'Register again', 'dokan-lite' )
+                                    : __( 'Turn on', 'dokan-lite' ) }
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-2">
+                            <span>
+                                { __(
+                                    'This replaces any webhooks already set on this CJ account, for example from another store or tool. Continue?',
+                                    'dokan-lite'
+                                ) }
+                            </span>
+                            <div className="flex gap-2">
+                                <Button
+                                    onClick={ registerWebhooks }
+                                    disabled={ busy }
+                                >
+                                    { __( 'Yes, replace', 'dokan-lite' ) }
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={ () =>
+                                        setConfirmingWebhooks( false )
+                                    }
+                                >
+                                    { __( 'Cancel', 'dokan-lite' ) }
+                                </Button>
+                            </div>
+                        </div>
+                    ) }
                 </div>
             ) }
 

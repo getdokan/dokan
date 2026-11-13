@@ -122,7 +122,7 @@ class DataRepositoryTest extends DokanTestCase {
         $this->links->link( $product_id, $product_id, $this->seller_id1, 'vid-new', 'pid-new' );
         $this->links->link( $product_id + 1000, $product_id + 1000, $this->seller_id1, 'vid-old', 'pid-old' );
 
-        $this->assertSame( [ 'pid-old', 'pid-new' ], $this->variants->due_for_sync( 10 ) );
+        $this->assertSame( [ 'pid-old', 'pid-new' ], array_column( $this->variants->due_for_sync( 10 ), 'pid' ) );
     }
 
     public function test_order_refs_detect_duplicate_cj_order_numbers() {

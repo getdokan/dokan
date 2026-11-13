@@ -10,6 +10,7 @@ use WeDevs\Dokan\CJDropshipping\Product\Importer;
 use WeDevs\Dokan\CJDropshipping\Settings;
 use WeDevs\Dokan\CJDropshipping\Status;
 use WeDevs\Dokan\CJDropshipping\Vendor\Access;
+use WeDevs\Dokan\CJDropshipping\Vendor\Alerts;
 use WeDevs\Dokan\REST\DokanBaseVendorController;
 use WP_Error;
 use WP_REST_Request;
@@ -93,6 +94,27 @@ class VendorController extends DokanBaseVendorController {
                             'default' => 1,
                             'minimum' => 1,
                             'maximum' => 1000,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/alerts/dismiss', [
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'dismiss_alert' ],
+                    'permission_callback' => [ $this, 'can_use' ],
+                    'args'                => [
+                        'type'       => [
+                            'type'              => 'string',
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_key',
+                        ],
+                        'product_id' => [
+                            'type'     => 'integer',
+                            'required' => true,
                         ],
                     ],
                 ],
@@ -299,6 +321,7 @@ class VendorController extends DokanBaseVendorController {
                 'currency'       => html_entity_decode( get_woocommerce_currency_symbol(), ENT_QUOTES | ENT_HTML5 ),
                 'variable'       => Importer::supports_variable(),
                 'categories'     => '' === $reason ? self::categories() : [],
+                'alerts'         => '' === $reason ? self::alerts( $user_id ) : [],
             ]
         );
     }
@@ -384,6 +407,46 @@ class VendorController extends DokanBaseVendorController {
         unset( $variant );
 
         return rest_ensure_response( $details );
+    }
+
+    /**
+     * Dismiss one of the vendor's own alerts.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request.
+     *
+     * @return WP_REST_Response
+     */
+    public function dismiss_alert( $request ) {
+        Alerts::clear( get_current_user_id(), (string) $request['type'], (int) $request['product_id'] );
+
+        return $this->get_status();
+    }
+
+    /**
+     * The vendor's alerts with product names and edit links, newest first.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id Vendor id.
+     *
+     * @return array[]
+     */
+    public static function alerts( int $vendor_id ): array {
+        $alerts = [];
+
+        foreach ( array_reverse( Alerts::all( $vendor_id ) ) as $alert ) {
+            $alerts[] = array_merge(
+                $alert,
+                [
+                    'product_name' => get_the_title( (int) $alert['product_id'] ),
+                    'edit_url'     => dokan_get_navigation_url( 'products/' . (int) $alert['product_id'] . '/edit', true ),
+                ]
+            );
+        }
+
+        return $alerts;
     }
 
     /**

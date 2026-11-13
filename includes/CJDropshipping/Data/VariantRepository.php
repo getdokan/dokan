@@ -153,13 +153,13 @@ class VariantRepository {
     }
 
     /**
-     * Distinct CJ products, oldest sync first, for the scheduled check.
+     * Distinct CJ products some vendor sells, oldest sync first, for the scheduled check.
      *
      * @since DOKAN_SINCE
      *
      * @param int $limit Max products.
      *
-     * @return string[] CJ product ids.
+     * @return array[] Rows: pid, synced_at (oldest of its variants, null when never).
      */
     public function due_for_sync( int $limit ): array {
         global $wpdb;
@@ -167,12 +167,12 @@ class VariantRepository {
         $variants = Schema::tables()['variants'];
         $links    = Schema::tables()['links'];
 
-        // Only products some vendor still sells.
-        return (array) $wpdb->get_col( // phpcs:ignore WordPress.DB
+        return (array) $wpdb->get_results( // phpcs:ignore WordPress.DB
             $wpdb->prepare(
-                "SELECT v.pid FROM {$variants} v INNER JOIN {$links} l ON l.vid = v.vid GROUP BY v.pid ORDER BY MIN( COALESCE( v.synced_at, '1970-01-01' ) ) ASC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                "SELECT v.pid, MIN( v.synced_at ) AS synced_at FROM {$variants} v INNER JOIN {$links} l ON l.vid = v.vid GROUP BY v.pid ORDER BY MIN( COALESCE( v.synced_at, '1970-01-01' ) ) ASC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                 $limit
-            )
+            ),
+            ARRAY_A
         );
     }
 }

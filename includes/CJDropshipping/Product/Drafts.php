@@ -29,11 +29,12 @@ class Drafts {
             return;
         }
 
-        update_post_meta( $product_id, self::DRAFT_REASON_META, $reason );
-
+        // Already a draft: keep the first reason, e.g. a disconnect, so the right restore applies.
         if ( 'draft' === $status ) {
             return;
         }
+
+        update_post_meta( $product_id, self::DRAFT_REASON_META, $reason );
 
         update_post_meta( $product_id, self::PREV_STATUS_META, $status );
         wp_update_post(

@@ -78,6 +78,9 @@ class Connection {
      * @return void
      */
     public function disconnect(): void {
+        // Last chance to call CJ with this account, e.g. to stop webhooks.
+        do_action( 'dokan_cj_before_disconnect' );
+
         // No CJ logout: it would also kill tokens other tools share on this account.
         Credentials::clear();
         Status::mark_disconnected();
@@ -109,6 +112,8 @@ class Connection {
             'reactivate_url' => self::REACTIVATE_URL,
             'points'         => Api\Points::get(),
             'points_left'    => Api\Points::estimated_remaining(),
+            'webhooks'       => get_option( Sync\Webhooks::OPTION, null ),
+            'webhook_url'    => Sync\Webhooks::url(),
         ];
     }
 
