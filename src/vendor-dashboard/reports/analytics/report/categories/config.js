@@ -10,6 +10,7 @@ import { STORE_KEY as CES_STORE_KEY } from "@woocommerce/customer-effort-score";
  * Internal dependencies
  */
 import { getCategoryLabels } from "../../../lib/async-requests";
+import { searchFilterSettings } from "../../../utils/search-filter-settings";
 
 const CATEGORY_REPORT_CHARTS_FILTER =
   "dokan_analytics_categories_report_charts";
@@ -89,15 +90,19 @@ const filterValues = [
         value: "single_category",
         chartMode: "item-comparison",
         path: ["select_category"],
-        settings: {
-          type: "categories",
-          param: "categories",
-          getLabels: getCategoryLabels,
-          labels: {
+        settings: searchFilterSettings(
+          {
+            type: "categories",
             placeholder: __("Type to search for a category", 'dokan-lite'),
-            button: __("Single Category", 'dokan-lite'),
           },
-        },
+          {
+            param: "categories",
+            getLabels: getCategoryLabels,
+            labels: {
+              button: __("Single Category", 'dokan-lite'),
+            },
+          }
+        ),
       },
     ],
   },
@@ -105,21 +110,25 @@ const filterValues = [
     label: __("Comparison", 'dokan-lite'),
     value: "compare-categories",
     chartMode: "item-comparison",
-    settings: {
-      type: "categories",
-      param: "categories",
-      getLabels: getCategoryLabels,
-      labels: {
-        helpText: __(
-          "Check at least two categories below to compare",
-          'dokan-lite'
-        ),
+    settings: searchFilterSettings(
+      {
+        type: "categories",
         placeholder: __("Search for categories to compare", 'dokan-lite'),
-        title: __("Compare Categories", 'dokan-lite'),
-        update: __("Compare", 'dokan-lite'),
       },
-      onClick: addCesSurveyForAnalytics,
-    },
+      {
+        param: "categories",
+        getLabels: getCategoryLabels,
+        labels: {
+          helpText: __(
+            "Check at least two categories below to compare",
+            'dokan-lite'
+          ),
+          title: __("Compare Categories", 'dokan-lite'),
+          update: __("Compare", 'dokan-lite'),
+        },
+        onClick: addCesSurveyForAnalytics,
+      }
+    ),
   },
 ];
 

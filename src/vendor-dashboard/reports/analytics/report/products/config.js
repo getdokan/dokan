@@ -13,6 +13,7 @@ import {
   getProductLabels,
   getVariationLabels,
 } from "../../../lib/async-requests";
+import { searchFilterSettings } from "../../../utils/search-filter-settings";
 
 const PRODUCTS_REPORT_CHARTS_FILTER = "dokan_analytics_products_report_charts";
 const PRODUCTS_REPORT_FILTERS_FILTER =
@@ -73,15 +74,19 @@ const filterConfig = {
           value: "single_product",
           chartMode: "item-comparison",
           path: ["select_product"],
-          settings: {
-            type: "products",
-            param: "products",
-            getLabels: getProductLabels,
-            labels: {
+          settings: searchFilterSettings(
+            {
+              type: "products",
               placeholder: __("Type to search for a product", 'dokan-lite'),
-              button: __("Single product", 'dokan-lite'),
             },
-          },
+            {
+              param: "products",
+              getLabels: getProductLabels,
+              labels: {
+                button: __("Single product", 'dokan-lite'),
+              },
+            }
+          ),
         },
       ],
     },
@@ -89,21 +94,25 @@ const filterConfig = {
       label: __("Comparison", 'dokan-lite'),
       value: "compare-products",
       chartMode: "item-comparison",
-      settings: {
-        type: "products",
-        param: "products",
-        getLabels: getProductLabels,
-        labels: {
-          helpText: __(
-            "Check at least two products below to compare",
-            'dokan-lite'
-          ),
+      settings: searchFilterSettings(
+        {
+          type: "products",
           placeholder: __("Search for products to compare", 'dokan-lite'),
-          title: __("Compare Products", 'dokan-lite'),
-          update: __("Compare", 'dokan-lite'),
         },
-        onClick: addCesSurveyForAnalytics,
-      },
+        {
+          param: "products",
+          getLabels: getProductLabels,
+          labels: {
+            helpText: __(
+              "Check at least two products below to compare",
+              'dokan-lite'
+            ),
+            title: __("Compare Products", 'dokan-lite'),
+            update: __("Compare", 'dokan-lite'),
+          },
+          onClick: addCesSurveyForAnalytics,
+        }
+      ),
     },
   ],
 };
@@ -129,15 +138,19 @@ const variationsConfig = {
           component: "Search",
           value: "single_variation",
           path: ["select_variation"],
-          settings: {
-            type: "variations",
-            param: "variations",
-            getLabels: getVariationLabels,
-            labels: {
+          settings: searchFilterSettings(
+            {
+              type: "variations",
               placeholder: __("Type to search for a variation", 'dokan-lite'),
-              button: __("Single variation", 'dokan-lite'),
             },
-          },
+            {
+              param: "variations",
+              getLabels: getVariationLabels,
+              labels: {
+                button: __("Single variation", 'dokan-lite'),
+              },
+            }
+          ),
         },
       ],
     },
@@ -145,20 +158,24 @@ const variationsConfig = {
       label: __("Comparison", 'dokan-lite'),
       chartMode: "item-comparison",
       value: "compare-variations",
-      settings: {
-        type: "variations",
-        param: "variations",
-        getLabels: getVariationLabels,
-        labels: {
-          helpText: __(
-            "Check at least two variations below to compare",
-            'dokan-lite'
-          ),
+      settings: searchFilterSettings(
+        {
+          type: "variations",
           placeholder: __("Search for variations to compare", 'dokan-lite'),
-          title: __("Compare Variations", 'dokan-lite'),
-          update: __("Compare", 'dokan-lite'),
         },
-      },
+        {
+          param: "variations",
+          getLabels: getVariationLabels,
+          labels: {
+            helpText: __(
+              "Check at least two variations below to compare",
+              'dokan-lite'
+            ),
+            title: __("Compare Variations", 'dokan-lite'),
+            update: __("Compare", 'dokan-lite'),
+          },
+        }
+      ),
     },
   ],
 };

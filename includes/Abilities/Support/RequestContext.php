@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * server, another plugin in-process, or WP-CLI. Scoping deliberately follows the Ability rather
  * than the transport: an ability call that never touches an MCP URL is still scoped.
  *
- * A URI check (preferring WooCommerce's own detection when present) is kept as a secondary
- * signal, and the result is filterable via `dokan_is_ability_context`.
+ * A check of the REST route WordPress is serving is kept as a secondary signal, and the result
+ * is filterable via `dokan_is_ability_context`.
  *
  * @since 5.0.15
  */
@@ -93,7 +93,7 @@ class RequestContext {
     public static function is_ability_context(): bool {
         $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-        $is_ability_context = self::$request_is_mcp || self::is_executing_ability() || self::matches_mcp_endpoint( $request_uri );
+        $is_ability_context = self::$request_is_mcp || self::is_executing_ability() || self::matches_mcp_endpoint();
 
         /**
          * Filters whether the current request should be treated as an Ability Context.
@@ -200,27 +200,24 @@ class RequestContext {
     }
 
     /**
-     * Whether the request targets a known MCP endpoint.
+     * Whether the request is being served by a known MCP endpoint.
      *
-     * Prefers WooCommerce's own detection when present; otherwise (or when it reports false,
-     * e.g. for a future `/dokan/mcp` endpoint) falls back to a URI check.
+     * Matches the REST route WordPress dispatches (`rest_route`), not the raw request URI.
      *
      * @since 5.0.15
-     *
-     * @param string $request_uri The current request URI.
+     * @since 5.3.4 Reads the dispatched REST route instead of the request URI.
      *
      * @return bool
      */
-    protected static function matches_mcp_endpoint( string $request_uri ): bool {
-        $provider = '\Automattic\WooCommerce\Internal\MCP\MCPAdapterProvider';
-
-        if ( class_exists( $provider ) && method_exists( $provider, 'is_mcp_request' ) && $provider::is_mcp_request() ) {
-            return true;
+    protected static function matches_mcp_endpoint(): bool {
+        if ( ! self::is_rest_request() ) {
+            return false;
         }
 
-        return self::is_rest_request()
-            && '' !== $request_uri
-            && (bool) preg_match( '#/(?:woocommerce|dokan)/mcp(?:/|$)#', $request_uri );
+        $route = $GLOBALS['wp']->query_vars['rest_route'] ?? '';
+
+        // Case-insensitive because WordPress matches REST routes case-insensitively.
+        return is_string( $route ) && preg_match( '#^/(?:woocommerce|dokan)/mcp(?:/|$)#i', $route );
     }
 
     /**

@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Dashboard\Dashboard;
 use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
+use WeDevs\Dokan\Admin\Dashboard\Pages\BlackFriday;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Extensions;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
@@ -41,6 +42,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         Tools::class,
         Status::class,
         ProFeatures::class,
+        BlackFriday::class, // TODO BFCM-2026-REMOVE: seasonal page, remove after the campaign.
         Withdraw::class,
         Vendors::class,
         ReverseWithdrawal::class, // Added ReverseWithdrawal page service
