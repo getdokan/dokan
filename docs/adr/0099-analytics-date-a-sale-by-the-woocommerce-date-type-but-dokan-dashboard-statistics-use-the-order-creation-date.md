@@ -43,7 +43,7 @@ Vendor A receives Vendor order #301 for 80.00 created on 30 June, paid by bank t
 
 ## Edge cases
 
-- **On-hold orders under `date_paid`.** Orders that never received a paid date (for example on-hold bank transfer or cash-on-delivery orders before they move to processing) are missing from revenue and orders reports even though their status is counted.
+- **Orders without a paid date under `date_paid`.** Orders that never received a paid date are missing from revenue and orders reports even though their status is counted. Two common cases: a bank transfer order while it is on hold, and a cash-on-delivery order until it is completed. WooCommerce treats cash on delivery as paid only at completion (`WC_Gateway_COD::change_payment_complete_order_status()`, `wc:includes/gateways/cod/class-wc-gateway-cod.php:359-364`), so a cash-on-delivery order in processing still has no paid date.
 - **Month boundaries on the admin dashboard** come from `parse_date_range()` in the dashboard controller; see [ADR-0097](./0097-an-active-vendor-on-the-admin-dashboard-is-one-with-a-positive-earning-on-an-order-created-in-the-period.md).
 - **Time zones.** `wc_order_stats.date_created` is in site local time; legacy HPOS queries compare `date_created_gmt` against dates converted to UTC.
 
