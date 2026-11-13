@@ -7,6 +7,9 @@ import Products from '@src/dashboard/products';
 import Orders from '@src/dashboard/orders';
 import ReverseWithdrawal from '@src/dashboard/reverse-withdraw';
 import StoreSettings from '@src/dashboard/settings/store';
+import CJDropshipping from '@src/dashboard/cj-dropshipping';
+import '@src/dashboard/cj-dropshipping/product-list';
+import '@src/dashboard/cj-dropshipping/order-list';
 
 export default [
     {
@@ -16,6 +19,15 @@ export default [
         path: '/products',
         exact: true,
         order: 5,
+        capabilities: [ 'dokan_view_product_menu' ],
+    },
+    {
+        id: 'dokan-cj-dropshipping',
+        title: __( 'CJ Dropshipping', 'dokan-lite' ),
+        element: <CJDropshipping />,
+        path: '/cj-dropshipping',
+        exact: true,
+        order: 6,
         capabilities: [ 'dokan_view_product_menu' ],
     },
     {

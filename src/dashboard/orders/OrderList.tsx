@@ -6,6 +6,7 @@ import {
     useEffect,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { applyFilters } from '@wordpress/hooks';
 import { useToast, SimpleInput } from '@getdokan/dokan-ui';
 import { Fill } from '@wordpress/components';
 import {
@@ -362,7 +363,17 @@ function OrderList() {
     ];
 
     // Filter out shipment column if feature is disabled (match old template behavior)
-    const visibleFields = fields.filter( ( f ) => {
+    /**
+     * Filter the order list table fields (columns).
+     *
+     * @param {Array} fields Default field definitions.
+     */
+    const filteredFields = applyFilters(
+        'dokan_order_list_table_fields',
+        fields
+    ) as typeof fields;
+
+    const visibleFields = filteredFields.filter( ( f ) => {
         if ( f.id === 'shipment' ) {
             return allowShipment;
         }
