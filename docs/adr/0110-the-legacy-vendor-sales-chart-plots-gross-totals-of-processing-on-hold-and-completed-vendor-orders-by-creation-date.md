@@ -41,6 +41,7 @@ The chart shows on 3 June: Sales total 155.00, 2 orders (refund not deducted); o
 ## Edge cases
 
 - **Refunded orders are left out**, and partially refunded orders are counted at their full original total.
+- **Storage.** The query reads `wp_posts` and `wp_postmeta`. On a store using WooCommerce's order tables (HPOS) without compatibility sync, it finds no orders.
 - **REST sales report.** `VendorDashboardController::get_sales_reports()` (`lite:includes/REST/VendorDashboardController.php:186-270`) uses the same function with extra columns: `SUM(_qty)` of line items and `SUM(dokan_orders.net_amount)` as `total_earnings`.
 
 ## Why

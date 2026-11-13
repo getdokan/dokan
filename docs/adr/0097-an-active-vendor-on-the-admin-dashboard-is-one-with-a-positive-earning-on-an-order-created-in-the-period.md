@@ -19,7 +19,9 @@ So for the running month the overview compares month-to-date with the same numbe
 
 - are not in an excluded status (`:83`, `:90-93`);
 - have `vendor_earning > 0` (`:95`);
-- have `wc_order_stats.date_created BETWEEN <start> AND <end>` (`:96`).
+- have `wc_order_stats.date_created BETWEEN <start> AND <end>` (`:96`), where start and end are plain dates.
+
+The query has no order-type condition, so parent Order rows are read too.
 
 The tooltip describes this as "Vendors sold minimum 1 product" (`AdminDashboardStatsStore::get_active_vendors_data()`, `lite:includes/Models/DataStore/AdminDashboardStatsStore.php:356-380`); the count is filterable through `dokan_admin_dashboard_active_vendors_count`.
 
@@ -27,8 +29,8 @@ The tooltip describes this as "Vendors sold minimum 1 product" (`AdminDashboardS
 
 - New Products: published products created in the period, excluding subscription-pack and `subscription` product types and the advertisement product (`:307-345`; types filter `dokan_rest_admin_dashboard_exclude_product_types`).
 - New Vendor Registration: users registered in the period whose capabilities contain `seller` (`:391-432`).
-- New Customers: users registered in the period whose capabilities contain `customer` (`:178-219`).
-- Order Cancellation Rate: share of `shop_order` posts created in the period with status `wc-cancelled`, counting parent Orders and Suborders alike (`:230-296`).
+- New Customers: users registered in the period whose capabilities contain `customer` (`:178-219`). The period is compared with the same plain dates, so a Customer who registers during the last day of the range is not counted.
+- Order Cancellation Rate: share of `shop_order` posts created in the period with status `wc-cancelled`, counting parent Orders and Suborders alike (`:230-296`). It reads the `wp_posts` table, so a store that keeps its orders in WooCommerce's order tables (HPOS) without compatibility mode has no such posts and the rate shows 0.00 %.
 - Recurring Customers: distinct customers with a non-excluded order in the period who also ordered before the previous period began (`:98-167`).
 
 ## Settings that change it
@@ -42,11 +44,14 @@ The tooltip describes this as "Vendors sold minimum 1 product" (`AdminDashboardS
 Settings: defaults; global Commission `fixed` 10 % + 0 flat. Today is 15 June; the Store Admin opens June.
 
 - Current period: 1–15 June. Previous period: 1–15 May.
-- In the current period Vendor A has a processing order (Earning 54.00) and Vendor B has a completed order (Earning 36.00). Vendor C's only order is pending payment.
-- Active Vendors = distinct {A, B} = **2**. Vendor C is excluded by status.
+- On 10 June one processing multi-vendor checkout produced Suborders for Vendor A (Earning 54.00) and Vendor B (Earning 36.00); its parent Order row has `vendor_id` 0 and Earning 90.00. Vendor C's only order is pending payment.
+- Active Vendors = distinct {A, B, 0} = **3**, although two Vendors sold. Vendor C is excluded by status. The `0` comes from the parent Order row (see below).
+- Vendor D's first order is placed on 15 June at 10:00. It does not make D active today; from 16 June the range ends on the 16th and D counts.
 
 ## Edge cases
 
+- **Parent Order rows count as a Vendor "0".** Parent Orders are stored with `vendor_id = 0` and a full Earning (`lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:112-117`, `:236-255`), so any period that contains a multi-vendor checkout counts one more.
+- **The end date is a plain date.** `BETWEEN '2026-06-01' AND '2026-06-15'` stops at 15 June 00:00:00, so orders created later on the last day are not counted. For the running month this means today's orders do not yet make a Vendor active.
 - **Refunded-to-zero orders**: once a full refund is imported the row's Earning is 0, so that order no longer makes its Vendor active.
 
 ## Why

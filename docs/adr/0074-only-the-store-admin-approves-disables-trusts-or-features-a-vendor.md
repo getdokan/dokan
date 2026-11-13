@@ -40,6 +40,8 @@ Not a money rule. Vendor V, who is Pending, sends `PUT /dokan/v1/stores/<V>` wit
 ## Edge cases
 
 - A user who is both a Vendor and a Store Admin can approve and trust themselves, because the check is on capability, not role.
+- **Omitted keys reset trusted and featured.** For a Store Admin, `Vendor\Manager::update()` writes `dokan_feature_seller = no` and `dokan_publishing = no` whenever `featured` / `trusted` are absent or false in the payload (`lite:includes/Vendor/Manager.php:410-420`). A partial Store Admin update that only changes, say, the store name clears both. `enabled` is different: it is applied only when present (`:401`).
+- **Batch delete does nothing.** The `/batch` endpoint's `delete` list calls `dokan()->vendor->get( $id )->delete()` (`lite:includes/REST/StoreController.php:1121-1125`), but `Vendor` has no `delete()` method; the magic `__call()` only answers `get_*` names (`lite:includes/Vendor/Vendor.php:116-126`), so no Vendor is deleted. Single deletion through `DELETE /stores/<id>` works (see [ADR-0069](./0069-deleting-a-vendor-without-reassigning-their-content-permanently-deletes-their-products.md)).
 
 ## Why
 
