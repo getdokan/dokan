@@ -401,8 +401,11 @@ class Importer {
         $prefix = '' !== $prefix ? $prefix : 'V' . $vendor_id;
         $sku    = $prefix . '-' . $cj_sku;
 
-        for ( $i = 2; ! wc_product_has_unique_sku( 0, $sku ); $i++ ) {
+        $i = 2;
+
+        while ( ! wc_product_has_unique_sku( 0, $sku ) ) {
             $sku = $prefix . '-' . $cj_sku . '-' . $i;
+            ++$i;
         }
 
         return $sku;
