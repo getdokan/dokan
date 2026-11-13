@@ -57,4 +57,4 @@ The behaviour was introduced in 2.6.9 so that a disabled Store stops selling wit
 - Consider a dedicated status or a visible marker for "held because the Vendor is disabled", so the admin product queue can tell the two kinds of pending apart.
 - Document for support teams that Action Scheduler must be running for Vendor suspension to take effect.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

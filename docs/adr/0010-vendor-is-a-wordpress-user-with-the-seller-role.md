@@ -16,7 +16,7 @@ A marketplace needs an identity for each Vendor and a record for each Store: a n
 - **Store URL.** The store slug is the user's `user_nicename`. `dokan_get_store_url()` (`lite:includes/functions.php:1202`) builds `/{custom_store_url}/{user_nicename}/`. Registration sets `user_nicename` from the submitted `shopurl` through `Registration::set_new_vendor_names()` on WooCommerce's `woocommerce_new_customer_data` filter (applied at `wc:includes/wc-user-functions.php:163`).
 - **Operating Terms are scalar user meta.** Selling Activation is `dokan_enable_selling` (`yes` / `no`), Direct Publishing is `dokan_publishing`, featured status is `dokan_feature_seller`, and the Vendor-level Commission formula is `dokan_admin_percentage`, `dokan_admin_percentage_type`, `dokan_admin_additional_fee` and `admin_category_commission`. `dokan_is_seller_enabled()` (`lite:includes/functions.php:1172`) treats anything other than `yes`, including an absent row, as Pending.
 - **Vendor Staff resolve to their Vendor.** `dokan_get_current_user_id()` (`lite:includes/functions.php:52`) returns the `_vendor_id` user meta for a user holding `vendor_staff`, so data scoping follows the Vendor's user id. The role that grants `vendor_staff` is consumed by Dokan Pro.
-- **Queries.** `Vendor\Manager::get_vendors()` (`lite:includes/Vendor/Manager.php:57`) wraps `WP_User_Query` with `role__in = [ 'seller', 'administrator' ]` and filters Approved Vendors with a `dokan_enable_selling = yes` meta query.
+- **Queries.** `Vendor\Manager::get_vendors()` (`lite:includes/Vendor/Manager.php:58`) wraps `WP_User_Query` with `role__in = [ 'seller', 'administrator' ]` and filters Approved Vendors with a `dokan_enable_selling = yes` meta query.
 
 ```mermaid
 erDiagram
@@ -57,4 +57,4 @@ erDiagram
 
 - The full list of SQL queries that depend on `dokan_store_name` existing for admin users (the reason given in the installer docblock) was not enumerated.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

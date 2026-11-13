@@ -64,4 +64,4 @@ None recorded.
 
 - Apply `ReportUtil::get_exclude_order_statuses()`, restrict to Vendor order types 1 and 2 for the order count, and add `vendor_id > 0` before the `LIMIT`.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

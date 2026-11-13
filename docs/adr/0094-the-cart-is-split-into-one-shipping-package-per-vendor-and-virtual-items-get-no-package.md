@@ -13,7 +13,7 @@ Product ownership is the product's `post_author` (Lite ADR 0011). The Suborder s
 - `Shipping\Hooks::split_shipping_packages()` (`lite:includes/Shipping/Hooks.php:42-77`) replaces WooCommerce's package list. It ignores the incoming packages and rebuilds them from `WC()->cart->get_cart()`:
   - Every cart item whose product `is_virtual()` is skipped (`:48-50`). Virtual items never appear in any package.
   - The remaining items are grouped by the product's `post_author` (`:51-53`). Variations are looked up by their own ID, so the variation post's own `post_author` decides. Dokan keeps variation authors aligned with the parent product (for example `BackgroundProcess\RewriteVariableProductsAuthor`, `lite:includes/BackgroundProcess/RewriteVariableProductsAuthor.php:79`), but a variation whose author differs from its parent's is packaged under the variation's author.
-  - For each Vendor one package is built with `contents` (that Vendor's cart items), `contents_cost` (the sum of their `line_total`, i.e. after discounts and before tax), `applied_coupons` (all coupons on the cart), `user.ID`, `seller_id` (the Vendor's user ID) and `destination` (the customer's shipping country, state, postcode, city and address lines) (`:56-74`).
+  - For each Vendor one package is built with `contents` (that Vendor's cart items), `contents_cost` (the sum of their `line_total`, i.e. after discounts and before tax), `applied_coupons` (all coupons on the cart), `user.ID`, `seller_id` (the Vendor's user ID) and `destination` (the customer's shipping country, state, postcode, city and address lines) (`lite:includes/Shipping/Hooks.php:56-74`).
   - The resulting array passes through the filter `dokan_cart_shipping_packages` (`:76`).
 - Each package is labelled for the customer as "Shipping: {store name}" by `Shipping\Hooks::change_shipping_pack_name()` (`lite:includes/Shipping/Hooks.php:106-121`), filter `dokan_shipping_package_name` (arguments: label, package index, package, Vendor object). Packages without a `seller_id` keep WooCommerce's default label.
 - WooCommerce then rates each package independently (`WC_Shipping::calculate_shipping()`, `wc:includes/class-wc-shipping.php:255-279`), and the customer picks one rate per package. Which rates are offered is described in [ADR-0092](./0092-in-dokan-lite-every-vendor-package-is-charged-the-stores-own-woocommerce-shipping-rates-separately.md).
@@ -58,4 +58,4 @@ The class comment and the `@since 3.7.19 Moved from pro` tags (`lite:includes/Sh
 - Finish the move the `todo` describes so that one implementation, with documented extension filters, owns the split.
 - Consider passing only the coupons valid for the package's items in `applied_coupons`, to remove the burden from every shipping method.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

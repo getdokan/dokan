@@ -19,7 +19,7 @@ Dokan has two kinds of report: the WooCommerce Analytics reports it filters (rev
 | Admin dashboard sales chart | always | `VendorOrderStatsStore::get_sales_chart_data()`, `lite:includes/Models/DataStore/VendorOrderStatsStore.php:172-176` |
 | Admin dashboard active Vendors | always | `get_active_vendors_count()`, `:83-93` |
 | Admin dashboard recurring customers | always | `AdminDashboardStatsStore::get_recurring_customers_data()`, `lite:includes/Models/DataStore/AdminDashboardStatsStore.php:102`, `:123`, `:143` |
-| Report rows, row count and summary | only when the caller passes `exclude_statuses = true` | `get_report_data()` `:298-304`, `get_report_count()` `:337-341`, `get_report_summary()` `:372-376` |
+| Report rows, row count and summary | only when the caller passes `exclude_statuses = true` | `get_report_data()` `lite:includes/Models/DataStore/VendorOrderStatsStore.php:298-304`, `get_report_count()` `:337-341`, `get_report_summary()` `:372-376` |
 | Admin dashboard top-performing Vendors | **never** | `get_top_performing_vendors()`, `:121-140` |
 
 Admin dashboard counters that are not revenue (order cancellation rate, new customers, new Vendor registrations, new products) do not use the status setting; the cancellation rate counts every order, including cancelled ones, because cancelled orders are what it measures (`AdminDashboardStatsStore::get_order_cancellation_rate_data()`, `lite:includes/Models/DataStore/AdminDashboardStatsStore.php:230-296`).
@@ -63,4 +63,4 @@ Reusing the WooCommerce setting keeps Dokan's numbers consistent with the WooCom
 - Apply the status exclusion in `get_top_performing_vendors()` like the other dashboard queries.
 - Default `exclude_statuses` to `true` in `VendorOrderStatsStore`.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

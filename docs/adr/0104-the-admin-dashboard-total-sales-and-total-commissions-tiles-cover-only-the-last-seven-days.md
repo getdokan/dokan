@@ -21,7 +21,7 @@ No `before` or `after` is passed. WooCommerce's reports data store fills them fr
 - leaves out the excluded statuses ([ADR-0101](./0101-reports-leave-out-the-order-statuses-excluded-in-woocommerce-analytics-settings.md));
 - reports **Total Sales** as WooCommerce `total_sales` (gross order totals, minus refund rows in the window) and **Total Commissions** as `SUM(admin_commission)` (formula Commission plus admin fees, net of refunds; see [ADR-0105](./0105-the-commission-figure-in-reports-includes-shipping-tax-and-fees-routed-to-the-admin-minus-the-admins-gateway-fee.md)).
 
-The other tiles are lifetime: published products excluding subscription packs and the advertisement product (`:488-500`), approved Vendors (`:503-507`), users with the customer role (`:509-511`) and Total Orders ([ADR-0103](./0103-the-admin-dashboard-total-orders-tile-counts-parent-orders-and-suborders-alike.md)).
+The other tiles are lifetime: published products excluding subscription packs and the advertisement product (`lite:includes/REST/AdminDashboardStatsController.php:488-500`), approved Vendors (`:503-507`), users with the customer role (`:509-511`) and Total Orders ([ADR-0103](./0103-the-admin-dashboard-total-orders-tile-counts-parent-orders-and-suborders-alike.md)).
 
 ## Settings that change it
 
@@ -54,4 +54,4 @@ None recorded.
 
 - Pass an explicit `after` (for example the WooCommerce install date) and `before` = now, or relabel the tiles.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

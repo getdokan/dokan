@@ -14,13 +14,13 @@ The admin dashboard's all-time row includes a "Total Orders" tile. Every other o
 dokan()->order->all( [ 'status' => [ 'wc-completed', 'wc-processing', 'wc-on-hold', 'wc-refunded' ], 'return' => 'count' ] )
 ```
 
-`Order\Manager::all()` runs `wc_get_orders()` with `type = shop_order` and no Vendor filter when no `seller_id` is given (`lite:includes/Order/Manager.php:31-66`, `:104-115`, `:150-153`), and for `return = count` it asks WooCommerce for a paginated result and returns its `total` (`:258-262`, `:61-63`). WooCommerce returns every `shop_order` in those statuses: parent Orders, Suborders and single-vendor Orders. Refund objects are not orders and are not counted.
+`Order\Manager::all()` runs `wc_get_orders()` with `type = shop_order` and no Vendor filter when no `seller_id` is given (`lite:includes/Order/Manager.php:32-67`, `:105-116`, `:151-154`), and for `return = count` it asks WooCommerce for a paginated result and returns its `total` (`:259-263`, `:62-64`). WooCommerce returns every `shop_order` in those statuses: parent Orders, Suborders and single-vendor Orders. Refund objects are not orders and are not counted.
 
 So the tile is: lifetime count of parent Orders + Suborders + single-vendor Orders (+ marketplace-owned orders) in completed, processing, on-hold or refunded status. A multi-vendor checkout counts as 1 + (number of Vendors).
 
 ## Settings that change it
 
-None. The status list is fixed in code and is not the WooCommerce Analytics excluded-status setting. The query can be changed through `dokan_get_vendor_orders_args` and the count through `dokan_get_vendor_orders_count` (`lite:includes/Order/Manager.php:32`, `:62`); the dashboard response can be changed through `dokan_rest_admin_dashboard_all_time_stats_data` (`lite:includes/REST/AdminDashboardStatsController.php:543-544`).
+None. The status list is fixed in code and is not the WooCommerce Analytics excluded-status setting. The query can be changed through `dokan_get_vendor_orders_args` and the count through `dokan_get_vendor_orders_count` (`lite:includes/Order/Manager.php:33`, `:63`); the dashboard response can be changed through `dokan_rest_admin_dashboard_all_time_stats_data` (`lite:includes/REST/AdminDashboardStatsController.php:543-544`).
 
 ## Worked example
 
@@ -48,4 +48,4 @@ None recorded.
 
 - Count only Vendor orders (exclude orders that have Suborders), matching the analytics rule, or count only customer Orders (exclude Suborders), and label the tile accordingly.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

@@ -21,11 +21,11 @@ Checks that implement this:
 | REST product create (`dokan/v1/products`) | `400` "Your account is not enabled for selling" unless the caller has `manage_options` | `ProductController::validation_before_create_item()`, `lite:includes/REST/ProductController.php:383-385` |
 | REST product create (`dokan/v3/products`) | `403` "Your account is not enabled for selling." unless the caller has `manage_woocommerce` | `ProductControllerV3::create_item_permissions_check()`, `lite:includes/REST/ProductControllerV3.php:55-57` |
 | REST product publish or schedule (`dokan/v3/products`) | The product is saved as `pending` instead, unless the caller has `manage_woocommerce` | `ProductControllerV3::enforce_publish_moderation()`, `lite:includes/REST/ProductControllerV3.php:402-408` |
-| REST product editor form init (v3) | `401` | `ProductControllerV3::init_form_fields()`, `lite:includes/REST/ProductControllerV3.php:594-600` |
+| REST product editor form init (v3) | `401` | `ProductControllerV3::init_form_fields()`, `lite:includes/REST/ProductControllerV3.php:627-633` |
 | Withdraw request (dashboard AJAX and REST `POST /dokan/v1/withdraw`) | `WP_Error` `dokan_withdraw_seller_not_enabled` | `Withdraw\Manager::is_valid_approval_request()`, `lite:includes/Withdraw/Manager.php:61-63`, called from `lite:includes/Withdraw/Hooks.php:205` and `lite:includes/REST/WithdrawController.php:474` |
 | Store Admin approving a pending withdraw request (REST update with a status, REST batch approve) | Refused with the same error while the Vendor is not enabled | the same validator, called at `lite:includes/REST/WithdrawController.php:588` and `:699` |
 | Withdraw request cancellation (dashboard) | Error "Your account is not enabled for selling" | `lite:includes/Dashboard/Templates/Withdraw.php:137-140` |
-| Abilities (MCP / machine context) | A Store Admin who is also a Vendor counts as the acting Vendor only while their own selling is enabled | `lite:includes/Abilities/Definitions/CurrentVendor.php:94-95`, `lite:includes/Abilities/ProductAbilityScope.php:601-605` |
+| Abilities (MCP / machine context) | A Store Admin who is also a Vendor counts as the acting Vendor only while their own selling is enabled | `lite:includes/Abilities/Definitions/CurrentVendor.php:94-95`, `lite:includes/Abilities/ProductAbilityScope.php:608-612` |
 
 Not gated: viewing the dashboard, editing store settings, viewing existing orders, and the Earnings already on the Balance (the notice is shown above the page content; it does not replace it). The REST product endpoints keep an exception (see the table): on `dokan/v1` a caller with `manage_options` can still create products for the Vendor, and on `dokan/v3` a caller with `manage_woocommerce` can.
 
@@ -58,4 +58,4 @@ No recorded decision. The per-screen checks were added over several releases (`@
 
 - Consider a single gate (for example in the abilities layer, Lite ADR 0006) that every "create" or "money-out" action consults, instead of per-screen checks.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

@@ -17,7 +17,7 @@ The admin dashboard shows a daily sales chart for a selected month (`GET dokan/v
 
 over rows that:
 
-- are **any `order_type`**: no type condition is added (`:157-186`), so parent Orders (type 0), Suborders, single-vendor Orders and marketplace-owned orders are all summed;
+- are **any `order_type`**: no type condition is added (`lite:includes/Models/DataStore/VendorOrderStatsStore.php:157-186`), so parent Orders (type 0), Suborders, single-vendor Orders and marketplace-owned orders are all summed;
 - are not in an excluded status (`ReportUtil::get_exclude_order_statuses()`, `:172-176`);
 - have `total_sales > 0` (`:178`), which drops every refund row and every zero-total order;
 - were created between the first day of the month and its last day, or today for the running month (`:179-186`; range from `parse_date_range()`, `lite:includes/REST/AdminDashboardStatsController.php:663-718`).
@@ -63,4 +63,4 @@ None recorded.
 
 - Add `order_type IN (vendor order types)` to `get_sales_chart_data()`, as the Analytics filters do, and decide explicitly whether refunds should be netted per day.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

@@ -10,11 +10,11 @@ Who receives the shipping tax money is a separate rule; see [ADR-0037](./0037-sh
 
 ## Rule
 
-- `Shipping\Hooks::add_shipping_method_rate()` (`lite:includes/Shipping/Hooks.php:134-148`) is attached to `woocommerce_shipping_method_add_rate` (fired at `wc:includes/abstracts/abstract-wc-shipping-method.php:376`) on every install, with or without add-ons (`:30`).
+- `Shipping\Hooks::add_shipping_method_rate()` (`lite:includes/Shipping/Hooks.php:134-148`) is attached to `woocommerce_shipping_method_add_rate` (fired at `wc:includes/abstracts/abstract-wc-shipping-method.php:376`) on every install, with or without add-ons (`lite:includes/Shipping/Hooks.php:30`).
 - It recalculates the rate's taxes only when all of these hold (`:138`): the rate was added with `calc_tax = per_order`; the rate already has a taxes array; the rate cost is greater than 0; and the shipping method is taxable (`WC_Shipping_Method::is_taxable()`: taxes enabled, method tax status "taxable", customer not VAT-exempt).
 - The tax class is chosen by `Shipping\Tax::get_shipping_tax_class_from_vendor_cart_items()` (`lite:includes/Shipping/Tax.php:54-94`) from the items in **this package only** (`$args['package']['contents']`), considering only items whose product `is_shipping_taxable()` (`:105-115`):
   1. If the package has no such items, no Dokan rates are produced and WooCommerce's own taxes stay on the rate (`:59-68`, `Hooks.php:141`).
-  2. If any such item uses the standard class, the standard class is used (`:70-73`).
+  2. If any such item uses the standard class, the standard class is used (`lite:includes/Shipping/Tax.php:70-73`).
   3. If all such items share one class, that class is used (`:75-78`).
   4. Otherwise the first class found in the store's tax-class order (WooCommerce → Settings → Tax → Additional tax classes) is used (`:80-90`), falling back to standard.
 - Rates are then looked up for the customer's tax location with that class (`Tax::get_tax_rates()`, `:18-43`) and applied with `WC_Tax::calc_shipping_tax()`, replacing the taxes WooCommerce had calculated.
@@ -57,4 +57,4 @@ The `@since 4.2.4` code was added so that each Vendor's shipping tax follows the
 
 - Respect a non-`inherit` `woocommerce_shipping_tax_class` before applying the package-based choice, or document the override in the admin UI.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

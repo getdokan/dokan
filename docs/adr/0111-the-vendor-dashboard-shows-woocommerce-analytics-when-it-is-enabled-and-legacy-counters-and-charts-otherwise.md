@@ -53,4 +53,4 @@ The legacy widgets predate WooCommerce Analytics. Keeping them behind the WooCom
 
 - Show the active reporting mode (and its status and date rules) in Dokan's admin status page.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

@@ -8,7 +8,7 @@ The legacy Vendor dashboard (WooCommerce Analytics off) shows an "Order" counter
 
 ## Rule
 
-**Per-status counts.** `Order\Manager::count_orders()` (`lite:includes/Order/Manager.php:287-355`) counts the Vendor's `dokan_orders` rows grouped by `order_status`, joined to the order table and excluding orders whose post or HPOS status is `trash` (`:309-337`). It starts from the statuses pending, completed, on-hold, processing, refunded, cancelled, failed and checkout-draft, filterable through `dokan_order_status_count` (`:295-306`); rows in any other status are ignored. `total` is the sum of the listed statuses. Results are cached per Vendor.
+**Per-status counts.** `Order\Manager::count_orders()` (`lite:includes/Order/Manager.php:288-356`) counts the Vendor's `dokan_orders` rows grouped by `order_status`, joined to the order table and excluding orders whose post or HPOS status is `trash` (`:310-338`). It starts from the statuses pending, completed, on-hold, processing, refunded, cancelled, failed and checkout-draft, filterable through `dokan_order_status_count` (`:296-307`); rows in any other status are ignored. `total` is the sum of the listed statuses. Results are cached per Vendor.
 
 **The counter.** The big-counter template sums the per-status counts only for the statuses returned by `dokan_withdraw_get_active_order_status()` (`lite:templates/dashboard/big-counter-widget.php:29-41`): the "Order Status for Withdraw" statuses plus `wc-refunded` (`lite:includes/Withdraw/functions.php:355-366`).
 
@@ -49,4 +49,4 @@ No recorded reason. Reusing the withdraw status list keeps the counter consisten
 
 - Label the counter "Orders counting toward earnings", or show the widget total instead.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

@@ -60,4 +60,4 @@ No recorded reason. A commented-out line in Dokan's own stats data store (`lite:
 
 - Make the Dokan dashboard queries honour `woocommerce_date_type`, or label their charts "by order date" so the difference is visible.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

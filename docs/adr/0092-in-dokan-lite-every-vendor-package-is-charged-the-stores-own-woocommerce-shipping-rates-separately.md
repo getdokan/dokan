@@ -60,4 +60,4 @@ No decision is recorded. The behaviour follows from splitting packages per Vendo
 - Document clearly in the admin UI that each flat rate is charged per Vendor.
 - If per-Vendor free-shipping thresholds are needed in Lite, filter `woocommerce_shipping_free_shipping_is_available` and re-check the threshold against `$package['contents']`.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

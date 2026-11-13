@@ -11,7 +11,7 @@ Before the React admin dashboard, Dokan's admin overview showed "This month" sal
 `dokan_admin_report_data()` (`lite:includes/Admin/functions.php:45-115`) selects from `dokan_orders` joined to the order table and returns, per day or per month:
 
 - `order_total` = `SUM(dokan_orders.order_total)` — the Vendor order's total after refunds, including tax and shipping (every save of a Vendor order rewrites `order_total` = order total − total refunded and `net_amount` = the refund-adjusted Earning, `VendorBalanceUpdateHandler::update_dokan_order_table()`, `lite:includes/Order/VendorBalanceUpdateHandler.php:146-210`);
-- `earning` = `SUM(dokan_orders.order_total − dokan_orders.net_amount)` (`:98`) — everything on the Vendor order that is not the Vendor's Earning: Commission, admin-routed shipping and tax, and gateway fees;
+- `earning` = `SUM(dokan_orders.order_total − dokan_orders.net_amount)` (`lite:includes/Admin/functions.php:98`) — everything on the Vendor order that is not the Vendor's Earning: Commission, admin-routed shipping and tax, and gateway fees;
 - `total_orders` = `COUNT(DISTINCT order id)`,
 
 for rows where:
@@ -55,4 +55,4 @@ No recorded reason; the query predates WooCommerce Analytics support.
 
 - Rename the field to "admin total" or retire the endpoint in favour of the Analytics-based reports.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

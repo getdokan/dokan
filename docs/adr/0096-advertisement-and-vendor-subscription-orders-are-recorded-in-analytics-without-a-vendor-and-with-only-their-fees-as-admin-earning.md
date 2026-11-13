@@ -16,7 +16,7 @@ Some orders are purchases from the marketplace itself, for example a Vendor payi
 
 - `admin_commission` = `admin_net_commission` (0) + admin fees (`OrderCommission::get_admin_commission()`, `lite:includes/Commission/OrderCommission.php:531-533`);
 - `admin_earning` = max(`admin_net_commission`, 0) (0) + admin fees (`get_admin_total_earning()`, `:542-544`; `lite:includes/Commission/Model/Commission.php:165-167`);
-- `vendor_earning` = 0 + Vendor fees (`:340-342`).
+- `vendor_earning` = 0 + Vendor fees (`lite:includes/Commission/OrderCommission.php:340-342`).
 
 `admin_net_earning` is not written to `dokan_order_stats` (`lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:136-156`). In the stats table such an order therefore carries only its fee amounts (shipping, tax and shipping tax routed to the admin, plus WooCommerce fee lines routed to the admin, minus a gateway fee the admin pays; `get_total_admin_fees()`, `lite:includes/Commission/OrderCommission.php:377-379`), and its line amount appears only in WooCommerce's own `total_sales` and `net_total`.
 
@@ -60,4 +60,4 @@ No recorded reason.
 - Store `admin_net_earning` plus admin fees in `admin_earning` for admin-earning order types, then regenerate `dokan_order_stats` through WooCommerce's "Import historical data".
 - Add a test that a marketplace-owned order's `admin_earning` equals its line total plus admin fees.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

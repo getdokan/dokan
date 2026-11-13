@@ -10,11 +10,11 @@ CONTEXT.md defines an Approved Vendor as "a Vendor the marketplace has accepted,
 
 Any store list shown to the public contains only Approved Vendors: users with the `seller` or `administrator` role and `dokan_enable_selling = yes`. Pending Vendors, whether they have a `no` row or no row at all, are listed only on Store Admin screens.
 
-- **Default status.** `Vendor\Manager::get_vendors()` defaults to `status = [ 'approved' ]` and `role__in = [ 'seller', 'administrator' ]` (`lite:includes/Vendor/Manager.php:57-70`). For `approved` it adds the meta query `dokan_enable_selling = yes` (`:76-83`).
-- **Unknown statuses fall back to Approved.** `Manager::resolve_status()` keeps only `all`, `approved` and `pending`; anything else becomes `approved`, so a typo never widens the result (`lite:includes/Vendor/Manager.php:139-147`).
-- **Pending listing.** `status = pending` adds a correlated `NOT EXISTS` subquery that drops every Vendor with `dokan_enable_selling = yes`, so Vendors with no row are included (`Manager::exclude_approved_vendors()`, `lite:includes/Vendor/Manager.php:98-106`, `:161-174`). This is for the admin Vendors screen and the pending badge (`dokan_get_pending_vendor_count()`, `lite:includes/functions.php:3567-3594`). Because the default `role__in` includes `administrator`, an administrator without a `yes` flag is counted as Pending too, as that function's docblock states (`:3554-3558`).
-- **Store list page.** The `[dokan-stores]` shortcode builds its arguments without a status (`lite:includes/Shortcodes/Stores.php:60-107`) and calls `dokan_get_sellers()` → `get_vendors()` (`lite:includes/functions.php:1421-1429`), so it lists Approved Vendors only. Its `featured = yes` attribute adds `dokan_feature_seller = yes` on top (`lite:includes/Vendor/Manager.php:86-93`); `with_products_only` adds `has_published_posts = [ 'product' ]`.
-- **Public REST.** Store responses leave `enabled` and payment data out for callers who cannot access the Store (`StoreController::get_restricted_fields_for_view()`, `lite:includes/REST/StoreController.php:805-823`).
+- **Default status.** `Vendor\Manager::get_vendors()` defaults to `status = [ 'approved' ]` and `role__in = [ 'seller', 'administrator' ]` (`lite:includes/Vendor/Manager.php:58-71`). For `approved` it adds the meta query `dokan_enable_selling = yes` (`:77-84`).
+- **Unknown statuses fall back to Approved.** `Manager::resolve_status()` keeps only `all`, `approved` and `pending`; anything else becomes `approved`, so a typo never widens the result (`lite:includes/Vendor/Manager.php:140-148`).
+- **Pending listing.** `status = pending` adds a correlated `NOT EXISTS` subquery that drops every Vendor with `dokan_enable_selling = yes`, so Vendors with no row are included (`Manager::exclude_approved_vendors()`, `lite:includes/Vendor/Manager.php:99-107`, `:162-175`). This is for the admin Vendors screen and the pending badge (`dokan_get_pending_vendor_count()`, `lite:includes/functions.php:3567-3594`). Because the default `role__in` includes `administrator`, an administrator without a `yes` flag is counted as Pending too, as that function's docblock states (`:3554-3558`).
+- **Store list page.** The `[dokan-stores]` shortcode builds its arguments without a status (`lite:includes/Shortcodes/Stores.php:60-107`) and calls `dokan_get_sellers()` → `get_vendors()` (`lite:includes/functions.php:1421-1429`), so it lists Approved Vendors only. Its `featured = yes` attribute adds `dokan_feature_seller = yes` on top (`lite:includes/Vendor/Manager.php:87-94`); `with_products_only` adds `has_published_posts = [ 'product' ]`.
+- **Public REST.** Store responses leave `enabled` and payment data out for callers who cannot access the Store (`StoreController::get_restricted_fields_for_view()`, `lite:includes/REST/StoreController.php:812-830`).
 
 Add-ons may narrow listings through `dokan_seller_listing_args`, `dokan_rest_get_stores_args` and a `store_category_query` argument applied on a `store_category` taxonomy that Lite itself does not register.
 
@@ -33,7 +33,7 @@ Five Vendors exist: A and B approved, C approved and featured, D disabled (`doka
 
 ## Why
 
-The rule comes from the domain model (CONTEXT.md: Approved Vendor). The "unknown status falls back to approved" behaviour is recorded in `resolve_status()`: its docblock says anything unrecognised "falls back to the default rather than widening the result" (`lite:includes/Vendor/Manager.php:125-131`), and the inline comment reads "Never let a typo read as a wider set than the caller asked for" (`:142`).
+The rule comes from the domain model (CONTEXT.md: Approved Vendor). The "unknown status falls back to approved" behaviour is recorded in `resolve_status()`: its docblock says anything unrecognised "falls back to the default rather than widening the result" (`lite:includes/Vendor/Manager.php:126-132`), and the inline comment reads "Never let a typo read as a wider set than the caller asked for" (`:143`).
 
 ## Consequences & risks
 
@@ -44,4 +44,4 @@ The rule comes from the domain model (CONTEXT.md: Approved Vendor). The "unknown
 
 None.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

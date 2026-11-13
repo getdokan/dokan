@@ -10,22 +10,22 @@ Dokan does not have its own account system. A Vendor is a WordPress user with th
 
 A registration request may create a Vendor only when the form it came from offers the Vendor role. Every other registration creates a Customer.
 
-- **Allowed roles.** `Registration::get_allowed_registration_roles()` (`lite:includes/Registration.php:107-116`) always allows `customer`. It adds `seller` when either:
-  - the request was submitted from one of Dokan's dedicated Vendor sign-up forms, proven by the `dokan_vendor_registration_form_nonce` marker (`Registration::is_vendor_form_request()`, `lite:includes/Registration.php:125-135`), or
-  - the "Show Register as a Vendor in Sign Up Page" setting is not `off` (`lite:includes/Registration.php:111`).
-  The list is filterable through `dokan_register_user_role` (`:115`).
-- **Enforcement.** `Registration::validate_registration()` (`lite:includes/Registration.php:144-191`) runs on both WooCommerce registration error filters (`woocommerce_process_registration_errors` and `woocommerce_registration_errors`, hooked at `:34-35`). It verifies the `woocommerce-register` nonce (`:153`, `Registration::validate_nonce()` at `:342-352`) and rejects any `role` that is missing or not in the allowed list with the error "Cheating, eh?" (`:160-162`).
-- **Role written to the user.** `Registration::set_new_vendor_names()` (`lite:includes/Registration.php:200-219`, on `woocommerce_new_customer_data`, applied at `wc:includes/wc-user-functions.php:163`) sets `role` to the posted role only if it is allowed, otherwise to `customer` (`:206`).
-- **Dedicated forms.** `[dokan-vendor-registration]` (`Shortcodes\VendorRegistration`) and `[dokan-vendor-onboarding-registration]` print the marker through `dokan_vendor_reg_form_start` (`Registration::render_vendor_form_marker()`, `:64-66`). If a theme override of the form template does not fire that action, `Registration::inject_vendor_form_marker()` (`:81-95`) adds the marker to any rendered form that contains a `role` input. Both shortcodes return "You are already logged in" for logged-in users (`lite:includes/Shortcodes/VendorRegistration.php:18`).
+- **Allowed roles.** `Registration::get_allowed_registration_roles()` (`lite:includes/Registration.php:108-117`) always allows `customer`. It adds `seller` when either:
+  - the request was submitted from one of Dokan's dedicated Vendor sign-up forms, proven by the `dokan_vendor_registration_form_nonce` marker (`Registration::is_vendor_form_request()`, `lite:includes/Registration.php:126-136`), or
+  - the "Show Register as a Vendor in Sign Up Page" setting is not `off` (`lite:includes/Registration.php:112`).
+  The list is filterable through `dokan_register_user_role` (`:116`).
+- **Enforcement.** `Registration::validate_registration()` (`lite:includes/Registration.php:145-192`) runs on both WooCommerce registration error filters (`woocommerce_process_registration_errors` and `woocommerce_registration_errors`, hooked at `:35-36`). It verifies the `woocommerce-register` nonce (`:154`, `Registration::validate_nonce()` at `:343-353`) and rejects any `role` that is missing or not in the allowed list with the error "Cheating, eh?" (`:161-163`).
+- **Role written to the user.** `Registration::set_new_vendor_names()` (`lite:includes/Registration.php:201-220`, on `woocommerce_new_customer_data`, applied at `wc:includes/wc-user-functions.php:163`) sets `role` to the posted role only if it is allowed, otherwise to `customer` (`lite:includes/Registration.php:207`).
+- **Dedicated forms.** `[dokan-vendor-registration]` (`Shortcodes\VendorRegistration`) and `[dokan-vendor-onboarding-registration]` print the marker through `dokan_vendor_reg_form_start` (`Registration::render_vendor_form_marker()`, `:65-67`). If a theme override of the form template does not fire that action, `Registration::inject_vendor_form_marker()` (`:82-96`) adds the marker to any rendered form that contains a `role` input. Both shortcodes return "You are already logged in" for logged-in users (`lite:includes/Shortcodes/VendorRegistration.php:18`).
 - **WordPress's own sign-up page is not a Vendor path.** `dokan_redirect_to_register()` (`lite:includes/functions.php:1152-1161`, on `login_init`) redirects `wp-login.php?action=register` to the WooCommerce My Account page.
-- **Checkout sign-ups are Customers.** A checkout form carries no `woocommerce-register` nonce, so `set_new_vendor_names()` leaves the role WooCommerce chose (`customer`) untouched (`:201-203`).
+- **Checkout sign-ups are Customers.** A checkout form carries no `woocommerce-register` nonce, so `set_new_vendor_names()` leaves the role WooCommerce chose (`customer`) untouched (`lite:includes/Registration.php:202-204`).
 
 ## Settings that change it
 
 | Setting | Storage | Default | Effect |
 |---|---|---|---|
-| Show "Register as a Vendor" in Sign Up Page | canonical `show_register_as_vendor`; legacy `dokan_appearance[show_register_as_vendor]` (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:1359-1379`) | `on` | `on`: the WooCommerce My Account form shows the role choice (`lite:templates/global/seller-registration-form.php:87`) and accepts `role=seller`. `off`: the choice is hidden **and** a `role=seller` post from the My Account form is rejected. Dokan's dedicated Vendor forms keep working in both cases. |
-| `dokan_register_nonce_check` filter | code | `true` | Returning `false` disables the nonce check and makes every request count as a dedicated Vendor form request (`lite:includes/Registration.php:127-129`), so `seller` is always allowed. Intended for sites that drive their own sign-up forms. |
+| Show "Register as a Vendor" in Sign Up Page | canonical `show_register_as_vendor`; legacy `dokan_appearance[show_register_as_vendor]` (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:1353-1373`) | `on` | `on`: the WooCommerce My Account form shows the role choice (`lite:templates/global/seller-registration-form.php:87`) and accepts `role=seller`. `off`: the choice is hidden **and** a `role=seller` post from the My Account form is rejected. Dokan's dedicated Vendor forms keep working in both cases. |
+| `dokan_register_nonce_check` filter | code | `true` | Returning `false` disables the nonce check and makes every request count as a dedicated Vendor form request (`lite:includes/Registration.php:128-130`), so `seller` is always allowed. Intended for sites that drive their own sign-up forms. |
 | WooCommerce "Allow customers to create an account on the My account page" | WooCommerce option | WooCommerce default | If WooCommerce does not render its registration form, Dokan's role choice on it is not rendered either. Dokan's shortcodes render their own form. |
 
 ## Worked example
@@ -39,11 +39,11 @@ Setting `show_register_as_vendor = off`.
 
 - The marker is a WordPress nonce printed together with WooCommerce's own `woocommerce-register` nonce, so both expire together. When a Vendor form is left open past the nonce lifetime, WooCommerce's `WC_Form_Handler::process_registration()` does not process the submission at all (`wc:includes/class-wc-form-handler.php:1355`), so the visitor is never silently registered as a Customer instead.
 - Becoming a Vendor after registering as a Customer is a separate path and is not governed by this setting ([ADR-0065](./0065-a-customer-becomes-a-vendor-through-become-a-vendor-and-loses-their-previous-roles.md)).
-- Store Admin-created Vendors (WP Admin, REST `POST /dokan/v1/stores`) bypass registration entirely; `Vendor\Manager::create()` forces `role = seller` (`lite:includes/Vendor/Manager.php:217`).
+- Store Admin-created Vendors (WP Admin, REST `POST /dokan/v1/stores`) bypass registration entirely; `Vendor\Manager::create()` forces `role = seller` (`lite:includes/Vendor/Manager.php:218`).
 
 ## Why
 
-The docblock and inline comment of `get_allowed_registration_roles()` record the decision: the appearance setting "only hides the vendor option in the WooCommerce form's template, so a role that form never offered has to be refused server side too" (`lite:includes/Registration.php:100-101`), and "Dokan's dedicated vendor pages exist to sign vendors up, so a setting naming the WooCommerce form must not close them" (`:110`).
+The docblock and inline comment of `get_allowed_registration_roles()` record the decision: the appearance setting "only hides the vendor option in the WooCommerce form's template, so a role that form never offered has to be refused server side too" (`lite:includes/Registration.php:101-102`), and "Dokan's dedicated vendor pages exist to sign vendors up, so a setting naming the WooCommerce form must not close them" (`:111`).
 
 ## Consequences & risks
 
@@ -54,4 +54,4 @@ The docblock and inline comment of `get_allowed_registration_roles()` record the
 
 - If a full stop on Vendor sign-ups is a common request, a dedicated setting that empties `seller` from the allowed roles for every form would be clearer than relying on page removal.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._

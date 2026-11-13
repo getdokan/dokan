@@ -56,4 +56,4 @@ The counter reuses the Vendor model's lifetime earning query rather than a repor
 
 - Label the counter "Lifetime earning (matured)" and show the threshold in a tooltip.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
