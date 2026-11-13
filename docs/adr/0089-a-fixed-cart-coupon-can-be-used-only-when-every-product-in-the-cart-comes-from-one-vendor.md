@@ -54,4 +54,4 @@ The method docblock states the intent: coupons are restricted "for consistency" 
 - Count only the Vendors of items the coupon is actually valid for, so that a `fixed_cart` coupon restricted to one Vendor's products keeps working when other Vendors' products are also in the cart.
 - If a cart-wide fixed amount across Vendors is ever needed, define an explicit apportionment rule (for example pro rata to each Vendor's eligible subtotal) and document who funds each share.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

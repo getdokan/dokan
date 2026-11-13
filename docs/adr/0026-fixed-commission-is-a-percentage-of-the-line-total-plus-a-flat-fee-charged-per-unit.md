@@ -4,7 +4,7 @@ Status: Accepted (retroactive — no recorded decision; documents observed behav
 
 ## Context
 
-The admin settings offer two commission types: **Fixed** and **Category Based** (`dokan_commission_types()`, `lite:includes/functions.php:3407-3414`; filter `dokan_commission_types`). Older releases also had **Percentage**, **Flat** and **Combine**, which CONTEXT.md still lists as Commission formulas (`lite:CONTEXT.md:127-128`). Teammates regularly ask whether the flat fee is charged once per order, once per line or once per unit, and what happened to the old types. This ADR answers both. Category Based only changes *which* percentage and flat values are used; the arithmetic below is the same (see [ADR-0023](./0023-category-based-commission-uses-the-products-chosen-category-and-falls-back-to-the-all-categories-rate.md)).
+The admin settings offer two Commission formulas: **Fixed** and **Category Based** (`dokan_commission_types()`, `lite:includes/functions.php:3407-3414`; filter `dokan_commission_types`). Older releases also had **Percentage**, **Flat** and **Combine**, which CONTEXT.md still lists as Commission formulas (`lite:CONTEXT.md:137-140`). Teammates regularly ask whether the flat fee is charged once per order, once per line or once per unit, and what happened to the old types. This ADR answers both. Category Based only changes *which* percentage and flat values are used; the arithmetic below is the same (see [ADR-0023](./0023-category-based-commission-uses-the-products-chosen-category-and-falls-back-to-the-all-categories-rate.md)).
 
 ## Rule
 
@@ -29,6 +29,7 @@ The type string itself is only consulted to detect the legacy `combine` type: `S
 
 - Global: `flat` → percentage `0`, flat = old rate; `percentage` → flat `0`; every non-category type becomes `fixed` (`V_3_14_0::update_global_commission_type()`, `lite:includes/Upgrade/Upgrades/V_3_14_0.php:23-46`).
 - Vendor, product and category settings are converted the same way by background upgraders, except that the cleared half is stored as an empty string rather than `0` (`lite:includes/Commission/Upugrader/Update_Vendor_Commission.php:135-160`, `Update_Product_Commission.php:186-200`, `Update_Category_Commission.php:183-205`).
+- Legacy `combine` at the global, Vendor, product or category level matches neither the `flat` nor the `percentage` branch, so it is converted to `fixed` with both its percentage and its flat value kept (same citations). From 3.14.0 on, its flat fee is therefore charged per unit like any `fixed` setting; only order items already frozen as `combine` keep the once-per-line flat fee.
 - Frozen order items are **not** rewritten. When an item's frozen type is `flat` and it has no `_dokan_commission_meta` array (that is, it was calculated before 3.14.0), `Settings\OrderItem::get()` moves the stored rate into the flat slot (`lite:includes/Commission/Settings/OrderItem.php:49-52`), so the old flat amount is still charged. An item frozen as `combine` still charges its flat fee once per line.
 
 ## Settings that change it
@@ -79,4 +80,4 @@ No recorded reason was found for charging the flat fee per unit. The `Commission
 - Make "per unit" visible in the settings UI label for the flat fee ("Fixed fee per item").
 - Clear the percentage when mapping a legacy `flat` item rate into the flat slot, so old orders recalculate to the amount originally charged.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

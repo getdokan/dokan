@@ -41,6 +41,7 @@ flowchart TD
 ## Risks
 
 - **Every non-private method runs.** `DokanUpgrader::run()` iterates `get_class_methods()` from the parent class's scope, which includes public and protected methods. A helper declared `public` or `protected` in an upgrader class is executed as a migration step; only `private` helpers are skipped.
+- **A skipped upgrader is still recorded as done.** When a contributed upgrader's `require` version is not yet met, `DokanUpgrader::run()` returns without running any step (`lite:includes/Abstracts/DokanUpgrader.php:24-31`), but `Upgrade\Manager::do_upgrade()` calls `update_db_version()` for it right afterwards regardless (`lite:includes/Upgrade/Manager.php:97-98`). Its version is stored, so later runs no longer list it and its steps never run.
 - **Name-derived versions.** A misnamed class (for example `V_3_14` for `3.14.0`) stores a different version from its registry key, which affects later comparisons.
 - **Data updates wait for a click.** Between a plugin update and the administrator running the upgrade, new code runs against old data. Code paths that depend on a new column or table must tolerate its absence until then.
 - **An interrupted run hides the notice.** While `dokan_is_upgrading_db` exists, `AdminNotice::show_notice()` shows no notice and `AdminNotice::do_upgrade()` refuses to start (`has_ongoing_process()`). After an interrupted run, the remaining path in Lite is the activation-time call in `Installer::do_install()`, which does not check for an ongoing process.
@@ -58,4 +59,4 @@ flowchart TD
 - The individual effect of every upgrader is summarised in `docs/adr/reference/database.md` only for schema-relevant steps; data-only upgraders were not audited.
 - How contributed (non-Lite) upgraders interleave with Lite's when both are pending was not traced beyond the shared `version_compare` sort.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

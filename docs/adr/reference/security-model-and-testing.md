@@ -508,4 +508,4 @@ Tag usage across `tests/pw/tests/` (single-quoted tag literals such as `'@pro'`)
 - **Playwright detail.** `tests/pw/README.md`, `setup.md`, `test-cases.md` and `feature-map/feature-map.yml` were only partly read. Per-feature spec ownership and the full meaning of secondary tags (`@migration`, `@new-ui`, `@v2`; `tests/pw/README.md` describes `@exploratory` as smoke-level coverage with relaxed assertions) are not documented here beyond their counts.
 - **AJAX inventory.** Only `WeDevs\Dokan\Ajax` and a few other handlers were inspected. A complete list of every `wp_ajax_*` action with its nonce and capability is not included.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

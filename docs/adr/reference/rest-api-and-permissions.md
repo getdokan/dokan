@@ -454,4 +454,4 @@ Route `args` declare `type`, `sanitize_callback` and `validate_callback`; for ex
 - Apart from `src/utils/Api.js`, the React and Vue clients under `src/` were not reviewed for how they attach the `wp_rest` nonce.
 - `DokanAbilityRegistrar` also hooks `abilities_api_categories_init`, but neither installed copy of the Abilities API (WordPress core or WooCommerce's bundled one) fires that hook. Which Abilities API version fires it was not determined.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

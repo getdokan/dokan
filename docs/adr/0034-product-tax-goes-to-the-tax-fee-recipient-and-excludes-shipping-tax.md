@@ -56,4 +56,4 @@ The operator decides who is the seller of record for tax purposes. Before 3.7.19
 
 - Document `product_tax_fee_recipient` vs `tax_fee_recipient` wherever settings are read programmatically; the two names for one value are a common source of confusion.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

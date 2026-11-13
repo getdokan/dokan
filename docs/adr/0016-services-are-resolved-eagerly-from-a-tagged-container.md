@@ -44,4 +44,4 @@ Dokan Lite has many service classes (managers, hook registrars, REST, admin page
 - Whether the custom `DependencyManagement\Definition` class (which calls an `init()` method after construction) is wired into the container at this revision is listed as a gap in `docs/adr/reference/bootstrap-and-container.md`.
 - The cost of eager construction per request was not measured.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

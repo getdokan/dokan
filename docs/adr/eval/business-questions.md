@@ -6,6 +6,8 @@ The business-rule ADRs in `docs/adr/` (0020 to 0112, together with the earlier A
 
 Every question here can be answered from Dokan Lite and WooCommerce alone. Questions whose answer depends on add-on code are kept in the add-on's own repository.
 
+Question IDs are stable; gaps are questions retired or moved to an add-on's own repository, and are not reused.
+
 Each entry records:
 
 - **Question**: asked verbatim, the way a teammate or merchant would ask it.
@@ -181,7 +183,7 @@ They are two separate settings, and both default to the Vendor.
 2. **Shipping tax**: "Shipping Tax Fee", stored as `dokan_selling[shipping_tax_fee_recipient]` (lite:includes/Admin/Settings/Schema/SettingsSchema.php:611-633). The settings UI default is `seller`. The amount is the order's shipping tax minus shipping tax refunded.
    - `seller`: goes to the Vendor (lite:includes/Commission/OrderCommission.php:310-316).
    - `admin`: goes to the admin (lite:includes/Commission/OrderCommission.php:257-263).
-   - Key never saved: if the settings were never saved with this key, the code falls back to that order's product-tax recipient (`Fees::get_shipping_tax_fee_recipient`, lite:includes/Fees.php:227-229). So on such a site, shipping tax follows product tax rather than defaulting to the Vendor.
+   - Key never saved: if the settings were never saved with this key (by the Fees page, the setup wizard or the onboarding Basic step, which prefills `seller` and stores it on save), the code falls back to that order's product-tax recipient (`Fees::get_shipping_tax_fee_recipient`, lite:includes/Fees.php:227-229). So on such a site, shipping tax follows product tax rather than defaulting to the Vendor.
 
 The UI help text says the same: shipping tax is not included in the shipping fee, and shipping tax is not included in product tax (lite:includes/Admin/Settings.php:608, 619). So all three amounts (shipping, product tax and shipping tax) can go to different parties. None of them is commissionable. Each value can be changed by a filter, which payment add-ons use to force a recipient: `dokan_tax_fee_recipient` (lite:includes/Fees.php:202) and `dokan_shipping_tax_fee_recipient` (lite:includes/Fees.php:229). The two filters are independent, so an add-on that forces only the product-tax recipient leaves shipping tax on the saved value (or the product-tax fallback when the key is unsaved).
 
@@ -1088,4 +1090,4 @@ Refunds get `date_paid` and `date_completed` backfilled from the refund's own cr
 
 ---
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

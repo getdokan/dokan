@@ -4,7 +4,7 @@ Status: Accepted (retroactive — documents existing code)
 
 ## Context
 
-A Store Admin can set a Commission formula in three places: on a single product, on a Vendor, and globally for the marketplace. A teammate asking "which commission applies to this sale?" needs to know which level wins when more than one is set, and what happens when none is set. Category-based rates are not a separate level: they are a *mode* of the Vendor and global levels (see [ADR-0023](./0023-category-based-commission-uses-the-products-chosen-category-and-falls-back-to-the-all-categories-rate.md)).
+A Store Admin can set a Commission formula in three places: on a single product, on a Vendor, and globally for the marketplace. A teammate asking "which commission applies to this sale?" needs to know which level wins when more than one is set, and what happens when none is set. Category-based values are not a separate level: they are a *mode* of the Vendor and global levels (see [ADR-0023](./0023-category-based-commission-uses-the-products-chosen-category-and-falls-back-to-the-all-categories-rate.md)).
 
 Once an order line item has been calculated, the formula is frozen onto the item and the levels below are never consulted again for that item. That rule is recorded in Lite ADR 0013 (`docs/adr/0013-commission-terms-are-frozen-onto-the-order-at-first-calculation.md`) and is not repeated here. This ADR covers how the formula is chosen the first time.
 
@@ -42,9 +42,9 @@ Settings: global `fixed`, `admin_percentage = 10`, `additional_fee = 2`. Vendor 
 
 ## Edge cases
 
-- **Category is not a level of its own.** There is no "category beats Vendor" step. A category rate only applies when the level that won (Vendor or global) is in `category_based` mode.
+- **Category is not a level of its own.** There is no "category beats Vendor" step. A category's values only apply when the level that won (Vendor or global) is in `category_based` mode.
 - **Product-level type is ignored for category mode.** `Settings\Product` has no category handling, so a product formula is always percentage plus flat, whatever `_per_product_admin_commission_type` says.
-- **Vendor in `category_based` mode with no matching rate.** If the Vendor's `admin_category_commission` has no entry for the product's category, the `all` rate is used; if that is empty too, the Vendor setting is not applicable and resolution falls through to global. An entry that exists for the category but has both fields empty is still "the category's entry": the `all` rate is not consulted, the Vendor setting is not applicable, and resolution falls through to global (`lite:includes/Commission/Settings/Vendor.php:48-59`).
+- **Vendor in `category_based` mode with no matching entry.** If the Vendor's `admin_category_commission` has no entry for the product's category, the `all` value is used; if that is empty too, the Vendor setting is not applicable and resolution falls through to global. An entry that exists for the category but has both fields empty is still "the category's entry": the `all` value is not consulted, the Vendor setting is not applicable, and resolution falls through to global (`lite:includes/Commission/Settings/Vendor.php:48-59`).
 - **Orders already calculated** keep the formula frozen at their first calculation (Lite ADR 0013), so changing any level changes only future line items.
 - **The `dokan_earning_by_order_item_price` filter does not change the amount.** `OrderLineItemCommission::calculate()` passes the filtered price to `Calculator::set_subtotal()` (`lite:includes/Commission/OrderLineItemCommission.php:117`, `:136`), but `Calculator::calculate()` only reads `get_total()` (`lite:includes/Commission/Calculator.php:114-149`). Code that hooks this filter to adjust Commission has no effect on the live path.
 
@@ -54,13 +54,13 @@ The deprecated `Commission::calculate_commission()` docblock describes the inten
 
 ## Consequences & risks
 
-- One empty-versus-filled field decides the level, so a stray value in a single field (for example a flat fee typed on a product) silently overrides a carefully configured Vendor or category rate.
-- Because levels are never mixed, a Vendor rate of "5 %" means "5 % and no flat fee", even if the global formula has a flat fee. Admins sometimes expect inheritance of the missing half.
-- The historical "category beats Vendor" priority from older releases no longer holds. Since 3.14.0, a Vendor-level formula beats a global category rate: the deprecated `calculate_commission()` documents "1.product, 2.category, 3.vendor, 4.global", while its 3.14.0 replacement `get_commission()` documents "2.product, 3.vendor, 4.global" (`lite:includes/Commission.php:525-528`, `:584-586`).
+- One empty-versus-filled field decides the level, so a stray value in a single field (for example a flat fee typed on a product) silently overrides a carefully configured Vendor or category Commission formula.
+- Because levels are never mixed, a Vendor percentage of "5 %" means "5 % and no flat fee", even if the global formula has a flat fee. Admins sometimes expect inheritance of the missing half.
+- The historical "category beats Vendor" priority from older releases no longer holds. Since 3.14.0, a Vendor-level formula beats a global category value: the deprecated `calculate_commission()` documents "1.product, 2.category, 3.vendor, 4.global", while its 3.14.0 replacement `get_commission()` documents "2.product, 3.vendor, 4.global" (`lite:includes/Commission.php:525-528`, `:584-586`).
 
 ## Recommendations
 
 - Show the resolved level ("Product", "Vendor", "Global category: Electronics", "Default") next to the Commission figure in the order Commission meta box, so that support can answer "why this rate?" without reading meta.
 - Either remove the inert `dokan_earning_by_order_item_price` filter or make `Calculator` use the subtotal it is given; leaving it in place misleads extension authors.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

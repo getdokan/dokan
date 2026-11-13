@@ -8,9 +8,9 @@ A Vendor's own status changes drive their money: completing an order usually mak
 
 ## Rule
 
-**[Lite]** A Vendor (or Vendor Staff with `dokan_manage_order`) may change the status of a Vendor order that belongs to them, and only while the Store Admin allows Vendors to change order status. A Vendor can never change a multi-vendor parent Order. `cancelled` and `refunded` are final for Vendors: they cannot be changed from, and the bulk action cannot set them.
+**[Lite]** A Vendor (or Vendor Staff with `dokan_manage_order`) may change the status of a Vendor order that belongs to them, and only while the Store Admin allows Vendors to change order status. A Vendor can never change a multi-vendor parent Order. The Vendor dashboard and the bulk status action treat `cancelled` and `refunded` as final: the single-order screen offers no status change for an order in either status, and the bulk action neither sets them nor changes orders already in them.
 
-**Ownership.** Every Vendor entry point resolves the order's Vendor from the `dokan_orders` table and compares it with the acting Vendor (`dokan_get_current_user_id()`, which maps Vendor Staff to their Vendor):
+**Ownership.** The entry points resolve the order's Vendor from Dokan's order data and compare it with the acting Vendor (`dokan_get_current_user_id()`, which maps Vendor Staff to their Vendor); the dashboard AJAX and bulk routes do it through the `dokan_orders` table (`lite:includes/Order/Manager.php:393-401`):
 
 | Entry point | Ownership check | Setting check |
 |---|---|---|
@@ -24,7 +24,7 @@ A multi-vendor parent has no `dokan_orders` row and `dokan_get_seller_id_by_orde
 
 - The single-order screen shows the Edit control only when the order is neither `cancelled` nor `refunded` (`lite:templates/orders/details.php:219`, `:223`). It offers every WooCommerce status, including `cancelled` and `refunded`, as a target.
 - The dashboard bulk selector offers only on-hold, processing and completed (`lite:includes/Dashboard/Templates/Orders.php:138-146`, filter `dokan_bulk_order_statuses`). The shared bulk helper refuses `cancelled` and `refunded` both as the new status (`lite:includes/Order/functions.php:965-969`) and as the current status of an order (`:978-980`), so bulk is not a way to cancel or refund.
-- The rule is: a Vendor can move an open order to any status (including cancelling or refunding it one order at a time from the single-order screen), but cannot move an order out of `cancelled` or `refunded`.
+- The rule is: from the Vendor dashboard a Vendor can move an open order to any status (including cancelling or refunding it one order at a time from the single-order screen), but the dashboard and the bulk action offer no way to move an order out of `cancelled` or `refunded`.
 
 **No upward effect.** A Vendor's change applies to their Vendor order only. On a Suborder it is never copied to the parent Order, except that completing the last open Suborder completes the parent ([ADR-0038](./0038-a-parent-order-is-completed-automatically-only-when-every-suborder-is-completed.md)).
 
@@ -58,7 +58,7 @@ With `order_status_change` = `off`, steps 1 and 4 are refused too; only the Stor
 
 ## Why
 
-The setting's tooltip states the intent: "Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status." (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:1521`). Treating `cancelled` and `refunded` as final for Vendors protects money decisions (a cancelled Earning, a refunded customer) from being reversed by the party who benefits.
+The setting's tooltip states the intent: "Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status." (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:1521`). Treating `cancelled` and `refunded` as final in the Vendor dashboard and bulk action protects money decisions (a cancelled Earning, a refunded customer) from being reversed by the party who benefits.
 
 ## Consequences & risks
 
@@ -69,4 +69,4 @@ The setting's tooltip states the intent: "Checking this will enable sellers to c
 
 - Offer Vendors only the statuses that make sense for a Vendor order (for example hide `pending` and `failed`).
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

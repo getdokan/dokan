@@ -38,7 +38,7 @@ Each "Vendor X" / "admin X" getter returns either the full amount or zero, depen
 
 **Refunds are netted.** By default (`should_adjust_refund` is true) shipping, product tax, shipping tax and fee amounts are taken net of what has already been refunded on the order (`get_shipping_refunded()`, `get_tax_refunded()`, `get_total_shipping_tax_refunded()`, `get_order_fee_refunded()`, `lite:includes/Commission/OrderCommission.php:562-587`, `:641-657`).
 
-**Where the result goes.** `Commission::get_earning_by_order()` returns `get_vendor_total_earning()` (an alias of `get_vendor_earning()`) for the Vendor and `get_admin_total_earning()` for the admin (`lite:includes/Commission.php:241`). `dokan_sync_insert_order()` stores the Vendor figure as `dokan_orders.net_amount` and as the `debit` of the order's `dokan_vendor_balance` row (`lite:includes/Order/functions.php:243-282`). Analytics stores each fee bucket separately in `dokan_order_stats` (`vendor_shipping_fee`, `vendor_shipping_tax`, `vendor_order_tax`, `vendor_gateway_fee` and the `admin_*` equivalents, `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:136-155`).
+**Where the result goes.** `Commission::get_earning_by_order()` returns `get_vendor_total_earning()` (an alias of `get_vendor_earning()`) for the Vendor and `get_admin_total_earning()` for the admin (`lite:includes/Commission.php:241`). `dokan_sync_insert_order()` stores the Vendor figure as `dokan_orders.net_amount` and as the `debit` of the order's `dokan_vendor_balance` row (`lite:includes/Order/functions.php:243-282`). Analytics stores the shipping, tax and gateway-fee buckets separately in `dokan_order_stats` (`vendor_shipping_fee`, `vendor_shipping_tax`, `vendor_order_tax`, `vendor_gateway_fee` and the `admin_*` equivalents, `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:136-155`). There is no column for order fee lines ([ADR-0033](./0033-order-fee-lines-go-to-the-admin-unless-the-vendor-created-the-order.md)): they are only folded into the `vendor_earning`, `admin_earning` and `admin_commission` totals, and are visible on their own only through `OrderCommission::get_data()` (`admin_order_fees`, `vendor_order_fees`, `lite:includes/Commission/OrderCommission.php:441-455`).
 
 **Only Vendor orders are calculated.** A parent Order that has Suborders is skipped (`lite:includes/Commission.php:213-215`, `lite:includes/Order/functions.php:235-237`); see Lite ADR 0004.
 
@@ -79,7 +79,7 @@ Shipping and tax are pass-through money: a carrier or a tax authority is the rea
 
 ## Consequences & risks
 
-- A reader cannot derive the admin's Commission from `order_total − net_amount` alone: that difference includes whatever shipping and tax the admin receives and, when the admin bears a gateway fee, overstates the admin's take. Use the `dokan_order_stats` columns or `OrderCommission` getters to see the buckets.
+- A reader cannot derive the admin's Commission from `order_total − net_amount` alone: that difference includes whatever shipping and tax the admin receives and, when the admin bears a gateway fee, overstates the admin's take. Use the `dokan_order_stats` columns or `OrderCommission` getters to see the buckets; order fee lines have no `dokan_order_stats` column, so for them only `OrderCommission::get_data()` shows the split.
 - Each recipient getter returns the full amount or zero, so a marketplace that wants "Vendor gets shipping but pays a cut of it" cannot express that through settings.
 - The fee getters persist the recipient on first read (Lite ADR 0013), so calling any of these getters can save the order.
 
@@ -88,4 +88,4 @@ Shipping and tax are pass-through money: a carrier or a tax authority is the rea
 - When adding a new kind of non-product money, add a matching pair of `get_vendor_*` / `get_admin_*` getters and include them in both totals, rather than adjusting the line-item filters.
 - Consider exposing an explicit "fees breakdown" in REST responses so integrators stop inferring Commission from `order_total − net_amount`.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

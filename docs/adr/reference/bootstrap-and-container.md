@@ -646,4 +646,4 @@ REST routes are registered by the `api` service (`REST\Manager`) and are out of 
 - `Installer::create_page()` looks for an existing page with `get_page_by_path( $page['post_title'] )` (by title, not slug). How this behaves with localized titles was not verified.
 - The callbacks attached to the commission batch hooks (`process_product_batch` and the others) and the code that schedules them were not traced further.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

@@ -4,7 +4,7 @@ Status: Accepted (retroactive — no recorded decision; documents observed behav
 
 ## Context
 
-Variable products sell as individual variations, and each variation is its own WooCommerce product object with its own ID and price. Teammates ask whether a variation can carry its own commission rate, and which category counts when the variation is sold. The general level order is in [ADR-0029](./0029-the-commission-formula-is-taken-from-the-product-then-the-vendor-then-the-global-setting-then-zero.md).
+Variable products sell as individual variations, and each variation is its own WooCommerce product object with its own ID and price. Teammates ask whether a variation can carry its own Commission formula, and which category counts when the variation is sold. The general level order is in [ADR-0029](./0029-the-commission-formula-is-taken-from-the-product-then-the-vendor-then-the-global-setting-then-zero.md).
 
 ## Rule
 
@@ -13,7 +13,7 @@ Variable products sell as individual variations, and each variation is its own W
 - **Vendor comes from the product author.** The Vendor link of the chain is resolved through `dokan_get_vendor_by_product()` on the product ID of the order item (`lite:includes/Commission/Strategies/OrderItem.php:47`, `lite:includes/Commission/Strategies/Product.php:49`); variations share the parent's Vendor (Lite ADR 0011).
 - **The amount is the variation's own line.** The calculator uses the order line's total and quantity, which are those of the variation sold (`lite:includes/Commission/OrderLineItemCommission.php:117-140`).
 
-The product editor exposes the commission fields only once, on the parent, for `simple`, `variable` and `booking` products (`lite:includes/Product/Hooks.php:504-540`), and saves them only for simple and variable products (`lite:includes/Product/Hooks.php:56-57`).
+The product editor exposes the commission fields only once, on the parent, for `simple`, `variable` and `booking` products (`lite:includes/Product/Hooks.php:504-540`), and the product editor saves them only for simple and variable products (`lite:includes/Product/Hooks.php:56-57`). The admin bulk-edit tool is broader: `Admin\Hooks::save_custom_bulk_edit_field()` saves them for every product type except those in the filterable `dokan_excluded_product_types_for_bulk_edit` list (default `product_pack`, `external`, `grouped`) and except the marketplace's advertisement and reverse-withdrawal products (`lite:includes/Admin/Hooks.php:251-271`). It runs on `woocommerce_product_bulk_edit_save` (`:41`), so it receives the products selected in the products list, which are parents, not variations.
 
 ## Settings that change it
 
@@ -28,7 +28,7 @@ Settings: global `fixed` 10 % + 0. Variable T-shirt with parent product commissi
 
 ## Edge cases
 
-- Product earning previews for a variation (for example "You Earn" next to a variation price in the Vendor dashboard) also resolve to the parent's formula, because they go through the same `Settings\Product` class.
+- Product earning previews for a variation (for example "You Earn" next to a variation price in the Vendor dashboard) also resolve to the parent's formula, because they go through the same `Settings\Product` class. Their category is looked up with the variation ID (`Helper::get_saved_products_category()`, `lite:includes/Commission/ProductCommission.php:76-81`); it reads the parent's `chosen_product_cat` meta (`lite:includes/ProductCategory/Helper.php:290`) and, when the parent has none, derives the category from the parent's `product_cat` terms, because `get_product_terms()` also redirects a variation to its parent (`lite:includes/ProductCategory/Helper.php:73-82`, `:339`).
 - Variation-like types registered by extensions that are not of type `variation` are not redirected to a parent by `Settings\Product`; they are treated as products in their own right.
 
 ## Why
@@ -44,4 +44,4 @@ No recorded decision. Storing commission once on the parent keeps the editor and
 
 - If per-variation commission is ever required, add it as an explicit new chain link before the parent product rather than changing `Settings\Product`.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

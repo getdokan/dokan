@@ -53,4 +53,4 @@ The class docblock states the intent: "Handles the update of vendor balance afte
 - Decide whether the Balance debit should be net or gross of Vendor-borne gateway fees and make `Fees::calculate_gateway_fee()` and `handle_order_edit()` agree.
 - Add an order note when an edit changes a Vendor's Earning, so Balance changes caused by edits are explainable.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

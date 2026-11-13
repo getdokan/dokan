@@ -57,7 +57,7 @@ Order #300 → #301 (Vendor A, Earning 54.00) and #302 (Vendor B, Earning 36.00)
 ## Edge cases
 
 - **Cancelling after a Withdraw.** If the Vendor had already withdrawn money that included this Earning, the Earning stops counting but the Withdraw credit remains, so the Vendor's Balance drops, possibly below zero. Dokan records no separate debt for it. What a negative Balance means for future Withdraws is a `05-…` topic.
-- **Cancelled is final for Vendors.** The Vendor dashboard does not offer status changes on a cancelled order, so only the Store Admin can bring it back.
+- **Cancelled is final in the Vendor dashboard.** The Vendor dashboard's single-order screen does not offer status changes on a cancelled order and the bulk status action skips it ([ADR-0046](./0046-vendors-change-only-their-own-vendor-order-status-when-allowed-and-cancelled-or-refunded-orders-are-final.md)); reopening it is a Store Admin action in WP-admin.
 - **Reverse withdrawal is unaffected.** The Reverse withdrawal ledger books its entry when a Vendor order paid with a gateway enabled for Reverse withdrawal (cash on delivery) moves to *completed* (`lite:includes/ReverseWithdrawal/Hooks.php:187-227`), and is governed by Lite ADR 0015 (`docs/adr/0015-reverse-withdrawal-is-a-separate-receivable-ledger.md`), not by this rule.
 - **Gateway fees already deducted stay deducted.** A fee that adjusted the row's amount before cancellation is not restored; the row just stops counting.
 
@@ -75,4 +75,4 @@ No recorded decision. Driving Balance from status keeps cancellation reversible 
 
 - When an order that had an earning status is cancelled after a Withdraw, add an order note (or Vendor notification) so the Balance drop is explainable.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

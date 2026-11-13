@@ -4,7 +4,7 @@ Status: Accepted (retroactive — documents existing code)
 
 ## Context
 
-Every Commission level (product, Vendor, global) stores its percentage and flat fee as strings. An admin who wants "no commission for this Vendor" and an admin who simply never filled in the Vendor's commission both see a Vendor whose rate looks blank or zero in reports. The code treats these two cases very differently, and support questions such as "I set 0 and the global rate still applied" or "I cleared the field and the Vendor is now charged the global rate" depend on the distinction. The level order itself is described in [ADR-0029](./0029-the-commission-formula-is-taken-from-the-product-then-the-vendor-then-the-global-setting-then-zero.md).
+Every Commission level (product, Vendor, global) stores its percentage and flat fee as strings. An admin who wants "no commission for this Vendor" and an admin who simply never filled in the Vendor's commission both see a Vendor whose Commission formula looks blank or zero in reports. The code treats these two cases very differently, and support questions such as "I set 0 and the global rate still applied" or "I cleared the field and the Vendor is now charged the global rate" depend on the distinction. The level order itself is described in [ADR-0029](./0029-the-commission-formula-is-taken-from-the-product-then-the-vendor-then-the-global-setting-then-zero.md).
 
 ## Rule
 
@@ -31,8 +31,8 @@ The save paths preserve the difference between `''` and `0`:
 
 Validation that can turn a typed value into an empty one:
 
-- Product percentage outside 0–100 is discarded and stored as `''` (`lite:includes/Product/Hooks.php:577-583`); a negative product flat fee is stored as `''` (`:585-593`). The product then falls through to the Vendor or global rate rather than charging zero.
-- When the global type being saved is `fixed`, a global percentage outside 0–100 is replaced by the previously saved value (`Settings::validate_fixed_price_values()`, `lite:includes/Admin/Settings.php:95-108`). The new settings page requires both global fields to be non-empty (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:705-712`).
+- Product percentage outside 0–100 is discarded and stored as `''` (`lite:includes/Product/Hooks.php:577-583`); a negative product flat fee is stored as `''` (`:585-593`). The product then falls through to the Vendor or global Commission formula rather than charging zero.
+- When the global `commission_type` being saved is `flat` or `fixed` (`$clickable_types = [ 'flat', 'fixed' ]`, `lite:includes/Admin/Settings.php:96`), a global percentage outside 0–100 is replaced by the previously saved value (`Settings::validate_fixed_price_values()`, `lite:includes/Admin/Settings.php:95-108`). The new settings page requires both global fields to be non-empty (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:705-712`).
 
 ## Worked example
 
@@ -41,12 +41,12 @@ Settings: global `fixed`, 10 % + 2.00. Vendor V: case A `dokan_admin_percentage 
 - Case A: Vendor level is applicable. Commission = 50 × 0 % + 0 = 0.00. Earning = 50.00.
 - Case B: Vendor level is skipped, global applies. Commission = 50 × 10 % + 2.00 = 7.00. Earning = 43.00.
 
-Product variant: product percentage typed as `150` → stored as `''` → with case B the Vendor level is skipped too, so Commission is again 7.00 from the global rate, not 150 % and not 0.
+Product variant: product percentage typed as `150` → stored as `''` → with case B the Vendor level is skipped too, so Commission is again 7.00 from the global Commission formula, not 150 % and not 0.
 
 ## Edge cases
 
 - A value of only whitespace is treated as empty (`trim`).
-- Clearing a Vendor's commission fields in the admin form re-attaches that Vendor to the global rate for every future sale. It does not change already calculated orders (Lite ADR 0013).
+- Clearing a Vendor's commission fields in the admin form re-attaches that Vendor to the global Commission formula for every future sale. It does not change already calculated orders (Lite ADR 0013).
 - Category maps behave the same way at the category level: an entry for a category whose percentage and flat are both empty does not count as "set" once it reaches the setting, so the level as a whole may become non-applicable (see [ADR-0023](./0023-category-based-commission-uses-the-products-chosen-category-and-falls-back-to-the-all-categories-rate.md)).
 
 ## Why
@@ -56,11 +56,11 @@ The UI copy on both the product field and the category table explicitly promises
 ## Consequences & risks
 
 - Reports cannot tell "zero by choice" from "zero because nothing applies" without looking at the frozen `_dokan_commission_source` item meta.
-- Silent normalisation of out-of-range product values to `''` means a typo makes the product inherit a different, usually higher, rate instead of producing an error.
+- Silent normalisation of out-of-range product values to `''` means a typo makes the product inherit a different, usually higher, Commission formula instead of producing an error.
 
 ## Recommendations
 
 - Reject out-of-range product commission values with a visible error instead of storing `''`.
-- In the Vendor and product UIs, label empty fields "Inherit" and show the inherited rate, so `''` and `0` are visibly different.
+- In the Vendor and product UIs, label empty fields "Inherit" and show the inherited Commission formula, so `''` and `0` are visibly different.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

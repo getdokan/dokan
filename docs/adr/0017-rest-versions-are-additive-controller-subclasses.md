@@ -50,4 +50,4 @@ flowchart TD
 - Which external clients depend on which namespace was not determinable from source.
 - No deprecation or sunset mechanism for old namespaces exists in Lite; whether one is planned is not recorded in code.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

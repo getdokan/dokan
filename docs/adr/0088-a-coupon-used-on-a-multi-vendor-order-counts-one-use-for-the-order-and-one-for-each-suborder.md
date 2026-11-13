@@ -1,12 +1,14 @@
 # A coupon used on a multi-vendor order counts one use for the order and one for each Suborder
 
-Status: Accepted (retroactive — no recorded decision; documents observed behaviour)
+Status: Accepted (retroactive — documents existing behaviour; known defect, see Recommendations)
 
 ## Context
 
 WooCommerce coupons can carry a total **usage limit** (`usage_limit`) and a **usage limit per user** (`usage_limit_per_user`). WooCommerce counts a use per *order*: each order that carries the coupon and reaches a counted status increments the coupon's `usage_count` and adds one `_used_by` entry for the Customer. Dokan turns a multi-vendor Order into a parent Order plus one Suborder per Vendor, and each Suborder carries its own coupon line (see [ADR-0087](./0087-a-coupon-discount-is-split-across-suborders-exactly-as-woocommerce-allocated-it-to-each-line-item.md)). Teammates ask: "If a Customer uses a 'once per customer' coupon on a basket from two stores, how many uses is that?" Dokan has no code of its own for coupon usage; the answer follows from how WooCommerce's counter meets Dokan's Suborders.
 
 ## Rule
+
+This section describes observed behaviour, not intended policy.
 
 **Every order that carries the coupon is counted separately by WooCommerce. A multi-vendor Order that uses a coupon therefore records one use for the parent Order plus one use for each Suborder that received the coupon. A single-vendor Order (no Suborders) records one use.**
 
@@ -16,7 +18,7 @@ The chain, as the code shows it:
 2. **Suborders get coupon lines.** Each Suborder whose items were discounted by the coupon gets a `WC_Order_Item_Coupon` for that code (`Order\Manager::create_coupons()`, `lite:includes/Order/Manager.php:821-879`). Suborders do not copy the parent's order meta, so they do not inherit its `_recorded_coupon_usage_counts` flag.
 3. **Counting happens on status changes.** WooCommerce's `wc_update_coupon_usage_counts()` runs on `woocommerce_order_status_pending`, `processing`, `on-hold`, `completed`, `cancelled`, `failed` and on trashing (`wc:includes/wc-order-functions.php:1080-1086`). For an order in a counted status that has not yet recorded usage, it sets `_recorded_coupon_usage_counts` on that order and calls `WC_Coupon::increase_usage_count()` for every coupon code on it (`wc:includes/wc-order-functions.php:1020-1078`), which raises `usage_count` and adds a `_used_by` row (`wc:includes/data-stores/class-wc-coupon-data-store-cpt.php:368-384`).
 4. **Suborders change status through Dokan's cascade.** A new Suborder is created without a status and then given the parent's status (`lite:includes/Order/Manager.php:652`). An order without a status reads as `pending` (`wc:includes/abstracts/abstract-wc-order.php:658-672`, used by `set_status()` at `:904`), and WooCommerce records a status transition only when the old and new statuses differ (`wc:includes/class-wc-order.php:319-336`). At checkout the parent is still `pending`, so no status hook fires for the Suborder at creation. When the parent later moves (for example from `pending` to `processing` on payment), Dokan calls `update_status()` on each Suborder whose current status allows that transition (`Order\Hooks::on_order_status_change()`, `lite:includes/Order/Hooks.php:125-137`; the transition list is `Order\Hooks::is_status_change_allowed()`, `lite:includes/Order/Hooks.php:199-213`), which fires `woocommerce_order_status_processing` for each Suborder (`wc:includes/class-wc-order.php:457`). Each Suborder then records its own use.
-5. **Reversal is symmetric.** When an order that recorded usage moves to `cancelled`, `failed` or trash, the same function decreases the count once for that order (`wc:includes/wc-order-functions.php:1042-1044`). A cancelled parent cascades to its Suborders, so each one gives its use back.
+5. **Reversal is symmetric.** When an order that recorded usage moves to `cancelled`, `failed` or trash, the same function decreases the count once for that order (`wc:includes/wc-order-functions.php:1042-1044`). A cancelled parent cascades to its Suborders only where the transition list allows it (`lite:includes/Order/Hooks.php:205-213`, [ADR-0039](./0039-a-parent-order-status-change-is-copied-to-its-suborders-only-along-an-allowed-transition-list.md)); each Suborder that follows gives its use back. `wc-on-hold` does not list `wc-cancelled`, so when an `on-hold` parent (for example one paid by bank transfer or cheque) is cancelled, its Suborders stay `on-hold` and keep their uses.
 
 ## Settings that change it
 
@@ -62,4 +64,4 @@ No recorded decision. WooCommerce counts per order; Dokan creates additional ord
 - Decide the intended rule explicitly (almost certainly "one use per Customer Order") and implement it, for example by marking each Suborder's coupon usage as already recorded when the Suborder is created, or by short-circuiting `wc_update_coupon_usage_counts()` for orders that have a parent.
 - Until then, set usage limits with this multiplier in mind and tell Store Admins about it.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

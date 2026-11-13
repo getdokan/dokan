@@ -62,4 +62,4 @@ No recorded decision beyond the inline comment ("if the order is a downloadable 
 
 - Evaluate `is_paid()` and the payment method per sibling rather than from the triggering Suborder, so the rule stays correct if Suborders ever stop sharing a payment method.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

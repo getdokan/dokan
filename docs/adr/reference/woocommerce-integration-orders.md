@@ -466,4 +466,4 @@ Two order-related REST seams touch WooCommerce's order REST layer:
 - **Parent status at split time on classic checkout.** A new order's default status comes from `woocommerce_default_order_status`, which defaults to `pending` (`wc:includes/abstracts/abstract-wc-order.php:669`). Other plugins can filter it, so the status copied into Suborders on classic checkout is not guaranteed to be `pending` in every installation.
 - **Dokan Pro ADRs.** Dokan Pro's ADRs were checked for context. Per the public-repo rule, their content is not summarised here.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

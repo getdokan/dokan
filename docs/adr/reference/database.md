@@ -645,4 +645,4 @@ The data layer itself exposes one endpoint. All table-backed REST resources (ord
 - Sites upgraded through `V_3_2_12` before `V_3_3_7` ran may briefly have had `dokan_withdraw.details` as `NOT NULL`. `V_3_3_7` corrects this, but the column state of a site where that upgrader did not complete cannot be determined from source.
 - `dokan_orders.order_id`, `dokan_vendor_balance.trn_id` and the other order references are not declared as foreign keys, so referential integrity relies entirely on the PHP cascade in `Order\Manager::delete_seller_order()`. Whether every deletion path, such as trashing versus permanent deletion of an order, reaches that cascade was not traced in this document; see [orders-commission-fees.md](orders-commission-fees.md).
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

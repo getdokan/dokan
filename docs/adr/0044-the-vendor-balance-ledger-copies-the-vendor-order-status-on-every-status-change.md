@@ -8,7 +8,7 @@ A Vendor order's Earning is written once, at creation, with an empty ledger stat
 
 ## Rule
 
-**[Lite]** On every WooCommerce status change of an order, Dokan writes the new status, with the `wc-` prefix, into that order's `dokan_orders.order_status` and into the `status` of that order's `dokan_orders`-type Balance row. It does not insert, delete or re-price anything.
+**[Lite]** On every WooCommerce status change of an order, Dokan writes the new status, with the `wc-` prefix, into that order's `dokan_orders.order_status` and into the `status` of that order's `dokan_orders`-type Balance row. The status listener itself does not insert, delete or re-price anything. Because `update_status()` saves the order, the same save also fires `woocommerce_update_order`, where the order-edit handlers (priorities 80 and 99) may rewrite `net_amount`, `order_total` and the debit if the recalculated Earning differs ([ADR-0042](./0042-editing-a-vendor-order-recalculates-its-earning-in-the-vendor-balance-ledger.md); `lite:includes/Order/VendorBalanceUpdateHandler.php:30-31`, `:181-201`).
 
 - `Order\Hooks::on_order_status_change` (`lite:includes/Order/Hooks.php:95`, priority 10 on `woocommerce_order_status_changed`, `:36`) adds the `wc-` prefix (`:111-114`), then:
   - updates `dokan_orders.order_status` where `order_id` = the order (`:117-123`);
@@ -47,7 +47,7 @@ The debit never changes; only the status does.
 - **Status changes that are not WooCommerce transitions are not copied.** Direct database edits, `set_status()` without `save()`, and saves where the status does not change do not fire `woocommerce_order_status_changed`, so the ledger keeps its previous status.
 - **The first change after creation fills the empty status.** At checkout the usual first change is `pending → processing` (or `on-hold`) at payment. A Vendor order that never changes status after creation keeps the empty status forever.
 - **Custom statuses are stored as is**, with the `wc-` prefix (for example `wc-shipped`). Whether they count depends only on the earning-status list.
-- **`dokan_orders.order_status` and the Balance status can differ** for cash-on-delivery orders under the exclusion, and for Vendor orders created already past `pending` (the Balance status stays empty while `dokan_orders` has the real status).
+- **`dokan_orders.order_status` and the Balance status can differ** for cash-on-delivery orders under the exclusion, and for Suborders created already past `pending` (the Balance status stays empty while `dokan_orders` has the real status; see [ADR-0040](./0040-a-vendor-order-earning-is-written-to-the-vendor-balance-ledger-once-when-the-order-is-created-not-when-it-is-paid.md)). A single-Vendor Order created in WP-admin past `pending` is not affected: its rows are written and its Balance status set in the same `on_order_status_change` call.
 
 ## Why
 
@@ -63,4 +63,4 @@ No recorded decision. Copying the status keeps a single ledger row per Vendor or
 
 - Treat `dokan_orders.order_status` and `dokan_vendor_balance.status` as caches of the WooCommerce status. Tools that repair data should recompute them from the order rather than edit them by hand.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

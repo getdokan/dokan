@@ -49,4 +49,4 @@ Lite keeps the marketplace core (orders, Suborders, commission, Balance) and lea
 
 - Grant the coupon capabilities only when a coupon screen is actually available, or label them as add-on capabilities in the staff-permission UI.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

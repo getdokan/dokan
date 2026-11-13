@@ -55,4 +55,4 @@ No decision record exists. The code comment says "check order is a manual order 
 - Consider a dedicated Dokan order meta to mark Vendor-created orders instead of reusing the WooCommerce attribution field.
 - If multi-vendor fee lines matter, decide explicitly whether they should be split to Suborders, rather than leaving them on the parent.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

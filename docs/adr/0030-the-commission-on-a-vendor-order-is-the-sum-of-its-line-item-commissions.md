@@ -53,4 +53,4 @@ No recorded decision. Calculating per line is what allows one order to mix produ
 
 - Surface skipped-line failures in the order notes rather than only in the log.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

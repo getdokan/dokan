@@ -8,7 +8,7 @@ Payment gateways keep a processing fee from each payment. On a marketplace someo
 
 ## Rule
 
-**When it runs.** `Fees::calculate_gateway_fee()` is hooked to `woocommerce_order_status_changed` (priority 100), `woocommerce_thankyou_ppec_paypal` and `woocommerce_paypal_payments_order_captured` (priority 99) (`lite:includes/Fees.php:21-23`).
+**When it runs.** `Fees::calculate_gateway_fee()` is hooked to `woocommerce_order_status_changed` (priority 100), `woocommerce_thankyou_ppec_paypal` (default priority 10) and `woocommerce_paypal_payments_order_captured` (priority 99) (`lite:includes/Fees.php:21-23`).
 
 **Which fee.** `Fees::get_processing_fee()` (`lite:includes/Fees.php:126-142`) reads the fee from the paid Order:
 
@@ -76,7 +76,7 @@ PayPal Standard and its successors report a single fee per payment and know noth
 
 ## Consequences & risks
 
-- **Two ledger models meet here.** Lite folds the fee into the order's Balance `debit`, while `VendorBalanceUpdateHandler::handle_order_edit()` recomputes that debit on every order save as `get_vendor_earning() + get_vendor_gateway_fee()`, that is, before the gateway fee (`lite:includes/Order/VendorBalanceUpdateHandler.php:43-60`). That formula matches add-ons that book the gateway fee as a separate Balance entry. When Lite's routine saves the Vendor order at step 3, the order-edit handler runs and resets the debit to the Earning before the fee (`:54`, `:62-66`), while `update_dokan_order_table()` recomputes `dokan_orders.net_amount` as `get_vendor_earning()`, which now includes the saved fee, so the orders table keeps the net amount (`:157-162`). For the PayPal-family gateways handled only by Lite, the Balance can therefore show the Earning before the gateway fee while the orders table and reports show it after.
+- **Two ledger models meet here.** Lite folds the fee into the order's Balance `debit`, while `VendorBalanceUpdateHandler::handle_order_edit()` recomputes that debit on every order save as `get_vendor_earning() + get_vendor_gateway_fee()`, that is, before the gateway fee (`lite:includes/Order/VendorBalanceUpdateHandler.php:43-60`). That formula matches add-ons that book the gateway fee as a separate Balance entry. When Lite's routine saves the Vendor order at step 3, the order-edit handler runs and resets the debit to the Earning before the fee (`:54`, `:62-66`), while `update_dokan_order_table()` recomputes `dokan_orders.net_amount` as `get_vendor_earning()`, which now includes the saved fee, so the orders table keeps the net amount (`:157-162`). For the PayPal-family gateways handled only by Lite, the Balance can therefore show the Earning before the gateway fee while the orders table and reports show it after. The reset is skipped in one case: `get_order_amount()` first reads a 5-minute transient that `update_balance()` writes whenever it rewrites the debit (`:94-99`, `:124-127`); if that cached value, rather than the current `debit`, already equals the pre-fee Earning, the handler sees no change and leaves the fee-deducted debit in place (`:60-64`). Which of the two outcomes a given order gets therefore depends on whether its debit was rewritten in the previous five minutes.
 - Any code that reads `dokan_gateway_fee` without `dokan_gateway_fee_paid_by` must apply the same payment-method fallback, or it will disagree with `OrderCommission`.
 - The prorated fee is stored without rounding to price decimals (only to the 6-decimal rounding precision), so sums of displayed fees may differ by a cent from the reported total.
 
@@ -86,4 +86,4 @@ PayPal Standard and its successors report a single fee per payment and know noth
 - Write `dokan_gateway_fee_paid_by` explicitly in Lite's routine instead of relying on the empty-value fallback.
 - Round the prorated fee to `wc_get_price_decimals()`.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

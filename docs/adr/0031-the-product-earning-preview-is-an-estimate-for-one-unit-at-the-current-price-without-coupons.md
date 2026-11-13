@@ -48,4 +48,4 @@ No recorded decision. A per-unit, coupon-free figure is the only number that can
 
 - Label the preview "per unit, before discounts, shipping and taxes" in the Vendor UI.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

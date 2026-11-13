@@ -52,4 +52,4 @@ Most marketplaces let Vendors ship their own goods and pay the carrier, so the V
 - Treat the `shipping_fee_recipient` order meta as part of the financial record (see Lite ADR 0013).
 - If per-Vendor shipping recipients are ever needed, implement them as an earlier-priority `dokan_shipping_fee_recipient` filter so the freeze still captures the result.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

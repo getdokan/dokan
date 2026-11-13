@@ -8,7 +8,7 @@ After checkout, a Store Admin can still add or remove coupons on an order from t
 
 ## Rule
 
-**Adding a coupon to a parent Order applies the same code to every Suborder that does not already have it. Removing a coupon from a parent Order removes it from every Suborder that has it. Removing a coupon from a Suborder only clears the matching per-line records on the parent; the parent keeps its coupon line.**
+**Adding a coupon to a parent Order applies the same code to every Suborder that does not already have it. Removing a coupon from a parent Order removes it from every Suborder that has it. Removing a coupon from a Suborder only clears the matching per-line records on the parent.** (The parent keeping its coupon line in that case is a known gap, not part of the rule; see Edge cases.)
 
 1. **Add on the parent.** When WooCommerce applies a coupon to an order, Lite records the per-line discount on each order item (`Vendor\Coupon::save_coupon_data_to_order_item()`, `lite:includes/Vendor/Coupon.php:199-237`) and, if the order has Suborders (`has_sub_order` meta), calls `apply_coupon_to_child_orders()` (`lite:includes/Vendor/Coupon.php:239-242`). That method loops over `dokan()->order->get_child_orders()`, skips Suborders that already list the code, and calls `$sub_order->apply_coupon( $code )` followed by `save()` (`lite:includes/Vendor/Coupon.php:254-267`).
    - `WC_Order::apply_coupon()` re-validates the coupon against the Suborder's own items, so WooCommerce rules, the Lite fixed cart rule ([ADR-0089](./0089-a-fixed-cart-coupon-can-be-used-only-when-every-product-in-the-cart-comes-from-one-vendor.md)) and any add-on rules on `dokan_coupon_is_valid` apply per Suborder. A Suborder whose items are not eligible simply does not get the coupon; the error is not surfaced.
@@ -33,6 +33,7 @@ The Store Admin then removes `LATE10` from #102 only: #102 loses the coupon and 
 
 ## Edge cases
 
+- **Known gap: removing a coupon from a Suborder leaves the parent diverged.** The parent keeps its coupon line and its totals (step 3 above), so the Customer-facing Order and the Vendor order disagree until the coupon is also removed from the parent.
 - **Coupon restricted to one Vendor.** If `LATE10` were valid only for Vendor A's products, #102 would reject it during `apply_coupon()` and only #101 would be discounted.
 - **Already applied.** The recording hook runs once per parent line item (and again whenever WooCommerce recalculates the parent's coupons), so `apply_coupon_to_child_orders()` is called several times; a Suborder that already lists the code is skipped (`lite:includes/Vendor/Coupon.php:258-262`), so the code is applied to each Suborder only once.
 - **Rejected on a Suborder.** `WC_Order::apply_coupon()` returns a `WP_Error` instead of throwing when validation fails (`wc:includes/abstracts/abstract-wc-order.php:1665-1698`); Lite ignores the return value (`lite:includes/Vendor/Coupon.php:264`), which is why nothing is shown.
@@ -55,4 +56,4 @@ No recorded decision. The handler's docblock describes the intended propagation 
 - When a coupon is removed from a Suborder, recalculate the parent's coupon line (or block Suborder coupon edits for multi-vendor Orders).
 - Add an order note on the parent listing which Suborders accepted or rejected a mirrored coupon.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

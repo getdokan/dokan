@@ -53,4 +53,4 @@ The code states the reason: "Round only the admin's share and let the vendor tak
 
 - Document per-line rounding in Vendor-facing help, since Vendors often check Commission against the order total with a calculator.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

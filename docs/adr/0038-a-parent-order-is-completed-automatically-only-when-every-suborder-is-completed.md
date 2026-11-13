@@ -53,4 +53,4 @@ No recorded decision beyond the method's docblock ("Mark the parent order as com
 - Consider rolling up a parent to `cancelled` or `refunded` when every Suborder reached that same final status, and to `completed` when every Suborder is in a final state with at least one `completed`, so mixed outcomes do not leave the parent open forever.
 - Skip the roll-up when the parent is already `cancelled` or `refunded`, so a late Suborder event cannot re-open a closed Order.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

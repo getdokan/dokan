@@ -443,4 +443,4 @@ Controllers added through `dokan_rest_api_class_map` define their own routes and
 - The exact moment at which an add-on's `dokan-dashboard-routes` filter must be registered was inferred from `getRoutes()` being called inside the `App` component; the mounting code after `domReady` was not traced line by line, and Lite does not document a required script dependency for add-on route bundles.
 - The full list of component-level `wp.hooks` filters in `src/` (roughly 75 files call `applyFilters`) is not enumerated here.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._

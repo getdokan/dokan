@@ -42,7 +42,7 @@ With a `fixed_product` coupon of 3.00 instead: shirt −3.00, mug −6.00 (3.00 
 - **Vendor with no eligible items.** If a coupon did not discount any of a Vendor's items, those items carry no record for that code and the Suborder gets no coupon line for it.
 - **Codes recorded on a line but missing from the parent.** The per-code accumulator is initialised before the "is it on the parent?" check (`lite:includes/Order/Manager.php:855-860`), so such a code still produces a Suborder coupon line with a discount of 0.
 - **Lines without a record** (for example items added by code that bypassed `WC_Discounts`) still carry their discounted line totals, but the Suborder gets no coupon line for that discount.
-- **Over-discount trimming.** If the recorded discounts on one cart item exceed price × quantity, the record is trimmed at checkout before it is copied (`lite:includes/Vendor/Coupon.php:298-313`), so the Suborder coupon line never exceeds the item value.
+- **Over-discount trimming.** If the recorded discounts on one cart item exceed price × quantity, the record is trimmed at checkout before it is copied (`lite:includes/Vendor/Coupon.php:298-313`). The price compared against is the product's current catalogue price, `wc_get_product( $item->get_product_id() )->get_price()` (`:300-301`), not the line's own price or subtotal, and for a variation it is the parent product's price; so the trim keeps the recorded discount within the item value only when that price matches what the line was sold at.
 - **Orders created in WP Admin** are split on their first status change (`lite:includes/Order/Hooks.php:100-108`); the same copy logic applies.
 - **Coupons changed after checkout** are handled by [ADR-0086](./0086-a-coupon-added-to-or-removed-from-a-parent-order-is-mirrored-onto-its-suborders.md).
 
@@ -61,4 +61,4 @@ No recorded decision. The class comment on `intercept_wc_coupon()` explains why 
 - Copy the parent coupon line's discount tax pro rata (or compute it from the copied items) so that Suborder coupon lines are complete.
 - Skip codes that are not on the parent instead of adding zero-value coupon lines.
 
-_Verified against Lite @e1ce7fc81 / Pro @65975a952 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
