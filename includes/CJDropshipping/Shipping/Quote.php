@@ -141,7 +141,7 @@ class Quote {
 
         // Warehouses that stock every item.
         $lists  = array_values( $candidates );
-        $common = array_values( array_reduce( array_slice( $lists, 1 ), static fn( $carry, $list ) => array_intersect( $carry, $list ), $lists[0] ) );
+        $common = array_values( array_reduce( array_slice( $lists, 1 ), static fn( $carry, $countries ) => array_intersect( $carry, $countries ), $lists[0] ) );
         sort( $common );
 
         if ( $common ) {

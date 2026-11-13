@@ -6,7 +6,9 @@ use WeDevs\Dokan\CJDropshipping\Api\ApiException;
 use WeDevs\Dokan\CJDropshipping\Api\Catalog;
 use WeDevs\Dokan\CJDropshipping\Api\ProductDetails;
 use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
+use WeDevs\Dokan\CJDropshipping\Order\Fulfilment;
 use WeDevs\Dokan\CJDropshipping\Product\Importer;
+use WeDevs\Dokan\CJDropshipping\Product\OffSale;
 use WeDevs\Dokan\CJDropshipping\Settings;
 use WeDevs\Dokan\CJDropshipping\Status;
 use WeDevs\Dokan\CJDropshipping\Vendor\Access;
@@ -96,6 +98,16 @@ class VendorController extends DokanBaseVendorController {
                             'maximum' => 1000,
                         ],
                     ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/restore', [
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'restore_products' ],
+                    'permission_callback' => [ $this, 'can_import' ],
                 ],
             ]
         );
@@ -322,6 +334,8 @@ class VendorController extends DokanBaseVendorController {
                 'variable'       => Importer::supports_variable(),
                 'categories'     => '' === $reason ? self::categories() : [],
                 'alerts'         => '' === $reason ? self::alerts( $user_id ) : [],
+                'awaiting'       => '' === $reason ? self::awaiting( $user_id ) : [],
+                'restorable'     => '' === $reason && Status::is_connected() ? count( ( new OffSale() )->restorable( $user_id ) ) : 0,
             ]
         );
     }
@@ -410,6 +424,23 @@ class VendorController extends DokanBaseVendorController {
     }
 
     /**
+     * Put the vendor's CJ products taken off sale by a disconnect back on sale (B9).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function restore_products() {
+        if ( ! Status::is_connected() ) {
+            return new WP_Error( 'dokan_cj_not_connected', __( 'CJ isn\'t available on this marketplace right now, so the products can\'t go back on sale yet.', 'dokan-lite' ), [ 'status' => 409 ] );
+        }
+
+        ( new OffSale() )->restore( get_current_user_id() );
+
+        return $this->get_status();
+    }
+
+    /**
      * Dismiss one of the vendor's own alerts.
      *
      * @since DOKAN_SINCE
@@ -422,6 +453,36 @@ class VendorController extends DokanBaseVendorController {
         Alerts::clear( get_current_user_id(), (string) $request['type'], (int) $request['product_id'] );
 
         return $this->get_status();
+    }
+
+    /**
+     * Paid orders whose CJ items aren't ordered on CJ yet (D10).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id Vendor id.
+     *
+     * @return array[] number, url.
+     */
+    public static function awaiting( int $vendor_id ): array {
+        return array_map(
+            static function ( $order_id ) {
+                $order = wc_get_order( $order_id );
+
+                return [
+                    'number' => $order ? $order->get_order_number() : (string) $order_id,
+                    // Not wp_nonce_url(): its &amp; breaks the link once sent as JSON.
+                    'url'    => add_query_arg(
+                        [
+                            'order_id' => $order_id,
+                            '_wpnonce' => wp_create_nonce( 'dokan_view_order' ),
+                        ],
+                        dokan_get_navigation_url( 'orders' )
+                    ),
+                ];
+            },
+            ( new Fulfilment() )->awaiting( $vendor_id )
+        );
     }
 
     /**

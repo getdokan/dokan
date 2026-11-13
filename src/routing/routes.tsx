@@ -9,6 +9,7 @@ import ReverseWithdrawal from '@src/dashboard/reverse-withdraw';
 import StoreSettings from '@src/dashboard/settings/store';
 import CJDropshipping from '@src/dashboard/cj-dropshipping';
 import '@src/dashboard/cj-dropshipping/product-list';
+import '@src/dashboard/cj-dropshipping/order-list';
 
 export default [
     {

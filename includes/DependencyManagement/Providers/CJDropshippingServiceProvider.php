@@ -7,6 +7,8 @@ use WeDevs\Dokan\CJDropshipping\Admin\SettingsSchema;
 use WeDevs\Dokan\CJDropshipping\REST\Registrar;
 use WeDevs\Dokan\CJDropshipping\Vendor\Navigation;
 use WeDevs\Dokan\CJDropshipping\Product\Hooks as ProductHooks;
+use WeDevs\Dokan\CJDropshipping\Product\OffSale;
+use WeDevs\Dokan\CJDropshipping\Order\Panel;
 use WeDevs\Dokan\CJDropshipping\Shipping\Checkout;
 use WeDevs\Dokan\CJDropshipping\Sync\Synchronizer;
 use WeDevs\Dokan\CJDropshipping\Sync\Webhooks;
@@ -34,9 +36,11 @@ class CJDropshippingServiceProvider extends BaseServiceProvider {
         Registrar::class,
         Navigation::class,
         ProductHooks::class,
+        OffSale::class,
         Synchronizer::class,
         Webhooks::class,
         Checkout::class,
+        Panel::class,
         LinkRepository::class,
         VariantRepository::class,
         OrderRefRepository::class,

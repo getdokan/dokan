@@ -36,6 +36,7 @@ class Registrar implements Hookable {
         $dir                       = DOKAN_DIR . '/includes/CJDropshipping/REST/';
         $class_map[ $dir . 'AdminController.php' ] = AdminController::class;
         $class_map[ $dir . 'VendorController.php' ] = VendorController::class;
+        $class_map[ $dir . 'OrderController.php' ]  = OrderController::class;
 
         return $class_map;
     }

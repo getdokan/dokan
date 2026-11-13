@@ -160,6 +160,16 @@ class SettingsSchema implements Hookable {
         ];
 
         $fields[] = [
+            'id'           => 'cj_privacy_note',
+            'type'         => 'field',
+            'variant'      => 'info',
+            'section_id'   => 'cj_connection_section',
+            'title'        => __( 'Buyer address on CJ orders', 'dokan-lite' ),
+            'description'  => __( 'Vendors need the buyer\'s name, address and phone to order on CJ, so the "Order this on CJ" panel shows them on orders with CJ items, even when "Hide customer info" is on.', 'dokan-lite' ),
+            'dependencies' => $enabled_only,
+        ];
+
+        $fields[] = [
             'id'           => 'cj_vendor_terms',
             'type'         => 'field',
             'variant'      => 'textarea',

@@ -11,6 +11,8 @@ export type CJStatus = {
     variable: boolean;
     categories: { id: number; name: string }[];
     alerts: CJAlert[];
+    awaiting: { number: string; url: string }[];
+    restorable: number;
 };
 
 export type CJAlert = {
