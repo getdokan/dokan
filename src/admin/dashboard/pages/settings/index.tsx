@@ -70,6 +70,27 @@ const getLegacyErrorMessage = ( error: unknown ): string => {
     ].join( ' ' );
 };
 
+// Take the admin to the first empty box of the failing field, which can sit far above Save.
+const focusFirstInvalidField = ( fieldId: string ): void => {
+    window.requestAnimationFrame( () => {
+        const field = document.getElementById( fieldId );
+        if ( ! field ) {
+            return;
+        }
+        const inputs = Array.from(
+            field.querySelectorAll< HTMLInputElement >( 'input' )
+        );
+        const target =
+            inputs.find( ( input ) => input.value.trim() === '' ) ??
+            inputs[ 0 ];
+        ( target ?? field ).scrollIntoView( {
+            behavior: 'smooth',
+            block: 'center',
+        } );
+        target?.focus( { preventScroll: true } );
+    } );
+};
+
 const hasElement = (
     elements: SettingsElement[],
     id: string,
@@ -217,14 +238,20 @@ export default function SettingsPage() {
         } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Failed to save settings:', error );
+            const fieldErrors = getFieldErrors( error );
+            const firstErrorId = Object.keys( fieldErrors )[ 0 ];
             const message =
                 getLegacyErrorMessage( error ) ||
+                ( firstErrorId && fieldErrors[ firstErrorId ] ) ||
                 ( error as { message?: string } )?.message ||
                 __( 'Failed to save settings.', 'dokan-lite' );
             toast.error( message );
+            if ( firstErrorId ) {
+                focusFirstInvalidField( firstErrorId );
+            }
             // Rethrow so plugin-ui keeps the page dirty and shows the field errors.
             throw Object.assign( new Error( message ), {
-                errors: getFieldErrors( error ),
+                errors: fieldErrors,
             } );
         } finally {
             setSaving( false );

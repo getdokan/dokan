@@ -4,6 +4,66 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.4',
+        'released' => '2026-11-05',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a Black Friday 2026 offers page to the Dokan admin.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added CartPilot and FlyAffiliate to the setup wizard\'s recommended add-ons, with a Show More option for the extra add-ons.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added CartPilot and FlyAffiliate to the admin Extensions page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Prevented unauthenticated visitors from reading private product data through a crafted request made to look like an MCP request.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The vendor customer list now counts only the vendor\'s own customers, so its totals and pages match the list and searches no longer reveal other registered users.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Customers who buy from several vendors no longer receive duplicate order emails when WooCommerce\'s deferred emails feature is turned on.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved compatibility with WooCommerce 11.3 so the vendor analytics pages keep their layout and no longer log deprecation warnings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor registration forms no longer accept a shop URL that already belongs to another vendor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The new vendor dashboard order list no longer shows order status actions when the admin has turned off order status changes for vendors.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The Reverse Withdrawal Invoice email now works in the WooCommerce email preview and test email instead of showing an error.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard reports no longer show "Something went wrong" after an update because a browser or CDN served outdated files.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The commission settings now name the empty field and explain that 0 is allowed when a commission amount is missing.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.3.3',
         'released' => '2026-10-30',
         'changes'  => [

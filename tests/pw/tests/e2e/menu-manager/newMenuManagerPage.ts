@@ -92,6 +92,8 @@ export class NewMenuManagerPage {
     /** Deep-link a React route by hash (e.g. 'settings/social') — a switched-off one must render Permission Denied. */
     async gotoRoute(route: string): Promise<void> {
         await this.page.goto(toPath(`dashboard/new/#${route}`));
+        // A hash-only change is a same-document navigation: reload so dokanFrontend.restrictedRoutes is re-localized after a DB seed.
+        await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await dvWaitForRootReady(this.page);
         await this.page.waitForTimeout(600);

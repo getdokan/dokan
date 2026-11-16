@@ -14,6 +14,7 @@ import {
   getCustomerLabels,
   getRequestByIdString,
 } from "../../../lib/async-requests";
+import { searchFilterSettings } from "../../../utils/search-filter-settings";
 
 const CUSTOMERS_REPORT_FILTERS_FILTER =
   "dokan_analytics_customers_report_filters";
@@ -48,15 +49,19 @@ export const filters = applyFilters(CUSTOMERS_REPORT_FILTERS_FILTER, [
             value: "single_customer",
             chartMode: "item-comparison",
             path: ["select_customer"],
-            settings: {
-              type: "customers",
-              param: "customers",
-              getLabels: getCustomerLabels,
-              labels: {
+            settings: searchFilterSettings(
+              {
+                type: "customers",
                 placeholder: __("Type to search for a customer", 'dokan-lite'),
-                button: __("Single Customer", 'dokan-lite'),
               },
-            },
+              {
+                param: "customers",
+                getLabels: getCustomerLabels,
+                labels: {
+                  button: __("Single Customer", 'dokan-lite'),
+                },
+              }
+            ),
           },
         ],
       },

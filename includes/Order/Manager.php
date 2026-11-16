@@ -7,6 +7,7 @@ use WC_Order;
 use WC_Order_Item_Coupon;
 use WC_Order_Refund;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Models\DataStore\VendorCustomerStore;
 use WeDevs\Dokan\Utilities\OrderUtil;
 use WeDevs\Dokan\Vendor\Coupon;
 use WP_Error;
@@ -453,6 +454,50 @@ class Manager {
     }
 
     /**
+     * Get the SQL selecting the registered customers who have an order from a seller.
+     *
+     * Matches dokan_customer_has_order_from_this_seller() defaults, without the dokan_get_vendor_orders_* filters.
+     *
+     * @since 5.3.4
+     *
+     * @param int $seller_id Seller ID.
+     *
+     * @return string Single-column SELECT of user IDs, for use in an `IN ( ... )` clause.
+     */
+    public function get_customer_ids_sql_by_seller( int $seller_id ): string {
+        $sql = dokan()->get_container()->get( VendorCustomerStore::class )->get_customer_ids_sql_by_seller( $seller_id );
+
+        /**
+         * Filter the SQL selecting a seller's customer IDs.
+         *
+         * @since 5.3.4
+         *
+         * @param string $sql       Prepared, single-column SELECT of user IDs; it is inserted into the user query's WHERE clause as-is.
+         * @param int    $seller_id Seller ID.
+         */
+        $sql = apply_filters( 'dokan_order_customer_ids_sql_by_seller', $sql, $seller_id );
+
+        // An empty IN () would break the whole user query.
+        return is_string( $sql ) && '' !== trim( $sql ) ? $sql : 'SELECT 0';
+    }
+
+    /**
+     * Limit a user query to the registered customers who have an order from a seller.
+     *
+     * @since 5.3.4
+     *
+     * @param \WP_User_Query $query     User query, from its `pre_user_query` action.
+     * @param int            $seller_id Seller ID.
+     *
+     * @return void
+     */
+    public function restrict_user_query_to_seller_customers( \WP_User_Query $query, int $seller_id ): void {
+        global $wpdb;
+
+        $query->query_where .= " AND {$wpdb->users}.ID IN ( " . $this->get_customer_ids_sql_by_seller( $seller_id ) . ' )';
+    }
+
+    /**
      * Get all child orders of a parent order
      *
      * @param int|WC_Order $parent_order
@@ -649,6 +694,8 @@ class Manager {
 
             // finally, let the order re-calculate itself and save
             $order->calculate_totals();
+            // The customer already gets the parent order's email.
+            EmailHooks::flag_synced_status( $order, $parent_order->get_status() );
             $order->set_status( $parent_order->get_status() );
             $order->set_parent_id( $parent_order->get_id() );
             $order->save();

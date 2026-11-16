@@ -56,6 +56,17 @@ class ProductAbilityScopeTest extends DokanTestCase {
         $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_published, 'product' ) );
     }
 
+    public function test_published_product_is_not_granted_to_anonymous_callers() {
+        $published = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();
+
+        $this->force_ability_context();
+        wp_set_current_user( 0 );
+
+        // MCP transports authenticate first, so the grant never applies; WooCommerce's answer passes through.
+        $this->assertFalse( $this->sut->scope_product_permissions( false, 'read', $published, 'product' ) );
+        $this->assertTrue( $this->sut->scope_product_permissions( true, 'read', $published, 'product' ) );
+    }
+
     public function test_unpublished_product_readable_only_by_owner_or_admin() {
         $other_draft = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
         $own_draft   = $this->factory()->product->set_seller_id( $this->seller_id1 )->create();

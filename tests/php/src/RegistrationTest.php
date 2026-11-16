@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test;
 
 use WeDevs\Dokan\Registration;
+use WP_Error;
 
 /**
  * Covers which roles a sign-up request is allowed to ask for.
@@ -127,5 +128,29 @@ class RegistrationTest extends DokanTestCase {
         add_filter( 'dokan_register_nonce_check', '__return_false' );
 
         $this->assertSame( [ 'customer', 'seller' ], dokan()->registration->get_allowed_registration_roles() );
+    }
+
+    public function test_the_vendor_sign_up_form_rejects_a_reformatted_taken_shop_url() {
+        $this->factory()->user->create(
+            [
+                'role'          => 'seller',
+                'user_nicename' => 'taken-shop',
+            ]
+        );
+
+        // wp_insert_user() would turn this into `taken-shop` and then rename it to `taken-shop-2`.
+        $_POST = [
+            'role'                       => 'seller',
+            'woocommerce-register-nonce' => wp_create_nonce( 'woocommerce-register' ),
+            'fname'                      => 'Nila',
+            'lname'                      => 'Vendor',
+            'phone'                      => '01800000000',
+            'shopname'                   => 'Taken Shop',
+            'shopurl'                    => 'Taken Shop',
+        ];
+
+        $error = dokan()->registration->validate_registration( new WP_Error() );
+
+        $this->assertSame( 'shop-url-error', $error->get_error_code() );
     }
 }
