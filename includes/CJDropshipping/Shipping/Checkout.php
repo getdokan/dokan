@@ -175,7 +175,8 @@ class Checkout implements Hookable {
             // WooCommerce keeps rates per package hash; drop them so the next load asks again.
             WC()->session->set( 'shipping_for_package_' . $key, null );
 
-            if ( ( is_cart() || is_checkout() || wp_doing_ajax() ) && ! wc_has_notice( $message, 'error' ) ) {
+            // On a classic checkout page load an error hides the whole form; its AJAX refresh shows it instead.
+            if ( ( is_cart() || wp_doing_ajax() ) && ! wc_has_notice( $message, 'error' ) ) {
                 wc_add_notice( $message, 'error' );
             }
         }

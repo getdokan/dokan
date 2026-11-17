@@ -408,4 +408,46 @@ class CheckoutTest extends DokanTestCase {
         WC()->shipping()->packages[0]['destination']['country'] = 'DE';
         $this->assertCount( 1, Checkout::missing_rate_messages(), 'A real block is still reported' );
     }
+
+    public function test_blocked_cart_notice_waits_for_the_checkout_refresh() {
+        $product = $this->factory()->product->create_and_get( [ 'regular_price' => 9 ] );
+        ( new LinkRepository() )->link( $product->get_id(), $product->get_id(), $this->seller_id1, 'VA', 'P1' );
+        WC()->cart->set_cart_contents(
+            [
+                'k' => [
+                    'product_id'   => $product->get_id(),
+                    'variation_id' => 0,
+                    'quantity'     => 1,
+                    'data'         => $product,
+                ],
+            ]
+        );
+        WC()->shipping()->packages = [
+            [
+                'seller_id'           => $this->seller_id1,
+                Checkout::PACKAGE_KEY => true,
+                'rates'               => [],
+                'contents'            => WC()->cart->get_cart(),
+                'destination'         => [
+                    'country'  => 'DE',
+                    'postcode' => '10115',
+                ],
+            ],
+        ];
+        wc_clear_notices();
+
+        // A plain checkout page load: no notice, or WooCommerce hides the form.
+        add_filter( 'woocommerce_is_checkout', '__return_true' );
+        ( new Checkout() )->explain_missing_rates();
+        $this->assertSame( 0, wc_notice_count( 'error' ) );
+
+        add_filter( 'wp_doing_ajax', '__return_true' );
+        ( new Checkout() )->explain_missing_rates();
+        remove_filter( 'wp_doing_ajax', '__return_true' );
+        remove_filter( 'woocommerce_is_checkout', '__return_true' );
+        $this->assertSame( 1, wc_notice_count( 'error' ) );
+
+        wc_clear_notices();
+        WC()->cart->empty_cart();
+    }
 }
