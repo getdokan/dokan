@@ -41,7 +41,7 @@ class Access {
             return 'inactive';
         }
 
-        // Pro limits CJ to chosen subscription packs (E3).
+        // Lets an add-on limit who uses CJ; nothing in Dokan does.
         if ( ! apply_filters( 'dokan_cj_vendor_can_use', true, $user_id ) ) {
             return 'not_allowed';
         }

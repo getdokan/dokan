@@ -556,7 +556,7 @@ class VendorController extends DokanBaseVendorController {
             'not_vendor'  => __( 'Only vendors can use CJ Dropshipping.', 'dokan-lite' ),
             'staff'       => __( 'Only the store owner can import and fulfil CJ products. Ask the store owner to handle CJ orders.', 'dokan-lite' ),
             'inactive'    => __( 'Your store needs to be enabled for selling before you can use CJ Dropshipping.', 'dokan-lite' ),
-            'not_allowed' => __( 'Your subscription plan does not include CJ Dropshipping.', 'dokan-lite' ),
+            'not_allowed' => __( 'CJ Dropshipping is not available for your store. Contact the marketplace admin.', 'dokan-lite' ),
         ];
 
         return $messages[ $reason ] ?? __( 'You can\'t use CJ Dropshipping.', 'dokan-lite' );
