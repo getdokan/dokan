@@ -466,7 +466,8 @@ class CheckoutTest extends DokanTestCase {
         $method = ( new Quote() )->get( $this->items( [ 'VA' => 2 ] ), 'MX' );
 
         $this->assertSame( 'method', $method['no_cover'], 'Method names match whatever their case' );
-        $this->assertStringContainsString( 'with this delivery service', Method::notes( $method ) );
+        $this->assertStringContainsString( 'Returns aren\'t available for this item.', Method::notes( $method ) );
+        $this->assertStringNotContainsString( 'your country', Method::notes( $method ) );
         $this->assertStringNotContainsString( 'CJ', Method::notes( $method ) );
     }
 }

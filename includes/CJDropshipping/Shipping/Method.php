@@ -108,7 +108,8 @@ class Method extends WC_Shipping_Method {
         if ( 'country' === $no_cover ) {
             $notes[] = _n( 'Returns aren\'t available for this item when shipped to your country.', 'Returns aren\'t available for these items when shipped to your country.', $items, 'dokan-lite' );
         } elseif ( 'method' === $no_cover ) {
-            $notes[] = _n( 'Returns aren\'t available for this item with this delivery service.', 'Returns aren\'t available for these items with this delivery service.', $items, 'dokan-lite' );
+            // Buyers never see or pick CJ's method, so don't give it as the reason.
+            $notes[] = _n( 'Returns aren\'t available for this item.', 'Returns aren\'t available for these items.', $items, 'dokan-lite' );
         }
 
         return implode( ' ', $notes );
