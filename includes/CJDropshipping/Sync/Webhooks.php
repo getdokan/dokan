@@ -21,6 +21,9 @@ class Webhooks implements Hookable {
 
     public const OPTION = 'dokan_cj_webhooks';
 
+    // CJ pushes changes for at most this many products per account; the rest are checked daily.
+    public const LIMIT = 1000;
+
     // CJ caps request bodies far below this; anything bigger is not CJ.
     private const MAX_BODY = 262144;
 
@@ -188,7 +191,18 @@ class Webhooks implements Hookable {
     }
 
     /**
-     * Point CJ's pushes here and subscribe every linked product (admin confirmed, F4).
+     * Products CJ can push changes for.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return int
+     */
+    public static function limit(): int {
+        return max( 0, (int) apply_filters( 'dokan_cj_webhook_product_limit', self::LIMIT ) );
+    }
+
+    /**
+     * Point CJ's pushes here and subscribe the first linked products, up to CJ's limit (F4, F8).
      *
      * @since DOKAN_SINCE
      *
@@ -199,23 +213,83 @@ class Webhooks implements Hookable {
         $catalog = new Catalog();
         $catalog->register_webhooks( self::url() );
 
-        $pids   = array_map( 'strval', $this->links_cj_products() );
+        $pids   = array_slice( array_map( 'strval', $this->links_cj_products() ), 0, self::limit() );
         $failed = $pids ? $catalog->subscribe( $pids ) : [];
 
         $state = [
             'registered_at' => time(),
             'url'           => self::url(),
-            'subscribed'    => count( $pids ) - count( $failed ),
             'failed'        => count( $failed ),
+            'pids'          => array_values( array_diff( $pids, array_map( 'strval', $failed ) ) ),
         ];
 
         update_option( self::OPTION, $state, false );
 
-        return $state;
+        return self::summary();
     }
 
     /**
-     * Subscribe a newly imported product when webhooks are on.
+     * What the admin's status box shows; null when pushes are off.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array|null registered_at, url, subscribed, failed, linked, limit.
+     */
+    public static function summary(): ?array {
+        $state = get_option( self::OPTION );
+
+        if ( ! is_array( $state ) ) {
+            return null;
+        }
+
+        return [
+            'registered_at' => (int) ( $state['registered_at'] ?? 0 ),
+            'url'           => (string) ( $state['url'] ?? '' ),
+            'subscribed'    => count( (array) ( $state['pids'] ?? [] ) ),
+            'failed'        => (int) ( $state['failed'] ?? 0 ),
+            'linked'        => count( ( new self() )->links_cj_products() ),
+            'limit'         => self::limit(),
+        ];
+    }
+
+    /**
+     * Subscribe CJ products while there is room under CJ's limit.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string[] $candidates CJ product ids, in the order they should get a slot.
+     *
+     * @return void
+     */
+    protected function fill( array $candidates ): void {
+        $state = get_option( self::OPTION );
+
+        if ( ! is_array( $state ) ) {
+            return;
+        }
+
+        $current = array_map( 'strval', (array) ( $state['pids'] ?? [] ) );
+        $room    = self::limit() - count( $current );
+        $new     = array_slice( array_values( array_diff( array_map( 'strval', $candidates ), $current ) ), 0, max( 0, $room ) );
+
+        if ( ! $new ) {
+            return;
+        }
+
+        try {
+            $failed = array_map( 'strval', ( new Catalog() )->subscribe( $new ) );
+        } catch ( ApiException $e ) {
+            dokan_log( '[CJ Dropshipping] Webhook subscribe failed: ' . $e->getMessage(), 'error' );
+
+            return;
+        }
+
+        $state['pids'] = array_values( array_merge( $current, array_diff( $new, $failed ) ) );
+        update_option( self::OPTION, $state, false );
+    }
+
+    /**
+     * Subscribe a newly imported product when webhooks are on and CJ's limit has room.
      *
      * @since DOKAN_SINCE
      *
@@ -226,15 +300,7 @@ class Webhooks implements Hookable {
      * @return void
      */
     public function subscribe_imported( $product_id, $vendor_id, $pid ): void {
-        if ( ! get_option( self::OPTION ) ) {
-            return;
-        }
-
-        try {
-            ( new Catalog() )->subscribe( [ (string) $pid ] );
-        } catch ( ApiException $e ) {
-            dokan_log( '[CJ Dropshipping] Webhook subscribe failed: ' . $e->getMessage(), 'error' );
-        }
+        $this->fill( [ (string) $pid ] );
     }
 
     /**
@@ -278,11 +344,27 @@ class Webhooks implements Hookable {
             return;
         }
 
+        $state   = get_option( self::OPTION );
+        $current = array_map( 'strval', (array) ( $state['pids'] ?? [] ) );
+
+        // Only products holding a slot are subscribed on CJ.
+        if ( ! in_array( (string) $link['pid'], $current, true ) ) {
+            return;
+        }
+
         try {
             ( new Catalog() )->unsubscribe( [ $link['pid'] ] );
         } catch ( ApiException $e ) {
             dokan_log( '[CJ Dropshipping] Webhook unsubscribe failed: ' . $e->getMessage(), 'error' );
+
+            return;
         }
+
+        $state['pids'] = array_values( array_diff( $current, [ (string) $link['pid'] ] ) );
+        update_option( self::OPTION, $state, false );
+
+        // Hand the freed slot to the next product waiting for one.
+        $this->fill( array_diff( $this->links_cj_products(), [ (string) $link['pid'] ] ) );
     }
 
     /**
@@ -297,7 +379,7 @@ class Webhooks implements Hookable {
     }
 
     /**
-     * Distinct CJ products that are linked.
+     * Distinct CJ products that are linked, first imported first.
      *
      * @since DOKAN_SINCE
      *
@@ -306,6 +388,6 @@ class Webhooks implements Hookable {
     protected function links_cj_products(): array {
         global $wpdb;
 
-        return (array) $wpdb->get_col( 'SELECT DISTINCT pid FROM ' . \WeDevs\Dokan\CJDropshipping\Data\Schema::tables()['links'] ); // phpcs:ignore WordPress.DB
+        return array_map( 'strval', (array) $wpdb->get_col( 'SELECT pid FROM ' . \WeDevs\Dokan\CJDropshipping\Data\Schema::tables()['links'] . " WHERE pid <> '' GROUP BY pid ORDER BY MIN(created_at), MIN(product_id)" ) ); // phpcs:ignore WordPress.DB
     }
 }

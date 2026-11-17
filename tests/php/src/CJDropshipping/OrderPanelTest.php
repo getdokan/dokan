@@ -169,4 +169,33 @@ class OrderPanelTest extends DokanTestCase {
 
         $this->assertSame( [], Fulfilment::quoted_freight( wc_get_order( $order->get_id() ) ) );
     }
+
+    public function test_orders_cj_does_not_cover_get_the_warning_and_the_list_flag() {
+        $order      = $this->cj_order( $this->seller_id1 );
+        $fulfilment = new Fulfilment();
+
+        $this->assertSame( '', $fulfilment->no_cover( $order ) );
+
+        $order->set_shipping_country( 'NG' );
+        $order->save();
+        $this->assertSame( 'country', $fulfilment->no_cover( $order ) );
+
+        $order->set_shipping_country( 'MX' );
+        foreach ( $order->get_items() as $item ) {
+            $item->update_meta_data( '_dokan_cj_method', 'CJPacket Postal' );
+            $item->save();
+        }
+        $order->save();
+        $this->assertSame( 'method', $fulfilment->no_cover( $order ) );
+
+        $response = ( new Panel() )->add_rest_flags( new \WP_REST_Response( [] ), $order );
+        $this->assertTrue( $response->get_data()['dokan_cj']['no_cover'] );
+
+        wp_set_current_user( $this->seller_id1 );
+        ob_start();
+        ( new Panel() )->render( wc_get_order( $order->get_id() ) );
+        $html = ob_get_clean();
+        $this->assertStringContainsString( 'cj-no-cover', $html );
+        $this->assertStringContainsString( 'CJ takes no disputes for this shipping method', $html );
+    }
 }

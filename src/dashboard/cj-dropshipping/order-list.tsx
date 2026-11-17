@@ -2,7 +2,7 @@ import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import { DokanBadge } from '@dokan/components';
 
-// "Ordered on CJ" or "Order on CJ" under the order number in the vendor order list.
+// "Ordered on CJ" or "Order on CJ", plus "No cover" when CJ takes no disputes, under the order number in the vendor order list.
 addFilter(
     'dokan_order_list_table_fields',
     'dokan-lite/cj-dropshipping',
@@ -15,7 +15,9 @@ addFilter(
             return {
                 ...field,
                 render: ( props: {
-                    item: { dokan_cj?: { ordered: boolean } };
+                    item: {
+                        dokan_cj?: { ordered: boolean; no_cover?: boolean };
+                    };
                 } ) => {
                     const flags = props.item?.dokan_cj;
 
@@ -41,6 +43,14 @@ addFilter(
                                                       'dokan-lite'
                                                   )
                                         }
+                                    />
+                                </span>
+                            ) }
+                            { flags?.no_cover && (
+                                <span data-testid="cj-no-cover-badge">
+                                    <DokanBadge
+                                        variant="danger"
+                                        label={ __( 'No cover', 'dokan-lite' ) }
                                     />
                                 </span>
                             ) }

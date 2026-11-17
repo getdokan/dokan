@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\CJDropshipping\Order;
 
 use WeDevs\Dokan\CJDropshipping\Data\OrderRefRepository;
 use WeDevs\Dokan\CJDropshipping\Settings;
+use WeDevs\Dokan\CJDropshipping\Shipping\Quote;
 use WC_Order;
 use WC_Order_Item_Product;
 use WP_Error;
@@ -253,6 +254,25 @@ class Fulfilment {
             ],
             static fn( $value ) => '' !== $value
         );
+    }
+
+    /**
+     * Why CJ takes no disputes for this order: 'country', 'method' or '' when covered.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Order.
+     *
+     * @return string
+     */
+    public function no_cover( WC_Order $order ): string {
+        if ( ! self::has_cj_items( $order ) ) {
+            return '';
+        }
+
+        $country = $order->has_shipping_address() ? $order->get_shipping_country() : $order->get_billing_country();
+
+        return Quote::no_cover( (string) $country, array_column( $this->groups( $order ), 'method' ) );
     }
 
     /**

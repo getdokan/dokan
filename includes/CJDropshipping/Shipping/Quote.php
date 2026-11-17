@@ -243,7 +243,33 @@ class Quote {
             ];
         }
 
+        $result['no_cover'] = self::no_cover( $country, array_column( $result['groups'], 'method' ) );
+
         return $result;
+    }
+
+    /**
+     * Why CJ takes no disputes for a shipment: 'country', 'method' or '' when covered.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string   $country Destination country.
+     * @param string[] $methods CJ shipping methods used.
+     *
+     * @return string
+     */
+    public static function no_cover( string $country, array $methods ): string {
+        if ( in_array( strtoupper( $country ), Settings::no_cover_countries(), true ) ) {
+            return 'country';
+        }
+
+        foreach ( $methods as $method ) {
+            if ( Settings::is_no_cover_method( (string) $method ) ) {
+                return 'method';
+            }
+        }
+
+        return '';
     }
 
     /**

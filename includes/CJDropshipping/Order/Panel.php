@@ -63,12 +63,19 @@ class Panel implements Hookable {
         $address    = Fulfilment::address( $order );
         $count      = count( $groups );
         $index      = 0;
+        $no_cover   = $fulfilment->no_cover( $order );
         ?>
         <div class="dokan-panel dokan-panel-default dokan-cj-panel" id="dokan-cj-panel" data-order="<?php echo esc_attr( $order->get_id() ); ?>">
             <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Order this on CJ', 'dokan-lite' ); ?></strong></div>
             <div class="dokan-panel-body">
                 <?php if ( Fulfilment::changed_since_ordered( $order ) ) : ?>
                     <div class="dokan-alert dokan-alert-warning" data-testid="cj-changed"><?php esc_html_e( 'This order changed after you ordered on CJ. Update your CJ order.', 'dokan-lite' ); ?></div>
+                <?php endif; ?>
+
+                <?php if ( 'country' === $no_cover ) : ?>
+                    <div class="dokan-alert dokan-alert-warning" data-testid="cj-no-cover"><strong><?php esc_html_e( 'No cover', 'dokan-lite' ); ?></strong> &middot; <?php esc_html_e( 'CJ takes no disputes for orders to this country. If the parcel is lost, late or damaged, CJ won\'t refund or resend it, and the cost is yours.', 'dokan-lite' ); ?></div>
+                <?php elseif ( 'method' === $no_cover ) : ?>
+                    <div class="dokan-alert dokan-alert-warning" data-testid="cj-no-cover"><strong><?php esc_html_e( 'No cover', 'dokan-lite' ); ?></strong> &middot; <?php esc_html_e( 'CJ takes no disputes for this shipping method. If the parcel is lost, late or damaged, CJ won\'t refund or resend it, and the cost is yours.', 'dokan-lite' ); ?></div>
                 <?php endif; ?>
 
                 <p><?php esc_html_e( 'Place one CJ order per group below in your CJ account, paid with your CJ balance, then save CJ\'s order number here.', 'dokan-lite' ); ?></p>
@@ -326,9 +333,11 @@ class Panel implements Hookable {
             return $response;
         }
 
+        $fulfilment       = new Fulfilment();
         $data             = $response->get_data();
         $data['dokan_cj'] = [
-            'ordered' => ( new Fulfilment() )->is_fully_ordered( $order ),
+            'ordered'  => $fulfilment->is_fully_ordered( $order ),
+            'no_cover' => '' !== $fulfilment->no_cover( $order ),
         ];
         $response->set_data( $data );
 

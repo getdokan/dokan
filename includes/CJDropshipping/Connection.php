@@ -112,7 +112,7 @@ class Connection {
             'reactivate_url' => self::REACTIVATE_URL,
             'points'         => Api\Points::get(),
             'points_left'    => Api\Points::estimated_remaining(),
-            'webhooks'       => get_option( Sync\Webhooks::OPTION, null ),
+            'webhooks'       => Sync\Webhooks::summary(),
             'webhook_url'    => Sync\Webhooks::url(),
         ];
     }

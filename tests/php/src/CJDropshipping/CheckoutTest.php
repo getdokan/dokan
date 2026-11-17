@@ -450,4 +450,23 @@ class CheckoutTest extends DokanTestCase {
         wc_clear_notices();
         WC()->cart->empty_cart();
     }
+
+    public function test_country_or_method_cj_does_not_cover_still_ships_and_tells_the_buyer() {
+        $this->stock( 'VA', [ 'CN' => 100 ] );
+
+        $covered = ( new Quote() )->get( $this->items( [ 'VA' => 1 ] ), 'MX' );
+        $country = ( new Quote() )->get( $this->items( [ 'VA' => 1 ] ), 'KE' );
+
+        $this->assertSame( '', $covered['no_cover'] );
+        $this->assertSame( 'country', $country['no_cover'], 'Kenya is on CJ\'s no-dispute list but still ships' );
+        $this->assertStringContainsString( 'Returns aren\'t available for this item when shipped to your country.', Method::notes( $country ) );
+        $this->assertStringNotContainsString( 'Returns', Method::notes( $covered ) );
+
+        add_filter( 'dokan_cj_no_cover_methods', fn() => [ 'recommended cn' ] );
+        $method = ( new Quote() )->get( $this->items( [ 'VA' => 2 ] ), 'MX' );
+
+        $this->assertSame( 'method', $method['no_cover'], 'Method names match whatever their case' );
+        $this->assertStringContainsString( 'with this delivery service', Method::notes( $method ) );
+        $this->assertStringNotContainsString( 'CJ', Method::notes( $method ) );
+    }
 }

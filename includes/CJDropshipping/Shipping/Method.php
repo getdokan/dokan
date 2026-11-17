@@ -83,7 +83,7 @@ class Method extends WC_Shipping_Method {
     }
 
     /**
-     * Buyer notes: separate parcels and import duties; never warehouses or CJ (C1).
+     * Buyer notes: separate parcels, import duties and no returns; never warehouses or CJ (C1).
      *
      * @since DOKAN_SINCE
      *
@@ -100,6 +100,15 @@ class Method extends WC_Shipping_Method {
 
         if ( $quote['cross_border'] ) {
             $notes[] = __( 'Import duties may apply.', 'dokan-lite' );
+        }
+
+        $items    = count( array_merge( ...array_column( $quote['groups'], 'vids' ) ) );
+        $no_cover = $quote['no_cover'] ?? '';
+
+        if ( 'country' === $no_cover ) {
+            $notes[] = _n( 'Returns aren\'t available for this item when shipped to your country.', 'Returns aren\'t available for these items when shipped to your country.', $items, 'dokan-lite' );
+        } elseif ( 'method' === $no_cover ) {
+            $notes[] = _n( 'Returns aren\'t available for this item with this delivery service.', 'Returns aren\'t available for these items with this delivery service.', $items, 'dokan-lite' );
         }
 
         return implode( ' ', $notes );

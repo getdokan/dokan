@@ -16,6 +16,8 @@ type Connection = {
         registered_at: number;
         subscribed: number;
         failed: number;
+        linked: number;
+        limit: number;
     } | null;
     points: { remaining?: number; total?: number };
     points_left: number;
@@ -235,18 +237,36 @@ export default function CJConnectionField( { element }: Props ) {
                         { __( 'Instant stock updates', 'dokan-lite' ) }
                     </span>
                     { connection?.webhooks ? (
-                        <span>
-                            { sprintf(
-                                /* translators: %d: number of CJ products CJ pushes changes for */
-                                _n(
-                                    'On: CJ sends stock and product changes for %d product. The daily check keeps running.',
-                                    'On: CJ sends stock and product changes for %d products. The daily check keeps running.',
+                        <>
+                            <span>
+                                { sprintf(
+                                    /* translators: 1: CJ products with instant updates, 2: CJ's limit */
+                                    __(
+                                        'On: %1$d of %2$d instant-update slots used. CJ sends stock and product changes right away for these products.',
+                                        'dokan-lite'
+                                    ),
                                     connection.webhooks.subscribed,
-                                    'dokan-lite'
-                                ),
-                                connection.webhooks.subscribed
+                                    connection.webhooks.limit
+                                ) }
+                            </span>
+                            { connection.webhooks.linked >
+                                connection.webhooks.subscribed && (
+                                <span data-testid="cj-webhooks-waiting">
+                                    { sprintf(
+                                        /* translators: %d: CJ products without instant updates */
+                                        _n(
+                                            '%d CJ product has no instant updates; its stock is checked daily.',
+                                            '%d CJ products have no instant updates; their stock is checked daily.',
+                                            connection.webhooks.linked -
+                                                connection.webhooks.subscribed,
+                                            'dokan-lite'
+                                        ),
+                                        connection.webhooks.linked -
+                                            connection.webhooks.subscribed
+                                    ) }
+                                </span>
                             ) }
-                        </span>
+                        </>
                     ) : (
                         <span className="text-muted-foreground">
                             { __(

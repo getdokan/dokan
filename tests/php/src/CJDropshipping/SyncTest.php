@@ -316,4 +316,46 @@ class SyncTest extends DokanTestCase {
         $next = as_next_scheduled_action( Synchronizer::PRODUCT_HOOK, [ 'pid' => 'P1' ], Queue::GROUP );
         $this->assertGreaterThan( time() + 5 * MINUTE_IN_SECONDS, $next );
     }
+
+    public function test_instant_updates_stop_at_cjs_limit_and_a_freed_slot_goes_to_the_next_product() {
+        $calls = [];
+        add_filter(
+            'pre_http_request', function ( $pre, $args, $url ) use ( &$calls ) {
+                if ( preg_match( '#webhook/product/(subscribe|unsubscribe)#', $url, $m ) ) {
+                    $calls[] = [ $m[1], json_decode( $args['body'], true )['productIds'] ];
+                }
+
+                return $pre;
+            }, 5, 3
+        );
+        add_filter( 'dokan_cj_webhook_product_limit', fn() => 2 );
+
+        $links    = new \WeDevs\Dokan\CJDropshipping\Data\LinkRepository();
+        $products = [];
+        foreach ( [ 'PA', 'PB', 'PC' ] as $pid ) {
+            $products[ $pid ] = $this->factory()->post->create( [ 'post_type' => 'product' ] );
+            $links->link( $products[ $pid ], $products[ $pid ], $this->seller_id1, 'V' . $pid, $pid );
+        }
+
+        $webhooks = new Webhooks( $links );
+        $summary  = $webhooks->register();
+
+        $this->assertSame( [ [ 'subscribe', [ 'PA', 'PB' ] ] ], $calls, 'First imported first, up to the limit' );
+        $this->assertSame( 2, $summary['subscribed'] );
+        $this->assertSame( 3, $summary['linked'] );
+        $this->assertSame( 2, $summary['limit'] );
+
+        $calls = [];
+        $webhooks->subscribe_imported( 0, $this->seller_id1, 'PD' );
+        $this->assertSame( [], $calls, 'No room, so no subscribe call' );
+
+        $webhooks->unsubscribe_deleted( $products['PA'] );
+        $this->assertSame( [ [ 'unsubscribe', [ 'PA' ] ], [ 'subscribe', [ 'PC' ] ] ], $calls );
+        $this->assertSame( [ 'PB', 'PC' ], get_option( Webhooks::OPTION )['pids'] );
+
+        $calls = [];
+        $webhooks->unsubscribe_deleted( $products['PC'] );
+        $webhooks->subscribe_imported( 0, $this->seller_id1, 'PB' );
+        $this->assertSame( [ [ 'unsubscribe', [ 'PC' ] ], [ 'subscribe', [ 'PA' ] ] ], $calls, 'PC freed its slot; PB already has one' );
+    }
 }
