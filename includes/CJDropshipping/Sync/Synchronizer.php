@@ -230,7 +230,7 @@ class Synchronizer implements Hookable {
 
         $parent     = $product->get_parent_id() ? wc_get_product( $product->get_parent_id() ) : $product;
         $categories = $parent ? $parent->get_category_ids() : [];
-        $result     = Importer::earning( (int) $link['vendor_id'], (float) min( $prices ), $cost, (int) reset( $categories ) );
+        $result     = Importer::earning( (int) $link['vendor_id'], (float) min( $prices ), $cost, (int) reset( $categories ), $parent ? $parent->get_id() : 0, $product );
 
         if ( $result['keeps'] > 0 ) {
             return;

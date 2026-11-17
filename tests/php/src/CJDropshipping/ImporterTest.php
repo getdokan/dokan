@@ -329,4 +329,37 @@ class ImporterTest extends DokanTestCase {
         $this->assertNotSame( wc_get_product( $product_id )->get_sku(), $taken );
         $this->assertStringEndsWith( '-CJ-V1-2', $taken );
     }
+
+    public function test_tax_inclusive_price_is_judged_without_tax() {
+        $without = Importer::earning( $this->seller_id1, 110, 50, $this->category_id );
+
+        update_option( 'woocommerce_calc_taxes', 'yes' );
+        update_option( 'woocommerce_prices_include_tax', 'yes' );
+        update_option( 'woocommerce_default_country', 'US:CA' );
+        \WC_Tax::_insert_tax_rate(
+            [
+				'tax_rate_country'  => 'US',
+				'tax_rate'          => '10.0000',
+				'tax_rate_name'     => 'Test',
+				'tax_rate_priority' => 1,
+				'tax_rate_order'    => 1,
+				'tax_rate_class'    => '',
+			]
+        );
+
+        $with = Importer::earning( $this->seller_id1, 110, 50, $this->category_id );
+
+        $this->assertEquals( 0, $without['tax'] );
+        $this->assertEquals( 10, $with['tax'], '110 including 10% is 100 without tax' );
+        $this->assertEquals( Importer::earning( $this->seller_id1, 100, 50, $this->category_id )['commission'], $with['commission'], 'Commission on 100, as on the order' );
+        $this->assertEquals( $with['earning'] - 50, $with['keeps'] );
+        $this->assertLessThan( $without['keeps'], $with['keeps'] );
+
+        $untaxed = $this->factory()->product->create_and_get();
+        $untaxed->set_tax_status( 'none' );
+        $this->assertEquals( 0, Importer::earning( $this->seller_id1, 110, 50, $this->category_id, 0, $untaxed )['tax'], 'No tax to take out of an untaxed product' );
+
+        update_option( 'woocommerce_prices_include_tax', 'no' );
+        $this->assertEquals( 0, Importer::earning( $this->seller_id1, 110, 50, $this->category_id )['tax'], 'Prices entered without tax are already right' );
+    }
 }

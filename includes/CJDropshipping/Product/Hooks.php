@@ -433,7 +433,7 @@ class Hooks implements Hookable {
         $parent_id = $product->get_parent_id() ? $product->get_parent_id() : $product->get_id();
         $chosen    = CategoryHelper::get_saved_products_category( $parent_id )['chosen_cat'] ?? [];
         $cost      = Settings::to_store_currency( (float) $variant['cost_usd'] );
-        $result    = Importer::earning( (int) $link['vendor_id'], (float) min( $prices ), $cost, (int) reset( $chosen ), $parent_id );
+        $result    = Importer::earning( (int) $link['vendor_id'], (float) min( $prices ), $cost, (int) reset( $chosen ), $parent_id, $product );
 
         if ( $result['keeps'] > 0 ) {
             return null;

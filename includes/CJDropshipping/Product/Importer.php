@@ -64,26 +64,52 @@ class Importer {
      * @param float $cost        CJ cost in store currency.
      * @param int   $category_id Category, for category commission.
      * @param int   $product_id  Saved product, for a per-product commission; 0 before import.
+     * @param \WC_Product|null $taxed Product whose tax settings apply; null for a new import (taxable, standard rate).
      *
-     * @return array{price: float, commission: float, earning: float, keeps: float}
+     * @return array{price: float, tax: float, commission: float, earning: float, keeps: float}
      */
-    public static function earning( int $vendor_id, float $price, float $cost, int $category_id = 0, int $product_id = 0 ): array {
+    public static function earning( int $vendor_id, float $price, float $cost, int $category_id = 0, int $product_id = 0, ?\WC_Product $taxed = null ): array {
+        // Commission and earnings come from the price without tax, as on the order (B14).
+        $net = self::price_excluding_tax( $price, $taxed );
+
         // ProductCommission::calculate() needs a saved product, so run the same strategy directly.
         $strategy = apply_filters( 'dokan_product_commission_strategies', new ProductStrategy( $product_id, $vendor_id, $category_id ) );
         $earning  = (float) dokan_get_container()->get( Calculator::class )
             ->set_settings( $strategy->get_settings() )
-            ->set_total( $price )
+            ->set_total( $net )
             ->set_quantity( 1 )
             ->calculate()
             ->get_vendor_earning();
-        $decimals   = wc_get_price_decimals();
+        $decimals = wc_get_price_decimals();
 
         return [
             'price'      => round( $price, $decimals ),
-            'commission' => round( $price - $earning, $decimals ),
+            'tax'        => round( $price - $net, $decimals ),
+            'commission' => round( $net - $earning, $decimals ),
             'earning'    => round( $earning, $decimals ),
             'keeps'      => round( $earning - $cost, $decimals ),
         ];
+    }
+
+    /**
+     * A price as the order counts it: without tax when the store enters prices with tax.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param float            $price  Price as entered.
+     * @param \WC_Product|null $product Product whose tax settings apply; null means taxable at the standard rate.
+     *
+     * @return float
+     */
+    public static function price_excluding_tax( float $price, ?\WC_Product $product = null ): float {
+        if ( $price <= 0 || ! wc_tax_enabled() || ! wc_prices_include_tax() || ( $product && ! $product->is_taxable() ) ) {
+            return $price;
+        }
+
+        // Base-location rates, the same ones WooCommerce takes out of a tax-inclusive price.
+        $rates = \WC_Tax::get_base_tax_rates( $product ? $product->get_tax_class() : '' );
+
+        return $price - array_sum( \WC_Tax::calc_tax( $price, $rates, true ) );
     }
 
     /**

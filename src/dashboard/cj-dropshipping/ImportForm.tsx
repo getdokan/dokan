@@ -7,6 +7,7 @@ import type { CJProduct, CJStatus, CJVariant } from './types';
 
 type Earning = {
     price: number;
+    tax?: number;
     commission: number;
     earning: number;
     keeps: number;
@@ -230,6 +231,21 @@ const ImportForm = ( { product, status }: Props ) => {
                                         { __( 'CJ cost', 'dokan-lite' ) }
                                     </span>
                                     <PriceHtml price={ variant.cost } />
+                                    { result && ( result.tax ?? 0 ) > 0 && (
+                                        <>
+                                            <span>
+                                                { __(
+                                                    'Tax in your price',
+                                                    'dokan-lite'
+                                                ) }
+                                            </span>
+                                            <span data-testid="cj-tax">
+                                                <PriceHtml
+                                                    price={ result.tax ?? 0 }
+                                                />
+                                            </span>
+                                        </>
+                                    ) }
                                     <span>
                                         { __( 'Commission', 'dokan-lite' ) }
                                     </span>
