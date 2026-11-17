@@ -219,6 +219,79 @@ class ProductRestUnsafeMetaTest extends DokanTestCase {
     }
 
     /**
+     * A variation's `attribute_*` rows and its COGS flag are owned by the variation data store, not the product list.
+     */
+    public function test_vendor_variation_update_ignores_variation_owned_keys(): void {
+        $product_id   = $this->vendor_product();
+        $variation_id = wp_insert_post(
+            [
+                'post_type'   => 'product_variation',
+                'post_parent' => $product_id,
+                'post_status' => 'publish',
+                'post_author' => $this->seller_id1,
+            ]
+        );
+        add_post_meta( $variation_id, 'attribute_pa_color', 'red' );
+        wp_set_object_terms( $product_id, 'variable', 'product_type' );
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->json_request(
+            'PUT',
+            "/wc/v3/products/$product_id/variations/$variation_id",
+            [
+                'meta_data' => [
+                    [
+                        'key'   => '_vendor_note',
+                        'value' => 'kept',
+                    ],
+                    [
+                        'key'   => 'attribute_pa_color',
+                        'value' => 'blue',
+                    ],
+                    [
+                        'key'   => 'Attribute_pa_size',
+                        'value' => 'xl',
+                    ],
+                    [
+                        'key'   => '_cogs_value_is_additive',
+                        'value' => 'yes',
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( [ 'kept' ], $this->stored_values( $variation_id, '_vendor_note' ) );
+        $this->assertSame( [ 'red' ], $this->stored_values( $variation_id, 'attribute_pa_color' ) );
+        $this->assertSame( [], $this->stored_values( $variation_id, 'Attribute_pa_size' ) );
+        $this->assertNotContains( 'yes', $this->stored_values( $variation_id, '_cogs_value_is_additive' ) );
+    }
+
+    /**
+     * A product that is not a variation keeps an ordinary `attribute_*` meta key, as before.
+     */
+    public function test_vendor_product_keeps_attribute_prefixed_meta(): void {
+        $product_id = $this->vendor_product();
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->json_request(
+            'PUT',
+            '/wc/v3/products/' . $product_id,
+            [
+                'meta_data' => [
+                    [
+                        'key'   => 'attribute_note',
+                        'value' => 'kept',
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+        $this->assertSame( [ 'kept' ], $this->stored_values( $product_id, 'attribute_note' ) );
+    }
+
+    /**
      * Dokan Pro's variations route hands its variation to this filter, so the rule holds there without a Pro change.
      */
     public function test_dokan_variation_filter_stores_only_safe_meta(): void {

@@ -87,7 +87,8 @@ class Hooks {
     /**
      * Keep unsafe raw meta out of a product or variation REST save, unless a Store Admin sends it.
      *
-     * Unsafe is a key WooCommerce owns, such as `_product_attributes`, or a value holding a serialized PHP object.
+     * Unsafe is a key WooCommerce owns, such as `_product_attributes` or a variation's `attribute_*`,
+     * or a value holding a serialized PHP object.
      *
      * @since DOKAN_SINCE
      *
@@ -102,9 +103,18 @@ class Hooks {
         }
 
         $internal_keys = \WC_Data_Store::load( 'product' )->get_internal_meta_keys();
+        $is_variation  = $product instanceof \WC_Product_Variation;
+
+        if ( $is_variation ) {
+            // The variation data store also owns this key, on top of the product list.
+            $internal_keys[] = '_cogs_value_is_additive';
+        }
 
         foreach ( $product->get_meta_data() as $meta ) {
-            if ( in_array( $meta->key, $internal_keys, true ) || ProductAttribute::contains_php_object( $meta->value ) ) {
+            // A variation stores its attribute values as `attribute_*` rows, which WooCommerce writes from `attributes`.
+            $is_variation_attribute = $is_variation && 0 === stripos( (string) $meta->key, 'attribute_' );
+
+            if ( $is_variation_attribute || in_array( $meta->key, $internal_keys, true ) || ProductAttribute::contains_php_object( $meta->value ) ) {
                 // Unsafe meta goes back to what is stored, which for a new entry is nothing.
                 $meta->key   = $meta->get_data()['key'];
                 $meta->value = $meta->id ? $meta->get_data()['value'] : null;
