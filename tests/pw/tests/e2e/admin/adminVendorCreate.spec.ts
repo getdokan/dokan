@@ -236,6 +236,19 @@ test.describe('Admin Vendor Create functionality', () => {
             await expect(createVendor.socialInput('fb'), 'social URL is still there after the tab round trip').toHaveValue('https://facebook.com/avc_tabswitch');
         });
 
+        test('several social URLs flushed by the same tab switch all survive', { tag: ['@lite', '@admin'] }, async () => {
+            await createVendor.goto();
+            await createVendor.clickTab(/^Social Options$/);
+            // fill() keeps the gap well under the 500ms debounce, so both fields flush in one unmount pass.
+            await createVendor.typeFast(createVendor.socialInput('fb'), 'https://facebook.com/avc_multi');
+            await createVendor.socialInput('twitter').fill('https://x.com/avc_multi');
+            await createVendor.tab(/^General$/).click();
+            await page.waitForTimeout(300);
+            await createVendor.clickTab(/^Social Options$/);
+            await expect(createVendor.socialInput('fb'), 'Facebook URL kept').toHaveValue('https://facebook.com/avc_multi');
+            await expect(createVendor.socialInput('twitter'), 'X URL kept').toHaveValue('https://x.com/avc_multi');
+        });
+
         test('store name, email and username typed back-to-back all survive the availability checks', { tag: ['@lite', '@admin'] }, async () => {
             const tag = faker.string.alphanumeric(6).toLowerCase();
             await createVendor.goto();

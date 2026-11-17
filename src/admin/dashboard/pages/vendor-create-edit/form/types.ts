@@ -21,6 +21,11 @@ export interface SectionProps {
         /** @deprecated DOKAN_SINCE Ignored; writes always merge into the live vendor. */
         existingVendor?: object
     ) => Promise< any >;
+    // Merges into a nested object key using the live vendor value.
+    mergeData: (
+        key: string,
+        partial: Record< string, any >
+    ) => Promise< any >;
 }
 
 export interface TabData {

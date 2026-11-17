@@ -143,6 +143,7 @@ export default function Form( {
             isRequired: formState.isRequired,
             getError: formState.getError,
             setData: formState.setData,
+            mergeData: formState.mergeData,
         };
 
         // Render based on tab

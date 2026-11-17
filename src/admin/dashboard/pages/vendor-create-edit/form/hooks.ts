@@ -102,6 +102,25 @@ export const useVendorForm = (
         [ updateVendor, clearFieldError ]
     );
 
+    // Merge into a nested key from the live value so same-pass flushes all survive.
+    const mergeData = useCallback(
+        async ( key: string, partial: Record< string, any > ) => {
+            clearFieldError( key );
+
+            const current = getLatestVendor()?.[ key ];
+
+            return await updateVendor( {
+                [ key ]: {
+                    ...( current && typeof current === 'object'
+                        ? current
+                        : {} ),
+                    ...partial,
+                },
+            } );
+        },
+        [ getLatestVendor, updateVendor, clearFieldError ]
+    );
+
     // Check if field is required
     const isRequired = useCallback(
         ( key: string ): boolean => {
@@ -316,6 +335,7 @@ export const useVendorForm = (
         commissionSubCategoryConfirm,
         setCommissionSubCategoryConfirm,
         setData,
+        mergeData,
         clearFieldError,
         isRequired,
         getError,
