@@ -150,7 +150,8 @@ class Checkout implements Hookable {
 
             $quote = self::quote_for_package( $package );
 
-            if ( is_wp_error( $quote ) ) {
+            // No address yet is not a problem with the cart; WooCommerce asks for one anyway.
+            if ( is_wp_error( $quote ) && 'dokan_cj_no_address' !== $quote->get_error_code() ) {
                 $messages[ $key ] = $quote->get_error_message();
             }
         }

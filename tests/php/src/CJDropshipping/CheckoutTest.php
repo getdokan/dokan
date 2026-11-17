@@ -376,4 +376,36 @@ class CheckoutTest extends DokanTestCase {
         $this->assertSame( 'Import duties may apply.', $rate->get_description() );
         $this->assertStringNotContainsString( 'China', $rate->get_description() . $rate->get_label() );
     }
+
+    public function test_missing_address_is_not_reported_as_a_cart_problem() {
+        $this->assertSame( 'dokan_cj_no_address', ( new Quote() )->get( $this->items( [ 'VA' => 1 ] ), '' )->get_error_code() );
+
+        $product = $this->factory()->product->create_and_get( [ 'regular_price' => 9 ] );
+        ( new LinkRepository() )->link( $product->get_id(), $product->get_id(), $this->seller_id1, 'VA', 'P1' );
+
+        WC()->shipping()->packages = [
+            [
+                'seller_id'           => $this->seller_id1,
+                Checkout::PACKAGE_KEY => true,
+                'rates'               => [],
+                'contents'            => [
+                    'k' => [
+                        'product_id'   => $product->get_id(),
+                        'variation_id' => 0,
+                        'quantity'     => 1,
+                        'data'         => $product,
+                    ],
+                ],
+                'destination'         => [
+                    'country'  => '',
+                    'postcode' => '',
+                ],
+            ],
+        ];
+
+        $this->assertSame( [], Checkout::missing_rate_messages() );
+
+        WC()->shipping()->packages[0]['destination']['country'] = 'DE';
+        $this->assertCount( 1, Checkout::missing_rate_messages(), 'A real block is still reported' );
+    }
 }
