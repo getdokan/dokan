@@ -59,8 +59,8 @@ const Alerts = ( { status, onChange }: Props ) => {
                         { sprintf(
                             /* translators: %d: number of products */
                             _n(
-                                '%d CJ product was taken off sale while CJ was unavailable.',
-                                '%d CJ products were taken off sale while CJ was unavailable.',
+                                '%d CJ product taken off sale can go back on sale now.',
+                                '%d CJ products taken off sale can go back on sale now.',
                                 status.restorable,
                                 'dokan-lite'
                             ),

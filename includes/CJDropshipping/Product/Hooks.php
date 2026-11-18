@@ -24,7 +24,7 @@ class Hooks implements Hookable {
     // Vendor can't change these on a CJ product (epic §2).
     public const LOCKED_FIELDS = [ 'sku', 'manage_stock', 'stock_quantity', 'stock_status', 'backorders', 'virtual', 'downloadable' ];
 
-    public const META_KEYS = [ LinkRepository::LINKED_META, '_dokan_cj_pid', '_dokan_cj_sku', '_dokan_cj_source_url' ];
+    public const META_KEYS = [ LinkRepository::LINKED_META, '_dokan_cj_pid', '_dokan_cj_sku', '_dokan_cj_source_url', BlockedCategories::META, BlockedCategories::OVERRIDE_META ];
 
     protected LinkRepository $links;
 
@@ -154,6 +154,10 @@ class Hooks implements Hookable {
 
         $stored  = $product->get_data();
         $changes = $product->get_changes();
+
+        if ( isset( $changes['status'] ) && 'draft' !== $changes['status'] && ! $product->get_parent_id() && BlockedCategories::is_blocked( $parent_id ) ) {
+            return new WP_Error( 'dokan_cj_category_blocked', __( 'The marketplace no longer allows CJ products from this category, so this product can\'t go on sale.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
         $setters = [
             'sku'          => 'set_sku',
             'manage_stock' => 'set_manage_stock',

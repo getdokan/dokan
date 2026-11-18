@@ -61,5 +61,6 @@ export type CJProduct = {
     description: string;
     option_name: string;
     on_sale: boolean;
+    blocked?: boolean;
     variants: CJVariant[];
 };

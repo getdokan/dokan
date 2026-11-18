@@ -162,6 +162,7 @@ class ProductDetails {
             'option_name' => (string) ( $product['productKeyEn'] ?? '' ),
             'props'       => $props ? $props : [ 'COMMON' ],
             'on_sale'     => '3' === (string) ( $product['status'] ?? '3' ),
+            'category_id' => (string) ( $product['categoryId'] ?? '' ),
             'variants'    => $variants,
             'fetched_at'  => time(),
         ];

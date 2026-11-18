@@ -382,14 +382,19 @@ class VendorController extends DokanBaseVendorController {
             return AdminController::to_error( $e );
         }
 
-        $result['items'] = array_map(
-            static function ( $item ) {
-                $item['cost'] = round( Settings::to_store_currency( (float) $item['price'] ), wc_get_price_decimals() );
-                unset( $item['price'] );
+        // Blocked CJ categories aren't offered (B8); the filter runs after the cache, so a new block applies at once.
+        $items = array_filter( $result['items'], static fn( $item ) => ! Settings::is_category_blocked( (string) ( $item['category_id'] ?? '' ) ) );
 
-                return $item;
-            },
-            $result['items']
+        $result['items'] = array_values(
+            array_map(
+                static function ( $item ) {
+                    $item['cost'] = round( Settings::to_store_currency( (float) $item['price'] ), wc_get_price_decimals() );
+                    unset( $item['price'], $item['category_id'] );
+
+                    return $item;
+                },
+                $items
+            )
         );
 
         return rest_ensure_response( $result );
@@ -419,6 +424,9 @@ class VendorController extends DokanBaseVendorController {
             $variant['imported_product_id'] = $links->find_vendor_product( $vendor_id, $variant['vid'] );
         }
         unset( $variant );
+
+        $details['blocked'] = Settings::is_category_blocked( $details['category_id'] ?? '' );
+        unset( $details['category_id'] );
 
         return rest_ensure_response( $details );
     }

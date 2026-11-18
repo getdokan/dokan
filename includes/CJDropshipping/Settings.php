@@ -102,6 +102,92 @@ class Settings {
     }
 
     /**
+     * CJ categories the admin blocked, keyed by CJ category id (B8).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<string, array{name: string, existing: bool}> existing: products already on sale go to Draft too.
+     */
+    public static function blocked_categories(): array {
+        return (array) apply_filters( 'dokan_cj_blocked_categories', self::parse_blocked_categories( self::get( 'blocked_categories', [] ) ) );
+    }
+
+    /**
+     * Read stored blocked-category rows.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $rows Stored rows: id, name, mode (imports or existing).
+     *
+     * @return array<string, array{name: string, existing: bool}>
+     */
+    public static function parse_blocked_categories( $rows ): array {
+        $blocked = [];
+
+        foreach ( is_array( $rows ) ? $rows : [] as $row ) {
+            $id = is_array( $row ) ? trim( (string) ( $row['id'] ?? '' ) ) : '';
+
+            if ( '' !== $id ) {
+                $blocked[ $id ] = [
+                    'name'     => (string) ( $row['name'] ?? $id ),
+                    'existing' => 'existing' === ( $row['mode'] ?? '' ),
+                ];
+            }
+        }
+
+        return $blocked;
+    }
+
+    /**
+     * Clean blocked-category rows before they are saved.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $rows Submitted rows.
+     *
+     * @return array[]
+     */
+    public static function sanitize_blocked_categories( $rows ): array {
+        $clean = [];
+
+        foreach ( self::parse_blocked_categories( $rows ) as $id => $row ) {
+            $clean[] = [
+                'id'   => sanitize_text_field( $id ),
+                'name' => sanitize_text_field( $row['name'] ),
+                'mode' => $row['existing'] ? 'existing' : 'imports',
+            ];
+        }
+
+        return $clean;
+    }
+
+    /**
+     * Whether vendors can't import from a CJ category.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $category_id CJ category id.
+     *
+     * @return bool
+     */
+    public static function is_category_blocked( string $category_id ): bool {
+        return '' !== $category_id && isset( self::blocked_categories()[ $category_id ] );
+    }
+
+    /**
+     * Whether products already imported from a CJ category must come off sale too.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $category_id CJ category id.
+     *
+     * @return bool
+     */
+    public static function blocks_existing( string $category_id ): bool {
+        return '' !== $category_id && ! empty( self::blocked_categories()[ $category_id ]['existing'] );
+    }
+
+    /**
      * Whether only CJ's own shelf counts as stock; default counts supplier stock too (F6).
      *
      * @since DOKAN_SINCE

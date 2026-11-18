@@ -33,6 +33,17 @@ addFilter(
                                     />
                                 </span>
                             ) }
+                            { 'category' === flags?.off_sale_reason && (
+                                <span data-testid="cj-category-badge">
+                                    <DokanBadge
+                                        variant="warning"
+                                        label={ __(
+                                            'Off sale: CJ category blocked',
+                                            'dokan-lite'
+                                        ) }
+                                    />
+                                </span>
+                            ) }
                             { 'loss' === flags?.off_sale_reason && (
                                 <DokanBadge
                                     variant="warning"

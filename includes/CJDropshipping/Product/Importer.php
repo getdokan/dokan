@@ -156,6 +156,10 @@ class Importer {
             return new WP_Error( 'dokan_cj_not_on_sale', __( 'CJ no longer sells this product.', 'dokan-lite' ), [ 'status' => 409 ] );
         }
 
+        if ( Settings::is_category_blocked( $details['category_id'] ?? '' ) ) {
+            return new WP_Error( 'dokan_cj_category_blocked', __( 'The marketplace doesn\'t allow CJ products from this category.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
         $variants = array_column( $details['variants'], null, 'vid' );
         $chosen   = [];
 
@@ -214,6 +218,7 @@ class Importer {
 
         // Dokan's chosen-category meta drives category commission and the editor (B12).
         Helper::set_object_terms_from_chosen_categories( $product_id, $category_ids );
+        BlockedCategories::record( $product_id, $details['category_id'] ?? '' );
 
         Queue::enqueue( self::IMAGES_HOOK, [ 'product_id' => $product_id ] );
 

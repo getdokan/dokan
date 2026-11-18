@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\CJDropshipping\REST;
 
 use WeDevs\Dokan\CJDropshipping\Api\ApiException;
+use WeDevs\Dokan\CJDropshipping\Api\Catalog;
 use WeDevs\Dokan\CJDropshipping\Connection;
 use WeDevs\Dokan\CJDropshipping\Sync\Webhooks;
 use WeDevs\Dokan\REST\DokanBaseAdminController;
@@ -66,6 +67,16 @@ class AdminController extends DokanBaseAdminController {
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'register_webhooks' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/categories', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_categories' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
@@ -154,6 +165,21 @@ class AdminController extends DokanBaseAdminController {
         }
 
         return rest_ensure_response( ( new Connection() )->summary() );
+    }
+
+    /**
+     * CJ's categories, for the blocked-categories setting (B8).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function get_categories() {
+        try {
+            return rest_ensure_response( ( new Catalog() )->categories() );
+        } catch ( ApiException $e ) {
+            return self::to_error( $e );
+        }
     }
 
     /**

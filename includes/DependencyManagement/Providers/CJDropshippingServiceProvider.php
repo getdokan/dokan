@@ -8,6 +8,7 @@ use WeDevs\Dokan\CJDropshipping\REST\Registrar;
 use WeDevs\Dokan\CJDropshipping\Vendor\Navigation;
 use WeDevs\Dokan\CJDropshipping\Product\Hooks as ProductHooks;
 use WeDevs\Dokan\CJDropshipping\Product\OffSale;
+use WeDevs\Dokan\CJDropshipping\Product\BlockedCategories;
 use WeDevs\Dokan\CJDropshipping\Order\Panel;
 use WeDevs\Dokan\CJDropshipping\Shipping\Checkout;
 use WeDevs\Dokan\CJDropshipping\Sync\Synchronizer;
@@ -37,6 +38,7 @@ class CJDropshippingServiceProvider extends BaseServiceProvider {
         Navigation::class,
         ProductHooks::class,
         OffSale::class,
+        BlockedCategories::class,
         Synchronizer::class,
         Webhooks::class,
         Checkout::class,

@@ -160,6 +160,21 @@ class SettingsSchema implements Hookable {
         ];
 
         $fields[] = [
+            'id'           => 'cj_blocked_categories',
+            'type'         => 'field',
+            'variant'      => 'cj_blocked_categories',
+            'section_id'   => 'cj_catalog_section',
+            'title'        => __( 'Blocked categories', 'dokan-lite' ),
+            'description'  => __( 'Vendors can\'t find or import CJ products from these categories. For each one, choose whether products vendors already imported stay on sale or move to Draft.', 'dokan-lite' ),
+            'default'      => [],
+            'legacy_key'   => [
+                'option' => Settings::OPTION,
+                'field'  => 'blocked_categories',
+            ],
+            'dependencies' => $enabled_only,
+        ];
+
+        $fields[] = [
             'id'           => 'cj_privacy_note',
             'type'         => 'field',
             'variant'      => 'info',

@@ -316,6 +316,46 @@ class Catalog {
     }
 
     /**
+     * CJ's third-level categories, the only level with ids (B8).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array[] Each: id, name, parent ("First › Second").
+     * @throws ApiException When CJ fails.
+     */
+    public function categories(): array {
+        $cached = get_transient( 'dokan_cj_categories' );
+
+        if ( is_array( $cached ) && $cached ) {
+            return $cached;
+        }
+
+        $categories = [];
+
+        foreach ( (array) $this->client->get( 'product/getCategory', [], Points::INTERACTIVE ) as $first ) {
+            foreach ( (array) ( $first['categoryFirstList'] ?? [] ) as $second ) {
+                foreach ( (array) ( $second['categorySecondList'] ?? [] ) as $third ) {
+                    $id = (string) ( $third['categoryId'] ?? '' );
+
+                    if ( '' !== $id ) {
+                        $categories[] = [
+                            'id'     => $id,
+                            'name'   => (string) ( $third['categoryName'] ?? $id ),
+                            'parent' => (string) ( $first['categoryFirstName'] ?? '' ) . ' › ' . (string) ( $second['categorySecondName'] ?? '' ),
+                        ];
+                    }
+                }
+            }
+        }
+
+        if ( $categories ) {
+            set_transient( 'dokan_cj_categories', $categories, DAY_IN_SECONDS );
+        }
+
+        return $categories;
+    }
+
+    /**
      * Account details, used to check a connection.
      *
      * @since DOKAN_SINCE
@@ -347,6 +387,7 @@ class Catalog {
             'price'          => (string) ( $row['nowPrice'] ?? $row['sellPrice'] ?? '' ),
             'inventory'      => (int) ( $row['warehouseInventoryNum'] ?? 0 ),
             'delivery_cycle' => (string) ( $row['deliveryCycle'] ?? '' ),
+            'category_id'    => (string) ( $row['categoryId'] ?? '' ),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\CJDropshipping\Product;
 use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
 use WeDevs\Dokan\CJDropshipping\Queue;
 use WeDevs\Dokan\CJDropshipping\Settings;
+use WeDevs\Dokan\CJDropshipping\Vendor\Alerts;
 use WeDevs\Dokan\Contracts\Hookable;
 
 /**
@@ -125,7 +126,7 @@ class OffSale implements Hookable {
     }
 
     /**
-     * A vendor's CJ products the bulk action can put back on sale.
+     * A vendor's CJ products the bulk action can put back on sale; not while their CJ category is blocked.
      *
      * @since DOKAN_SINCE
      *
@@ -137,7 +138,9 @@ class OffSale implements Hookable {
         return array_values(
             array_filter(
                 $this->links->parent_ids( $vendor_id ),
-                static fn( $id ) => 'draft' === get_post_status( $id ) && in_array( get_post_meta( $id, Drafts::DRAFT_REASON_META, true ), self::RESTORABLE, true )
+                static fn( $id ) => 'draft' === get_post_status( $id )
+                    && in_array( get_post_meta( $id, Drafts::DRAFT_REASON_META, true ), self::RESTORABLE, true )
+                    && ! BlockedCategories::is_blocked( $id )
             )
         );
     }
@@ -165,6 +168,7 @@ class OffSale implements Hookable {
             );
             delete_post_meta( $product_id, Drafts::PREV_STATUS_META );
             delete_post_meta( $product_id, Drafts::DRAFT_REASON_META );
+            Alerts::clear( $vendor_id, 'category', $product_id );
             ++$count;
         }
 

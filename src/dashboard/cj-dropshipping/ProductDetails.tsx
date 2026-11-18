@@ -167,7 +167,19 @@ const ProductDetails = ( { pid, status, warehouseNames, onClose }: Props ) => {
                             </tbody>
                         </table>
 
-                        <ImportForm product={ product } status={ status } />
+                        { product.blocked ? (
+                            <p
+                                className="m-0 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm"
+                                data-testid="cj-category-blocked"
+                            >
+                                { __(
+                                    "The marketplace doesn't allow CJ products from this category, so you can't import it.",
+                                    'dokan-lite'
+                                ) }
+                            </p>
+                        ) : (
+                            <ImportForm product={ product } status={ status } />
+                        ) }
                     </>
                 ) }
             </div>

@@ -7,6 +7,7 @@ use WeDevs\Dokan\CJDropshipping\Api\Points;
 use WeDevs\Dokan\CJDropshipping\Api\ProductDetails;
 use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
 use WeDevs\Dokan\CJDropshipping\Data\VariantRepository;
+use WeDevs\Dokan\CJDropshipping\Product\BlockedCategories;
 use WeDevs\Dokan\CJDropshipping\Product\Drafts;
 use WeDevs\Dokan\CJDropshipping\Product\Importer;
 use WeDevs\Dokan\CJDropshipping\Product\Stock;
@@ -182,8 +183,20 @@ class Synchronizer implements Hookable {
         }
 
         $variants = array_column( $details['variants'], null, 'vid' );
+        $links    = $this->links->for_cj_product( $pid );
+        $blocked  = [];
 
-        foreach ( $this->links->for_cj_product( $pid ) as $link ) {
+        // Off sale first: a later stock save mustn't find the product published (B8).
+        foreach ( array_unique( array_map( 'intval', array_column( $links, 'parent_id' ) ) ) as $parent_id ) {
+            BlockedCategories::record( $parent_id, $details['category_id'] ?? '' );
+
+            if ( BlockedCategories::is_blocked( $parent_id ) ) {
+                BlockedCategories::take_off_sale( $parent_id );
+                $blocked[ $parent_id ] = true;
+            }
+        }
+
+        foreach ( $links as $link ) {
             $product = wc_get_product( (int) $link['product_id'] );
 
             if ( ! $product ) {
@@ -204,7 +217,10 @@ class Synchronizer implements Hookable {
 
             Stock::apply( $product, $link['vid'] );
             Alerts::clear( (int) $link['vendor_id'], 'sync_failed', (int) $link['parent_id'] );
-            $this->check_loss( $product, $link, (float) $variants[ $link['vid'] ]['cost'] );
+
+            if ( ! isset( $blocked[ (int) $link['parent_id'] ] ) ) {
+                $this->check_loss( $product, $link, (float) $variants[ $link['vid'] ]['cost'] );
+            }
         }
 
         return true;

@@ -5,6 +5,7 @@ import DokanSingleProductPreview from './fields/DokanSingleProductPreview';
 import DokanDoubleInput from './fields/DokanDoubleInput';
 import DokanRepeaterField from './fields/DokanRepeaterField';
 import CJConnectionField from './fields/CJConnectionField';
+import CJBlockedCategoriesField from './fields/CJBlockedCategoriesField';
 import DokanCombineInput from './fields/commission-fields/DokanCombineInput';
 import DokanCategoryBasedCommission from './fields/commission-fields/DokanCategoryBasedCommission';
 import DokanCommissionInheritanceSwitch from './fields/commission-fields/DokanCommissionInheritanceSwitch';
@@ -72,6 +73,15 @@ export function registerSettingsFields(): void {
         'dokan-lite/cj-connection',
         ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
             <CJConnectionField element={ element } />
+        )
+    );
+
+    // CJ Dropshipping: categories vendors can't import from.
+    addFilter(
+        'dokan_settings_cj_blocked_categories_field',
+        'dokan-lite/cj-blocked-categories',
+        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
+            <CJBlockedCategoriesField element={ element } />
         )
     );
 
