@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
-use WeDevs\Dokan\Analytics\Reports\Orders\Stats\BackfillNotice;
 use WeDevs\Dokan\Install\Installer;
 use Automattic\WooCommerce\Admin\ReportsSync;
 
@@ -13,10 +12,6 @@ class V_3_13_0 extends DokanUpgrader {
         ( new Installer() )->create_dokan_order_stats_table();
 
         // Sync the WC order stats.
-        $import = ReportsSync::regenerate_report_data( false, false );
-
-        if ( ! is_wp_error( $import ) ) {
-            BackfillNotice::mark_started();
-        }
+		$import = ReportsSync::regenerate_report_data( null, false );
     }
 }

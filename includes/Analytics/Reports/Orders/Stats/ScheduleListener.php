@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Analytics\Reports\Orders\Stats;
 
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Install\Installer;
 
 /**
  * Class ScheduleListener
@@ -28,6 +29,18 @@ class ScheduleListener implements Hookable {
     public function register_hooks(): void {
         add_action( 'woocommerce_analytics_update_order_stats', [ $this, 'sync_dokan_order' ] );
         add_action( 'woocommerce_analytics_delete_order_stats', [ $this, 'delete_order' ] );
+        add_action( Installer::BACKFILL_RETRY_HOOK, [ $this, 'retry_backfill' ] );
+    }
+
+    /**
+     * Retry an order stats backfill that WooCommerce refused at activation.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function retry_backfill() {
+        ( new Installer() )->maybe_backfill_order_stats();
     }
 
     /**

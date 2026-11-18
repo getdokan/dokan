@@ -8,7 +8,6 @@ use WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Install\Installer;
 use WeDevs\Dokan\Test\DokanTestCase;
-use WeDevs\Dokan\Upgrade\Upgrades\V_3_13_0;
 
 /**
  * Activation must backfill dokan_order_stats when orders exist but the table is empty.
@@ -34,6 +33,8 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
     public function tear_down() {
         $this->reset_import_queue();
         delete_option( BackfillNotice::OPTION );
+        delete_option( Installer::BACKFILL_PENDING_OPTION );
+        as_unschedule_all_actions( Installer::BACKFILL_RETRY_HOOK );
         remove_filter( 'woocommerce_logger_log_message', [ $this, 'capture_dokan_log' ] );
         remove_filter( 'dokan_analytics_backfill_order_stats_on_activation', '__return_false' );
         update_option( 'woocommerce_analytics_enabled', 'yes' );
@@ -42,7 +43,7 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
 
     // Keep unique backfill lines only: WC runs this filter once per log handler, and other Dokan code logs to the same source.
     public function capture_dokan_log( $message, $level, $context ) {
-        if ( 'dokan' === ( $context['source'] ?? '' ) && false !== strpos( $message, 'backfill' ) && ! in_array( $message, $this->logged, true ) ) {
+        if ( 'dokan' === ( $context['source'] ?? '' ) && 0 === strpos( $message, 'Dokan order stats backfill' ) && ! in_array( $message, $this->logged, true ) ) {
             $this->logged[] = $message;
         }
 
@@ -207,36 +208,146 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
         $this->assertNotEmpty( get_option( BackfillNotice::OPTION ) );
     }
 
-    public function test_wc_refusal_is_logged_when_an_import_is_already_running() {
-        $this->create_single_vendor_order(); // Leaves a WC import action pending.
-        $this->truncate_dokan_stats();
+    // An old order without a Dokan row, then a new order whose own WC import job is still queued.
+    private function create_refusal_state(): int {
+        $old_order_id = $this->create_order_without_dokan_stats();
+        $this->create_single_vendor_order();
         $this->assertTrue( ReportsSync::is_importing() );
+
+        return $old_order_id;
+    }
+
+    private function retry_count(): int {
+        $args = [
+            'hook'   => Installer::BACKFILL_RETRY_HOOK,
+            'status' => \ActionScheduler_Store::STATUS_PENDING,
+        ];
+
+        return count( as_get_scheduled_actions( $args, 'ids' ) );
+    }
+
+    public function test_wc_refusal_schedules_a_retry() {
+        $this->create_refusal_state();
         $before = $this->regenerate_count();
 
         $this->backfill();
 
         $this->assertSame( $before, $this->regenerate_count() );
-        $this->assertCount( 1, $this->logged );
-        $this->assertStringContainsString( 'backfill skipped', $this->logged[0] );
+        $this->assertSame( 1, (int) get_option( Installer::BACKFILL_PENDING_OPTION ) );
+        $this->assertSame( 1, $this->retry_count() );
         $this->assertFalse( get_option( BackfillNotice::OPTION ) );
+        $this->assertCount( 1, $this->logged );
+        $this->assertStringContainsString( 'backfill deferred', $this->logged[0] );
     }
 
-    public function test_upgrader_regeneration_marks_the_notice() {
+    public function test_retry_running_under_action_scheduler_reschedules_itself() {
+        $this->create_order_without_dokan_stats();
+        // A future WC import keeps is_importing() true while the queue runs, without being run itself.
+        as_schedule_single_action( time() + HOUR_IN_SECONDS, 'wc-admin_import_orders', [ 999999 ], 'wc-admin-data' );
+        $this->assertTrue( ReportsSync::is_importing() );
+        $this->backfill();
+        $this->assertSame( 1, $this->retry_count() );
+
+        // Make the queued retry due now and let Action Scheduler run it.
+        as_unschedule_all_actions( Installer::BACKFILL_RETRY_HOOK );
+        as_schedule_single_action( time(), Installer::BACKFILL_RETRY_HOOK, [], 'dokan' );
+        $this->run_all_pending_queue();
+
+        $this->assertSame( 2, (int) get_option( Installer::BACKFILL_PENDING_OPTION ) );
+        $this->assertSame( 1, $this->retry_count() );
+        $next = as_next_scheduled_action( Installer::BACKFILL_RETRY_HOOK, [], 'dokan' );
+        $this->assertGreaterThanOrEqual( time() + 2 * Installer::BACKFILL_RETRY_DELAY - MINUTE_IN_SECONDS, $next );
+    }
+
+    public function test_pending_flag_is_cleared_when_analytics_is_turned_off() {
+        update_option( Installer::BACKFILL_PENDING_OPTION, 2 );
+        update_option( 'woocommerce_analytics_enabled', 'no' );
+
+        $this->backfill();
+
+        $this->assertFalse( get_option( Installer::BACKFILL_PENDING_OPTION ) );
+    }
+
+    public function test_pending_flag_is_cleared_when_the_filter_opts_out() {
+        update_option( Installer::BACKFILL_PENDING_OPTION, 2 );
+        add_filter( 'dokan_analytics_backfill_order_stats_on_activation', '__return_false' );
+
+        $this->backfill();
+
+        $this->assertFalse( get_option( Installer::BACKFILL_PENDING_OPTION ) );
+    }
+
+    public function test_retry_is_scheduled_only_once() {
+        $this->create_refusal_state();
+
+        $this->backfill();
+        $this->backfill();
+
+        $this->assertSame( 2, (int) get_option( Installer::BACKFILL_PENDING_OPTION ) );
+        $this->assertSame( 1, $this->retry_count() );
+    }
+
+    public function test_retry_backfills_even_after_a_new_order_row_lands() {
+        $old_order_id = $this->create_refusal_state();
+        $this->backfill();
+
+        // The new order's own job runs and writes one row, so the table is no longer empty.
+        $this->run_all_pending_queue();
+        global $wpdb;
+        $this->assertGreaterThan( 0, (int) $wpdb->get_var( 'SELECT COUNT(*) FROM ' . DataStore::get_db_table_name() ) ); // phpcs:ignore
+        $this->assertNull( $this->get_stats_row( $old_order_id ) );
         $before = $this->regenerate_count();
 
-        V_3_13_0::resync_wc_order_stats_to_sync_dokan_stats();
+        do_action( Installer::BACKFILL_RETRY_HOOK );
 
         $this->assertSame( $before + 1, $this->regenerate_count() );
+        $this->assertFalse( get_option( Installer::BACKFILL_PENDING_OPTION ) );
         $this->assertNotEmpty( get_option( BackfillNotice::OPTION ) );
+
+        $this->run_all_pending_queue();
+        $this->assertNotNull( $this->get_stats_row( $old_order_id ) );
     }
 
-    public function test_refused_upgrader_regeneration_does_not_mark_the_notice() {
-        $this->create_single_vendor_order(); // Leaves a WC import action pending.
-        $this->assertTrue( ReportsSync::is_importing() );
+    public function test_retry_stops_when_nothing_is_missing() {
+        $this->create_single_vendor_order();
+        $this->run_all_pending_queue();
+        update_option( Installer::BACKFILL_PENDING_OPTION, 1 );
+        $before = $this->regenerate_count();
 
-        V_3_13_0::resync_wc_order_stats_to_sync_dokan_stats();
+        do_action( Installer::BACKFILL_RETRY_HOOK );
 
-        $this->assertFalse( get_option( BackfillNotice::OPTION ) );
+        $this->assertSame( $before, $this->regenerate_count() );
+        $this->assertFalse( get_option( Installer::BACKFILL_PENDING_OPTION ) );
+    }
+
+    public function test_backfill_gives_up_after_max_attempts() {
+        $this->create_refusal_state();
+        update_option( Installer::BACKFILL_PENDING_OPTION, Installer::BACKFILL_MAX_ATTEMPTS - 1 );
+        $before = $this->regenerate_count();
+
+        $this->backfill();
+
+        $this->assertSame( $before, $this->regenerate_count() );
+        $this->assertFalse( get_option( Installer::BACKFILL_PENDING_OPTION ) );
+        $this->assertSame( 0, $this->retry_count() );
+        $this->assertCount( 1, $this->logged );
+        $this->assertStringContainsString( 'skipped after ' . Installer::BACKFILL_MAX_ATTEMPTS . ' attempts', $this->logged[0] );
+        $this->assertStringContainsString( 'Import historical data', $this->logged[0] );
+    }
+
+    // Looks up the hook registry, since other tests swap the container's ScheduleListener for a mock.
+    public function test_retry_hook_is_registered_at_boot() {
+        global $wp_filter;
+
+        $found = false;
+        foreach ( $wp_filter[ Installer::BACKFILL_RETRY_HOOK ]->callbacks ?? [] as $callbacks ) {
+            foreach ( $callbacks as $callback ) {
+                $function = $callback['function'];
+                $found    = $found || ( is_array( $function ) && $function[0] instanceof \WeDevs\Dokan\Analytics\Reports\Orders\Stats\ScheduleListener && 'retry_backfill' === $function[1] );
+            }
+        }
+
+        $this->assertTrue( $found );
     }
 
     public function test_do_install_runs_the_backfill() {

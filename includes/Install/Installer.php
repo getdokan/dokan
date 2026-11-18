@@ -59,6 +59,26 @@ class Installer {
     }
 
     /**
+     * Option holding the number of refused backfill attempts; set while a backfill is pending.
+     */
+    public const BACKFILL_PENDING_OPTION = 'dokan_order_stats_backfill_pending';
+
+    /**
+     * Action Scheduler hook that retries a backfill WooCommerce refused.
+     */
+    public const BACKFILL_RETRY_HOOK = 'dokan_order_stats_backfill_retry';
+
+    /**
+     * Maximum refused attempts before giving up; with doubling delays this spans about 21 hours.
+     */
+    public const BACKFILL_MAX_ATTEMPTS = 8;
+
+    /**
+     * Seconds before the first retry; each later retry waits twice as long.
+     */
+    public const BACKFILL_RETRY_DELAY = 10 * MINUTE_IN_SECONDS;
+
+    /**
      * Backfill dokan_order_stats when orders exist but the table is empty.
      *
      * @since DOKAN_SINCE
@@ -74,6 +94,7 @@ class Installer {
 
         // WC only consumes the import actions while its analytics feature is on.
         if ( 'yes' !== get_option( 'woocommerce_analytics_enabled', 'yes' ) ) {
+            delete_option( self::BACKFILL_PENDING_OPTION );
             return;
         }
 
@@ -85,36 +106,71 @@ class Installer {
          * @param bool $backfill Whether to schedule the WC Analytics regeneration.
          */
         if ( ! apply_filters( 'dokan_analytics_backfill_order_stats_on_activation', true ) ) {
+            delete_option( self::BACKFILL_PENDING_OPTION );
             return;
         }
 
-        $table = OrderStatsDataStore::get_db_table_name();
+        $table    = OrderStatsDataStore::get_db_table_name();
+        $attempts = get_option( self::BACKFILL_PENDING_OPTION, false );
 
-        if ( $wpdb->get_var( "SELECT order_id FROM {$table} LIMIT 1" ) ) { // phpcs:ignore WordPress.DB
+        if ( false === $attempts ) {
+            if ( $wpdb->get_var( "SELECT order_id FROM {$table} LIMIT 1" ) ) { // phpcs:ignore WordPress.DB
+                return;
+            }
+
+            $order_ids = wc_get_orders(
+                [
+                    'limit'  => 1,
+                    'return' => 'ids',
+                ]
+            );
+
+            if ( empty( $order_ids ) ) {
+                return;
+            }
+
+            $attempts = 0;
+        } elseif ( ! $wpdb->get_var( "SELECT s.order_id FROM {$wpdb->prefix}wc_order_stats s LEFT JOIN {$table} d ON d.order_id = s.order_id WHERE d.order_id IS NULL LIMIT 1" ) ) { // phpcs:ignore WordPress.DB
+            // A retry found every WC report row already synced, e.g. by an import that ran meanwhile.
+            delete_option( self::BACKFILL_PENDING_OPTION );
             return;
         }
 
-        $order_ids = wc_get_orders(
-            [
-                'limit'  => 1,
-                'return' => 'ids',
-            ]
-        );
-
-        if ( empty( $order_ids ) ) {
-            return;
-        }
-
-        // Re-importing through WC Analytics fires the hook that fills dokan_order_stats.
         // false (not null) = full import, which also lets WC reset its failed-import counter.
         $result = ReportsSync::regenerate_report_data( false, false );
 
-        if ( is_wp_error( $result ) ) {
-            dokan_log( 'Dokan order stats backfill skipped: ' . $result->get_error_message(), 'warning' );
+        if ( ! is_wp_error( $result ) ) {
+            delete_option( self::BACKFILL_PENDING_OPTION );
+            BackfillNotice::mark_started();
             return;
         }
 
-        BackfillNotice::mark_started();
+        $attempts = (int) $attempts + 1;
+
+        if ( $attempts >= self::BACKFILL_MAX_ATTEMPTS ) {
+            delete_option( self::BACKFILL_PENDING_OPTION );
+            dokan_log( 'Dokan order stats backfill skipped after ' . $attempts . ' attempts; run WooCommerce > Analytics > Settings > Import historical data with "Skip previously imported" unticked. Last error: ' . $result->get_error_message(), 'warning' );
+            return;
+        }
+
+        // Another WC import (e.g. a single new order) is queued; retry once it has run.
+        update_option( self::BACKFILL_PENDING_OPTION, $attempts, false );
+        dokan_log( 'Dokan order stats backfill deferred (attempt ' . $attempts . '): ' . $result->get_error_message(), 'warning' );
+
+        // Only a pending retry counts: as_next_scheduled_action() also matches the retry that is running now.
+        $queued = as_get_scheduled_actions(
+            [
+                'hook'     => self::BACKFILL_RETRY_HOOK,
+                'group'    => 'dokan',
+                'status'   => \ActionScheduler_Store::STATUS_PENDING,
+                'per_page' => 1,
+            ],
+            'ids'
+        );
+
+        if ( empty( $queued ) ) {
+            as_schedule_single_action( time() + self::BACKFILL_RETRY_DELAY * ( 2 ** ( $attempts - 1 ) ), self::BACKFILL_RETRY_HOOK, [], 'dokan' );
+        }
     }
 
     /**
