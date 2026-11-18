@@ -16,6 +16,7 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
 
     protected $services = [
         ScheduleListener::class,
+        \WeDevs\Dokan\Analytics\Reports\Orders\Stats\BackfillNotice::class,
         QueryFilter::class,
         StatsQueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Products\QueryFilter::class,

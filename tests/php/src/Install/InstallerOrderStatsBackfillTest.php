@@ -3,10 +3,12 @@
 namespace WeDevs\Dokan\Test\Install;
 
 use Automattic\WooCommerce\Admin\ReportsSync;
+use WeDevs\Dokan\Analytics\Reports\Orders\Stats\BackfillNotice;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Install\Installer;
 use WeDevs\Dokan\Test\DokanTestCase;
+use WeDevs\Dokan\Upgrade\Upgrades\V_3_13_0;
 
 /**
  * Activation must backfill dokan_order_stats when orders exist but the table is empty.
@@ -22,19 +24,20 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
      */
     private $logged = [];
 
-    public function setUp(): void {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
         $this->reset_import_queue();
         $this->logged = [];
         add_filter( 'woocommerce_logger_log_message', [ $this, 'capture_dokan_log' ], 10, 3 );
     }
 
-    protected function tearDown(): void {
+    public function tear_down() {
         $this->reset_import_queue();
+        delete_option( BackfillNotice::OPTION );
         remove_filter( 'woocommerce_logger_log_message', [ $this, 'capture_dokan_log' ] );
         remove_filter( 'dokan_analytics_backfill_order_stats_on_activation', '__return_false' );
         update_option( 'woocommerce_analytics_enabled', 'yes' );
-        parent::tearDown();
+        parent::tear_down();
     }
 
     // Keep unique backfill lines only: WC runs this filter once per log handler, and other Dokan code logs to the same source.
@@ -73,9 +76,9 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
 
         $product = $this->factory()->product->create_and_get(
             [
-				'price' => 10,
-				'regular_price' => 10,
-			]
+                'price' => 10,
+                'regular_price' => 10,
+            ]
         );
         $order   = wc_create_order( [ 'customer_id' => $this->customer_id ] );
         $order->add_product( $product, 2 );
@@ -116,6 +119,12 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
 
         $this->assertSame( $before, $this->regenerate_count() );
         $this->assertFalse( ReportsSync::is_importing() );
+    }
+
+    public function test_skipped_backfill_does_not_mark_the_notice() {
+        $this->backfill();
+
+        $this->assertFalse( get_option( BackfillNotice::OPTION ) );
     }
 
     public function test_no_regeneration_is_scheduled_when_table_already_has_rows() {
@@ -195,6 +204,7 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
         $this->assertSame( $before + 1, $this->regenerate_count() );
         $this->assertTrue( ReportsSync::is_importing() );
         $this->assertSame( [], $this->logged );
+        $this->assertNotEmpty( get_option( BackfillNotice::OPTION ) );
     }
 
     public function test_wc_refusal_is_logged_when_an_import_is_already_running() {
@@ -208,6 +218,25 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
         $this->assertSame( $before, $this->regenerate_count() );
         $this->assertCount( 1, $this->logged );
         $this->assertStringContainsString( 'backfill skipped', $this->logged[0] );
+        $this->assertFalse( get_option( BackfillNotice::OPTION ) );
+    }
+
+    public function test_upgrader_regeneration_marks_the_notice() {
+        $before = $this->regenerate_count();
+
+        V_3_13_0::resync_wc_order_stats_to_sync_dokan_stats();
+
+        $this->assertSame( $before + 1, $this->regenerate_count() );
+        $this->assertNotEmpty( get_option( BackfillNotice::OPTION ) );
+    }
+
+    public function test_refused_upgrader_regeneration_does_not_mark_the_notice() {
+        $this->create_single_vendor_order(); // Leaves a WC import action pending.
+        $this->assertTrue( ReportsSync::is_importing() );
+
+        V_3_13_0::resync_wc_order_stats_to_sync_dokan_stats();
+
+        $this->assertFalse( get_option( BackfillNotice::OPTION ) );
     }
 
     public function test_do_install_runs_the_backfill() {
@@ -249,10 +278,10 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
         $this->truncate_dokan_stats();
         $suborder_ids = wc_get_orders(
             [
-				'parent' => $parent_id,
-				'return' => 'ids',
-				'limit' => -1,
-			]
+                'parent' => $parent_id,
+                'return' => 'ids',
+                'limit' => -1,
+            ]
         );
         $this->assertCount( 2, $suborder_ids );
 
@@ -277,10 +306,10 @@ class InstallerOrderStatsBackfillTest extends DokanTestCase {
         $order_id = $this->create_single_vendor_order();
         $refund   = wc_create_refund(
             [
-				'order_id' => $order_id,
-				'amount' => 5,
-				'reason' => 'corner case',
-			]
+                'order_id' => $order_id,
+                'amount' => 5,
+                'reason' => 'corner case',
+            ]
         );
         $this->assertNotWPError( $refund );
         $this->run_all_pending_queue();

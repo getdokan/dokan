@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Install;
 
 use Automattic\WooCommerce\Admin\ReportsSync;
 use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
+use WeDevs\Dokan\Analytics\Reports\Orders\Stats\BackfillNotice;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore as OrderStatsDataStore;
 use WeDevs\Dokan\ReverseWithdrawal\InstallerHelper as ReverseWithdrawalInstallerHelper;
 use WeDevs\Dokan\Rewrites;
@@ -26,6 +27,7 @@ class Installer {
         $this->product_design();
         $this->add_store_name_meta_key_for_admin_users();
         $this->schedule_cron_jobs();
+        // On re-activating a pre-3.13.0 site, do_upgrade() runs V_3_13_0 next; WC refuses its identical regeneration while this one is queued.
         $this->maybe_backfill_order_stats();
 
         // does it needs any update?
@@ -104,11 +106,15 @@ class Installer {
         }
 
         // Re-importing through WC Analytics fires the hook that fills dokan_order_stats.
-        $result = ReportsSync::regenerate_report_data( null, false );
+        // false (not null) = full import, which also lets WC reset its failed-import counter.
+        $result = ReportsSync::regenerate_report_data( false, false );
 
         if ( is_wp_error( $result ) ) {
             dokan_log( 'Dokan order stats backfill skipped: ' . $result->get_error_message(), 'warning' );
+            return;
         }
+
+        BackfillNotice::mark_started();
     }
 
     /**
