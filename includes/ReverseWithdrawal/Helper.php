@@ -187,6 +187,26 @@ class Helper {
     }
 
     /**
+     * Get the amount an order actually collected towards the reverse withdrawal balance.
+     *
+     * @since 5.3.3
+     *
+     * @param \WC_Abstract_Order $order
+     *
+     * @return float
+     */
+    public static function get_collected_amount_from_order( \WC_Abstract_Order $order ): float {
+        foreach ( $order->get_items() as $item ) {
+            if ( $item->get_meta( '_dokan_reverse_withdrawal_balance' ) ) {
+                // Line total is after coupons, and the order total also reflects negative fees some discount plugins add.
+                return max( 0.0, min( (float) $item->get_total(), (float) $order->get_total() ) );
+            }
+        }
+
+        return 0.0;
+    }
+
+    /**
      * Get reverse withdrawal base product id
      *
      * @since 3.5.1
@@ -525,28 +545,8 @@ class Helper {
                 }
 
                 // vendor needs to pay due amount
-                $ret['status'] = true;
-
-                // check if user crossed the due period
-                $due_date = $current_date->modify( 'first day of this month' )->setTime( 23, 59, 59 );
-
-                if ( SettingsHelper::get_billing_day() ) {
-                    $billing_day = SettingsHelper::get_billing_day() - 1;
-                    $due_date    = $billing_day > 0 ? $due_date->modify( "+ {$billing_day} days" ) : $due_date;
-                }
-
-                if ( SettingsHelper::get_due_period() ) {
-                    $due_period = SettingsHelper::get_due_period() - 1;
-                    $due_date   = $due_period > 0 ? $due_date->modify( "+ {$due_period} days" ) : $due_date;
-                }
-
-                if ( $current_date > $due_date ) {
-                    // vendor needs to pay due balance immediately
-                    $ret['due_date'] = 'immediate';
-                } else {
-                    // vendor needs to pay due balance on due date
-                    $ret['due_date'] = $due_date->format( 'Y-m-d' );
-                }
+                $ret['status']   = true;
+                $ret['due_date'] = static::get_monthly_due_date( $current_date );
 
                 break;
 
@@ -595,6 +595,34 @@ class Helper {
         }
 
         return $ret;
+    }
+
+    /**
+     * Get the due date for the current month's reverse withdrawal payment.
+     *
+     * Billing day and due period both count from the first day of the month.
+     *
+     * @since 5.3.4
+     *
+     * @param \DateTimeImmutable $current_date
+     *
+     * @return string 'immediate' once the due date has passed, otherwise Y-m-d
+     */
+    public static function get_monthly_due_date( $current_date ) {
+        $due_date = $current_date->modify( 'first day of this month' )->setTime( 23, 59, 59 );
+
+        if ( SettingsHelper::get_billing_day() ) {
+            $billing_day = SettingsHelper::get_billing_day() - 1;
+            $due_date    = $billing_day > 0 ? $due_date->modify( "+ {$billing_day} days" ) : $due_date;
+        }
+
+        if ( SettingsHelper::get_due_period() ) {
+            $due_period = SettingsHelper::get_due_period() - 1;
+            $due_date   = $due_period > 0 ? $due_date->modify( "+ {$due_period} days" ) : $due_date;
+        }
+
+        // vendor needs to pay due balance immediately once the due date has passed
+        return $current_date > $due_date ? 'immediate' : $due_date->format( 'Y-m-d' );
     }
 
     /**

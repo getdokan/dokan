@@ -39,6 +39,10 @@ export const getActiveSubmenuKey = (
     return activeKey;
 };
 
+// Switched off from the menu manager (Pro); items it never touched carry no flag.
+export const isSwitchedOff = ( item: any ): boolean =>
+    'is_switched_on' in item && ! item.is_switched_on;
+
 // Labels arrive HTML-escaped from esc_html__, so decode for display (&amp; -> &) while JSX still escapes markup.
 const getMenuTitle = ( hookName: string, menuItem: any ): string =>
     decodeEntities(
@@ -287,11 +291,7 @@ const Sidebar = ( {
                         <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
                             { Object.entries( sidebarNav || {} ).map(
                                 ( [ key, item ]: any ) => {
-                                    // If switched off from the menu manager.
-                                    if (
-                                        'is_switched_on' in item &&
-                                        ! item.is_switched_on
-                                    ) {
+                                    if ( isSwitchedOff( item ) ) {
                                         return null;
                                     }
 
@@ -456,11 +456,10 @@ const Sidebar = ( {
                                                                 subkey,
                                                                 subitem,
                                                             ]: any ) => {
-                                                                // If switched off from the menu manager.
                                                                 if (
-                                                                    'is_switched_on' in
-                                                                        subitem &&
-                                                                    ! subitem.is_switched_on
+                                                                    isSwitchedOff(
+                                                                        subitem
+                                                                    )
                                                                 ) {
                                                                     return null;
                                                                 }

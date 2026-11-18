@@ -89,6 +89,22 @@ test.describe('Menu Manager (React) functionality', () => {
             expect(productsIdx, 'products nav item found').toBeGreaterThanOrEqual(0);
             expect(withdrawIdx, 'withdraw now sorts before products after the reorder').toBeLessThan(productsIdx);
         });
+
+        test('menu-manager hide refuses the settings route by URL (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            // [cross-role DB] switch the Social Profile settings page off — the sidebar hides it, the deep link must not open it.
+            await NewMenuManagerPage.seedSettingsSubMenus({ social: { is_switched_on: 'no', menu_manager_position: 90 } });
+            await menu.gotoRoute('settings/social');
+            expect(await menu.isForbidden(), 'the switched-off Social Profile route renders Permission Denied').toBe(true);
+            // React Router matches the hash case-insensitively and decoded, so these reach the same route and must be refused too.
+            await menu.gotoRoute('settings/Social');
+            expect(await menu.isForbidden(), 'a mixed-case hash is refused').toBe(true);
+            await menu.gotoRoute('settings/%73ocial');
+            expect(await menu.isForbidden(), 'a percent-encoded hash is refused').toBe(true);
+
+            await NewMenuManagerPage.seedSettingsSubMenus({ social: { is_switched_on: 'yes', menu_manager_position: 90 } });
+            await menu.gotoRoute('settings/social');
+            expect(await menu.routeRendered('#social-fb'), 'the Social Profiles form renders again once the page is switched on').toBe(true);
+        });
     });
 
     // ---------------------------------------------------------------

@@ -897,6 +897,8 @@ class Assets {
             'allow_shipment'                => dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' ),
             'wc_shipping_enabled'           => get_option( 'woocommerce_calc_shipping' ) === 'yes',
             'has_shipment_func'             => function_exists( 'dokan_get_order_shipment_current_status' ),
+            // Vendor order status change permission (used by JS order list to match PHP template behavior)
+            'order_status_change'           => dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ),
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -1092,8 +1094,10 @@ class Assets {
 
         wp_localize_script( 'dokan-util-helper', 'dokan_helper', $localize_data );
 
+        // The hash router can't be gated server-side like the legacy pages, so it gets the switched-off routes.
         $dokan_frontend = [
-            'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            'currency'         => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+            'restrictedRoutes' => is_user_logged_in() && dokan_is_seller_dashboard() ? dokan_get_restricted_dashboard_routes() : [],
         ];
 
         // localize dokan frontend script

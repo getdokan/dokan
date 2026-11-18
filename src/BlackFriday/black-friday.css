@@ -1,0 +1,43 @@
+/* TODO BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off. */
+/* Black Friday campaign page. Tailwind utilities come from the dokan-tailwind bundle; only what utilities cannot express cleanly lives here. */
+
+.dokan-black-friday {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dokan-black-friday .dokan-bf-hero {
+    background-color: #0f0043;
+    background-image:
+        radial-gradient(430px 171px at 62% 100%, rgba(192, 75, 232, 0.6), rgba(192, 75, 232, 0) 70%),
+        radial-gradient(484px 192px at 98% 90%, rgba(255, 138, 76, 0.75), rgba(255, 138, 76, 0) 70%),
+        radial-gradient(538px 213px at 82% 10%, rgba(59, 59, 245, 0.85), rgba(59, 59, 245, 0) 70%);
+}
+
+/* Hero visual: the big discount number. Poppins is not bundled, so the stack falls back to the admin sans-serif on most installs. */
+.dokan-black-friday .dokan-bf-hero-number {
+    font-family: Poppins, Inter, ui-sans-serif, system-ui, sans-serif;
+    font-size: 186px;
+    line-height: 1;
+    letter-spacing: -7.4px;
+    background-image: linear-gradient(149deg, #e9dcff 7%, #a77bff 32%, #6a3cf0 57%, #3a2bd6 79%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 11px 37px rgba(112, 71, 235, 0.65)) drop-shadow(-6px 4px 15px rgba(226, 59, 214, 0.35));
+}
+
+.dokan-black-friday .dokan-bf-hero-badge-text,
+.dokan-black-friday .dokan-bf-hero-eyebrow {
+    font-family: 'Plus Jakarta Sans', Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Deal card tinted backgrounds (radial highlight in the bottom-right corner). */
+.dokan-black-friday .dokan-bf-deal-bg-purple {
+    background-color: #f4efff;
+    background-image: radial-gradient(300px 237px at 100% 100%, rgba(136, 101, 227, 1), rgba(136, 101, 227, 0) 100%);
+}
+
+.dokan-black-friday .dokan-bf-deal-bg-pink {
+    background-color: #fef7f8;
+    background-image: radial-gradient(300px 251px at 100% 100%, rgba(195, 103, 249, 1), rgba(195, 103, 249, 0) 100%);
+}
