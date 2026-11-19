@@ -11,6 +11,7 @@ import VendorRadioField from './fields/VendorRadioField';
 import VendorNoteField from './fields/VendorNoteField';
 import VacationHistoryField from './fields/VacationHistoryField';
 import CompanyBankField from './fields/CompanyBankField';
+import AppPasswordsField from './fields/AppPasswordsField';
 
 type FieldComponent = ( props: { element: SettingsElement } ) => JSX.Element;
 
@@ -29,6 +30,7 @@ const CUSTOM_VARIANTS: Record< string, FieldComponent > = {
     vendor_note: VendorNoteField,
     vendor_vacation_history: VacationHistoryField,
     vendor_company_bank: CompanyBankField,
+    vendor_app_passwords: AppPasswordsField,
 };
 
 /**

@@ -158,7 +158,12 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
     /**
      * Base ability metadata shared by Dokan abilities.
      *
+     * Not public over MCP: the adapter's default server lists every public ability to any
+     * signed-in user, and Dokan's are offered by its own server only
+     * ({@see \WeDevs\Dokan\Abilities\Mcp\Server}), which names them itself.
+     *
      * @since 5.0.15
+     * @since DOKAN_SINCE No longer public on the MCP Adapter's default server.
      *
      * @param bool $is_readonly Whether the ability only reads data.
      *
@@ -168,7 +173,7 @@ abstract class AbstractVendorAbility implements AbilityDefinition {
         return [
             'show_in_rest' => true,
             'mcp'          => [
-                'public' => true,
+                'public' => false,
                 'type'   => 'tool',
             ],
             'annotations'  => [
