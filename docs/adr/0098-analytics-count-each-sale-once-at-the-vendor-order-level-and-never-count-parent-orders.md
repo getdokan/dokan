@@ -10,7 +10,7 @@ Dokan therefore keeps a companion table, `{prefix}dokan_order_stats`, that class
 
 ## Rule
 
-**Every order and refund is classified.** `OrderType::get_type()` (`lite:includes/Analytics/Reports/OrderType.php:57-99`) assigns one of ten types, stored in `dokan_order_stats.order_type`:
+**Every order and refund is classified.** `OrderType::get_type()` (`lite:includes/Analytics/Reports/OrderType.php::get_type()`) assigns one of ten types, stored in `dokan_order_stats.order_type`:
 
 | Value | Constant | Meaning |
 |---|---|---|
@@ -21,23 +21,24 @@ Dokan therefore keeps a companion table, `{prefix}dokan_order_stats`, that class
 | 6 / 7 | `DOKAN_ADVERTISEMENT_*` | Advertisement order / its refund |
 | 8 / 9 | `DOKAN_SUBSCRIPTION_*` | Vendor subscription order / its refund |
 
-Types 6-9 are assigned only when an add-on answers the `dokan_get_order_type` filter (`lite:includes/Analytics/Reports/OrderType.php:113-137`); see [ADR-0096](./0096-advertisement-and-vendor-subscription-orders-are-recorded-in-analytics-without-a-vendor-and-with-only-their-fees-as-admin-earning.md).
+Types 6-9 are assigned only when an add-on answers the `dokan_get_order_type` filter (`lite:includes/Analytics/Reports/OrderType.php::get_special_order_type()`); see [ADR-0096](./0096-advertisement-and-vendor-subscription-orders-are-recorded-in-analytics-without-a-vendor-and-with-only-their-fees-as-admin-earning.md).
 
-**Analytics queries include only Vendor-order-level types.** Each report's `QueryFilter` joins `dokan_order_stats` on `order_id` (`BaseQueryFilter::add_join_subquery()`, `lite:includes/Analytics/Reports/BaseQueryFilter.php:27-35`) and adds `order_type IN (...)` (`add_where_subquery()`, `:44-54`). The list comes from `get_order_and_refund_types_to_include()` (`:90-98`), which returns `OrderType::get_vendor_order_types()` = types 1, 2, 4, 5, 6, 7, 8, 9 (`lite:includes/Analytics/Reports/OrderType.php:158-169`; selected through `should_filter_by_vendor_id()`, `lite:includes/Analytics/Reports/BaseQueryFilter.php:81-83`). The same type list applies whether a Vendor or a Store Admin is looking.
+**Analytics queries include only Vendor-order-level types.** Each report's `QueryFilter` joins `dokan_order_stats` on `order_id` (`lite:includes/Analytics/Reports/BaseQueryFilter.php::add_join_subquery()`) and adds `order_type IN (...)` (`::add_where_subquery()`). The list comes from `::get_order_and_refund_types_to_include()`, which returns `OrderType::get_vendor_order_types()` = types 1, 2, 4, 5, 6, 7, 8, 9 (`lite:includes/Analytics/Reports/OrderType.php::get_vendor_order_types()`; selected through `lite:includes/Analytics/Reports/BaseQueryFilter.php::should_filter_by_vendor_id()`). The same type list applies whether a Vendor or a Store Admin is looking.
 
 So in every Dokan-filtered WooCommerce Analytics report:
 
 - **Parent Orders (type 0) and refunds created on a parent Order (type 3) are never counted.**
 - **Single-vendor Orders and Suborders are counted once each**, together with their refunds (types 4 and 5) as separate negative rows (WooCommerce stores refund rows with negative totals).
 - Advertisement and Vendor subscription orders and their refunds (types 6-9) are counted for the Store Admin; for a Vendor they drop out through the Vendor filter because their `vendor_id` is 0 (see [ADR-0095](./0095-a-vendor-sees-only-their-own-vendor-orders-in-analytics-and-only-report-managers-can-choose-a-vendor.md)).
-- **Order counts and averages exclude refunds.** The orders-stats `orders_count`, `avg_order_value`, `avg_items_per_order`, `avg_admin_commission` and `avg_vendor_earning` columns count only types 1 and 2 (`get_vendor_order_types_excluding_refunds()`, `lite:includes/Analytics/Reports/OrderType.php:188-193`; `Orders\Stats\QueryFilter::modify_admin_report_columns()`, `lite:includes/Analytics/Reports/Orders/Stats/QueryFilter.php:56-74`). The taxes-stats `orders_count` does the same (`lite:includes/Analytics/Reports/Taxes/Stats/QueryFilter.php:41-51`).
-- **The `refunds` view** (`?refunds=...`) further narrows to Vendor refund types 4 and 5 (`BaseQueryFilter::add_where_subquery_for_refund()`, `lite:includes/Analytics/Reports/BaseQueryFilter.php:63-74`; `OrderType::get_vendor_refund_types()`, `OrderType.php:215-220`).
+- **Order counts exclude refunds.** The orders-stats `orders_count`, `avg_order_value` and `avg_items_per_order` columns divide by, or count, only types 1 and 2 (`lite:includes/Analytics/Reports/OrderType.php::get_vendor_order_types_excluding_refunds()`; `lite:includes/Analytics/Reports/Orders/Stats/QueryFilter.php::modify_admin_report_columns()`). The taxes-stats `orders_count` does the same (`lite:includes/Analytics/Reports/Taxes/Stats/QueryFilter.php::modify_admin_report_columns()`).
+- **Commission and Earning averages divide by orders plus refunds.** `modify_admin_report_columns()` also defines `avg_admin_commission` and `avg_vendor_earning` over types 1 and 2, but `Orders\Stats\QueryFilter::add_select_subquery_for_total()` appends a second column with each of those names to the same SELECT, dividing by every included type, refunds (4, 5, 7, 9) among them. The appended column comes later in the row, so it is the value WooCommerce reads. Refund rows carry zero Commission and Earning, so in a period with refunds these two averages come out lower than Commission or Earning per order.
+- **The `refunds` view** (`?refunds=...`) further narrows to Vendor refund types 4 and 5 (`lite:includes/Analytics/Reports/BaseQueryFilter.php::add_where_subquery_for_refund()`; `lite:includes/Analytics/Reports/OrderType.php::get_vendor_refund_types()`).
 
-**Reports covered.** Orders and orders stats (revenue), products and products stats, variations, categories, coupons, taxes and customers all register these join/where filters through their `QueryFilter` classes under `lite:includes/Analytics/Reports/`. For the products, taxes, orders, coupons and stock stats data stores Dokan swaps in its own subclasses, whose SQL clauses are filterable (`DataStoreModifier::modify_wc_products_stats_datastore()`, `lite:includes/Analytics/Reports/DataStoreModifier.php:62-84`; `WcSqlQuery::get_sql_clause()`, `lite:includes/Analytics/Reports/WcSqlQuery.php:21-23`). Products, categories and variations are therefore counted from the Vendor order's line items, never from the parent's copy of them.
+**Reports covered.** Orders and orders stats (revenue), products and products stats, variations, categories, coupons, taxes and customers all register these join/where filters through their `QueryFilter` classes under `lite:includes/Analytics/Reports/`. For the products, taxes, orders, coupons and stock stats data stores Dokan swaps in its own subclasses, whose SQL clauses are filterable (`lite:includes/Analytics/Reports/DataStoreModifier.php::modify_wc_products_stats_datastore()`; `lite:includes/Analytics/Reports/WcSqlQuery.php::get_sql_clause()`). Products, categories and variations are therefore counted from the Vendor order's line items, never from the parent's copy of them.
 
-**Order rows link to the Vendor order.** In the orders list, `parent_id` is forced to 0 for every non-refund row so that WooCommerce links a Suborder row to the Suborder itself rather than treating it as a refund of its parent (`Orders\QueryFilter::modify_admin_report_columns()`, `lite:includes/Analytics/Reports/Orders/QueryFilter.php:44-61`).
+**Order rows link to the Vendor order.** In the orders list, `parent_id` is forced to 0 for every non-refund row so that WooCommerce links a Suborder row to the Suborder itself rather than treating it as a refund of its parent (`lite:includes/Analytics/Reports/Orders/QueryFilter.php::modify_admin_report_columns()`).
 
-**Legacy WooCommerce reports (WP Admin → WooCommerce → Reports)** follow the same principle the other way round: in WP Admin, Dokan appends `posts.post_parent = 0` to `woocommerce_reports_get_order_report_query` (`Order\Admin\Hooks::admin_order_reports_remove_parents()`, `lite:includes/Order/Admin/Hooks.php:81-85`), so those old reports count customer Orders and leave Suborders out.
+**Legacy WooCommerce reports (WP Admin → WooCommerce → Reports)** follow the same principle the other way round: in WP Admin, Dokan appends `posts.post_parent = 0` to `woocommerce_reports_get_order_report_query` (`lite:includes/Order/Admin/Hooks.php::admin_order_reports_remove_parents()`), so those old reports count customer Orders and leave Suborders out.
 
 ## Settings that change it
 
@@ -62,7 +63,7 @@ The Store Admin's WooCommerce Analytics revenue report shows total sales 100.00 
 - **A customer sees one order, the Store Admin's Analytics shows two.** Order counts are Vendor-order counts, which is what the Commission and Earning columns relate to.
 - **Refunds made directly on a parent Order** (type 3) never appear in any Dokan-filtered Analytics report. CONTEXT.md already puts such refunds outside the model.
 - **Single-vendor Orders for products the marketplace owner sells** are type 1 like any other single-vendor Order and are counted.
-- **Orders with no `dokan_order_stats` row** (for example, imported before the table existed and never re-imported) drop out of every report because the join is an inner `JOIN`.
+- **Orders with no `dokan_order_stats` row** drop out of every report because the join is an inner `JOIN`. On activation Dokan schedules a full WooCommerce import when the table is empty and orders exist (see [ADR-0111](./0111-the-vendor-dashboard-shows-woocommerce-analytics-when-it-is-enabled-and-legacy-counters-and-charts-otherwise.md)); rows missing from a table that is not empty need WooCommerce's "Import historical data".
 
 ## Why
 
@@ -75,6 +76,6 @@ The `parent_id` comment in `Orders\QueryFilter` shows the intent: count Vendor o
 
 ## Recommendations
 
-None.
+- Drop the duplicate `avg_admin_commission` and `avg_vendor_earning` columns from `add_select_subquery_for_total()`, so both averages divide by Vendor orders only, like `avg_order_value`.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

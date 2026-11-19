@@ -10,12 +10,12 @@ Admins can charge Vendors for each Withdraw, typically to recover what PayPal or
 
 - **Formula.** For a request of `amount` through a method with charge settings `{fixed, percentage}`:
   `charge = fixed + percentage / 100 × amount` and `receivable = amount − charge`
-  (`Withdraw::calculate_charge()`, `lite:includes/Withdraw/Withdraw.php:383-401`). Either part may be zero. The charge is not rounded by this calculation.
-- **Charge settings per method.** `dokan_withdraw_get_method_charges()` (`lite:includes/Withdraw/functions.php:543-562`) returns `{fixed, percentage}` for every registered method. A method registered without `apply_charge` (`dokan_withdraw_get_chargeable_methods()`, `:523-534`) always gets `0` and `0`; so does every method when no charges were ever saved. Lite's `paypal` and `bank` are chargeable (`:14-23`).
-- **The charge comes out of the request.** The Vendor asks for `amount`, the Balance is debited `amount` on approval (the ledger credit is `$withdraw->get_amount()`, `lite:includes/Withdraw/Hooks.php:138`), and the Vendor is to be paid `receivable`. The charge is never written to the ledger as its own row; it is the part of the debited amount that the admin does not pay out.
-- **The receivable must not be negative.** A request whose charge exceeds its amount is rejected ("Withdraw amount is less then the withdraw charge.", `lite:includes/Withdraw/Manager.php:69-79`). A receivable of exactly zero is accepted.
-- **The charge is frozen at creation.** `Withdraw::create()` stores `charge`, `receivable` and `charge_data` inside the request's serialized `details` (`lite:includes/Withdraw/Withdraw.php:439-447`), and the model reads them back from there on every load (`:53-61`). `Withdraw::update()` does not rewrite `details` (`:496-510`), so neither a later change of charge settings nor an admin edit of the amount recomputes the stored charge.
-- **Preview.** `GET dokan/v1/withdraw/charge?method=&amount=` returns the charge and receivable for a prospective request using the current settings (`WithdrawController::get_method_charge()`, `lite:includes/REST/WithdrawController.php:783-808`); the vendor request form uses it.
+  (`Withdraw::calculate_charge()`, `lite:includes/Withdraw/Withdraw.php::calculate_charge()`). Either part may be zero. The charge is not rounded by this calculation.
+- **Charge settings per method.** `dokan_withdraw_get_method_charges()` (`lite:includes/Withdraw/functions.php::dokan_withdraw_get_method_charges()`) returns `{fixed, percentage}` for every registered method. A method registered without `apply_charge` (`::dokan_withdraw_get_chargeable_methods()`) always gets `0` and `0`; so does every method when no charges were ever saved. Lite's `paypal` and `bank` are chargeable (`::dokan_withdraw_register_methods()`).
+- **The charge comes out of the request.** The Vendor asks for `amount`, the Balance is debited `amount` on approval (the ledger credit is `$withdraw->get_amount()`, `lite:includes/Withdraw/Hooks.php::update_vendor_balance()`), and the Vendor is to be paid `receivable`. The charge is never written to the ledger as its own row; it is the part of the debited amount that the admin does not pay out.
+- **The receivable must not be negative.** A request whose charge exceeds its amount is rejected ("Withdraw amount is less then the withdraw charge.", `lite:includes/Withdraw/Manager.php::is_valid_approval_request()`). A receivable of exactly zero is accepted.
+- **The charge is frozen at creation.** `Withdraw::create()` stores `charge`, `receivable` and `charge_data` inside the request's serialized `details` (`lite:includes/Withdraw/Withdraw.php::create()`), and the model reads them back from there on every load (`::__construct()`). `Withdraw::update()` does not rewrite `details` (`::update()`), so neither a later change of charge settings nor an admin edit of the amount recomputes the stored charge.
+- **Preview.** `GET dokan/v1/withdraw/charge?method=&amount=` returns the charge and receivable for a prospective request using the current settings (`WithdrawController::get_method_charge()`, `lite:includes/REST/WithdrawController.php::get_method_charge()`); the vendor request form uses it.
 
 ## Settings that change it
 
@@ -37,8 +37,8 @@ The admin then raises the PayPal charge to 3.00 + 3 % while the 200.00 request i
 ## Edge cases
 
 - **Admin edits the amount** of a pending request through REST: the stored `charge` and `receivable` keep their creation-time values, so the receivable no longer equals amount minus charge.
-- **Approval email** shows the stored receivable (`{receivable_amount}`, `lite:includes/Emails/WithdrawApproved.php:89`).
-- **Exports differ.** The admin withdraw export reports the receivable as the payable amount (`lite:includes/REST/WithdrawExportController.php:128`); the legacy CSV export writes the gross requested amount (`lite:includes/Withdraw/Export/CSV.php:44`).
+- **Approval email** shows the stored receivable (`{receivable_amount}`, `lite:includes/Emails/WithdrawApproved.php::trigger()`).
+- **Exports differ.** The admin withdraw export reports the receivable as the payable amount (`lite:includes/REST/WithdrawExportController.php::get_items()`); the legacy CSV export writes the gross requested amount (`lite:includes/Withdraw/Export/CSV.php::export()`).
 
 ## Why
 
@@ -54,4 +54,4 @@ No recorded decision. Deducting the charge from the request keeps the Balance ar
 - If charge income must be reported, record it explicitly (for example as its own field summed by reports) rather than deriving it from serialized `details`.
 - Recompute and re-store `charge` and `receivable` whenever an admin changes a request's amount or method.
 
-_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

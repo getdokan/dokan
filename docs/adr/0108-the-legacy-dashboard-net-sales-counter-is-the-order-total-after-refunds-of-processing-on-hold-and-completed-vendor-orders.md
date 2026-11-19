@@ -8,13 +8,13 @@ When WooCommerce Analytics is off, the Vendor dashboard shows four big counters:
 
 ## Rule
 
-**Source.** The counter prints `Dashboard::get_earning()` under the title "Net Sales" (`lite:templates/dashboard/big-counter-widget.php:17-18`; `lite:includes/Dashboard/Templates/Dashboard.php:79`, `:314-316`). That calls `dokan_author_total_sales()` → `Vendor::get_total_sales()` (`lite:includes/Order/functions.php:879-887`; `lite:includes/Vendor/Vendor.php:788-804`), which returns
+**Source.** The counter prints `Dashboard::get_earning()` under the title "Net Sales" (`lite:templates/dashboard/big-counter-widget.php`, the "Net Sales" counter; `lite:includes/Dashboard/Templates/Dashboard.php::get_big_counter_widgets()`, `::get_earning()`). That calls `dokan_author_total_sales()` → `Vendor::get_total_sales()` (`lite:includes/Order/functions.php::dokan_author_total_sales()`; `lite:includes/Vendor/Vendor.php::get_total_sales()`), which returns
 
 `SUM(dokan_orders.order_total)` for the Vendor where `order_status IN ('wc-completed', 'wc-processing', 'wc-on-hold')`,
 
-filtered through `dokan_seller_total_sales`. The same value is the `sales` field of the Vendor dashboard REST statistics (`VendorDashboardController::get_dashboard_statistics()`, `lite:includes/REST/VendorDashboardController.php:146-149`).
+filtered through `dokan_seller_total_sales`. The same value is the `sales` field of the Vendor dashboard REST statistics (`lite:includes/REST/VendorDashboardController.php::get_dashboard_statistics()`).
 
-**What `order_total` holds.** One `dokan_orders` row exists per Vendor order. Whenever the order is saved, `VendorBalanceUpdateHandler::update_dokan_order_table()` sets `order_total` to the WooCommerce order total minus the total refunded (`lite:includes/Order/VendorBalanceUpdateHandler.php:31`, `:147`, `:183`, `:192-197`). The order total includes tax, shipping and fees.
+**What `order_total` holds.** One `dokan_orders` row exists per Vendor order. Whenever the order is saved, `VendorBalanceUpdateHandler::update_dokan_order_table()` sets `order_total` to the WooCommerce order total minus the total refunded (`lite:includes/Order/VendorBalanceUpdateHandler.php::register_hooks()`, `::update_dokan_order_table()`). The order total includes tax, shipping and fees.
 
 So "Net Sales" means: all-time gross order totals (including tax and shipping) less refunds, over the Vendor's processing, on-hold and completed Vendor orders. It is not "net" in WooCommerce's sense (which removes tax and shipping), and it is not limited to a date range.
 
@@ -39,7 +39,7 @@ Net Sales = 115.00 + 40.00 = **155.00** (#403 is pending; #404 is refunded and, 
 
 - **Cancelled and failed orders** are excluded by the status list; their rows stay in `dokan_orders`.
 - **Trashed orders** drop out: trashing writes `wc-trash` into `dokan_orders.order_status`, which is not in the list (see [ADR-0045](./0045-trashing-an-order-parks-its-vendor-earning-and-deleting-it-in-wp-admin-erases-its-ledger-rows.md)).
-- **Caching.** The value is cached in the `seller_order_data_{vendor_id}` group, which Dokan invalidates when the Vendor's orders change (`lite:includes/Order/OrderCache.php:45`).
+- **Caching.** The value is cached in the `seller_order_data_{vendor_id}` group, which Dokan invalidates when the Vendor's orders change (`lite:includes/Order/OrderCache.php::delete()`).
 
 ## Why
 
@@ -54,4 +54,4 @@ No recorded reason. The method is still named `get_total_sales()` and the widget
 
 - Relabel the counter "Sales (after refunds)" or compute a true net figure.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

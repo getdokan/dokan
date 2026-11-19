@@ -81,4 +81,4 @@ sequenceDiagram
 - Behaviour when a Suborder is created already in a final status, and whether a status transition then follows for the ledger row, is listed as a gap in `docs/adr/reference/orders-commission-fees.md`.
 - Whether any supported payment gateway creates orders through a path that fires neither checkout hook was not surveyed.
 
-_Verified against Lite @fbae0ce7d / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-11-19._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

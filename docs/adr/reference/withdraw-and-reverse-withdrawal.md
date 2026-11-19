@@ -20,7 +20,7 @@ Terminology follows `CONTEXT.md`: **Vendor** (not seller), **Commission** = the 
 | Withdraw request model, validation, persistence, status lifecycle | [Lite] |
 | Vendor Balance computation (`dokan_vendor_balance` ledger reads) | [Lite] |
 | Built-in methods `paypal` and `bank`; charge (fee) calculation | [Lite] |
-| Additional methods, automatic/scheduled Withdraw processing, the `dokan_custom` method's settings, per-Vendor threshold UI | Seams consumed by Dokan Pro (filters listed in A11); internals out of scope |
+| Additional methods, automatic/scheduled Withdraw processing, the `dokan_custom` method's settings, per-Vendor threshold UI | Seams consumed by add-ons (filters listed in A11); internals out of scope |
 | Order totals, statuses, refunds that feed the ledger | [WooCommerce], mirrored into the ledger by Lite's Order subsystem |
 
 **Related ADRs:** [ADR-0014](../0014-marketplace-money-lives-in-custom-tables-not-post-types.md) (money in custom tables; Balance computed from the ledger), [ADR-0015](../0015-reverse-withdrawal-is-a-separate-receivable-ledger.md) (Reverse withdrawal is a separate receivable ledger, covered in Part B), [ADR-0017](../0017-rest-versions-are-additive-controller-subclasses.md) (Withdraw REST v1 and v2).
@@ -29,30 +29,30 @@ Terminology follows `CONTEXT.md`: **Vendor** (not seller), **Commission** = the 
 
 | What | Where |
 |---|---|
-| `dokan()->withdraw` service → `WeDevs\Dokan\Withdraw\Manager` | `lite:includes/DependencyManagement/Providers/ServiceProvider.php:36` |
-| `WeDevs\Dokan\Withdraw\Hooks` registered as a common (always-loaded) service | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:14` |
-| Procedural API `includes/Withdraw/functions.php` required at bootstrap | `lite:dokan-class.php:296` |
-| `$wpdb->dokan_withdraw` and `$wpdb->dokan_vendor_balance` table aliases | `lite:dokan-class.php:349`, `lite:dokan-class.php:353` |
-| `dokan_withdraw` table DDL | `lite:includes/Install/Installer.php:348` (`Installer::create_withdraw_table`) |
-| `dokan_vendor_balance` table DDL | `Installer::create_vendor_balance_table` in `lite:includes/Install/Installer.php` |
-| `Withdraw\Hooks` constructor (AJAX actions, ledger listener, cache) | `lite:includes/Withdraw/Hooks.php:14` |
-| REST v1 controller `dokan/v1/withdraw` | `lite:includes/REST/WithdrawController.php:42` |
-| REST v2 controller `dokan/v2/withdraw` (extends v1) | `lite:includes/REST/WithdrawControllerV2.php:26` |
-| Legacy vendor-dashboard template controller | `WeDevs\Dokan\Dashboard\Templates\Withdraw` (`lite:includes/Dashboard/Templates/Withdraw.php:36`) |
-| MCP/Abilities read surface `dokan/withdraws-query` | `WeDevs\Dokan\Abilities\Definitions\WithdrawsQuery` (`lite:includes/Abilities/Definitions/WithdrawsQuery.php:21`) |
+| `dokan()->withdraw` service → `WeDevs\Dokan\Withdraw\Manager` | `lite:includes/DependencyManagement/Providers/ServiceProvider.php::$services` |
+| `WeDevs\Dokan\Withdraw\Hooks` registered as a common (always-loaded) service | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php::$services` |
+| Procedural API `includes/Withdraw/functions.php` required at bootstrap | `lite:dokan-class.php::includes()` |
+| `$wpdb->dokan_withdraw` and `$wpdb->dokan_vendor_balance` table aliases | `lite:dokan-class.php::wpdb_table_shortcuts()` |
+| `dokan_withdraw` table DDL | `lite:includes/Install/Installer.php::create_withdraw_table()` |
+| `dokan_vendor_balance` table DDL | `lite:includes/Install/Installer.php::create_vendor_balance_table()` |
+| `Withdraw\Hooks` constructor (AJAX actions, ledger listener, cache) | `lite:includes/Withdraw/Hooks.php::__construct()` |
+| REST v1 controller `dokan/v1/withdraw` | `lite:includes/REST/WithdrawController.php::register_routes()` |
+| REST v2 controller `dokan/v2/withdraw` (extends v1) | `lite:includes/REST/WithdrawControllerV2.php::register_routes()` |
+| Legacy vendor-dashboard template controller | `WeDevs\Dokan\Dashboard\Templates\Withdraw` (`lite:includes/Dashboard/Templates/Withdraw.php`) |
+| MCP/Abilities read surface `dokan/withdraws-query` | `WeDevs\Dokan\Abilities\Definitions\WithdrawsQuery` (`lite:includes/Abilities/Definitions/WithdrawsQuery.php`) |
 
 ### A3. Key classes
 
 | Class / file | Responsibility |
 |---|---|
-| `WeDevs\Dokan\Withdraw\Manager` (`lite:includes/Withdraw/Manager.php:18`) | Service facade: validation (`is_valid_approval_request` `:29`, `is_valid_cancellation_request` `:101`), status code ↔ name mapping (`get_status_code` `:289`, `get_status_name` `:337`), lookups (`get` `:403`, `all` `:361`, `get_withdraw_requests` `:254`), `create` `:454`, `has_pending_request` `:223`, limit/balance accessors (`get_withdraw_limit` `:487`, `get_user_balance` `:498`), payment-profile snapshot (`get_formatted_details` `:313`), summary (`get_user_withdraw_summary` `:524`). Also retains two legacy write methods with no Lite caller: `insert_withdraw` `:176` (used by Pro's direct-payment gateways, A4.3) and `update_status` `:135`. |
-| `WeDevs\Dokan\Withdraw\Withdraw` (`lite:includes/Withdraw/Withdraw.php:7`) | Active-record model for one `dokan_withdraw` row. Computes charge/receivable (`calculate_charge` `:383`) and persists (`save` `:421`, `create` `:436`, `update` `:493`, `delete` `:544`). Fires the lifecycle actions. |
-| `WeDevs\Dokan\Withdraw\Withdraws` (`lite:includes/Withdraw/Withdraws.php:7`) | Query object behind `Manager::all()`: filtering by `ids`, `user_id`, `amount`, date range, `status`, `method`, `ip`; pagination via `SQL_CALC_FOUND_ROWS`; status counts (`return => 'count'`). |
-| `WeDevs\Dokan\Withdraw\Hooks` (`lite:includes/Withdraw/Hooks.php:5`) | Registers AJAX handlers, writes the ledger credit on approval (`update_vendor_balance` `:110`), CSV log download, React localization, custom-method title. |
-| `WeDevs\Dokan\Withdraw\WithdrawCache` (`lite:includes/Withdraw/WithdrawCache.php:16`) | Invalidates the `withdraws` and `withdraws_seller_{id}` cache groups on lifecycle events. |
+| `WeDevs\Dokan\Withdraw\Manager` (`lite:includes/Withdraw/Manager.php`) | Service facade: validation (`::is_valid_approval_request()`, `::is_valid_cancellation_request()`), status code ↔ name mapping (`::get_status_code()`, `::get_status_name()`), lookups (`::get()`, `::all()`, `::get_withdraw_requests()`), `::create()`, `::has_pending_request()`, limit/balance accessors (`::get_withdraw_limit()`, `::get_user_balance()`), payment-profile snapshot (`::get_formatted_details()`), summary (`::get_user_withdraw_summary()`). Also retains two legacy write methods with no Lite caller: `::insert_withdraw()` (available to direct-payment gateways added by add-ons, A4.3) and `::update_status()`. |
+| `WeDevs\Dokan\Withdraw\Withdraw` (`lite:includes/Withdraw/Withdraw.php`) | Active-record model for one `dokan_withdraw` row. Computes charge/receivable (`::calculate_charge()`) and persists (`::save()`, `::create()`, `::update()`, `::delete()`). Fires the lifecycle actions. |
+| `WeDevs\Dokan\Withdraw\Withdraws` (`lite:includes/Withdraw/Withdraws.php`) | Query object behind `Manager::all()`: filtering by `ids`, `user_id`, `amount`, date range, `status`, `method`, `ip`; pagination via `SQL_CALC_FOUND_ROWS`; status counts (`return => 'count'`). |
+| `WeDevs\Dokan\Withdraw\Hooks` (`lite:includes/Withdraw/Hooks.php`) | Registers AJAX handlers, writes the ledger credit on approval (`::update_vendor_balance()`), CSV log download, React localization, custom-method title. |
+| `WeDevs\Dokan\Withdraw\WithdrawCache` (`lite:includes/Withdraw/WithdrawCache.php`) | Invalidates the `withdraws` and `withdraws_seller_{id}` cache groups on lifecycle events. |
 | `WeDevs\Dokan\Withdraw\Export\Manager`, `Export\CSV` | Legacy CSV export (`Manager::export()`): writes `email,amount,currency` lines. |
-| `includes/Withdraw/functions.php` | Method registry and settings readers (`dokan_withdraw_register_methods` `:12`, `dokan_get_seller_active_withdraw_methods` `:67`, `dokan_withdraw_get_method_charges` `:543`, `dokan_withdraw_get_active_order_status` `:355`, etc.). |
-| `WeDevs\Dokan\Vendor\Vendor::get_balance` (`lite:includes/Vendor/Vendor.php:873`) | Computes the withdrawable Balance from `dokan_vendor_balance`. |
+| `includes/Withdraw/functions.php` | Method registry and settings readers (`lite:includes/Withdraw/functions.php::dokan_withdraw_register_methods()`, `::dokan_get_seller_active_withdraw_methods()`, `::dokan_withdraw_get_method_charges()`, `::dokan_withdraw_get_active_order_status()`, etc.). |
+| `WeDevs\Dokan\Vendor\Vendor::get_balance` (`lite:includes/Vendor/Vendor.php::get_balance()`) | Computes the withdrawable Balance from `dokan_vendor_balance`. |
 | `WeDevs\Dokan\REST\WithdrawController`, `WithdrawControllerV2`, `WithdrawExportController` | REST surfaces (A7). |
 
 ### A4. Execution flow
@@ -74,21 +74,18 @@ stateDiagram-v2
     [*] --> pending: Vendor submits via AJAX or REST, or admin creates for a vendor
     pending --> approved: Admin approves via REST update or batch
     pending --> cancelled: Vendor cancels own request, or admin cancels
-    approved --> pending: Admin REST update with status pending
-    approved --> cancelled: Admin REST update with status cancelled
-    cancelled --> approved: Admin REST update with status approved
-    cancelled --> pending: Admin REST update with status pending
     pending --> [*]: Admin deletes
-    approved --> [*]: Admin deletes
     cancelled --> [*]: Admin deletes
 ```
 
+`approved` is final ([ADR-0056](../0056-a-withdraw-moves-money-only-when-the-admin-approves-it-and-approval-is-final.md)): an approved Withdraw is not cancelled, returned to pending or deleted.
+
 How the transitions are enforced:
 
-- **Vendor cancellation** (`WithdrawController::update_item` without `manage_woocommerce`, and `Dashboard\Templates\Withdraw::handle_cancel_request`) goes through `Manager::is_valid_cancellation_request()`, which only finds rows whose current status is `0` (pending) and requires the passed `user_id` to own the row or hold `manage_woocommerce`. The dashboard handler passes the current user's ID; the REST path passes the row's own data and relies on `update_item_permissions_check` (row owner or `manage_woocommerce`) for caller ownership. Vendors can only set status to cancelled.
-- **Admin update** (`WithdrawController::update_item` with `manage_woocommerce`) may set `user_id`, `amount`, `method`, `note` and any `status` value. Before validation it temporarily clears status (`get_status_code( null )`) so `is_valid_approval_request()` does not reject an already-approved row, re-runs full approval validation (balance, limit, method, Vendor enabled, charge), then applies the requested status. The edges out of `approved`/`cancelled` in the diagram are therefore reachable through this endpoint, subject to that validation.
-- **Batch** (`WithdrawController::batch_items`) processes only the `approved`, `cancelled` and `delete` keys of the request. Approve runs `is_valid_approval_request()`; cancel runs `is_valid_cancellation_request()` (pending-only). A `pending` key, shown in the method's docblock, is not processed.
-- **Delete** (`WithdrawController::delete_item`, batch `delete`) removes the row via `Withdraw::delete()`; `manage_woocommerce` only.
+- **Vendor cancellation** (`WithdrawController::update_item` without `manage_woocommerce`, used by the React dashboard, and `Dashboard\Templates\Withdraw::handle_cancel_request`, the legacy dashboard link) goes through `Manager::is_valid_cancellation_request()`, which only finds rows whose current status is `0` (pending). A Vendor may cancel only their own request, and only while enabled for selling. Vendors can only set status to cancelled.
+- **Admin update** (`WithdrawController::update_item` with `manage_woocommerce`) may set `user_id`, `amount`, `method`, `note` and `status` of a pending request. It re-runs full approval validation (balance, limit, method, Vendor enabled, charge) before saving, so a cancel or a note save through it fails with HTTP 400 whenever approval would fail ([ADR-0059](../0059-only-a-pending-withdraw-can-be-cancelled-and-cancelling-never-changes-the-balance.md)).
+- **Batch** (`WithdrawController::batch_items`) processes only the `approved`, `cancelled` and `delete` keys of the request. Approve runs `is_valid_approval_request()`; cancel runs `is_valid_cancellation_request()` (pending-only). A `pending` key, shown in the method's docblock, is not processed. The admin screen sends every Approve, Cancel and Delete through this endpoint.
+- **Delete** (`WithdrawController::delete_item`, batch `delete`) removes the row via `Withdraw::delete()`; `manage_woocommerce` only, for requests that are not approved.
 
 #### A4.2 Creating a request
 
@@ -118,23 +115,23 @@ sequenceDiagram
 
 Step details:
 
-1. **One open request per Vendor.** Both the AJAX handler (`Hooks::ajax_handle_withdraw_request`, `lite:includes/Withdraw/Hooks.php:165`) and REST (`WithdrawController::create_item`, `lite:includes/REST/WithdrawController.php:445`) reject the request if `Manager::has_pending_request()` finds any row with status `0` for the user.
-2. **Validation order** in `Manager::is_valid_approval_request()` (`lite:includes/Withdraw/Manager.php:29`):
+1. **One open request per Vendor.** Both the AJAX handler (`lite:includes/Withdraw/Hooks.php::ajax_handle_withdraw_request()`) and REST (`lite:includes/REST/WithdrawController.php::create_item()`) reject the request if `Manager::has_pending_request()` finds any row with status `0` for the user.
+2. **Validation order** in `Manager::is_valid_approval_request()` (`lite:includes/Withdraw/Manager.php::is_valid_approval_request()`):
    1. amount must be non-empty (`dokan_withdraw_empty`);
    2. amount must not exceed the Balance, compared in integer cents to avoid floating-point drift (`dokan_withdraw_not_enough_balance`);
    3. amount must be at least `withdraw_limit` (`dokan_withdraw_amount`);
-   4. method must be in `dokan_get_seller_active_withdraw_methods( $user_id )`, i.e. the Vendor has filled in that payment profile (`dokan_withdraw_invalid_method`);
+   4. method must be usable: enabled by the admin and filled in by the Vendor (`dokan_get_seller_active_withdraw_methods( $user_id )`), see [ADR-0055](../0055-a-withdraw-can-use-only-a-method-the-admin-enabled-and-the-vendor-has-filled-in.md) (`dokan_withdraw_invalid_method`);
    5. the Vendor must be enabled for selling (`dokan_withdraw_seller_not_enabled`);
    6. if an `id` and status `1` are passed, reject as already approved;
    7. charge is computed and `receivable` must be `>= 0` (`Withdraw amount is less then the withdraw charge.`);
    8. finally `apply_filters( 'dokan_withdraw_is_valid_request', true, $args )`.
-3. **Charge calculation** (`Withdraw::calculate_charge`, `lite:includes/Withdraw/Withdraw.php:383`): `charge = fixed + (percentage / 100 × amount)` from `dokan_withdraw_get_method_charges()[ $method ]`; `receivable = amount − charge`. Methods without `apply_charge` in the registry always get `fixed = 0, percentage = 0`.
-4. **Details snapshot** (`Withdraw::create`, `lite:includes/Withdraw/Withdraw.php:436`): the Vendor's payment profile for the chosen method (`Manager::get_formatted_details`, from `Vendor::get_payment_profiles()`; for `dokan_custom` from store settings plus the `withdraw_method_name` option) is merged with `charge`, `receivable`, `charge_data`, filtered through `dokan_withdraw_request_details_data`, and stored serialized in `details`. The model reads these back from `details` on load.
-5. **Hooks fired on create.** `Withdraw::create()` fires `dokan_withdraw_created` with the reloaded `Withdraw`. The AJAX handler additionally fires `dokan_after_withdraw_request( $user_id, $amount, $method, $withdraw_id )` (`lite:includes/Withdraw/Hooks.php:228`). The REST `create_item` path does not fire `dokan_after_withdraw_request`.
+3. **Charge calculation** (`lite:includes/Withdraw/Withdraw.php::calculate_charge()`): `charge = fixed + (percentage / 100 × amount)` from `dokan_withdraw_get_method_charges()[ $method ]`; `receivable = amount − charge`. Methods without `apply_charge` in the registry always get `fixed = 0, percentage = 0`.
+4. **Details snapshot** (`lite:includes/Withdraw/Withdraw.php::create()`): the Vendor's payment profile for the chosen method (`Manager::get_formatted_details`, from `Vendor::get_payment_profiles()`; for `dokan_custom` from store settings plus the `withdraw_method_name` option) is merged with `charge`, `receivable`, `charge_data`, filtered through `dokan_withdraw_request_details_data`, and stored serialized in `details`. The model reads these back from `details` on load.
+5. **Hooks fired on create.** `Withdraw::create()` fires `dokan_withdraw_created` with the reloaded `Withdraw`. The AJAX handler additionally fires `dokan_after_withdraw_request( $user_id, $amount, $method, $withdraw_id )` (`lite:includes/Withdraw/Hooks.php::ajax_handle_withdraw_request()`). The REST `create_item` path does not fire `dokan_after_withdraw_request`.
 
 #### A4.3 Approval and the ledger credit
 
-`Withdraw::update()` (`lite:includes/Withdraw/Withdraw.php:493`) writes `user_id, amount, date, status, method, note, ip` (not `details`) and then fires, on **every** save:
+`Withdraw::update()` (`lite:includes/Withdraw/Withdraw.php::update()`) writes `user_id, amount, date, status, method, note, ip` (not `details`) and then fires, on **every** save:
 
 1. `dokan_withdraw_request_{status_name}` (`pending` / `approved` / `cancelled`), and
 2. `dokan_withdraw_updated`.
@@ -143,18 +140,18 @@ The status-named action fires whenever the row is saved, not only when the statu
 
 | Priority | Listener | Effect |
 |---|---|---|
-| 11 | `Withdraw\Hooks::update_vendor_balance` (`lite:includes/Withdraw/Hooks.php:110`) | Re-checks Balance ≥ amount (in cents) and, if no `dokan_vendor_balance` row with `trn_id = withdraw id` and `trn_type = 'dokan_withdraw'` exists yet, inserts one with `credit = amount`, `status = 'approved'`, `trn_date = withdraw date`, `balance_date = now`. The existence check makes repeated `approved` saves idempotent. If the Balance is short it returns silently: the status stays approved and the email below is still sent. |
+| 11 | `Withdraw\Hooks::update_vendor_balance` (`lite:includes/Withdraw/Hooks.php::update_vendor_balance()`) | Re-checks Balance ≥ amount (in cents) and, if no `dokan_vendor_balance` row with `trn_id = withdraw id` and `trn_type = 'dokan_withdraw'` exists yet, inserts one with `credit = amount`, `status = 'approved'`, `trn_date = withdraw date`, `balance_date = now`. The existence check makes repeated `approved` saves idempotent. |
 | 30 | `WeDevs\Dokan\Emails\WithdrawApproved::trigger` | Vendor email. |
 
 Because `update()` does not rewrite `details`, an admin changing `amount` through REST leaves the stored `charge`/`receivable` as they were computed at creation.
 
-Lite contains no listener that removes or reverses the `dokan_withdraw` ledger row when an approved Withdraw is later saved with another status or deleted; `Withdraw::delete()` deletes only the `dokan_withdraw` row and `WithdrawCache` only invalidates cache. The row can still disappear another way: `Order\Manager::delete_seller_order()` deletes every `dokan_vendor_balance` row of type `dokan_orders`, `dokan_refund` or `dokan_withdraw` whose `trn_id` equals an order id, with no Vendor filter (`lite:includes/Order/Manager.php:570-577`; called on order deletion and from `dokan_sync_insert_order()`, `lite:includes/Order/functions.php:252`). Because this listener keys its row by the Withdraw id, deleting order #N also deletes the credit of approved Withdraw #N ([ADR-0056](../0056-a-withdraw-moves-money-only-when-the-admin-approves-it-and-approval-is-final.md)).
+Approval is final ([ADR-0056](../0056-a-withdraw-moves-money-only-when-the-admin-approves-it-and-approval-is-final.md)): the `dokan_withdraw` ledger row of an approved Withdraw stays. `Withdraw::delete()` deletes only the `dokan_withdraw` row (of a request that is not approved) and `WithdrawCache` only invalidates cache.
 
-Pro's direct-payment gateways (Stripe Express, PayPal Marketplace, MangoPay, Razorpay, Stripe) bypass this flow: they insert already approved Withdraws through `Manager::insert_withdraw()` (status `1`, no validation, no charge, no `dokan_withdraw_request_approved`) and write their own `dokan_withdraw` credit keyed by the **order** id, often with a future `balance_date` (for example `pro:modules/stripe-express/includes/Processors/Withdraw.php:98-110`, `:167`). Since the existence check above matches only `trn_id` and `trn_type`, a gateway row for order #N would also suppress the credit for manual Withdraw #N (inferred from the code path).
+Direct-payment gateways added by add-ons pay the Vendor during the order flow and may record that payout as an already approved Withdraw through the legacy `Manager::insert_withdraw()` (status `1`), writing their own `dokan_withdraw` ledger credit. Those records do not pass through the pending state, the charge or this listener.
 
 #### A4.4 Balance calculation (available balance and threshold)
 
-`dokan_get_seller_balance( $id, $formatted )` (`lite:includes/wc-functions.php:746`) delegates to `Vendor::get_balance()` (`lite:includes/Vendor/Vendor.php:873`), which runs one query against `dokan_vendor_balance`:
+`dokan_get_seller_balance( $id, $formatted )` (`lite:includes/wc-functions.php::dokan_get_seller_balance()`) delegates to `Vendor::get_balance()` (`lite:includes/Vendor/Vendor.php::get_balance()`), which runs one query against `dokan_vendor_balance`:
 
 ```
 earnings = SUM(debit)  WHERE vendor_id = V AND DATE(balance_date) <= today AND status IN (<active statuses>)
@@ -162,22 +159,22 @@ withdraw = SUM(credit) WHERE vendor_id = V AND DATE(balance_date) <= today
 balance  = earnings − round(withdraw, wc_get_rounding_precision())
 ```
 
-- **Active statuses** come from `dokan_withdraw_get_active_order_status()` (`lite:includes/Withdraw/functions.php:355`): the `withdraw_order_status` setting (default `[ 'wc-completed' ]`) plus `wc-refunded`, which is always added, filtered by `dokan_withdraw_active_status`.
+- **Active statuses** come from `dokan_withdraw_get_active_order_status()` (`lite:includes/Withdraw/functions.php::dokan_withdraw_get_active_order_status()`): the `withdraw_order_status` setting (default `[ 'wc-completed' ]`) plus `wc-refunded`, which is always added, filtered by `dokan_withdraw_active_status`.
 - **The credit side has no status or `trn_type` filter.** All credit rows with a matured `balance_date` (Withdraw rows `dokan_withdraw` and Refund rows `dokan_refund`) reduce the Balance.
-- **Withdraw threshold (holding period).** `dokan_get_withdraw_threshold( $user_id )` (`lite:includes/functions.php:4058`) returns the `withdraw_date_limit` user meta if set, else the `withdraw_date_limit` option in the `dokan_withdraw` section, else `0`. The threshold is applied when the order Earning is written, not when it is read: `dokan_sync_insert_order()` stores `balance_date = now + threshold days` (`lite:includes/Order/functions.php:281`). Rows whose `balance_date` is in the future are excluded by `DATE(balance_date) <= today`, which is what makes part of the Earning "not yet available". `Vendor::get_balance()` also computes a threshold-shifted `$date` (`lite:includes/Vendor/Vendor.php:879`), but that value is not used in the query.
+- **Withdraw threshold (holding period).** `dokan_get_withdraw_threshold( $user_id )` (`lite:includes/functions.php::dokan_get_withdraw_threshold()`) returns the `withdraw_date_limit` user meta if set, else the `withdraw_date_limit` option in the `dokan_withdraw` section, else `0`. The threshold is applied when the order Earning is written, not when it is read: `dokan_sync_insert_order()` stores `balance_date = now + threshold days` (`lite:includes/Order/functions.php::dokan_sync_insert_order()`). Rows whose `balance_date` is in the future are excluded by `DATE(balance_date) <= today`, which is what makes part of the Earning "not yet available". `Vendor::get_balance()` also computes a threshold-shifted `$date`, but that value is not used in the query.
 - **Caching.** The result is cached under key `seller_balance_{id}_{Y_m_d}` in group `withdraws_seller_{id}`, which `WithdrawCache` invalidates.
 - **Filters.** `dokan_get_seller_balance` (raw float) and `dokan_get_formatted_seller_balance` (HTML).
 
-`Vendor::get_earnings()` (`lite:includes/Vendor/Vendor.php:820`) uses a different formula: debit restricted to `trn_type = 'dokan_orders'` with active statuses, minus credit restricted to `trn_type = 'dokan_refund'` and `status = 'approved'`. It is not used for Withdraw validation.
+`Vendor::get_earnings()` (`lite:includes/Vendor/Vendor.php::get_earnings()`) uses a different formula: debit restricted to `trn_type = 'dokan_orders'` with active statuses, minus credit restricted to `trn_type = 'dokan_refund'` and `status = 'approved'`. It is not used for Withdraw validation.
 
 Ledger writers that feed the Balance:
 
 | `trn_type` | Column | Writer |
 |---|---|---|
-| `dokan_orders` | `debit` = Vendor Earning | `dokan_sync_insert_order()` via `VendorBalance` model (`lite:includes/Order/functions.php:217`) |
-| `dokan_orders` status sync | `status` = new order status | `Order\Hooks::on_order_status_change` (`lite:includes/Order/Hooks.php:95`), skipped for COD when `exclude_cod_payment` is on or `dokan_order_should_exclude_from_vendor_balance` returns true; also `OrderEventListener` |
-| `dokan_refund` | `credit` | `Order\RefundHandler` (`lite:includes/Order/RefundHandler.php:225`), `Order\Hooks::manage_refunded_for_order` (`lite:includes/Order/Hooks.php:330`) |
-| `dokan_withdraw` | `credit` = Withdraw amount | `Withdraw\Hooks::update_vendor_balance` (`lite:includes/Withdraw/Hooks.php:130`); Pro's direct-payment gateways also write it, keyed by order id |
+| `dokan_orders` | `debit` = Vendor Earning | `dokan_sync_insert_order()` via `VendorBalance` model (`lite:includes/Order/functions.php::dokan_sync_insert_order()`) |
+| `dokan_orders` status sync | `status` = new order status | `Order\Hooks::on_order_status_change` (`lite:includes/Order/Hooks.php::on_order_status_change()`), skipped for COD when `exclude_cod_payment` is on or `dokan_order_should_exclude_from_vendor_balance` returns true; also `OrderEventListener` |
+| `dokan_refund` | `credit` | `Order\RefundHandler` (`lite:includes/Order/RefundHandler.php::insert_into_balance_table()`). `Order\Hooks::manage_refunded_for_order` (`lite:includes/Order/Hooks.php::manage_refunded_for_order()`) is a second, dormant writer that inserts nothing in practice ([ADR-0050](../0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md)) |
+| `dokan_withdraw` | `credit` = Withdraw amount | `Withdraw\Hooks::update_vendor_balance` (`lite:includes/Withdraw/Hooks.php::update_vendor_balance()`); direct-payment gateways added by add-ons may also write it |
 
 Per ADR-0004, ledger accounting is driven by the Vendor order (Suborder), not the parent Order; `dokan_sync_insert_order()` returns early for orders with `has_sub_order = 1`.
 
@@ -257,7 +254,7 @@ No secondary indexes are declared.
 |---|---|---|
 | `id` | `bigint(20) unsigned` PK AI | |
 | `vendor_id` | `bigint(20) unsigned` | |
-| `trn_id` | `bigint(20) unsigned` | Order ID for `dokan_orders` / `dokan_refund`; for `dokan_withdraw`, the Withdraw ID in rows written by Lite's approval listener but the order ID in rows written by Pro's direct-payment gateways. `Order\Manager::delete_seller_order()` deletes `dokan_withdraw` rows by order ID (A4.3). |
+| `trn_id` | `bigint(20) unsigned` | Order ID for `dokan_orders` / `dokan_refund`; Withdraw ID for `dokan_withdraw` rows written by Lite's approval listener. |
 | `trn_type` | `varchar(30)` | `dokan_orders`, `dokan_refund`, `dokan_withdraw` |
 | `perticulars` | `text` | Free text (column name spelled this way in the schema) |
 | `debit` | `decimal(19,4)` | Earnings |
@@ -345,7 +342,7 @@ The first five are defined in Lite's legacy settings fields (`Admin\Settings`); 
 | `dokan/v2/withdraw/settings` | GET | `get_withdraw_settings` | `dokan_manage_withdraw` |
 | `dokan/v2/withdraw/summary` | GET | `get_withdraw_summary` (counts by status) | `dokan_manage_withdraw` |
 | `dokan/v2/withdraw/make-default-method` | POST | `handle_make_default_method` | `dokan_manage_withdraw` |
-| `dokan/v1/reports/withdraws` | GET | WooCommerce Admin reports export route inherited from `wc:includes/rest-api/Controllers/Version1/class-wc-rest-reports-v1-controller.php:42` | `manage_woocommerce` or `dokan_view_reports` |
+| `dokan/v1/reports/withdraws` | GET | WooCommerce Admin reports export route inherited from `wc:includes/rest-api/Controllers/Version1/class-wc-rest-reports-v1-controller.php::register_routes()` | `manage_woocommerce` or `dokan_view_reports` |
 
 For `GET /withdraw`, non-admins are forced to their own `user_id`; admins may filter by `user_id`. Response headers `X-Status-Pending`, `X-Status-Completed`, `X-Status-Cancelled` carry counts.
 
@@ -360,16 +357,16 @@ Ability: `dokan/withdraws-query` requires `dokan_manage_withdraw` (`WithdrawsQue
 
 ### A8. Permissions & capabilities
 
-- `dokan_manage_withdraw` — Vendor-level capability for creating requests, listing own requests, reading balance and charges (`dokan_get_all_caps()` in `lite:includes/functions.php:2870`).
-- `dokan_view_withdraw_menu` — shows the Withdraw dashboard nav item (`functions-dashboard-navigation.php`) and gates `Dashboard\Templates\Withdraw::display_request_listing` (`lite:includes/functions.php:2888`).
+- `dokan_manage_withdraw` — Vendor-level capability for creating requests, listing own requests, reading balance and charges (`lite:includes/functions.php::dokan_get_all_caps()`).
+- `dokan_view_withdraw_menu` — shows the Withdraw dashboard nav item (`functions-dashboard-navigation.php`) and gates `Dashboard\Templates\Withdraw::display_request_listing` (also listed in `lite:includes/functions.php::dokan_get_all_caps()`).
 - `manage_woocommerce` — Store Admin (ADR-0005): may create on behalf of a Vendor (target must hold `dokan_manage_withdraw`), edit any field, approve, delete, batch.
-- **Ownership:** `get_item_permissions_check` compares the row's `user_id` with the current user; `is_valid_cancellation_request` requires ownership or `manage_woocommerce`; non-admin list queries are pinned to `dokan_get_current_user_id()`.
-- **Input handling:** AJAX inputs are passed through `sanitize_text_field`/`sanitize_key` and `wc_format_decimal`; method keys are checked against the active-method lists; all SQL uses `$wpdb->prepare` or `$wpdb->insert/update` with formats.
+- **Ownership:** `get_item_permissions_check` compares the row's `user_id` with the current user; a Vendor may cancel only their own request; non-admin list queries are pinned to `dokan_get_current_user_id()`.
+- **Input handling:** AJAX inputs are passed through `sanitize_text_field`/`sanitize_key` and `wc_format_decimal`; method keys are checked against the usable-method rule ([ADR-0055](../0055-a-withdraw-can-use-only-a-method-the-admin-enabled-and-the-vendor-has-filled-in.md)); all SQL uses `$wpdb->prepare` or `$wpdb->insert/update` with formats.
 
 ### A9. WooCommerce touchpoints
 
 - Prices are formatted with `wc_price()` and normalized with `wc_format_decimal()`; rounding uses `wc_get_rounding_precision()` / `wc_get_price_decimals()`.
-- Balance eligibility depends on WooCommerce order statuses (`wc-completed`, `wc-refunded`, and configured statuses), synced into the ledger by Lite's Order subsystem on `woocommerce_order_status_changed` (fired at `wc:includes/class-wc-order.php:478`) and on refunds (`woocommerce_order_refunded`).
+- Balance eligibility depends on WooCommerce order statuses (`wc-completed`, `wc-refunded`, and configured statuses), synced into the ledger by Lite's Order subsystem on `woocommerce_order_status_changed` (fired in `wc:includes/class-wc-order.php::status_transition()`) and on refunds (`woocommerce_order_refunded`).
 - The list export extends WooCommerce Admin's `Automattic\WooCommerce\Admin\API\Reports\GenericController` and implements `ExportableInterface`.
 - The legacy CSV export reads `get_option( 'woocommerce_currency' )`.
 
@@ -380,12 +377,12 @@ Ability: `dokan/withdraws-query` requires `dokan_manage_withdraw` (`WithdrawsQue
 
 ### A11. Extension points
 
-- **Add a withdraw method:** filter `dokan_withdraw_methods` (title, settings-form callback, `apply_charge`); make it selectable for a Vendor via `dokan_get_seller_active_withdraw_methods`; optionally `dokan_withdraw_withdrawable_payment_methods`, `dokan_withdraw_method_icon`, `dokan_withdraw_method_additional_info`, `dokan_get_withdraw_method_title`. These seams are consumed by Dokan Pro.
+- **Add a withdraw method:** filter `dokan_withdraw_methods` (title, settings-form callback, `apply_charge`); make it selectable for a Vendor via `dokan_get_seller_active_withdraw_methods`; optionally `dokan_withdraw_withdrawable_payment_methods`, `dokan_withdraw_method_icon`, `dokan_withdraw_method_additional_info`, `dokan_get_withdraw_method_title`. These seams are consumed by add-ons.
 - **Add validation rules:** `dokan_withdraw_is_valid_request` (return `WP_Error` to reject).
 - **Augment the stored snapshot:** `dokan_withdraw_request_details_data`.
 - **React to lifecycle:** `dokan_withdraw_created`, `dokan_withdraw_request_{pending|approved|cancelled}`, `dokan_withdraw_updated`, `dokan_withdraw_deleted`. Remember the status-named action fires on every save.
 - **Change which order statuses count toward the Balance:** `dokan_withdraw_active_status`; exclude orders with `dokan_order_should_exclude_from_vendor_balance`.
-- **Hide manual requests / the whole Withdraw UI:** `dokan_withdraw_manual_request_enable`, `dokan_withdraw_disable`.
+- **Switch off manual requests / the whole Withdraw feature:** `dokan_withdraw_manual_request_enable`, `dokan_withdraw_disable` ([ADR-0062](../0062-the-withdraw-page-and-manual-withdraw-requests-are-always-on-in-lite-and-only-add-ons-switch-them-off.md)).
 - **REST shape:** `dokan_rest_prepare_withdraw_object`.
 
 ---
@@ -399,18 +396,18 @@ When a Vendor is paid directly by the customer through a gateway that bypasses t
 | Concern | Owner |
 |---|---|
 | Ledger table, transaction types, balance/due computation, payment-via-cart, failed actions, crons, REST, settings | [Lite] |
-| Producers of the transaction types Lite never writes itself (everything except `order_commission` and `vendor_payment`, see B4.1) and additional gateways via `dokan_reverse_withdrawal_payment_gateways` | Extension seams (some consumed by Dokan Pro); internals out of scope |
+| Producers of the transaction types Lite never writes itself (everything except `order_commission` and `vendor_payment`, see B4.1) and additional gateways via `dokan_reverse_withdrawal_payment_gateways` | Extension seams (some consumed by add-ons); internals out of scope |
 | Cart, checkout, order, product, Action Scheduler | [WooCommerce] |
 
 ### B2. Entry points & bootstrap
 
 | What | Where |
 |---|---|
-| `dokan()->reverse_withdrawal` service → `WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal` | `lite:includes/DependencyManagement/Providers/ServiceProvider.php:43` |
-| Sub-controllers: `settings`, `hooks`, `async_hooks`, `admin_hooks`, `cron_actions`, `order_hooks`, `cart_hooks`, `cache_hooks`, and `ajax` (AJAX requests only) | `lite:includes/ReverseWithdrawal/ReverseWithdrawal.php:61` |
-| REST controller registered through `dokan_rest_api_class_map` | `lite:includes/ReverseWithdrawal/ReverseWithdrawal.php:84` |
-| Table DDL | `lite:includes/ReverseWithdrawal/InstallerHelper.php:23` (called from `Installer::create_reverse_withdrawal_table`) |
-| Base product creation | `lite:includes/ReverseWithdrawal/InstallerHelper.php:55`; also on settings save (`Admin\Settings::create_reverse_withdrawal_base_product`, `lite:includes/ReverseWithdrawal/Admin/Settings.php:234`) |
+| `dokan()->reverse_withdrawal` service → `WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal` | `lite:includes/DependencyManagement/Providers/ServiceProvider.php::$services` |
+| Sub-controllers: `settings`, `hooks`, `async_hooks`, `admin_hooks`, `cron_actions`, `order_hooks`, `cart_hooks`, `cache_hooks`, and `ajax` (AJAX requests only) | `lite:includes/ReverseWithdrawal/ReverseWithdrawal.php::set_controllers()` |
+| REST controller registered through `dokan_rest_api_class_map` | `lite:includes/ReverseWithdrawal/ReverseWithdrawal.php::init_hooks()` |
+| Table DDL | `lite:includes/ReverseWithdrawal/InstallerHelper.php::create_reverse_withdrawal_table()` (called from `Installer::create_reverse_withdrawal_table`) |
+| Base product creation | `lite:includes/ReverseWithdrawal/InstallerHelper.php::create_reverse_withdrawal_base_product()`; also on settings save (`lite:includes/ReverseWithdrawal/Admin/Settings.php::create_reverse_withdrawal_base_product()`) |
 | Vendor dashboard page | `WeDevs\Dokan\Dashboard\Templates\ReverseWithdrawal` (instantiated by `Dashboard\Templates\Manager`) |
 
 `Hooks`, `Cart` and most of `Order` return early from their constructors when `SettingsHelper::is_enabled()` is false; `Order` still registers its two order-item display filters.
@@ -419,20 +416,20 @@ When a Vendor is paid directly by the customer through a gateway that bypasses t
 
 | Class | File | Responsibility |
 |---|---|---|
-| `ReverseWithdrawal` | `lite:includes/ReverseWithdrawal/ReverseWithdrawal.php:20` | Container of sub-controllers (`ChainableContainer`). |
-| `Manager` | `lite:includes/ReverseWithdrawal/Manager.php:20` | Data access: `all` `:50` (multi-mode query), `get_stores_balance` `:323`, `get_store_balance` `:367`, `get_store_transactions` `:396`, `get` `:487`, `insert` `:512`, `is_reverse_withdrawal_added` `:584`, `is_payment_inserted` `:604`, `get_payments_by_vendor` `:645`, `get_stores` `:707`. |
-| `Helper` | `lite:includes/ReverseWithdrawal/Helper.php` | Transaction-type map (`get_transaction_types` `:57`), meta keys, Vendor balance and due status (`get_vendor_balance` `:440`, `get_vendor_due_status` `:503`, `get_vendor_payable_amount_by_month` `:379`), payment-order detection, awaiting-payment guard, `add_payment_to_cart` `:923`. |
-| `SettingsHelper` | `lite:includes/ReverseWithdrawal/SettingsHelper.php:15` | Typed readers for the `dokan_reverse_withdrawal` settings section and option lists. |
-| `Hooks` | `lite:includes/ReverseWithdrawal/Hooks.php:15` | Writes the Commission debit on order completion; applies failed-action effects (menu, purchasability, price); dashboard nav. |
-| `Order` | `lite:includes/ReverseWithdrawal/Order.php:15` | Stores the payment amount on the order line item and writes the Vendor payment credit when the payment order completes. |
-| `Cart` | `lite:includes/ReverseWithdrawal/Cart.php:15` | Sets the payment product's price from cart item data and blocks mixing with other products. |
-| `FailedActions` | `lite:includes/ReverseWithdrawal/FailedActions.php:15` | Applies (`ensure_reverse_pay_actions` `:25`) and reverts (`revert_reverse_pay_actions` `:69`) restrictions. |
-| `Ajax` | `lite:includes/ReverseWithdrawal/Ajax.php:16` | `wp_ajax_dokan_reverse_withdrawal_payment_to_cart`. |
-| `Cache` | `lite:includes/ReverseWithdrawal/Cache.php:15` | Invalidates `reverse_withdrawal` and `reverse_withdrawal_{vendor_id}` on insert. |
-| `BackgroundProcess\CronActions` | `lite:includes/ReverseWithdrawal/BackgroundProcess/CronActions.php:15` | Daily and monthly Action Scheduler jobs; fans out Vendors in batches. |
-| `BackgroundProcess\AsyncRequests` | `lite:includes/ReverseWithdrawal/BackgroundProcess/AsyncRequests.php:19` | Per-batch async worker: apply/revert actions, send invoice emails. |
+| `ReverseWithdrawal` | `lite:includes/ReverseWithdrawal/ReverseWithdrawal.php` | Container of sub-controllers (`ChainableContainer`). |
+| `Manager` | `lite:includes/ReverseWithdrawal/Manager.php` | Data access: `::all()` (multi-mode query), `::get_stores_balance()`, `::get_store_balance()`, `::get_store_transactions()`, `::get()`, `::insert()`, `::is_reverse_withdrawal_added()`, `::is_payment_inserted()`, `::get_payments_by_vendor()`, `::get_stores()`. |
+| `Helper` | `lite:includes/ReverseWithdrawal/Helper.php` | Transaction-type map (`::get_transaction_types()`), meta keys, Vendor balance and due status (`::get_vendor_balance()`, `::get_vendor_due_status()`, `::get_vendor_payable_amount_by_month()`), payment-order detection, awaiting-payment guard, `::add_payment_to_cart()`. |
+| `SettingsHelper` | `lite:includes/ReverseWithdrawal/SettingsHelper.php` | Typed readers for the `dokan_reverse_withdrawal` settings section and option lists. |
+| `Hooks` | `lite:includes/ReverseWithdrawal/Hooks.php` | Writes the Commission debit on order completion; applies failed-action effects (menu, purchasability, price); dashboard nav. |
+| `Order` | `lite:includes/ReverseWithdrawal/Order.php` | Stores the payment amount on the order line item and writes the Vendor payment credit when the payment order completes. |
+| `Cart` | `lite:includes/ReverseWithdrawal/Cart.php` | Sets the payment product's price from cart item data and blocks mixing with other products. |
+| `FailedActions` | `lite:includes/ReverseWithdrawal/FailedActions.php` | Applies (`::ensure_reverse_pay_actions()`) and reverts (`::revert_reverse_pay_actions()`) restrictions. |
+| `Ajax` | `lite:includes/ReverseWithdrawal/Ajax.php` | `wp_ajax_dokan_reverse_withdrawal_payment_to_cart`. |
+| `Cache` | `lite:includes/ReverseWithdrawal/Cache.php` | Invalidates `reverse_withdrawal` and `reverse_withdrawal_{vendor_id}` on insert. |
+| `BackgroundProcess\CronActions` | `lite:includes/ReverseWithdrawal/BackgroundProcess/CronActions.php` | Daily and monthly Action Scheduler jobs; fans out Vendors in batches. |
+| `BackgroundProcess\AsyncRequests` | `lite:includes/ReverseWithdrawal/BackgroundProcess/AsyncRequests.php` | Per-batch async worker: apply/revert actions, send invoice emails. |
 | `Admin\Settings`, `Admin\Hooks` | `lite:includes/ReverseWithdrawal/Admin/` | Settings fields/validation; re-evaluate actions after save; clear base product option on trash. |
-| `REST\ReverseWithdrawalController` | `lite:includes/REST/ReverseWithdrawalController.php:47` | `dokan/v1/reverse-withdrawal/*`. |
+| `REST\ReverseWithdrawalController` | `lite:includes/REST/ReverseWithdrawalController.php` | `dokan/v1/reverse-withdrawal/*`. |
 
 ### B4. Execution flow
 
@@ -490,24 +487,24 @@ flowchart TD
 
 Details:
 
-1. **Commission accrual** (`Hooks::process_order_status_changed`, `lite:includes/ReverseWithdrawal/Hooks.php:187`, on `woocommerce_order_status_changed` priority 10). Requires: real status change to `completed`; payment method enabled for reverse withdrawal (`SettingsHelper::is_gateway_enabled_for_reverse_withdrawal`, where enabled gateways are all keys of `dokan_reverse_withdrawal_payment_gateways`, default `[ 'cod' ]`); order without `has_sub_order` meta (only Vendor orders accrue, consistent with ADR-0004); not itself a `cod` reverse-withdrawal payment order; no existing `order_commission` row for that order. The debit is `dokan()->commission->get_earning_by_order( $order_id, 'admin' )` and `vendor_id` is `dokan_get_seller_id_by_order()`.
-2. **Paying the debt.** `Helper::add_payment_to_cart( $amount )` (`lite:includes/ReverseWithdrawal/Helper.php:923`):
+1. **Commission accrual** (`lite:includes/ReverseWithdrawal/Hooks.php::process_order_status_changed()`, on `woocommerce_order_status_changed` priority 10). Requires: real status change to `completed`; payment method enabled for reverse withdrawal (`SettingsHelper::is_gateway_enabled_for_reverse_withdrawal`, where enabled gateways are all keys of `dokan_reverse_withdrawal_payment_gateways`, default `[ 'cod' ]`); order without `has_sub_order` meta (only Vendor orders accrue, consistent with ADR-0004); not itself a `cod` reverse-withdrawal payment order; no existing `order_commission` row for that order. The debit is `dokan()->commission->get_earning_by_order( $order_id, 'admin' )` and `vendor_id` is `dokan_get_seller_id_by_order()`.
+2. **Paying the debt.** `Helper::add_payment_to_cart( $amount )` (`lite:includes/ReverseWithdrawal/Helper.php::add_payment_to_cart()`):
    - rejects amounts `<= 0`;
    - computes the ceiling from the Vendor's total outstanding balance (not `payable_amount`, so early payment under monthly billing works), minus the sum of the Vendor's reverse-withdrawal payment orders still in `pending`, `processing`, `on-hold` or `failed` that have not yet reached the ledger (`get_awaiting_payment_orders`). If that leaves nothing, the error names the blocking orders and links to pay or cancel them;
    - applies `dokan_reverse_withdrawal_payable_amount` with context `cart`;
    - compares in scaled integers, requires the base product to exist and be published, loads the cart if needed, **empties the cart**, and adds the base product with cart item data `dokan_reverse_withdrawal_balance => $amount`.
-   `Cart::woocommerce_custom_price_to_cart_item` (on `woocommerce_before_calculate_totals`, priority 99) sets that price; `Cart::prevent_purchasing_multiple_products` blocks adding other products while it is in the cart; `Cart::remove_seller_name_from_cart_item` removes Dokan's vendor-name line for it. `Hooks::skip_cart_validation_for_reverse_withdraw` returns `false` from the `dokan_stripe_express_needs_cart_validation` filter (fired by Dokan Pro, not Lite) when the payment product is in the cart.
-3. **Recording the payment** (`Order::insert_payment`, `lite:includes/ReverseWithdrawal/Order.php:98`, from `woocommerce_payment_complete` and from `woocommerce_order_status_changed` → `completed`). Skips when the order has no `_dokan_reverse_withdrawal_balance` item meta, when a `vendor_payment` row for the order already exists, or when the order carries `_dokan_reverse_withdrawal_payment_settled = yes`. The credited amount is first capped at what the order collected, `min( line total, order total )` (`Helper::get_collected_amount_from_order`, `lite:includes/ReverseWithdrawal/Helper.php:198`; `lite:includes/ReverseWithdrawal/Order.php:131-147`), so a coupon-discounted payment is credited only for what was paid and an order note says so. It is then clamped to the current outstanding balance (after `dokan_reverse_withdrawal_payable_amount` with context `completion`); an order note records any shortfall. If nothing remains to credit, the order is marked with `_dokan_reverse_withdrawal_payment_settled` and no row is written. The credit row's `vendor_id` is the order's **customer ID**, which is why only users with the `dokandar` capability may start a payment (B8).
-4. **Due status** (`Helper::get_vendor_due_status`, `lite:includes/ReverseWithdrawal/Helper.php:503`):
+   `Cart::woocommerce_custom_price_to_cart_item` (on `woocommerce_before_calculate_totals`, priority 99) sets that price; `Cart::prevent_purchasing_multiple_products` blocks adding other products while it is in the cart; `Cart::remove_seller_name_from_cart_item` removes Dokan's vendor-name line for it. `Hooks::skip_cart_validation_for_reverse_withdraw` returns `false` from the `dokan_stripe_express_needs_cart_validation` filter (fired by an add-on, not Lite) when the payment product is in the cart.
+3. **Recording the payment** (`lite:includes/ReverseWithdrawal/Order.php::insert_payment()`, from `woocommerce_payment_complete` and from `woocommerce_order_status_changed` → `completed`). Skips when the order has no `_dokan_reverse_withdrawal_balance` item meta, when a `vendor_payment` row for the order already exists, or when the order carries `_dokan_reverse_withdrawal_payment_settled = yes`. The credited amount is first capped at what the order collected, `min( line total, order total )` (`lite:includes/ReverseWithdrawal/Helper.php::get_collected_amount_from_order()`, applied in `Order::insert_payment()`), so a coupon-discounted payment is credited only for what was paid and an order note says so. It is then clamped to the current outstanding balance (after `dokan_reverse_withdrawal_payable_amount` with context `completion`); an order note records any shortfall. If nothing remains to credit, the order is marked with `_dokan_reverse_withdrawal_payment_settled` and no row is written. The credit row's `vendor_id` is the order's **customer ID**, which is why only users with the `dokandar` capability may start a payment (B8).
+4. **Due status** (`lite:includes/ReverseWithdrawal/Helper.php::get_vendor_due_status()`):
    - `by_amount`: due when `payable_amount` (= full balance) `>= reverse_balance_threshold`. The first day the threshold is seen exceeded is stored in user meta `_dokan_reverse_withdrawal_threshold_exceeded_date`, and `dokan_reverse_withdrawal_balance_threshold_exceed` fires once at that moment. Due date = that date + (`due_period` − 1) days at 23:59:59; past it, `due_date = 'immediate'`.
    - `by_month`: `payable_amount` = balance up to the last day of the previous month minus payments made in the current month (`get_vendor_payable_amount_by_month`). Due date = first of the month + (`monthly_billing_day` − 1) + (`due_period` − 1) days; past it, `immediate`.
 5. **Failed actions.** `FailedActions::ensure_reverse_pay_actions` runs only if no actions are already stored, the due status is `immediate`, and at least one action is configured. It stores the configured list in `_dokan_reverse_withdrawal_failed_actions` and, for `status_inactive`, calls `Vendor::make_inactive()`. Effects are applied at render time by `Hooks`:
-   - `hide_withdraw_menu` → `Hooks::unset_withdraw_menu` removes `withdraw` from `dokan_get_dashboard_nav`;
+   - `hide_withdraw_menu` → the Vendor cannot make Withdraw requests until the debt is paid ([ADR-0060](../0060-overdue-reverse-withdrawal-debt-can-block-withdraws-but-is-never-deducted-from-the-balance.md)), and `Hooks::unset_withdraw_menu` removes `withdraw` from `dokan_get_dashboard_nav`;
    - `enable_catalog_mode` → `Hooks::hide_add_to_cart_button` returns `false` from `woocommerce_is_purchasable` for that Vendor's products (the base product is always purchasable);
    - `hide_product_price` → `Hooks::hide_product_price` blanks `woocommerce_get_price_html` (this key is honored in code but is not among Lite's default `get_failed_payment_actions()` options; it can be added through `dokan_reverse_withdrawal_failed_payment_actions`).
-   `revert_reverse_pay_actions` clears them once the due status is no longer `immediate`, reactivating the Vendor if `status_inactive` had been applied, whatever the reason the Vendor is inactive by then.
+   `revert_reverse_pay_actions` clears them once the due status is no longer `immediate`, reactivating the Vendor if `status_inactive` had been applied.
 6. **Background processing** (`CronActions`): on `init`, schedules the recurring Action Scheduler action `dokan_reverse_withdrawal_midnight_cron` (daily from tomorrow) when enabled and unschedules it when disabled. When settings are saved with `billing_type = by_month`, `after_save_settings` schedules `dokan_reverse_withdrawal_monthly_cron` with cron expression `0 8 {monthly_billing_day} * *`. Both fan out Vendors (`dokan()->vendor->all`, 50 per batch daily, 5 per batch monthly) to `dokan_reverse_withdrawal_async_actions`. The monthly task additionally fires `dokan_reverse_withdrawal_invoice_email_sent` for each Vendor whose due status is true; `Emails\ReverseWithdrawalInvoice::trigger` listens at priority 30. `Admin\Hooks::maybe_take_action` re-runs the daily fan-out immediately after the settings section is saved with the feature enabled.
-7. **Order deletion.** `Order\Manager::delete_seller_order` deletes `order_commission`, `manual_order_commission` and `order_refund` rows whose `trn_id` is the deleted order (`lite:includes/Order/Manager.php:582-589`).
+7. **Order deletion.** `Order\Manager::delete_seller_order` deletes `order_commission`, `manual_order_commission` and `order_refund` rows whose `trn_id` is the deleted order (`lite:includes/Order/Manager.php::delete_seller_order()`).
 
 ### B5. Hooks
 
@@ -533,27 +530,27 @@ Details:
 
 | Hook | Source (fired at) | Callback | Priority |
 |---|---|---|---|
-| `woocommerce_order_status_changed` | [WooCommerce] `wc:includes/class-wc-order.php:478` | `Hooks::process_order_status_changed` (debit) | 10 |
-| `woocommerce_order_status_changed` | [WooCommerce] `wc:includes/class-wc-order.php:478` | `Order::process_order_status_changed` (credit) | 10 |
-| `woocommerce_payment_complete` | [WooCommerce] `wc:includes/class-wc-order.php:186` | `Order::process_payment` | 10 |
-| `woocommerce_checkout_create_order_line_item` | [WooCommerce] `wc:includes/class-wc-checkout.php:611` | `Order::store_line_item_metas` | 10 |
-| `woocommerce_order_item_display_meta_key` | [WooCommerce] `wc:includes/class-wc-order-item.php:372` | `Order::hide_order_item_meta_key` | 999 |
-| `woocommerce_order_item_display_meta_value` | [WooCommerce] `wc:includes/class-wc-order-item.php:373`, `wc:includes/class-wc-order-item-meta.php:154` | `Order::hide_order_item_meta_value` | 999 |
-| `woocommerce_add_to_cart_validation` | [WooCommerce] `wc:includes/class-wc-form-handler.php:1088`, `wc:includes/class-wc-ajax.php:555` | `Cart::prevent_purchasing_multiple_products` | 10 |
-| `woocommerce_get_item_data` | [WooCommerce] `wc:includes/wc-template-functions.php:4591`, `wc:src/StoreApi/Schemas/V1/CartItemSchema.php:174` | `Cart::remove_seller_name_from_cart_item` | 9 |
-| `woocommerce_before_calculate_totals` | [WooCommerce] `wc:includes/class-wc-cart.php:1604` | `Cart::woocommerce_custom_price_to_cart_item` | 99 |
-| `woocommerce_is_purchasable` | [WooCommerce] `wc:includes/abstracts/abstract-wc-product.php:1785` | `Hooks::hide_add_to_cart_button` | 20 |
-| `woocommerce_get_price_html` | [WooCommerce] `wc:includes/abstracts/abstract-wc-product.php:2059` | `Hooks::hide_product_price` | 20 |
+| `woocommerce_order_status_changed` | [WooCommerce] `wc:includes/class-wc-order.php::status_transition()` | `Hooks::process_order_status_changed` (debit) | 10 |
+| `woocommerce_order_status_changed` | [WooCommerce] `wc:includes/class-wc-order.php::status_transition()` | `Order::process_order_status_changed` (credit) | 10 |
+| `woocommerce_payment_complete` | [WooCommerce] `wc:includes/class-wc-order.php::payment_complete()` | `Order::process_payment` | 10 |
+| `woocommerce_checkout_create_order_line_item` | [WooCommerce] `wc:includes/class-wc-checkout.php::create_order_line_items()` | `Order::store_line_item_metas` | 10 |
+| `woocommerce_order_item_display_meta_key` | [WooCommerce] `wc:includes/class-wc-order-item.php::get_formatted_meta_data()` | `Order::hide_order_item_meta_key` | 999 |
+| `woocommerce_order_item_display_meta_value` | [WooCommerce] `wc:includes/class-wc-order-item.php::get_formatted_meta_data()`, `wc:includes/class-wc-order-item-meta.php::get_formatted()` | `Order::hide_order_item_meta_value` | 999 |
+| `woocommerce_add_to_cart_validation` | [WooCommerce] `wc:includes/class-wc-form-handler.php::add_to_cart_handler_simple()`, `wc:includes/class-wc-ajax.php::add_to_cart()` | `Cart::prevent_purchasing_multiple_products` | 10 |
+| `woocommerce_get_item_data` | [WooCommerce] `wc:includes/wc-template-functions.php::wc_get_formatted_cart_item_data()`, `wc:src/StoreApi/Schemas/V1/CartItemSchema.php` (item data) | `Cart::remove_seller_name_from_cart_item` | 9 |
+| `woocommerce_before_calculate_totals` | [WooCommerce] `wc:includes/class-wc-cart.php::calculate_totals()` | `Cart::woocommerce_custom_price_to_cart_item` | 99 |
+| `woocommerce_is_purchasable` | [WooCommerce] `wc:includes/abstracts/abstract-wc-product.php::is_purchasable()` | `Hooks::hide_add_to_cart_button` | 20 |
+| `woocommerce_get_price_html` | [WooCommerce] `wc:includes/abstracts/abstract-wc-product.php::get_price_html()` | `Hooks::hide_product_price` | 20 |
 | `dokan_reverse_withdrawal_created` | Lite | `Hooks::after_reverse_withdrawal_inserted` | 99 |
 | `dokan_reverse_withdrawal_created` | Lite | `Cache::clear_cache` | 10 |
 | `dokan_get_dashboard_nav` | Lite | `Hooks::unset_withdraw_menu`, `Hooks::add_reverse_withdrawal_nav` | 10 |
-| `dokan_stripe_express_needs_cart_validation` | Not fired by Lite (fired by Dokan Pro) | `Hooks::skip_cart_validation_for_reverse_withdraw` | 10 |
+| `dokan_stripe_express_needs_cart_validation` | Not fired by Lite (fired by an add-on) | `Hooks::skip_cart_validation_for_reverse_withdraw` | 10 |
 | `dokan_rest_api_class_map` | Lite | `ReverseWithdrawal::rest_api_class_map` | 10 |
 | `init` | WordPress | `CronActions::schedule_action` | 10 |
 | `dokan_after_saving_settings` | Lite | `CronActions::after_save_settings` (10), `Admin\Hooks::maybe_take_action` (11), `Admin\Settings::create_reverse_withdrawal_base_product` (20) | as listed |
 | `dokan_before_saving_settings` | Lite | `Admin\Settings::validate_admin_settings` | 20 |
 | `dokan_settings_fields` | Lite | `Admin\Settings::load_settings_fields` | 21 |
-| `dokan_log_exclude_commission` | Not fired by Lite (fired by Dokan Pro) | `Admin\Hooks::report_log_exclude_commission` | 10 |
+| `dokan_log_exclude_commission` | Not fired by Lite (fired by an add-on) | `Admin\Hooks::report_log_exclude_commission` | 10 |
 | `wp_trash_post` | WordPress | `Admin\Hooks::delete_base_product` | 10 |
 | `dokan_reverse_withdrawal_midnight_cron` | Action Scheduler | `CronActions::maybe_take_action` | 10 |
 | `dokan_reverse_withdrawal_monthly_cron` | Action Scheduler | `CronActions::send_billing_invoice_email` (registered only when billing type is `by_month`) | 10 |
@@ -656,7 +653,7 @@ For `transactions` and `vendor-due-status`, a `vendor_id` parameter is honored o
 
 - **Enable more gateways for accrual:** `dokan_reverse_withdrawal_payment_gateways`.
 - **Add a billing mode or failed action to the settings UI:** `dokan_reverse_withdrawal_billing_type_options`, `dokan_reverse_withdrawal_failed_payment_actions`, `dokan_reverse_withdrawal_setting_fields`. Note that due computation in `Helper::get_vendor_due_status` only implements `by_amount` and `by_month`, and effects are implemented only for the keys handled in `Hooks` and `FailedActions`.
-- **Record other debts or credits:** instantiate `WeDevs\Dokan\ReverseWithdrawal\Manager` and call `insert()` with one of the fixed transaction types (this is how Lite's own writers do it); insertion triggers `dokan_reverse_withdrawal_created`, which applies failed actions after an `order_commission`, `failed_transfer_reversal`, `product_advertisement` or `manual_order_commission` row and reverts them after `vendor_payment` or `order_refund` (`lite:includes/ReverseWithdrawal/Hooks.php:80-92`); other types wait for the daily job. Transaction types themselves are not filterable.
+- **Record other debts or credits:** instantiate `WeDevs\Dokan\ReverseWithdrawal\Manager` and call `insert()` with one of the fixed transaction types (this is how Lite's own writers do it); insertion triggers `dokan_reverse_withdrawal_created`, which applies failed actions after an `order_commission`, `failed_transfer_reversal`, `product_advertisement` or `manual_order_commission` row and reverts them after `vendor_payment` or `order_refund` (`lite:includes/ReverseWithdrawal/Hooks.php::after_reverse_withdrawal_inserted()`); other types wait for the daily job. Transaction types themselves are not filterable.
 - **Change the payment ceiling consistently:** `dokan_reverse_withdrawal_payable_amount` (filter both the `cart` and `completion` contexts; the docblock in `Helper::add_payment_to_cart` explains why).
 - **React to enforcement:** `dokan_reverse_withdrawal_action_taken`, `dokan_reverse_withdrawal_action_reverted`, `dokan_reverse_withdrawal_balance_threshold_exceed`, `dokan_reverse_withdrawal_invoice_email_sent`.
 
@@ -669,12 +666,11 @@ For `transactions` and `vendor-due-status`, a `vendor_id` parameter is honored o
 - `Admin\WithdrawLogExporter` (used by `GET /withdraw?is_export=true` and the CSV download) and `Admin\Settings` field rendering for the `dokan_withdraw` section were not traced in detail.
 - `Dashboard\Templates\ReverseWithdrawal` (vendor dashboard notices and rendering for `display_notice`) and the React/Vue front-end for both subsystems were not traced.
 - Email classes (`WithdrawApproved`, `WithdrawCancelled`, `VendorWithdrawRequest`, `ReverseWithdrawalInvoice`) were confirmed only at their `add_action` registration; their templates and recipients were not read.
-- The settings fields for `withdraw_date_limit`, `withdraw_method_name` and `disbursement`, the `dokan_custom` method registration, the per-Vendor threshold UI and any automatic/scheduled disbursement are not defined in Lite; they arrive through filters consumed by Dokan Pro and are out of scope for this public document.
-- No Lite code writes `order_refund`, `failed_transfer_reversal`, `product_advertisement`, `manual_order_commission`, `manual_product`, `manual_order` or `other` reverse-withdrawal rows other than the admin `POST /reverse-withdrawal/transactions` route. Pro writes `order_refund` when a refund request is approved (`pro:includes/ReverseWithdrawal.php:44`, `:116-166`); the other producers were not traced. Lite never reduces an `order_commission` debit when the COD order is refunded or cancelled.
+- The settings fields for `withdraw_date_limit`, `withdraw_method_name` and `disbursement`, the `dokan_custom` method registration, the per-Vendor threshold UI and any automatic/scheduled disbursement are not defined in Lite; they arrive through filters consumed by add-ons and are out of scope for this document.
+- No Lite code writes `order_refund`, `failed_transfer_reversal`, `product_advertisement`, `manual_order_commission`, `manual_product`, `manual_order` or `other` reverse-withdrawal rows other than the admin `POST /reverse-withdrawal/transactions` route. An add-on may write `order_refund` when it approves a refund; the other producers were not traced. Lite never reduces an `order_commission` debit when the COD order is refunded or cancelled.
 - `SettingsHelper::send_balance_exceeded_announcement()` (the `send_announcement` setting) has no caller in Lite. `display_notice` is read by `Dashboard\Templates\ReverseWithdrawal` and returned in the `vendor-due-status` REST response; the notice rendering itself was not traced.
-- `Manager::insert_withdraw()` has no caller in Lite but is used by Pro's direct-payment gateways (A4.3). `Manager::update_status()` has no caller in Lite or Pro. `update_status()` passes `'%s'` as the format for the integer `status` column.
-- Lite has no listener that reverses the `dokan_withdraw` ledger credit when an approved Withdraw is later cancelled or deleted (A4.3); whether this is handled elsewhere was not determined. Deleting an order whose id equals the Withdraw id does delete it (A4.3).
+- `Manager::insert_withdraw()` has no caller in Lite but is available to direct-payment gateways added by add-ons (A4.3). `Manager::update_status()` has no caller in Lite. `update_status()` passes `'%s'` as the format for the integer `status` column.
 - No `wp dokan withdraw` CLI command was found under `includes/CLI` at this revision (ADR-0008 concerns namespace ownership only).
 - Upgrade routines that migrated historical withdraw data (`includes/Upgrade/Upgrades/BackgroundProcesses/V_2_8_3_VendorBalance.php`, `V_3_2_12`, `V_3_3_1`, `V_3_3_7`) were not analyzed.
 
-_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

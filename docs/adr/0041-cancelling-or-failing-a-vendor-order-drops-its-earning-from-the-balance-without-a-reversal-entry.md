@@ -57,7 +57,7 @@ Order #300 → #301 (Vendor A, Earning 54.00) and #302 (Vendor B, Earning 36.00)
 ## Edge cases
 
 - **Cancelling after a Withdraw.** If the Vendor had already withdrawn money that included this Earning, the Earning stops counting but the Withdraw credit remains, so the Vendor's Balance drops, possibly below zero. Dokan records no separate debt for it. What a negative Balance means for future Withdraws is a `05-…` topic.
-- **Cancelled is treated as final by the Vendor dashboard UI.** The single-order screen hides the Edit status control for a cancelled or refunded order (`lite:templates/orders/details.php` (the order-status Edit link and the status form, both guarded by the same condition)), and the bulk status helper skips orders whose current status is `cancelled` or `refunded` (`lite:includes/Order/functions.php::dokan_apply_bulk_order_status_change()`) ([ADR-0046](./0046-vendors-change-only-their-own-vendor-order-status-when-allowed-and-cancelled-or-refunded-orders-are-final.md)). The single-order AJAX handler (`lite:includes/Ajax.php::change_order_status()`) and the REST update (`PUT dokan/v1/orders/{id}`, `lite:includes/REST/OrderController.php::prepare_object_for_database()`) do not check the order's current status. In normal use, reopening a cancelled order is done by the Store Admin in WP-admin.
+- **Cancelled is final for the Vendor.** A Vendor cannot move a cancelled or refunded Vendor order to another status: the single-order screen hides the Edit status control for such an order (`lite:templates/orders/details.php` (the order-status Edit link and the status form, both guarded by the same condition)), and the bulk status helper skips orders whose current status is `cancelled` or `refunded` (`lite:includes/Order/functions.php::dokan_apply_bulk_order_status_change()`) ([ADR-0046](./0046-vendors-change-only-their-own-vendor-order-status-when-allowed-and-cancelled-or-refunded-orders-are-final.md)). Reopening a cancelled order is done by the Store Admin in WP-admin.
 - **Reverse withdrawal is unaffected.** The Reverse withdrawal ledger books its entry when a Vendor order paid with a gateway enabled for Reverse withdrawal (cash on delivery) moves to *completed* (`lite:includes/ReverseWithdrawal/Hooks.php::process_order_status_changed()`), and is governed by Lite ADR 0015 (`docs/adr/0015-reverse-withdrawal-is-a-separate-receivable-ledger.md`), not by this rule.
 - **Gateway fees already deducted stay deducted.** A fee that adjusted the row's amount before cancellation is not restored; the row just stops counting.
 
@@ -75,4 +75,4 @@ No recorded decision. Driving Balance from status keeps cancellation reversible 
 
 - When an order that had an earning status is cancelled after a Withdraw, add an order note (or Vendor notification) so the Balance drop is explainable.
 
-_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

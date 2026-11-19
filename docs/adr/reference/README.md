@@ -24,7 +24,6 @@ Every document was verified against the following source revisions. The `_Verifi
 | Codebase | Revision | Prefix used in citations |
 |---|---|---|
 | Dokan Lite (this repository) | `e1ce7fc81` or later, per document footer (for example `fbae0ce7d`) | `lite:` |
-| Dokan Pro | (not recorded) | `pro:` (not used in this public repository; see below) |
 | WooCommerce | `11.2.1` | `wc:` |
 
 Other third-party plugins are named in ownership labels, for example **[Third-party: User Switching]**, and are cited by plugin name.
@@ -150,8 +149,8 @@ Every document ends with a **Known gaps** section that lists what could not be d
 
 - This README is a navigation page. It makes no claims about runtime behavior of its own; each behavioral statement lives, with its citation, in the linked subsystem document.
 - Citations name symbols, not line numbers, so they survive ordinary edits, but a statement is still only as current as the revision in the document's footer. The documents are not regenerated automatically: a renamed or moved method breaks its citation, and changed behavior inside an unchanged method is not caught by the citation at all.
-- The `pro:` prefix is part of the shared citation convention, but this public repository deliberately contains no Dokan Pro paths. How Dokan Pro uses the seams named here is documented only in Dokan Pro's private repository.
+- This public repository deliberately contains no Dokan Pro paths or citations. How Dokan Pro uses the seams named here is documented only in Dokan Pro's private repository.
 - Release tooling (translation `.pot` generation, release packaging, `.distignore`) is not covered by any document in this directory. Its absence here does not mean the tooling is unimportant.
 - Each subsystem document keeps its own Known gaps list. Those lists are not aggregated here, so check the relevant document before relying on a behavior it marks as unconfirmed.
 
-_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

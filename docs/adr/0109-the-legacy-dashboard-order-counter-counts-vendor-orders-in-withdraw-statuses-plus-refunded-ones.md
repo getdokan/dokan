@@ -8,11 +8,11 @@ The legacy Vendor dashboard (WooCommerce Analytics off) shows an "Order" counter
 
 ## Rule
 
-**Per-status counts.** `Order\Manager::count_orders()` (`lite:includes/Order/Manager.php:288-356`) counts the Vendor's `dokan_orders` rows grouped by `order_status`, joined to the order table and excluding orders whose post or HPOS status is `trash` (`:310-338`). It starts from the statuses pending, completed, on-hold, processing, refunded, cancelled, failed and checkout-draft, filterable through `dokan_order_status_count` (`:296-307`); rows in any other status are ignored. `total` is the sum of the listed statuses. Results are cached per Vendor.
+**Per-status counts.** `Order\Manager::count_orders()` (`lite:includes/Order/Manager.php::count_orders()`) counts the Vendor's `dokan_orders` rows grouped by `order_status`, joined to the order table and excluding orders whose post or HPOS status is `trash`. It starts from the statuses pending, completed, on-hold, processing, refunded, cancelled, failed and checkout-draft, filterable through `dokan_order_status_count`; rows in any other status are ignored. `total` is the sum of the listed statuses. Results are cached per Vendor.
 
-**The counter.** The big-counter template sums the per-status counts only for the statuses returned by `dokan_withdraw_get_active_order_status()` (`lite:templates/dashboard/big-counter-widget.php:29-41`): the "Order Status for Withdraw" statuses plus `wc-refunded` (`lite:includes/Withdraw/functions.php:355-366`).
+**The counter.** The big-counter template sums the per-status counts only for the statuses returned by `dokan_withdraw_get_active_order_status()` (`lite:templates/dashboard/big-counter-widget.php`, the "Order" counter): the "Order Status for Withdraw" statuses plus `wc-refunded` (`lite:includes/Withdraw/functions.php::dokan_withdraw_get_active_order_status()`).
 
-So the counter answers "how many Vendor orders currently count toward my earnings", not "how many orders have I received". The orders widget below it (`Dashboard::get_orders_widgets()`, `lite:includes/Dashboard/Templates/Dashboard.php:92`) shows the full per-status breakdown and its total.
+So the counter answers "how many Vendor orders currently count toward my earnings", not "how many orders have I received". The orders widget below it (`lite:includes/Dashboard/Templates/Dashboard.php::get_orders_widgets()`, shown to users with `dokan_view_order_report`) shows the full per-status breakdown and its total.
 
 ## Settings that change it
 
@@ -49,4 +49,4 @@ No recorded reason. Reusing the withdraw status list keeps the counter consisten
 
 - Label the counter "Orders counting toward earnings", or show the widget total instead.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

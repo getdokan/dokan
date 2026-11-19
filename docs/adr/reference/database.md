@@ -404,7 +404,7 @@ sequenceDiagram
 
 The parent Order is a mirror, and operational accounting happens only on Vendor orders. This is deliberate; see ADR-0004 (`docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`). It is the reason `dokan_orders` and `dokan_vendor_balance` contain no rows for parent Orders that have Suborders.
 
-When a Vendor order is deleted, `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php::delete_seller_order()`) deletes data in this sequence: `dokan_orders` rows (by `order_id`, optionally also `seller_id`); `dokan_refund` rows by `order_id`; then it fires `dokan_after_deleting_seller_order`; then it deletes `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw`; finally it deletes `dokan_reverse_withdrawal` rows whose `trn_type` is `order_commission`, `manual_order_commission` or `order_refund`.
+When a Vendor order is deleted, `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php::delete_seller_order()`) deletes data in this sequence: `dokan_orders` rows (by `order_id`, optionally also `seller_id`); `dokan_refund` rows by `order_id`; then it fires `dokan_after_deleting_seller_order`; then it deletes the order's `dokan_vendor_balance` rows (Earning and refund entries); finally it deletes `dokan_reverse_withdrawal` rows whose `trn_type` is `order_commission`, `manual_order_commission` or `order_refund`.
 
 ### 5.3 Schema migrations (upgraders)
 
@@ -648,4 +648,4 @@ The data layer itself exposes one endpoint. All table-backed REST resources (ord
 - Sites upgraded through `V_3_2_12` before `V_3_3_7` ran may briefly have had `dokan_withdraw.details` as `NOT NULL`. `V_3_3_7` corrects this, but the column state of a site where that upgrader did not complete cannot be determined from source.
 - `dokan_orders.order_id`, `dokan_vendor_balance.trn_id` and the other order references are not declared as foreign keys, so referential integrity relies entirely on the PHP cascade in `Order\Manager::delete_seller_order()`. Whether every deletion path, such as trashing versus permanent deletion of an order, reaches that cascade was not traced in this document; see [orders-commission-fees.md](orders-commission-fees.md).
 
-_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

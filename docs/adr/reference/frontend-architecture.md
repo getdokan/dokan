@@ -481,4 +481,4 @@ On the PHP side, the localisation filters in section 5.1 (`dokan_react_frontend_
 - **Vendor analytics, intelligence and the setup wizard** are covered here only as bundles and mount points. Their internal flows belong in their own subsystem docs.
 - **Legacy jQuery code under `assets/src/js/`** is listed as entries only; its behaviour is documented with the owning subsystems.
 
-_Verified against Lite @fbae0ce7d / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-11-19._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

@@ -8,15 +8,15 @@ The admin dashboard lists the top five Vendors for a selected month (`GET dokan/
 
 ## Rule
 
-`VendorOrderStatsStore::get_top_performing_vendors()` (`lite:includes/Models/DataStore/VendorOrderStatsStore.php:121-140`) groups `dokan_order_stats` rows joined to `wc_order_stats` by `vendor_id` and returns, per Vendor:
+`VendorOrderStatsStore::get_top_performing_vendors()` (`lite:includes/Models/DataStore/VendorOrderStatsStore.php::get_top_performing_vendors()`) groups `dokan_order_stats` rows joined to `wc_order_stats` by `vendor_id` and returns, per Vendor:
 
 - `total_earning` = `SUM(vendor_earning)`,
 - `total_orders` = `COUNT(order_id)`,
 - `total_commission` = `SUM(admin_commission)`,
 
-for rows with `DATE(wc_order_stats.date_created)` between the period's first and last day inclusive (`:131`), ordered by `total_earning` descending, limited to 5 (`:133-135`). There is **no status condition and no order-type condition**.
+for rows with `DATE(wc_order_stats.date_created)` between the period's first and last day inclusive, ordered by `total_earning` descending, limited to 5. There is **no status condition and no order-type condition**: parent Order rows form their own `vendor_id` 0 group, which takes one of the five places before it is dropped below, and refund rows add to `total_orders`.
 
-The period comes from `parse_date_range()` (the selected month, ending today for the running month; see [ADR-0097](./0097-an-active-vendor-on-the-admin-dashboard-is-one-with-a-positive-earning-on-an-order-created-in-the-period.md)). `AdminDashboardStatsController::get_top_performing_vendors()` (`lite:includes/REST/AdminDashboardStatsController.php:403-433`) then drops any row whose `vendor_id` does not load a user (`dokan()->vendor->get()` returns id 0, as it does for the `vendor_id` 0 group and for deleted accounts), numbers the rest from 1 and passes the list through `dokan_rest_admin_dashboard_top_performing_vendors_data`.
+The period comes from `parse_date_range()` (the selected month, ending today for the running month; see [ADR-0097](./0097-an-active-vendor-on-the-admin-dashboard-is-one-with-a-positive-earning-on-an-order-created-in-the-period.md)). `AdminDashboardStatsController::get_top_performing_vendors()` (`lite:includes/REST/AdminDashboardStatsController.php::get_top_performing_vendors()`) then drops any row whose `vendor_id` does not load a user (`dokan()->vendor->get()` returns id 0, as it does for the `vendor_id` 0 group and for deleted accounts), numbers the rest from 1 and passes the list through `dokan_rest_admin_dashboard_top_performing_vendors_data`.
 
 So:
 
@@ -64,4 +64,4 @@ None recorded.
 
 - Apply `ReportUtil::get_exclude_order_statuses()`, restrict to Vendor order types 1 and 2 for the order count, and add `vendor_id > 0` before the `LIMIT`.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

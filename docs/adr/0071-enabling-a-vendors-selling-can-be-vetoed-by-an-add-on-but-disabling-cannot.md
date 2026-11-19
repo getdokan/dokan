@@ -10,10 +10,10 @@ Every route that approves a Vendor ends in `Vendor::make_active()`, and every ro
 
 `Vendor::make_active()` asks the `dokan_can_enable_selling` filter first. If any callback returns `false`, nothing changes: `dokan_enable_selling` is not written, products are not restored, and `dokan_vendor_enabled` does not fire. Disabling has no such filter and always takes effect.
 
-- **Veto point.** `make_active()` applies `dokan_can_enable_selling` with default `true` and the Vendor id (`lite:includes/Vendor/Vendor.php:985-1004`). On `false` it writes a `dokan_log()` line ("Vendor activation blocked for vendor #N by dokan_can_enable_selling filter.") and returns `to_array()` unchanged (`:1006-1015`).
-- **Normal activation.** Otherwise it writes `dokan_enable_selling = yes`, queues the product status revert, and fires `dokan_vendor_enabled` (`:1017-1022`).
-- **Deactivation.** `make_inactive()` writes `dokan_enable_selling = no`, queues the product status change, and fires `dokan_vendor_disabled` (`lite:includes/Vendor/Vendor.php:1034-1043`). There is no filter that can stop it.
-- **Read path.** Separately from the write path, `dokan_is_seller_enabled()` passes its answer through the `dokan_is_seller_enabled` filter (`lite:includes/functions.php:1172-1177`), so an add-on can also make an approved Vendor *behave* as not enabled without changing stored data.
+- **Veto point.** `make_active()` applies `dokan_can_enable_selling` with default `true` and the Vendor id (`lite:includes/Vendor/Vendor.php::make_active()`). On `false` it writes a `dokan_log()` line ("Vendor activation blocked for vendor #N by dokan_can_enable_selling filter.") and returns `to_array()` unchanged.
+- **Normal activation.** Otherwise it writes `dokan_enable_selling = yes`, queues the product status revert, and fires `dokan_vendor_enabled` (same method).
+- **Deactivation.** `make_inactive()` writes `dokan_enable_selling = no`, queues the product status change, and fires `dokan_vendor_disabled` (`lite:includes/Vendor/Vendor.php::make_inactive()`). There is no filter that can stop it.
+- **Read path.** Separately from the write path, `dokan_is_seller_enabled()` passes its answer through the `dokan_is_seller_enabled` filter (`lite:includes/functions.php::dokan_is_seller_enabled()`), so an add-on can also make an approved Vendor *behave* as not enabled without changing stored data.
 
 ## Settings that change it
 
@@ -25,13 +25,13 @@ An add-on requires verified identity and returns `false` from `dokan_can_enable_
 
 ## Edge cases
 
-- **The return value does not report a veto.** `make_active()` returns the Vendor array in both cases. The docblock says so explicitly and tells callers to check `dokan_is_seller_enabled()` afterwards (`lite:includes/Vendor/Vendor.php:994-998`).
+- **The return value does not report a veto.** `make_active()` returns the Vendor array in both cases. The docblock says so explicitly and tells callers to check `dokan_is_seller_enabled()` afterwards (`lite:includes/Vendor/Vendor.php::make_active()`, the docblock).
 - **Registration under `automatically`.** If an add-on vetoes, a new Vendor who would have been auto-approved stays Pending with no `dokan_enable_selling` row.
 - A veto also stops the revert of products that were held when the Vendor was disabled; they stay in pending review.
 
 ## Why
 
-Recorded in the docblock (added in 5.0.2): the filter "allows extensions (verification, KYC, compliance, etc.) to short-circuit vendor activation" (`lite:includes/Vendor/Vendor.php:986-1003`). No rationale is recorded for leaving deactivation unfiltered; disabling a Vendor is a safety action and is expected always to work.
+Recorded in the docblock (added in 5.0.2): the filter "allows extensions (verification, KYC, compliance, etc.) to short-circuit vendor activation" (`lite:includes/Vendor/Vendor.php::make_active()`, the docblock). No rationale is recorded for leaving deactivation unfiltered; disabling a Vendor is a safety action and is expected always to work.
 
 ## Consequences & risks
 
@@ -42,4 +42,4 @@ Recorded in the docblock (added in 5.0.2): the filter "allows extensions (verifi
 
 None.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

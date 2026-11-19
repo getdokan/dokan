@@ -31,7 +31,7 @@ Store Admins trash test orders, fraudulent orders and duplicates, and sometimes 
 
 - the `dokan_orders` row;
 - `dokan_refund` rows, then fires `dokan_after_deleting_seller_order`;
-- `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw`;
+- the order's Balance ledger rows (its Earning and refund entries);
 - Reverse withdrawal rows of types `order_commission`, `manual_order_commission` and `order_refund` for the order.
 
 How Suborders are reached depends on the order storage.
@@ -57,7 +57,6 @@ Order #300 → #301 (Vendor A, 54.00, `completed`) and #302 (Vendor B, 36.00, `c
 
 - **Deletion outside WP-admin keeps the rows.** Orders deleted by REST calls, WP-CLI, cron jobs or payment webhooks do not load `Order\Admin\Hooks`, so their ledger rows remain with their last status and keep counting if that status is an earning status. On HPOS, deleting a parent Order there still deletes its Suborders (WooCommerce's child-order cleanup above), but their ledger rows remain as orphans that point to orders which no longer exist and still count.
 - **Trashing with `wp_trash_post()` directly on posts storage** (the legacy order list's Trash link) does not fire `woocommerce_trash_order`; WooCommerce's own `wp_trash_post` handler does not fire it either (`wc:includes/class-wc-post-data.php::init()`, `::trash_post()`). The trashed order's own rows keep their previous status. Its Suborders, which Dokan trashes through the data store, are parked normally.
-- **Withdraw rows are matched by number.** The delete query removes `dokan_withdraw` Balance rows whose `trn_id` equals the order id. Withdraw rows store the Withdraw id in `trn_id` (`lite:includes/Withdraw/Hooks.php::update_vendor_balance()`), so this clause matches an unrelated Withdraw that happens to share the number.
 - **Refund credits are deleted too.** Deleting a refunded order removes both its debit and its refund credits, so the net effect on the Balance is zero only if they matched.
 
 ## Why
@@ -68,12 +67,10 @@ No recorded decision beyond the method docblocks ("Delete sub orders and from do
 
 - Deleting an old, paid-out order lowers the Vendor's earnings history and Balance, because its Earning row disappears while the Withdraw that paid it remains.
 - Whether ledger rows survive a deletion depends on *where* the deletion ran, not on what was deleted.
-- The `dokan_withdraw` clause in the delete query can remove a Withdraw's ledger row that has nothing to do with the deleted order.
 
 ## Recommendations
 
 - Register the delete cleanup outside the `is_admin()` branch so that deletion behaves the same in every context.
-- Remove `dokan_withdraw` from the delete query, or match Withdraw rows by a real link to the order, so unrelated Withdraw rows cannot be deleted.
 - Consider blocking permanent deletion of Vendor orders whose Earning has already been paid out, or at least warning the Store Admin.
 
-_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

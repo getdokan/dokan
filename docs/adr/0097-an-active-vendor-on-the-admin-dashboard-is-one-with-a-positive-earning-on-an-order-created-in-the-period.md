@@ -8,30 +8,30 @@ The admin dashboard's monthly overview (`GET dokan/v1/admin/dashboard/monthly-ov
 
 ## Rule
 
-**Comparison window.** `AdminDashboardStatsController::parse_date_range()` (`lite:includes/REST/AdminDashboardStatsController.php:663-718`) turns the selected month into:
+**Comparison window.** `AdminDashboardStatsController::parse_date_range()` (`lite:includes/REST/AdminDashboardStatsController.php::parse_date_range()`) turns the selected month into:
 
 - current period: the 1st of the month to the last day of the month, or to **today** when the selected month is the running month;
 - previous period: the 1st of the previous month to its last day, or, for the running month, to the **same day of the month** (capped at the previous month's length).
 
 So for the running month the overview compares month-to-date with the same number of days last month. The range is filterable through `dokan_rest_admin_dashboard_date_range`.
 
-**Active Vendors.** `VendorOrderStatsStore::get_active_vendors_count()` (`lite:includes/Models/DataStore/VendorOrderStatsStore.php:79-108`) counts `DISTINCT dokan_order_stats.vendor_id` over rows that:
+**Active Vendors.** `VendorOrderStatsStore::get_active_vendors_count()` (`lite:includes/Models/DataStore/VendorOrderStatsStore.php::get_active_vendors_count()`) counts `DISTINCT dokan_order_stats.vendor_id` over rows that:
 
-- are not in an excluded status (`:83`, `:90-93`);
-- have `vendor_earning > 0` (`:95`);
-- have `wc_order_stats.date_created BETWEEN <start> AND <end>` (`:96`), where start and end are plain dates.
+- are not in an excluded status;
+- have `vendor_earning > 0`;
+- have `wc_order_stats.date_created BETWEEN <start> AND <end>`, where start and end are plain dates.
 
 The query has no order-type condition, so parent Order rows are read too.
 
-The tooltip describes this as "Vendors sold minimum 1 product" (`AdminDashboardStatsStore::get_active_vendors_data()`, `lite:includes/Models/DataStore/AdminDashboardStatsStore.php:356-380`); the count is filterable through `dokan_admin_dashboard_active_vendors_count`.
+The tooltip describes this as "Vendors sold minimum 1 product" (`lite:includes/Models/DataStore/AdminDashboardStatsStore.php::get_active_vendors_data()`); the count is filterable through `dokan_admin_dashboard_active_vendors_count`.
 
-**The other overview counters** (`AdminDashboardStatsStore`, `lite:includes/Models/DataStore/AdminDashboardStatsStore.php`):
+**The other overview counters** (`lite:includes/Models/DataStore/AdminDashboardStatsStore.php`):
 
-- New Products: published products created in the period, excluding subscription-pack and `subscription` product types and the advertisement product (`:307-345`; types filter `dokan_rest_admin_dashboard_exclude_product_types`).
-- New Vendor Registration: users registered in the period whose capabilities contain `seller` (`:391-432`).
-- New Customers: users registered in the period whose capabilities contain `customer` (`:178-219`). The period is compared with the same plain dates, so a Customer who registers during the last day of the range is not counted.
-- Order Cancellation Rate: share of `shop_order` posts created in the period with status `wc-cancelled`, counting parent Orders and Suborders alike (`:230-296`). It reads the `wp_posts` table, so a store that keeps its orders in WooCommerce's order tables (HPOS) without compatibility mode has no such posts and the rate shows 0.00 %.
-- Recurring Customers: distinct customers with a non-excluded order in the period who also ordered before the previous period began (`:98-167`).
+- New Products: published products created in the period, excluding subscription-pack and `subscription` product types and the advertisement product (`::get_new_products_data()`; types filter `dokan_rest_admin_dashboard_exclude_product_types`).
+- New Vendor Registration: users registered in the period whose capabilities contain `seller` (`::get_new_vendor_registration_data()`).
+- New Customers: users registered in the period whose capabilities contain `customer` (`::get_new_customers_data()`). The period is compared with the same plain dates, so a Customer who registers during the last day of the range is not counted.
+- Order Cancellation Rate: share of `shop_order` posts created in the period with status `wc-cancelled`, counting parent Orders and Suborders alike (`::get_order_cancellation_rate_data()`). It reads the `wp_posts` table, so a store that keeps its orders in WooCommerce's order tables (HPOS) without compatibility mode has no such posts and the rate shows 0.00 %.
+- Recurring Customers: distinct customers with a non-excluded order in the period who also ordered before the previous period began (`::get_recurring_customers_data()`).
 
 ## Settings that change it
 
@@ -50,7 +50,7 @@ Settings: defaults; global Commission `fixed` 10 % + 0 flat. Today is 15 June; t
 
 ## Edge cases
 
-- **Parent Order rows count as a Vendor "0".** Parent Orders are stored with `vendor_id = 0` and a full Earning (`lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:112-117`, `:236-255`), so any period that contains a multi-vendor checkout counts one more.
+- **Parent Order rows count as a Vendor "0".** Parent Orders are stored with `vendor_id = 0` and a full Earning (`lite:includes/Analytics/Reports/Orders/Stats/DataStore.php::update()`, `::get_vendor_id_from_order()`), so any period that contains a multi-vendor checkout counts one more.
 - **The end date is a plain date.** `BETWEEN '2026-06-01' AND '2026-06-15'` stops at 15 June 00:00:00, so orders created later on the last day are not counted. For the running month this means today's orders do not yet make a Vendor active.
 - **Refunded-to-zero orders**: once a full refund is imported the row's Earning is 0, so that order no longer makes its Vendor active.
 
@@ -66,4 +66,4 @@ None recorded.
 
 None.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

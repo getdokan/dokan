@@ -4,24 +4,24 @@ Status: Accepted (retroactive — documents existing code)
 
 ## Context
 
-Before the React admin dashboard, Dokan's admin overview showed "This month" sales, orders and earning against last month, with an overview chart. That data is still served by `GET dokan/v1/admin/report/summary` and `GET dokan/v1/admin/report/overview` (`AdminReportController`, `lite:includes/REST/AdminReportController.php:25`, `:33-50`), built on Dokan's own `dokan_orders` table rather than WooCommerce Analytics. Teammates ask "what is 'earning' in that report?" and "why does it disagree with Analytics?".
+Before the React admin dashboard, Dokan's admin overview showed "This month" sales, orders and earning against last month, with an overview chart. That data is still served by `GET dokan/v1/admin/report/summary` and `GET dokan/v1/admin/report/overview` (`lite:includes/REST/AdminReportController.php::$base`, `::register_routes()`), built on Dokan's own `dokan_orders` table rather than WooCommerce Analytics. Teammates ask "what is 'earning' in that report?" and "why does it disagree with Analytics?".
 
 ## Rule
 
-`dokan_admin_report_data()` (`lite:includes/Admin/functions.php:45-115`) selects from `dokan_orders` joined to the order table and returns, per day or per month:
+`dokan_admin_report_data()` (`lite:includes/Admin/functions.php::dokan_admin_report_data()`) selects from `dokan_orders` joined to the order table and returns, per day or per month:
 
-- `order_total` = `SUM(dokan_orders.order_total)` — the Vendor order's total after refunds, including tax and shipping (every save of a Vendor order rewrites `order_total` = order total − total refunded and `net_amount` = the refund-adjusted Earning, `VendorBalanceUpdateHandler::update_dokan_order_table()`, `lite:includes/Order/VendorBalanceUpdateHandler.php:146-210`);
-- `earning` = `SUM(dokan_orders.order_total − dokan_orders.net_amount)` (`lite:includes/Admin/functions.php:98`) — everything on the Vendor order that is not the Vendor's Earning: Commission, admin-routed shipping and tax, and gateway fees;
+- `order_total` = `SUM(dokan_orders.order_total)` — the Vendor order's total after refunds, including tax and shipping (every save of a Vendor order rewrites `order_total` = order total − total refunded and `net_amount` = the refund-adjusted Earning, `lite:includes/Order/VendorBalanceUpdateHandler.php::update_dokan_order_table()`);
+- `earning` = `SUM(dokan_orders.order_total − dokan_orders.net_amount)` — everything on the Vendor order that is not the Vendor's Earning: Commission, admin-routed shipping and tax, and gateway fees;
 - `total_orders` = `COUNT(DISTINCT order id)`,
 
 for rows where:
 
-- `seller_id` is the requested Vendor, or `!= 0` for all Vendors (`:95`, `:106`) — `dokan_orders` holds Vendor orders only, so parent Orders are never counted;
-- the order is not trashed (`:107`);
-- `dokan_orders.order_status IN ('wc-on-hold', 'wc-completed', 'wc-processing')` (`:108`);
-- the order creation date (`post_date`, or HPOS `date_created_gmt` compared with UTC-converted dates) is within the range (`:70-91`). The default range is the first of the current month to today.
+- `seller_id` is the requested Vendor, or `!= 0` for all Vendors — `dokan_orders` holds Vendor orders only, so parent Orders are never counted;
+- the order is not trashed;
+- `dokan_orders.order_status IN ('wc-on-hold', 'wc-completed', 'wc-processing')`;
+- the order creation date (`post_date`, or HPOS `date_created_gmt` compared with UTC-converted dates) is within the range. The default range is the first of the current month to today.
 
-`dokan_get_sales_count()` (`lite:includes/functions.php:1822-1922`) sums those rows for the current month, the previous calendar month and an optional custom range, and computes the change between them. The SQL can be extended through `dokan_report_left_join` and `dokan_report_where`, and the rows through `dokan_get_admin_report_data`.
+`dokan_get_sales_count()` (`lite:includes/functions.php::dokan_get_sales_count()`) sums those rows for the current month, the previous calendar month and an optional custom range, and computes the change between them. The SQL can be extended through `dokan_report_left_join` and `dokan_report_where`, and the rows through `dokan_get_admin_report_data`.
 
 ## Settings that change it
 
@@ -55,4 +55,4 @@ No recorded reason; the query predates WooCommerce Analytics support.
 
 - Rename the field to "admin total" or retire the endpoint in favour of the Analytics-based reports.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

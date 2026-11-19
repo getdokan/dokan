@@ -8,11 +8,11 @@ Vendors sometimes try to split a Withdraw into several requests, or ask why thei
 
 ## Rule
 
-- **One open request per Vendor.** Before creating a request, both entry points call `Withdraw\Manager::has_pending_request()` (`lite:includes/Withdraw/Manager.php:223-242`), which looks for any `dokan_withdraw` row of that Vendor with status `0` (pending), and refuse when one exists:
-  - AJAX `dokan_handle_withdraw_request` (`lite:includes/Withdraw/Hooks.php:176-178`): "You already have a pending withdraw request."
-  - REST `POST dokan/v1/withdraw` (`lite:includes/REST/WithdrawController.php:470-472`): HTTP 400 "You already have a pending withdraw request". This includes an admin creating a request on behalf of a Vendor.
-  - The vendor dashboard form is not rendered while a request is pending (`lite:includes/Dashboard/Templates/Withdraw.php:493-497`).
-- **A pending request reserves nothing.** Creation writes only the `dokan_withdraw` row (`Withdraw::create()`, `lite:includes/Withdraw/Withdraw.php:436-484`); no ledger row is written until approval ([ADR-0056](./0056-a-withdraw-moves-money-only-when-the-admin-approves-it-and-approval-is-final.md)). The Balance shown to the Vendor still includes the requested amount.
+- **One open request per Vendor.** Before creating a request, both entry points call `Withdraw\Manager::has_pending_request()` (`lite:includes/Withdraw/Manager.php::has_pending_request()`), which looks for any `dokan_withdraw` row of that Vendor with status `0` (pending), and refuse when one exists:
+  - AJAX `dokan_handle_withdraw_request` (`lite:includes/Withdraw/Hooks.php::ajax_handle_withdraw_request()`): "You already have a pending withdraw request."
+  - REST `POST dokan/v1/withdraw` (`lite:includes/REST/WithdrawController.php::create_item()`): HTTP 400 "You already have a pending withdraw request". This includes an admin creating a request on behalf of a Vendor.
+  - The vendor dashboard form is not rendered while a request is pending (`lite:includes/Dashboard/Templates/Withdraw.php::withdraw_request_popup_form_content()`).
+- **A pending request reserves nothing.** Creation writes only the `dokan_withdraw` row (`Withdraw::create()`, `lite:includes/Withdraw/Withdraw.php::create()`); no ledger row is written until approval ([ADR-0056](./0056-a-withdraw-moves-money-only-when-the-admin-approves-it-and-approval-is-final.md)). The Balance shown to the Vendor still includes the requested amount.
 - **The request is re-checked at approval.** Because nothing was reserved, approval re-runs the full validation ([ADR-0057](./0057-a-withdraw-must-be-at-least-the-minimum-withdraw-limit-and-at-most-the-balance-and-there-is-no-maximum-limit.md)). If refunds reduced the Balance below the requested amount meanwhile, approval fails and the request stays pending.
 - **The slot frees up on cancellation or approval.** Once the request is cancelled (status `2`) or approved (status `1`), `has_pending_request()` no longer finds it and the Vendor may request again.
 
@@ -27,14 +27,13 @@ Vendor Balance 300.00, minimum limit 50, no charges.
 1. The Vendor requests 200.00. A pending row is created. The dashboard still shows a Balance of 300.00 and no request form.
 2. The Vendor calls `POST dokan/v1/withdraw` for 100.00: rejected with HTTP 400.
 3. A refund credit of 150.00 is recorded. The Balance becomes 150.00.
-4. The admin tries to approve the 200.00 request: validation fails with `dokan_withdraw_not_enough_balance`. A single `PUT dokan/v1/withdraw/{id}` returns that message as `dokan_rest_withdraw_error`, HTTP 400 (`lite:includes/REST/WithdrawController.php:588-592`); the batch endpoint the admin screen uses returns only the id under `failed.approved`, and the screen refreshes the list without showing it (`lite:src/admin/dashboard/pages/withdraw/index.tsx:748-757`). The request remains pending, and the Vendor still cannot create a new one until the admin or the Vendor cancels it.
+4. The admin tries to approve the 200.00 request: validation fails with `dokan_withdraw_not_enough_balance`. A single `PUT dokan/v1/withdraw/{id}` returns that message as `dokan_rest_withdraw_error`, HTTP 400 (`lite:includes/REST/WithdrawController.php::update_item()`); the batch endpoint the admin screen uses returns only the id under `failed.approved`, and the screen refreshes the list without showing it (`lite:src/admin/dashboard/pages/withdraw/index.tsx::handleBulkAction()`). The request remains pending, and the Vendor still cannot create a new one until the admin or the Vendor cancels it.
 5. The Vendor cancels it and requests 150.00, which the admin approves. The Balance becomes 0.00.
 
 ## Edge cases
 
 - **Admins can still edit the pending row** (amount, method, note) through the REST update endpoint; edits are validated like an approval but do not create a second row.
-- **Vendor staff** act for their Vendor (`dokan_get_current_user_id()` resolves to the Vendor on the AJAX path), so a staff member and the Vendor share the single slot. Staff cannot cancel the request, though: the dashboard cancel link and `GET`/`PUT dokan/v1/withdraw/{id}` check ownership against `get_current_user_id()`, the staff member's own id (`lite:includes/Dashboard/Templates/Withdraw.php:126`, `:137`; `lite:includes/REST/WithdrawController.php:206-207`), so only the Vendor or the admin can free the slot.
-- **Only creation checks the slot.** The admin `PUT dokan/v1/withdraw/{id}` never calls `has_pending_request()` (`lite:includes/REST/WithdrawController.php:539-614`), so it can set a cancelled or approved request back to pending while another request of the same Vendor is pending. The batch Approve also accepts a cancelled id, because the validator rejects only an already approved row (`:693-713`).
+- **Vendor staff** act for their Vendor (`dokan_get_current_user_id()` resolves to the Vendor on the AJAX path), so a staff member and the Vendor share the single slot. Staff cannot cancel the request, though: the dashboard cancel link and `GET`/`PUT dokan/v1/withdraw/{id}` check ownership against `get_current_user_id()`, the staff member's own id (`lite:includes/Dashboard/Templates/Withdraw.php::handle_cancel_request()`; `lite:includes/REST/WithdrawController.php::get_item_permissions_check()`), so only the Vendor or the admin can free the slot.
 
 ## Why
 
@@ -49,4 +48,4 @@ No recorded decision. A single open request keeps the admin's approval queue to 
 
 - Show "requested, awaiting approval" separately from the available Balance in the dashboard so Vendors do not read an unchanged Balance as a failed request.
 
-_Verified against Lite @1808fb2ac / Pro @c6096e669 / WooCommerce 11.2.1 — 2026-11-12._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

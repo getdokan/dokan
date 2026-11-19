@@ -8,20 +8,20 @@ The Dokan admin dashboard (WP Admin → Dokan → Dashboard, React, since 4.1.0)
 
 ## Rule
 
-`AdminDashboardStatsController::get_all_time_stats()` (`lite:includes/REST/AdminDashboardStatsController.php:486-580`) builds the money tiles from WooCommerce's orders-stats query (`Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query`, imported as `DataStore`) with only a `fields` argument (`:521-532`):
+`AdminDashboardStatsController::get_all_time_stats()` (`lite:includes/REST/AdminDashboardStatsController.php::get_all_time_stats()`) builds the money tiles from WooCommerce's orders-stats query (`Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query`, imported as `DataStore`) with only a `fields` argument:
 
 ```php
 [ 'fields' => [ 'total_sales', 'total_admin_commission' ] ]   // filter: dokan_rest_admin_dashboard_all_time_stats_sales_args
 ```
 
-No `before` or `after` is passed. WooCommerce's reports data store fills them from its defaults (`DataStore::get_data()` merges `get_default_query_vars()`, `wc:src/Admin/API/Reports/DataStore.php:237-239`, `:263-272`): `before` = now and `after` = now minus one week (`TimeInterval::default_after()`, `wc:src/Admin/API/Reports/TimeInterval.php:62-64`). The query also passes through Dokan's analytics filters, so it:
+No `before` or `after` is passed. WooCommerce's reports data store fills them from its defaults (`get_data()` merges `get_default_query_vars()`, `wc:src/Admin/API/Reports/DataStore.php::get_data()`, `::get_default_query_vars()`): `before` = now and `after` = now minus one week (`wc:src/Admin/API/Reports/TimeInterval.php::default_after()`). The query also passes through Dokan's analytics filters, so it:
 
 - covers **the last seven days** up to now, by the WooCommerce date type (default `date_paid`);
 - counts Vendor orders, single-vendor Orders and marketplace-owned orders, never parent Orders ([ADR-0098](./0098-analytics-count-each-sale-once-at-the-vendor-order-level-and-never-count-parent-orders.md));
 - leaves out the excluded statuses ([ADR-0101](./0101-reports-leave-out-the-order-statuses-excluded-in-woocommerce-analytics-settings.md));
 - reports **Total Sales** as WooCommerce `total_sales` (gross order totals, minus refund rows in the window) and **Total Commissions** as `SUM(admin_commission)` (formula Commission plus admin fees, net of refunds; see [ADR-0105](./0105-the-commission-figure-in-reports-includes-shipping-tax-and-fees-routed-to-the-admin-minus-the-admins-gateway-fee.md)).
 
-The other tiles are lifetime: published products excluding subscription packs and the advertisement product (`lite:includes/REST/AdminDashboardStatsController.php:488-500`), approved Vendors (`:503-507`), users with the customer role (`:509-511`) and Total Orders ([ADR-0103](./0103-the-admin-dashboard-total-orders-tile-counts-parent-orders-and-suborders-alike.md)).
+The other tiles are lifetime: published products excluding subscription packs and the advertisement product, approved Vendors, users with the customer role (all in `lite:includes/REST/AdminDashboardStatsController.php::get_all_time_stats()`) and Total Orders ([ADR-0103](./0103-the-admin-dashboard-total-orders-tile-counts-parent-orders-and-suborders-alike.md)).
 
 ## Settings that change it
 
@@ -54,4 +54,4 @@ None recorded.
 
 - Pass an explicit `after` (for example the WooCommerce install date) and `before` = now, or relabel the tiles.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

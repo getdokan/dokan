@@ -4,7 +4,7 @@ Status: Accepted (retroactive — no recorded decision; documents observed behav
 
 ## Context
 
-Selling Activation (CONTEXT.md) is separate from holding the Vendor role: a Pending Vendor (never approved) and a disabled Vendor (approval withdrawn) are still Vendors with the `seller` role and the `dokandar` capability (Lite ADR 0010). Teammates are asked what such a Vendor can still do. Lite has no single "suspended" mode; instead individual screens and endpoints check `dokan_is_seller_enabled()` (`lite:includes/functions.php:1172-1177`). This ADR lists those checks so the intended rule is written down in one place.
+Selling Activation (CONTEXT.md) is separate from holding the Vendor role: a Pending Vendor (never approved) and a disabled Vendor (approval withdrawn) are still Vendors with the `seller` role and the `dokandar` capability (Lite ADR 0010). Teammates are asked what such a Vendor can still do. Lite has no single "suspended" mode; instead individual screens and endpoints check `dokan_is_seller_enabled()` (`lite:includes/functions.php::dokan_is_seller_enabled()`). This ADR lists those checks so the intended rule is written down in one place.
 
 ## Rule
 
@@ -14,18 +14,18 @@ Checks that implement this:
 
 | Area | Behaviour when not enabled | Code |
 |---|---|---|
-| Dashboard home, Orders, Settings, Withdraw pages | Show the `global/seller-warning` notice through `dokan_seller_not_enabled_notice()` | `lite:includes/Dashboard/Templates/Dashboard.php:49-53`, `Orders.php:38-43`, `Settings.php:42-47`, `Withdraw.php:190-195`; notice at `lite:includes/template-tags.php:464-466` |
-| Product list "Add new product" button and empty-state call to action | Hidden | `lite:templates/products/products-listing.php:66`, `:283` |
-| Classic new-product and edit-product forms | Not rendered | `lite:templates/products/new-product.php:154`, `lite:templates/products/edit-product-single.php:238` |
-| React dashboard | `can_add_product` is false | `lite:includes/Assets.php:195` |
-| REST product create (`dokan/v1/products`) | `400` "Your account is not enabled for selling" unless the caller has `manage_options` | `ProductController::validation_before_create_item()`, `lite:includes/REST/ProductController.php:383-385` |
-| REST product create (`dokan/v3/products`) | `403` "Your account is not enabled for selling." unless the caller has `manage_woocommerce` | `ProductControllerV3::create_item_permissions_check()`, `lite:includes/REST/ProductControllerV3.php:55-57` |
-| REST product publish or schedule (`dokan/v3/products`) | The product is saved as `pending` instead, unless the caller has `manage_woocommerce` | `ProductControllerV3::enforce_publish_moderation()`, `lite:includes/REST/ProductControllerV3.php:402-408` |
-| REST product editor form init (v3) | `401` | `ProductControllerV3::init_form_fields()`, `lite:includes/REST/ProductControllerV3.php:627-633` |
-| Withdraw request (dashboard AJAX and REST `POST /dokan/v1/withdraw`) | `WP_Error` `dokan_withdraw_seller_not_enabled` | `Withdraw\Manager::is_valid_approval_request()`, `lite:includes/Withdraw/Manager.php:61-63`, called from `lite:includes/Withdraw/Hooks.php:205` and `lite:includes/REST/WithdrawController.php:474` |
-| Store Admin approving a pending withdraw request (REST update with a status, REST batch approve) | Refused with the same error while the Vendor is not enabled | the same validator, called at `lite:includes/REST/WithdrawController.php:588` and `:699` |
-| Withdraw request cancellation (dashboard) | Error "Your account is not enabled for selling" | `lite:includes/Dashboard/Templates/Withdraw.php:137-140` |
-| Abilities (MCP / machine context) | A Store Admin who is also a Vendor counts as the acting Vendor only while their own selling is enabled | `lite:includes/Abilities/Definitions/CurrentVendor.php:94-95`, `lite:includes/Abilities/ProductAbilityScope.php:608-612` |
+| Dashboard home, Orders, Settings, Withdraw pages | Show the `global/seller-warning` notice through `dokan_seller_not_enabled_notice()` | `lite:includes/Dashboard/Templates/Dashboard.php::show_seller_dashboard_notice()`, `lite:includes/Dashboard/Templates/Orders.php::show_seller_enable_message()`, `lite:includes/Dashboard/Templates/Settings.php::show_enable_seller_message()`, `lite:includes/Dashboard/Templates/Withdraw.php::show_seller_enable_message()`; notice in `lite:includes/template-tags.php::dokan_seller_not_enabled_notice()` |
+| Product list "Add new product" button and empty-state call to action | Hidden | `lite:templates/products/products-listing.php` (the "Add new product" link and the empty-state message) |
+| Classic new-product and edit-product forms | Not rendered | `lite:templates/products/new-product.php` (the new-product form), `lite:templates/products/edit-product-single.php` (the edit form) |
+| React dashboard | `can_add_product` is false | `lite:includes/Assets.php::add_product_listing_localized_args()` |
+| REST product create (`dokan/v1/products`) | `400` "Your account is not enabled for selling" unless the caller has `manage_options` | `lite:includes/REST/ProductController.php::validation_before_create_item()` |
+| REST product create (`dokan/v3/products`) | `403` "Your account is not enabled for selling." unless the caller has `manage_woocommerce` | `lite:includes/REST/ProductControllerV3.php::create_item_permissions_check()` |
+| REST product publish or schedule (`dokan/v3/products`) | The product is saved as `pending` instead, unless the caller has `manage_woocommerce` | `lite:includes/REST/ProductControllerV3.php::enforce_publish_moderation()` |
+| REST product editor form init (v3) | `401` | `lite:includes/REST/ProductControllerV3.php::init_form_fields()` |
+| Withdraw request (dashboard AJAX and REST `POST /dokan/v1/withdraw`) | `WP_Error` `dokan_withdraw_seller_not_enabled` | `lite:includes/Withdraw/Manager.php::is_valid_approval_request()`, called from `lite:includes/Withdraw/Hooks.php::ajax_handle_withdraw_request()` and `lite:includes/REST/WithdrawController.php::create_item()` |
+| Store Admin updating a withdraw request over REST (any single-item `PUT`, with or without a new status, so approving and also editing the amount, method or note) and REST batch approve | Refused with the same error while the Vendor is not enabled, because every Store Admin single-item update re-runs the full request validation | the same validator, called from `lite:includes/REST/WithdrawController.php::update_item()` and `::batch_items()` |
+| Withdraw request cancellation | Error "Your account is not enabled for selling" | `lite:includes/Dashboard/Templates/Withdraw.php::handle_cancel_request()` |
+| Abilities (MCP / machine context) | A Store Admin who is also a Vendor counts as the acting Vendor only while their own selling is enabled | `lite:includes/Abilities/Definitions/CurrentVendor.php::execute()`, `lite:includes/Abilities/ProductAbilityScope.php::resolve_create_vendor()` |
 
 Not gated: viewing the dashboard, editing store settings, viewing existing orders, and the Earnings already on the Balance (the notice is shown above the page content; it does not replace it). The REST product endpoints keep an exception (see the table): on `dokan/v1` a caller with `manage_options` can still create products for the Vendor, and on `dokan/v3` a caller with `manage_woocommerce` can.
 
@@ -42,7 +42,7 @@ Vendor V is disabled while holding a Balance of 120.00 and two processing Vendor
 ## Edge cases
 
 - **Existing orders keep flowing.** Disabling a Vendor does not cancel or reassign their open Vendor orders, and Earnings from them still reach the Balance when they complete. Only new purchases stop, because the products are no longer purchasable.
-- **Pending withdraw requests freeze too.** A request the Vendor placed before being disabled cannot be approved by the Store Admin until the Vendor is enabled again, because approval re-runs the same validation (see the table).
+- **Pending withdraw requests freeze too.** A request the Vendor placed before being disabled cannot be approved, or otherwise edited over REST, by the Store Admin until the Vendor is enabled again, because every Store Admin single-item update re-runs the same validation whether or not it changes the status (see the table).
 - **Admins as Vendors.** Administrators and shop managers hold `dokandar` but usually have no `dokan_enable_selling` row, so by this rule they are "not enabled" Vendors. The `manage_options` exception keeps `dokan/v1/products` creation working for administrators (not shop managers); the dashboard's "Add new product" button and the classic product forms stay hidden for them.
 
 ## Why
@@ -58,4 +58,4 @@ No recorded decision. The per-screen checks were added over several releases (`@
 
 - Consider a single gate (for example in the abilities layer, Lite ADR 0006) that every "create" or "money-out" action consults, instead of per-screen checks.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

@@ -8,18 +8,18 @@ With WooCommerce Analytics off, the Vendor dashboard shows a "Sales" chart for t
 
 ## Rule
 
-**Query.** `dokan_get_order_report_data()` (`lite:includes/reports.php:20-248`), a copy of WooCommerce's legacy `WC_Admin_Report::get_order_report_data()`, selects from `wp_posts` joined to `dokan_orders` and keeps only rows where (`:114-126`):
+**Query.** `dokan_get_order_report_data()` (`lite:includes/reports.php::dokan_get_order_report_data()`), a copy of WooCommerce's legacy `WC_Admin_Report::get_order_report_data()`, selects from `wp_posts` joined to `dokan_orders` and keeps only rows where:
 
 - `post_type = 'shop_order'` and `post_status != 'trash'`;
 - `dokan_orders.seller_id` = the current Vendor (`dokan_get_current_user_id()`, so Vendor Staff see their Vendor);
 - `dokan_orders.order_status` is in `wc-completed`, `wc-processing`, `wc-on-hold`, filterable through WooCommerce's `woocommerce_reports_order_statuses`;
 - when a range is requested, `DATE(post_date)` is between the start and end dates inclusive (order creation date, site time).
 
-**Chart.** `dokan_dashboard_sales_overview()` (`:261-267`) asks for the first day of the current month to today, grouped by day; `dokan_sales_overview_chart_data()` (`:285-338`) plots `SUM(_order_total)` as "Sales total" and `COUNT(DISTINCT ID)` as "Number of orders". `_order_total` is the WooCommerce order total meta: gross, including tax and shipping, and not reduced by refunds.
+**Chart.** `dokan_dashboard_sales_overview()` (`lite:includes/reports.php::dokan_dashboard_sales_overview()`) asks for the first day of the current month to today, grouped by day; `dokan_sales_overview_chart_data()` (`::dokan_sales_overview_chart_data()`) plots `SUM(_order_total)` as "Sales total" and `COUNT(DISTINCT ID)` as "Number of orders". `_order_total` is the WooCommerce order total meta: gross, including tax and shipping, and not reduced by refunds.
 
-**Caching.** Results are cached per Vendor (group `report_data_seller_{vendor_id}`) for 1 hour when the range ends today and 24 hours otherwise (`:227-245`).
+**Caching.** Results are cached per Vendor (group `report_data_seller_{vendor_id}`) for 1 hour when the range ends today and 24 hours otherwise (`lite:includes/reports.php::dokan_get_order_report_data()`).
 
-**Only without the premium add-on.** `includes/reports.php` is loaded only when the premium add-on is not active (`lite:dokan-class.php:290-292`). Because the functions are pluggable (`function_exists` guards), an add-on that defines `dokan_get_order_report_data()` changes these rules everywhere the function is called.
+**Only without the premium add-on.** `includes/reports.php` is loaded only when the premium add-on is not active (`lite:dokan-class.php::includes()`). Because the functions are pluggable (`function_exists` guards), an add-on that defines `dokan_get_order_report_data()` changes these rules everywhere the function is called.
 
 ## Settings that change it
 
@@ -42,11 +42,11 @@ The chart shows on 3 June: Sales total 155.00, 2 orders (refund not deducted); o
 
 - **Refunded orders are left out**, and partially refunded orders are counted at their full original total.
 - **Storage.** The query reads `wp_posts` and `wp_postmeta`. On a store using WooCommerce's order tables (HPOS) without compatibility sync, it finds no orders.
-- **REST sales report.** `VendorDashboardController::get_sales_reports()` (`lite:includes/REST/VendorDashboardController.php:186-270`) uses the same function with extra columns: `SUM(_qty)` of line items and `SUM(dokan_orders.net_amount)` as `total_earnings`.
+- **REST sales report.** `VendorDashboardController::get_sales_reports()` (`lite:includes/REST/VendorDashboardController.php::get_sales_reports()`) uses the same function with extra columns: `SUM(_qty)` of line items and `SUM(dokan_orders.net_amount)` as `total_earnings`.
 
 ## Why
 
-The function was cloned from WooCommerce's legacy report class (docblock, `lite:includes/reports.php:7-9`) and kept WooCommerce's default report statuses.
+The function was cloned from WooCommerce's legacy report class (docblock above `lite:includes/reports.php::dokan_get_order_report_data()`) and kept WooCommerce's default report statuses.
 
 ## Consequences & risks
 
@@ -56,4 +56,4 @@ The function was cloned from WooCommerce's legacy report class (docblock, `lite:
 
 - Read from `dokan_orders.order_total` (after refunds) or from `wc_order_stats` so the chart matches the counters.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

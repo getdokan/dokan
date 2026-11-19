@@ -283,7 +283,7 @@ sequenceDiagram
 - Priority 80, `update_dokan_order_table`: recalculates the Earning (refund-adjusted) and updates `dokan_orders.net_amount` and `order_total` when they differ; clears earning caches.
 - Priority 99, `handle_order_edit`: recalculates without refund adjustment, adds back the Vendor gateway fee (`get_vendor_earning() + get_vendor_gateway_fee()`), compares with the stored ledger `debit` (or a short-lived transient), and updates the `dokan_orders` ledger row's `debit` when it changed. Refunds therefore stay as separate credit rows instead of reducing the order's debit.
 
-`lite:includes/Order/Manager.php::delete_seller_order()` deletes the `dokan_orders` row (optionally scoped by Vendor), every `dokan_refund` row for the order, fires `dokan_after_deleting_seller_order`, deletes ledger rows with `trn_id = order id` and `trn_type` in (`dokan_orders`, `dokan_refund`, `dokan_withdraw`), and deletes reverse-withdrawal rows (`trn_type` in `order_commission`, `manual_order_commission`, `order_refund`). It runs before every `dokan_sync_insert_order` insert and, through `delete_seller_order_with_suborders`, when an order is permanently deleted in admin (`woocommerce_delete_order`, fired in `wc:includes/data-stores/abstract-wc-order-data-store-cpt.php::delete()` and `wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php::delete()`, or `delete_post` for CPT storage).
+`lite:includes/Order/Manager.php::delete_seller_order()` deletes the `dokan_orders` row (optionally scoped by Vendor), every `dokan_refund` row for the order, fires `dokan_after_deleting_seller_order`, deletes the order's Balance ledger rows (Earning and refund entries), and deletes reverse-withdrawal rows (`trn_type` in `order_commission`, `manual_order_commission`, `order_refund`). It runs before every `dokan_sync_insert_order` insert and, through `delete_seller_order_with_suborders`, when an order is permanently deleted in admin (`woocommerce_delete_order`, fired in `wc:includes/data-stores/abstract-wc-order-data-store-cpt.php::delete()` and `wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php::delete()`, or `delete_post` for CPT storage).
 
 ### 4.7 Stock and coupons
 
@@ -546,7 +546,7 @@ Order REST controllers are summarized here only as consumers of this subsystem.
 
 Non-REST entry points: `Frontend\Hooks::bulk_order_status_change` on `template_redirect` (nonce `bulk_order_status_change`, capability `dokan_manage_order`, `order_status_change` not `off`), and the vendor-dashboard single-order status change, AJAX `dokan_change_status` (`lite:includes/Ajax.php::change_order_status()`: nonce `dokan_change_status`, capability `dokan_manage_order`, `order_status_change` must be `on`, Ownership through `dokan_is_seller_has_order()`), whose switch to refunded is then processed by `Hooks::manage_refunded_for_order`.
 
-The order's current status is not checked by the AJAX handler or the REST update. The dashboard single-order screen hides the Edit control for `cancelled` and `refunded` orders (`lite:templates/orders/details.php`, the order-status Edit link and the status form), and the shared bulk helper skips `cancelled` and `refunded`, compared as unprefixed values, both as the target and as the current status (`lite:includes/Order/functions.php::dokan_apply_bulk_order_status_change()`). See ADR-0046.
+`cancelled` and `refunded` are final for the Vendor (ADR-0046): the dashboard single-order screen hides the Edit control for orders in either status (`lite:templates/orders/details.php`, the order-status Edit link and the status form), and the shared bulk helper skips orders whose current status is `cancelled` or `refunded` (`lite:includes/Order/functions.php::dokan_apply_bulk_order_status_change()`).
 
 `Order\Ajax` registers `wp_ajax_dokan_search_downloadable_products`, which is unrelated to money flow.
 
@@ -611,4 +611,4 @@ The order's current status is not checked by the AJAX handler or the REST update
 - The exact parameter schemas and response shapes of the order REST controllers are out of scope here.
 - `Withdraw\Hooks::update_vendor_balance` is documented only as a ledger writer; Withdraw lifecycle belongs to a separate document.
 
-_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

@@ -8,21 +8,21 @@ The admin dashboard shows a daily sales chart for a selected month (`GET dokan/v
 
 ## Rule
 
-`AdminDashboardStatsController::get_sales_chart()` (`lite:includes/REST/AdminDashboardStatsController.php:589-610`) calls `VendorOrderStatsStore::get_sales_chart_data( $start, $end, true )` (`lite:includes/Models/DataStore/VendorOrderStatsStore.php:153-222`), which per day returns
+`AdminDashboardStatsController::get_sales_chart()` (`lite:includes/REST/AdminDashboardStatsController.php::get_sales_chart()`) calls `VendorOrderStatsStore::get_sales_chart_data( $start, $end, true )` (`lite:includes/Models/DataStore/VendorOrderStatsStore.php::get_sales_chart_data()`), which per day returns
 
 - `total_sales` = `SUM(wc_order_stats.total_sales)`,
-- `net_sales` = `SUM(wc_order_stats.net_total)` (order total minus tax and shipping, `wc:src/Admin/API/Reports/Orders/Stats/DataStore.php:772-775`),
+- `net_sales` = `SUM(wc_order_stats.net_total)` (order total minus tax and shipping, `wc:src/Admin/API/Reports/Orders/Stats/DataStore.php::get_net_total()`),
 - `commissions` = `SUM(dokan_order_stats.admin_commission)`,
 - `order_count` = `COUNT(order_id)`,
 
 over rows that:
 
-- are **any `order_type`**: no type condition is added (`lite:includes/Models/DataStore/VendorOrderStatsStore.php:157-186`), so parent Orders (type 0), Suborders, single-vendor Orders and marketplace-owned orders are all summed;
-- are not in an excluded status (`ReportUtil::get_exclude_order_statuses()`, `:172-176`);
-- have `total_sales > 0` (`:178`), which drops every refund row and every zero-total order;
-- were created between the first day of the month and its last day, or today for the running month (`:179-186`; range from `parse_date_range()`, `lite:includes/REST/AdminDashboardStatsController.php:663-718`).
+- are **any `order_type`**: no type condition is added, so parent Orders (type 0), Suborders, single-vendor Orders and marketplace-owned orders are all summed;
+- are not in an excluded status (`ReportUtil::get_exclude_order_statuses()`);
+- have `total_sales > 0`, which drops every refund row and every zero-total order;
+- were created between the first day of the month and its last day, or today for the running month (range from `lite:includes/REST/AdminDashboardStatsController.php::parse_date_range()`).
 
-`Orders\Stats\DataStore::update()` computes a full Commission split for parent Orders too (it runs `OrderCommission` for every `shop_order`, `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:112-117`, and line items without an order Vendor resolve their Vendor from the product, `lite:includes/Commission/Strategies/OrderItem.php:44-47`), so a parent row carries the same amounts as its Suborders together. Every multi-vendor checkout therefore appears twice in the chart: once as the parent and once as its Suborders.
+`Orders\Stats\DataStore::update()` computes a full Commission split for parent Orders too (it runs `OrderCommission` for every `shop_order`, `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php::update()`, and line items without an order Vendor resolve their Vendor from the product, `lite:includes/Commission/Strategies/OrderItem.php::__construct()`), so a parent row carries the same amounts as its Suborders together. Every multi-vendor checkout therefore appears twice in the chart: once as the parent and once as its Suborders.
 
 ## Settings that change it
 
@@ -49,7 +49,7 @@ WooCommerce Analytics for the same orders (date type `date_created`): total sale
 ## Edge cases
 
 - Refunds never appear as negative amounts, because refund rows have negative totals and are filtered out. They lower only the Commission stored on the refunded order's row; that row's `total_sales` stays the original order total.
-- The parent row's Commission is computed from the parent's own copy of the line items. Each item's Vendor is taken from the product author when the order has no `_dokan_vendor_id` (`Strategies\OrderItem::__construct()`, `lite:includes/Commission/Strategies/OrderItem.php:44-47`), so the parent row normally equals the sum of its Suborders. It can differ when a Commission formula or Fee recipient changed between the Suborders' first calculation and the parent's, because each order freezes its own terms (Lite ADR 0013).
+- The parent row's Commission is computed from the parent's own copy of the line items. Each item's Vendor is taken from the product author when the order has no `_dokan_vendor_id` (`lite:includes/Commission/Strategies/OrderItem.php::__construct()`), so the parent row normally equals the sum of its Suborders. It can differ when a Commission formula or Fee recipient changed between the Suborders' first calculation and the parent's, because each order freezes its own terms (Lite ADR 0013).
 
 ## Why
 
@@ -63,4 +63,4 @@ None recorded.
 
 - Add `order_type IN (vendor order types)` to `get_sales_chart_data()`, as the Analytics filters do, and decide explicitly whether refunds should be netted per day.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

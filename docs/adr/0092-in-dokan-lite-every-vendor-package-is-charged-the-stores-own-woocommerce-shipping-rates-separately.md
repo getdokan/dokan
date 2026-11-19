@@ -8,11 +8,11 @@ After the cart is split into one package per Vendor ([ADR-0094](./0094-the-cart-
 
 ## Rule
 
-- **Lite registers no shipping method.** There is no `woocommerce_shipping_methods` callback in Lite (the filter fires at `wc:includes/class-wc-shipping.php:152`). A Vendor in Lite cannot define shipping zones, methods or costs.
-- **Rates come from the store admin's WooCommerce zones.** For each package, WooCommerce matches one shipping zone from the package `destination` and loads that zone's enabled methods (`WC_Shipping::load_shipping_methods()`, `wc:includes/class-wc-shipping.php:162-189`), then asks each method for rates for that package only (`WC_Shipping_Method::get_rates_for_package()`, `wc:includes/abstracts/abstract-wc-shipping-method.php:256-262`).
+- **Lite registers no shipping method.** There is no `woocommerce_shipping_methods` callback in Lite (the filter fires in `wc:includes/class-wc-shipping.php::get_shipping_method_class_names()`). A Vendor in Lite cannot define shipping zones, methods or costs.
+- **Rates come from the store admin's WooCommerce zones.** For each package, WooCommerce matches one shipping zone from the package `destination` and loads that zone's enabled methods (`wc:includes/class-wc-shipping.php::load_shipping_methods()`), then asks each method for rates for that package only (`wc:includes/abstracts/abstract-wc-shipping-method.php::get_rates_for_package()`).
 - **Every package is priced and charged on its own.** A flat rate is charged once per Vendor package, and quantity- or cost-based formulas see only that Vendor's items (`contents`, `contents_cost`). The customer chooses one rate per package, and the order total includes the sum of all chosen rates.
-- **No rate means no checkout.** If a Vendor's package matches a zone that offers no rate for it, the customer cannot place the order. Classic checkout adds "No shipping method has been selected…" for every package without a valid chosen rate (`WC_Checkout::validate_checkout()`, `wc:includes/class-wc-checkout.php:1049-1056`); block checkout throws "Sorry, this order requires a shipping option." (`OrderController::validate_selected_shipping_methods()`, `wc:src/StoreApi/Utilities/OrderController.php:694-720`).
-- **WooCommerce Free shipping is evaluated against the whole cart.** WooCommerce's own `free_shipping` method checks the minimum amount against the cart's displayed subtotal and coupons against the whole cart (`WC_Shipping_Free_Shipping::is_available()`, `wc:includes/shipping/free-shipping/class-wc-shipping-free-shipping.php:160-212`). Lite does not change this, so when the cart qualifies, free shipping is offered on every Vendor package in that zone.
+- **No rate means no checkout.** If a Vendor's package matches a zone that offers no rate for it, the customer cannot place the order. Classic checkout adds "No shipping method has been selected…" for every package without a valid chosen rate (`wc:includes/class-wc-checkout.php::validate_checkout()`); block checkout throws "Sorry, this order requires a shipping option." (`wc:src/StoreApi/Utilities/OrderController.php::validate_selected_shipping_methods()`).
+- **WooCommerce Free shipping is evaluated against the whole cart.** WooCommerce's own `free_shipping` method checks the minimum amount against the cart's displayed subtotal and coupons against the whole cart (`wc:includes/shipping/free-shipping/class-wc-shipping-free-shipping.php::is_available()`). Lite does not change this, so when the cart qualifies, free shipping is offered on every Vendor package in that zone.
 - Add-ons may replace pricing by registering their own WooCommerce shipping methods; the package split still decides which items each method sees.
 
 ## Settings that change it
@@ -24,7 +24,7 @@ All settings are WooCommerce's; Lite adds none.
 | WooCommerce → Settings → Shipping → Zones (zone locations and methods) | admin-defined | none | Decides which rates each Vendor package is offered. A package whose destination matches no zone falls into "Locations not covered by your other zones". |
 | Flat rate method "Cost" (per zone instance) | number or formula with `[qty]`, `[cost]`, `[fee]` | empty | Evaluated per package, so charged once per Vendor. |
 | Free shipping method "Requires" + "Minimum order amount" | none / coupon / min_amount / either / both | none | Evaluated against the whole cart, then offered on every package in the zone. |
-| `woocommerce_shipping_hide_rates_when_free` | `yes` / `no` | `no` | `yes`: when free shipping is available in a package, other rates in that package are hidden except local pickup (`wc:includes/class-wc-shipping.php:362-379`). |
+| `woocommerce_shipping_hide_rates_when_free` | `yes` / `no` | `no` | `yes`: when free shipping is available in a package, other rates in that package are hidden except local pickup (`wc:includes/class-wc-shipping.php::calculate_shipping_for_package()`). |
 
 ## Worked example
 
@@ -60,4 +60,4 @@ No decision is recorded. The behaviour follows from splitting packages per Vendo
 - Document clearly in the admin UI that each flat rate is charged per Vendor.
 - If per-Vendor free-shipping thresholds are needed in Lite, filter `woocommerce_shipping_free_shipping_is_available` and re-check the threshold against `$package['contents']`.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._

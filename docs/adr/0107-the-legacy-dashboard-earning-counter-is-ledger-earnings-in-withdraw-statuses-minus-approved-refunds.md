@@ -8,22 +8,22 @@ The legacy Vendor dashboard (WooCommerce Analytics off, see [ADR-0111](./0111-th
 
 ## Rule
 
-The counter prints `dokan_get_seller_earnings( dokan_get_current_user_id() )` (`lite:templates/dashboard/big-counter-widget.php:21-22`; `lite:includes/wc-functions.php:764-772`), which is `Vendor::get_earnings()` (`lite:includes/Vendor/Vendor.php:820-861`) for today. The same figure is the `earnings` field of the Vendor dashboard REST statistics (`lite:includes/REST/VendorDashboardController.php:150`).
+The counter prints `dokan_get_seller_earnings( dokan_get_current_user_id() )` (`lite:templates/dashboard/big-counter-widget.php`, the "Earning" counter; `lite:includes/wc-functions.php::dokan_get_seller_earnings()`), which is `Vendor::get_earnings()` (`lite:includes/Vendor/Vendor.php::get_earnings()`) for today. The same figure is the `earnings` field of the Vendor dashboard REST statistics (`lite:includes/REST/VendorDashboardController.php::get_dashboard_statistics()`).
 
 What `Vendor::get_earnings()` sums is already specified in [ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md). From a reporting point of view that means the counter is:
 
 - **Lifetime, not per period**: every Earning row up to today.
 - **Only matured Earnings**: rows whose `balance_date` is on or before today. Earnings are stamped with `balance_date` = order creation + withdraw threshold days ([ADR-0063](./0063-the-withdraw-threshold-delays-each-earning-by-a-fixed-number-of-days-counted-from-checkout.md)), so recent orders appear only after the threshold.
 - **Only Vendor orders in an earning status**: the "Order Status for Withdraw" statuses plus `wc-refunded`.
-- **Minus approved refund credits only.** Withdraws and gateway-fee rows are not subtracted, so the counter is not the Balance. The Balance is shown separately (`Dashboard::get_seller_balance()`, `lite:includes/Dashboard/Templates/Dashboard.php:325-327`) and defined in [ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md).
+- **Minus approved refund credits only.** Withdraws and gateway-fee rows are not subtracted, so the counter is not the Balance. The Balance is shown separately (`lite:includes/Dashboard/Templates/Dashboard.php::get_seller_balance()`) and defined in [ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md).
 
 The Earning amount on each row is the Vendor order's Earning: formula Earning plus the shipping and tax the Vendor receives, minus the gateway fee the Vendor pays (see [ADR-0105](./0105-the-commission-figure-in-reports-includes-shipping-tax-and-fees-routed-to-the-admin-minus-the-admins-gateway-fee.md) for the same split).
 
 ## Settings that change it
 
-- `dokan_withdraw[withdraw_order_status]` ("Order Status for Withdraw"), default `wc-completed` (`lite:includes/Admin/Settings.php:753-762`). Each selected status adds those Vendor orders' Earnings; `wc-refunded` is always included.
-- Withdraw threshold: `dokan_withdraw[withdraw_date_limit]`, default 0 days, overridden per Vendor by the `withdraw_date_limit` user meta when that meta is not empty (`dokan_get_withdraw_threshold()`, `lite:includes/functions.php:4058-4065`). It delays when each new Earning starts counting.
-- `dokan_withdraw[exclude_cod_payment]` ("Exclude COD Payments", default `off`, `lite:includes/Admin/Settings.php:764-770`): when cash-on-delivery payments are excluded from the balance, those Earnings are never counted (see [ADR-0058](./0058-cash-on-delivery-earnings-stay-out-of-the-withdrawable-balance-only-while-exclude-cod-payments-is-on.md)).
+- `dokan_withdraw[withdraw_order_status]` ("Order Status for Withdraw"), default `wc-completed` (`lite:includes/Admin/Settings.php::get_settings_fields()`, field `withdraw_order_status`). Each selected status adds those Vendor orders' Earnings; `wc-refunded` is always included.
+- Withdraw threshold: `dokan_withdraw[withdraw_date_limit]`, default 0 days, overridden per Vendor by the `withdraw_date_limit` user meta when that meta is not empty (`lite:includes/functions.php::dokan_get_withdraw_threshold()`). It delays when each new Earning starts counting.
+- `dokan_withdraw[exclude_cod_payment]` ("Exclude COD Payments", default `off`, `lite:includes/Admin/Settings.php::get_settings_fields()`, field `exclude_cod_payment`): when cash-on-delivery payments are excluded from the balance, those Earnings are not counted. The setting is not retroactive: it acts on each order's next status change, so Earnings already recorded before it was switched on keep counting until their order changes status (see [ADR-0058](./0058-cash-on-delivery-earnings-stay-out-of-the-withdrawable-balance-only-while-exclude-cod-payments-is-on.md)).
 
 ## Worked example
 
@@ -56,4 +56,4 @@ The counter reuses the Vendor model's lifetime earning query rather than a repor
 
 - Label the counter "Lifetime earning (matured)" and show the threshold in a tooltip.
 
-_Verified against Lite @1808fb2ac / Pro @965848058 / WooCommerce 11.2.1 — 2026-11-13._
+_Verified against Lite @863e6f9c5 / WooCommerce 11.2.1 — 2026-11-19._
