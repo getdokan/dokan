@@ -8,16 +8,16 @@ A Vendor order's Earning is written once, at creation, with an empty ledger stat
 
 ## Rule
 
-**[Lite]** On every WooCommerce status change of an order, Dokan writes the new status, with the `wc-` prefix, into that order's `dokan_orders.order_status` and into the `status` of that order's `dokan_orders`-type Balance row. The status listener itself does not insert, delete or re-price anything. Because `update_status()` saves the order, the same save also fires `woocommerce_update_order`, where the order-edit handlers (priorities 80 and 99) may rewrite `net_amount`, `order_total` and the debit if the recalculated Earning differs ([ADR-0042](./0042-editing-a-vendor-order-recalculates-its-earning-in-the-vendor-balance-ledger.md); `lite:includes/Order/VendorBalanceUpdateHandler.php:30-31`, `:180-201`).
+**[Lite]** On every WooCommerce status change of an order, Dokan writes the new status, with the `wc-` prefix, into that order's `dokan_orders.order_status` and into the `status` of that order's `dokan_orders`-type Balance row. The status listener itself does not insert, delete or re-price anything. Because `update_status()` saves the order, the same save also fires `woocommerce_update_order`, where the order-edit handlers (priorities 80 and 99) may rewrite `net_amount`, `order_total` and the debit if the recalculated Earning differs ([ADR-0042](./0042-editing-a-vendor-order-recalculates-its-earning-in-the-vendor-balance-ledger.md); `lite:includes/Order/VendorBalanceUpdateHandler.php::register_hooks()`, `::update_dokan_order_table()`).
 
-- `Order\Hooks::on_order_status_change` (`lite:includes/Order/Hooks.php:95-186`, priority 10 on `woocommerce_order_status_changed`, `:36`) adds the `wc-` prefix (`:111-114`), then:
-  - updates `dokan_orders.order_status` where `order_id` = the order (`:117-123`);
-  - copies the status to Suborders through the whitelist (`:125-140`; see [ADR-0039](./0039-a-parent-order-status-change-is-copied-to-its-suborders-only-along-an-allowed-transition-list.md));
-  - unless the cash-on-delivery exclusion applies (`:147-173`; see [ADR-0058](./0058-cash-on-delivery-earnings-stay-out-of-the-withdrawable-balance-only-while-exclude-cod-payments-is-on.md)), updates `dokan_vendor_balance.status` where `trn_id` = the order and `trn_type` = `dokan_orders` (`:175-185`).
+- `Order\Hooks::on_order_status_change` (`lite:includes/Order/Hooks.php::on_order_status_change()`, priority 10 on `woocommerce_order_status_changed`, registered in `::__construct()`) adds the `wc-` prefix, then, in the same method:
+  - updates `dokan_orders.order_status` where `order_id` = the order;
+  - copies the status to Suborders through the whitelist (see [ADR-0039](./0039-a-parent-order-status-change-is-copied-to-its-suborders-only-along-an-allowed-transition-list.md));
+  - unless the cash-on-delivery exclusion applies (see [ADR-0058](./0058-cash-on-delivery-earnings-stay-out-of-the-withdrawable-balance-only-while-exclude-cod-payments-is-on.md)), updates `dokan_vendor_balance.status` where `trn_id` = the order and `trn_type` = `dokan_orders`.
 - Only the order's own `dokan_orders`-type row is touched. Refund credits (`trn_type` `dokan_refund`, status `approved`) and Withdraw rows keep their status.
 - For a multi-vendor parent the two updates match no rows, because a parent has none. Each Suborder's rows are updated when the copied status change fires `woocommerce_order_status_changed` for that Suborder.
 - For a single-vendor Order the updates hit the Order's own rows directly.
-- Trashing is handled by a separate listener that writes the current status (`wc-trash`) the same way (`lite:includes/Order/OrderEventListener.php:11-12`, `:75-101`); see [ADR-0045](./0045-trashing-an-order-parks-its-vendor-earning-and-deleting-it-in-wp-admin-erases-its-ledger-rows.md).
+- Trashing is handled by a separate listener that writes the current status (`wc-trash`) the same way (`lite:includes/Order/OrderEventListener.php::__construct()`, `::process_order_status()`); see [ADR-0045](./0045-trashing-an-order-parks-its-vendor-earning-and-deleting-it-in-wp-admin-erases-its-ledger-rows.md).
 
 Amounts change only through other paths: order edits ([ADR-0042](./0042-editing-a-vendor-order-recalculates-its-earning-in-the-vendor-balance-ledger.md)), gateway fees, and refunds ([ADR-0048](./0048-each-refund-is-booked-as-a-separate-dokan-refund-credit-on-the-vendor-balance.md) and the other [refund ADRs](decisions-index.md#refunds)).
 
@@ -25,7 +25,7 @@ Amounts change only through other paths: order edits ([ADR-0042](./0042-editing-
 
 | Setting | Default | Effect |
 |---|---|---|
-| `dokan_withdraw[exclude_cod_payment]` (admin UI: "COD Payments", stored inverted as `include_cod_payments_in_balance`, `lite:includes/Admin/Settings/Schema/SettingsSchema.php:972-998`) | `off` (include), read at `lite:includes/Order/Hooks.php:147` | When `on` and the order's payment method is `cod`, the Balance row's status is **not** updated; `dokan_orders.order_status` and the Suborder copy still happen. Filter `dokan_order_should_exclude_from_vendor_balance` (`lite:includes/Order/Hooks.php:162-169`) can force either outcome per order. |
+| `dokan_withdraw[exclude_cod_payment]` (admin UI: "COD Payments", stored inverted as `include_cod_payments_in_balance`, `lite:includes/Admin/Settings/Schema/SettingsSchema.php::transaction_page()`, field `include_cod_payments_in_balance`) | `off` (include), read in `lite:includes/Order/Hooks.php::on_order_status_change()` | When `on` and the order's payment method is `cod`, the Balance row's status is **not** updated; `dokan_orders.order_status` and the Suborder copy still happen. Filter `dokan_order_should_exclude_from_vendor_balance` (`lite:includes/Order/Hooks.php::on_order_status_change()`) can force either outcome per order. |
 
 Nothing else changes this rule.
 

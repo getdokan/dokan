@@ -12,32 +12,32 @@ Store Admins trash test orders, fraudulent orders and duplicates, and sometimes 
 
 **Trash.**
 
-- `OrderEventListener` is always loaded (`lite:includes/Order/Controller.php:40`). On `woocommerce_trash_order` it reloads the order and writes its current status, which is now `trash`, as `wc-trash` into `dokan_orders.order_status` and into the order's `dokan_orders`-type Balance row (`lite:includes/Order/OrderEventListener.php:11`, `:25-36`, `:75-101`), then logs who did it (`:111-143`).
-- WooCommerce fires `woocommerce_trash_order` when an order is trashed through its data store: `WC_Order::delete( false )` on posts storage (`wc:includes/data-stores/abstract-wc-order-data-store-cpt.php:325-336`) and on HPOS (`wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php:2695`).
+- `OrderEventListener` is always loaded (`lite:includes/Order/Controller.php::init_classes()`). On `woocommerce_trash_order` it reloads the order and writes its current status, which is now `trash`, as `wc-trash` into `dokan_orders.order_status` and into the order's `dokan_orders`-type Balance row (`lite:includes/Order/OrderEventListener.php::__construct()`, `::after_order_trash()`, `::process_order_status()`), then logs who did it (`::log_status_change()`).
+- WooCommerce fires `woocommerce_trash_order` when an order is trashed through its data store: `WC_Order::delete( false )` on posts storage (`wc:includes/data-stores/abstract-wc-order-data-store-cpt.php::delete()`) and on HPOS (`wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php::delete()`).
 - `wc-trash` is never an earning status ([ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md)), so the Earning is parked: still in the ledger with its amount, not counted.
 
 **Restore.**
 
-- Restoring through the data store sets the order back to its previous status and saves it (`wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php:2916-2930` on HPOS; `wc:includes/data-stores/class-wc-order-data-store-cpt.php:1242-1262` on posts storage). That save is a normal `trash → previous` status transition, so `Order\Hooks::on_order_status_change` writes the previous status back to both rows.
-- On HPOS WooCommerce also fires `woocommerce_untrash_order` *before* the restore (`OrdersTableDataStore.php:2916`); the listener's write at that moment still sees `trash` and is overwritten by the transition that follows.
+- Restoring through the data store sets the order back to its previous status and saves it (`wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php::untrash_order()` on HPOS; `wc:includes/data-stores/class-wc-order-data-store-cpt.php::untrash_order()` on posts storage). That save is a normal `trash → previous` status transition, so `Order\Hooks::on_order_status_change` writes the previous status back to both rows.
+- On HPOS WooCommerce also fires `woocommerce_untrash_order` *before* the restore (`OrdersTableDataStore.php::untrash_order()`); the listener's write at that moment still sees `trash` and is overwritten by the transition that follows.
 
-**Parent and Suborders (WP-admin requests only).** `Order\Admin\Hooks` is loaded only when `is_admin()` is true (`lite:includes/Order/Controller.php:42-45`). It:
+**Parent and Suborders (WP-admin requests only).** `Order\Admin\Hooks` is loaded only when `is_admin()` is true (the `is_admin()` block in `lite:includes/Order/Controller.php::init_classes()`). It:
 
-- trashes every Suborder when a parent Order is trashed (`$child->delete( false )`, `lite:includes/Order/Admin/Hooks.php:462-476`, hooked at `:40` for HPOS and `:53` for posts storage), which parks each Suborder's Earning through the listener above;
-- restores every trashed Suborder through the data store when the parent is restored (`lite:includes/Order/Admin/Hooks.php:488-518`, hooked at `:41` / `:54`), which restores their ledger status;
-- on permanent deletion (`woocommerce_delete_order` on HPOS, `delete_post` on posts storage, `:42` / `:55`) calls `Order\Manager::delete_seller_order_with_suborders()` (`lite:includes/Order/Manager.php:604-616`).
+- trashes every Suborder when a parent Order is trashed (`$child->delete( false )`, `lite:includes/Order/Admin/Hooks.php::admin_on_trash_order()`, hooked in `::__construct()` on `woocommerce_trash_order` for HPOS and `wp_trash_post` for posts storage), which parks each Suborder's Earning through the listener above;
+- restores every trashed Suborder through the data store when the parent is restored (`lite:includes/Order/Admin/Hooks.php::admin_on_untrash_order()`, hooked in `::__construct()` on `woocommerce_untrash_order` / `untrash_post`), which restores their ledger status;
+- on permanent deletion (`woocommerce_delete_order` on HPOS, `delete_post` on posts storage, both hooked in `::__construct()`) calls `Order\Manager::delete_seller_order_with_suborders()` (`lite:includes/Order/Manager.php::delete_seller_order_with_suborders()`).
 
-**Delete.** `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php:535-593`) removes, for the order id:
+**Delete.** `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php::delete_seller_order()`) removes, for the order id:
 
-- the `dokan_orders` row (`:550`);
-- `dokan_refund` rows (`:558-563`), then fires `dokan_after_deleting_seller_order` (`:568`);
-- `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw` (`:571-577`);
-- Reverse withdrawal rows of types `order_commission`, `manual_order_commission` and `order_refund` for the order (`:583-589`).
+- the `dokan_orders` row;
+- `dokan_refund` rows, then fires `dokan_after_deleting_seller_order`;
+- `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw`;
+- Reverse withdrawal rows of types `order_commission`, `manual_order_commission` and `order_refund` for the order.
 
 How Suborders are reached depends on the order storage.
 
-- **HPOS.** `OrdersTableDataStore::delete()` calls `upshift_or_delete_child_orders()` (`wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php:2691`) *before* it fires `woocommerce_delete_order` (`:2724`). `shop_order` is not hierarchical (`wc:includes/class-wc-post-types.php:469`), so that method runs `$child_order->delete( true )` on every order whose `parent_order_id` is the parent, with no status filter (`:2819-2858`). In WP-admin each Suborder deletion fires `woocommerce_delete_order` for the Suborder, so Dokan's handler erases its rows, trashed or not. When the parent's own `woocommerce_delete_order` fires afterwards, `get_child_orders()` in `delete_seller_order_with_suborders()` finds nothing left to delete.
-- **Posts storage.** `delete_seller_order_with_suborders()` deletes each Suborder returned by `get_child_orders()` permanently (`lite:includes/Order/Manager.php:608-615`), which re-enters the same handler for that Suborder. `get_child_orders()` uses WooCommerce's default status list, which leaves out `trash` (`wc:includes/class-wc-order-query.php:27`), so Suborders that were already trashed together with the parent are not deleted by this step; their rows are erased when the Suborders themselves are deleted, which WooCommerce's "Empty Trash" does because it deletes every trashed order one by one (`wc:src/Internal/Admin/Orders/ListTable.php:1446-1456`, `:1601-1615`). Until then they stay parked at `wc-trash`. Once deleted, the Earning disappears from the ledger entirely, as if the order had never existed.
+- **HPOS.** `OrdersTableDataStore::delete()` calls `upshift_or_delete_child_orders()` (`wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php::delete()`) *before* it fires `woocommerce_delete_order` (same method). `shop_order` is not hierarchical (the `shop_order` registration in `wc:includes/class-wc-post-types.php::register_post_types()`), so that method runs `$child_order->delete( true )` on every order whose `parent_order_id` is the parent, with no status filter (`::upshift_or_delete_child_orders()`). In WP-admin each Suborder deletion fires `woocommerce_delete_order` for the Suborder, so Dokan's handler erases its rows, trashed or not. When the parent's own `woocommerce_delete_order` fires afterwards, `get_child_orders()` in `delete_seller_order_with_suborders()` finds nothing left to delete.
+- **Posts storage.** `delete_seller_order_with_suborders()` deletes each Suborder returned by `get_child_orders()` permanently (`lite:includes/Order/Manager.php::delete_seller_order_with_suborders()`), which re-enters the same handler for that Suborder. `get_child_orders()` uses WooCommerce's default status list, which leaves out `trash` (`wc:includes/class-wc-order-query.php::get_default_query_vars()`), so Suborders that were already trashed together with the parent are not deleted by this step; their rows are erased when the Suborders themselves are deleted, which WooCommerce's "Empty Trash" does because it deletes every trashed order one by one (`wc:src/Internal/Admin/Orders/ListTable.php::handle_bulk_actions()`, `::do_delete()`). Until then they stay parked at `wc-trash`. Once deleted, the Earning disappears from the ledger entirely, as if the order had never existed.
 
 ## Settings that change it
 
@@ -56,13 +56,13 @@ Order #300 → #301 (Vendor A, 54.00, `completed`) and #302 (Vendor B, 36.00, `c
 ## Edge cases
 
 - **Deletion outside WP-admin keeps the rows.** Orders deleted by REST calls, WP-CLI, cron jobs or payment webhooks do not load `Order\Admin\Hooks`, so their ledger rows remain with their last status and keep counting if that status is an earning status. On HPOS, deleting a parent Order there still deletes its Suborders (WooCommerce's child-order cleanup above), but their ledger rows remain as orphans that point to orders which no longer exist and still count.
-- **Trashing with `wp_trash_post()` directly on posts storage** (the legacy order list's Trash link) does not fire `woocommerce_trash_order`; WooCommerce's own `wp_trash_post` handler does not fire it either (`wc:includes/class-wc-post-data.php:62`, `:468-496`). The trashed order's own rows keep their previous status. Its Suborders, which Dokan trashes through the data store, are parked normally.
-- **Withdraw rows are matched by number.** The delete query removes `dokan_withdraw` Balance rows whose `trn_id` equals the order id. Withdraw rows store the Withdraw id in `trn_id` (`lite:includes/Withdraw/Hooks.php:130-141`), so this clause matches an unrelated Withdraw that happens to share the number.
+- **Trashing with `wp_trash_post()` directly on posts storage** (the legacy order list's Trash link) does not fire `woocommerce_trash_order`; WooCommerce's own `wp_trash_post` handler does not fire it either (`wc:includes/class-wc-post-data.php::init()`, `::trash_post()`). The trashed order's own rows keep their previous status. Its Suborders, which Dokan trashes through the data store, are parked normally.
+- **Withdraw rows are matched by number.** The delete query removes `dokan_withdraw` Balance rows whose `trn_id` equals the order id. Withdraw rows store the Withdraw id in `trn_id` (`lite:includes/Withdraw/Hooks.php::update_vendor_balance()`), so this clause matches an unrelated Withdraw that happens to share the number.
 - **Refund credits are deleted too.** Deleting a refunded order removes both its debit and its refund credits, so the net effect on the Balance is zero only if they matched.
 
 ## Why
 
-No recorded decision beyond the method docblocks ("Delete sub orders and from dokan sync table when a order is deleted", `lite:includes/Order/Admin/Hooks.php:521-530`; "Perform actions after an order is trashed … updates the order status in the Dokan tables", `lite:includes/Order/OrderEventListener.php:15-24`). Trash is treated as reversible and therefore only parks the Earning; permanent deletion is treated as "this order never happened".
+No recorded decision beyond the method docblocks ("Delete sub orders and from dokan sync table when a order is deleted", docblock of `lite:includes/Order/Admin/Hooks.php::admin_on_delete_order()`; "Perform actions after an order is trashed … updates the order status in the Dokan tables", docblock of `lite:includes/Order/OrderEventListener.php::after_order_trash()`). Trash is treated as reversible and therefore only parks the Earning; permanent deletion is treated as "this order never happened".
 
 ## Consequences & risks
 

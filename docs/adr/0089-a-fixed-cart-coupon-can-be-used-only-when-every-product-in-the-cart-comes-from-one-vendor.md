@@ -10,9 +10,9 @@ WooCommerce has three core coupon types: `percent` (a percentage off each eligib
 
 **A `fixed_cart` coupon is refused whenever the products in the cart (or order) come from more than one Vendor, whether or not the coupon would discount all of them. Percentage and fixed-product coupons are not limited by this rule.**
 
-- `Order\Hooks::ensure_coupon_is_valid()` is attached to WooCommerce's `woocommerce_coupon_is_valid` filter (`lite:includes/Order/Hooks.php:52`), which WooCommerce applies at the end of `WC_Discounts::is_coupon_valid()` after its own checks (usage limits, expiry, minimum/maximum spend, product and category restrictions, allowed e-mails) have passed (`wc:includes/class-wc-discounts.php:1246-1262`).
-- The callback collects the Vendor of every product in the `WC_Discounts` items with `dokan_get_vendor_by_product( $product_id, true )`, de-duplicates the list, and throws `Exception( 'This coupon is invalid for multiple vendors.' )` when the coupon is `fixed_cart` and more than one Vendor is present (`lite:includes/Order/Hooks.php:484-499`). WooCommerce turns the exception into a coupon error shown to the Customer (`wc:includes/class-wc-discounts.php:1263-1287`).
-- For every other case the callback returns the incoming validity through the `dokan_coupon_is_valid` filter (`lite:includes/Order/Hooks.php:510`), which is the Lite seam add-ons use to add their own coupon rules.
+- `Order\Hooks::ensure_coupon_is_valid()` is attached to WooCommerce's `woocommerce_coupon_is_valid` filter (`lite:includes/Order/Hooks.php::__construct()`), which WooCommerce applies at the end of `WC_Discounts::is_coupon_valid()` after its own checks (usage limits, expiry, minimum/maximum spend, product and category restrictions, allowed e-mails) have passed (`wc:includes/class-wc-discounts.php::is_coupon_valid()`).
+- The callback collects the Vendor of every product in the `WC_Discounts` items with `dokan_get_vendor_by_product( $product_id, true )`, de-duplicates the list, and throws `Exception( 'This coupon is invalid for multiple vendors.' )` when the coupon is `fixed_cart` and more than one Vendor is present (`lite:includes/Order/Hooks.php::ensure_coupon_is_valid()`). WooCommerce turns the exception into a coupon error shown to the Customer (the `catch` block of `wc:includes/class-wc-discounts.php::is_coupon_valid()`).
+- For every other case the callback returns the incoming validity through the `dokan_coupon_is_valid` filter (`lite:includes/Order/Hooks.php::ensure_coupon_is_valid()`), which is the Lite seam add-ons use to add their own coupon rules.
 - The check counts Vendors over **all items in the cart or order**, not only over the items the coupon would discount. Products owned by the Store Admin count as one more "Vendor", because `dokan_get_vendor_by_product()` returns the product author.
 - The same filter runs whenever WooCommerce validates a coupon: in the cart, at checkout, and when a coupon is applied to an existing order in WP Admin. On a Suborder there is only one Vendor, so a `fixed_cart` coupon passes this check there.
 
@@ -35,13 +35,13 @@ If the Customer removes the mug, the same `fixed_cart` coupon is accepted and ta
 ## Edge cases
 
 - **Coupon restricted to one Vendor's products.** A `fixed_cart` coupon whose product list contains only Vendor A's products is still refused when the cart also contains Vendor B's products, because the Vendor count is taken over every item, not over the coupon's eligible items.
-- **Coupon already in the cart.** WooCommerce re-validates applied coupons in `WC_Cart::check_cart_coupons()`, so adding a second Vendor's product after a `fixed_cart` coupon was applied makes WooCommerce remove the coupon with its generic "coupon is invalid – it has now been removed from your order" notice (`wc:includes/class-wc-cart.php:811-820`).
-- **Items without a product object** (for example a deleted product) are skipped when counting Vendors (`lite:includes/Order/Hooks.php:488-490`).
+- **Coupon already in the cart.** WooCommerce re-validates applied coupons in `WC_Cart::check_cart_coupons()`, so adding a second Vendor's product after a `fixed_cart` coupon was applied makes WooCommerce remove the coupon with its generic "coupon is invalid – it has now been removed from your order" notice (`wc:includes/class-wc-cart.php::check_cart_coupons()`).
+- **Items without a product object** (for example a deleted product) are skipped when counting Vendors (the `WC_Product` guard in `lite:includes/Order/Hooks.php::ensure_coupon_is_valid()`).
 - **Single-vendor marketplaces.** The rule never triggers when only one Vendor sells, so every coupon type behaves exactly as in WooCommerce.
 
 ## Why
 
-The method docblock states the intent: coupons are restricted "for consistency" so that the discount can be distributed to Suborders, with the example that an admin coupon must match products in the cart, "otherwise it wouldn't be possible to distribute the coupon in sub orders" (`lite:includes/Order/Hooks.php:465-473`).
+The method docblock states the intent: coupons are restricted "for consistency" so that the discount can be distributed to Suborders, with the example that an admin coupon must match products in the cart, "otherwise it wouldn't be possible to distribute the coupon in sub orders" (docblock of `lite:includes/Order/Hooks.php::ensure_coupon_is_valid()`).
 
 ## Consequences & risks
 

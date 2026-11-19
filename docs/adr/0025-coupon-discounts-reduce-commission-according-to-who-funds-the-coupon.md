@@ -8,14 +8,14 @@ A coupon lowers what the customer pays for a line item, so it lowers the money a
 
 ## Rule
 
-**1. Each line item records its coupons and who funds them.** When WooCommerce applies a coupon to a cart or an order, Dokan hooks `woocommerce_coupon_get_apply_quantity` (`lite:includes/Vendor/Coupon.php:21`, fired at `wc:includes/class-wc-discounts.php:384`), re-applies the coupon on a clone of `WC_Discounts`, reads the per-item discount from `WC_Discounts::get_discounts()` (`wc:includes/class-wc-discounts.php:180`) and stores, per coupon code, on the cart item or order item meta `_dokan_coupon_info` (`Coupon::DOKAN_COUPON_META_KEY`, `lite:includes/Vendor/Coupon.php:16`):
+**1. Each line item records its coupons and who funds them.** When WooCommerce applies a coupon to a cart or an order, Dokan hooks `woocommerce_coupon_get_apply_quantity` (registered in `lite:includes/Vendor/Coupon.php::__construct()`, fired in `wc:includes/class-wc-discounts.php::apply_coupon_percent()`), re-applies the coupon on a clone of `WC_Discounts`, reads the per-item discount from `WC_Discounts::get_discounts()` (`wc:includes/class-wc-discounts.php::get_discounts()`) and stores, per coupon code, on the cart item or order item meta `_dokan_coupon_info` (`lite:includes/Vendor/Coupon.php::DOKAN_COUPON_META_KEY`):
 
 - `discount`: the amount this coupon took off this line;
-- `coupon_commissions_type`, `admin_shared_coupon_type`, `admin_shared_coupon_amount`: copied from the coupon's meta at the time of application (`lite:includes/Vendor/Coupon.php:161-186` for carts, `:199-243` for orders).
+- `coupon_commissions_type`, `admin_shared_coupon_type`, `admin_shared_coupon_amount`: copied from the coupon's meta at the time of application (`lite:includes/Vendor/Coupon.php::save_coupon_data_to_cart_item()` for carts, `::save_coupon_data_to_order_item()` for orders).
 
-At checkout the cart item's record is copied to the order item (`Coupon::add_coupon_info_to_order_item()`, hooked to `woocommerce_checkout_create_order_line_item`, `lite:includes/Vendor/Coupon.php:19`, `:292-316`). If the recorded discounts on one line add up to more than the product price × quantity, the excess is trimmed from the last coupons. The price used here is the product's current catalogue price, `wc_get_product( $item->get_product_id() )->get_price()` (`lite:includes/Vendor/Coupon.php:300-301`), not the line's own price or subtotal; for a variation, `get_product_id()` is the parent product, so the parent's price is used. Suborder line items inherit the record because Suborder creation copies all item meta (`lite:includes/Order/Manager.php:740-745`).
+At checkout the cart item's record is copied to the order item (`Coupon::add_coupon_info_to_order_item()`, hooked to `woocommerce_checkout_create_order_line_item` in `lite:includes/Vendor/Coupon.php::__construct()`; `::add_coupon_info_to_order_item()`). If the recorded discounts on one line add up to more than the product price × quantity, the excess is trimmed from the last coupons. The price used here is the product's current catalogue price, `wc_get_product( $item->get_product_id() )->get_price()` (`lite:includes/Vendor/Coupon.php::add_coupon_info_to_order_item()`), not the line's own price or subtotal; for a variation, `get_product_id()` is the parent product, so the parent's price is used. Suborder line items inherit the record because Suborder creation copies all item meta (`lite:includes/Order/Manager.php::create_line_items()`).
 
-**2. The record is split into an admin-funded and a Vendor-funded discount.** `CouponInfo::get_coupon_amount()` (`lite:includes/Commission/CouponInfo.php:74-116`) classifies each coupon by `coupon_commissions_type`:
+**2. The record is split into an admin-funded and a Vendor-funded discount.** `CouponInfo::get_coupon_amount()` (`lite:includes/Commission/CouponInfo.php::get_coupon_amount()`) classifies each coupon by `coupon_commissions_type`:
 
 | `coupon_commissions_type` | Admin-funded part | Vendor-funded part |
 |---|---|---|
@@ -24,9 +24,9 @@ At checkout the cart item's record is copied to the order item (`Coupon::add_cou
 | `shared_coupon` with `admin_shared_coupon_type = percentage` | discount × `admin_shared_coupon_amount` / 100 | the rest |
 | `shared_coupon` with any other `admin_shared_coupon_type` (flat) | `min( discount, admin_shared_coupon_amount )` | the rest |
 
-The parts of all coupons on a line are summed (`lite:includes/Commission/CouponInfo.php:27-37`).
+The parts of all coupons on a line are summed (`lite:includes/Commission/CouponInfo.php::populate()`).
 
-**3. The calculator puts the admin-funded part back into the base and then charges it to the admin** (`Calculator::calculate_raw_admin_commission()`, `lite:includes/Commission/Calculator.php:139-149`):
+**3. The calculator puts the admin-funded part back into the base and then charges it to the admin** (`lite:includes/Commission/Calculator.php::calculate_raw_admin_commission()`):
 
 ```
 line_total = price × qty − all coupon discounts          (WooCommerce line total, excl. tax)
@@ -47,11 +47,11 @@ All settings are per coupon (WooCommerce coupon post meta). Dokan Lite has no gl
 
 | Coupon meta | Default when absent | Effect |
 |---|---|---|
-| `coupon_commissions_type` | `from_vendor` (`lite:includes/Commission/CouponInfo.php:78-83`) | Chooses the row of the table above. |
+| `coupon_commissions_type` | `from_vendor` (the default in `lite:includes/Commission/CouponInfo.php::get_coupon_amount()`) | Chooses the row of the table above. |
 | `admin_shared_coupon_type` | `percent` (which falls into the flat branch, because only `percentage` selects the percentage branch) | Only for `shared_coupon`. |
 | `admin_shared_coupon_amount` | `0` | Percentage of the discount, or flat amount per line, funded by the admin. |
 
-Because the record copies `WC_Coupon::get_meta()` for each key, a coupon without these meta keys usually produces a record whose fields are empty strings rather than missing. The result is the same: an empty `coupon_commissions_type` falls into the `default` branch of the switch (Vendor-funded), an empty `admin_shared_coupon_type` selects the flat branch, and an empty amount is `floatval('') = 0` (`lite:includes/Commission/CouponInfo.php:85-110`). Without an add-on that writes these meta keys, every coupon is Vendor-funded.
+Because the record copies `WC_Coupon::get_meta()` for each key, a coupon without these meta keys usually produces a record whose fields are empty strings rather than missing. The result is the same: an empty `coupon_commissions_type` falls into the `default` branch of the switch (Vendor-funded), an empty `admin_shared_coupon_type` selects the flat branch, and an empty amount is `floatval('') = 0` (the `switch` in `lite:includes/Commission/CouponInfo.php::get_coupon_amount()`). Without an add-on that writes these meta keys, every coupon is Vendor-funded.
 
 ## Worked example
 
@@ -70,10 +70,10 @@ The admin-funded case yields a negative Commission; how that is paid out is desc
 ## Edge cases
 
 - **Flat shared amount is per line, not per coupon.** `min( discount, admin_shared_coupon_amount )` is evaluated for each line item's record. A shared coupon with a flat admin amount of 5.00 that applies to three lines makes the admin fund up to 15.00 in total.
-- **Coupon funding is frozen with the line, unless the order's coupons are recalculated.** The funding fields are copied when the coupon is applied, and editing the coupon later does not by itself change existing orders. But when an order's coupons are recalculated (WooCommerce `WC_Abstract_Order::recalculate_coupons()`, `wc:includes/abstracts/abstract-wc-order.php:1950-2003`, called whenever a coupon is applied to or removed from the order, `:1773`, `:1924`), WooCommerce re-applies each still-existing coupon as a fresh `WC_Coupon`, which fires `woocommerce_coupon_get_apply_quantity` again; `Coupon::save_coupon_data_to_order_item()` (`lite:includes/Vendor/Coupon.php:199-243`) then rewrites `_dokan_coupon_info` with the coupon's *current* meta, and on a parent order `Coupon::apply_coupon_to_child_orders()` (`:254-266`) applies the coupon to any Suborder that does not have it yet. A later Commission recalculation reads the rewritten record (`lite:includes/Commission/OrderLineItemCommission.php:71`); the figure `Commission::get_earning_by_order()` returns is unaffected while a `dokan_orders` row exists, because it reads that row first (`lite:includes/Commission.php:227-231`). Removing a coupon from an order removes its record from the items of that order, its Suborders or its parent (`Coupon::remove_coupon_info_from_order_item()`, `lite:includes/Vendor/Coupon.php:41-68`).
+- **Coupon funding is frozen with the line, unless the order's coupons are recalculated.** The funding fields are copied when the coupon is applied, and editing the coupon later does not by itself change existing orders. But when an order's coupons are recalculated (WooCommerce `WC_Abstract_Order::recalculate_coupons()`, `wc:includes/abstracts/abstract-wc-order.php::recalculate_coupons()`, called whenever a coupon is applied to or removed from the order, `::apply_coupon()`, `::remove_coupon()`), WooCommerce re-applies each still-existing coupon as a fresh `WC_Coupon`, which fires `woocommerce_coupon_get_apply_quantity` again; `Coupon::save_coupon_data_to_order_item()` (`lite:includes/Vendor/Coupon.php::save_coupon_data_to_order_item()`) then rewrites `_dokan_coupon_info` with the coupon's *current* meta, and on a parent order `Coupon::apply_coupon_to_child_orders()` (`::apply_coupon_to_child_orders()`) applies the coupon to any Suborder that does not have it yet. A later Commission recalculation reads the rewritten record (`lite:includes/Commission/OrderLineItemCommission.php::set_item()`); the figure `Commission::get_earning_by_order()` returns is unaffected while a `dokan_orders` row exists, because it reads that row first (`lite:includes/Commission.php::get_earning_by_order()`). Removing a coupon from an order removes its record from the items of that order, its Suborders or its parent (`lite:includes/Vendor/Coupon.php::remove_coupon_info_from_order_item()`).
 - **Lines without a record** (orders created before this mechanism, or items added by code that bypassed `WC_Discounts`) are treated as fully Vendor-funded, because `line_total` already includes the discount and the admin-funded part is 0.
 - **Taxes and shipping** are not part of `line_total`, so a coupon's effect on them is outside this rule.
-- **Refunds** of discounted lines are split in proportion to the discounted line total; see the comment in `OrderLineItemCommission::adjust_refunds()` (`lite:includes/Commission/OrderLineItemCommission.php:202-205`) and the [refund ADRs](decisions-index.md#refunds), in particular [ADR-0047](./0047-a-refund-reverses-commission-and-vendor-earning-pro-rata-to-the-refunded-share-of-each-line-item.md).
+- **Refunds** of discounted lines are split in proportion to the discounted line total; see the comment in `OrderLineItemCommission::adjust_refunds()` (`lite:includes/Commission/OrderLineItemCommission.php::adjust_refunds()`) and the [refund ADRs](decisions-index.md#refunds), in particular [ADR-0047](./0047-a-refund-reverses-commission-and-vendor-earning-pro-rata-to-the-refunded-share-of-each-line-item.md).
 
 ## Why
 

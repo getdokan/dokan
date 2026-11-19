@@ -10,16 +10,16 @@ WooCommerce completes an order straight after payment when nothing in it needs s
 
 **[Lite]** When a Suborder changes status, Dokan looks at all of its siblings. Any sibling that is `processing` and contains only items that do not need processing is moved to `completed`, provided the Suborder that just changed is paid and was not paid with a manual gateway.
 
-The step is the first part of `Order\Hooks::on_sub_order_change` (`lite:includes/Order/Hooks.php:393-449`, registered at priority 99 on `woocommerce_order_status_changed`, `:38`). For each sibling (`:413-419`) all four conditions must hold:
+The step is the first part of `Order\Hooks::on_sub_order_change` (`lite:includes/Order/Hooks.php::on_sub_order_change()`, registered at priority 99 on `woocommerce_order_status_changed` in `::__construct()`). For each sibling (the `foreach` over the Suborders in `::on_sub_order_change()`) all four conditions must hold:
 
 1. the sibling's status is `processing`;
-2. the Suborder whose status just changed (`$order`) is paid, that is `WC_Order::is_paid()`, which by default means status `processing` or `completed` (`wc:includes/class-wc-order.php:1724-1726`, `wc:includes/wc-order-functions.php:134`);
-3. the payment method of the Suborder that just changed is **not** in the excluded list, default `bacs`, `cheque`, `cod` (`lite:includes/Order/Hooks.php:411`);
-4. the sibling does not need processing: `WC_Order::needs_processing()` is false, which by default means every line item's product is both downloadable and virtual (`wc:includes/class-wc-order.php:1871-1900`, filter `woocommerce_order_item_needs_processing`).
+2. the Suborder whose status just changed (`$order`) is paid, that is `WC_Order::is_paid()`, which by default means status `processing` or `completed` (`wc:includes/class-wc-order.php::is_paid()`, `wc:includes/wc-order-functions.php::wc_get_is_paid_statuses()`);
+3. the payment method of the Suborder that just changed is **not** in the excluded list, default `bacs`, `cheque`, `cod` (the `dokan_excluded_payment_gateways_on_order_status_update` filter in `lite:includes/Order/Hooks.php::on_sub_order_change()`);
+4. the sibling does not need processing: `WC_Order::needs_processing()` is false, which by default means every line item's product is both downloadable and virtual (`wc:includes/class-wc-order.php::needs_processing()`, filter `woocommerce_order_item_needs_processing`).
 
-The sibling is then given status `completed` with the note "Marked as completed because it contains digital products only." and saved (`lite:includes/Order/Hooks.php:416-418`). Saving fires the sibling's own status hooks, so its ledger row moves to `wc-completed` like any other completion.
+The sibling is then given status `completed` with the note "Marked as completed because it contains digital products only." and saved (`lite:includes/Order/Hooks.php::on_sub_order_change()`). Saving fires the sibling's own status hooks, so its ledger row moves to `wc-completed` like any other completion.
 
-Conditions 2 and 3 are read from the Suborder that triggered the check, not from each sibling. Suborders copy the parent's payment method at creation (`Order\Manager::create_sub_order()`, `lite:includes/Order/Manager.php:665-666`), so all siblings normally share it.
+Conditions 2 and 3 are read from the Suborder that triggered the check, not from each sibling. Suborders copy the parent's payment method at creation (`lite:includes/Order/Manager.php::create_sub_order()`), so all siblings normally share it.
 
 ## Settings that change it
 
@@ -51,7 +51,7 @@ Same Order paid by bank transfer (`bacs`): the gateway leaves #300 `on-hold`; wh
 
 ## Why
 
-No recorded decision beyond the inline comment ("if the order is a downloadable and virtual product, then we need to set the status to complete", `lite:includes/Order/Hooks.php:414`) and the comment on the exclusion filter ("Exclude manual gateways from auto complete order status update for digital products", `:410`). The exclusion keeps orders paid by manual methods, where `processing` may be set before money is confirmed, under human control.
+No recorded decision beyond the inline comment ("if the order is a downloadable and virtual product, then we need to set the status to complete", `lite:includes/Order/Hooks.php::on_sub_order_change()`) and the comment on the exclusion filter in the same method ("Exclude manual gateways from auto complete order status update for digital products"). The exclusion keeps orders paid by manual methods, where `processing` may be set before money is confirmed, under human control.
 
 ## Consequences & risks
 

@@ -8,16 +8,16 @@ Percentages of prices produce fractions of a cent. If both the Commission and th
 
 ## Rule
 
-For each order line item, `Calculator::calculate()` (`lite:includes/Commission/Calculator.php:114-128`):
+For each order line item, `Calculator::calculate()` (`lite:includes/Commission/Calculator.php::calculate()`):
 
 1. Computes the raw Commission (see [ADR-0026](./0026-fixed-commission-is-a-percentage-of-the-line-total-plus-a-flat-fee-charged-per-unit.md)).
-2. Rounds **only the Commission** to the store's price decimals with half-up rounding: `NumberUtil::round( $raw, wc_get_price_decimals() )` (`:120`; `wc:src/Utilities/NumberUtil.php:54` defaults to `PHP_ROUND_HALF_UP`).
-3. Caps the Commission at the line total: `min( rounded, line_total )` (`:120`). There is no lower bound here; a negative value is possible and is handled as a subsidy (see [ADR-0022](./0022-an-admin-funded-discount-larger-than-the-commission-becomes-an-admin-subsidy-to-the-vendor.md)).
-4. Sets the Earning to `line_total − Commission`, unrounded (`:122`).
+2. Rounds **only the Commission** to the store's price decimals with half-up rounding: `NumberUtil::round( $raw, wc_get_price_decimals() )` (`wc:src/Utilities/NumberUtil.php::round()` defaults to `PHP_ROUND_HALF_UP`).
+3. Caps the Commission at the line total: `min( rounded, line_total )`. There is no lower bound here; a negative value is possible and is handled as a subsidy (see [ADR-0022](./0022-an-admin-funded-discount-larger-than-the-commission-becomes-an-admin-subsidy-to-the-vendor.md)).
+4. Sets the Earning to `line_total − Commission`, unrounded.
 
 Rounding happens **per line item**. The order Commission is the sum of the already rounded line Commissions (see [ADR-0030](./0030-the-commission-on-a-vendor-order-is-the-sum-of-its-line-item-commissions.md)); there is no second rounding at order level.
 
-Refunds are split with the same rule: `Calculator::calculate_for_refund()` rounds the admin's part of the refunded amount and gives the Vendor the remainder (`lite:includes/Commission/Calculator.php:191-212`). The refund rules themselves are in the [refund ADRs](decisions-index.md#refunds), starting with [ADR-0047](./0047-a-refund-reverses-commission-and-vendor-earning-pro-rata-to-the-refunded-share-of-each-line-item.md).
+Refunds are split with the same rule: `Calculator::calculate_for_refund()` rounds the admin's part of the refunded amount and gives the Vendor the remainder (`lite:includes/Commission/Calculator.php::calculate_for_refund()`). The refund rules themselves are in the [refund ADRs](decisions-index.md#refunds), starting with [ADR-0047](./0047-a-refund-reverses-commission-and-vendor-earning-pro-rata-to-the-refunded-share-of-each-line-item.md).
 
 ## Settings that change it
 
@@ -42,7 +42,7 @@ Cap: global `fixed` 0 % + 10.00 flat. Line 1 × 5.00. Raw = 10.00. Commission = 
 
 ## Why
 
-The code states the reason: "Round only the admin's share and let the vendor take the exact remainder. Rounding both shares leaves a fraction of a cent credited to neither party." (`lite:includes/Commission/Calculator.php:117-118`). The refund split carries the matching comment (`:203-204`).
+The code states the reason: "Round only the admin's share and let the vendor take the exact remainder. Rounding both shares leaves a fraction of a cent credited to neither party." (the comment in `lite:includes/Commission/Calculator.php::calculate()`). The refund split carries the matching comment (`::calculate_for_refund()`).
 
 ## Consequences & risks
 

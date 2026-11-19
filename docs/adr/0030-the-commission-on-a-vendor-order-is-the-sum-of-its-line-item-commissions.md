@@ -8,12 +8,12 @@ Commission formulas are defined per product, Vendor or category, but Vendors and
 
 ## Rule
 
-1. **Commission is computed only on Vendor orders.** `Commission::get_earning_by_order()` returns nothing for a parent Order that has Suborders (`lite:includes/Commission.php:213-215`), in line with Lite ADR 0004 (the Vendor order is authoritative).
-2. **Each product line item is calculated on its own.** `OrderCommission::calculate()` loops over `$order->get_items()` (product line items) and runs `OrderLineItemCommission::calculate()` for each (`lite:includes/Commission/OrderCommission.php:79-97`). Each line resolves its own formula (product, Vendor, category or global, or the frozen formula of Lite ADR 0013), applies its own coupons, and is rounded on its own.
-3. **The order figures are plain sums.** `admin_net_commission`, `admin_discount`, `vendor_net_earning` and `vendor_discount` are the sums of the line results (`lite:includes/Commission/OrderCommission.php:91-94`). There is no order-level percentage, no order-level flat fee and no second rounding.
-4. **Extensions may adjust the sums.** After the loop the summed values pass through `dokan_order_vendor_net_earning` and `dokan_order_admin_net_commission` (`lite:includes/Commission/OrderCommission.php:120`, `:131`). These filters run only in `calculate()`; the per-line results kept for refunds are not changed by them.
-5. **A line that fails is skipped.** An exception while calculating one line is logged and that line contributes nothing (`lite:includes/Commission/OrderCommission.php:98-108`).
-6. **Fees are added outside the Commission.** Shipping, tax, shipping tax, order fee lines and gateway fees are not part of any line's base. They are added on top as admin fees or Vendor fees (`get_total_admin_fees()`, `get_total_vendor_fees()`, `lite:includes/Commission/OrderCommission.php:377-390`). The Vendor order's Earning is `vendor_net_earning + vendor fees` (`:340-342`).
+1. **Commission is computed only on Vendor orders.** `Commission::get_earning_by_order()` returns nothing for a parent Order that has Suborders (the `has_sub_order` early return in `lite:includes/Commission.php::get_earning_by_order()`), in line with Lite ADR 0004 (the Vendor order is authoritative).
+2. **Each product line item is calculated on its own.** `OrderCommission::calculate()` loops over `$order->get_items()` (product line items) and runs `OrderLineItemCommission::calculate()` for each (the line-item loop in `lite:includes/Commission/OrderCommission.php::calculate()`). Each line resolves its own formula (product, Vendor, category or global, or the frozen formula of Lite ADR 0013), applies its own coupons, and is rounded on its own.
+3. **The order figures are plain sums.** `admin_net_commission`, `admin_discount`, `vendor_net_earning` and `vendor_discount` are the sums of the line results (same loop in `lite:includes/Commission/OrderCommission.php::calculate()`). There is no order-level percentage, no order-level flat fee and no second rounding.
+4. **Extensions may adjust the sums.** After the loop the summed values pass through `dokan_order_vendor_net_earning` and `dokan_order_admin_net_commission` (after the loop in `lite:includes/Commission/OrderCommission.php::calculate()`). These filters run only in `calculate()`; the per-line results kept for refunds are not changed by them.
+5. **A line that fails is skipped.** An exception while calculating one line is logged and that line contributes nothing (the `catch` inside the loop in `lite:includes/Commission/OrderCommission.php::calculate()`).
+6. **Fees are added outside the Commission.** Shipping, tax, shipping tax, order fee lines and gateway fees are not part of any line's base. They are added on top as admin fees or Vendor fees (`lite:includes/Commission/OrderCommission.php::get_total_admin_fees()`, `::get_total_vendor_fees()`). The Vendor order's Earning is `vendor_net_earning + vendor fees` (`::get_vendor_earning()`).
 
 ## Settings that change it
 
@@ -38,7 +38,7 @@ A single "10 % of 80.00 + 1.00" would give 9.00; the order figure is not compute
 - Non-product items (shipping lines, fee lines, coupon lines) are never passed to the line-item calculator.
 - Admin-funded discounts can make one line negative; the order sum nets it against other lines (see [ADR-0022](./0022-an-admin-funded-discount-larger-than-the-commission-becomes-an-admin-subsidy-to-the-vendor.md)).
 - On marketplace-owned order types the sums are routed differently (see [ADR-0027](./0027-marketplace-owned-order-types-give-the-whole-line-amount-to-the-admin-and-nothing-to-the-vendor.md)).
-- Once a Vendor order has a row in `dokan_orders`, `get_earning_by_order()` reads the stored figure instead of recalculating (`lite:includes/Commission.php:227-231`).
+- Once a Vendor order has a row in `dokan_orders`, `get_earning_by_order()` reads the stored figure instead of recalculating (`lite:includes/Commission.php::get_earning_by_order()`).
 
 ## Why
 

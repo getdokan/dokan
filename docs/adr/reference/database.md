@@ -21,7 +21,7 @@ Related documents: [orders-commission-fees.md](orders-commission-fees.md), [with
 | Rows in `dokan_announcement` and `dokan_refund` | Lite creates both tables. Lite code never inserts into either; both are filled by Dokan Pro (Lite does delete `dokan_refund` rows when a Vendor order is deleted). |
 | Other `dokan_*` tables that appear in `uninstall.php` | Created by Dokan Pro. Out of scope here. |
 
-Lite registers **no custom post types, post statuses or taxonomies**. A search for `register_post_type`, `register_taxonomy` and `register_post_status` under `includes/` finds nothing. Lite reuses WooCommerce's `product`, `shop_order`, `shop_order_refund` and the core `page` type. The only post-type registration change it makes is to filter `woocommerce_register_post_type_product`, which maps the `edit_post` meta capability to `edit_product` (`dokan_manage_capability_for_woocommerce_product`, `lite:includes/wc-template.php:152`). WooCommerce fires that filter at `wc:includes/class-wc-post-types.php:370`.
+Lite registers **no custom post types, post statuses or taxonomies**. A search for `register_post_type`, `register_taxonomy` and `register_post_status` under `includes/` finds nothing. Lite reuses WooCommerce's `product`, `shop_order`, `shop_order_refund` and the core `page` type. The only post-type registration change it makes is to filter `woocommerce_register_post_type_product`, which maps the `edit_post` meta capability to `edit_product` (`lite:includes/wc-template.php::dokan_manage_capability_for_woocommerce_product()`, registered by the top-level `add_filter( 'woocommerce_register_post_type_product', ... )` in that file). WooCommerce fires that filter in `wc:includes/class-wc-post-types.php::register_post_types()`.
 
 **Related ADRs:** [ADR-0014](../0014-marketplace-money-lives-in-custom-tables-not-post-types.md) (money in custom tables, entities reuse WordPress and WooCommerce types), [ADR-0018](../0018-orders-are-storage-agnostic-through-woocommerce-crud.md) (storage-agnostic orders and HPOS), [ADR-0019](../0019-schema-migrations-are-version-named-upgrader-classes.md) (version-named upgraders), [ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md) and [ADR-0003](../0003-settings-legacy-mirror-mode.md) (settings options), [ADR-0015](../0015-reverse-withdrawal-is-a-separate-receivable-ledger.md) (`dokan_reverse_withdrawal` ledger).
 
@@ -31,19 +31,19 @@ Lite registers **no custom post types, post statuses or taxonomies**. A search f
 
 | What | Where |
 |---|---|
-| Activation hook registered | `lite:dokan-class.php:73` (`register_activation_hook( DOKAN_FILE, [ $this, 'activate' ] )`) |
-| `WeDevs_Dokan::activate()` builds the `upgrades` service, then runs the installer | `lite:dokan-class.php:157` |
-| `Installer::do_install()`: roles, pages, tables, base product, cron, `dokan_order_stats` backfill, then upgrades | `lite:includes/Install/Installer.php:19` |
-| `Installer::create_tables()`: creates all seven tables in order | `lite:includes/Install/Installer.php:451` |
-| `InstallerHelper::create_reverse_withdrawal_table()` | `lite:includes/ReverseWithdrawal/InstallerHelper.php:23` |
-| `Installer::create_dokan_order_stats_table()` (public, also called by an upgrader) | `lite:includes/Install/Installer.php:671` |
-| `Installer::maybe_backfill_order_stats()`: asks WooCommerce to regenerate Analytics data when orders exist but `dokan_order_stats` is empty | `lite:includes/Install/Installer.php:88-174` |
-| `$wpdb` table aliases set on `init` priority 1 | `lite:dokan-class.php:267` → `WeDevs_Dokan::wpdb_table_shortcuts` at `lite:dokan-class.php:346` |
-| DB version option key `dokan_theme_version` | `lite:dokan-class.php:62` |
-| Upgrader registry (version → class) | `lite:includes/Upgrade/Upgrades.php:14` |
-| Upgrade runner `Upgrade\Manager::do_upgrade()` | `lite:includes/Upgrade/Manager.php:85` |
-| Upgrader base `DokanUpgrader::run()` / `update_db_version()` | `lite:includes/Abstracts/DokanUpgrader.php:22` |
-| Upgrade hook wiring (`Upgrade\Hooks`) | `lite:includes/Upgrade/Hooks.php:18` |
+| Activation hook registered | `lite:dokan-class.php::__construct()` (`register_activation_hook( DOKAN_FILE, [ $this, 'activate' ] )`) |
+| `WeDevs_Dokan::activate()` builds the `upgrades` service, then runs the installer | `lite:dokan-class.php::activate()` |
+| `Installer::do_install()`: roles, pages, tables, base product, cron, `dokan_order_stats` backfill, then upgrades | `lite:includes/Install/Installer.php::do_install()` |
+| `Installer::create_tables()`: creates all seven tables in order | `lite:includes/Install/Installer.php::create_tables()` |
+| `InstallerHelper::create_reverse_withdrawal_table()` | `lite:includes/ReverseWithdrawal/InstallerHelper.php::create_reverse_withdrawal_table()` |
+| `Installer::create_dokan_order_stats_table()` (public, also called by an upgrader) | `lite:includes/Install/Installer.php::create_dokan_order_stats_table()` |
+| `Installer::maybe_backfill_order_stats()`: asks WooCommerce to regenerate Analytics data when orders exist but `dokan_order_stats` is empty | `lite:includes/Install/Installer.php::maybe_backfill_order_stats()` |
+| `$wpdb` table aliases set on `init` priority 1 | `lite:dokan-class.php::init_hooks()` → `lite:dokan-class.php::wpdb_table_shortcuts()` |
+| DB version option key `dokan_theme_version` | `lite:dokan-class.php::$db_version_key` |
+| Upgrader registry (version → class) | `lite:includes/Upgrade/Upgrades.php::$upgrades` |
+| Upgrade runner `Upgrade\Manager::do_upgrade()` | `lite:includes/Upgrade/Manager.php::do_upgrade()` |
+| Upgrader base `DokanUpgrader::run()` / `update_db_version()` | `lite:includes/Abstracts/DokanUpgrader.php::run()`, `::update_db_version()` |
+| Upgrade hook wiring (`Upgrade\Hooks`) | `lite:includes/Upgrade/Hooks.php::__construct()` |
 | Uninstall data removal | `lite:uninstall.php` (`Dokan_Uninstaller`) |
 
 `wpdb_table_shortcuts()` sets five aliases: `$wpdb->dokan_withdraw`, `$wpdb->dokan_orders`, `$wpdb->dokan_announcement`, `$wpdb->dokan_refund` and `$wpdb->dokan_vendor_balance`. No alias exists for `dokan_reverse_withdrawal` or `dokan_order_stats`. Code reaches those through `ReverseWithdrawal\Manager::get_table()` and `Analytics\Reports\Orders\Stats\DataStore::get_db_table_name()`.
@@ -56,23 +56,23 @@ Every table is created with `CREATE TABLE IF NOT EXISTS ... ENGINE=InnoDB {$wpdb
 
 | Class | File | Responsibility |
 |---|---|---|
-| `WeDevs\Dokan\Install\Installer` | `lite:includes/Install/Installer.php:18` | Install routine: DDL for six tables, `seller` role, default pages, initial options, daily cron |
-| `WeDevs\Dokan\ReverseWithdrawal\InstallerHelper` | `lite:includes/ReverseWithdrawal/InstallerHelper.php:15` | DDL for `dokan_reverse_withdrawal`; creates the hidden Reverse withdrawal payment product |
-| `WeDevs\Dokan\Upgrade\Upgrades` | `lite:includes/Upgrade/Upgrades.php:5` | Static registry of Lite upgraders; decides whether an upgrade is needed |
-| `WeDevs\Dokan\Upgrade\Manager` | `lite:includes/Upgrade/Manager.php:5` | Collects upgraders through filters, runs them, stores progress in `dokan_is_upgrading_db` |
-| `WeDevs\Dokan\Abstracts\DokanUpgrader` | `lite:includes/Abstracts/DokanUpgrader.php:7` | Runs every public static method of an upgrader class, then writes the version derived from the class name |
-| `WeDevs\Dokan\Models\BaseModel` / `Models\DataStore\BaseDataStore` | `lite:includes/Models/BaseModel.php:8`, `lite:includes/Models/DataStore/BaseDataStore.php` | `WC_Data`-style model and data store over a custom table |
-| `WeDevs\Dokan\Models\VendorBalance` | `lite:includes/Models/VendorBalance.php:8` | Model for one `dokan_vendor_balance` row; `TRN_TYPE_*` constants |
-| `WeDevs\Dokan\Models\DataStore\VendorBalanceStore` | `lite:includes/Models/DataStore/VendorBalanceStore.php:14` | Field formats and Balance aggregation queries for `dokan_vendor_balance` |
-| `WeDevs\Dokan\Withdraw\Withdraw` | `lite:includes/Withdraw/Withdraw.php` | Inserts, updates and deletes `dokan_withdraw` rows (`create()` at line 436) |
-| `WeDevs\Dokan\Order\Manager` | `lite:includes/Order/Manager.php` | Suborder creation (order meta writes); `delete_seller_order()` cascade across four tables (line 535) |
+| `WeDevs\Dokan\Install\Installer` | `lite:includes/Install/Installer.php` | Install routine: DDL for six tables, `seller` role, default pages, initial options, daily cron |
+| `WeDevs\Dokan\ReverseWithdrawal\InstallerHelper` | `lite:includes/ReverseWithdrawal/InstallerHelper.php` | DDL for `dokan_reverse_withdrawal`; creates the hidden Reverse withdrawal payment product |
+| `WeDevs\Dokan\Upgrade\Upgrades` | `lite:includes/Upgrade/Upgrades.php` | Static registry of Lite upgraders; decides whether an upgrade is needed |
+| `WeDevs\Dokan\Upgrade\Manager` | `lite:includes/Upgrade/Manager.php` | Collects upgraders through filters, runs them, stores progress in `dokan_is_upgrading_db` |
+| `WeDevs\Dokan\Abstracts\DokanUpgrader` | `lite:includes/Abstracts/DokanUpgrader.php` | Runs every public static method of an upgrader class, then writes the version derived from the class name |
+| `WeDevs\Dokan\Models\BaseModel` / `Models\DataStore\BaseDataStore` | `lite:includes/Models/BaseModel.php`, `lite:includes/Models/DataStore/BaseDataStore.php` | `WC_Data`-style model and data store over a custom table |
+| `WeDevs\Dokan\Models\VendorBalance` | `lite:includes/Models/VendorBalance.php` | Model for one `dokan_vendor_balance` row; `TRN_TYPE_*` constants |
+| `WeDevs\Dokan\Models\DataStore\VendorBalanceStore` | `lite:includes/Models/DataStore/VendorBalanceStore.php` | Field formats and Balance aggregation queries for `dokan_vendor_balance` |
+| `WeDevs\Dokan\Withdraw\Withdraw` | `lite:includes/Withdraw/Withdraw.php` | Inserts, updates and deletes `dokan_withdraw` rows (`lite:includes/Withdraw/Withdraw.php::create()`) |
+| `WeDevs\Dokan\Order\Manager` | `lite:includes/Order/Manager.php` | Suborder creation (order meta writes); `lite:includes/Order/Manager.php::delete_seller_order()` cascade across four tables |
 | `WeDevs\Dokan\Order\Hooks` | `lite:includes/Order/Hooks.php` | Keeps `dokan_orders` and `dokan_vendor_balance` in step with WooCommerce order status changes |
 | `WeDevs\Dokan\Order\RefundHandler` | `lite:includes/Order/RefundHandler.php` | Writes `dokan_refund` type ledger rows into `dokan_vendor_balance` when a WooCommerce refund is created |
-| `WeDevs\Dokan\ReverseWithdrawal\Manager` | `lite:includes/ReverseWithdrawal/Manager.php` | Reads and inserts `dokan_reverse_withdrawal` rows (`insert()` at line 512) |
-| `WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore` | `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:20` | Upserts and deletes `dokan_order_stats` rows |
-| `WeDevs\Dokan\Analytics\Reports\OrderType` | `lite:includes/Analytics/Reports/OrderType.php:16` | Constants for the `order_type` column (0–9) |
-| `WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository` | `lite:includes/Admin/Settings/Repository/SettingsRepository.php:15` | Owns the `dokan_admin_settings` option |
-| `WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository` | `lite:includes/Admin/Settings/Repository/LegacySettingsRepository.php:14` | Reads and writes legacy `dokan_<section>` options |
+| `WeDevs\Dokan\ReverseWithdrawal\Manager` | `lite:includes/ReverseWithdrawal/Manager.php` | Reads and inserts `dokan_reverse_withdrawal` rows (`lite:includes/ReverseWithdrawal/Manager.php::insert()`) |
+| `WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore` | `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php` | Upserts and deletes `dokan_order_stats` rows |
+| `WeDevs\Dokan\Analytics\Reports\OrderType` | `lite:includes/Analytics/Reports/OrderType.php` | Constants for the `order_type` column (0–9) |
+| `WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository` | `lite:includes/Admin/Settings/Repository/SettingsRepository.php` | Owns the `dokan_admin_settings` option |
+| `WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository` | `lite:includes/Admin/Settings/Repository/LegacySettingsRepository.php` | Reads and writes legacy `dokan_<section>` options |
 | `WeDevs\Dokan\Admin\Settings\Migration\LegacyMirror` | `lite:includes/Admin/Settings/Migration/LegacyMirror.php` | Keeps legacy option rows populated from canonical settings (ADR-0003) |
 
 ---
@@ -83,7 +83,7 @@ The column lists below are the schema a **fresh install** produces, taken from t
 
 ### 4.1 `{prefix}dokan_orders`: per-Vendor-order sync table
 
-Created by `Installer::create_sync_table()` (`lite:includes/Install/Installer.php:492`). It holds one row per **Vendor order**: a Suborder, or a single-vendor Order. Parent Orders that have Suborders are skipped (`has_sub_order` = 1 check in `dokan_sync_insert_order`).
+Created by `Installer::create_sync_table()` (`lite:includes/Install/Installer.php::create_sync_table()`). It holds one row per **Vendor order**: a Suborder, or a single-vendor Order. Parent Orders that have Suborders are skipped (`has_sub_order` = 1 check in `dokan_sync_insert_order`).
 
 | Column | Type | Null / default | Meaning |
 |---|---|---|---|
@@ -96,18 +96,18 @@ Created by `Installer::create_sync_table()` (`lite:includes/Install/Installer.ph
 
 Indexes: `PRIMARY KEY (id)`, `KEY order_id (order_id)`, `KEY seller_id (seller_id)`.
 
-Writers: `dokan_sync_insert_order()` (`lite:includes/Order/functions.php:217`) deletes any existing row for the order and Vendor, then inserts a new one. `Order\Hooks::on_order_status_change()` (`lite:includes/Order/Hooks.php:95`) updates `order_status`. `Fees::calculate_gateway_fee()` and `VendorBalanceUpdateHandler::update_dokan_order_table()` (on `woocommerce_update_order`, when an edited Vendor order's Earning changes) update `net_amount`. `Commission\RecalculateCommissions` also contains `net_amount` update code, but its constructor returns before registering any hook, so it does not run. `Order\Manager::delete_seller_order()` deletes rows.
+Writers: `dokan_sync_insert_order()` (`lite:includes/Order/functions.php::dokan_sync_insert_order()`) deletes any existing row for the order and Vendor, then inserts a new one. `Order\Hooks::on_order_status_change()` (`lite:includes/Order/Hooks.php::on_order_status_change()`) updates `order_status`. `Fees::calculate_gateway_fee()` and `VendorBalanceUpdateHandler::update_dokan_order_table()` (on `woocommerce_update_order`, when an edited Vendor order's Earning changes) update `net_amount`. `Commission\RecalculateCommissions` also contains `net_amount` update code, but its constructor returns before registering any hook, so it does not run. `Order\Manager::delete_seller_order()` deletes rows.
 
 ### 4.2 `{prefix}dokan_vendor_balance`: the Balance ledger
 
-Created by `Installer::create_vendor_balance_table()` (`lite:includes/Install/Installer.php:565`). It is a double-entry-style ledger. The Vendor's Balance is computed as `SUM(debit) - SUM(credit)` over qualifying rows (`VendorBalanceStore::get_total_earning_by_vendor`, and `Vendor::get_balance` in `lite:includes/Vendor/Vendor.php`). Note the direction: `debit` holds money that **accrues to** the Vendor (Earnings), and `credit` holds money that **leaves** the Balance (Withdraws and Refunds).
+Created by `Installer::create_vendor_balance_table()` (`lite:includes/Install/Installer.php::create_vendor_balance_table()`). It is a double-entry-style ledger. The Vendor's Balance is computed as `SUM(debit) - SUM(credit)` over qualifying rows (`VendorBalanceStore::get_total_earning_by_vendor`, and `Vendor::get_balance` in `lite:includes/Vendor/Vendor.php`). Note the direction: `debit` holds money that **accrues to** the Vendor (Earnings), and `credit` holds money that **leaves** the Balance (Withdraws and Refunds).
 
 | Column | Type | Null / default | Meaning |
 |---|---|---|---|
 | `id` | `bigint(20) unsigned` | NOT NULL, AUTO_INCREMENT, PK | Row id |
 | `vendor_id` | `bigint(20) unsigned` | NOT NULL | Vendor user id |
 | `trn_id` | `bigint(20) unsigned` | NOT NULL | Source record id: a Vendor order id for `dokan_orders` and `dokan_refund` rows, a `dokan_withdraw.id` for `dokan_withdraw` rows |
-| `trn_type` | `varchar(30)` | NOT NULL | `dokan_orders`, `dokan_withdraw` or `dokan_refund` (`VendorBalance::TRN_TYPE_*`, `lite:includes/Models/VendorBalance.php:9`) |
+| `trn_type` | `varchar(30)` | NOT NULL | `dokan_orders`, `dokan_withdraw` or `dokan_refund` (`lite:includes/Models/VendorBalance.php::TRN_TYPE_DOKAN_ORDERS` and its sibling `TRN_TYPE_*` constants) |
 | `perticulars` | `text` | NOT NULL | Free-text description (column name misspelled in the schema; the model exposes it as `get_particulars()` / `set_particulars()`) |
 | `debit` | `decimal(19,4)` | NOT NULL | Amount added to the Balance |
 | `credit` | `decimal(19,4)` | NOT NULL | Amount removed from the Balance |
@@ -121,14 +121,14 @@ Row producers:
 
 | `trn_type` | Written by | Columns set |
 |---|---|---|
-| `dokan_orders` | `dokan_sync_insert_order()` via the `VendorBalance` model (`lite:includes/Order/functions.php:273`) | `debit` = Earning, particulars `New order`, `balance_date` = now + `dokan_get_withdraw_threshold()` days (`lite:includes/functions.php:4058`) |
+| `dokan_orders` | `dokan_sync_insert_order()` via the `VendorBalance` model (`lite:includes/Order/functions.php::dokan_sync_insert_order()`) | `debit` = Earning, particulars `New order`, `balance_date` = now + `dokan_get_withdraw_threshold()` days (`lite:includes/functions.php::dokan_get_withdraw_threshold()`) |
 | `dokan_orders` (status) | `Order\Hooks::on_order_status_change()` updates `status` unless the COD exclusion applies (`dokan_order_should_exclude_from_vendor_balance` filter) | `status` |
-| `dokan_withdraw` | `Withdraw\Hooks::update_vendor_balance()` on `dokan_withdraw_request_approved` (`lite:includes/Withdraw/Hooks.php:110`) | `credit` = Withdraw amount, `status` = `approved` |
-| `dokan_refund` | `RefundHandler::insert_into_balance_table()` on `dokan_refund_adjust_vendor_balance` (`lite:includes/Order/RefundHandler.php:191`) and `Order\Hooks::manage_refunded_for_order()` (`lite:includes/Order/Hooks.php:292`) | `credit` = refunded Earning, `status` = `approved` |
+| `dokan_withdraw` | `Withdraw\Hooks::update_vendor_balance()` on `dokan_withdraw_request_approved` (`lite:includes/Withdraw/Hooks.php::update_vendor_balance()`) | `credit` = Withdraw amount, `status` = `approved` |
+| `dokan_refund` | `RefundHandler::insert_into_balance_table()` on `dokan_refund_adjust_vendor_balance` (`lite:includes/Order/RefundHandler.php::insert_into_balance_table()`) and `Order\Hooks::manage_refunded_for_order()` (`lite:includes/Order/Hooks.php::manage_refunded_for_order()`) | `credit` = refunded Earning, `status` = `approved` |
 
 ### 4.3 `{prefix}dokan_withdraw`: Withdraw requests
 
-Created by `Installer::create_withdraw_table()` (`lite:includes/Install/Installer.php:468`).
+Created by `Installer::create_withdraw_table()` (`lite:includes/Install/Installer.php::create_withdraw_table()`).
 
 | Column | Type | Null / default | Meaning |
 |---|---|---|---|
@@ -148,13 +148,13 @@ On upgraded sites the `details` column was added by `V_3_2_12::update_dokan_with
 
 ### 4.4 `{prefix}dokan_reverse_withdrawal`: Reverse withdrawal ledger
 
-Created by `InstallerHelper::create_reverse_withdrawal_table()` (`lite:includes/ReverseWithdrawal/InstallerHelper.php:23`), called from both `Installer::create_tables()` and the `V_3_5_1` upgrader. Per `CONTEXT.md`, this is a receivable the Vendor owes the admin. It is never a Balance entry, and this table is separate from `dokan_vendor_balance`.
+Created by `InstallerHelper::create_reverse_withdrawal_table()` (`lite:includes/ReverseWithdrawal/InstallerHelper.php::create_reverse_withdrawal_table()`), called from both `Installer::create_tables()` and the `V_3_5_1` upgrader. Per `CONTEXT.md`, this is a receivable the Vendor owes the admin. It is never a Balance entry, and this table is separate from `dokan_vendor_balance`.
 
 | Column | Type | Null / default | Meaning |
 |---|---|---|---|
 | `id` | `bigint(20) UNSIGNED` | NOT NULL, AUTO_INCREMENT, PK | Row id |
 | `trn_id` | `bigint(20) UNSIGNED` | NOT NULL | Source id (an order id for order-based types) |
-| `trn_type` | `varchar(200)` | NOT NULL, default `order_commission` | One of the keys from `ReverseWithdrawal\Helper::get_transaction_types()` (`lite:includes/ReverseWithdrawal/Helper.php:57`): `opening_balance`, `order_commission`, `failed_transfer_reversal`, `product_advertisement`, `manual_order_commission`, `vendor_payment`, `order_refund`, `manual_product`, `manual_order`, `other` |
+| `trn_type` | `varchar(200)` | NOT NULL, default `order_commission` | One of the keys from `ReverseWithdrawal\Helper::get_transaction_types()` (`lite:includes/ReverseWithdrawal/Helper.php::get_transaction_types()`): `opening_balance`, `order_commission`, `failed_transfer_reversal`, `product_advertisement`, `manual_order_commission`, `vendor_payment`, `order_refund`, `manual_product`, `manual_order`, `other` |
 | `vendor_id` | `bigint(20) UNSIGNED` | NOT NULL | Vendor user id |
 | `note` | `mediumtext` | NULL | Free text |
 | `debit` | `decimal(19,4)` | NOT NULL, default `0.0000` | Amount the Vendor owes (per the helper's comments, the "admin will get payment" types) |
@@ -167,7 +167,7 @@ Indexes: `PRIMARY KEY (id)`, `KEY trn_date (trn_date)`, `KEY vendor_id_trn_date 
 
 ### 4.5 `{prefix}dokan_order_stats`: Analytics lookup table
 
-Created by `Installer::create_dokan_order_stats_table()` (`lite:includes/Install/Installer.php:671`). Existing sites got it from `V_3_13_0::resync_wc_order_stats_to_sync_dokan_stats`, which also calls WooCommerce `ReportsSync::regenerate_report_data()` to backfill the table. On every activation, `Installer::maybe_backfill_order_stats()` does the same when orders exist but the table is empty (skipped when WooCommerce Analytics is off or the `dokan_analytics_backfill_order_stats_on_activation` filter returns false). If WooCommerce refuses because another import is queued, it stores the attempt count in `dokan_order_stats_backfill_pending` and retries through the Action Scheduler hook `dokan_order_stats_backfill_retry`, with doubling delays, up to 8 attempts. It is a one-to-one companion of WooCommerce's `wc_order_stats` and is joined on `order_id` (`BaseQueryFilter::add_join_subquery`, `lite:includes/Analytics/Reports/BaseQueryFilter.php:27`).
+Created by `Installer::create_dokan_order_stats_table()` (`lite:includes/Install/Installer.php::create_dokan_order_stats_table()`). Existing sites got it from `V_3_13_0::resync_wc_order_stats_to_sync_dokan_stats`, which also calls WooCommerce `ReportsSync::regenerate_report_data()` to backfill the table. On every activation, `Installer::maybe_backfill_order_stats()` does the same when orders exist but the table is empty (skipped when WooCommerce Analytics is off or the `dokan_analytics_backfill_order_stats_on_activation` filter returns false). If WooCommerce refuses because another import is queued, it stores the attempt count in `dokan_order_stats_backfill_pending` and retries through the Action Scheduler hook `dokan_order_stats_backfill_retry`, with doubling delays, up to 8 attempts. It is a one-to-one companion of WooCommerce's `wc_order_stats` and is joined on `order_id` (`lite:includes/Analytics/Reports/BaseQueryFilter.php::add_join_subquery()`).
 
 | Column | Type | Null / default | Meaning |
 |---|---|---|---|
@@ -191,7 +191,7 @@ Created by `Installer::create_dokan_order_stats_table()` (`lite:includes/Install
 
 Indexes: `PRIMARY KEY (order_id)`, `KEY vendor_id (vendor_id)`, `KEY order_type (order_type)`.
 
-`order_type` values (`lite:includes/Analytics/Reports/OrderType.php:16`):
+`order_type` values (the `DOKAN_*` constants in `lite:includes/Analytics/Reports/OrderType.php`):
 
 | Value | Constant | Meaning |
 |---|---|---|
@@ -206,11 +206,11 @@ Indexes: `PRIMARY KEY (order_id)`, `KEY vendor_id (vendor_id)`, `KEY order_type 
 | 8 | `DOKAN_SUBSCRIPTION_ORDER` | Vendor subscription order |
 | 9 | `DOKAN_SUBSCRIPTION_REFUND_ORDER` | Vendor subscription refund |
 
-Writer: `DataStore::update()` (`lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:99`) runs `$wpdb->replace()` with values from `Commission\OrderCommission` for `shop_order` objects. Refund rows get zeros in every money column. The data passes through the `dokan_analytics_update_order_stats_data` filter first. `DataStore::delete_order()` (line 203) deletes the row.
+Writer: `DataStore::update()` (`lite:includes/Analytics/Reports/Orders/Stats/DataStore.php::update()`) runs `$wpdb->replace()` with values from `Commission\OrderCommission` for `shop_order` objects. Refund rows get zeros in every money column. The data passes through the `dokan_analytics_update_order_stats_data` filter first. `DataStore::delete_order()` (`::delete_order()` in the same file) deletes the row.
 
 ### 4.6 `{prefix}dokan_refund`: refund request table
 
-Created by `Installer::create_refund_table()` (`lite:includes/Install/Installer.php:538`). It was first introduced by `V_2_4_11::create_refund_table`. Lite only defines the schema and deletes rows in `Order\Manager::delete_seller_order()`. Rows are written by Dokan Pro.
+Created by `Installer::create_refund_table()` (`lite:includes/Install/Installer.php::create_refund_table()`). It was first introduced by `V_2_4_11::create_refund_table`. Lite only defines the schema and deletes rows in `Order\Manager::delete_seller_order()`. Rows are written by Dokan Pro.
 
 | Column | Type | Null / default |
 |---|---|---|
@@ -231,7 +231,7 @@ Indexes: `PRIMARY KEY (id)` only.
 
 ### 4.7 `{prefix}dokan_announcement`
 
-Created by `Installer::create_announcement_table()` (`lite:includes/Install/Installer.php:517`; also called by `V_2_1::create_announcement_table`). No Lite code reads or writes it. It is consumed by Dokan Pro.
+Created by `Installer::create_announcement_table()` (`lite:includes/Install/Installer.php::create_announcement_table()`; also called by `V_2_1::create_announcement_table`). No Lite code reads or writes it. It is consumed by Dokan Pro.
 
 | Column | Type | Null / default |
 |---|---|---|
@@ -244,7 +244,7 @@ Indexes: `PRIMARY KEY (id)` only.
 
 ### 4.8 Entity-relationship diagram
 
-No table declares foreign keys. The relationships below are logical: they are enforced in PHP, not by the database. Order ids point at `wc_orders.id` when HPOS is enabled and at `wp_posts.ID` (post type `shop_order` / `shop_order_refund`) when it is not. Lite declares HPOS compatibility at `lite:dokan-class.php:239` and switches its raw SQL on `OrderUtil::is_hpos_enabled()` (for example `Order\Manager`'s status-count query joins `OrderUtil::get_order_table_name()`).
+No table declares foreign keys. The relationships below are logical: they are enforced in PHP, not by the database. Order ids point at `wc_orders.id` when HPOS is enabled and at `wp_posts.ID` (post type `shop_order` / `shop_order_refund`) when it is not. Lite declares HPOS compatibility in `lite:dokan-class.php::declare_woocommerce_feature_compatibility()` and switches its raw SQL on `OrderUtil::is_hpos_enabled()` (for example `Order\Manager`'s status-count query joins `OrderUtil::get_order_table_name()`).
 
 ```mermaid
 erDiagram
@@ -370,7 +370,7 @@ flowchart TD
 
 Points worth knowing:
 
-- `add_store_name_meta_key_for_admin_users()` (`lite:includes/Install/Installer.php:186`) writes `dokan_store_name` user meta for every `administrator` and `shop_manager` that lacks it. The docblock explains why: admins are treated as Vendors by default, and several SQL queries rely on that meta key.
+- `add_store_name_meta_key_for_admin_users()` (`lite:includes/Install/Installer.php::add_store_name_meta_key_for_admin_users()`) writes `dokan_store_name` user meta for every `administrator` and `shop_manager` that lacks it. The docblock explains why: admins are treated as Vendors by default, and several SQL queries rely on that meta key.
 - `create_reverse_withdrawal_base_product()` exits early unless WooCommerce is active and the current user has `manage_options`. It creates a hidden, virtual, zero-price simple product and stores its id in the `dokan_reverse_withdrawal_product_id` option.
 - Only fresh installs set `dokan_new_settings_page_enabled` to `yes`. The inline comment says upgraded sites stay on the classic settings page.
 
@@ -404,7 +404,7 @@ sequenceDiagram
 
 The parent Order is a mirror, and operational accounting happens only on Vendor orders. This is deliberate; see ADR-0004 (`docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`). It is the reason `dokan_orders` and `dokan_vendor_balance` contain no rows for parent Orders that have Suborders.
 
-When a Vendor order is deleted, `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php:535`) deletes data in this sequence: `dokan_orders` rows (by `order_id`, optionally also `seller_id`); `dokan_refund` rows by `order_id`; then it fires `dokan_after_deleting_seller_order`; then it deletes `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw`; finally it deletes `dokan_reverse_withdrawal` rows whose `trn_type` is `order_commission`, `manual_order_commission` or `order_refund`.
+When a Vendor order is deleted, `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php::delete_seller_order()`) deletes data in this sequence: `dokan_orders` rows (by `order_id`, optionally also `seller_id`); `dokan_refund` rows by `order_id`; then it fires `dokan_after_deleting_seller_order`; then it deletes `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw`; finally it deletes `dokan_reverse_withdrawal` rows whose `trn_type` is `order_commission`, `manual_order_commission` or `order_refund`.
 
 ### 5.3 Schema migrations (upgraders)
 
@@ -442,7 +442,7 @@ flowchart TD
 | 3.14.0 | `V_3_14_0` | Rewrites the Commission settings in `dokan_selling`; background jobs migrate product, Vendor and category Commission meta |
 | 5.0.0 | `V_5_0_0::alter_dokan_order_stats_table_and_regenerate` | Adds the five tax and earning columns to `dokan_order_stats` and updates the `order_type` column comment |
 
-Some upgraders run as background processes. Their class name and file path are saved in the `dokan_background_processes` option, and `WeDevs_Dokan::after_plugins_loaded()` (`lite:dokan-class.php:365`) re-instantiates them on every load until they finish.
+Some upgraders run as background processes. Their class name and file path are saved in the `dokan_background_processes` option, and `WeDevs_Dokan::after_plugins_loaded()` (`lite:dokan-class.php::after_plugins_loaded()`) re-instantiates them on every load until they finish.
 
 ---
 
@@ -460,10 +460,10 @@ Some upgraders run as background processes. Their class name and file path are s
 | `dokan_pages` | `Installer::setup_pages` (through `dokan_save_legacy_settings_section`), `V_5_0_0::create_vendor_onboarding_page` | Page ids keyed `dashboard`, `store_listing`, `my_orders`, `vendor_onboarding` |
 | `dokan_admin_setup_wizard_ready` | `Installer::do_install` | Set to `false` on fresh install |
 | `dokan_order_stats_backfill_pending` | `Installer::maybe_backfill_order_stats` (`BACKFILL_PENDING_OPTION`) | Number of refused `dokan_order_stats` backfill attempts; present only while a retry is pending (§4.5) |
-| `dokan_new_settings_page_enabled` | `Installer::do_install` (`LegacySwitcher::NEW_SETTINGS_OPTION`, `lite:includes/Admin/Dashboard/LegacySwitcher.php:28`) | Enables the new admin settings page on fresh installs |
-| `dokan_admin_settings` | `SettingsRepository` (`OPTION_KEY`, `lite:includes/Admin/Settings/Repository/SettingsRepository.php:15`) | Canonical flat settings store (ADR-0002) |
+| `dokan_new_settings_page_enabled` | `Installer::do_install` (`lite:includes/Admin/Dashboard/LegacySwitcher.php::NEW_SETTINGS_OPTION`) | Enables the new admin settings page on fresh installs |
+| `dokan_admin_settings` | `SettingsRepository` (`lite:includes/Admin/Settings/Repository/SettingsRepository.php::OPTION_KEY`) | Canonical flat settings store (ADR-0002) |
 | `dokan_admin_settings_legacy_snapshot` | `LegacyMirror` (`SNAPSHOT_KEY`) | Snapshot used to reconcile the legacy mirror on `admin_init` (ADR-0003) |
-| `dokan_general`, `dokan_selling`, `dokan_withdraw`, `dokan_pages`, `dokan_appearance`, `dokan_privacy`, `dokan_reverse_withdrawal`, `dokan_shipping_status_setting`, `dokan_ai`, `dokan_geolocation`, `dokan_colors` | `LegacySettingsRepository` / `dokan_save_legacy_settings_section()` (`lite:includes/functions.php:1131`), kept populated by the Legacy mirror | Legacy per-section settings arrays read through `dokan_get_option( $key, $section )`. These are the sections Lite reads; the authoritative list comes from the Legacy bridge mapping (`BridgeBootstrap::known_sections`). |
+| `dokan_general`, `dokan_selling`, `dokan_withdraw`, `dokan_pages`, `dokan_appearance`, `dokan_privacy`, `dokan_reverse_withdrawal`, `dokan_shipping_status_setting`, `dokan_ai`, `dokan_geolocation`, `dokan_colors` | `LegacySettingsRepository` / `dokan_save_legacy_settings_section()` (`lite:includes/functions.php::dokan_save_legacy_settings_section()`), kept populated by the Legacy mirror | Legacy per-section settings arrays read through `dokan_get_option( $key, $section )`. These are the sections Lite reads; the authoritative list comes from the Legacy bridge mapping (`BridgeBootstrap::known_sections`). |
 | `dokan_reverse_withdrawal_product_id` | `InstallerHelper::create_reverse_withdrawal_base_product` (`Helper::get_base_product_option_key`) | Id of the hidden Reverse withdrawal payment product |
 | `dokan_advertisement_product_id` | read by Lite | Id of the advertisement product (written outside Lite) |
 | `woocommerce_enable_myaccount_registration` | `Installer::woocommerce_settings` | Forced to `yes` [WooCommerce option] |
@@ -484,32 +484,32 @@ Some upgraders run as background processes. Their class name and file path are s
 
 | Meta key | Written by | Content |
 |---|---|---|
-| `dokan_profile_settings` | `Registration` (`lite:includes/Registration.php:282`), `Vendor\Manager`, `Vendor::apply_changes` (`lite:includes/Vendor/Vendor.php:1629`) | Serialized store profile. Defaults from `Vendor::popluate_store_data`: `store_name`, `social`, `payment`, `phone`, `show_email`, `address`, `location`, `banner`, `icon`, `gravatar`, `enable_tnc`, `store_tnc`, `show_min_order_discount`, `store_seo`, `dokan_store_time_enabled`, `dokan_store_open_notice`, `dokan_store_close_notice`. Registration also adds `profile_completion`. |
+| `dokan_profile_settings` | `Registration` (`lite:includes/Registration.php::save_vendor_info()`), `Vendor\Manager`, `Vendor::apply_changes` (`lite:includes/Vendor/Vendor.php::apply_changes()`) | Serialized store profile. Defaults from `Vendor::popluate_store_data`: `store_name`, `social`, `payment`, `phone`, `show_email`, `address`, `location`, `banner`, `icon`, `gravatar`, `enable_tnc`, `store_tnc`, `show_min_order_discount`, `store_seo`, `dokan_store_time_enabled`, `dokan_store_open_notice`, `dokan_store_close_notice`. Registration also adds `profile_completion`. |
 | `dokan_store_name` | Registration, `Vendor::update_meta_data`, `Installer::add_store_name_meta_key_for_admin_users` | Store name, kept separate so it can be searched with SQL |
-| `dokan_enable_selling` | `Vendor::make_active` / `make_inactive` (`lite:includes/Vendor/Vendor.php:1017`, `:1035`), admin user profile | `yes` / `no`: Selling activation |
-| `dokan_publishing` | `Vendor\Manager`, admin user profile, `dokan_user_update_to_seller` (`lite:includes/functions.php:4457`) | `yes` / `no`: Direct publishing |
+| `dokan_enable_selling` | `Vendor::make_active` / `make_inactive` (`lite:includes/Vendor/Vendor.php::make_active()`, `::make_inactive()`), admin user profile | `yes` / `no`: Selling activation |
+| `dokan_publishing` | `Vendor\Manager`, admin user profile, `dokan_user_update_to_seller` (`lite:includes/functions.php::dokan_user_update_to_seller()`) | `yes` / `no`: Direct publishing |
 | `dokan_feature_seller` | `Vendor\Manager` | `yes` / `no`: featured Vendor |
 | `reset_sub_category` | `Vendor\Manager` | `yes` / `no` |
-| `dokan_admin_percentage`, `dokan_admin_percentage_type`, `dokan_admin_additional_fee`, `admin_category_commission` | `Commission\Settings\Vendor::save` (`lite:includes/Commission/Settings/Vendor.php:93`), `Vendor\Manager` | Vendor-level Commission formula override |
+| `dokan_admin_percentage`, `dokan_admin_percentage_type`, `dokan_admin_additional_fee`, `admin_category_commission` | `Commission\Settings\Vendor::save` (`lite:includes/Commission/Settings/Vendor.php::save()`), `Vendor\Manager` | Vendor-level Commission formula override |
 | `dokan_withdraw_default_method` | `Withdraw\Hooks` AJAX, `WithdrawControllerV2` | Vendor's default withdraw method |
 | `withdraw_date_limit` | read in `dokan_get_withdraw_threshold()` | Per-Vendor withdraw threshold in days; falls back to the `withdraw_date_limit` setting in `dokan_withdraw` |
-| `_dokan_reverse_withdrawal_threshold_exceeded_date` | `ReverseWithdrawal\Helper` (`lite:includes/ReverseWithdrawal/Helper.php:37`) | Date the Reverse withdrawal threshold was exceeded |
-| `_dokan_reverse_withdrawal_failed_actions` | `ReverseWithdrawal\Helper` (`lite:includes/ReverseWithdrawal/Helper.php:46`) | Actions applied because of unpaid Reverse withdrawal |
-| `_vendor_id` | read in `dokan_get_current_user_id` (`lite:includes/functions.php:55`) and `VendorUtil` | Links a Vendor Staff user to its Vendor; the meta itself is written outside Lite |
+| `_dokan_reverse_withdrawal_threshold_exceeded_date` | `ReverseWithdrawal\Helper` (`lite:includes/ReverseWithdrawal/Helper.php::balance_threshold_exceed_date_key()`) | Date the Reverse withdrawal threshold was exceeded |
+| `_dokan_reverse_withdrawal_failed_actions` | `ReverseWithdrawal\Helper` (`lite:includes/ReverseWithdrawal/Helper.php::failed_actions_key()`) | Actions applied because of unpaid Reverse withdrawal |
+| `_vendor_id` | read in `dokan_get_current_user_id` (`lite:includes/functions.php::dokan_get_current_user_id()`) and `VendorUtil` | Links a Vendor Staff user to its Vendor; the meta itself is written outside Lite |
 | `first_name`, `last_name` | `dokan_user_update_to_seller` | Core WordPress user meta |
 
 ### 6.4 Post meta (`wp_postmeta`) and post fields
 
-Vendor ownership of a product is stored in the core `wp_posts.post_author` column, not in meta. `dokan_get_vendor_by_product()` (`lite:includes/Product/functions.php:553`) reads `post_author` and falls back to the parent product for variations, through the `dokan_get_vendor_by_product` filter.
+Vendor ownership of a product is stored in the core `wp_posts.post_author` column, not in meta. `dokan_get_vendor_by_product()` (`lite:includes/Product/functions.php::dokan_get_vendor_by_product()`) reads `post_author` and falls back to the parent product for variations, through the `dokan_get_vendor_by_product` filter.
 
 | Meta key | Object | Written by | Purpose |
 |---|---|---|---|
-| `_per_product_admin_commission`, `_per_product_admin_commission_type`, `_per_product_admin_additional_fee` | product | `Commission\Settings\Product::save` (`lite:includes/Commission/Settings/Product.php:95`) | Product-level Commission formula. Only users with `manage_woocommerce` change it: on REST product saves, `Product\Hooks::protect_per_product_commission_meta()` (`woocommerce_rest_pre_insert_product_object`, `lite:includes/Product/Hooks.php:63`, `:665-680`) restores the stored values for anyone else (ADR-0028) |
+| `_per_product_admin_commission`, `_per_product_admin_commission_type`, `_per_product_admin_additional_fee` | product | `Commission\Settings\Product::save` (`lite:includes/Commission/Settings/Product.php::save()`) | Product-level Commission formula. Only users with `manage_woocommerce` change it: on REST product saves, `Product\Hooks::protect_per_product_commission_meta()` (hooked to `woocommerce_rest_pre_insert_product_object` in `lite:includes/Product/Hooks.php::__construct()`; body in `::protect_per_product_commission_meta()`) restores the stored values for anyone else (ADR-0028) |
 | `_dokan_new_product_email_sent` | product | `Product\Hooks`, `Emails\NewProduct`, `Emails\NewProductPending` | `yes` / `no` guard against sending the new-product email twice |
-| `_dokan_previous_status` | product | `ProductStatusChanger` (`lite:includes/Abstracts/ProductStatusChanger.php:309`), `ProductStatusRollback` | Status to restore after a bulk status change |
-| `_dokan_catalog_mode` | product | `CatalogMode\Dashboard\Products` (`lite:includes/CatalogMode/Dashboard/Products.php:99`), `ProductBulkEdit` | Per-product catalog mode settings |
-| `chosen_product_cat` | product | `ProductCategory\Helper` (`lite:includes/ProductCategory/Helper.php:197`) | Categories selected in the Vendor dashboard |
-| `pageview` | product | `PageViews` (`lite:includes/PageViews.php:62`) | View counter; `dokan_author_pageviews()` sums it per Vendor |
+| `_dokan_previous_status` | product | `ProductStatusChanger` (`lite:includes/Abstracts/ProductStatusChanger.php::change_status()`), `ProductStatusRollback` | Status to restore after a bulk status change |
+| `_dokan_catalog_mode` | product | `CatalogMode\Dashboard\Products` (`lite:includes/CatalogMode/Dashboard/Products.php::save_catalog_mode_data()`), `ProductBulkEdit` | Per-product catalog mode settings |
+| `chosen_product_cat` | product | `ProductCategory\Helper` (`lite:includes/ProductCategory/Helper.php::set_object_terms_from_chosen_categories()`) | Categories selected in the Vendor dashboard |
+| `pageview` | product | `PageViews` (`lite:includes/PageViews.php::update_view()`) | View counter; `dokan_author_pageviews()` sums it per Vendor |
 | `dokan_dummy_data` | product | `DummyData\Importer` | Marks imported sample data |
 | `_wp_page_template` | page | `Installer::create_page` (only when a template is given) | Page template |
 | Standard WooCommerce product meta (`_regular_price`, `_sale_price`, `_stock`, ...) | product | Legacy helpers in `lite:includes/wc-functions.php` | [WooCommerce] meta written directly by Lite's legacy product form handlers |
@@ -518,23 +518,23 @@ Term meta read by Lite: `per_category_admin_commission`, `per_category_admin_com
 
 ### 6.5 Order meta and order-item meta
 
-Order meta is read and written through WooCommerce CRUD (`$order->get_meta()` / `update_meta_data()`). It therefore lands in `wc_orders_meta` under HPOS and in `wp_postmeta` otherwise. Suborders are linked to their parent through WooCommerce's own parent field (`$order->set_parent_id()`, `lite:includes/Order/Manager.php:700`), which is `wc_orders.parent_order_id` or `wp_posts.post_parent`. Suborders are created with `created_via = dokan`.
+Order meta is read and written through WooCommerce CRUD (`$order->get_meta()` / `update_meta_data()`). It therefore lands in `wc_orders_meta` under HPOS and in `wp_postmeta` otherwise. Suborders are linked to their parent through WooCommerce's own parent field (`$order->set_parent_id()` in `lite:includes/Order/Manager.php::create_sub_order()`), which is `wc_orders.parent_order_id` or `wp_posts.post_parent`. Suborders are created with `created_via = dokan`.
 
 | Meta key | Level | Written by | Meaning |
 |---|---|---|---|
-| `has_sub_order` | Order | `Order\Manager::maybe_split_orders` (`lite:includes/Order/Manager.php:996`), `REST\OrderController` | Truthy on a parent Order that has Suborders |
-| `_dokan_vendor_id` | Order | `Order\Manager::create_sub_order` (`lite:includes/Order/Manager.php:667`) and the single-vendor branch of `maybe_split_orders` (`:987`) | Vendor that owns this Vendor order. Commission resolves the Vendor of each line item from this meta and falls back to the product author only when it is `0` (ADR-0021) |
-| `dokan_gateway_fee` | Order | `Fees` (`lite:includes/Fees.php:100`) | Gateway processing fee |
+| `has_sub_order` | Order | `Order\Manager::maybe_split_orders` (`lite:includes/Order/Manager.php::maybe_split_orders()`), `REST\OrderController` | Truthy on a parent Order that has Suborders |
+| `_dokan_vendor_id` | Order | `Order\Manager::create_sub_order` (`lite:includes/Order/Manager.php::create_sub_order()`) and the single-vendor branch of `::maybe_split_orders()` | Vendor that owns this Vendor order. Commission resolves the Vendor of each line item from this meta and falls back to the product author only when it is `0` (ADR-0021) |
+| `dokan_gateway_fee` | Order | `Fees` (`lite:includes/Fees.php::calculate_gateway_fee()`) | Gateway processing fee |
 | `dokan_gateway_fee_paid_by`, `dokan_admin_gateway_fee` | Order | read by `Commission\OrderCommission` and `OrderRefundCommission` | Who bears the gateway fee, and the admin's portion (written outside Lite) |
-| `shipping_fee_recipient`, `tax_fee_recipient`, `shipping_tax_fee_recipient` | Order | `Fees` (`lite:includes/Fees.php:170`, `:203`, `:231`) | Fee recipient snapshot (`admin` / `seller`) |
+| `shipping_fee_recipient`, `tax_fee_recipient`, `shipping_tax_fee_recipient` | Order | `Fees` (`lite:includes/Fees.php::get_shipping_fee_recipient()`, `::get_tax_fee_recipient()`, `::get_shipping_tax_fee_recipient()`) | Fee recipient snapshot (`admin` / `seller`) |
 | `_dokan_admin_fee` | Order | `V_2_7_3` (legacy) | Historical admin fee on old Suborders |
-| `_dokan_reverse_withdrawal_payment_settled` | Order | `ReverseWithdrawal\Order` (`PAYMENT_SETTLED_META`, `lite:includes/ReverseWithdrawal/Order.php:24`) | `yes` once a Reverse withdrawal payment order has been credited |
-| `_dokan_commission_source`, `_dokan_commission_rate`, `_dokan_commission_type`, `_dokan_additional_fee`, `_dokan_commission_meta` | line item | `Commission\Settings\OrderItem::save` (`lite:includes/Commission/Settings/OrderItem.php:88`) | Commission formula snapshot at order time. `Order\Hooks` filters the legacy key `dokan_commission_meta` into `_dokan_commission_meta`. |
-| `_dokan_parent_order_item_id` | line item | `Order\Manager::create_line_items` (`lite:includes/Order/Manager.php:747`) | Links a Suborder line item to the parent Order's line item |
-| `_dokan_reverse_withdrawal_balance` | line item | `ReverseWithdrawal\Order::store_line_item_metas` (`lite:includes/ReverseWithdrawal/Order.php:218`) | Amount being paid toward the Reverse withdrawal |
-| `coupon_info`, `coupon_data` | coupon item | `Order\Manager::create_coupons` (`lite:includes/Order/Manager.php:922`) | Coupon snapshot copied onto Suborders |
-| `_dokan_coupon_info` | line item | `Vendor\Coupon` (`DOKAN_COUPON_META_KEY`, `lite:includes/Vendor/Coupon.php:16`; written at checkout by `add_coupon_info_to_order_item`, `:292-317`, and by `save_coupon_data_to_order_item`, `:199-243`) | Per-coupon discount on that line item. A coupon added to a parent Order after checkout updates the parent's items but writes no record on the Suborder items (ADR-0086) |
-| `seller_id` | shipping item | `Shipping\Hooks` (`lite:includes/Shipping/Hooks.php:92`) | Vendor that a shipping package belongs to |
+| `_dokan_reverse_withdrawal_payment_settled` | Order | `ReverseWithdrawal\Order` (`lite:includes/ReverseWithdrawal/Order.php::PAYMENT_SETTLED_META`) | `yes` once a Reverse withdrawal payment order has been credited |
+| `_dokan_commission_source`, `_dokan_commission_rate`, `_dokan_commission_type`, `_dokan_additional_fee`, `_dokan_commission_meta` | line item | `Commission\Settings\OrderItem::save` (`lite:includes/Commission/Settings/OrderItem.php::save()`) | Commission formula snapshot at order time. `Order\Hooks` filters the legacy key `dokan_commission_meta` into `_dokan_commission_meta`. |
+| `_dokan_parent_order_item_id` | line item | `Order\Manager::create_line_items` (`lite:includes/Order/Manager.php::create_line_items()`) | Links a Suborder line item to the parent Order's line item |
+| `_dokan_reverse_withdrawal_balance` | line item | `ReverseWithdrawal\Order::store_line_item_metas` (`lite:includes/ReverseWithdrawal/Order.php::store_line_item_metas()`) | Amount being paid toward the Reverse withdrawal |
+| `coupon_info`, `coupon_data` | coupon item | `Order\Manager::create_coupons` (`lite:includes/Order/Manager.php::create_coupons()`) | Coupon snapshot copied onto Suborders |
+| `_dokan_coupon_info` | line item | `Vendor\Coupon` (`lite:includes/Vendor/Coupon.php::DOKAN_COUPON_META_KEY`; written at checkout by `::add_coupon_info_to_order_item()` and by `::save_coupon_data_to_order_item()`) | Per-coupon discount on that line item. A coupon added to a parent Order after checkout updates the parent's items but writes no record on the Suborder items (ADR-0086) |
+| `seller_id` | shipping item | `Shipping\Hooks` (`lite:includes/Shipping/Hooks.php::add_shipping_pack_meta()`) | Vendor that a shipping package belongs to |
 
 ---
 
@@ -560,22 +560,22 @@ Order meta is read and written through WooCommerce CRUD (`$order->get_meta()` / 
 | `dokan_analytics_update_order_stats_data` | filter | `Orders\Stats\DataStore::update` | Row written to `dokan_order_stats` |
 | `dokan_analytics_update_order_stats`, `dokan_analytics_delete_order_stats` | action | `Orders\Stats\DataStore::update` / `delete_order` | After the upsert or delete |
 | `dokan_get_vendor_by_product` | filter | `dokan_get_vendor_by_product` | Override the `post_author`-based Vendor lookup |
-| `dokan_admin_settings_changed` | action | `SettingsRepository` (lines 101, 128) | Canonical settings write; the Legacy mirror listens to it |
+| `dokan_admin_settings_changed` | action | `lite:includes/Admin/Settings/Repository/SettingsRepository.php::update()`, `::replace()` | Canonical settings write; the Legacy mirror listens to it |
 | `dokan_legacy_settings_pre_save` (filter), `dokan_legacy_settings_changed` (action) | both | `LegacySettingsRepository` | Legacy section writes |
-| `dokan_admin_settings_legacy_mirror` | filter | `LegacySettingsBridge` (line 150) | Turn the Legacy mirror off (ADR-0003) |
+| `dokan_admin_settings_legacy_mirror` | filter | `lite:includes/Admin/Settings/Migration/LegacySettingsBridge.php::is_legacy_mirror_enabled()` | Turn the Legacy mirror off (ADR-0003) |
 
 ### 7.2 Hooks Dokan Lite consumes (data layer)
 
 | Hook | Owner and where fired | Lite callback |
 |---|---|---|
-| `woocommerce_checkout_update_order_meta` | [WooCommerce] `wc:includes/class-wc-checkout.php:514` | `Order\Hooks::split_vendor_orders`; `dokan_sync_insert_order` (priority 20) |
-| `woocommerce_store_api_checkout_order_processed` | [WooCommerce] `wc:src/StoreApi/Routes/V1/Checkout.php:695`, `wc:src/StoreApi/Routes/V1/CheckoutOrder.php:160` | Same two callbacks |
-| `woocommerce_process_shop_order_meta` (admin only) | [WooCommerce] `wc:includes/admin/class-wc-admin-meta-boxes.php:262`, `wc:src/Internal/Admin/Orders/Edit.php:318` | `dokan_sync_insert_order` (priority 60) |
-| `woocommerce_order_status_changed` | [WooCommerce] `wc:includes/class-wc-order.php:478` | `Order\Hooks::on_order_status_change` (10), `manage_refunded_for_order` (15), `on_sub_order_change` (99) |
-| `woocommerce_order_refunded` | [WooCommerce] `wc:includes/wc-order-functions.php:752` | `RefundHandler::handle_refund` |
-| `woocommerce_analytics_update_order_stats` | [WooCommerce] `wc:src/Admin/API/Reports/Orders/Stats/DataStore.php:658` | `Orders\Stats\ScheduleListener::sync_dokan_order` |
-| `woocommerce_analytics_delete_order_stats` | [WooCommerce] `wc:src/Admin/API/Reports/Orders/Stats/DataStore.php:691`, `:739` | `Orders\Stats\ScheduleListener::delete_order` |
-| `woocommerce_register_post_type_product` | [WooCommerce] `wc:includes/class-wc-post-types.php:370` | `dokan_manage_capability_for_woocommerce_product` |
+| `woocommerce_checkout_update_order_meta` | [WooCommerce] `wc:includes/class-wc-checkout.php::create_order()` | `Order\Hooks::split_vendor_orders`; `dokan_sync_insert_order` (priority 20) |
+| `woocommerce_store_api_checkout_order_processed` | [WooCommerce] `wc:src/StoreApi/Routes/V1/Checkout.php::process_order()`, `wc:src/StoreApi/Routes/V1/CheckoutOrder.php::get_route_post_response()` | Same two callbacks |
+| `woocommerce_process_shop_order_meta` (admin only) | [WooCommerce] `wc:includes/admin/class-wc-admin-meta-boxes.php::save_meta_boxes()`, `wc:src/Internal/Admin/Orders/Edit.php::handle_order_update()` | `dokan_sync_insert_order` (priority 60) |
+| `woocommerce_order_status_changed` | [WooCommerce] `wc:includes/class-wc-order.php::status_transition()` | `Order\Hooks::on_order_status_change` (10), `manage_refunded_for_order` (15), `on_sub_order_change` (99) |
+| `woocommerce_order_refunded` | [WooCommerce] `wc:includes/wc-order-functions.php::wc_create_refund()` | `RefundHandler::handle_refund` |
+| `woocommerce_analytics_update_order_stats` | [WooCommerce] `wc:src/Admin/API/Reports/Orders/Stats/DataStore.php::update()` | `Orders\Stats\ScheduleListener::sync_dokan_order` |
+| `woocommerce_analytics_delete_order_stats` | [WooCommerce] `wc:src/Admin/API/Reports/Orders/Stats/DataStore.php::delete_order()`, `::delete_refund()` | `Orders\Stats\ScheduleListener::delete_order` |
+| `woocommerce_register_post_type_product` | [WooCommerce] `wc:includes/class-wc-post-types.php::register_post_types()` | `dokan_manage_capability_for_woocommerce_product` |
 | `dokan_checkout_update_order_meta` | [Lite] `Order\Manager::maybe_split_orders` | `dokan_sync_insert_order` |
 | `dokan_withdraw_request_approved` | [Lite] `Withdraw::update` | `Withdraw\Hooks::update_vendor_balance` (priority 11) |
 | `dokan_upgrade_is_upgrade_required`, `dokan_upgrade_upgrades` | [Lite] | `Upgrades::is_upgrade_required`, `Upgrades::get_upgrades` (priority 1) |
@@ -597,7 +597,7 @@ The data layer itself exposes one endpoint. All table-backed REST resources (ord
 ## 9. Permissions & capabilities
 
 - **Schema changes** run only from the activation hook, which WordPress restricts to users who can activate plugins, or from the upgrade AJAX action, which is nonce-checked and requires `update_plugins`. The upgrade notice is shown only to users with `update_plugins` (`AdminNotice::show_notice`).
-- **Roles and capabilities** are stored in the `{prefix}user_roles` option. `Installer::user_roles()` (`lite:includes/Install/Installer.php:287`) creates the `seller` role, labelled "Vendor", with WordPress and WooCommerce product capabilities plus `dokandar`. It grants every capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager`. Capability semantics are covered in ADR-0005 (`docs/adr/0005-canonical-admin-capability.md`) and ADR-0007 (`docs/adr/0007-staff-actions-gated-by-dokan-capabilities.md`).
+- **Roles and capabilities** are stored in the `{prefix}user_roles` option. `Installer::user_roles()` (`lite:includes/Install/Installer.php::user_roles()`) creates the `seller` role, labelled "Vendor", with WordPress and WooCommerce product capabilities plus `dokandar`. It grants every capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager`. Capability semantics are covered in ADR-0005 (`docs/adr/0005-canonical-admin-capability.md`) and ADR-0007 (`docs/adr/0007-staff-actions-gated-by-dokan-capabilities.md`).
 - **Raw SQL** in the data layer uses `$wpdb->prepare()` with placeholders, or `$wpdb->insert()` / `update()` / `delete()` / `replace()` with explicit format arrays. Identifier placeholders use `%i` in the newer upgraders. Values are sanitized before persistence (for example `wc_format_decimal` for Commission amounts and `sanitize_text_field` / `wc_clean` for meta).
 - **Ownership** of a row is expressed by its Vendor id column: `seller_id`, `vendor_id` or `user_id`. Ownership enforcement happens in the abilities and REST layers (ADR-0006), not in the database.
 
@@ -633,7 +633,7 @@ The data layer itself exposes one endpoint. All table-backed REST resources (ord
 - **Change what counts toward Balance.** Use `dokan_vendor_total_balance_order_status` and `dokan_vendor_total_balance_trn_types`.
 - **React to row lifecycle.** Use `dokan_withdraw_created` / `_updated` / `_deleted`, `dokan_reverse_withdrawal_created`, `dokan_after_deleting_seller_order`, `dokan_analytics_update_order_stats` and `dokan_analytics_delete_order_stats`.
 - **Settings storage.** Read and write through the settings accessor API against `dokan_admin_settings` (ADR-0002). Do not write legacy `dokan_<section>` rows directly; the Legacy mirror adopts such writes, but the canonical store is authoritative. Disable mirroring with `add_filter( 'dokan_admin_settings_legacy_mirror', '__return_false' )` (ADR-0003).
-- **Uninstall.** `uninstall.php` removes data only when the `data_clear_on_uninstall` setting in `dokan_general` is `on`. It then changes Vendors to the customer role, removes roles and capabilities, drops the tables in `Dokan_Uninstaller::get_tables()` (`lite:uninstall.php:145`), deletes a fixed list of user meta keys (`delete_usermeta`, line 226), deletes the Dokan pages, and deletes every option whose name contains `dokan` (line 50).
+- **Uninstall.** `uninstall.php` removes data only when the `data_clear_on_uninstall` setting in `dokan_general` is `on`. It then changes Vendors to the customer role, removes roles and capabilities, drops the tables in `Dokan_Uninstaller::get_tables()` (`lite:uninstall.php::get_tables()`), deletes a fixed list of user meta keys (`lite:uninstall.php::delete_usermeta()`), deletes the Dokan pages, and deletes every option whose name contains `dokan` (the `DELETE FROM $wpdb->options` query in `lite:uninstall.php::__construct()`).
 
 **Related ADRs:** ledger business rules [0040](../0040-a-vendor-order-earning-is-written-to-the-vendor-balance-ledger-once-when-the-order-is-created-not-when-it-is-paid.md), [0044](../0044-the-vendor-balance-ledger-copies-the-vendor-order-status-on-every-status-change.md), [0042](../0042-editing-a-vendor-order-recalculates-its-earning-in-the-vendor-balance-ledger.md), [0045](../0045-trashing-an-order-parks-its-vendor-earning-and-deleting-it-in-wp-admin-erases-its-ledger-rows.md), [0048](../0048-each-refund-is-booked-as-a-separate-dokan-refund-credit-on-the-vendor-balance.md), [0056](../0056-a-withdraw-moves-money-only-when-the-admin-approves-it-and-approval-is-final.md), [0064](../0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md); analytics table [0098](../0098-analytics-count-each-sale-once-at-the-vendor-order-level-and-never-count-parent-orders.md), [0100](../0100-commission-and-earning-in-analytics-are-the-vendor-orders-figures-after-refunds-while-refunds-reduce-sales-as-separate-rows.md).
 
@@ -641,7 +641,7 @@ The data layer itself exposes one endpoint. All table-backed REST resources (ord
 
 ## Known gaps
 
-- `dokan_order_stats` is not in the `Dokan_Uninstaller::get_tables()` drop list (`lite:uninstall.php:145`). Whether it is removed by some other mechanism on uninstall could not be determined from Lite source.
+- `dokan_order_stats` is not in the `Dokan_Uninstaller::get_tables()` drop list (`lite:uninstall.php::get_tables()`). Whether it is removed by some other mechanism on uninstall could not be determined from Lite source.
 - The full list of legacy `dokan_<section>` option rows is built at runtime from the Legacy bridge mappings (`BridgeBootstrap::known_sections`). The sections listed in §6.1 are those that Lite code reads through `dokan_get_option()`. Sections added by Dokan Pro are not enumerated.
 - `dokan_admin_gateway_fee`, `dokan_gateway_fee_paid_by`, the `_vendor_id` user meta and the `dokan_advertisement_product_id` option are read by Lite, but no Lite code writes them. They are written outside Lite (consumed by Dokan Pro or gateway integrations); their writers are out of scope for this public document.
 - The exact structure of the serialized `dokan_withdraw.details` payload depends on each withdraw method's `get_formatted_details()` implementation and on the `dokan_withdraw_request_details_data` filter, so it is not fully specified here.

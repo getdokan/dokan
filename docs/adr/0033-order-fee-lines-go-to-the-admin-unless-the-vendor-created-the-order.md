@@ -8,11 +8,11 @@ WooCommerce orders can carry **fee lines** (`WC_Order_Item_Fee`): a payment surc
 
 ## Rule
 
-- `OrderCommission::get_order_fee_recipient()` (`lite:includes/Commission/OrderCommission.php:626-634`) returns `admin` by default. When the order meta `_wc_order_attribution_source_type` equals `vendor`, it returns `seller`. The result passes through the filter `dokan_order_commission_order_fee_recipient` (recipient, order, calculator).
-- The recipient receives `get_total_fees()` minus fee amounts already refunded (`get_admin_order_fees()` / `get_vendor_order_fees()`, `:596-617`; refunded fees summed per fee line in `get_order_fee_refunded()`, `:641-657`). `get_total_fees()` is the sum of fee line totals excluding their tax.
+- `OrderCommission::get_order_fee_recipient()` (`lite:includes/Commission/OrderCommission.php::get_order_fee_recipient()`) returns `admin` by default. When the order meta `_wc_order_attribution_source_type` equals `vendor`, it returns `seller`. The result passes through the filter `dokan_order_commission_order_fee_recipient` (recipient, order, calculator).
+- The recipient receives `get_total_fees()` minus fee amounts already refunded (`::get_admin_order_fees()` / `::get_vendor_order_fees()`; refunded fees summed per fee line in `::get_order_fee_refunded()`). `get_total_fees()` is the sum of fee line totals excluding their tax.
 - The recipient is **not** frozen onto the order, unlike shipping and tax recipients: it is recomputed on every calculation from the attribution meta and the filter.
 - `_wc_order_attribution_source_type` is WooCommerce's order attribution field. `vendor` is not a value WooCommerce assigns itself; it is written by add-ons that let a Vendor create an order on a customer's behalf. Orders placed through checkout carry WooCommerce's own values (for example `typein`, `organic`, `utm`, `referral`) and orders created in WP Admin carry `admin`, so their fee lines go to the admin.
-- `get_data()` exposes the result as `admin_order_fees`, `vendor_order_fees` and `order_fees_recipient` (`:441-455`).
+- `get_data()` exposes the result as `admin_order_fees`, `vendor_order_fees` and `order_fees_recipient` (`lite:includes/Commission/OrderCommission.php::get_data()`).
 
 ## Settings that change it
 
@@ -34,14 +34,14 @@ Commission Fixed 10 % + 0 flat; shipping and tax recipients irrelevant (no shipp
 
 ## Edge cases
 
-- **Multi-vendor Orders.** `Manager::create_sub_order()` copies product lines, shipping, tax and coupons to each Suborder but never copies fee lines (`lite:includes/Order/Manager.php:679-696`). Fee lines therefore stay on the parent Order only. Because the parent is never calculated (Lite ADR 0004), those fees enter no Vendor order, no `dokan_orders` row and no Balance; the money stays with whoever collected the payment, which in practice is the admin. A gateway processing fee prorated on the parent total is still computed against a total that includes these fees.
+- **Multi-vendor Orders.** `Manager::create_sub_order()` copies product lines, shipping, tax and coupons to each Suborder but never copies fee lines (`lite:includes/Order/Manager.php::create_sub_order()`). Fee lines therefore stay on the parent Order only. Because the parent is never calculated (Lite ADR 0004), those fees enter no Vendor order, no `dokan_orders` row and no Balance; the money stays with whoever collected the payment, which in practice is the admin. A gateway processing fee prorated on the parent total is still computed against a total that includes these fees.
 - **Tax on fee lines** is part of `get_total_tax()` and therefore follows the product tax recipient, not this rule (see [ADR-0034](./0034-product-tax-goes-to-the-tax-fee-recipient-and-excludes-shipping-tax.md)).
 - **Negative fees** (discount-like fee lines) reduce the recipient's figure by the same logic.
-- **Refund calculation.** `OrderRefundCommission` computes the per-refund Vendor and admin deductions from product lines, tax, shipping and any gateway fee returned through `dokan_refund_gateway_fee`; refunded fee lines are not part of it (`lite:includes/Commission/OrderRefundCommission.php:287-317`); refunded fee lines are reflected only through the refund-netted recalculation of the order.
+- **Refund calculation.** `OrderRefundCommission` computes the per-refund Vendor and admin deductions from product lines, tax, shipping and any gateway fee returned through `dokan_refund_gateway_fee`; refunded fee lines are not part of it (`lite:includes/Commission/OrderRefundCommission.php::get_vendor_total_refund()`, `::get_admin_total_refund()`); refunded fee lines are reflected only through the refund-netted recalculation of the order.
 
 ## Why
 
-No decision record exists. The code comment says "check order is a manual order then fee recipient is seller" (`lite:includes/Commission/OrderCommission.php:628`), which suggests the intent: fees a Vendor adds to an order they build themselves are the Vendor's charges, while fees added at checkout are normally marketplace-level surcharges.
+No decision record exists. The code comment says "check order is a manual order then fee recipient is seller" (`lite:includes/Commission/OrderCommission.php::get_order_fee_recipient()`), which suggests the intent: fees a Vendor adds to an order they build themselves are the Vendor's charges, while fees added at checkout are normally marketplace-level surcharges.
 
 ## Consequences & risks
 

@@ -33,43 +33,43 @@ Dokan Lite and Dokan Pro form one bounded context, and Pro depends on Lite, neve
 
 | Step | Location | Behavior |
 |---|---|---|
-| Autoloader | `lite:dokan.php:48` | `require_once vendor/autoload.php`. This also loads the Composer `files` autoload entries `includes/functions-rest-api.php` and `includes/functions-dashboard-navigation.php` (`lite:composer.json:45-48`), so those helpers exist from the very start. |
-| Singleton class | `lite:dokan.php:55` | Loads `dokan-class.php` (`WeDevs_Dokan`). |
-| `DOKAN_FILE` | `lite:dokan.php:58` | Defines the main file constant. |
-| Container | `lite:dokan.php:67` | `global $dokan_container = new Container()`. |
-| Root provider | `lite:dokan.php:70` | `$dokan_container->addServiceProvider( new ServiceProvider() )`. League calls `boot()` on a bootable provider as soon as it is added (`lite:lib/packages/League/Container/ServiceProvider/ServiceProviderAggregate.php:25-39`). `ServiceProvider::boot()` adds the 14 child providers. **No service is instantiated at this point.** |
-| `dokan_get_container()` | `lite:dokan.php:79` | Returns the global container. |
-| `dokan()` | `lite:dokan.php:90` | Returns `WeDevs_Dokan::init()`. |
-| Kick-off | `lite:dokan.php:95` | Calls `dokan()` while the plugin file is being loaded. |
+| Autoloader | `lite:dokan.php` (top level, the `vendor/autoload.php` require) | `require_once vendor/autoload.php`. This also loads the Composer `files` autoload entries `includes/functions-rest-api.php` and `includes/functions-dashboard-navigation.php` (`lite:composer.json` (key `autoload.files`)), so those helpers exist from the very start. |
+| Singleton class | `lite:dokan.php` (top level, the `dokan-class.php` require) | Loads `dokan-class.php` (`WeDevs_Dokan`). |
+| `DOKAN_FILE` | `lite:dokan.php` (top level, the `DOKAN_FILE` define) | Defines the main file constant. |
+| Container | `lite:dokan.php` (top level, `$dokan_container`) | `global $dokan_container = new Container()`. |
+| Root provider | `lite:dokan.php` (top level, the `addServiceProvider()` call) | `$dokan_container->addServiceProvider( new ServiceProvider() )`. League calls `boot()` on a bootable provider as soon as it is added (`lite:lib/packages/League/Container/ServiceProvider/ServiceProviderAggregate.php::add()`). `ServiceProvider::boot()` adds the 14 child providers. **No service is instantiated at this point.** |
+| `dokan_get_container()` | `lite:dokan.php::dokan_get_container()` | Returns the global container. |
+| `dokan()` | `lite:dokan.php::dokan()` | Returns `WeDevs_Dokan::init()`. |
+| Kick-off | `lite:dokan.php` (top level, the final `dokan()` call) | Calls `dokan()` while the plugin file is being loaded. |
 
-### 2.2 `WeDevs_Dokan` (`lite:dokan-class.php:23`)
+### 2.2 `WeDevs_Dokan` (`lite:dokan-class.php`)
 
 | Method | Location | Hook / trigger | Responsibility |
 |---|---|---|---|
-| `__construct()` | `lite:dokan-class.php:70` | Plugin file load | Calls `define_constants()`. Registers the activation and deactivation hooks. Consumes `before_woocommerce_init`, `woocommerce_loaded` and `woocommerce_flush_rewrite_rules`. Resolves the `admin_notices` service (`:81`) and the `tracker` service (`:83`, through `init_appsero_tracker()` at `:434`). Adds `woocommerce_not_loaded` on `plugins_loaded` priority 11 (`:85`). |
-| `init()` | `lite:dokan-class.php:94` | — | Singleton accessor. |
-| `__get( $prop )` | `lite:dokan-class.php:111` | `dokan()->x` | Looks in `$legacy_container` first, which is filled only by the `dokan_get_class_container` filter. Then checks `get_container()->has( $prop )` and returns `get( $prop )`. Returns `null` when neither knows the name. |
-| `define_constants()` | `lite:dokan-class.php:217` | constructor | Defines `DOKAN_PLUGIN_VERSION`, `DOKAN_DIR`, `DOKAN_INC_DIR`, `DOKAN_TEMPLATE_DIR`, `DOKAN_LIB_DIR`, `DOKAN_PLUGIN_ASSEST`, `DOKAN_LOAD_STYLE` and `DOKAN_LOAD_SCRIPTS`. Each is guarded by `defined() \|\|`. |
-| `declare_woocommerce_feature_compatibility()` | `lite:dokan-class.php:237` | `before_woocommerce_init` | Declares compatibility with `custom_order_tables` (HPOS) and `cart_checkout_blocks` through `FeaturesUtil::declare_compatibility` (`wc:src/Utilities/FeaturesUtil.php:87`). |
-| `init_plugin()` | `lite:dokan-class.php:249` | `woocommerce_loaded` | Calls `includes()` and `init_hooks()`, then fires `dokan_loaded` (`:253`). |
-| `init_hooks()` | `lite:dokan-class.php:261` | from `init_plugin` | Adds `localization_setup` (`init`), `init_classes` (`init` priority 4), `wpdb_table_shortcuts` (`init` priority 1), `after_plugins_loaded` (`plugins_loaded`), plugin action links, the in-plugin update message, and `register_widgets` (`widgets_init`). Then resolves every `Hookable` service and calls `register_hooks()` on each one (`:276-279`). |
-| `includes()` | `lite:dokan-class.php:287` | from `init_plugin` | Loads the procedural helper files (see section 10.3). |
-| `init_classes()` | `lite:dokan-class.php:316` | `init` priority 4 | Resolves the tag groups `common-service`, then `admin-service` (when `is_admin()`) or `frontend-service` (otherwise), then `container-service`. Applies `dokan_get_class_container`. Resolves `ajax-service` when `DOING_AJAX`, and `cli-service` when `WP_CLI`. |
-| `wpdb_table_shortcuts()` | `lite:dokan-class.php:346` | `init` priority 1 | Sets `$wpdb->dokan_withdraw`, `dokan_orders`, `dokan_announcement`, `dokan_refund` and `dokan_vendor_balance`. |
-| `after_plugins_loaded()` | `lite:dokan-class.php:365` | `plugins_loaded` priority 10 | Re-instantiates the background processes recorded in the `dokan_background_processes` option and prunes entries whose file no longer exists (section 4.4). |
-| `register_widgets()` | `lite:dokan-class.php:393` | `widgets_init` | Resolves the `widgets` service. |
-| `is_pro_exists()` | `lite:dokan-class.php:404` | — | Returns `apply_filters( 'dokan_is_pro_exists', false )`. |
-| `activate()` | `lite:dokan-class.php:157` | activation hook | Sets the `dokan_wc_missing_notice` transient when WooCommerce is absent. Prints an error and exits when the PHP version is not supported. Otherwise loads `functions.php` and `functions-compatibility.php`, resolves `upgrades`, runs `Installer::do_install()`, and flushes rewrite rules when WooCommerce is present. |
-| `deactivate()` | `lite:dokan-class.php:199` | deactivation hook | Deletes `dokan_wc_missing_notice`. |
-| `flush_rewrite_rules()` | `lite:dokan-class.php:188` | `woocommerce_flush_rewrite_rules`, activation | Calls `rewrite->register_rule()`, then WordPress `flush_rewrite_rules()`. |
-| `woocommerce_not_loaded()` | `lite:dokan-class.php:466` | `plugins_loaded` priority 11 | In wp-admin only, when `woocommerce_loaded` never fired: loads `functions.php`, follows the setup-wizard redirect transient, and instantiates `Admin\SetupWizardNoWC`. |
-| `get_db_version_key()` | `lite:dokan-class.php:487` | — | Returns `'dokan_theme_version'`, the option that stores the Lite DB version. |
+| `__construct()` | `lite:dokan-class.php::__construct()` | Plugin file load | Calls `define_constants()`. Registers the activation and deactivation hooks. Consumes `before_woocommerce_init`, `woocommerce_loaded` and `woocommerce_flush_rewrite_rules`. Resolves the `admin_notices` service and the `tracker` service (through `::init_appsero_tracker()`). Adds `woocommerce_not_loaded` on `plugins_loaded` priority 11. |
+| `init()` | `lite:dokan-class.php::init()` | — | Singleton accessor. |
+| `__get( $prop )` | `lite:dokan-class.php::__get()` | `dokan()->x` | Looks in `$legacy_container` first, which is filled only by the `dokan_get_class_container` filter. Then checks `get_container()->has( $prop )` and returns `get( $prop )`. Returns `null` when neither knows the name. |
+| `define_constants()` | `lite:dokan-class.php::define_constants()` | constructor | Defines `DOKAN_PLUGIN_VERSION`, `DOKAN_DIR`, `DOKAN_INC_DIR`, `DOKAN_TEMPLATE_DIR`, `DOKAN_LIB_DIR`, `DOKAN_PLUGIN_ASSEST`, `DOKAN_LOAD_STYLE` and `DOKAN_LOAD_SCRIPTS`. Each is guarded by `defined() \|\|`. |
+| `declare_woocommerce_feature_compatibility()` | `lite:dokan-class.php::declare_woocommerce_feature_compatibility()` | `before_woocommerce_init` | Declares compatibility with `custom_order_tables` (HPOS) and `cart_checkout_blocks` through `FeaturesUtil::declare_compatibility` (`wc:src/Utilities/FeaturesUtil.php::declare_compatibility()`). |
+| `init_plugin()` | `lite:dokan-class.php::init_plugin()` | `woocommerce_loaded` | Calls `includes()` and `init_hooks()`, then fires `dokan_loaded`. |
+| `init_hooks()` | `lite:dokan-class.php::init_hooks()` | from `init_plugin` | Adds `localization_setup` (`init`), `init_classes` (`init` priority 4), `wpdb_table_shortcuts` (`init` priority 1), `after_plugins_loaded` (`plugins_loaded`), plugin action links, the in-plugin update message, and `register_widgets` (`widgets_init`). Then resolves every `Hookable` service and calls `register_hooks()` on each one (the closing `foreach` loop). |
+| `includes()` | `lite:dokan-class.php::includes()` | from `init_plugin` | Loads the procedural helper files (see section 10.3). |
+| `init_classes()` | `lite:dokan-class.php::init_classes()` | `init` priority 4 | Resolves the tag groups `common-service`, then `admin-service` (when `is_admin()`) or `frontend-service` (otherwise), then `container-service`. Applies `dokan_get_class_container`. Resolves `ajax-service` when `DOING_AJAX`, and `cli-service` when `WP_CLI`. |
+| `wpdb_table_shortcuts()` | `lite:dokan-class.php::wpdb_table_shortcuts()` | `init` priority 1 | Sets `$wpdb->dokan_withdraw`, `dokan_orders`, `dokan_announcement`, `dokan_refund` and `dokan_vendor_balance`. |
+| `after_plugins_loaded()` | `lite:dokan-class.php::after_plugins_loaded()` | `plugins_loaded` priority 10 | Re-instantiates the background processes recorded in the `dokan_background_processes` option and prunes entries whose file no longer exists (section 4.4). |
+| `register_widgets()` | `lite:dokan-class.php::register_widgets()` | `widgets_init` | Resolves the `widgets` service. |
+| `is_pro_exists()` | `lite:dokan-class.php::is_pro_exists()` | — | Returns `apply_filters( 'dokan_is_pro_exists', false )`. |
+| `activate()` | `lite:dokan-class.php::activate()` | activation hook | Sets the `dokan_wc_missing_notice` transient when WooCommerce is absent. Prints an error and exits when the PHP version is not supported. Otherwise loads `functions.php` and `functions-compatibility.php`, resolves `upgrades`, runs `Installer::do_install()`, and flushes rewrite rules when WooCommerce is present. |
+| `deactivate()` | `lite:dokan-class.php::deactivate()` | deactivation hook | Deletes `dokan_wc_missing_notice`. |
+| `flush_rewrite_rules()` | `lite:dokan-class.php::flush_rewrite_rules()` | `woocommerce_flush_rewrite_rules`, activation | Calls `rewrite->register_rule()`, then WordPress `flush_rewrite_rules()`. |
+| `woocommerce_not_loaded()` | `lite:dokan-class.php::woocommerce_not_loaded()` | `plugins_loaded` priority 11 | In wp-admin only, when `woocommerce_loaded` never fired: loads `functions.php`, follows the setup-wizard redirect transient, and instantiates `Admin\SetupWizardNoWC`. |
+| `get_db_version_key()` | `lite:dokan-class.php::get_db_version_key()` | — | Returns `'dokan_theme_version'`, the option that stores the Lite DB version. |
 
-`is_supported_php()` (`lite:dokan-class.php:126`) uses `version_compare( PHP_VERSION, $min_php, '<=' )` with `$min_php = '7.4'`.
+`is_supported_php()` (`lite:dokan-class.php::is_supported_php()`) uses `version_compare( PHP_VERSION, $min_php, '<=' )` with `$min_php = '7.4'`.
 
 ### 2.3 Initialization sequence
 
-WooCommerce fires `woocommerce_loaded` from `WooCommerce::on_plugins_loaded()` (`wc:includes/class-woocommerce.php:301`), which is hooked to `plugins_loaded` at priority **-1** (`wc:includes/class-woocommerce.php:333`). As a result, Dokan's whole `init_plugin()` runs inside the `plugins_loaded` pass, before priority 10. The `after_plugins_loaded` callback it adds at priority 10 still runs in that same pass. `before_woocommerce_init` fires from `WooCommerce::init()` (`wc:includes/class-woocommerce.php:998`), which is hooked on `init` priority 0 (`:341`).
+WooCommerce fires `woocommerce_loaded` from `WooCommerce::on_plugins_loaded()` (`wc:includes/class-woocommerce.php::on_plugins_loaded()`), which is hooked to `plugins_loaded` at priority **-1** (`wc:includes/class-woocommerce.php::init_hooks()`). As a result, Dokan's whole `init_plugin()` runs inside the `plugins_loaded` pass, before priority 10. The `after_plugins_loaded` callback it adds at priority 10 still runs in that same pass. `before_woocommerce_init` fires from `WooCommerce::init()` (`wc:includes/class-woocommerce.php::init()`), which is hooked on `init` priority 0 (also in `::init_hooks()`).
 
 ```mermaid
 sequenceDiagram
@@ -113,11 +113,11 @@ sequenceDiagram
     WP->>D: wp at priority 99 runs Rewrites maybe_flash_rewrite_rules
 ```
 
-The ordering matters: several `container-service` classes add their own `init` callbacks at the default priority 10 in their constructors, for example `Assets::register_all_scripts` (`lite:includes/Assets.php:19`) and `Rewrites::register_rule` (`lite:includes/Rewrites.php:21`). Because `init_classes` constructs them at priority 4, those callbacks are attached before `init` reaches priority 10 and still run in the same pass.
+The ordering matters: several `container-service` classes add their own `init` callbacks at the default priority 10 in their constructors, for example `Assets::register_all_scripts` (`lite:includes/Assets.php::__construct()`) and `Rewrites::register_rule` (`lite:includes/Rewrites.php::__construct()`). Because `init_classes` constructs them at priority 4, those callbacks are attached before `init` reaches priority 10 and still run in the same pass.
 
 ### 2.4 `dokan()->name` service map
 
-All entries are registered by `ServiceProvider::register()` (`lite:includes/DependencyManagement/Providers/ServiceProvider.php:96`) as **shared** definitions tagged `container-service`. The array is at `lite:includes/DependencyManagement/Providers/ServiceProvider.php:22-53`.
+All entries are registered by `ServiceProvider::register()` (`lite:includes/DependencyManagement/Providers/ServiceProvider.php::register()`) as **shared** definitions tagged `container-service`. The array is `lite:includes/DependencyManagement/Providers/ServiceProvider.php::$services`.
 
 | `dokan()->…` alias | Class |
 |---|---|
@@ -160,13 +160,13 @@ Because the definitions are shared, `dokan()->order` always returns the same `Or
 
 | Tag | Provider | Definition style | Resolved at |
 |---|---|---|---|
-| `container-service` | `ServiceProvider` (`lite:includes/DependencyManagement/Providers/ServiceProvider.php:16`) | `addShared` + tag | `init_classes()`, `lite:dokan-class.php:325` |
-| `common-service` | `CommonServiceProvider` | `share_with_implements_tags` + tag | `lite:dokan-class.php:317` |
-| `admin-service` | `AdminServiceProvider` | `addShared` + tag | `lite:dokan-class.php:320`, only when `is_admin()` |
-| `frontend-service` | `FrontendServiceProvider` | `addShared` + tag | `lite:dokan-class.php:322`, only when not `is_admin()` |
-| `ajax-service` | `AjaxServiceProvider` | `addShared` + tag | `lite:dokan-class.php:330`, only when `DOING_AJAX` |
-| `cli-service` | `CliServiceProvider` | `addShared` + tag | `lite:dokan-class.php:335`, only when `WP_CLI` |
-| `WeDevs\Dokan\Contracts\Hookable` (interface used as tag) | every provider using `*_with_implements_tags` | tag added per implemented interface | `init_hooks()`, `lite:dokan-class.php:276` |
+| `container-service` | `ServiceProvider` (`lite:includes/DependencyManagement/Providers/ServiceProvider.php::TAG`) | `addShared` + tag | `lite:dokan-class.php::init_classes()` |
+| `common-service` | `CommonServiceProvider` | `share_with_implements_tags` + tag | `lite:dokan-class.php::init_classes()` |
+| `admin-service` | `AdminServiceProvider` | `addShared` + tag | `lite:dokan-class.php::init_classes()`, only when `is_admin()` |
+| `frontend-service` | `FrontendServiceProvider` | `addShared` + tag | `lite:dokan-class.php::init_classes()`, only when not `is_admin()` |
+| `ajax-service` | `AjaxServiceProvider` | `addShared` + tag | `lite:dokan-class.php::init_classes()`, only when `DOING_AJAX` |
+| `cli-service` | `CliServiceProvider` | `addShared` + tag | `lite:dokan-class.php::init_classes()`, only when `WP_CLI` |
+| `WeDevs\Dokan\Contracts\Hookable` (interface used as tag) | every provider using `*_with_implements_tags` | tag added per implemented interface | `lite:dokan-class.php::init_hooks()` |
 | `analytics-service`, `intelligence-service`, `admin-dashboard-service`, `admin-setup-guide-service`, `admin-settings-service`, `captcha-services`, `commission-service`, `utils` | the respective providers | see section 3 | No `get()` of these tag names exists in Lite. Their members are reached through the `Hookable` tag or by class name. |
 
 ---
@@ -177,16 +177,16 @@ Because the definitions are shared, `dokan()->order` always returns the same `Or
 
 | Class | File | Responsibility |
 |---|---|---|
-| `Container` | `lite:includes/DependencyManagement/Container.php:16` | Empty subclass of the Mozart-prefixed `League\Container\Container`. |
-| `BaseServiceProvider` | `lite:includes/DependencyManagement/BaseServiceProvider.php:21` | Abstract provider holding `$services` and `$tags`. Its `provides()` (`:33`) answers true for a listed service, a listed tag, or **any interface implemented by a listed class**. The interface index is a method-level `static` array that is merged on every call and never reset (see Known gaps for how PHP versions scope it). `add_with_implements_tags()` (`:65`) and `share_with_implements_tags()` (`:86`) register a definition and tag it with each of its interfaces. `add_tags()` (`:98`) applies extra tags. |
-| `BootableServiceProvider` | `lite:includes/DependencyManagement/BootableServiceProvider.php:20` | Abstract base that implements League's `BootableServiceProviderInterface`. |
-| `Definition` | `lite:includes/DependencyManagement/Definition.php:13` | League `Definition` subclass. It instantiates with `new $concrete()` and then calls an `init()` method with the resolved arguments (`INJECTION_METHOD = 'init'`). See Known gaps about whether it is wired in. |
+| `Container` | `lite:includes/DependencyManagement/Container.php` | Empty subclass of the Mozart-prefixed `League\Container\Container`. |
+| `BaseServiceProvider` | `lite:includes/DependencyManagement/BaseServiceProvider.php` | Abstract provider holding `$services` and `$tags`. Its `::provides()` answers true for a listed service, a listed tag, or **any interface implemented by a listed class**. The interface index is a method-level `static` array that is merged on every call and never reset (see Known gaps for how PHP versions scope it). `::add_with_implements_tags()` and `::share_with_implements_tags()` register a definition and tag it with each of its interfaces. `::add_tags()` applies extra tags. |
+| `BootableServiceProvider` | `lite:includes/DependencyManagement/BootableServiceProvider.php` | Abstract base that implements League's `BootableServiceProviderInterface`. |
+| `Definition` | `lite:includes/DependencyManagement/Definition.php` | League `Definition` subclass. It instantiates with `new $concrete()` and then calls an `init()` method with the resolved arguments (`INJECTION_METHOD = 'init'`). See Known gaps about whether it is wired in. |
 | `ContainerException` | `lite:includes/DependencyManagement/ContainerException.php` | Exception type for the container. |
 | `Contracts\Hookable` | `lite:includes/Contracts/Hookable.php` | Interface with `register_hooks(): void`. Services that implement it have their hooks registered from `init_hooks()` instead of their constructor. |
 
 ### 3.2 Service providers
 
-All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceProvider::boot()` adds them in this order (`ServiceProvider.php:60-74`).
+All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceProvider::boot()` adds them in this order (`ServiceProvider.php::boot()`).
 
 | Provider | Tag(s) | Shared? | Services |
 |---|---|---|---|
@@ -201,7 +201,7 @@ All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceP
 | `AdminDashboardServiceProvider` | `admin-dashboard-service` + interfaces | shared | `Admin\Dashboard\Dashboard`, `LegacySwitcher`, and the pages `Modules`, `Tools`, `Status`, `ProFeatures`, `Withdraw`, `Vendors`, `ReverseWithdrawal`, `Extensions`, `SetupGuide` (constructed with `AdminSetupGuide`) and `Settings` |
 | `AdminSetupGuideServiceProvider` | `admin-setup-guide-service` + interfaces | shared | `Admin\OnboardingSetup\AdminSetupGuide` and the steps `BasicStep`, `CommissionStep`, `WithdrawStep`, `AppearanceStep` |
 | `ModelServiceProvider` | none applied | **not shared** (`add`) | `Models\VendorBalance`, `VendorOrderStats`, `AdminDashboardStats` and their `DataStore\*Store` classes. The class declares `TAG = 'ajax-service'`, but `register()` never applies it. |
-| `AdminSettingsServiceProvider` | `admin-settings-service` + interfaces | shared | `SettingsRegistry`, `SchemaValidator`, `SettingsRepository`, `LegacySettingsBridge`, `LegacySettingsRepository`, `BridgeBootstrap`, `LegacyMirror`. Because the container does not autowire, the provider passes explicit constructor arguments to two definitions (`lite:includes/DependencyManagement/Providers/AdminSettingsServiceProvider.php:44-55`): `LegacySettingsBridge` receives the shared `SettingsRepository`, and `LegacySettingsRepository` receives the shared `SettingsRepository` and `LegacySettingsBridge`. It also binds `SettingsRepositoryInterface` and `LegacySettingsRepositoryInterface` to the same shared instances (`:62-67`). Together these keep the whole settings stack on one repository snapshot instead of letting a class build its own repository when a nullable constructor parameter falls back to `null` ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md), [ADR-0003](../0003-settings-legacy-mirror-mode.md)). |
+| `AdminSettingsServiceProvider` | `admin-settings-service` + interfaces | shared | `SettingsRegistry`, `SchemaValidator`, `SettingsRepository`, `LegacySettingsBridge`, `LegacySettingsRepository`, `BridgeBootstrap`, `LegacyMirror`. Because the container does not autowire, the provider passes explicit constructor arguments to two definitions (`lite:includes/DependencyManagement/Providers/AdminSettingsServiceProvider.php::register()`): `LegacySettingsBridge` receives the shared `SettingsRepository`, and `LegacySettingsRepository` receives the shared `SettingsRepository` and `LegacySettingsBridge`. At the end of the same `::register()` it also binds `SettingsRepositoryInterface` and `LegacySettingsRepositoryInterface` to the same shared instances. Together these keep the whole settings stack on one repository snapshot instead of letting a class build its own repository when a nullable constructor parameter falls back to `null` ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md), [ADR-0003](../0003-settings-legacy-mirror-mode.md)). |
 | `CaptchaServiceProvider` | `captcha-services` + interfaces | shared | `Captcha\Manager`, `GoogleRecaptchaV3Provider`, `CloudflareTurnstileProvider` |
 | `CliServiceProvider` | `cli-service` | shared | `CLI\Manager` |
 
@@ -209,25 +209,25 @@ All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceP
 
 | Class | File | Responsibility |
 |---|---|---|
-| `WeDevs_Dokan` | `lite:dokan-class.php:23` | Plugin singleton and service locator (section 2.2). |
-| `Core` | `lite:includes/Core.php:14` | Cross-cutting request behavior: blocks wp-admin for Vendors, Customers and Vendor Staff, scopes the media library to the current Vendor, adds body classes, sets Store-page titles, requires login and the Vendor role on the dashboard page, and handles the post-activation setup-wizard redirect. |
-| `Install\Installer` | `lite:includes/Install/Installer.php:18` | Creates roles, capabilities, pages, tables and the cron action, sets the initial options, and queues a one-time `dokan_order_stats` backfill when needed. |
-| `Upgrade\Manager` | `lite:includes/Upgrade/Manager.php:5` | Upgrade orchestrator (`dokan()->upgrades`). |
-| `Upgrade\Upgrades` | `lite:includes/Upgrade/Upgrades.php:5` | Lite's version-to-upgrader registry and version checks. |
-| `Upgrade\Hooks` | `lite:includes/Upgrade/Hooks.php:9` | Wires the registry into the filters and starts the three commission batch upgraders. |
+| `WeDevs_Dokan` | `lite:dokan-class.php` | Plugin singleton and service locator (section 2.2). |
+| `Core` | `lite:includes/Core.php` | Cross-cutting request behavior: blocks wp-admin for Vendors, Customers and Vendor Staff, scopes the media library to the current Vendor, adds body classes, sets Store-page titles, requires login and the Vendor role on the dashboard page, and handles the post-activation setup-wizard redirect. |
+| `Install\Installer` | `lite:includes/Install/Installer.php` | Creates roles, capabilities, pages, tables and the cron action, sets the initial options, and queues a one-time `dokan_order_stats` backfill when needed. |
+| `Upgrade\Manager` | `lite:includes/Upgrade/Manager.php` | Upgrade orchestrator (`dokan()->upgrades`). |
+| `Upgrade\Upgrades` | `lite:includes/Upgrade/Upgrades.php` | Lite's version-to-upgrader registry and version checks. |
+| `Upgrade\Hooks` | `lite:includes/Upgrade/Hooks.php` | Wires the registry into the filters and starts the three commission batch upgraders. |
 | `Upgrade\AdminNotice` | `lite:includes/Upgrade/AdminNotice.php` | "Data Update Required" notice and its AJAX handler. |
-| `Abstracts\DokanUpgrader` | `lite:includes/Abstracts/DokanUpgrader.php:7` | Base class for `V_x_y_z` upgraders. |
+| `Abstracts\DokanUpgrader` | `lite:includes/Abstracts/DokanUpgrader.php` | Base class for `V_x_y_z` upgraders. |
 | `Rewrites` | `lite:includes/Rewrites.php` | Endpoints, rewrite rules, query vars, Store, terms-and-conditions and product-edit templates, and the Store product query. |
 | `Assets` | `lite:includes/Assets.php` | Script and style registry, enqueueing and localization. |
-| `BackgroundProcess\Manager` | `lite:includes/BackgroundProcess/Manager.php:17` | Chainable container of long-lived background processors (`dokan()->bg_process`). |
-| `BackgroundProcess\RewriteVariableProductsAuthor` | `lite:includes/BackgroundProcess/RewriteVariableProductsAuthor.php:18` | `WC_Background_Process` that realigns variation authors with their parent product. |
-| `Abstracts\DokanBackgroundProcesses` | `lite:includes/Abstracts/DokanBackgroundProcesses.php:18` | Base class over `WP_Background_Process` that registers itself for restoration on later requests. |
-| `Cache` | `lite:includes/Cache.php:14` | Concrete `DokanCache` with group prefix `dokan_cache` and key prefix `dokan`. |
-| `Abstracts\DokanCache` | `lite:includes/Abstracts/DokanCache.php:17` | Uses the `ObjectCache` and `TransientCache` traits. |
-| `CacheInvalidate` | `lite:includes/CacheInvalidate.php:12` | Invalidates per-Vendor comment-count caches on comment changes. |
-| `CLI\Manager` | `lite:includes/CLI/Manager.php:14` | `wp dokan` command registrar. |
-| `Tracker` | `lite:includes/Tracker.php:11` | Appsero insights client. |
-| `Admin\Notices\Manager` | `lite:includes/Admin/Notices/Manager.php:12` | Admin-notice hub (`dokan()->admin_notices`). Resolved in the `WeDevs_Dokan` constructor. |
+| `BackgroundProcess\Manager` | `lite:includes/BackgroundProcess/Manager.php` | Chainable container of long-lived background processors (`dokan()->bg_process`). |
+| `BackgroundProcess\RewriteVariableProductsAuthor` | `lite:includes/BackgroundProcess/RewriteVariableProductsAuthor.php` | `WC_Background_Process` that realigns variation authors with their parent product. |
+| `Abstracts\DokanBackgroundProcesses` | `lite:includes/Abstracts/DokanBackgroundProcesses.php` | Base class over `WP_Background_Process` that registers itself for restoration on later requests. |
+| `Cache` | `lite:includes/Cache.php` | Concrete `DokanCache` with group prefix `dokan_cache` and key prefix `dokan`. |
+| `Abstracts\DokanCache` | `lite:includes/Abstracts/DokanCache.php` | Uses the `ObjectCache` and `TransientCache` traits. |
+| `CacheInvalidate` | `lite:includes/CacheInvalidate.php` | Invalidates per-Vendor comment-count caches on comment changes. |
+| `CLI\Manager` | `lite:includes/CLI/Manager.php` | `wp dokan` command registrar. |
+| `Tracker` | `lite:includes/Tracker.php` | Appsero insights client. |
+| `Admin\Notices\Manager` | `lite:includes/Admin/Notices/Manager.php` | Admin-notice hub (`dokan()->admin_notices`). Resolved in the `WeDevs_Dokan` constructor. |
 
 ### 3.4 Component diagram
 
@@ -295,11 +295,11 @@ flowchart TB
 
 ### 4.1 Service resolution and the `Hookable` pass
 
-League resolves `get( $id )` in a fixed order (`lite:lib/packages/League/Container/Container.php:172-208`):
+League resolves `get( $id )` in a fixed order (`lite:lib/packages/League/Container/Container.php::resolve()`):
 
 1. If a definition with that id exists, resolve it.
 2. Otherwise, if a tag with that id exists, resolve every definition with that tag and return an array.
-3. Otherwise, if any provider's `provides( $id )` is true, call `register()` on **every** not-yet-registered provider that provides it (`ServiceProviderAggregate::register`, `ServiceProviderAggregate.php:57-75`), then retry.
+3. Otherwise, if any provider's `provides( $id )` is true, call `register()` on **every** not-yet-registered provider that provides it (`ServiceProviderAggregate.php::register()`), then retry.
 4. Otherwise, try the delegate containers. If nothing matches, throw `NotFoundException`.
 
 `init_hooks()` calls `get( Hookable::class )`. No definition or tag exists yet for that name, so step 3 runs. `BaseServiceProvider::provides()` reports true once `Hookable` appears in its accumulated interface index, so every not-yet-registered provider that uses the base `provides()` and answers true registers (`AdminServiceProvider` and `ModelServiceProvider` override `provides()` and only answer for their own lists). Their `*_with_implements_tags` definitions are tagged with `Hookable`, and step 2 then returns all of them. The effect is that every `Hookable` service in Common, Analytics, Intelligence, AdminDashboard (for example `Admin\Dashboard\Dashboard`, which `implements Hookable`), AdminSetupGuide, AdminSettings, Captcha and Commission is instantiated and has `register_hooks()` called during `plugins_loaded` priority -1. This happens on every request, whether or not it is an admin request. Classes registered with plain `addShared` (the `container-service` map, `AdminServiceProvider`, `FrontendServiceProvider`) are not interface-tagged, so they register their hooks in their constructors when `init_classes()` resolves their tag.
@@ -334,12 +334,12 @@ flowchart TD
     I1 --> J["activate(): flush_rewrite_rules() again if WC present"]
 ```
 
-Notes, each taken from `Installer::do_install()` (`lite:includes/Install/Installer.php:19`):
+Notes, each taken from `Installer::do_install()` (`lite:includes/Install/Installer.php::do_install()`):
 
-- `setup_pages()` (`:346`) returns early once `dokan_pages_created` is set. It saves the created page IDs through `dokan_save_legacy_settings_section( 'dokan_pages', … )`, which writes through the settings repository ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md)).
-- `user_roles()` (`:287`) adds the `seller` role. `seller` is the legacy WordPress role name for a **Vendor** (see `CONTEXT.md`). The role gets WordPress post, product and term capabilities plus `dokandar`. `dokandar` is also added to `administrator` and `shop_manager`. Every capability returned by `dokan_get_all_caps()` is added to `seller`, `administrator` and `shop_manager`.
-- `schedule_cron_jobs()` (`:215`) removes any existing `dokan_daily_midnight_cron` Action Scheduler action and reschedules it with `WC()->queue()->schedule_cron( midnight, '0 0 * * *', 'dokan_daily_midnight_cron', [], 'dokan' )`. Lite has no callback for this hook; it is consumed by Dokan Pro.
-- `maybe_backfill_order_stats()` (`:88`) runs only when WooCommerce Analytics is enabled and the filter `dokan_analytics_backfill_order_stats_on_activation` (default `true`) allows it. If WooCommerce has orders but `dokan_order_stats` is empty, it starts a full `ReportsSync::regenerate_report_data()` import. When WooCommerce refuses because another import is queued, it records the attempt count in `dokan_order_stats_backfill_pending` and retries through the `dokan_order_stats_backfill_retry` Action Scheduler action with doubling delays, giving up after 8 attempts.
+- `::setup_pages()` returns early once `dokan_pages_created` is set. It saves the created page IDs through `dokan_save_legacy_settings_section( 'dokan_pages', … )`, which writes through the settings repository ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md)).
+- `::user_roles()` adds the `seller` role. `seller` is the legacy WordPress role name for a **Vendor** (see `CONTEXT.md`). The role gets WordPress post, product and term capabilities plus `dokandar`. `dokandar` is also added to `administrator` and `shop_manager`. Every capability returned by `dokan_get_all_caps()` is added to `seller`, `administrator` and `shop_manager`.
+- `::schedule_cron_jobs()` removes any existing `dokan_daily_midnight_cron` Action Scheduler action and reschedules it with `WC()->queue()->schedule_cron( midnight, '0 0 * * *', 'dokan_daily_midnight_cron', [], 'dokan' )`. Lite has no callback for this hook; it is consumed by Dokan Pro.
+- `::maybe_backfill_order_stats()` runs only when WooCommerce Analytics is enabled and the filter `dokan_analytics_backfill_order_stats_on_activation` (default `true`) allows it. If WooCommerce has orders but `dokan_order_stats` is empty, it starts a full `ReportsSync::regenerate_report_data()` import. When WooCommerce refuses because another import is queued, it records the attempt count in `dokan_order_stats_backfill_pending` and retries through the `dokan_order_stats_backfill_retry` Action Scheduler action with doubling delays, giving up after 8 attempts.
 - On a fresh install, the `_dokan_setup_page_redirect` transient (30 seconds) makes `Core::redirect_after_activate` (`admin_init` priority 999) send the Site Admin to the setup wizard.
 
 ### 4.3 Database upgrades
@@ -364,22 +364,22 @@ flowchart TD
 
 Details:
 
-- `Upgrades::is_upgrade_required()` (`lite:includes/Upgrade/Upgrades.php:71`) compares the stored `dokan_theme_version` with the **last key of `Upgrades::$upgrades`** (currently `5.0.0`, `:48`), not with `DOKAN_PLUGIN_VERSION`. When no DB version is stored, it returns the incoming filter value.
-- `Upgrades::get_upgrades()` (`:106`) adds every registry entry whose version is greater than the stored DB version, as `$upgrades[ $version ][] = ClassName`. The filter also accepts an entry of the form `[ 'require' => <lite version>, 'upgrader' => Class ]`. `DokanUpgrader::run()` skips such an entry while the Lite DB version is below `require` (`lite:includes/Abstracts/DokanUpgrader.php:22-32`). Dokan Pro uses this form.
-- `Manager::get_upgrades()` (`lite:includes/Upgrade/Manager.php:45`) caches the sorted pending list in the `dokan_is_upgrading_db` option (autoload off). The same option acts as the "ongoing process" flag in `has_ongoing_process()` (`:34`).
-- `DokanUpgrader::run()` statically calls every method returned by `get_class_methods( static::class )` except `run` and `update_db_version` (`lite:includes/Abstracts/DokanUpgrader.php:34-40`), so migration steps are written as public static methods. `update_db_version()` (`:56`) derives the version from the class short name (`V_3_7_19` becomes `3.7.19`) and writes it to `static::get_db_version_key()`. The source docblock states that this method is meant to be overridden by Dokan Pro.
+- `Upgrades::is_upgrade_required()` (`lite:includes/Upgrade/Upgrades.php::is_upgrade_required()`) compares the stored `dokan_theme_version` with the **last key of `Upgrades::$upgrades`** (currently `5.0.0`, `::$upgrades`), not with `DOKAN_PLUGIN_VERSION`. When no DB version is stored, it returns the incoming filter value.
+- `Upgrades::get_upgrades()` (`::get_upgrades()`) adds every registry entry whose version is greater than the stored DB version, as `$upgrades[ $version ][] = ClassName`. The filter also accepts an entry of the form `[ 'require' => <lite version>, 'upgrader' => Class ]`. `DokanUpgrader::run()` skips such an entry while the Lite DB version is below `require` (the `require` check in `lite:includes/Abstracts/DokanUpgrader.php::run()`). Dokan Pro uses this form.
+- `Manager::get_upgrades()` (`lite:includes/Upgrade/Manager.php::get_upgrades()`) caches the sorted pending list in the `dokan_is_upgrading_db` option (autoload off). The same option acts as the "ongoing process" flag in `::has_ongoing_process()`.
+- `DokanUpgrader::run()` statically calls every method returned by `get_class_methods( static::class )` except `run` and `update_db_version` (the method loop in `lite:includes/Abstracts/DokanUpgrader.php::run()`), so migration steps are written as public static methods. `::update_db_version()` derives the version from the class short name (`V_3_7_19` becomes `3.7.19`) and writes it to `static::get_db_version_key()`. The source docblock states that this method is meant to be overridden by Dokan Pro.
 - Long-running migrations dispatch `DokanBackgroundProcesses` subclasses in `lite:includes/Upgrade/Upgrades/BackgroundProcesses/` (`V_2_8_3_VendorBalance`, `V_2_9_4_OrderPostAuthor`, `V_2_9_16_StoreSettings`, `V_2_9_23_StoreName`, `V_3_0_10_ProductAttributesAuthorId`, `V_3_1_1_RefundTableUpdate`, `V_3_3_8_VendorStoreTimes`, `V_3_6_2_UpdateProductCategories`, `V_3_7_19_UpdateOrderMeta`).
-- `Upgrade\Hooks` (`lite:includes/Upgrade/Hooks.php:18`) also calls `init_hooks()` on `Commission\Upugrader\Update_Product_Commission`, `Update_Vendor_Commission` and `Update_Category_Commission`. These consume the actions `process_product_batch_creator`, `process_product_batch`, `process_product_item`, `process_vendor_batch_creator`, `process_vendor_batch`, `process_vendor_item`, `process_category_batch_creator`, `process_category_batch` and `process_category_item`. The directory name `Upugrader` is spelled that way in the source.
+- `Upgrade\Hooks` (`lite:includes/Upgrade/Hooks.php::__construct()`) also calls `init_hooks()` on `Commission\Upugrader\Update_Product_Commission`, `Update_Vendor_Commission` and `Update_Category_Commission`. These consume the actions `process_product_batch_creator`, `process_product_batch`, `process_product_item`, `process_vendor_batch_creator`, `process_vendor_batch`, `process_vendor_item`, `process_category_batch_creator`, `process_category_batch` and `process_category_item`. The directory name `Upugrader` is spelled that way in the source.
 
 ### 4.4 Background-process restoration
 
-`DokanBackgroundProcesses::dispatch_process()` (`lite:includes/Abstracts/DokanBackgroundProcesses.php:129`) saves and dispatches the queue. It then records `static::class => <class file path>` in the `dokan_background_processes` option (autoload off). On every later request, `WeDevs_Dokan::after_plugins_loaded()` (`lite:dokan-class.php:365`) reads that option, `include_once`s each recorded file and instantiates the class. The `WP_Background_Process` constructor then re-attaches its AJAX and cron handlers. Entries whose file no longer exists are removed. `complete()` and `cancel_process()` call `clear_process()` (`:152`) to remove the entry. The action name defaults to `'dokan_' . md5( static::class )` (`set_action()`, `:114`). When the bundled classes are missing, the base class loads WooCommerce's `includes/libraries/wp-async-request.php` and `wp-background-process.php`.
+`DokanBackgroundProcesses::dispatch_process()` (`lite:includes/Abstracts/DokanBackgroundProcesses.php::dispatch_process()`) saves and dispatches the queue. It then records `static::class => <class file path>` in the `dokan_background_processes` option (autoload off). On every later request, `WeDevs_Dokan::after_plugins_loaded()` (`lite:dokan-class.php::after_plugins_loaded()`) reads that option, `include_once`s each recorded file and instantiates the class. The `WP_Background_Process` constructor then re-attaches its AJAX and cron handlers. Entries whose file no longer exists are removed. `complete()` and `cancel_process()` call `clear_process()` (`lite:includes/Abstracts/DokanBackgroundProcesses.php::clear_process()`) to remove the entry. The action name defaults to `'dokan_' . md5( static::class )` (`::set_action()`). When the bundled classes are missing, the base class loads WooCommerce's `includes/libraries/wp-async-request.php` and `wp-background-process.php`.
 
-`BackgroundProcess\Manager` (`lite:includes/BackgroundProcess/Manager.php:17`) is a separate, always-on mechanism. Its constructor puts `RewriteVariableProductsAuthor` and `Vendor\ChangeProductStatus` into a `ChainableContainer` and exposes them through `dokan_background_process_container`. It also adds a one-time success notice keyed on the `dokan_variable_products_author_updated` transient.
+`BackgroundProcess\Manager` (`lite:includes/BackgroundProcess/Manager.php::__construct()`) is a separate, always-on mechanism. Its constructor puts `RewriteVariableProductsAuthor` and `Vendor\ChangeProductStatus` into a `ChainableContainer` and exposes them through `dokan_background_process_container`. It also adds a one-time success notice keyed on the `dokan_variable_products_author_updated` transient.
 
 ### 4.5 Rewrites and request routing
 
-`Rewrites::register_rule()` (`lite:includes/Rewrites.php:83`, on `init` priority 10):
+`Rewrites::register_rule()` (`lite:includes/Rewrites.php::register_rule()`, on `init` priority 10):
 
 - **Endpoints (`EP_PAGES`)**: from the `dokan_query_var_filter` filter, defaulting to `products`, `new-product`, `orders`, `withdraw`, `withdraw-requests`, `reverse-withdrawal`, `settings`, `edit-account` and `account-migration`. Because these are page endpoints, they resolve under the Vendor dashboard page (for example `/dashboard/orders/`).
 - **Product edit**: `{product_base}/{slug}(/{page})?/edit/` maps to `product=…&edit=true`. When the WooCommerce product base contains `product_cat`, the rule uses `{cat_base}/{cat}/{slug}/edit` instead. The base comes from the `woocommerce_permalinks` option.
@@ -390,45 +390,45 @@ Details:
   - `/toc` and `/toc/page/{n}`, which set `toc=true`
 - Fires `dokan_rewrite_rules_loaded` with the Store base.
 
-`register_query_var()` (`:166`) adds the Store base, `edit`, `term_section`, `toc` and every endpoint to WordPress `query_vars`. `resolve_wc_query_conflict()` (`:146`, filter `woocommerce_get_query_vars`) removes WooCommerce's `orders` and `edit-account` My Account endpoints when the current page is the Vendor dashboard page, so the two sets of endpoints do not collide.
+`::register_query_var()` adds the Store base, `edit`, `term_section`, `toc` and every endpoint to WordPress `query_vars`. `::resolve_wc_query_conflict()` (filter `woocommerce_get_query_vars`) removes WooCommerce's `orders` and `edit-account` My Account endpoints when the current page is the Vendor dashboard page, so the two sets of endpoints do not collide.
 
 Templates, all on `template_include` priority 99:
 
-- `store_template()` (`:186`) returns `store.php` when the Store query var names a user who exists, is not Vendor Staff (unless a super admin), and passes `dokan_is_user_seller()`. Otherwise it returns the 404 template.
-- `store_toc_template()` (`:226`) returns `store-toc.php`.
-- `product_edit_template()` (`:256`) returns `products/edit-product-single.php` only when the user can `dokan_edit_product`. The result passes through `dokan_get_product_edit_template`.
+- `::store_template()` returns `store.php` when the Store query var names a user who exists, is not Vendor Staff (unless a super admin), and passes `dokan_is_user_seller()`. Otherwise it returns the 404 template.
+- `::store_toc_template()` returns `store-toc.php`.
+- `::product_edit_template()` returns `products/edit-product-single.php` only when the user can `dokan_edit_product`. The result passes through `dokan_get_product_edit_template`.
 
-`store_query_filter()` (`:302`, `pre_get_posts`) turns the main query on a Store page into a product query for that Vendor. It applies `dokan_store_products_per_page`, attribute and section filters and WooCommerce's hide-out-of-stock visibility, fires `dokan_store_page_query_filter`, and filters the tax query through `dokan_store_tax_query`.
+`lite:includes/Rewrites.php::store_query_filter()` (`pre_get_posts`) turns the main query on a Store page into a product query for that Vendor. It applies `dokan_store_products_per_page`, attribute and section filters and WooCommerce's hide-out-of-stock visibility, fires `dokan_store_page_query_filter`, and filters the tax query through `dokan_store_tax_query`.
 
-`maybe_flash_rewrite_rules()` (`:544`, `wp` priority 99) flushes once when `dokan_rewrite_rules_needs_flashing` is missing or `yes`, then stores `no`.
+`::maybe_flash_rewrite_rules()` (`wp` priority 99) flushes once when `dokan_rewrite_rules_needs_flashing` is missing or `yes`, then stores `no`.
 
 ### 4.6 Assets pipeline
 
-`Assets::__construct()` (`lite:includes/Assets.php:18`):
+`Assets::__construct()` (`lite:includes/Assets.php::__construct()`):
 
-- `init` priority 10 → `register_all_scripts()` (`:301`) registers every handle from `get_styles()` (`:316`) and `get_scripts()` (`:419`). It uses `wp_register_style`/`wp_register_script` with `wp_set_script_translations( …, 'dokan-lite' )`, then fires `dokan_register_scripts`.
-- In admin: `admin_enqueue_scripts` priority 5 → `load_dokan_global_scripts`, priority 8 → `load_dokan_admin_notices_scripts`, priority 10 → `enqueue_admin_scripts` (`:77`, which fires `dokan-vue-admin-scripts` and `dokan_enqueue_admin_scripts`).
-- On the frontend: `wp_enqueue_scripts` priority 5 → `load_dokan_global_scripts` (`:1030`), default priority → `enqueue_front_scripts` (`:839`, which fires `dokan_enqueue_scripts`). `init` → `register_wc_admin_scripts`.
-- The Vendor dashboard bundles load only when `dokan_is_seller_dashboard()` is true, when the request is a product edit page, or when `dokan_forced_load_scripts` returns true (`:949`).
-- Script versions default to `DOKAN_PLUGIN_VERSION`. Some styles use `filemtime`. The `.min` suffix is dropped when `SCRIPT_DEBUG` is set (`get_prefix()`, `:1392`).
+- `init` priority 10 → `::register_all_scripts()` registers every handle from `::get_styles()` and `::get_scripts()`. It uses `wp_register_style`/`wp_register_script` with `wp_set_script_translations( …, 'dokan-lite' )`, then fires `dokan_register_scripts`.
+- In admin: `admin_enqueue_scripts` priority 5 → `load_dokan_global_scripts`, priority 8 → `load_dokan_admin_notices_scripts`, priority 10 → `::enqueue_admin_scripts()` (which fires `dokan-vue-admin-scripts` and `dokan_enqueue_admin_scripts`).
+- On the frontend: `wp_enqueue_scripts` priority 5 → `::load_dokan_global_scripts()`, default priority → `::enqueue_front_scripts()` (which fires `dokan_enqueue_scripts`). `init` → `register_wc_admin_scripts`.
+- The Vendor dashboard bundles load only when `dokan_is_seller_dashboard()` is true, when the request is a product edit page, or when `dokan_forced_load_scripts` returns true (the `dokan_dashboard_scripts()` guard in `::enqueue_front_scripts()`).
+- Script versions default to `DOKAN_PLUGIN_VERSION`. Some styles use `filemtime`. The `.min` suffix is dropped when `SCRIPT_DEBUG` is set (`::get_prefix()`).
 
 ### 4.7 Cache
 
 `Cache` (static API from the `ObjectCache` and `TransientCache` traits):
 
-- `Cache::get/set/delete( $key, $group )` store keys as `dokan_{timePrefix}_{key}` in group `dokan_cache_{group}`. The time prefix is kept in object-cache entry `{group}_prefix`. `Cache::invalidate_group( $group )` (`lite:includes/Traits/ObjectCache.php:166`) rewrites only that prefix, so earlier keys become unreachable. The source comment explains that it deliberately avoids `wp_cache_flush_group()` because a group flush scans the whole keyspace on Redis and Memcached.
-- `Cache::get_transient/set_transient/delete_transient` work the same way. The version marker is the transient `dokan_cache_{group}-transient-version`, whose lifetime is filterable through `dokan_cache_transient_version_expiration` (default `MONTH_IN_SECONDS`, `lite:includes/Traits/TransientCache.php:56`). `invalidate_transient_group()` (`:196`) regenerates the marker.
+- `Cache::get/set/delete( $key, $group )` store keys as `dokan_{timePrefix}_{key}` in group `dokan_cache_{group}`. The time prefix is kept in object-cache entry `{group}_prefix`. `Cache::invalidate_group( $group )` (`lite:includes/Traits/ObjectCache.php::invalidate_group()`) rewrites only that prefix, so earlier keys become unreachable. The source comment explains that it deliberately avoids `wp_cache_flush_group()` because a group flush scans the whole keyspace on Redis and Memcached.
+- `Cache::get_transient/set_transient/delete_transient` work the same way. The version marker is the transient `dokan_cache_{group}-transient-version`, whose lifetime is filterable through `dokan_cache_transient_version_expiration` (default `MONTH_IN_SECONDS`, `lite:includes/Traits/TransientCache.php::get_transient_version()`). `::invalidate_transient_group()` regenerates the marker.
 - A key with no group is stored as `dokan_{key}` with no versioning.
 
-`CacheInvalidate` (`lite:includes/CacheInvalidate.php:12`) consumes `comment_post`, `edit_comment`, `delete_comment` and `wp_set_comment_status`. It calls `Cache::invalidate_group( "count_{post_type}_comments_{author_id}" )` for the commented post's author (the Vendor).
+`CacheInvalidate` (`lite:includes/CacheInvalidate.php::__construct()`) consumes `comment_post`, `edit_comment`, `delete_comment` and `wp_set_comment_status`. It calls `Cache::invalidate_group( "count_{post_type}_comments_{author_id}" )` for the commented post's author (the Vendor).
 
 ### 4.8 CLI
 
-`CLI\Manager` (`lite:includes/CLI/Manager.php:14`) is constructed only when `cli-service` is resolved, which happens only under `WP_CLI`. Its constructor returns early if `WP_CLI` is not defined. On `init` priority 99, `register_commands()` (`:38`) reads `apply_filters( 'dokan_cli_commands', [] )`, a map of `'dokan <command>' => HandlerClass`, and calls `WP_CLI::add_command()` for each entry. Lite currently contributes no commands of its own. Rationale, priority and the capability stance are recorded in [ADR-0008](../0008-lite-owns-the-wp-dokan-cli-namespace.md).
+`CLI\Manager` (`lite:includes/CLI/Manager.php`) is constructed only when `cli-service` is resolved, which happens only under `WP_CLI`. Its constructor (`::__construct()`) returns early if `WP_CLI` is not defined. On `init` priority 99, `::register_commands()` reads `apply_filters( 'dokan_cli_commands', [] )`, a map of `'dokan <command>' => HandlerClass`, and calls `WP_CLI::add_command()` for each entry. Lite currently contributes no commands of its own. Rationale, priority and the capability stance are recorded in [ADR-0008](../0008-lite-owns-the-wp-dokan-cli-namespace.md).
 
 ### 4.9 Tracker
 
-`Tracker::appsero_init_tracker_dokan()` (`lite:includes/Tracker.php:38`) builds an `\Appsero\Client` for `DOKAN_FILE` (the client identifier is at `:39`). It adds extra payload fields: `products`, `orders` (from `get_order_count()` at `:65`, a count of `dokan_orders` rows in completed, processing, on-hold or refunded status), `is_pro`, `wc_version` and `dokan_version`. It then calls `insights->init_plugin()`, which leaves opt-in and data sending to Appsero. It also filters `appsero_custom_deactivation_reasons`, replacing the reasons only when the client slug is `dokan-lite`.
+`Tracker::appsero_init_tracker_dokan()` (`lite:includes/Tracker.php::appsero_init_tracker_dokan()`) builds an `\Appsero\Client` for `DOKAN_FILE` (the client identifier is the first `\Appsero\Client` constructor argument in the same method). It adds extra payload fields: `products`, `orders` (from `::get_order_count()`, a count of `dokan_orders` rows in completed, processing, on-hold or refunded status), `is_pro`, `wc_version` and `dokan_version`. It then calls `insights->init_plugin()`, which leaves opt-in and data sending to Appsero. It also filters `appsero_custom_deactivation_reasons`, replacing the reasons only when the client slug is `dokan-lite`.
 
 ---
 
@@ -470,11 +470,11 @@ Templates, all on `template_include` priority 99:
 
 | Hook | Owner / where fired | Callback |
 |---|---|---|
-| `woocommerce_loaded` | [WooCommerce] `wc:includes/class-woocommerce.php:301` (inside `plugins_loaded` priority -1) | `WeDevs_Dokan::init_plugin` |
-| `before_woocommerce_init` | [WooCommerce] `wc:includes/class-woocommerce.php:998` (`init` priority 0) | `WeDevs_Dokan::declare_woocommerce_feature_compatibility` |
-| `woocommerce_flush_rewrite_rules` | [WooCommerce] `wc:includes/class-wc-install.php:683` and `wc:includes/wc-core-functions.php:1032` (`flush_rewrite_rules_on_shop_page_save`) | `WeDevs_Dokan::flush_rewrite_rules` |
-| `woocommerce_get_query_vars` | [WooCommerce] `wc:includes/class-wc-query.php:237` | `Rewrites::resolve_wc_query_conflict` |
-| `woocommerce_get_breadcrumb` | [WooCommerce] `wc:includes/class-wc-breadcrumb.php:52` | `Rewrites::store_page_breadcrumb` |
+| `woocommerce_loaded` | [WooCommerce] `wc:includes/class-woocommerce.php::on_plugins_loaded()` (inside `plugins_loaded` priority -1) | `WeDevs_Dokan::init_plugin` |
+| `before_woocommerce_init` | [WooCommerce] `wc:includes/class-woocommerce.php::init()` (`init` priority 0) | `WeDevs_Dokan::declare_woocommerce_feature_compatibility` |
+| `woocommerce_flush_rewrite_rules` | [WooCommerce] `wc:includes/class-wc-install.php::install()` and `wc:includes/wc-core-functions.php::flush_rewrite_rules_on_shop_page_save()` | `WeDevs_Dokan::flush_rewrite_rules` |
+| `woocommerce_get_query_vars` | [WooCommerce] `wc:includes/class-wc-query.php::get_query_vars()` | `Rewrites::resolve_wc_query_conflict` |
+| `woocommerce_get_breadcrumb` | [WooCommerce] `wc:includes/class-wc-breadcrumb.php::get_breadcrumb()` | `Rewrites::store_page_breadcrumb` |
 | `plugins_loaded` priority 10 / 11 | WordPress | `after_plugins_loaded` / `woocommerce_not_loaded` |
 | `init` priorities 1, 4, 10, 99 | WordPress | `wpdb_table_shortcuts`, `init_classes`, `localization_setup` and `Assets::register_all_scripts` and `Rewrites::register_rule`, `CLI\Manager::register_commands` |
 | `widgets_init` | WordPress | `register_widgets` |
@@ -497,7 +497,7 @@ Templates, all on `template_include` priority 99:
 
 ## 6. Data storage
 
-### 6.1 Custom tables created by `Installer::create_tables()` (`lite:includes/Install/Installer.php:451`)
+### 6.1 Custom tables created by `Installer::create_tables()` (`lite:includes/Install/Installer.php::create_tables()`)
 
 All tables use `CREATE TABLE IF NOT EXISTS … ENGINE=InnoDB` with the site charset and collation, run through `dbDelta`.
 
@@ -509,7 +509,7 @@ All tables use `CREATE TABLE IF NOT EXISTS … ENGINE=InnoDB` with the site char
 | `{prefix}dokan_refund` | `id` PK AI, `order_id`, `seller_id`, `refund_amount` decimal(19,4), `refund_reason` text, `item_qtys` varchar(200), `item_totals` text, `item_tax_totals` text, `restock_items` varchar(10), `date` timestamp, `status` int(1), `method` varchar(30) | PK |
 | `{prefix}dokan_vendor_balance` | `id` PK AI, `vendor_id`, `trn_id`, `trn_type` varchar(30), `perticulars` text, `debit` decimal(19,4), `credit` decimal(19,4), `status` varchar(30), `trn_date` timestamp, `balance_date` timestamp | PK |
 | `{prefix}dokan_reverse_withdrawal` | `id` PK AI, `trn_id`, `trn_type` varchar(200) default `order_commission`, `vendor_id`, `note` mediumtext, `debit`, `credit` decimal(19,4), `trn_date` int unsigned | PK, `trn_date`, `vendor_id_trn_date`, `vendor_id`, `trn_id_type`, `vendor_id_trn_date_type`. Created by `ReverseWithdrawal\InstallerHelper::create_reverse_withdrawal_table`. |
-| `{prefix}dokan_order_stats` | `order_id` PK, `vendor_id`, `order_type` tinyint (0 to 9, documented in the column comment), `vendor_earning`, `vendor_gateway_fee`, `vendor_shipping_fee`, `vendor_discount`, `vendor_shipping_tax`, `vendor_order_tax`, `admin_earning`, `admin_commission`, `admin_gateway_fee`, `admin_shipping_fee`, `admin_discount`, `admin_shipping_tax`, `admin_order_tax`, `admin_subsidy` (all double) | PK, `vendor_id`, `order_type`. Created by `create_dokan_order_stats_table` (`:671`). The `V_5_0_0` upgrader adds the newer columns on older installs. |
+| `{prefix}dokan_order_stats` | `order_id` PK, `vendor_id`, `order_type` tinyint (0 to 9, documented in the column comment), `vendor_earning`, `vendor_gateway_fee`, `vendor_shipping_fee`, `vendor_discount`, `vendor_shipping_tax`, `vendor_order_tax`, `admin_earning`, `admin_commission`, `admin_gateway_fee`, `admin_shipping_fee`, `admin_discount`, `admin_shipping_tax`, `admin_order_tax`, `admin_subsidy` (all double) | PK, `vendor_id`, `order_type`. Created by `lite:includes/Install/Installer.php::create_dokan_order_stats_table()`. The `V_5_0_0` upgrader adds the newer columns on older installs. |
 
 `seller_id` and `vendor_id` both refer to the **Vendor**'s user ID. `seller_id` is a legacy column name. `$wpdb->dokan_withdraw`, `dokan_orders`, `dokan_announcement`, `dokan_refund` and `dokan_vendor_balance` are shortcut properties set on `init` priority 1.
 
@@ -555,7 +555,7 @@ No post types are registered by the classes in this document.
 
 | Endpoint | Method | Handler | Permission |
 |---|---|---|---|
-| `admin-ajax.php?action=dokan_do_upgrade` | POST | `Upgrade\AdminNotice::do_upgrade` (`lite:includes/Upgrade/AdminNotice.php:69`) | `check_ajax_referer( 'dokan_admin' )` and `current_user_can( 'update_plugins' )`. Rejected with HTTP 400 while an upgrade is running or when none is required. |
+| `admin-ajax.php?action=dokan_do_upgrade` | POST | `lite:includes/Upgrade/AdminNotice.php::do_upgrade()` | `check_ajax_referer( 'dokan_admin' )` and `current_user_can( 'update_plugins' )`. Rejected with HTTP 400 while an upgrade is running or when none is required. |
 | `wp dokan <command>` | CLI | registered by `CLI\Manager::register_commands` | No Dokan capability gate. Shell access is the boundary ([ADR-0008](../0008-lite-owns-the-wp-dokan-cli-namespace.md)). |
 
 REST routes are registered by the `api` service (`REST\Manager`) and are out of scope here. AJAX handlers other than the upgrader belong to the `ajax-service` (`WeDevs\Dokan\Ajax`) and are documented with their domains.
@@ -564,21 +564,21 @@ REST routes are registered by the `api` service (`REST\Manager`) and are out of 
 
 ## 8. Permissions & capabilities
 
-- **Roles and capabilities**: `Installer::user_roles()` creates the `seller` role (a Vendor) and grants `dokandar` and every capability from `dokan_get_all_caps()` (`lite:includes/functions.php:2835`, filter `dokan_get_all_cap`) to `seller`, `administrator` and `shop_manager`.
+- **Roles and capabilities**: `Installer::user_roles()` creates the `seller` role (a Vendor) and grants `dokandar` and every capability from `dokan_get_all_caps()` (`lite:includes/functions.php::dokan_get_all_caps()`, filter `dokan_get_all_cap`) to `seller`, `administrator` and `shop_manager`.
 - **Store Admin**: `manage_woocommerce` is the canonical admin capability for Vendor authorization ([ADR-0005](../0005-canonical-admin-capability.md)). `Core::hide_others_uploads` skips media scoping for that capability. For `dokandar` users on `upload.php` and `media-upload.php`, it limits attachments to `post_author = dokan_get_current_user_id()`.
 - **wp-admin access**: `Core::block_admin_access` redirects users whose first role is `seller`, `customer` or `vendor_staff` to the home page when the `admin_access` setting is `on`. With HPOS enabled the setting is always treated as `on`. `admin-ajax.php`, `admin-post.php`, `async-upload.php` and `media-upload.php` stay reachable, and the check is skipped under `WP_CLI`.
 - **Vendor dashboard**: `Core::redirect_if_not_logged_seller` calls `dokan_redirect_login()` and `dokan_redirect_if_not_seller()` on the dashboard page, or on any page where `dokan_force_page_redirect` returns true.
 - **Product edit template**: requires `dokan_edit_product`.
 - **Store page**: renders only for users who pass `dokan_is_user_seller()` and are not Vendor Staff.
 - **Upgrades**: the `update_plugins` capability and the `dokan_admin` nonce are required.
-- **Vendor Staff**: `dokan_get_current_user_id()` (`lite:includes/functions.php:52`) resolves a `vendor_staff` user to their Vendor through `_vendor_id`, so ownership checks act on the Vendor.
+- **Vendor Staff**: `dokan_get_current_user_id()` (`lite:includes/functions.php::dokan_get_current_user_id()`) resolves a `vendor_staff` user to their Vendor through `_vendor_id`, so ownership checks act on the Vendor.
 - **CLI**: no capability check ([ADR-0008](../0008-lite-owns-the-wp-dokan-cli-namespace.md)).
 
 ---
 
 ## 9. WooCommerce touchpoints
 
-- Dokan's `init_plugin()` is gated on `woocommerce_loaded`. Without WooCommerce, only the constructor work (container, admin notices, tracker) and `woocommerce_not_loaded()` run. The plugin header also declares `Requires Plugins: woocommerce` (`lite:dokan.php:10`).
+- Dokan's `init_plugin()` is gated on `woocommerce_loaded`. Without WooCommerce, only the constructor work (container, admin notices, tracker) and `woocommerce_not_loaded()` run. The plugin header also declares `Requires Plugins: woocommerce` (`lite:dokan.php` (plugin header `Requires Plugins`)).
 - HPOS (`custom_order_tables`) and Cart/Checkout Blocks compatibility are declared on `before_woocommerce_init`.
 - Rewrite rules are rebuilt whenever WooCommerce fires `woocommerce_flush_rewrite_rules`.
 - The product-edit rule reads WooCommerce's `woocommerce_permalinks['product_base']`.
@@ -609,9 +609,9 @@ REST routes are registered by the `api` service (`REST\Manager`) and are out of 
 
 | File | Loaded | Major helpers |
 |---|---|---|
-| `includes/functions-rest-api.php` | Composer `files` autoload, always (`dokan.php:48`) | `dokan_rest_validate_store_id`, `dokan_rest_validate_order_id` |
+| `includes/functions-rest-api.php` | Composer `files` autoload, always (the `vendor/autoload.php` require in `dokan.php`) | `dokan_rest_validate_store_id`, `dokan_rest_validate_order_id` |
 | `includes/functions-dashboard-navigation.php` | Composer `files` autoload, always | `dokan_get_dashboard_nav`, `dokan_dashboard_nav`, `dokan_check_menu_permission`, `dokan_nav_sort_by_pos` |
-| `includes/functions.php` (`lite:includes/functions.php`) | `WeDevs_Dokan::includes()` on `woocommerce_loaded`; also in `activate()` and `woocommerce_not_loaded()` | **Identity:** `dokan_get_current_user_id` (`:52`), `dokan_is_user_seller` (`:77`), `dokan_is_user_customer`, `dokan_is_seller_enabled`, `dokan_is_seller_trusted`, `dokan_get_vendor` (`:2820`). **Context:** `dokan_is_seller_dashboard` (`:193`), `dokan_is_store_page` (`:165`), `dokan_is_product_edit_page`, `dokan_is_store_listing`. **Redirects:** `dokan_redirect_login`, `dokan_redirect_if_not_seller`, `dokan_redirect_to_admin_setup_wizard`. **Settings:** `dokan_get_option` (`:1083`), `dokan_save_legacy_settings_section` (`:1131`). **Templates:** `dokan_get_template_part` (`:847`), `dokan_get_template` (`:898`), `dokan_locate_template` (`:933`). **URLs:** `dokan_get_page_url`, `dokan_get_navigation_url` (`:2113`), `dokan_get_store_url` (`:1202`), `dokan_edit_product_url`, `dokan_get_admin_page_url`. **Store data:** `dokan_get_store_info` (`:1318`), `dokan_get_store_tabs`, `dokan_get_seller_address`. **Capabilities:** `dokan_get_all_caps` (`:2835`), `dokan_get_all_cap_labels`. **Date and time:** `dokan_current_datetime` (`:3801`), `dokan_format_datetime`, `dokan_wp_timezone`. **Counts:** `dokan_count_posts`, `dokan_get_seller_count`. **Utilities:** `dokan_log`, `dokan_parse_args`, `dokan_remove_hook_for_anonymous_class`, `dokan_clear_product_caches`. |
+| `includes/functions.php` (`lite:includes/functions.php`) | `WeDevs_Dokan::includes()` on `woocommerce_loaded`; also in `activate()` and `woocommerce_not_loaded()` | **Identity:** `dokan_get_current_user_id`, `dokan_is_user_seller`, `dokan_is_user_customer`, `dokan_is_seller_enabled`, `dokan_is_seller_trusted`, `dokan_get_vendor`. **Context:** `dokan_is_seller_dashboard`, `dokan_is_store_page`, `dokan_is_product_edit_page`, `dokan_is_store_listing`. **Redirects:** `dokan_redirect_login`, `dokan_redirect_if_not_seller`, `dokan_redirect_to_admin_setup_wizard`. **Settings:** `dokan_get_option`, `dokan_save_legacy_settings_section`. **Templates:** `dokan_get_template_part`, `dokan_get_template`, `dokan_locate_template`. **URLs:** `dokan_get_page_url`, `dokan_get_navigation_url`, `dokan_get_store_url`, `dokan_edit_product_url`, `dokan_get_admin_page_url`. **Store data:** `dokan_get_store_info`, `dokan_get_store_tabs`, `dokan_get_seller_address`. **Capabilities:** `dokan_get_all_caps`, `dokan_get_all_cap_labels`. **Date and time:** `dokan_current_datetime`, `dokan_format_datetime`, `dokan_wp_timezone`. **Counts:** `dokan_count_posts`, `dokan_get_seller_count`. **Utilities:** `dokan_log`, `dokan_parse_args`, `dokan_remove_hook_for_anonymous_class`, `dokan_clear_product_caches`. |
 | `includes/functions-compatibility.php` | `includes()`, `activate()` | WooCommerce CRUD compatibility wrappers: `dokan_wc_get_product`, `dokan_get_prop`, `dokan_get_date_created`, `dokan_get_metadata`, `dokan_save_product_price`, `dokan_process_product_file_download_paths_permission` |
 | `includes/reports.php` | `includes()` only when `dokan_pro()` is not defined | Lite-only reports helpers |
 | `includes/Order/functions.php`, `Product/functions.php`, `Withdraw/functions.php`, `wc-functions.php`, `wc-template.php`, `store-functions.php` | `includes()` | Domain helpers, documented with their domains |
@@ -638,7 +638,7 @@ REST routes are registered by the `api` service (`REST\Manager`) and are out of 
 
 ## Known gaps
 
-- `WeDevs\Dokan\DependencyManagement\Definition` (with its `init()` injection method) exists, but no code was found that installs it into the container. League's `DefinitionAggregate` instantiates its own `Definition` class (`lite:lib/packages/League/Container/Definition/DefinitionAggregate.php:30`). Whether any service relies on `init()` injection could not be confirmed from source.
+- `WeDevs\Dokan\DependencyManagement\Definition` (with its `init()` injection method) exists, but no code was found that installs it into the container. League's `DefinitionAggregate` instantiates its own `Definition` class (`lite:lib/packages/League/Container/Definition/DefinitionAggregate.php::add()`). Whether any service relies on `init()` injection could not be confirmed from source.
 - `BaseServiceProvider::provides()` keeps its interface index in a method-level `static` array. Since PHP 8.1, method statics are shared across inheriting classes, so which providers answer true for an interface id can depend on the PHP version and on resolution order. The practical effect on registration order was not traced.
 - The script and style handle inventory in `Assets::get_scripts()` and `get_styles()` (more than 1,000 lines) is not listed here. Only the registration and enqueue pipeline is documented.
 - The `dokan_get_class_container` filter has no consumer inside Lite. Which external callers still depend on the legacy lookup was not determined.

@@ -8,24 +8,24 @@ WooCommerce charges tax on product lines (and on fee lines) and, separately, on 
 
 ## Rule
 
-- The product tax recipient is resolved by `Fees::get_tax_fee_recipient()` (`lite:includes/Fees.php:188-208`): order meta `tax_fee_recipient` if present; otherwise `dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' )` through the filter `dokan_tax_fee_recipient` (value, order ID), written to the order and saved (`:202-204`). It is then frozen; see Lite ADR 0013.
+- The product tax recipient is resolved by `Fees::get_tax_fee_recipient()` (`lite:includes/Fees.php::get_tax_fee_recipient()`): order meta `tax_fee_recipient` if present; otherwise `dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' )` through the filter `dokan_tax_fee_recipient` (value, order ID), written to the order and saved. It is then frozen; see Lite ADR 0013.
 - The amount given to the recipient is **all tax on the order minus shipping tax**, each net of refunds:
 
   ```
   product tax = (get_total_tax() − tax refunded) − (get_shipping_tax() − shipping tax refunded)
   ```
 
-  (`OrderCommission::get_vendor_tax_fee()`, `lite:includes/Commission/OrderCommission.php:325-331`, and `get_admin_tax_fee()`, `:242-248`). Subtracting shipping tax guarantees that shipping tax is never counted in both the product tax and the shipping tax buckets.
+  (`lite:includes/Commission/OrderCommission.php::get_vendor_tax_fee()`, `::get_admin_tax_fee()`). Subtracting shipping tax guarantees that shipping tax is never counted in both the product tax and the shipping tax buckets.
 - All-or-nothing: one of the two getters returns the amount, the other 0.
-- **Refunds.** Refunded product tax (the `tax_total` of the refund's tax lines) is charged back to the product tax recipient by `OrderRefundCommission::get_tax_refund_for()` (`lite:includes/Commission/OrderRefundCommission.php:357-376`, recipient check at `:367`).
+- **Refunds.** Refunded product tax (the `tax_total` of the refund's tax lines) is charged back to the product tax recipient by `OrderRefundCommission::get_tax_refund_for()` (`lite:includes/Commission/OrderRefundCommission.php::get_tax_refund_for()`, which also performs the recipient check).
 
 ## Settings that change it
 
 | Setting | Values | Default | Behaviour |
 |---|---|---|---|
-| `dokan_selling[tax_fee_recipient]` — in the new flat settings option `dokan_admin_settings` the same value is stored under the field id `product_tax_fee_recipient`, which maps to this legacy key (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:586-609`); legacy screen `lite:includes/Admin/Settings.php:616-626` | `seller` ("Vendor"), `admin` | `seller` | `seller`: product tax is added to the Vendor's Earning. `admin`: product tax is added to the admin's total. |
+| `dokan_selling[tax_fee_recipient]` — in the new flat settings option `dokan_admin_settings` the same value is stored under the field id `product_tax_fee_recipient`, which maps to this legacy key (`lite:includes/Admin/Settings/Schema/SettingsSchema.php::transaction_page()`, field `product_tax_fee_recipient`); legacy screen `lite:includes/Admin/Settings.php::get_settings_fields()` (field `tax_fee_recipient`) | `seller` ("Vendor"), `admin` | `seller` | `seller`: product tax is added to the Vendor's Earning. `admin`: product tax is added to the admin's total. |
 
-This value is also the fallback for the shipping tax recipient when `dokan_selling[shipping_tax_fee_recipient]` has never been saved. The value has two names. `product_tax_fee_recipient` is the UI field id and also the storage key in `dokan_admin_settings`: the new settings screen and the onboarding Basic step write it under that key (`lite:includes/REST/AdminSettingsController.php:251`, `lite:includes/Admin/OnboardingSetup/Steps/AbstractStep.php:267-273`), and the bridge fills it from the legacy key when it is missing (`lite:includes/Admin/Settings/Migration/LegacySettingsBridge.php:285-322`). Code that reads it through `dokan_get_option( ..., 'dokan_selling' )`, as `Fees::get_tax_fee_recipient()` does, must use the legacy key `tax_fee_recipient`; the read overlays the stored new-option value onto that key (`lite:includes/functions.php:1083-1103`, `lite:includes/Admin/Settings/Migration/LegacySettingsBridge.php:337-350`).
+This value is also the fallback for the shipping tax recipient when `dokan_selling[shipping_tax_fee_recipient]` has never been saved. The value has two names. `product_tax_fee_recipient` is the UI field id and also the storage key in `dokan_admin_settings`: the new settings screen and the onboarding Basic step write it under that key (`lite:includes/REST/AdminSettingsController.php::update_item()`, `lite:includes/Admin/OnboardingSetup/Steps/AbstractStep.php::save()`), and the bridge fills it from the legacy key when it is missing (`lite:includes/Admin/Settings/Migration/LegacySettingsBridge.php::hydrate_new_from_legacy()`). Code that reads it through `dokan_get_option( ..., 'dokan_selling' )`, as `Fees::get_tax_fee_recipient()` does, must use the legacy key `tax_fee_recipient`; the read overlays the stored new-option value onto that key (`lite:includes/functions.php::dokan_get_option()`, `lite:includes/Admin/Settings/Migration/LegacySettingsBridge.php::hydrate_legacy_from_new()`).
 
 ## Worked example
 
@@ -39,9 +39,9 @@ Settings: Commission Fixed 10 % + 0 flat; shipping and shipping tax recipients `
 
 - **Tax on fee lines.** `get_total_tax()` includes tax on WooCommerce fee lines, so fee-line tax travels with the product tax recipient, not with the fee-line recipient.
 - **Prices entered including tax.** The line-item base for Commission is `get_total()`, which WooCommerce stores excluding tax even when prices are entered inclusive of tax, so the rule does not change.
-- **Suborder tax lines.** `Manager::create_taxes()` seeds tax lines on a Suborder (`lite:includes/Order/Manager.php:764-794`), and `calculate_totals()` then recalculates the Suborder's taxes (`:696`). The Suborder's own totals are what this rule reads.
+- **Suborder tax lines.** `Manager::create_taxes()` seeds tax lines on a Suborder (`lite:includes/Order/Manager.php::create_taxes()`), and `calculate_totals()` then recalculates the Suborder's taxes (`::create_sub_order()`). The Suborder's own totals are what this rule reads.
 - **Payment gateways that pay out at checkout.** Some split-payment gateways override this recipient per order through `dokan_tax_fee_recipient` or by writing the order meta before the first read. Lite does not do this itself.
-- **Pre-2.8.6 installs** had a single `extra_fee_recipient`; the 2.8.6 upgrade copied it into both `shipping_fee_recipient` and `tax_fee_recipient` of the `dokan_general` option, defaulting to `seller` (`lite:includes/Upgrade/Upgrades/V_2_8_6.php:16-22`), and the 2.9.19 upgrade copied both keys to `dokan_selling` (`lite:includes/Upgrade/Upgrades/V_2_9_19.php:12-13`).
+- **Pre-2.8.6 installs** had a single `extra_fee_recipient`; the 2.8.6 upgrade copied it into both `shipping_fee_recipient` and `tax_fee_recipient` of the `dokan_general` option, defaulting to `seller` (`lite:includes/Upgrade/Upgrades/V_2_8_6.php::update_fees_recipient()`), and the 2.9.19 upgrade copied both keys to `dokan_selling` (`lite:includes/Upgrade/Upgrades/V_2_9_19.php::dokan_update_admin_settings_next()`).
 
 ## Why
 

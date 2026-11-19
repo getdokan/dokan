@@ -19,7 +19,7 @@ The documents serve two kinds of reader.
 
 ## Pinned revisions
 
-Every document was verified against the following source revisions. The footer of each document records the exact Lite revision its citations match. A statement may be out of date for any later revision.
+Every document was verified against the following source revisions. The `_Verified against …_` footer of each document records the exact Lite revision (and WooCommerce version) at which its statements and citations were checked; it is the snapshot to diff against when re-verifying. A statement may be out of date for any later revision.
 
 | Codebase | Revision | Prefix used in citations |
 |---|---|---|
@@ -35,19 +35,24 @@ Other third-party plugins are named in ownership labels, for example **[Third-pa
 
 ## How to read citations
 
-### File and line citations
+### File and symbol citations
 
-Entry points, key classes and key methods are cited as `prefix:path/relative/to/repo/File.php:LINE`. The path is relative to the root of the repository the prefix names.
+Entry points, key classes and key methods are cited as `prefix:path/relative/to/repo/File.php::symbol`, in one code span. The path is relative to the root of the repository the prefix names, and the symbol is a method, function, property or constant declared in that file. The path already identifies the class, so the class name is not repeated. **Citations never carry line numbers**: line numbers drift with every commit, while a method or constant name stays valid until the code itself is renamed or moved.
 
 | Example | Meaning |
 |---|---|
-| `lite:includes/Order/Manager.php:943` | Line 943 of `includes/Order/Manager.php` in the Dokan Lite repository |
-| `lite:dokan-class.php:276-279` | Lines 276 to 279 of `dokan-class.php` in Dokan Lite |
-| `wc:includes/class-wc-checkout.php:514` | Line 514 of `includes/class-wc-checkout.php` in the WooCommerce plugin (11.2.1); used to show where WooCommerce fires a hook Dokan consumes |
+| `lite:includes/Order/Manager.php::maybe_split_orders()` | The `maybe_split_orders()` method in `includes/Order/Manager.php` in the Dokan Lite repository |
+| `lite:includes/functions.php::dokan_get_withdraw_threshold()` | The global function `dokan_get_withdraw_threshold()` defined in `includes/functions.php` |
+| `lite:includes/Admin/Settings/Repository/SettingsRepository.php::OPTION_KEY` | The `OPTION_KEY` class constant in that file; a property is written `::$name` (for example `lite:includes/Upgrade/Upgrades.php::$upgrades`) |
+| `lite:includes/Fees.php::get_shipping_fee_recipient()`, `::get_tax_fee_recipient()` | Several symbols in one file: after the first full citation, a bare `::name()` refers to the same file |
+| `lite:includes/wc-template.php` (the top-level `add_filter( 'woocommerce_register_post_type_product', ... )`) | Code with no enclosing function (top-level hook registrations, templates, settings-schema arrays): the file plus the nearest stable identifier, named in words |
+| `wc:includes/class-wc-checkout.php::create_order()` | The `create_order()` method in the WooCommerce plugin (11.2.1); used to show where WooCommerce fires a hook Dokan consumes |
 
-### Symbol citations
+When a statement depends on one branch inside a method, the prose names the branch (for example "the single-vendor branch of `::maybe_split_orders()`") instead of pointing at a line range.
 
-Everything else is cited by symbol: `Class::method` (for example `Order\Manager::maybe_split_orders`), a procedural function name (for example `dokan_sync_insert_order()`), or an exact hook string (for example `woocommerce_order_status_changed`). Class names are given relative to the `WeDevs\Dokan` namespace unless a full name is needed. Use your editor's symbol search to locate them; line numbers are given only where the precise location matters.
+### Other symbol citations
+
+Everything else is cited by bare symbol: `Class::method` (for example `Order\Manager::maybe_split_orders`), a procedural function name (for example `dokan_sync_insert_order()`), or an exact hook string (for example `woocommerce_order_status_changed`). Class names are given relative to the `WeDevs\Dokan` namespace unless a full name is needed. Use your editor's symbol search to locate them.
 
 ### Hooks: fired versus consumed
 
@@ -144,7 +149,7 @@ Every document ends with a **Known gaps** section that lists what could not be d
 ## Known gaps
 
 - This README is a navigation page. It makes no claims about runtime behavior of its own; each behavioral statement lives, with its citation, in the linked subsystem document.
-- Line numbers are accurate only at the pinned revisions. The documents are not regenerated automatically, so a citation can drift after later commits. Symbol citations (`Class::method`, hook names) are more durable than line numbers.
+- Citations name symbols, not line numbers, so they survive ordinary edits, but a statement is still only as current as the revision in the document's footer. The documents are not regenerated automatically: a renamed or moved method breaks its citation, and changed behavior inside an unchanged method is not caught by the citation at all.
 - The `pro:` prefix is part of the shared citation convention, but this public repository deliberately contains no Dokan Pro paths. How Dokan Pro uses the seams named here is documented only in Dokan Pro's private repository.
 - Release tooling (translation `.pot` generation, release packaging, `.distignore`) is not covered by any document in this directory. Its absence here does not mean the tooling is unimportant.
 - Each subsystem document keeps its own Known gaps list. Those lists are not aggregated here, so check the relevant document before relying on a behavior it marks as unconfirmed.

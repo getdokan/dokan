@@ -10,10 +10,10 @@ Status changes normally flow from a multi-vendor Order down to its Suborders ([A
 
 **[Lite]** Whenever a Suborder changes status, Dokan checks all non-trashed Suborders of the same parent. If every one of them is `completed`, it sets the parent Order to `completed`. No other Suborder status is ever copied up.
 
-- `Order\Hooks::on_sub_order_change` runs on `woocommerce_order_status_changed` at priority 99 (`lite:includes/Order/Hooks.php:38`, method at `:393-449`).
-- It returns at once for an order whose `parent_id` is 0 (`:395-397`), so it acts only on Suborders. A single-vendor Order has no parent and therefore no roll-up; its own status is the Vendor order status.
-- It loads the siblings with `Manager::get_child_orders( $parent_id )` (`:400-405`). That helper calls `wc_get_orders()` without a `status` argument (`lite:includes/Order/Manager.php:508-523`), so WooCommerce's default status list applies and trashed Suborders are not returned. Before checking, it may auto-complete digital-only siblings (`:410-419`; see [ADR-0043](./0043-paid-digital-only-suborders-are-completed-automatically-unless-paid-with-a-manual-gateway.md)).
-- If any returned sibling's status is not exactly `completed`, nothing happens (`:421-424`). Otherwise it calls `update_status( 'wc-completed', 'Mark parent order completed when all child orders are completed.' )` on the parent (`:429-448`; `:433-445` only decide which customer email is sent).
+- `Order\Hooks::on_sub_order_change` runs on `woocommerce_order_status_changed` at priority 99 (`lite:includes/Order/Hooks.php::__construct()`, method `::on_sub_order_change()`).
+- It returns at once for an order whose `parent_id` is 0, so it acts only on Suborders. A single-vendor Order has no parent and therefore no roll-up; its own status is the Vendor order status.
+- It loads the siblings with `Manager::get_child_orders( $parent_id )`. That helper calls `wc_get_orders()` without a `status` argument (`lite:includes/Order/Manager.php::get_child_orders()`), so WooCommerce's default status list applies and trashed Suborders are not returned. Before checking, it may auto-complete digital-only siblings (see [ADR-0043](./0043-paid-digital-only-suborders-are-completed-automatically-unless-paid-with-a-manual-gateway.md)).
+- If any returned sibling's status is not exactly `completed`, nothing happens. Otherwise it calls `update_status( 'wc-completed', 'Mark parent order completed when all child orders are completed.' )` on the parent; the email branches around that call only decide which customer email is sent (all in `lite:includes/Order/Hooks.php::on_sub_order_change()`).
 - The check runs on every Suborder status change, not only on moves to `completed`, so the parent completes as soon as the last open Suborder completes, whatever triggered it.
 
 Cancelled, refunded, failed, on-hold and processing Suborders never change the parent. In particular, a Vendor cancelling or refunding their Suborder leaves the parent Order in whatever status it had.
@@ -41,7 +41,7 @@ Alternative: in step 2 Vendor B cancels #302 instead. Siblings: `completed` and 
 
 ## Why
 
-No recorded decision beyond the method's docblock ("Mark the parent order as complete when all the child order are completed", `lite:includes/Order/Hooks.php:383-392`). Completion is the one state where the customer-facing Order can be derived unambiguously from its Vendor orders; for mixed outcomes there is no single correct parent status, so Dokan leaves it alone.
+No recorded decision beyond the method's docblock ("Mark the parent order as complete when all the child order are completed", docblock of `lite:includes/Order/Hooks.php::on_sub_order_change()`). Completion is the one state where the customer-facing Order can be derived unambiguously from its Vendor orders; for mixed outcomes there is no single correct parent status, so Dokan leaves it alone.
 
 ## Consequences & risks
 

@@ -36,15 +36,15 @@ Related reading:
 
 | Entry point | Location | What it establishes |
 |---|---|---|
-| Plugin header | `lite:dokan.php:1` | `Requires Plugins: woocommerce`, `WC requires at least: 8.5.0`, `WC tested up to: 11.0.1`. |
-| Minimum PHP | `lite:dokan-class.php:44` (`$min_php = '7.4'`), checked by `WeDevs_Dokan::is_supported_php` (`lite:dokan-class.php:126`) | Activation refuses to proceed on an unsupported PHP version (`WeDevs_Dokan::activate`). |
-| Activation / deactivation | `lite:dokan-class.php:73-74` | `register_activation_hook` → `WeDevs_Dokan::activate` → `Installer::do_install()`, which registers roles and capabilities. |
-| WooCommerce feature declarations | Hooked at `lite:dokan-class.php:76` on `before_woocommerce_init`; body at `lite:dokan-class.php:237` | Declares HPOS (`custom_order_tables`) and Cart/Checkout Blocks (`cart_checkout_blocks`) compatibility. WooCommerce fires `before_woocommerce_init` at `wc:includes/class-woocommerce.php:998`. |
-| Role and capability install | `Installer::user_roles` (`lite:includes/Install/Installer.php:287`, `add_role` at line 294) | Creates the `seller` role and grants `dokandar` plus every `dokan_*` capability (see §8). |
-| Abilities layer registration | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:29-31` | Registers `ProductAbilityScope`, `OrderAbilityScope` and `DokanAbilityRegistrar` as `Hookable` services; `WeDevs_Dokan::init_hooks` calls `register_hooks()` on each (`lite:dokan-class.php:276-279`). |
-| Admin order permissions | `Order\Controller::init_classes` (`lite:includes/Order/Controller.php:42-45`) | Instantiates `Order\Admin\Permissions` only when `is_admin()`. |
-| AJAX handlers | `WeDevs\Dokan\Ajax` (`lite:includes/Ajax.php:12`) | Registers the `wp_ajax_*` / `wp_ajax_nopriv_*` actions. |
-| PHPUnit bootstrap | `lite:tests/php/bootstrap.php:1` | Loads WooCommerce and Dokan on `muplugins_loaded`, forces HPOS on, installs both plugins on `setup_theme`. |
+| Plugin header | `lite:dokan.php` (plugin header comment) | `Requires Plugins: woocommerce`, `WC requires at least: 8.5.0`, `WC tested up to: 11.0.1`. |
+| Minimum PHP | `lite:dokan-class.php::$min_php` (`'7.4'`), checked by `WeDevs_Dokan::is_supported_php` (`lite:dokan-class.php::is_supported_php()`) | Activation refuses to proceed on an unsupported PHP version (`WeDevs_Dokan::activate`). |
+| Activation / deactivation | `lite:dokan-class.php::__construct()` (the `register_activation_hook` / `register_deactivation_hook` calls) | `register_activation_hook` → `WeDevs_Dokan::activate` → `Installer::do_install()`, which registers roles and capabilities. |
+| WooCommerce feature declarations | Hooked in `lite:dokan-class.php::__construct()` on `before_woocommerce_init`; body at `lite:dokan-class.php::declare_woocommerce_feature_compatibility()` | Declares HPOS (`custom_order_tables`) and Cart/Checkout Blocks (`cart_checkout_blocks`) compatibility. WooCommerce fires `before_woocommerce_init` in `wc:includes/class-woocommerce.php::init()`. |
+| Role and capability install | `Installer::user_roles` (`lite:includes/Install/Installer.php::user_roles()`, including the `add_role` call) | Creates the `seller` role and grants `dokandar` plus every `dokan_*` capability (see §8). |
+| Abilities layer registration | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php::$services` | Registers `ProductAbilityScope`, `OrderAbilityScope` and `DokanAbilityRegistrar` as `Hookable` services; `WeDevs_Dokan::init_hooks` calls `register_hooks()` on each (`lite:dokan-class.php::init_hooks()`). |
+| Admin order permissions | `Order\Controller::init_classes` (`lite:includes/Order/Controller.php::init_classes()`) | Instantiates `Order\Admin\Permissions` only when `is_admin()`. |
+| AJAX handlers | `WeDevs\Dokan\Ajax` (`lite:includes/Ajax.php`) | Registers the `wp_ajax_*` / `wp_ajax_nopriv_*` actions. |
+| PHPUnit bootstrap | `lite:tests/php/bootstrap.php` | Loads WooCommerce and Dokan on `muplugins_loaded`, forces HPOS on, installs both plugins on `setup_theme`. |
 | Playwright configs | `lite:tests/pw/e2e.config.ts`, `lite:tests/pw/api.config.ts`, `lite:tests/pw/playwright.config.ts` | Project chains and tag filters (see §4.6). |
 | CI workflows | `lite:.github/workflows/phpunit.yml`, `phpcs.yml`, `e2e_api_tests.yml`, `deploy.yml` | See §4.7. |
 
@@ -54,28 +54,28 @@ Related reading:
 
 | Class / function | File | Responsibility |
 |---|---|---|
-| `dokan_get_current_user_id()` | `lite:includes/functions.php:52` | Resolves the acting Vendor. A user holding `vendor_staff` resolves to the user ID in their `_vendor_id` user meta; everyone else resolves to `get_current_user_id()`. |
-| `dokan_is_user_seller()` | `lite:includes/functions.php:77` | `user_can( $user_id, 'dokandar' )`; with `$exclude_staff = true`, users holding `vendor_staff` return `false`. |
-| `dokan_is_product_author()` | `lite:includes/functions.php:148` | Compares a product's `post_author` with `dokan_get_current_user_id()` (filterable via `dokan_is_product_author`). |
-| `dokan_get_all_caps()` | `lite:includes/functions.php:2835` | The 41 `dokan_*` capabilities, grouped (overview, report, order, coupon, review, withdraw, product, menu); filterable via `dokan_get_all_cap`. |
-| `dokan_admin_menu_capability()` | `lite:includes/functions.php:40` | Returns `manage_woocommerce`, filterable via `dokan_menu_capability`. |
-| `dokan_get_seller_id_by_order()` | `lite:includes/Order/functions.php:296` | Resolves an order's Vendor from `{prefix}dokan_orders.seller_id` (cached). |
-| `Order\Manager::is_seller_has_order` | `lite:includes/Order/Manager.php:394` | `SELECT 1 FROM {prefix}dokan_orders WHERE seller_id = %d AND order_id = %d`. |
-| `Order\Manager::all` | `lite:includes/Order/Manager.php:32` | Order queries; a `seller_id` argument becomes a `_dokan_vendor_id` meta query (line 122). |
-| `Abstracts\DokanRESTController::prepare_objects_query` | `lite:includes/Abstracts/DokanRESTController.php:333` | Forces `author` to `dokan_get_current_user_id()` unless the caller holds `dokan_admin_menu_capability()` and passes `id`. |
-| `Traits\VendorAuthorizable` | `lite:includes/Traits/VendorAuthorizable.php:7` | Shared Vendor-route checks: `check_permission()` (`dokandar`, line 16), `can_access_vendor_store()`, `get_vendor_id_for_user()`, `validate_store_id()`, `is_staff_only()`. |
-| `REST\DokanBaseAdminController::check_permission` | `lite:includes/REST/DokanBaseAdminController.php:26` | Admin routes require `manage_woocommerce`. |
-| `Order\Admin\Permissions` | `lite:includes/Order/Admin/Permissions.php:17` | wp-admin only: hooks registered in the constructor (line 23); `map_meta_caps` (line 51) and Vendor-scoped order list filters for HPOS (line 87) and legacy CPT (line 123). |
-| `Abilities\Support\OwnershipGate` | `lite:includes/Abilities/Support/OwnershipGate.php:28` | The single Ownership + `dokan_*` capability gate for the Abilities layer: `can_write()` (line 131), `has_read_capability()` (line 189). |
-| `Abilities\Support\RequestContext` | `lite:includes/Abilities/Support/RequestContext.php:25` | Detects an **Ability Context**: `is_ability_context()` (line 93), `is_vendor_ability_context()`. |
-| `Abilities\ProductAbilityScope` | `lite:includes/Abilities/ProductAbilityScope.php:38` | Applies Vendor Scope and Ownership to WooCommerce's product abilities. |
-| `Abilities\OrderAbilityScope` | `lite:includes/Abilities/OrderAbilityScope.php:43` | Applies Vendor Scope and Ownership to WooCommerce's order abilities across CPT and HPOS stores. |
-| `Abilities\Definitions\AbstractVendorAbility` | `lite:includes/Abilities/Definitions/AbstractVendorAbility.php:23` | Base for Dokan-native abilities: `check_permission()` (line 100) and `guard()` (line 154). |
-| `Abilities\DokanAbilityRegistrar` | `lite:includes/Abilities/DokanAbilityRegistrar.php:27` | Registers the `dokan` ability category and the four Dokan-native abilities. |
-| `Ajax::change_order_status` | `lite:includes/Ajax.php:354` | Reference example of the AJAX pattern (nonce → capability → Ownership). |
-| `Test\DokanTestCase` | `lite:tests/php/src/DokanTestCase.php:23` | Base PHPUnit case: REST server, users fixture, Brain Monkey and Mockery lifecycle, request helpers. |
-| `Test\DokanAjaxTestCase` | `lite:tests/php/src/DokanAjaxTestCase.php:11` | Base case for AJAX tests (`WP_Ajax_UnitTestCase`). |
-| `Test\Factories\DokanFactory` | `lite:tests/php/src/Factories/DokanFactory.php:6` | Fixture factory exposing `customer`, `seller`, `coupon`, `product`, `order`, `shipping`. |
+| `dokan_get_current_user_id()` | `lite:includes/functions.php::dokan_get_current_user_id()` | Resolves the acting Vendor. A user holding `vendor_staff` resolves to the user ID in their `_vendor_id` user meta; everyone else resolves to `get_current_user_id()`. |
+| `dokan_is_user_seller()` | `lite:includes/functions.php::dokan_is_user_seller()` | `user_can( $user_id, 'dokandar' )`; with `$exclude_staff = true`, users holding `vendor_staff` return `false`. |
+| `dokan_is_product_author()` | `lite:includes/functions.php::dokan_is_product_author()` | Compares a product's `post_author` with `dokan_get_current_user_id()` (filterable via `dokan_is_product_author`). |
+| `dokan_get_all_caps()` | `lite:includes/functions.php::dokan_get_all_caps()` | The 41 `dokan_*` capabilities, grouped (overview, report, order, coupon, review, withdraw, product, menu); filterable via `dokan_get_all_cap`. |
+| `dokan_admin_menu_capability()` | `lite:includes/functions.php::dokan_admin_menu_capability()` | Returns `manage_woocommerce`, filterable via `dokan_menu_capability`. |
+| `dokan_get_seller_id_by_order()` | `lite:includes/Order/functions.php::dokan_get_seller_id_by_order()` | Resolves an order's Vendor from `{prefix}dokan_orders.seller_id` (cached). |
+| `Order\Manager::is_seller_has_order` | `lite:includes/Order/Manager.php::is_seller_has_order()` | `SELECT 1 FROM {prefix}dokan_orders WHERE seller_id = %d AND order_id = %d`. |
+| `Order\Manager::all` | `lite:includes/Order/Manager.php::all()` | Order queries; a `seller_id` argument becomes a `_dokan_vendor_id` meta query (in `::get_backward_compatibility_args()`). |
+| `Abstracts\DokanRESTController::prepare_objects_query` | `lite:includes/Abstracts/DokanRESTController.php::prepare_objects_query()` | Forces `author` to `dokan_get_current_user_id()` unless the caller holds `dokan_admin_menu_capability()` and passes `id`. |
+| `Traits\VendorAuthorizable` | `lite:includes/Traits/VendorAuthorizable.php` | Shared Vendor-route checks: `check_permission()` (`dokandar`), `can_access_vendor_store()`, `get_vendor_id_for_user()`, `validate_store_id()`, `is_staff_only()`. |
+| `REST\DokanBaseAdminController::check_permission` | `lite:includes/REST/DokanBaseAdminController.php::check_permission()` | Admin routes require `manage_woocommerce`. |
+| `Order\Admin\Permissions` | `lite:includes/Order/Admin/Permissions.php` | wp-admin only: hooks registered in `::__construct()`; `::map_meta_caps()` and Vendor-scoped order list filters for HPOS (`::hpos_filter_orders_for_current_vendor()`) and legacy CPT (`::filter_orders_for_current_vendor()`). |
+| `Abilities\Support\OwnershipGate` | `lite:includes/Abilities/Support/OwnershipGate.php` | The single Ownership + `dokan_*` capability gate for the Abilities layer: `::can_write()`, `::has_read_capability()`. |
+| `Abilities\Support\RequestContext` | `lite:includes/Abilities/Support/RequestContext.php` | Detects an **Ability Context**: `::is_ability_context()`, `::is_vendor_ability_context()`. |
+| `Abilities\ProductAbilityScope` | `lite:includes/Abilities/ProductAbilityScope.php` | Applies Vendor Scope and Ownership to WooCommerce's product abilities. |
+| `Abilities\OrderAbilityScope` | `lite:includes/Abilities/OrderAbilityScope.php` | Applies Vendor Scope and Ownership to WooCommerce's order abilities across CPT and HPOS stores. |
+| `Abilities\Definitions\AbstractVendorAbility` | `lite:includes/Abilities/Definitions/AbstractVendorAbility.php` | Base for Dokan-native abilities: `::check_permission()` and `::guard()`. |
+| `Abilities\DokanAbilityRegistrar` | `lite:includes/Abilities/DokanAbilityRegistrar.php` | Registers the `dokan` ability category and the four Dokan-native abilities. |
+| `Ajax::change_order_status` | `lite:includes/Ajax.php::change_order_status()` | Reference example of the AJAX pattern (nonce → capability → Ownership). |
+| `Test\DokanTestCase` | `lite:tests/php/src/DokanTestCase.php` | Base PHPUnit case: REST server, users fixture, Brain Monkey and Mockery lifecycle, request helpers. |
+| `Test\DokanAjaxTestCase` | `lite:tests/php/src/DokanAjaxTestCase.php` | Base case for AJAX tests (`WP_Ajax_UnitTestCase`). |
+| `Test\Factories\DokanFactory` | `lite:tests/php/src/Factories/DokanFactory.php` | Fixture factory exposing `customer`, `seller`, `coupon`, `product`, `order`, `shipping`. |
 
 ---
 
@@ -111,7 +111,7 @@ The full per-route table lives in [rest-api-and-permissions.md §7](./rest-api-a
 1. **`permission_callback` checks a capability.** Examples: `WithdrawController::get_items_permissions_check` returns `current_user_can( 'dokan_manage_withdraw' )`; `VendorAuthorizable::check_permission` returns `current_user_can( 'dokandar' )`; `DokanBaseAdminController::check_permission` returns `current_user_can( 'manage_woocommerce' )`.
 2. **Ownership is checked per record**, either in the permission callback itself (`WithdrawController::get_item_permissions_check` compares the withdraw's `user_id` with the caller), in a `validation_before_update_item()` / `validation_before_delete_item()` step called by `DokanRESTController::update_item()` / `::delete_item()` (`OrderController::validation_before_update_item` compares `dokan_get_current_user_id()` with `dokan_get_seller_id_by_order()`), or with `VendorAuthorizable::can_access_vendor_store()` for store records.
 3. **List endpoints are scoped in the query.** `DokanRESTController::prepare_objects_query` pins `author`; `WithdrawController::get_items` pins `user_id` to `dokan_get_current_user_id()` for non-admins; `StoreController::get_store_products` pins the author and forces `status=publish` on a public route.
-4. **Operating Terms** (Commission, Selling Activation, Direct Publishing, featured status) are applied only for a Store Admin: `Vendor\Manager::update` (`lite:includes/Vendor/Manager.php:330`) wraps those writes in `current_user_can( 'manage_woocommerce' )` (line 400). ADR-0005 identifies this gate as the real protection for Operating Terms. The REST store update's restricted-field list (`StoreController::get_restricted_fields_for_update`) names the stored meta keys rather than the request parameters `Vendor\Manager::update` reads, so it removes only `admin_category_commission`; it is not what blocks a Vendor's Commission change. Per-product Commission meta written through any product REST route is held to the same `manage_woocommerce` gate by `Product\Hooks::protect_per_product_commission_meta()` (`lite:includes/Product/Hooks.php:665`).
+4. **Operating Terms** (Commission, Selling Activation, Direct Publishing, featured status) are applied only for a Store Admin: `Vendor\Manager::update` (`lite:includes/Vendor/Manager.php::update()`) wraps those writes in a `current_user_can( 'manage_woocommerce' )` block. ADR-0005 identifies this gate as the real protection for Operating Terms. The REST store update's restricted-field list (`StoreController::get_restricted_fields_for_update`) names the stored meta keys rather than the request parameters `Vendor\Manager::update` reads, so it removes only `admin_category_commission`; it is not what blocks a Vendor's Commission change. Per-product Commission meta written through any product REST route is held to the same `manage_woocommerce` gate by `Product\Hooks::protect_per_product_commission_meta()` (`lite:includes/Product/Hooks.php::protect_per_product_commission_meta()`).
 
 ### 4.3 AJAX pattern
 
@@ -132,7 +132,7 @@ sequenceDiagram
     A-->>B: "wp_send_json_success(escaped label HTML)"
 ```
 
-Unauthenticated (`wp_ajax_nopriv_*`) handlers also verify a nonce where they accept a form submission. Examples are `Ajax::contact_seller` (`dokan_contact_seller` nonce, `lite:includes/Ajax.php:402`) and `Ajax::seller_listing_search` (`dokan-seller-listing-search` nonce, line 640).
+Unauthenticated (`wp_ajax_nopriv_*`) handlers also verify a nonce where they accept a form submission. Examples are `Ajax::contact_seller` (`dokan_contact_seller` nonce, `lite:includes/Ajax.php::contact_seller()`) and `Ajax::seller_listing_search` (`dokan-seller-listing-search` nonce, `::seller_listing_search()`).
 
 ### 4.4 Abilities layer: Ability Context and the Ownership gate (ADR-0006, ADR-0007)
 
@@ -140,13 +140,13 @@ The Abilities layer applies Dokan's model to WooCommerce's own product and order
 
 **Ability Context detection.** `RequestContext::is_ability_context()` is true when any of the following holds:
 
-- the MCP adapter flagged the request during its permission pre-flight. `RequestContext::flag_mcp_request` is hooked to `mcp_adapter_execute_ability_capability`, fired by the bundled adapter at `wc:vendor/wordpress/mcp-adapter/includes/Abilities/ExecuteAbilityAbility.php:140`;
+- the MCP adapter flagged the request during its permission pre-flight. `RequestContext::flag_mcp_request` is hooked to `mcp_adapter_execute_ability_capability`, fired by the bundled adapter in `wc:vendor/wordpress/mcp-adapter/includes/Abilities/ExecuteAbilityAbility.php::validate_user_access()`;
 - an ability is executing. A depth counter is driven by `wp_before_execute_ability` and `wp_after_execute_ability`, so the context follows the ability whatever transport invoked it;
 - the request is a REST request whose URI matches `/(woocommerce|dokan)/mcp`, or WooCommerce's `MCPAdapterProvider::is_mcp_request()` says so.
 
 The result is filterable via `dokan_is_ability_context`. Because the context follows the ability, Vendor Scope applies to in-process and WP-CLI ability calls too (`CONTEXT.md`, **Ability Context**).
 
-**Per-object decisions.** Inside an Ability Context, `ProductAbilityScope::scope_product_permissions` and `OrderAbilityScope::scope_order_permissions` filter `woocommerce_rest_check_permissions` at priority 99. WooCommerce fires that filter from `wc_rest_check_post_permissions()` at `wc:includes/wc-rest-functions.php:249`. Write contexts (`create`, `edit`, `delete`, `batch`) go to `OwnershipGate::can_write`:
+**Per-object decisions.** Inside an Ability Context, `ProductAbilityScope::scope_product_permissions` and `OrderAbilityScope::scope_order_permissions` filter `woocommerce_rest_check_permissions` at priority 99. WooCommerce fires that filter from `wc:includes/wc-rest-functions.php::wc_rest_check_post_permissions()`. Write contexts (`create`, `edit`, `delete`, `batch`) go to `OwnershipGate::can_write`:
 
 ```mermaid
 flowchart TD
@@ -311,21 +311,21 @@ E2E shards run with `continue-on-error`. Failed tests are then re-run in isolati
 
 | Hook | Fired by | Dokan callback | Purpose |
 |---|---|---|---|
-| `before_woocommerce_init` | [WooCommerce] `wc:includes/class-woocommerce.php:998` | `WeDevs_Dokan::declare_woocommerce_feature_compatibility` | HPOS and Blocks compatibility. |
-| `woocommerce_rest_check_permissions` (priority 99) | [WooCommerce] `wc:includes/wc-rest-functions.php:249` | `ProductAbilityScope::scope_product_permissions`, `OrderAbilityScope::scope_order_permissions` | Ownership gate in an Ability Context. |
-| `woocommerce_product_data_store_cpt_get_products_query` | [WooCommerce] `wc:includes/data-stores/class-wc-product-data-store-cpt.php:2531` | `ProductAbilityScope::scope_products_query` | Product list scoping (Layer 2). |
-| `woocommerce_rest_product_object_query` | [WooCommerce] `wc:includes/rest-api/Controllers/Version3/class-wc-rest-crud-controller.php:355` (`woocommerce_rest_{$this->post_type}_object_query`) | `ProductAbilityScope::scope_rest_products_query` | Product list scoping (Layer 1). |
-| `woocommerce_order_data_store_cpt_get_orders_query` | [WooCommerce] `wc:includes/data-stores/class-wc-order-data-store-cpt.php:1055` | `OrderAbilityScope::scope_orders_query` | Order list scoping, legacy CPT. |
-| `woocommerce_orders_table_datastore_get_orders_query` | [WooCommerce] `wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php:3367` | `OrderAbilityScope::scope_orders_query` | Order list scoping, HPOS. |
-| `woocommerce_rest_orders_prepare_object_query` | [WooCommerce] `wc:includes/rest-api/Controllers/Version2/class-wc-rest-orders-v2-controller.php:685` | `OrderAbilityScope::scope_rest_orders_query` | Order list scoping (Layer 1). |
-| `woocommerce_new_product` (priority 99) | [WooCommerce] `wc:includes/data-stores/class-wc-product-data-store-cpt.php:263` | `ProductAbilityScope::assign_vendor_as_product_author` | Author ability-created products to the Vendor (matters for Vendor Staff). |
-| `woocommerce_ability_definition_classes` | [WooCommerce] `wc:src/Internal/Abilities/AbilitiesLoader.php:208` | `DokanAbilityRegistrar::register_definition_classes` | Register Dokan-native abilities. |
-| `mcp_adapter_execute_ability_capability` | [WooCommerce] bundled MCP adapter, `wc:vendor/wordpress/mcp-adapter/includes/Abilities/ExecuteAbilityAbility.php:140` | `RequestContext::flag_mcp_request` | Mark the request as MCP before the ability's permission callback runs. |
+| `before_woocommerce_init` | [WooCommerce] `wc:includes/class-woocommerce.php::init()` | `WeDevs_Dokan::declare_woocommerce_feature_compatibility` | HPOS and Blocks compatibility. |
+| `woocommerce_rest_check_permissions` (priority 99) | [WooCommerce] `wc:includes/wc-rest-functions.php::wc_rest_check_post_permissions()` | `ProductAbilityScope::scope_product_permissions`, `OrderAbilityScope::scope_order_permissions` | Ownership gate in an Ability Context. |
+| `woocommerce_product_data_store_cpt_get_products_query` | [WooCommerce] `wc:includes/data-stores/class-wc-product-data-store-cpt.php::get_wp_query_args()` | `ProductAbilityScope::scope_products_query` | Product list scoping (Layer 2). |
+| `woocommerce_rest_product_object_query` | [WooCommerce] `wc:includes/rest-api/Controllers/Version3/class-wc-rest-crud-controller.php::prepare_objects_query()` (`woocommerce_rest_{$this->post_type}_object_query`) | `ProductAbilityScope::scope_rest_products_query` | Product list scoping (Layer 1). |
+| `woocommerce_order_data_store_cpt_get_orders_query` | [WooCommerce] `wc:includes/data-stores/class-wc-order-data-store-cpt.php::get_wp_query_args()` | `OrderAbilityScope::scope_orders_query` | Order list scoping, legacy CPT. |
+| `woocommerce_orders_table_datastore_get_orders_query` | [WooCommerce] `wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php::query()` | `OrderAbilityScope::scope_orders_query` | Order list scoping, HPOS. |
+| `woocommerce_rest_orders_prepare_object_query` | [WooCommerce] `wc:includes/rest-api/Controllers/Version2/class-wc-rest-orders-v2-controller.php::prepare_objects_query()` | `OrderAbilityScope::scope_rest_orders_query` | Order list scoping (Layer 1). |
+| `woocommerce_new_product` (priority 99) | [WooCommerce] `wc:includes/data-stores/class-wc-product-data-store-cpt.php::create()` | `ProductAbilityScope::assign_vendor_as_product_author` | Author ability-created products to the Vendor (matters for Vendor Staff). |
+| `woocommerce_ability_definition_classes` | [WooCommerce] `wc:src/Internal/Abilities/AbilitiesLoader.php::get_ability_definition_classes()` | `DokanAbilityRegistrar::register_definition_classes` | Register Dokan-native abilities. |
+| `mcp_adapter_execute_ability_capability` | [WooCommerce] bundled MCP adapter, `wc:vendor/wordpress/mcp-adapter/includes/Abilities/ExecuteAbilityAbility.php::validate_user_access()` | `RequestContext::flag_mcp_request` | Mark the request as MCP before the ability's permission callback runs. |
 | `wp_before_execute_ability` / `wp_after_execute_ability` | WordPress core Abilities API | `RequestContext::mark_ability_execution_started` / `_finished` | Track the Ability Context regardless of transport. |
 | `abilities_api_categories_init` / `wp_abilities_api_categories_init` | WordPress core Abilities API | `DokanAbilityRegistrar::register_category` | Register the `dokan` category. |
 | `wp_register_ability_args` | WordPress core Abilities API | `ProductAbilityScope::extend_product_abilities`, `OrderAbilityScope::extend_order_abilities` | Wrap WooCommerce ability callbacks to add Vendor input/output. |
 | `map_meta_cap` (priority 12) | WordPress core | `Order\Admin\Permissions::map_meta_caps` | In wp-admin only: maps `edit_post` / `edit_others_shop_orders` to `edit_shop_orders` when the order's `_dokan_vendor_id` equals the user. |
-| `woocommerce_order_list_table_prepare_items_query_args` | [WooCommerce] `wc:src/Internal/Admin/Orders/ListTable.php:424` | `Order\Admin\Permissions::hpos_filter_orders_for_current_vendor` | Scope the HPOS admin order list for non-Store-Admins. |
+| `woocommerce_order_list_table_prepare_items_query_args` | [WooCommerce] `wc:src/Internal/Admin/Orders/ListTable.php::prepare_items()` | `Order\Admin\Permissions::hpos_filter_orders_for_current_vendor` | Scope the HPOS admin order list for non-Store-Admins. |
 | `posts_clauses` (priority 12) | WordPress core | `Order\Admin\Permissions::filter_orders_for_current_vendor` | Scope the legacy-CPT admin order list for non-Store-Admins. |
 
 ADR-0007 considered and rejected widening `Order\Admin\Permissions::map_meta_caps`, which is registered only when `is_admin()`, into a global product meta-capability remap. The reason was that it changes capability answers well beyond the MCP surface.
@@ -341,7 +341,7 @@ ADR-0007 considered and rejected widening `Order\Admin\Permissions::map_meta_cap
 | Capabilities `dokan_*` (41) | Granted to `seller`, `administrator`, `shop_manager` | Action model for Vendors and Vendor Staff. |
 | User meta `_vendor_id` | On a Vendor Staff user | Parent Vendor resolved by `dokan_get_current_user_id()`. |
 | Order meta `_dokan_vendor_id` | On each Vendor order | Vendor filter for order queries and the wp-admin meta-cap mapping. |
-| Table `{prefix}dokan_orders` | `id` bigint PK, `order_id` bigint (indexed), `seller_id` bigint (indexed), `order_total` decimal(19,4), `net_amount` decimal(19,4), `order_status` varchar(30); created by `Installer::create_sync_table` (`lite:includes/Install/Installer.php:492`, DDL at line 495) | Order → Vendor lookup used by Ownership checks. |
+| Table `{prefix}dokan_orders` | `id` bigint PK, `order_id` bigint (indexed), `seller_id` bigint (indexed), `order_total` decimal(19,4), `net_amount` decimal(19,4), `order_status` varchar(30); created by `Installer::create_sync_table` (`lite:includes/Install/Installer.php::create_sync_table()`, including the DDL) | Order → Vendor lookup used by Ownership checks. |
 | Table `{prefix}dokan_withdraw` | `user_id` column | Withdrawal ownership (see [withdraw-and-reverse-withdrawal.md](./withdraw-and-reverse-withdrawal.md)). |
 | `wp_posts.post_author` | Products | Product ownership. |
 | Option `dokan_selling` → `order_status_change` | Admin setting | When not `on`, Vendors cannot change order status (`Ajax::change_order_status`, `OrderController::update_order_permissions_check`). |
@@ -355,10 +355,10 @@ The complete route list with permission callbacks is in [rest-api-and-permission
 
 | Surface | Authentication | CSRF protection | Authorization |
 |---|---|---|---|
-| `dokan/v1`, `v2`, `v3` (Vendor and public routes) | WordPress cookie or application credentials | `wp_rest` nonce, localized to scripts by `Assets` (`lite:includes/Assets.php:63`, `:909`, `:1483`) and checked by WordPress core's REST cookie authentication | `permission_callback` capability + Ownership (§4.2) |
+| `dokan/v1`, `v2`, `v3` (Vendor and public routes) | WordPress cookie or application credentials | `wp_rest` nonce, localized to scripts by `Assets` (`lite:includes/Assets.php::load_dokan_admin_notices_scripts()`, `::enqueue_front_scripts()`, `::get_admin_localized_scripts()`) and checked by WordPress core's REST cookie authentication | `permission_callback` capability + Ownership (§4.2) |
 | `dokan/v1/admin` | Same | Same | `DokanBaseAdminController::check_permission` → `manage_woocommerce` |
 | `admin-ajax.php` (`WeDevs\Dokan\Ajax`, 29 `wp_ajax_*` registrations, plus handlers in other classes) | Cookie | `check_ajax_referer()` / `wp_verify_nonce()` with per-action nonce names | Capability + `dokan_is_seller_has_order()` / `dokan_is_product_author()` (§4.3) |
-| Dashboard form posts | Cookie | `wp_nonce_field()` + `wp_verify_nonce()`, e.g. `dokan_add_new_product` (`lite:includes/Dashboard/Templates/Products.php:296`), `dokan_edit_product` (line 469), `dokan_withdraw` (`lite:includes/Withdraw/Hooks.php:166`) | Capability + Ownership in the handler |
+| Dashboard form posts | Cookie | `wp_nonce_field()` + `wp_verify_nonce()`, e.g. `dokan_add_new_product` (`lite:includes/Dashboard/Templates/Products.php::handle_product_add()`), `dokan_edit_product` (`::handle_product_update()`), `dokan_withdraw` (`lite:includes/Withdraw/Hooks.php::ajax_handle_withdraw_request()`) | Capability + Ownership in the handler |
 | Abilities / MCP | WordPress Abilities API / MCP adapter | Handled by the transport | `OwnershipGate` and `AbstractVendorAbility::check_permission` (§4.4) |
 
 **Nonce strategy.** Nonces are per action rather than global. About 65 `wp_create_nonce()` calls exist across `includes/` and `templates/` (52 in `includes/`), with action names such as `dokan_admin`, `seller-order-filter-nonce`, `dokan_edit_product_nonce`, `dokan_reviews`, `dokan_view_order`, `dokan_add_product_nonce`, `dokan_reverse_withdrawal_payment`, `dokan_vendor_order_export_action`, and WooCommerce-compatible names such as `search-products`, `search-customer`, `load-variations`, `save-variations`. Verification uses about 21 `check_ajax_referer()` and 70 `wp_verify_nonce()` calls across `includes/` and `templates/`. The handlers cited above (`Ajax::contact_seller`, `Ajax::seller_listing_search`, the product form handlers and the withdraw form handler) pass the nonce through `sanitize_key()` before `wp_verify_nonce()`. A nonce proves intent only. Every handler still performs its own capability and Ownership checks.
@@ -369,7 +369,7 @@ The complete route list with permission callbacks is in [rest-api-and-permission
 
 ### 8.1 Roles and capabilities installed by Lite
 
-`Installer::user_roles` creates the `seller` role (display name "Vendor") with WordPress post capabilities, WooCommerce product capabilities (`edit_products`, `publish_products`, `delete_products`, and others), `edit_shop_orders`, `upload_files` and `dokandar`. It then adds `dokandar` to `administrator` and `shop_manager`, and adds every capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager` (`lite:includes/Install/Installer.php:331-338`).
+`Installer::user_roles` creates the `seller` role (display name "Vendor") with WordPress post capabilities, WooCommerce product capabilities (`edit_products`, `publish_products`, `delete_products`, and others), `edit_shop_orders`, `upload_files` and `dokandar`. It then adds `dokandar` to `administrator` and `shop_manager`, and adds every capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager` (`lite:includes/Install/Installer.php::user_roles()`, the closing capability-grant loop).
 
 The 41 `dokan_*` capabilities by group:
 
@@ -487,12 +487,12 @@ Tag usage across `tests/pw/tests/` (single-quoted tag literals such as `'@pro'`)
 
 | Item | Value | Source |
 |---|---|---|
-| PHP minimum | 7.4 | `$min_php` (`lite:dokan-class.php:44`); `Requires PHP: 7.4` in `readme.txt`; PHPCS `testVersion 7.4-`; PHPUnit CI matrix 7.4 and 8.3 |
+| PHP minimum | 7.4 | `lite:dokan-class.php::$min_php`; `Requires PHP: 7.4` in `readme.txt`; PHPCS `testVersion 7.4-`; PHPUnit CI matrix 7.4 and 8.3 |
 | WordPress | Requires at least 7.0, tested up to 7.1 | `readme.txt` header. The plugin header carries no `Requires at least`. `phpcs.xml.dist` sets `minimum_supported_wp_version` to 6.4. `.wp-env.json` pins WordPress 7.0.3 for local and pinned-lane runs. |
 | WooCommerce | Requires at least 8.5.0, tested up to 11.0.1 | `lite:dokan.php` header and `readme.txt`. This document was verified against WooCommerce 11.2.1. |
 | WooCommerce dependency | `Requires Plugins: woocommerce` | `lite:dokan.php` header |
-| HPOS | Declared compatible (`custom_order_tables`) | `lite:dokan-class.php:239`. Order scoping handles both stores (§4.5). PHPUnit runs with HPOS on. |
-| Cart & Checkout Blocks | Declared compatible (`cart_checkout_blocks`) | `lite:dokan-class.php:240` |
+| HPOS | Declared compatible (`custom_order_tables`) | `lite:dokan-class.php::declare_woocommerce_feature_compatibility()`. Order scoping handles both stores (§4.5). PHPUnit runs with HPOS on. |
+| Cart & Checkout Blocks | Declared compatible (`cart_checkout_blocks`) | `lite:dokan-class.php::declare_woocommerce_feature_compatibility()` |
 | Abilities / MCP | Needs WooCommerce 10.9+ for `woocommerce_ability_definition_classes`; supports both the pre-6.9 and 6.9+ category action names | `DokanAbilityRegistrar` docblock and `register_hooks()` |
 | Multisite | No multisite-specific code | No `is_multisite`, `switch_to_blog` or `network_wide` references outside vendored code. Activation uses a plain `register_activation_hook`. Tables are created with `$wpdb->prefix`, so they are per site. |
 

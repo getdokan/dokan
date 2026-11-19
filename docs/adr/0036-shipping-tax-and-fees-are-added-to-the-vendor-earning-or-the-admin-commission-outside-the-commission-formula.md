@@ -16,31 +16,31 @@ The fact that the recipients are fixed onto the order at the first calculation i
 
 ## Rule
 
-**The Commission formula only ever sees product line totals.** `OrderLineItemCommission::calculate()` passes `WC_Order_Item_Product::get_total()` (price × quantity after coupon discounts, excluding tax) to the `Calculator` as the base, after the filter `dokan_earning_by_order_item_price` (`lite:includes/Commission/OrderLineItemCommission.php:117-140`), and `OrderCommission::calculate()` loops only over `$order->get_items()`, which are product line items (`lite:includes/Commission/OrderCommission.php:79-109`). Shipping, tax, fee lines and the gateway fee never pass through a Commission formula, so a percentage Commission is never charged on them.
+**The Commission formula only ever sees product line totals.** `OrderLineItemCommission::calculate()` passes `WC_Order_Item_Product::get_total()` (price × quantity after coupon discounts, excluding tax) to the `Calculator` as the base, after the filter `dokan_earning_by_order_item_price` (`lite:includes/Commission/OrderLineItemCommission.php::calculate()`), and `OrderCommission::calculate()` loops only over `$order->get_items()`, which are product line items (`lite:includes/Commission/OrderCommission.php::calculate()`). Shipping, tax, fee lines and the gateway fee never pass through a Commission formula, so a percentage Commission is never charged on them.
 
 **Each non-product amount is then given whole to one party.** `OrderCommission` adds the amounts on top of the line-item split:
 
 ```
 Vendor Earning      = Σ line-item vendor net earning
-                    + total Vendor fees                              (lite:includes/Commission/OrderCommission.php:340-342)
+                    + total Vendor fees                              (lite:includes/Commission/OrderCommission.php::get_vendor_earning())
 
 total Vendor fees   = Vendor shipping + Vendor product tax + Vendor shipping tax
-                    − Vendor gateway fee + Vendor order fees          (:388-390)
+                    − Vendor gateway fee + Vendor order fees          (::get_total_vendor_fees())
 
 total admin fees    = admin shipping + admin product tax + admin shipping tax
-                    − admin gateway fee + admin order fees            (:377-379)
+                    − admin gateway fee + admin order fees            (::get_total_admin_fees())
 
 admin total earning = max(Σ line-item admin net commission, 0)
-                    + total admin fees                               (:542-544)
+                    + total admin fees                               (::get_admin_total_earning())
 ```
 
-Each "Vendor X" / "admin X" getter returns either the full amount or zero, depending on the recipient for that amount (`:227-331`, `:596-617`). There is no proportional sharing of shipping or tax between the two parties.
+Each "Vendor X" / "admin X" getter returns either the full amount or zero, depending on the recipient for that amount (`lite:includes/Commission/OrderCommission.php::get_admin_shipping_fee()` through `::get_vendor_tax_fee()`, and `::get_admin_order_fees()`, `::get_vendor_order_fees()`). There is no proportional sharing of shipping or tax between the two parties.
 
-**Refunds are netted.** By default (`should_adjust_refund` is true) shipping, product tax, shipping tax and fee amounts are taken net of what has already been refunded on the order (`get_shipping_refunded()`, `get_tax_refunded()`, `get_total_shipping_tax_refunded()`, `get_order_fee_refunded()`, `lite:includes/Commission/OrderCommission.php:562-587`, `:641-657`).
+**Refunds are netted.** By default (`should_adjust_refund` is true) shipping, product tax, shipping tax and fee amounts are taken net of what has already been refunded on the order (`get_shipping_refunded()`, `get_tax_refunded()`, `get_total_shipping_tax_refunded()`, `get_order_fee_refunded()`, `lite:includes/Commission/OrderCommission.php::get_shipping_refunded()`, `::get_tax_refunded()`, `::get_total_shipping_tax_refunded()`, `::get_order_fee_refunded()`).
 
-**Where the result goes.** `Commission::get_earning_by_order()` returns `get_vendor_total_earning()` (an alias of `get_vendor_earning()`) for the Vendor and `get_admin_total_earning()` for the admin (`lite:includes/Commission.php:241`). `dokan_sync_insert_order()` stores the Vendor figure as `dokan_orders.net_amount` and as the `debit` of the order's `dokan_vendor_balance` row (`lite:includes/Order/functions.php:243-282`). Analytics stores the shipping, tax and gateway-fee buckets separately in `dokan_order_stats` (`vendor_shipping_fee`, `vendor_shipping_tax`, `vendor_order_tax`, `vendor_gateway_fee` and the `admin_*` equivalents, `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php:136-155`). There is no column for order fee lines ([ADR-0033](./0033-order-fee-lines-go-to-the-admin-unless-the-vendor-created-the-order.md)): they are only folded into the `vendor_earning`, `admin_earning` and `admin_commission` totals, and are visible on their own only through `OrderCommission::get_data()` (`admin_order_fees`, `vendor_order_fees`, `lite:includes/Commission/OrderCommission.php:441-455`).
+**Where the result goes.** `Commission::get_earning_by_order()` returns `get_vendor_total_earning()` (an alias of `get_vendor_earning()`) for the Vendor and `get_admin_total_earning()` for the admin (`lite:includes/Commission.php::get_earning_by_order()`). `dokan_sync_insert_order()` stores the Vendor figure as `dokan_orders.net_amount` and as the `debit` of the order's `dokan_vendor_balance` row (`lite:includes/Order/functions.php::dokan_sync_insert_order()`). Analytics stores the shipping, tax and gateway-fee buckets separately in `dokan_order_stats` (`vendor_shipping_fee`, `vendor_shipping_tax`, `vendor_order_tax`, `vendor_gateway_fee` and the `admin_*` equivalents, `lite:includes/Analytics/Reports/Orders/Stats/DataStore.php::update()`). There is no column for order fee lines ([ADR-0033](./0033-order-fee-lines-go-to-the-admin-unless-the-vendor-created-the-order.md)): they are only folded into the `vendor_earning`, `admin_earning` and `admin_commission` totals, and are visible on their own only through `OrderCommission::get_data()` (`admin_order_fees`, `vendor_order_fees`, `lite:includes/Commission/OrderCommission.php::get_data()`).
 
-**Only Vendor orders are calculated.** A parent Order that has Suborders is skipped (`lite:includes/Commission.php:213-215`, `lite:includes/Order/functions.php:235-237`); see Lite ADR 0004.
+**Only Vendor orders are calculated.** A parent Order that has Suborders is skipped (the `has_sub_order` early returns in `lite:includes/Commission.php::get_earning_by_order()` and `lite:includes/Order/functions.php::dokan_sync_insert_order()`); see Lite ADR 0004.
 
 ## Settings that change it
 
@@ -68,10 +68,10 @@ Changing only `tax_fee_recipient` to `seller` moves the 8.00 to the Vendor: Earn
 
 ## Edge cases
 
-- **Admin-earning order types.** For order types listed by `OrderType::get_admin_earning_order_types()` (advertisement and Vendor subscription orders and their refunds, filter `dokan_admin_earning_order_types`, `lite:includes/Analytics/Reports/OrderType.php:263-273`), the whole line-item amount goes to `admin_net_earning` (`lite:includes/Commission/OrderCommission.php:87-89`). Note that `get_admin_total_earning()` adds only `max(admin net commission, 0)` and the admin fees, so `admin_net_earning` is reported separately and is not part of that total (`:542-544`; `Model\Commission::get_admin_commission()`, `lite:includes/Commission/Model/Commission.php:165-167`). The fee getters are not special-cased, so shipping and tax on such an order still follow the recipient settings and can land in the Vendor bucket of that order. Add-ons that sell such orders set the recipients to `admin` on the order when they need all money to go to the admin.
+- **Admin-earning order types.** For order types listed by `OrderType::get_admin_earning_order_types()` (advertisement and Vendor subscription orders and their refunds, filter `dokan_admin_earning_order_types`, `lite:includes/Analytics/Reports/OrderType.php::get_admin_earning_order_types()`), the whole line-item amount goes to `admin_net_earning` (the admin-earning order-type branch in `lite:includes/Commission/OrderCommission.php::calculate()`). Note that `get_admin_total_earning()` adds only `max(admin net commission, 0)` and the admin fees, so `admin_net_earning` is reported separately and is not part of that total (`::get_admin_total_earning()`; `lite:includes/Commission/Model/Commission.php::get_admin_commission()`). The fee getters are not special-cased, so shipping and tax on such an order still follow the recipient settings and can land in the Vendor bucket of that order. Add-ons that sell such orders set the recipients to `admin` on the order when they need all money to go to the admin.
 - **Admin subsidy.** If coupons make the line-item admin net commission negative, `get_admin_total_earning()` floors that part at zero (`max(…, 0)`), while the fee allocations are still added in full.
-- **Legacy orders.** An order that has `_dokan_admin_fee` meta (calculated before the current Commission engine) returns `order_total − _dokan_admin_fee` for the Vendor and ignores this arithmetic (`lite:includes/Commission.php:217-225`).
-- **The `dokan_order_vendor_net_earning` and `dokan_order_admin_net_commission` filters** adjust only the line-item sums, before the fees are added (`lite:includes/Commission/OrderCommission.php:120`, `:131`).
+- **Legacy orders.** An order that has `_dokan_admin_fee` meta (calculated before the current Commission engine) returns `order_total − _dokan_admin_fee` for the Vendor and ignores this arithmetic (the `_dokan_admin_fee` branch in `lite:includes/Commission.php::get_earning_by_order()`).
+- **The `dokan_order_vendor_net_earning` and `dokan_order_admin_net_commission` filters** adjust only the line-item sums, before the fees are added (`lite:includes/Commission/OrderCommission.php::calculate()`).
 
 ## Why
 

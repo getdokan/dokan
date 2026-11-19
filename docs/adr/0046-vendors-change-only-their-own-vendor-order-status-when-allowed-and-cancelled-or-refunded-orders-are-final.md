@@ -10,21 +10,21 @@ A Vendor's own status changes drive their money: completing an order usually mak
 
 **[Lite]** A Vendor (or Vendor Staff with `dokan_manage_order`) may change the status of a Vendor order that belongs to them, and only while the Store Admin allows Vendors to change order status. A Vendor can never change a multi-vendor parent Order. The Vendor dashboard treats `cancelled` and `refunded` as final: the single-order screen offers no status change for an order in either status, and the bulk action skips orders already in them. This is a dashboard behaviour; the single-order AJAX handler and the REST update do not check the order's current status.
 
-**Ownership.** The entry points resolve the order's Vendor from Dokan's order data and compare it with the acting Vendor (`dokan_get_current_user_id()`, which maps Vendor Staff to their Vendor); the dashboard AJAX and bulk routes do it through the `dokan_orders` table (`lite:includes/Order/Manager.php:394-403`):
+**Ownership.** The entry points resolve the order's Vendor from Dokan's order data and compare it with the acting Vendor (`dokan_get_current_user_id()`, which maps Vendor Staff to their Vendor); the dashboard AJAX and bulk routes do it through the `dokan_orders` table (`lite:includes/Order/Manager.php::is_seller_has_order()`):
 
 | Entry point | Ownership check | Setting check |
 |---|---|---|
-| Dashboard single-order form, AJAX `dokan_change_status` (`lite:includes/Ajax.php:354-395`) | `dokan_is_seller_has_order()` (`:366`) | `order_status_change` must be exactly `on` (`:357`); nonce and `dokan_manage_order` |
-| REST `PUT /dokan/v1/orders/{id}` (`lite:includes/REST/OrderController.php:101-113`) | `validation_before_update_item()` (`:228-248`) | `update_order_permissions_check()` (`:820-832`): refuses only when the value is exactly `off` |
-| Dashboard bulk form (`lite:includes/Order/Frontend/Hooks.php:33-53`) and REST `POST /dokan/v2/orders/bulk-actions` (`lite:includes/REST/OrderControllerV2.php:440-452`) | `OrderUtil::current_user_can_manage_order()` inside `dokan_apply_bulk_order_status_change()` (`lite:includes/Order/functions.php:962`; `lite:includes/Utilities/OrderUtil.php:253-259`) | `order_status_change` must not be `off` |
+| Dashboard single-order form, AJAX `dokan_change_status` (`lite:includes/Ajax.php::change_order_status()`) | `dokan_is_seller_has_order()` (same method) | `order_status_change` must be exactly `on` (same method); nonce and `dokan_manage_order` |
+| REST `PUT /dokan/v1/orders/{id}` (`lite:includes/REST/OrderController.php::register_routes()`) | `::validation_before_update_item()` | `::update_order_permissions_check()`: refuses only when the value is exactly `off` |
+| Dashboard bulk form (`lite:includes/Order/Frontend/Hooks.php::bulk_order_status_change()`) and REST `POST /dokan/v2/orders/bulk-actions` (`lite:includes/REST/OrderControllerV2.php::process_orders_bulk_action()`) | `OrderUtil::current_user_can_manage_order()` inside `dokan_apply_bulk_order_status_change()` (`lite:includes/Order/functions.php::dokan_apply_bulk_order_status_change()`; `lite:includes/Utilities/OrderUtil.php::current_user_can_manage_order()`) | `order_status_change` must not be `off` |
 
-A multi-vendor parent has no `dokan_orders` row and `dokan_get_seller_id_by_order()` returns 0 for it (`lite:includes/Order/functions.php:331-334`), so no Vendor owns it.
+A multi-vendor parent has no `dokan_orders` row and `dokan_get_seller_id_by_order()` returns 0 for it (`lite:includes/Order/functions.php::dokan_get_seller_id_by_order()`), so no Vendor owns it.
 
 **Final statuses.**
 
-- The single-order screen shows the Edit control only when the order is neither `cancelled` nor `refunded` (`lite:templates/orders/details.php:219`, `:223`). It offers every WooCommerce status, including `cancelled` and `refunded`, as a target.
-- The AJAX handler and the REST update apply the requested status after the ownership, capability and setting checks, whatever the order's current status is (`lite:includes/Ajax.php:372-380`; `lite:includes/REST/OrderController.php:375-417`). The "final" behaviour therefore comes from the dashboard template, not from these endpoints.
-- The dashboard bulk selector offers only on-hold, processing and completed (`lite:includes/Dashboard/Templates/Orders.php:138-146`, filter `dokan_bulk_order_statuses`). The shared bulk helper skips orders whose current status is `cancelled` or `refunded` (`lite:includes/Order/functions.php:978-980`). It also refuses `cancelled` and `refunded` as the new status (`:965-969`), but that list holds the unprefixed values only, while the dashboard selector uses `wc-`-prefixed values and the REST v2 bulk route accepts any status string, so `wc-cancelled` and `wc-refunded` are not matched by it.
+- The single-order screen shows the Edit control only when the order is neither `cancelled` nor `refunded` (`lite:templates/orders/details.php` (the order-status Edit link and the status form, both guarded by the same condition)). It offers every WooCommerce status, including `cancelled` and `refunded`, as a target.
+- The AJAX handler and the REST update apply the requested status after the ownership, capability and setting checks, whatever the order's current status is (`lite:includes/Ajax.php::change_order_status()`; `lite:includes/REST/OrderController.php::prepare_object_for_database()`). The "final" behaviour therefore comes from the dashboard template, not from these endpoints.
+- The dashboard bulk selector offers only on-hold, processing and completed (`lite:includes/Dashboard/Templates/Orders.php::order_main_content()`, filter `dokan_bulk_order_statuses`). The shared bulk helper skips orders whose current status is `cancelled` or `refunded` (`lite:includes/Order/functions.php::dokan_apply_bulk_order_status_change()`). It also refuses `cancelled` and `refunded` as the new status (same function), but that list holds the unprefixed values only, while the dashboard selector uses `wc-`-prefixed values and the REST v2 bulk route accepts any status string, so `wc-cancelled` and `wc-refunded` are not matched by it.
 - In short: from the Vendor dashboard a Vendor can move an open order to any status (including cancelling or refunding it one order at a time from the single-order screen), and the dashboard offers no way to move an order out of `cancelled` or `refunded`.
 
 **No upward effect.** A Vendor's change applies to their Vendor order only. On a Suborder it is never copied to the parent Order, except that completing the last open Suborder completes the parent ([ADR-0038](./0038-a-parent-order-is-completed-automatically-only-when-every-suborder-is-completed.md)).
@@ -33,8 +33,8 @@ A multi-vendor parent has no `dokan_orders` row and `dokan_get_seller_id_by_orde
 
 | Setting | Values | Behaviour |
 |---|---|---|
-| `dokan_selling[order_status_change]` (admin label "Order Status Change"; new key `vendor_can_change_order_status`, `lite:includes/Admin/Settings/Schema/SettingsSchema.php:1504-1525`) | `on` (default, `lite:includes/Admin/Settings.php:678-685`) | Vendors with `dokan_manage_order` can change status through all entry points above. |
-| | `off` | The AJAX handler, the REST update and bulk routes, and the dashboard bulk form refuse; the dashboard hides the Edit control. In WP-admin, for users without `manage_woocommerce`, the status field on the posts-storage order edit screen is hidden with CSS (`display:none`), and the list-table actions column and preview status actions are removed (`lite:includes/Order/Admin/Permissions.php:161-221`, hooked at `:33-35`); these hooks target the posts-storage screens, not the HPOS order screens. Only the Store Admin changes statuses. |
+| `dokan_selling[order_status_change]` (admin label "Order Status Change"; new key `vendor_can_change_order_status`, `lite:includes/Admin/Settings/Schema/SettingsSchema.php::vendor_page()`, field `vendor_can_change_order_status`) | `on` (default, `lite:includes/Admin/Settings.php::get_settings_fields()`, field `order_status_change`) | Vendors with `dokan_manage_order` can change status through all entry points above. |
+| | `off` | The AJAX handler, the REST update and bulk routes, and the dashboard bulk form refuse; the dashboard hides the Edit control. In WP-admin, for users without `manage_woocommerce`, the status field on the posts-storage order edit screen is hidden with CSS (`display:none`), and the list-table actions column and preview status actions are removed (`lite:includes/Order/Admin/Permissions.php::revoke_change_order_status()`, `::remove_action_column()`, `::remove_action_button()`, hooked in `::__construct()`); these hooks target the posts-storage screens, not the HPOS order screens. Only the Store Admin changes statuses. |
 | Capability `dokan_manage_order` | per role / per Vendor Staff | Required by the AJAX handler, the REST permission check and the bulk form. |
 
 ## Worked example
@@ -54,12 +54,12 @@ With `order_status_change` = `off`, steps 1 and 4 are refused too; only the Stor
 ## Edge cases
 
 - **Setting Refunded from the dashboard** produces a WooCommerce status-only refund that does not change the Vendor's Balance ([ADR-0050](./0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md)).
-- **Statuses offered** are all registered WooCommerce statuses (`wc_get_order_statuses()`, `lite:templates/orders/details.php:9`; REST validates against the same list, `lite:includes/REST/OrderController.php:378`, `:396-402`), including custom ones.
+- **Statuses offered** are all registered WooCommerce statuses (`wc_get_order_statuses()`, `lite:templates/orders/details.php` (the `$statuses` assignment at the top); REST validates against the same list, `lite:includes/REST/OrderController.php::prepare_object_for_database()`), including custom ones.
 - **The Store Admin is not bound by the dashboard's final-status behaviour.** WP-admin and `manage_woocommerce` users can reopen cancelled or refunded orders.
 
 ## Why
 
-The setting's tooltip states the intent: "Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status." (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:1515`). Hiding the status control for `cancelled` and `refunded` orders in the Vendor dashboard leaves reopening such orders to the Store Admin in normal use; no further rationale is recorded.
+The setting's tooltip states the intent: "Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status." (`lite:includes/Admin/Settings/Schema/SettingsSchema.php::vendor_page()`, field `vendor_can_change_order_status`). Hiding the status control for `cancelled` and `refunded` orders in the Vendor dashboard leaves reopening such orders to the Store Admin in normal use; no further rationale is recorded.
 
 ## Consequences & risks
 

@@ -10,37 +10,37 @@ Teammates ask "when does a Vendor get credited for an order?" and "why does the 
 
 **[Lite]** Each Vendor order gets exactly one `dokan_orders` row and one `dokan_orders`-type Balance row, written as soon as the Vendor order exists, before payment. The Balance row holds the Vendor's Earning in its `debit` column and starts with an **empty status**, so it does not count yet. Status changes then decide whether it counts (see [ADR-0064](./0064-the-withdrawable-balance-is-matured-earnings-in-a-withdraw-order-status-minus-every-matured-withdraw-and-refund.md)).
 
-**When it runs.** `dokan_sync_insert_order( $order_id )` (`lite:includes/Order/functions.php:217-283`) is hooked to:
+**When it runs.** `dokan_sync_insert_order( $order_id )` (`lite:includes/Order/functions.php::dokan_sync_insert_order()`) is hooked to:
 
-- `dokan_checkout_update_order_meta` (`lite:includes/Order/Hooks.php:49`), which the splitter fires for a single-vendor Order after tagging it with `_dokan_vendor_id` (`lite:includes/Order/Manager.php:986-989`) and for each new Suborder after it is saved (`lite:includes/Order/Manager.php:707`);
-- the two checkout hooks at priority 20, after the split at priority 10 (`lite:includes/Order/Hooks.php:45-46`);
-- `woocommerce_process_shop_order_meta` at priority 60, registered only in WP-admin requests (`lite:includes/Order/Hooks.php:54-56`).
+- `dokan_checkout_update_order_meta` (`lite:includes/Order/Hooks.php::__construct()`), which the splitter fires for a single-vendor Order after tagging it with `_dokan_vendor_id` (`lite:includes/Order/Manager.php::maybe_split_orders()`) and for each new Suborder after it is saved (`lite:includes/Order/Manager.php::create_sub_order()`);
+- the two checkout hooks at priority 20, after the split at priority 10 (`lite:includes/Order/Hooks.php::__construct()`);
+- `woocommerce_process_shop_order_meta` at priority 60, registered only in WP-admin requests (the `is_admin()` block in `lite:includes/Order/Hooks.php::__construct()`).
 
 At checkout this happens while the order is still `pending`; payment comes later.
 
-**Which orders get rows.** The function returns without writing when (`lite:includes/Order/functions.php:227-237`):
+**Which orders get rows.** The function returns without writing when (the early returns at the top of `lite:includes/Order/functions.php::dokan_sync_insert_order()`):
 
 - the order cannot be loaded, or is a `WC_Subscription`;
-- the order already has a `dokan_orders` row (`Order\Manager::is_order_already_synced()`, `lite:includes/Order/Manager.php:367-382`) — this makes the many hook registrations idempotent;
+- the order already has a `dokan_orders` row (`lite:includes/Order/Manager.php::is_order_already_synced()`) — this makes the many hook registrations idempotent;
 - the order is a parent with `has_sub_order` = 1. A multi-vendor Order therefore never has rows; its Suborders do (Lite ADR 0004, `docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`).
 
 A single-vendor Order is its own Vendor order and gets the rows itself.
 
-**What is written** (`lite:includes/Order/functions.php:239-282`):
+**What is written** (`lite:includes/Order/functions.php::dokan_sync_insert_order()`):
 
 | Table | Column | Value |
 |---|---|---|
-| `dokan_orders` | `order_id`, `seller_id` | the Vendor order and its Vendor (`dokan_get_seller_id_by_order()`, `:296-357`) |
+| `dokan_orders` | `order_id`, `seller_id` | the Vendor order and its Vendor (`lite:includes/Order/functions.php::dokan_get_seller_id_by_order()`) |
 | | `order_total` | `$order->get_total()` |
-| | `net_amount` | the Earning from `Commission::get_earning_by_order( $order, 'seller' )` (`lite:includes/Commission.php:204`); the function branches on `dokan_is_admin_coupon_applied()` but both branches use the `seller` context, which is the default (`:243-247`); then filter `dokan_order_net_amount` (`:249`) |
+| | `net_amount` | the Earning from `Commission::get_earning_by_order( $order, 'seller' )` (`lite:includes/Commission.php::get_earning_by_order()`); the function branches on `dokan_is_admin_coupon_applied()` but both branches use the `seller` context, which is the default; then filter `dokan_order_net_amount` (both in `lite:includes/Order/functions.php::dokan_sync_insert_order()`) |
 | | `order_status` | `'wc-' . $order->get_status()` |
 | `dokan_vendor_balance` | `vendor_id`, `trn_id` | the Vendor and the Vendor order id |
 | | `trn_type`, `perticulars` | `dokan_orders`, `New order` |
 | | `debit` / `credit` | the same Earning / 0 |
-| | `status` | **not set**: the model default, an empty string (`lite:includes/Models/VendorBalance.php:32-42`) |
-| | `trn_date` / `balance_date` | now / now plus the Vendor's withdraw threshold days (`dokan_get_withdraw_threshold()`, `:250`, `:280-281`) |
+| | `status` | **not set**: the model default, an empty string (`lite:includes/Models/VendorBalance.php::$data`) |
+| | `trn_date` / `balance_date` | now / now plus the Vendor's withdraw threshold days (`dokan_get_withdraw_threshold()`, read in `lite:includes/Order/functions.php::dokan_sync_insert_order()`) |
 
-Before inserting, the function calls `Order\Manager::delete_seller_order( $order_id, $seller_id )` (`:252`), so a re-sync replaces stale rows for that order instead of duplicating them.
+Before inserting, the function calls `Order\Manager::delete_seller_order( $order_id, $seller_id )`, so a re-sync replaces stale rows for that order instead of duplicating them.
 
 **Column meaning.** In `dokan_vendor_balance` the `debit` column is money owed *to* the Vendor (Earnings) and `credit` is money taken *from* the Vendor (refunds, Withdraws). Every Balance query computes `SUM(debit) - SUM(credit)`. This is the reverse of the usual bookkeeping meaning of the words; read the columns as "+" and "−".
 
@@ -66,10 +66,10 @@ When payment later moves the Vendor orders to `processing`, the status columns a
 
 ## Edge cases
 
-- **Suborders created already past `pending`.** `create_sub_order()` saves the Suborder with the parent's status (`lite:includes/Order/Manager.php:699-701`) *before* firing `dokan_checkout_update_order_meta` (`:707`). If the parent is not `pending` (for example a multi-vendor Order created in WP-admin directly as `processing`), the Suborder's status transition fires while it has no rows yet (and, in WP-admin, while the status listener is removed for the split, [ADR-0039](./0039-a-parent-order-status-change-is-copied-to-its-suborders-only-along-an-allowed-transition-list.md)), so the rows are written afterwards with `dokan_orders.order_status` correct but the Balance `status` empty. The Earning does not count until the next status change of that Suborder. This applies only to Suborders: a single-Vendor Order created in WP-admin past `pending` gets its rows during the split inside `on_order_status_change`, and the same call then writes its Balance status (`lite:includes/Order/Hooks.php:100-109`, `:176-185`).
+- **Suborders created already past `pending`.** `create_sub_order()` saves the Suborder with the parent's status *before* firing `dokan_checkout_update_order_meta` (both in `lite:includes/Order/Manager.php::create_sub_order()`). If the parent is not `pending` (for example a multi-vendor Order created in WP-admin directly as `processing`), the Suborder's status transition fires while it has no rows yet (and, in WP-admin, while the status listener is removed for the split, [ADR-0039](./0039-a-parent-order-status-change-is-copied-to-its-suborders-only-along-an-allowed-transition-list.md)), so the rows are written afterwards with `dokan_orders.order_status` correct but the Balance `status` empty. The Earning does not count until the next status change of that Suborder. This applies only to Suborders: a single-Vendor Order created in WP-admin past `pending` gets its rows during the split inside `on_order_status_change`, and the same call then writes its Balance status (`lite:includes/Order/Hooks.php::on_order_status_change()`).
 - **Orders created outside checkout and outside WP-admin** (for example programmatically through `wc_create_order()`) get no rows until something calls `dokan_sync_insert_order()` or `dokan()->order->maybe_split_orders()` (Lite ADR 0012).
 - **Unresolvable Vendor.** If `dokan_get_seller_id_by_order()` returns 0, rows are written with `seller_id` / `vendor_id` 0 and belong to no Vendor.
-- **Re-sync deletes more than the order row.** `delete_seller_order()` also deletes the order's `dokan_refund` rows and its Balance rows of types `dokan_orders`, `dokan_refund` and `dokan_withdraw`, and its Reverse withdrawal rows (`lite:includes/Order/Manager.php:535-593`). Because the function first returns when a `dokan_orders` row exists, this only matters when the Balance rows exist without a `dokan_orders` row.
+- **Re-sync deletes more than the order row.** `delete_seller_order()` also deletes the order's `dokan_refund` rows and its Balance rows of types `dokan_orders`, `dokan_refund` and `dokan_withdraw`, and its Reverse withdrawal rows (`lite:includes/Order/Manager.php::delete_seller_order()`). Because the function first returns when a `dokan_orders` row exists, this only matters when the Balance rows exist without a `dokan_orders` row.
 - **Unpaid orders keep their rows.** A checkout that is never paid leaves rows with an empty or `wc-pending`/`wc-cancelled` status. They never count, but raw reads of the table see them.
 
 ## Why

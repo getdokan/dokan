@@ -8,18 +8,18 @@ Every Commission level (product, Vendor, global) stores its percentage and flat 
 
 ## Rule
 
-A level's setting is used when its percentage **or** its flat value, trimmed, is not the empty string: `Setting::is_applicable()` returns `trim( $this->percentage ) !== '' || trim( $this->flat ) !== ''` (`lite:includes/Commission/Model/Setting.php:289-291`).
+A level's setting is used when its percentage **or** its flat value, trimmed, is not the empty string: `Setting::is_applicable()` returns `trim( $this->percentage ) !== '' || trim( $this->flat ) !== ''` (`lite:includes/Commission/Model/Setting.php::is_applicable()`).
 
 - The string `"0"` is not empty, so a level set to `0` **is applicable** and wins. It produces zero Commission from that part of the formula and stops the chain there.
-- An empty string means "not set at this level", and resolution continues with the next level (`AbstractStrategy::get_eligible_strategy()`, `lite:includes/Commission/Strategies/AbstractStrategy.php:55-63`).
-- Once a level is chosen, an empty half of its formula counts as zero: `get_percentage_value()` and `get_flat_value()` use `floatval()` (`lite:includes/Commission/Model/Setting.php:220-222`, `:263-265`).
+- An empty string means "not set at this level", and resolution continues with the next level (`lite:includes/Commission/Strategies/AbstractStrategy.php::get_eligible_strategy()`).
+- Once a level is chosen, an empty half of its formula counts as zero: `get_percentage_value()` and `get_flat_value()` use `floatval()` (`lite:includes/Commission/Model/Setting.php::get_flat_value()`, `::get_percentage_value()`).
 
-The product editor states this intent to the admin: "When the value is 0, no commissions will be deducted from this vendor." (`lite:includes/Product/Hooks.php:567-568`). The global category-based description says the same for categories: "If 0 is given in value, then the marketplace will deduct no commission from vendors" (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:725`).
+The product editor states this intent to the admin: "When the value is 0, no commissions will be deducted from this vendor." (`lite:includes/Product/Hooks.php::add_per_product_commission_options()`). The global category-based description says the same for categories: "If 0 is given in value, then the marketplace will deduct no commission from vendors" (`lite:includes/Admin/Settings/Schema/SettingsSchema.php`, the description of field `reset_sub_category_when_edit_all_category`).
 
 The save paths preserve the difference between `''` and `0`:
 
-- Product: `Hooks::save_per_product_commission_options()` keeps `''` when the field is submitted empty and stores the formatted number otherwise (`lite:includes/Product/Hooks.php:609-649`).
-- Vendor: `Vendor\Manager::create()` and `update()` accept either a numeric value or `''` (`lite:includes/Vendor/Manager.php:296-302`, `:432-438`).
+- Product: `Hooks::save_per_product_commission_options()` keeps `''` when the field is submitted empty and stores the formatted number otherwise (`lite:includes/Product/Hooks.php::save_per_product_commission_options()`).
+- Vendor: `Vendor\Manager::create()` and `update()` accept either a numeric value or `''` (`lite:includes/Vendor/Manager.php::create()`, `::update()`).
 
 ## Settings that change it
 
@@ -31,10 +31,10 @@ The save paths preserve the difference between `''` and `0`:
 
 Validation that can turn a typed value into an empty one:
 
-- Product percentage outside 0–100 is discarded and stored as `''` (`lite:includes/Product/Hooks.php:623-629`); a negative product flat fee is stored as `''` (`:631-639`). What happens next depends on the other field:
+- Product percentage outside 0–100 is discarded and stored as `''` (the percentage range check in `lite:includes/Product/Hooks.php::save_per_product_commission_options()`); a negative product flat fee is stored as `''` (the flat-fee check in the same method). What happens next depends on the other field:
   - If the other field is also empty, the product level is not applicable and the product falls through to the Vendor or global Commission formula rather than charging zero.
   - If the other field holds a value, `is_applicable()` still passes, so the product level wins with the discarded half counted as 0. An out-of-range percentage with a flat fee of 1.00 charges 0 % + 1.00 per unit; a negative flat fee with a valid percentage charges that percentage and no flat fee.
-- When the global `commission_type` being saved is `flat` or `fixed` (`$clickable_types = [ 'flat', 'fixed' ]`, `lite:includes/Admin/Settings.php:96`), a global percentage outside 0–100 is replaced by the previously saved value (`Settings::validate_fixed_price_values()`, `lite:includes/Admin/Settings.php:95-108`). The new settings page requires both global fields to be non-empty (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:701-709`).
+- When the global `commission_type` being saved is `flat` or `fixed` (`$clickable_types = [ 'flat', 'fixed' ]`), a global percentage outside 0–100 is replaced by the previously saved value (`lite:includes/Admin/Settings.php::validate_fixed_price_values()`). The new settings page requires both global fields to be non-empty (`lite:includes/Admin/Settings/Schema/SettingsSchema.php`, the `validations` and `validation_func` of field `admin_commission`).
 
 ## Worked example
 

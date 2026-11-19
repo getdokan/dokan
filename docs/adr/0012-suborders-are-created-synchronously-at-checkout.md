@@ -12,24 +12,24 @@ This ADR documents the mechanism only. It does not restate or re-argue ADR-0004.
 
 **[Lite]** Dokan splits an Order during the checkout request itself, immediately after WooCommerce has created it, by creating one real `WC_Order` per Vendor through WooCommerce CRUD.
 
-**Trigger.** `Order\Hooks::__construct` registers `Hooks::split_vendor_orders` at priority 10 on both checkout implementations (`lite:includes/Order/Hooks.php:41-42`):
+**Trigger.** `Order\Hooks::__construct` registers `Hooks::split_vendor_orders` at priority 10 on both checkout implementations (`lite:includes/Order/Hooks.php::__construct()`):
 
-- `woocommerce_checkout_update_order_meta`, fired by the classic checkout at `wc:includes/class-wc-checkout.php:514`;
-- `woocommerce_store_api_checkout_order_processed`, fired by the Store API (Checkout Block) at `wc:src/StoreApi/Routes/V1/Checkout.php:695` and `wc:src/StoreApi/Routes/V1/CheckoutOrder.php:160`.
+- `woocommerce_checkout_update_order_meta`, fired by the classic checkout in `wc:includes/class-wc-checkout.php::create_order()`;
+- `woocommerce_store_api_checkout_order_processed`, fired by the Store API (Checkout Block) in `wc:src/StoreApi/Routes/V1/Checkout.php::process_order()` and `wc:src/StoreApi/Routes/V1/CheckoutOrder.php::get_route_post_response()`.
 
-`dokan_sync_insert_order` is registered on the same two hooks at priority 20 (`lite:includes/Order/Hooks.php:45-46`) so that a single-vendor Order is synced into Dokan's tables after the split has tagged it.
+`dokan_sync_insert_order` is registered on the same two hooks at priority 20 (also in `lite:includes/Order/Hooks.php::__construct()`) so that a single-vendor Order is synced into Dokan's tables after the split has tagged it.
 
-**Split.** `Order\Manager::maybe_split_orders()` (`lite:includes/Order/Manager.php:943-1009`):
+**Split.** `Order\Manager::maybe_split_orders()` (`lite:includes/Order/Manager.php::maybe_split_orders()`):
 
-1. Returns at once if the Order already carries `_dokan_vendor_id` (`:957`). That meta is both "this is a Vendor order" and the idempotency marker that makes repeated calls harmless.
+1. Returns at once if the Order already carries `_dokan_vendor_id`. That meta is both "this is a Vendor order" and the idempotency marker that makes repeated calls harmless.
 2. Deletes existing child orders first when called with `$force_create` or when `has_sub_order` is already set.
 3. Groups line items by Vendor with `dokan_get_sellers_by()`, which reads each product's `post_author` ([ADR-0011](./0011-product-ownership-is-post-author.md)).
-4. **One Vendor:** fires `dokan_create_parent_order`, writes `_dokan_vendor_id` on the Order itself (`:987`), saves, and fires `dokan_checkout_update_order_meta`. No Suborder is created.
+4. **One Vendor:** fires `dokan_create_parent_order`, writes `_dokan_vendor_id` on the Order itself, saves, and fires `dokan_checkout_update_order_meta`. No Suborder is created.
 5. **Several Vendors:** writes `has_sub_order = true` on the parent, saves, then calls `create_sub_order()` once per Vendor.
 
-**Suborder construction.** `Order\Manager::create_sub_order()` (`lite:includes/Order/Manager.php:627-715`) builds a new `WC_Order` with `created_via = dokan` (`:657`) and `_dokan_vendor_id` (`:667`), copies customer, addresses, currency and payment method, clones the Vendor's line items (adding `_dokan_parent_order_item_id`), copies shipping lines whose `seller_id` item meta matches, rebuilds tax and coupon lines, fires `dokan_create_sub_order_before_calculate_totals`, runs `calculate_totals()`, copies the parent's status, links the parent with `set_parent_id()` (`:700`), saves, updates total sales, and fires `dokan_checkout_update_order_meta( $suborder_id, $seller_id )`. Any `Throwable` is logged and returned as `WP_Error( 'dokan-suborder-error' )`.
+**Suborder construction.** `Order\Manager::create_sub_order()` (`lite:includes/Order/Manager.php::create_sub_order()`) builds a new `WC_Order` with `created_via = dokan` and `_dokan_vendor_id`, copies customer, addresses, currency and payment method, clones the Vendor's line items (adding `_dokan_parent_order_item_id`), copies shipping lines whose `seller_id` item meta matches, rebuilds tax and coupon lines, fires `dokan_create_sub_order_before_calculate_totals`, runs `calculate_totals()`, copies the parent's status, links the parent with `set_parent_id()`, saves, updates total sales, and fires `dokan_checkout_update_order_meta( $suborder_id, $seller_id )`. Any `Throwable` is logged and returned as `WP_Error( 'dokan-suborder-error' )`.
 
-**Orders created outside checkout.** Orders created in WP-admin are split lazily: `Hooks::on_order_status_change` calls `maybe_split_orders()` when an order with no parent and no `has_sub_order` changes status in admin (`lite:includes/Order/Hooks.php:100-109`), and `dokan_sync_insert_order` also runs on `woocommerce_process_shop_order_meta` priority 60 in admin (`lite:includes/Order/Hooks.php:54-56`; WooCommerce fires it at `wc:includes/admin/class-wc-admin-meta-boxes.php:262` and `wc:src/Internal/Admin/Orders/Edit.php:318`). The status listener runs on `woocommerce_order_status_changed`, fired at `wc:includes/class-wc-order.php:478`.
+**Orders created outside checkout.** Orders created in WP-admin are split lazily: `Hooks::on_order_status_change` calls `maybe_split_orders()` when an order with no parent and no `has_sub_order` changes status in admin (`lite:includes/Order/Hooks.php::on_order_status_change()`), and `dokan_sync_insert_order` also runs on `woocommerce_process_shop_order_meta` priority 60 in admin (`lite:includes/Order/Hooks.php::__construct()`; WooCommerce fires it in `wc:includes/admin/class-wc-admin-meta-boxes.php::save_meta_boxes()` and `wc:src/Internal/Admin/Orders/Edit.php::handle_order_update()`). The status listener runs on `woocommerce_order_status_changed`, fired in `wc:includes/class-wc-order.php::status_transition()`.
 
 ```mermaid
 sequenceDiagram
@@ -59,7 +59,7 @@ sequenceDiagram
 
 - Suborders exist as soon as checkout returns. Payment, status cascade, emails, Commission and the Vendor's dashboard all see real orders from the first status change onward, with no background job to wait for.
 - Because Suborders are created through WooCommerce CRUD, they are stored wherever WooCommerce stores orders and work under both HPOS and posts storage ([ADR-0018](./0018-orders-are-storage-agnostic-through-woocommerce-crud.md)).
-- `created_via = dokan` and the `parent_id` link use WooCommerce's own fields, so WooCommerce's own order queries (for example the `parent` and `created_via` query arguments, `wc:includes/abstracts/abstract-wc-object-query.php:80` and `wc:includes/class-wc-order-query.php:72`) can tell Suborders apart without Dokan meta.
+- `created_via = dokan` and the `parent_id` link use WooCommerce's own fields, so WooCommerce's own order queries (for example the `parent` and `created_via` query arguments, `wc:includes/abstracts/abstract-wc-object-query.php::get_default_query_vars()` and `wc:includes/class-wc-order-query.php::get_default_query_vars()`) can tell Suborders apart without Dokan meta.
 - `dokan_checkout_update_order_meta` is the single seam that announces "a Vendor order is ready". Lite's own sync uses it, and it is consumed by Dokan Pro.
 - Split work scales with the number of Vendors in the cart and runs inside the customer's checkout request: one order insert, item clone and totals calculation per Vendor.
 - Supporting a new way of creating orders (for example a new checkout implementation) requires that it fire one of the two checkout hooks, or that Dokan add a listener for it.

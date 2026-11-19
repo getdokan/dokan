@@ -8,15 +8,15 @@ Vendors see a "You Earn" figure while editing a product, and admin and REST cons
 
 ## Rule
 
-`ProductCommission::calculate()` (`lite:includes/Commission/ProductCommission.php:59-95`) produces the preview:
+`ProductCommission::calculate()` (`lite:includes/Commission/ProductCommission.php::calculate()`) produces the preview:
 
-- **Same formula chain, starting at the product.** The chain head is the product strategy, filterable through `dokan_product_commission_strategies` (`:87`), so the product, Vendor, category, global and default levels are resolved exactly as for an order line (see [ADR-0029](./0029-the-commission-formula-is-taken-from-the-product-then-the-vendor-then-the-global-setting-then-zero.md)). There is no frozen order-item level.
-- **One unit.** Quantity is always 1 (`:93`), so the flat fee is applied once.
-- **The amount is the caller's or the current price.** When no amount is given, the product's current `get_price()` is used (`:71-74`). `Commission::get_earning_by_product()` passes the product price, or an explicit price if the caller gives one (`lite:includes/Commission.php:164-191`).
+- **Same formula chain, starting at the product.** The chain head is the product strategy, filterable through `dokan_product_commission_strategies`, so the product, Vendor, category, global and default levels are resolved exactly as for an order line (see [ADR-0029](./0029-the-commission-formula-is-taken-from-the-product-then-the-vendor-then-the-global-setting-then-zero.md)). There is no frozen order-item level.
+- **One unit.** Quantity is always 1, so the flat fee is applied once.
+- **The amount is the caller's or the current price.** When no amount is given, the product's current `get_price()` is used. `Commission::get_earning_by_product()` passes the product price, or an explicit price if the caller gives one (`lite:includes/Commission.php::get_earning_by_product()`).
 - **No coupons, no fees.** No coupon record is passed to the calculator, and shipping, tax and gateway fees are not considered.
-- **Category** is the product's first chosen category when the caller does not pass one (`lite:includes/Commission/ProductCommission.php:76-81`). `Commission::get_earning_by_product()` passes category `0`, which makes `ProductCommission` look the category up from the product.
+- **Category** is the product's first chosen category when the caller does not pass one (`lite:includes/Commission/ProductCommission.php::calculate()`). `Commission::get_earning_by_product()` passes category `0`, which makes `ProductCommission` look the category up from the product.
 
-The result is filtered by `dokan_get_earning_by_product` (`lite:includes/Commission.php:190`).
+The result is filtered by `dokan_get_earning_by_product` (`lite:includes/Commission.php::get_earning_by_product()`).
 
 ## Settings that change it
 
@@ -32,8 +32,8 @@ Settings: global `fixed` 10 % + 2.00. Product priced 25.00, no product or Vendor
 ## Edge cases
 
 - If the product price is empty or 0, the preview amount is 0 and the Commission is capped at 0.
-- An explicit amount of 0 is treated as "no amount given": `ProductCommission::calculate()` replaces an empty total with the product's current price (`lite:includes/Commission/ProductCommission.php:71-74`), so asking for the earning at price 0 returns the earning at the current price.
-- `Commission::get_earning_by_product()` returns the clamped `get_admin_commission()` (never below 0) for the `admin` context and `get_vendor_earning()` (the line's net Earning) for the `seller` context (`lite:includes/Commission.php:185`).
+- An explicit amount of 0 is treated as "no amount given": `ProductCommission::calculate()` replaces an empty total with the product's current price (`lite:includes/Commission/ProductCommission.php::calculate()`), so asking for the earning at price 0 returns the earning at the current price.
+- `Commission::get_earning_by_product()` returns the clamped `get_admin_commission()` (never below 0) for the `admin` context and `get_vendor_earning()` (the line's net Earning) for the `seller` context (`lite:includes/Commission.php::get_earning_by_product()`).
 - After the admin changes a rate, previews change immediately, while existing orders keep their frozen formula (Lite ADR 0013).
 
 ## Why
