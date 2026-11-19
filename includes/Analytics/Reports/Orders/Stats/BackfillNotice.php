@@ -8,7 +8,7 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * Admin notice shown while the dokan_order_stats backfill is running.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.5
  */
 class BackfillNotice implements Hookable {
     /**
@@ -24,7 +24,7 @@ class BackfillNotice implements Hookable {
     /**
      * Register hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @return void
      */
@@ -35,7 +35,7 @@ class BackfillNotice implements Hookable {
     /**
      * Record that a backfill was scheduled.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @return void
      */
@@ -46,7 +46,7 @@ class BackfillNotice implements Hookable {
     /**
      * Whether the backfill is still running; clears the marker once WC's import ends or it goes stale.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @return bool
      */
@@ -69,7 +69,7 @@ class BackfillNotice implements Hookable {
     /**
      * Add the "rebuilding analytics data" notice.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @param array $notices Existing notices.
      *

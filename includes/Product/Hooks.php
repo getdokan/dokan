@@ -92,7 +92,7 @@ class Hooks {
      * Unsafe is a key WooCommerce owns, such as `_product_attributes` or a variation's `attribute_*`,
      * or a value holding a serialized PHP object.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @param \WC_Data              $product Product or variation assembled from the request, not yet saved.
      * @param \WP_REST_Request|null $request Request the save came from.
@@ -656,7 +656,7 @@ class Hooks {
      * keys — sent by key, or by a meta id that retargets the admin's row — are undone by putting
      * the stored values back, behind the same gate as save_per_product_commission_options().
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @param \WC_Data $product Product assembled from the request, not yet saved.
      *

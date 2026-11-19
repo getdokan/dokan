@@ -35,7 +35,7 @@ class ScheduleListener implements Hookable {
     /**
      * Retry an order stats backfill that WooCommerce refused at activation.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @return void
      */

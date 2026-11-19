@@ -81,7 +81,7 @@ class Installer {
     /**
      * Backfill dokan_order_stats when orders exist but the table is empty.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @return void
      */
@@ -101,7 +101,7 @@ class Installer {
         /**
          * Filters whether to backfill dokan_order_stats on activation.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.5
          *
          * @param bool $backfill Whether to schedule the WC Analytics regeneration.
          */

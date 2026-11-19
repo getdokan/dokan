@@ -1,3 +1,11 @@
+### v5.3.5 ( Nov 19, 2026 ) ###
+
+- **update:** Updating from a version older than 5.0.0 now adds the new order report columns in one step, so the update finishes faster on large stores and can no longer stop half-way.
+- **fix:** Vendors can no longer change the admin commission on their own products through the REST API, which could push their earnings above the order total.
+- **fix:** Vendors can no longer save unsafe or WooCommerce-reserved product data through the product REST API.
+- **fix:** WooCommerce Analytics no longer shows zero orders and revenue on stores that already had orders before Dokan was activated. Dokan now rebuilds the order data on its own and shows a notice while it runs.
+- **fix:** The admin vendor form no longer loses what was typed when switching tabs, and a failed save now opens the tab with the problem field and focuses it.
+
 ### v5.3.4 ( Nov 05, 2026 ) ###
 
 - **new:** Added a Black Friday 2026 offers page to the Dokan admin.

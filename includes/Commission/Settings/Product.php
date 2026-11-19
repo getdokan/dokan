@@ -32,7 +32,7 @@ class Product implements InterfaceSetting {
      * gate — a vendor who could write them could set their own commission, even a negative fee
      * that pays them more than the order total.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.5
      *
      * @return string[]
      */
