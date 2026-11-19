@@ -13,7 +13,7 @@ A coupon lowers what the customer pays for a line item, so it lowers the money a
 - `discount`: the amount this coupon took off this line;
 - `coupon_commissions_type`, `admin_shared_coupon_type`, `admin_shared_coupon_amount`: copied from the coupon's meta at the time of application (`lite:includes/Vendor/Coupon.php:161-186` for carts, `:199-243` for orders).
 
-At checkout the cart item's record is copied to the order item (`Coupon::add_coupon_info_to_order_item()`, hooked to `woocommerce_checkout_create_order_line_item`, `lite:includes/Vendor/Coupon.php:19`, `:292-316`). If the recorded discounts on one line add up to more than the product price × quantity, the excess is trimmed from the last coupons. The price used here is the product's current catalogue price, `wc_get_product( $item->get_product_id() )->get_price()` (`lite:includes/Vendor/Coupon.php:300-301`), not the line's own price or subtotal; for a variation, `get_product_id()` is the parent product, so the parent's price is used. Suborder line items inherit the record because Suborder creation copies all item meta (`lite:includes/Order/Manager.php:693-697`).
+At checkout the cart item's record is copied to the order item (`Coupon::add_coupon_info_to_order_item()`, hooked to `woocommerce_checkout_create_order_line_item`, `lite:includes/Vendor/Coupon.php:19`, `:292-316`). If the recorded discounts on one line add up to more than the product price × quantity, the excess is trimmed from the last coupons. The price used here is the product's current catalogue price, `wc_get_product( $item->get_product_id() )->get_price()` (`lite:includes/Vendor/Coupon.php:300-301`), not the line's own price or subtotal; for a variation, `get_product_id()` is the parent product, so the parent's price is used. Suborder line items inherit the record because Suborder creation copies all item meta (`lite:includes/Order/Manager.php:740-745`).
 
 **2. The record is split into an admin-funded and a Vendor-funded discount.** `CouponInfo::get_coupon_amount()` (`lite:includes/Commission/CouponInfo.php:74-116`) classifies each coupon by `coupon_commissions_type`:
 
@@ -90,4 +90,4 @@ The `adjust_refunds()` comment shows the intent that an admin discount changes t
 - Align the `admin_shared_coupon_type` default with the value actually checked (`percentage`), or check both.
 - Show the admin-funded and Vendor-funded discount per line in the order Commission meta box; the values are already returned on the `Commission` object (`get_admin_discount()`, `get_vendor_discount()`).
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

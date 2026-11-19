@@ -11,11 +11,11 @@ Lite ADR 0004 (`docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`
 **[Lite]** When any order that has Suborders changes status, Dokan tries to give each Suborder the same status, but only if the Suborder's current status allows that move.
 
 - `Order\Hooks::on_order_status_change` runs on `woocommerce_order_status_changed` at priority 10 (`lite:includes/Order/Hooks.php:36`, method at `:95`). WooCommerce fires that action from `WC_Order::status_transition()` whenever a saved order's status changes from a non-empty previous status (`wc:includes/class-wc-order.php:478`).
-- The listener loads the order's children with `Order\Manager::get_child_orders()` (`lite:includes/Order/Manager.php:463-478`: type `shop_order`, `parent` = the order id, no limit, filter `dokan_get_child_orders_args`). For each child it calls `update_status( $new_status )` when `is_status_change_allowed( $current, $new )` returns true, and otherwise writes a "Skipped status update" line to the Dokan log (`lite:includes/Order/Hooks.php:125-138`, `:274-276`).
+- The listener loads the order's children with `Order\Manager::get_child_orders()` (`lite:includes/Order/Manager.php:508-523`: type `shop_order`, `parent` = the order id, no limit, no `status` argument so trashed Suborders are left out, filter `dokan_get_child_orders_args`). For each child it calls `update_status( $new_status )` when `is_status_change_allowed( $current, $new )` returns true, and otherwise writes a "Skipped status update" line to the Dokan log (`lite:includes/Order/Hooks.php:125-140`, `:276-278`).
 - It does not matter who changed the parent's status: the Store Admin in WP-admin, a payment gateway calling `payment_complete()`, WooCommerce's unpaid-order cleanup, or the customer cancelling a pending order all go through the same hook.
 - A single-vendor Order has no Suborders (it is itself the Vendor order), so nothing is copied.
 
-**The whitelist** (`lite:includes/Order/Hooks.php:205-213`). Read each row as "a Suborder currently in this status may be moved by the parent to …":
+**The whitelist** (`lite:includes/Order/Hooks.php:207-215`). Read each row as "a Suborder currently in this status may be moved by the parent to …":
 
 | Suborder's current status | Parent statuses that are copied down |
 |---|---|
@@ -24,8 +24,8 @@ Lite ADR 0004 (`docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`
 | `wc-processing` | `wc-completed`, `wc-failed`, `wc-cancelled`, `wc-refunded` |
 | `wc-completed` | `wc-refunded` |
 | `wc-failed` | `wc-pending`, `wc-on-hold`, `wc-processing`, `wc-failed`, `wc-cancelled` |
-| `wc-cancelled` | nothing (final) |
-| `wc-refunded` | nothing (final) |
+| `wc-cancelled` | nothing (final for the downward copy) |
+| `wc-refunded` | nothing (final for the downward copy) |
 
 **The same table read the other way**, for the parent statuses teammates ask about most. "Follows" means the Suborder in that current status is moved to the parent's new status; every other Suborder keeps its status:
 
@@ -37,22 +37,22 @@ Lite ADR 0004 (`docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`
 | `completed` | `pending`, `on-hold`, `processing` | `completed` (logged as skipped), `failed`, `cancelled`, `refunded` |
 | `processing` | `pending`, `on-hold`, `failed` | `processing`, `completed`, `cancelled`, `refunded` |
 
-Note that `pending` follows every parent status, including `refunded`, because its row is `any` (`lite:includes/Order/Hooks.php:206`). Copying a status down never moves money by itself: it only relabels each Suborder's ledger row. What a copied `cancelled`, `failed` or `refunded` status does to the Vendor's Balance is set out in [ADR-0041](./0041-cancelling-or-failing-a-vendor-order-drops-its-earning-from-the-balance-without-a-reversal-entry.md).
+Note that `pending` follows every parent status, including `refunded`, because its row is `any` (`lite:includes/Order/Hooks.php:208`). Copying a status down never moves money by itself: it only relabels each Suborder's ledger row. What a copied `cancelled`, `failed` or `refunded` status does to the Vendor's Balance is set out in [ADR-0041](./0041-cancelling-or-failing-a-vendor-order-drops-its-earning-from-the-balance-without-a-reversal-entry.md).
 
-**How the list is evaluated** (`lite:includes/Order/Hooks.php:199-245`):
+**How the list is evaluated** (`lite:includes/Order/Hooks.php:201-247`):
 
-1. Both statuses are normalised to the `wc-` prefix (`:201-202`, `:256-258`).
-2. If the Suborder's current status **or** the parent's new status is not a key of the whitelist, the move is allowed (`:233-236`). This covers custom statuses registered by other plugins, `wc-checkout-draft` and `wc-trash`.
-3. If the current status's list contains `any`, the move is allowed (`:238-241`).
-4. Otherwise the move is allowed only if the new status is in the list (`:244`).
+1. Both statuses are normalised to the `wc-` prefix (`:203-204`, `:258-260`).
+2. If the Suborder's current status **or** the parent's new status is not a key of the whitelist, the move is allowed (`:236-238`). This covers custom statuses registered by other plugins, `wc-checkout-draft` and `wc-trash`.
+3. If the current status's list contains `any`, the move is allowed (`:241-243`).
+4. Otherwise the move is allowed only if the new status is in the list (`:246`).
 
-Each copied change is a real `WC_Order::update_status()` on the Suborder, so it fires the Suborder's own WooCommerce emails and status hooks, including Dokan's ledger update and the completion roll-up described in [ADR-0038](./0038-a-parent-order-is-completed-automatically-only-when-every-suborder-is-completed.md).
+Each copied change is a real `WC_Order::update_status()` on the Suborder, so it fires the Suborder's own status hooks, including Dokan's ledger update and the completion roll-up described in [ADR-0038](./0038-a-parent-order-is-completed-automatically-only-when-every-suborder-is-completed.md). Before each copy Dokan flags the status on the Suborder (`lite:includes/Order/Hooks.php:132-133`); when WooCommerce queues its transactional emails, that flag skips the Suborder's customer on-hold, processing or completed email, because the customer already gets the parent's (`lite:includes/Order/EmailHooks.php:110-117`, `:165-179`, `:281-308`; list filterable through `dokan_synced_status_customer_emails`). Other emails fire as usual.
 
 Nothing is copied *upward* by this listener. A Vendor changing their own Suborder does not change the parent, except for the completion roll-up.
 
 ## Settings that change it
 
-There is no admin setting. The whitelist is changed only through the filter `dokan_sub_order_status_update_whitelist` (`lite:includes/Order/Hooks.php:231`), which receives the array above and must return an array of the same shape (keys are current statuses with the `wc-` prefix, values are lists of allowed new statuses, `any` allows everything). Because unknown statuses are always allowed (step 2), an extension that wants to *protect* a status must add it as a key with an empty list, not leave it out.
+There is no admin setting. The whitelist is changed only through the filter `dokan_sub_order_status_update_whitelist` (`lite:includes/Order/Hooks.php:233`), which receives the array above and must return an array of the same shape (keys are current statuses with the `wc-` prefix, values are lists of allowed new statuses, `any` allows everything). Because unknown statuses are always allowed (step 2), an extension that wants to *protect* a status must add it as a key with an empty list, not leave it out.
 
 ## Worked example
 
@@ -70,15 +70,15 @@ Result: the Order says `processing`, Vendor A's order says `completed`, Vendor B
 - **On-hold orders are not cancelled or refunded from the parent.** `wc-on-hold` does not list `wc-cancelled` or `wc-refunded`. An Order paid by bank transfer that sits `on-hold` and is then cancelled by the Store Admin leaves its Suborders `on-hold`; they must be cancelled one by one.
 - **Processing orders do not go back.** `wc-processing` does not list `wc-pending` or `wc-on-hold`, so putting a paid parent back on hold does not move its Suborders.
 - **Completed orders only follow a refund.** A completed Suborder can still be moved to `refunded` by the parent, but not to `cancelled`, `failed` or `processing`.
-- **Unpaid Suborders follow a refund too.** A `pending` Suborder accepts any parent status, so setting the parent to `refunded` also moves `pending` Suborders to `refunded`, which is final for them afterwards.
+- **Unpaid Suborders follow a refund too.** A `pending` Suborder accepts any parent status, so setting the parent to `refunded` also moves `pending` Suborders to `refunded`, after which later parent status changes no longer reach them.
 - **A parent set to Refunded creates refunds that move no Vendor money.** WooCommerce answers every move to `refunded` with `wc_order_fully_refunded()`, an amount-only refund with no lines (`wc:includes/wc-order-functions.php:915-940`). On the parent, Dokan ignores that refund because it is a parent-order refund (`lite:includes/Order/RefundHandler.php:52-54`). On each Suborder that follows, the same WooCommerce function creates a line-less refund whose Vendor share is 0, so no credit is booked (`lite:includes/Order/RefundHandler.php:214-216`; an add-on may take over refund handling, `:39-41`), and the Suborder's ledger row becomes `wc-refunded`, which always counts. The Vendor keeps the Earning. See the cancel/fail ADR linked above for every branch.
-- **Custom statuses bypass the list in both directions.** A parent moved to a status that is not a key (for example a "shipped" status added by another plugin) overwrites every Suborder, including `cancelled` and `refunded` ones, and a Suborder sitting in such a status accepts any parent status.
+- **Custom statuses are not limited by the list in either direction.** A parent moved to a status that is not a key (for example a "shipped" status added by another plugin) overwrites every Suborder, including `cancelled` and `refunded` ones, and a Suborder sitting in such a status accepts any parent status.
 - **Same-status moves are skipped where the list does not repeat the status.** When the completion roll-up sets the parent to `completed`, the listener tries to copy `completed` to Suborders that are already `completed`; `wc-completed` does not list itself, so these are logged as skipped. This is harmless noise in the log.
-- **Admin-created Orders** are split inside this same listener before the copy runs (Lite ADR 0012). Their brand-new Suborders get their status from `create_sub_order()`, which sets the parent's current status before saving (`$order->set_status( $parent_order->get_status() )`, `lite:includes/Order/Manager.php:652`), not from the downward copy; the copy that follows usually finds the same status and does nothing. The listener removes itself while splitting (`lite:includes/Order/Hooks.php:102-108`), so the Suborders' creation transitions never reach the ledger. This is why their Balance status stays empty ([ADR-0040](./0040-a-vendor-order-earning-is-written-to-the-vendor-balance-ledger-once-when-the-order-is-created-not-when-it-is-paid.md), edge case "Vendor orders created already past `pending`").
+- **Admin-created Orders** are split inside this same listener before the copy runs (Lite ADR 0012). Their brand-new Suborders get their status from `create_sub_order()`, which sets the parent's current status before saving (`$order->set_status( $parent_order->get_status() )`, `lite:includes/Order/Manager.php:699`), not from the downward copy; the copy that follows usually finds the same status and does nothing. The listener removes itself while splitting (`lite:includes/Order/Hooks.php:102-108`), so the Suborders' creation transitions never reach the ledger. This is why their Balance status stays empty ([ADR-0040](./0040-a-vendor-order-earning-is-written-to-the-vendor-balance-ledger-once-when-the-order-is-created-not-when-it-is-paid.md), edge case "Vendor orders created already past `pending`").
 
 ## Why
 
-The whitelist and its filter were introduced together (`@since 3.12.2`, docblock at `lite:includes/Order/Hooks.php:186-198`) to stop parent status changes from overwriting Suborders that had already reached a later or final state. The docblock describes it as a configurable list of allowed transitions; no further rationale is recorded.
+The whitelist and its filter were introduced together (`@since 3.12.2`, docblock at `lite:includes/Order/Hooks.php:188-200`) to stop parent status changes from overwriting Suborders that had already reached a later or final state. The docblock describes it as a configurable list of allowed transitions; no further rationale is recorded.
 
 ## Consequences & risks
 
@@ -92,4 +92,4 @@ The whitelist and its filter were introduced together (`@since 3.12.2`, docblock
 - Consider treating statuses that are not keys as "deny" for the *current* status of a final Suborder, so custom parent statuses cannot overwrite `cancelled` or `refunded` Suborders.
 - Add an order note on the parent when a Suborder is skipped, so the divergence is visible where the admin is looking.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

@@ -13,7 +13,7 @@ The Earning is written to the ledger when the Vendor order is created ([ADR-0040
 `Order\VendorBalanceUpdateHandler` (registered through the container, `lite:includes/DependencyManagement/Providers/CommissionServiceProvider.php:25`) listens on `woocommerce_update_order`, which WooCommerce fires on every save of an existing order (`lite:includes/Order/VendorBalanceUpdateHandler.php:29-33`):
 
 1. **Priority 80, `update_dokan_order_table()`** (`:147-209`). Skips a parent with Suborders (`:150-152`). Recalculates with `OrderCommission` with refunds adjusted (`:157-162`). If the order has no `dokan_orders` row, stops (`:170-178`). Otherwise compares the stored `net_amount` with the recalculated Earning and the stored `order_total` with `get_total() - get_total_refunded()`; if either differs, writes both (`:180-201`) and clears the earning caches (`:207-208`).
-2. **Priority 99, `handle_order_edit()`** (`:43-80`). Skips a parent with Suborders (`:44-46`). Recalculates with refunds **not** adjusted (`set_should_adjust_refund( false )`, `:49-52`) and takes `get_vendor_earning() + get_vendor_gateway_fee()` (`:54`), that is the Earning before refunds and before any gateway fee borne by the Vendor. If the order has no Balance row, stops; if the stored `debit` already equals it, stops (`:60-64`). Otherwise updates `debit` on the order's `dokan_orders`-type Balance row (`:90-111`) and caches the new figure for five minutes (`:94-99`).
+2. **Priority 99, `handle_order_edit()`** (`:43-80`). Skips a parent with Suborders (`:44-46`). Recalculates with refunds **not** adjusted (`set_should_adjust_refund( false )`, `:49-52`) and takes `get_vendor_earning() + get_vendor_gateway_fee()` (`:54`), that is the Earning before refunds and before any gateway fee borne by the Vendor. If the order has no Balance row, stops; if the stored `debit` already equals it, stops (`:60-64`). Otherwise updates `debit` on the order's `dokan_orders`-type Balance row (`:90-112`) and caches the new figure for five minutes (`:94-99`).
 
 The recalculation reuses the Commission terms frozen on the line items at first calculation (Lite ADR 0013, `docs/adr/0013-commission-terms-are-frozen-onto-the-order-at-first-calculation.md`). Editing an order never picks up new Commission settings for existing lines; lines added later are calculated with the settings in force when they are first calculated.
 
@@ -53,4 +53,4 @@ The class docblock states the intent: "Handles the update of vendor balance afte
 - Decide whether the Balance debit should be net or gross of Vendor-borne gateway fees and make `Fees::calculate_gateway_fee()` and `handle_order_edit()` agree.
 - Add an order note when an edit changes a Vendor's Earning, so Balance changes caused by edits are explainable.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

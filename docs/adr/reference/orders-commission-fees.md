@@ -40,7 +40,7 @@ Terminology follows `CONTEXT.md`: **Order** is the customer-facing WooCommerce o
 | Shared common services including `Shipping\Hooks`, `Commission\RecalculateCommissions`, `Order\RefundHandler`, `Withdraw\Hooks` | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:13-26` |
 | All `Hookable` services get `register_hooks()` called (this is how `RefundHandler` and `VendorBalanceUpdateHandler` attach) | `lite:dokan-class.php:276-279` |
 | `container-service` and `common-service` resolved on `init` priority 4 | `lite:dokan-class.php:316-325` (`WeDevs_Dokan::init_classes`) |
-| Table DDL | `lite:includes/Install/Installer.php:375` (`dokan_orders`), `:421` (`dokan_refund`), `:448` (`dokan_vendor_balance`) |
+| Table DDL | `lite:includes/Install/Installer.php:495` (`dokan_orders`), `:541` (`dokan_refund`), `:568` (`dokan_vendor_balance`) |
 
 Because the `commission-service` definitions are registered with `shared = false` (`add_with_implements_tags( $service, $service, false )`), every `dokan_get_container()->get( OrderCommission::class )` returns a fresh calculator, so per-order state never leaks between calls.
 
@@ -52,7 +52,7 @@ Because the `commission-service` definitions are registered with `shared = false
 
 | Class | File | Responsibility |
 |---|---|---|
-| `WeDevs\Dokan\Order\Manager` | `lite:includes/Order/Manager.php:20` | Order queries (`all`, `get_child_orders`, `count_orders`), Suborder creation (`maybe_split_orders` at `:896`, `create_sub_order` at `:582`), sync-row deletion (`delete_seller_order` at `:490`). HPOS-aware. |
+| `WeDevs\Dokan\Order\Manager` | `lite:includes/Order/Manager.php:21` | Order queries (`all`, `get_child_orders`, `count_orders`), Suborder creation (`maybe_split_orders` at `:943`, `create_sub_order` at `:627`), sync-row deletion (`delete_seller_order` at `:535`). HPOS-aware. |
 | `WeDevs\Dokan\Order\Hooks` | `lite:includes/Order/Hooks.php:25` | Checkout split trigger, status cascade parent to Suborders, completion roll-up, refunded-status Balance entry, coupon validity guard, parent stock guard. |
 | `dokan_sync_insert_order()` | `lite:includes/Order/functions.php:217` | Inserts the `dokan_orders` row and the `dokan_orders` ledger row for one Vendor order. |
 | `dokan_get_sellers_by()` | `lite:includes/Order/functions.php:522` | Groups an order's line items by Vendor (product `post_author`, filterable). |
@@ -92,7 +92,7 @@ Both the classic checkout (`woocommerce_checkout_update_order_meta`, fired at `w
 1. Priority 10: `Hooks::split_vendor_orders` calls `Manager::maybe_split_orders`.
 2. Priority 20: `dokan_sync_insert_order` for the parent Order.
 
-`Manager::maybe_split_orders` (`lite:includes/Order/Manager.php:896`):
+`Manager::maybe_split_orders` (`lite:includes/Order/Manager.php:943`):
 
 - Returns immediately if the order already has `_dokan_vendor_id` (already processed).
 - If `$force_create` is true or `has_sub_order` is set, deletes existing child orders first.
@@ -100,12 +100,12 @@ Both the classic checkout (`woocommerce_checkout_update_order_meta`, fired at `w
 - **One Vendor:** fires `dokan_create_parent_order`, writes `_dokan_vendor_id` on the Order itself, saves, and fires `dokan_checkout_update_order_meta( $order_id, $seller_id )`. No Suborder is created; the Order is the Vendor order (ADR-0004).
 - **Several Vendors:** writes `has_sub_order = true` on the parent, saves, and calls `create_sub_order()` once per Vendor.
 
-`Manager::create_sub_order` (`lite:includes/Order/Manager.php:582`) builds a new `WC_Order` with `created_via = dokan`, copies customer, currency, tax mode, payment method, billing/shipping address and `_dokan_vendor_id`, then:
+`Manager::create_sub_order` (`lite:includes/Order/Manager.php:627`) builds a new `WC_Order` with `created_via = dokan`, copies customer, currency, tax mode, payment method, billing/shipping address and `_dokan_vendor_id`, then:
 
 - `create_line_items()` clones the Vendor's line items including all item meta and adds `_dokan_parent_order_item_id` (used later for stock sync).
 - `create_shipping()` copies the parent's shipping items whose `seller_id` item meta matches the Vendor (filters `dokan_shipping_method` (deprecated) and `dokan_shipping_methods`).
 - `create_taxes()` adds tax items for each parent tax rate with the Vendor's product tax total and shipping tax total.
-- `create_coupons()` adds one coupon item per coupon code found in the Suborder items' `_dokan_coupon_info` meta; the discount is the sum of the per-item discounts, counted only for codes that are also present on the parent. When Dokan Pro is active, Lite removes a Dokan Pro filter on `woocommerce_order_get_items` before reading coupons and does not re-add it in this method (`lite:includes/Order/Manager.php:822-825`).
+- `create_coupons()` adds one coupon item per coupon code found in the Suborder items' `_dokan_coupon_info` meta; the discount is the sum of the per-item discounts, counted only for codes that are also present on the parent. This copy happens only at Suborder creation; a coupon added to the parent Order later is applied to each Suborder with `WC_Order::apply_coupon()` and leaves no per-line `_dokan_coupon_info` record on the Suborder items (ADR-0086). When Dokan Pro is active, Lite removes a Dokan Pro filter on `woocommerce_order_get_items` before reading coupons and does not re-add it in this method (`lite:includes/Order/Manager.php:869-872`).
 - Fires `dokan_create_sub_order_before_calculate_totals`, calls `calculate_totals()`, copies the parent status, sets `parent_id`, saves, updates WooCommerce total sales, and fires `dokan_checkout_update_order_meta( $suborder_id, $seller_id )`.
 - Any `Throwable` is logged and returned as `WP_Error( 'dokan-suborder-error' )`.
 
@@ -170,10 +170,10 @@ WooCommerce fires `woocommerce_order_status_changed` from `WC_Order::status_tran
 | 10 | `Order\Hooks::on_order_status_change` | Lazy admin split; `UPDATE dokan_orders SET order_status` (a no-op for a multi-vendor parent, which has no row); cascade the new status to each Suborder if `is_status_change_allowed()` permits (filter `dokan_sub_order_status_update_whitelist`), otherwise log; unless the COD exclusion applies, `UPDATE dokan_vendor_balance SET status` for `trn_type = dokan_orders`. |
 | 10 | `Order\OrderCache::reset_order_cache` | Cache invalidation. |
 | 15 | `Order\Hooks::manage_refunded_for_order` | Vendor-dashboard "refunded" status change: inserts a `dokan_refund` credit for the whole Earning and zeroes the `dokan_orders` totals (4.5). |
-| 99 | `Order\Hooks::on_sub_order_change` | For a Suborder: auto-completes paid, non-manual-gateway Suborders that do not need processing, then completes the parent when every Suborder is `completed`. |
+| 99 | `Order\Hooks::on_sub_order_change` | For a Suborder: auto-completes paid, non-manual-gateway Suborders that do not need processing, then completes the parent when every non-trashed Suborder is `completed` (`get_child_orders()` leaves trashed Suborders out; ADR-0038). |
 | 100 | `Fees::calculate_gateway_fee` | Deducts the payment-gateway processing fee from Vendor orders (4.4). |
 
-The default Suborder transition whitelist (`lite:includes/Order/Hooks.php:205-213`) lets `pending` move anywhere, forbids moving out of `cancelled` and `refunded`, allows `completed` only to `refunded`, and so on. Statuses not in the whitelist are always allowed.
+The default Suborder transition whitelist (`lite:includes/Order/Hooks.php:207-215`) lets `pending` move anywhere, forbids moving out of `cancelled` and `refunded`, allows `completed` only to `refunded`, and so on. Statuses not in the whitelist are always allowed.
 
 COD exclusion: when option `dokan_withdraw.exclude_cod_payment` is `on` and the payment method is `cod`, the ledger status update is skipped (filter `dokan_order_should_exclude_from_vendor_balance`). Because the checkout insert leaves `status` empty, such rows do not acquire an earning status through the status-change path and therefore do not count toward Balance (see the Balance queries in section 6). Note that `OrderEventListener::process_order_status` (trash/untrash) writes the ledger status without a COD check.
 
@@ -202,7 +202,7 @@ flowchart TD
     SUM --> FEES["Add fee allocations by recipient"]
 ```
 
-**Strategy chain.** `AbstractStrategy::get_eligible_strategy()` (`lite:includes/Commission/Strategies/AbstractStrategy.php:55`) returns the first strategy whose `Setting::is_applicable()` is true, which means the percentage or the flat value is a non-empty string (`lite:includes/Commission/Model/Setting.php:289`). The chain is `OrderItem` (source taken from saved meta) then `Product` then `Vendor` then `GlobalStrategy` then `DefaultStrategy`. The category used by `Vendor` and `GlobalStrategy` for `category_based` is the first chosen category from `ProductCategory\Helper::get_saved_products_category()`. Variations read commission meta from their parent product (`Settings\Product::__construct`).
+**Strategy chain.** `AbstractStrategy::get_eligible_strategy()` (`lite:includes/Commission/Strategies/AbstractStrategy.php:55`) returns the first strategy whose `Setting::is_applicable()` is true, which means the percentage or the flat value is a non-empty string (`lite:includes/Commission/Model/Setting.php:289`). The chain is `OrderItem` (source taken from saved meta) then `Product` then `Vendor` then `GlobalStrategy` then `DefaultStrategy`. The Vendor whose settings the chain reads is the Vendor order's `_dokan_vendor_id` (`lite:includes/Commission/OrderLineItemCommission.php:98`, passed in at `:124`); only when that meta is `0` does `Strategies\OrderItem` fall back to the product author through `dokan_get_vendor_by_product()` (`lite:includes/Commission/Strategies/OrderItem.php:47`), so a later change of product owner does not change the Vendor of an existing order (ADR-0021). The category used by `Vendor` and `GlobalStrategy` for `category_based` is the first chosen category from `ProductCategory\Helper::get_saved_products_category()`. Variations read commission meta from their parent product (`Settings\Product::__construct`).
 
 **Snapshot.** `AbstractStrategy::save_settings_to_order_item()` writes the resolved setting to the order item only when the head of the chain is an `OrderItem` strategy (`lite:includes/Commission/Strategies/AbstractStrategy.php:100-108`), via `Settings\OrderItem::save()` (filter `dokan_order_line_item_commission_settings_before_save`, action `dokan_order_line_item_commission_settings_after_save`). After the first calculation the item meta is applicable, so later recalculations use the rate in force at purchase, not the current settings. The class comment in `Strategies\OrderItem` states that this protects orders when the admin changes rates.
 
@@ -283,7 +283,7 @@ sequenceDiagram
 - Priority 80, `update_dokan_order_table`: recalculates the Earning (refund-adjusted) and updates `dokan_orders.net_amount` and `order_total` when they differ; clears earning caches.
 - Priority 99, `handle_order_edit`: recalculates without refund adjustment, adds back the Vendor gateway fee (`get_vendor_earning() + get_vendor_gateway_fee()`), compares with the stored ledger `debit` (or a short-lived transient), and updates the `dokan_orders` ledger row's `debit` when it changed. Refunds therefore stay as separate credit rows instead of reducing the order's debit.
 
-`Manager::delete_seller_order` (`lite:includes/Order/Manager.php:490`) deletes the `dokan_orders` row (optionally scoped by Vendor), every `dokan_refund` row for the order, fires `dokan_after_deleting_seller_order`, deletes ledger rows with `trn_id = order id` and `trn_type` in (`dokan_orders`, `dokan_refund`, `dokan_withdraw`), and deletes reverse-withdrawal rows (`trn_type` in `order_commission`, `manual_order_commission`, `order_refund`). It runs before every `dokan_sync_insert_order` insert and, through `delete_seller_order_with_suborders`, when an order is permanently deleted in admin (`woocommerce_delete_order`, fired at `wc:includes/data-stores/abstract-wc-order-data-store-cpt.php:310` and `wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php:2670`, or `delete_post` for CPT storage).
+`Manager::delete_seller_order` (`lite:includes/Order/Manager.php:535`) deletes the `dokan_orders` row (optionally scoped by Vendor), every `dokan_refund` row for the order, fires `dokan_after_deleting_seller_order`, deletes ledger rows with `trn_id = order id` and `trn_type` in (`dokan_orders`, `dokan_refund`, `dokan_withdraw`), and deletes reverse-withdrawal rows (`trn_type` in `order_commission`, `manual_order_commission`, `order_refund`). It runs before every `dokan_sync_insert_order` insert and, through `delete_seller_order_with_suborders`, when an order is permanently deleted in admin (`woocommerce_delete_order`, fired at `wc:includes/data-stores/abstract-wc-order-data-store-cpt.php:310` and `wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php:2670`, or `delete_post` for CPT storage).
 
 ### 4.7 Stock and coupons
 
@@ -461,9 +461,9 @@ erDiagram
     }
 ```
 
-**`{prefix}dokan_orders`** (`lite:includes/Install/Installer.php:375`): one row per Vendor order. Keys on `order_id` and `seller_id`. `net_amount` holds the Vendor's Earning; the admin's figure is derived as `order_total - net_amount` by `Commission::get_earning_from_order_table( $id, 'admin' )`. Writers: `dokan_sync_insert_order()` (insert), `Hooks::on_order_status_change` and `OrderEventListener` (status), `Hooks::manage_refunded_for_order` (zeroes totals), `Fees::calculate_gateway_fee` and `VendorBalanceUpdateHandler::update_dokan_order_table` (amounts), `Manager::delete_seller_order` (delete). Parent Orders with Suborders have no row.
+**`{prefix}dokan_orders`** (`lite:includes/Install/Installer.php:495`): one row per Vendor order. Keys on `order_id` and `seller_id`. `net_amount` holds the Vendor's Earning; the admin's figure is derived as `order_total - net_amount` by `Commission::get_earning_from_order_table( $id, 'admin' )`. Writers: `dokan_sync_insert_order()` (insert), `Hooks::on_order_status_change` and `OrderEventListener` (status), `Hooks::manage_refunded_for_order` (zeroes totals), `Fees::calculate_gateway_fee` and `VendorBalanceUpdateHandler::update_dokan_order_table` (amounts), `Manager::delete_seller_order` (delete). Parent Orders with Suborders have no row.
 
-**`{prefix}dokan_vendor_balance`** (`lite:includes/Install/Installer.php:448`): the Balance ledger. The column is spelled `perticulars` in the schema and the model maps it to `get_particulars()`. Row kinds written by Lite:
+**`{prefix}dokan_vendor_balance`** (`lite:includes/Install/Installer.php:568`): the Balance ledger. The column is spelled `perticulars` in the schema and the model maps it to `get_particulars()`. Row kinds written by Lite:
 
 | `trn_type` | `trn_id` | Written by | debit | credit | status |
 |---|---|---|---|---|---|
@@ -473,7 +473,7 @@ erDiagram
 
 The `dokan_orders` debit is later adjusted by `Fees::calculate_gateway_fee` and `VendorBalanceUpdateHandler::handle_order_edit`.
 
-**`{prefix}dokan_refund`** (`lite:includes/Install/Installer.php:421`): created and upgraded by Lite; Lite only deletes rows (`Manager::delete_seller_order`). Writers are outside Lite (consumed by Dokan Pro).
+**`{prefix}dokan_refund`** (`lite:includes/Install/Installer.php:541`): created and upgraded by Lite; Lite only deletes rows (`Manager::delete_seller_order`). Writers are outside Lite (consumed by Dokan Pro).
 
 `Manager::delete_seller_order` also deletes from `{prefix}dokan_reverse_withdrawal`, a table owned by Lite's Reverse withdrawal module.
 
@@ -500,9 +500,9 @@ The `dokan_orders` debit is later adjusted by `Fees::calculate_gateway_fee` and 
 | Order | `_wc_order_attribution_source_type` | read only ([WooCommerce]) | `vendor` routes order fees to the Vendor. |
 | Order item | `_dokan_parent_order_item_id` | `Manager::create_line_items` | Link from Suborder item to parent item. |
 | Order item | `_dokan_commission_source`, `_dokan_commission_rate`, `_dokan_commission_type`, `_dokan_additional_fee`, `_dokan_commission_meta` | `Settings\OrderItem::save` | Commission snapshot. Legacy `dokan_commission_meta` is migrated on read. |
-| Order item | `_dokan_coupon_info` (`Vendor\Coupon::DOKAN_COUPON_META_KEY`) | `Vendor\Coupon` | Per-item coupon discounts and funding type. |
+| Order item | `_dokan_coupon_info` (`Vendor\Coupon::DOKAN_COUPON_META_KEY`) | `Vendor\Coupon` | Per-item coupon discounts and funding type. Not written on Suborder items for a coupon added to the parent after checkout (ADR-0086). |
 | Shipping item | `seller_id` | `Shipping\Hooks::add_shipping_pack_meta` | Vendor of the shipping line. |
-| Product | `_per_product_admin_commission`, `_per_product_admin_commission_type`, `_per_product_admin_additional_fee` | `Settings\Product::save` (via `Product\Manager::save_commission_settings`) | Product-level commission. |
+| Product | `_per_product_admin_commission`, `_per_product_admin_commission_type`, `_per_product_admin_additional_fee` | `Settings\Product::save` (via `Product\Manager::save_commission_settings`) | Product-level commission. Changed only by users with `manage_woocommerce`; REST product saves by anyone else keep the stored values (`Product\Hooks::protect_per_product_commission_meta`). |
 | User | `dokan_admin_percentage`, `dokan_admin_percentage_type`, `dokan_admin_additional_fee`, `admin_category_commission` | `Settings\Vendor::save` (via `Vendor::save_commission_settings`) | Vendor-level commission. |
 | User | `withdraw_date_limit` | read by `dokan_get_withdraw_threshold()` | Per-Vendor threshold days. |
 
@@ -513,7 +513,7 @@ The `dokan_orders` debit is later adjusted by `Fees::calculate_gateway_fee` and 
 | `dokan_selling.commission_type`, `admin_percentage`, `additional_fee`, `commission_category_based_values` | `Settings\GlobalSetting::get` (written by `GlobalSetting::save` through `dokan_save_legacy_settings_section`) | empty |
 | `dokan_selling.shipping_fee_recipient`, `tax_fee_recipient` | `Fees` | `seller` |
 | `dokan_selling.shipping_tax_fee_recipient` | `Fees` | the resolved tax recipient |
-| `dokan_selling.order_status_change` | REST `update_order_permissions_check`, `Frontend\Hooks::bulk_order_status_change`, `WeDevs\Dokan\Ajax` order handlers | `on` (the bulk action passes no default; it only blocks on an explicit `off`) |
+| `dokan_selling.order_status_change` | REST `update_order_permissions_check`, `Frontend\Hooks::bulk_order_status_change`, `WeDevs\Dokan\Ajax` order handlers | `on`. The AJAX handlers require exactly `on`; the REST update and the bulk routes refuse only an explicit `off` (the bulk action passes no default). |
 | `dokan_withdraw.exclude_cod_payment` | `Hooks`, `RefundHandler` | `off` |
 | `dokan_withdraw.withdraw_order_status` | `dokan_withdraw_get_active_order_status()` | `[ 'wc-completed' ]` |
 | `dokan_withdraw.withdraw_date_limit` | `dokan_get_withdraw_threshold()` | `0` |
@@ -535,7 +535,7 @@ Order REST controllers are summarized here only as consumers of this subsystem.
 | Route | Methods | Permission callback |
 |---|---|---|
 | `dokan/v1/orders` | GET | `OrderController::get_orders_permissions_check` (`dokan_view_order_menu`) |
-| `dokan/v1/orders/{id}` | GET | `get_single_order_permissions_check` (shop manager, administrator, or the order's Vendor via `dokan_get_seller_id_by_order`) |
+| `dokan/v1/orders/{id}` | GET | `get_single_order_permissions_check` (`manage_woocommerce`, or `dokan_view_order` when the order's Vendor from `dokan_get_seller_id_by_order` is non-zero and equals `dokan_get_current_user_id()`, so Vendor Staff act for their Vendor; `lite:includes/REST/OrderController.php:800-811`) |
 | `dokan/v1/orders/{id}` | PUT/PATCH | `update_order_permissions_check` (`dokan_manage_order` and `dokan_selling.order_status_change` not `off`) |
 | `dokan/v1/orders/{id}/notes`, `.../notes/{note_id}` | GET, POST, DELETE | `get_single_order_permissions_check` |
 | `dokan/v1/orders/summary` | GET | `check_orders_summary_permissions` (`dokan_view_order_report`) |
@@ -544,16 +544,20 @@ Order REST controllers are summarized here only as consumers of this subsystem.
 | `dokan/v3/orders/...` | inherits v2 | `OrderControllerV3` (`lite:includes/REST/OrderControllerV3.php:12`) only changes the namespace and download formatting |
 | `dokan/v1/commission` | GET | `CommissionControllerV1::get_permissions_check`: `manage_woocommerce`, or a `dokandar` user with `dokan_add_product` or `dokan_edit_product` who targets only their own Vendor id and own products (ADR-0007) |
 
-Non-REST entry points: `Frontend\Hooks::bulk_order_status_change` on `template_redirect` (nonce `bulk_order_status_change`, capability `dokan_manage_order`, `order_status_change` not `off`), and the vendor-dashboard status change processed by `Hooks::manage_refunded_for_order` (nonce `dokan_change_status`). `Order\Ajax` registers `wp_ajax_dokan_search_downloadable_products`, which is unrelated to money flow.
+Non-REST entry points: `Frontend\Hooks::bulk_order_status_change` on `template_redirect` (nonce `bulk_order_status_change`, capability `dokan_manage_order`, `order_status_change` not `off`), and the vendor-dashboard single-order status change, AJAX `dokan_change_status` (`Ajax::change_order_status`, `lite:includes/Ajax.php:354-395`: nonce `dokan_change_status`, capability `dokan_manage_order`, `order_status_change` must be `on`, Ownership through `dokan_is_seller_has_order()`), whose switch to refunded is then processed by `Hooks::manage_refunded_for_order`.
+
+The order's current status is not checked by the AJAX handler or the REST update. The dashboard single-order screen hides the Edit control for `cancelled` and `refunded` orders (`lite:templates/orders/details.php:219`, `:223`), and the shared bulk helper skips `cancelled` and `refunded`, compared as unprefixed values, both as the target and as the current status (`lite:includes/Order/functions.php:965-980`). See ADR-0046.
+
+`Order\Ajax` registers `wp_ajax_dokan_search_downloadable_products`, which is unrelated to money flow.
 
 ---
 
 ## 8. Permissions & capabilities
 
-- **Vendor dashboard and REST:** `dokan_view_order_menu`, `dokan_manage_order`, `dokan_view_order_report` gate listing, editing and summaries. Single-order access requires Ownership: the requesting user must be the Vendor recorded for the order (`dokan_get_seller_id_by_order`), unless they hold `shop_manager` or `administrator`. See [ADR-0005](../0005-canonical-admin-capability.md), [ADR-0006](../0006-ownership-enforced-in-abilities-layer.md) and [ADR-0007](../0007-staff-actions-gated-by-dokan-capabilities.md) for the wider model.
-- **Store Admin setting:** `dokan_selling.order_status_change = off` removes Vendors' ability to change order status through REST and the bulk action.
+- **Vendor dashboard and REST:** `dokan_view_order_menu`, `dokan_manage_order`, `dokan_view_order_report` gate listing, editing and summaries. Single-order access requires Ownership: the requesting user's Vendor (`dokan_get_current_user_id()`) must be the non-zero Vendor recorded for the order (`dokan_get_seller_id_by_order`), unless they hold `manage_woocommerce`. A multi-vendor parent resolves to Vendor `0`, so no Vendor matches it. See [ADR-0005](../0005-canonical-admin-capability.md), [ADR-0006](../0006-ownership-enforced-in-abilities-layer.md) and [ADR-0007](../0007-staff-actions-gated-by-dokan-capabilities.md) for the wider model.
+- **Store Admin setting:** `dokan_selling.order_status_change = off` removes Vendors' ability to change order status through the dashboard AJAX handler, REST and the bulk action.
 - **WP-admin order screens:** `Admin\Permissions::map_meta_caps` (`map_meta_cap`, priority 12) maps `edit_post` / `edit_others_shop_orders` to `edit_shop_orders` when `_dokan_vendor_id` equals the user. The list is scoped to the current Vendor for users without `manage_woocommerce` (`woocommerce_order_list_table_prepare_items_query_args` with HPOS, `posts_clauses` otherwise).
-- **Commission settings** are Operating Terms (`CONTEXT.md`): Vendors never set their own Commission. The REST commission endpoint is read-only and limited to the caller's own Vendor and products.
+- **Commission settings** are Operating Terms (`CONTEXT.md`): Vendors never set their own Commission (ADR-0028). The REST commission endpoint is read-only and limited to the caller's own Vendor and products. Vendor-level Commission is written by `Vendor\Manager` only inside its `manage_woocommerce` blocks (`lite:includes/Vendor/Manager.php:279`, `:400`). Product-level Commission meta is restored to its stored values on REST product saves by users without `manage_woocommerce` (`Product\Hooks::protect_per_product_commission_meta` on `woocommerce_rest_pre_insert_product_object`, `lite:includes/Product/Hooks.php:63`, `:665-680`).
 - **Nonces and sanitization:** the dashboard refunded-status path verifies `dokan_change_status`; bulk status change verifies `bulk_order_status_change` and sanitizes ids with `absint`. All ledger and sync SQL uses `$wpdb->prepare`, `$wpdb->insert` or `$wpdb->update` with explicit formats. Vendor filters are passed through `absint` in `Manager::get_backward_compatibility_args`.
 
 ---
@@ -607,4 +611,4 @@ Non-REST entry points: `Frontend\Hooks::bulk_order_status_change` on `template_r
 - The exact parameter schemas and response shapes of the order REST controllers are out of scope here.
 - `Withdraw\Hooks::update_vendor_balance` is documented only as a ledger writer; Withdraw lifecycle belongs to a separate document.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

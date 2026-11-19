@@ -39,7 +39,7 @@ The type string itself is only consulted to detect the legacy `combine` type: `S
 | `dokan_selling[commission_type]` | `fixed` (default; the legacy settings page shows `fixed` when nothing is stored, `lite:includes/Admin/Settings.php:37`, `:77-83`), `category_based` | `fixed` or empty: use `admin_percentage` and `additional_fee` (any type other than `category_based` reads these two fields, `lite:includes/Commission/Settings/GlobalSetting.php:43`). `category_based`: use the category map; arithmetic unchanged. |
 | `dokan_selling[admin_percentage]` | number 0–100 | Percentage part. |
 | `dokan_selling[additional_fee]` | number ≥ 0 | Flat fee per unit. |
-| Product `_per_product_admin_commission_type` | always written as `fixed` by the product editor and bulk edit (`lite:includes/Product/Hooks.php:527`, `:568-575`) | No effect on the arithmetic. |
+| Product `_per_product_admin_commission_type` | always written as `fixed` by the product editor and bulk edit (`lite:includes/Product/Hooks.php:573`, `:614-621`) | No effect on the arithmetic. |
 | Vendor `dokan_admin_percentage_type` | `fixed`, `category_based` (values from the same type list) | As for global. |
 
 ## Worked example
@@ -80,4 +80,4 @@ No recorded reason was found for charging the flat fee per unit. The `Commission
 - Make "per unit" visible in the settings UI label for the flat fee ("Fixed fee per item").
 - Clear the percentage when mapping a legacy `flat` item rate into the flat slot, so old orders recalculate to the amount originally charged.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

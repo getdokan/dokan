@@ -42,4 +42,4 @@ The docblock describes these as order types "relevant to admin users" (`lite:inc
 
 - Skip the per-line formula resolution and snapshot for marketplace-owned orders, since the result is discarded.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

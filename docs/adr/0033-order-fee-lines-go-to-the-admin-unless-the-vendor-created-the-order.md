@@ -34,7 +34,7 @@ Commission Fixed 10 % + 0 flat; shipping and tax recipients irrelevant (no shipp
 
 ## Edge cases
 
-- **Multi-vendor Orders.** `Manager::create_sub_order()` copies product lines, shipping, tax and coupons to each Suborder but never copies fee lines (`lite:includes/Order/Manager.php:633-651`). Fee lines therefore stay on the parent Order only. Because the parent is never calculated (Lite ADR 0004), those fees enter no Vendor order, no `dokan_orders` row and no Balance; the money stays with whoever collected the payment, which in practice is the admin. A gateway processing fee prorated on the parent total is still computed against a total that includes these fees.
+- **Multi-vendor Orders.** `Manager::create_sub_order()` copies product lines, shipping, tax and coupons to each Suborder but never copies fee lines (`lite:includes/Order/Manager.php:679-696`). Fee lines therefore stay on the parent Order only. Because the parent is never calculated (Lite ADR 0004), those fees enter no Vendor order, no `dokan_orders` row and no Balance; the money stays with whoever collected the payment, which in practice is the admin. A gateway processing fee prorated on the parent total is still computed against a total that includes these fees.
 - **Tax on fee lines** is part of `get_total_tax()` and therefore follows the product tax recipient, not this rule (see [ADR-0034](./0034-product-tax-goes-to-the-tax-fee-recipient-and-excludes-shipping-tax.md)).
 - **Negative fees** (discount-like fee lines) reduce the recipient's figure by the same logic.
 - **Refund calculation.** `OrderRefundCommission` computes the per-refund Vendor and admin deductions from product lines, tax, shipping and any gateway fee returned through `dokan_refund_gateway_fee`; refunded fee lines are not part of it (`lite:includes/Commission/OrderRefundCommission.php:287-317`); refunded fee lines are reflected only through the refund-netted recalculation of the order.
@@ -55,4 +55,4 @@ No decision record exists. The code comment says "check order is a manual order 
 - Consider a dedicated Dokan order meta to mark Vendor-created orders instead of reusing the WooCommerce attribution field.
 - If multi-vendor fee lines matter, decide explicitly whether they should be split to Suborders, rather than leaving them on the parent.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

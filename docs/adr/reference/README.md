@@ -19,11 +19,11 @@ The documents serve two kinds of reader.
 
 ## Pinned revisions
 
-Every document was verified against the following source revisions. A statement may be out of date for any later revision.
+Every document was verified against the following source revisions. The footer of each document records the exact Lite revision its citations match. A statement may be out of date for any later revision.
 
 | Codebase | Revision | Prefix used in citations |
 |---|---|---|
-| Dokan Lite (this repository) | `e1ce7fc81` | `lite:` |
+| Dokan Lite (this repository) | `e1ce7fc81` or later, per document footer (for example `fbae0ce7d`) | `lite:` |
 | Dokan Pro | (not recorded) | `pro:` (not used in this public repository; see below) |
 | WooCommerce | `11.2.1` | `wc:` |
 
@@ -41,7 +41,7 @@ Entry points, key classes and key methods are cited as `prefix:path/relative/to/
 
 | Example | Meaning |
 |---|---|
-| `lite:includes/Order/Manager.php:896` | Line 896 of `includes/Order/Manager.php` in the Dokan Lite repository |
+| `lite:includes/Order/Manager.php:943` | Line 943 of `includes/Order/Manager.php` in the Dokan Lite repository |
 | `lite:dokan-class.php:276-279` | Lines 276 to 279 of `dokan-class.php` in Dokan Lite |
 | `wc:includes/class-wc-checkout.php:514` | Line 514 of `includes/class-wc-checkout.php` in the WooCommerce plugin (11.2.1); used to show where WooCommerce fires a hook Dokan consumes |
 
@@ -149,4 +149,4 @@ Every document ends with a **Known gaps** section that lists what could not be d
 - Release tooling (translation `.pot` generation, release packaging, `.distignore`) is not covered by any document in this directory. Its absence here does not mean the tooling is unimportant.
 - Each subsystem document keeps its own Known gaps list. Those lists are not aggregated here, so check the relevant document before relying on a behavior it marks as unconfirmed.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

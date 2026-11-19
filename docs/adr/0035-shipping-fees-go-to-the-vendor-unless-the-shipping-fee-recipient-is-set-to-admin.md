@@ -11,7 +11,7 @@ Every Vendor order that ships has one or more WooCommerce shipping lines. The ma
 - The shipping recipient of a Vendor order is resolved by `Fees::get_shipping_fee_recipient()` (`lite:includes/Fees.php:155-175`). It returns the order's `shipping_fee_recipient` meta when present. Otherwise it reads `dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' )`, passes it through the filter `dokan_shipping_fee_recipient` (arguments: value, order ID), writes it to the order and saves the order (`:169-171`). The value is frozen per order from then on; see Lite ADR 0013.
 - The recipient receives the order's **shipping total excluding shipping tax**, net of shipping already refunded: `get_shipping_total() − get_total_shipping_refunded()` (`OrderCommission::get_vendor_shipping_fee()`, `lite:includes/Commission/OrderCommission.php:295-301`, and `get_admin_shipping_fee()`, `:227-233`). Shipping tax is a separate amount with its own recipient; see [ADR-0037](./0037-shipping-tax-goes-to-the-shipping-tax-fee-recipient-and-falls-back-to-the-product-tax-recipient.md).
 - The recipient is all-or-nothing: exactly one of the two getters returns the amount, the other returns 0.
-- On a Suborder, the shipping total is the sum of the parent's shipping lines whose `seller_id` item meta matches that Vendor (`Manager::create_shipping()`, `lite:includes/Order/Manager.php:757-811`; the list passes through the filter `dokan_shipping_methods` at `:788`). Which shipping lines a Vendor gets is a shipping-method concern and is out of scope here.
+- On a Suborder, the shipping total is the sum of the parent's shipping lines whose `seller_id` item meta matches that Vendor (`Manager::create_shipping()`, `lite:includes/Order/Manager.php:804-858`; the list passes through the filter `dokan_shipping_methods` at `:835`). Which shipping lines a Vendor gets is a shipping-method concern and is out of scope here.
 - **Refunds.** When a refund includes shipping lines, the refunded shipping is charged back to whoever is the shipping recipient: `OrderRefundCommission::get_shipping_refund_for()` returns the refunded shipping only for the matching recipient (`lite:includes/Commission/OrderRefundCommission.php:387-399`), and it is included in `get_vendor_total_refund()` / `get_admin_total_refund()` (`:287-317`).
 
 ## Settings that change it
@@ -20,7 +20,7 @@ Every Vendor order that ships has one or more WooCommerce shipping lines. The ma
 |---|---|---|---|
 | `dokan_selling[shipping_fee_recipient]` (admin UI: Transaction → Fees → "Shipping Fee", `lite:includes/Admin/Settings/Schema/SettingsSchema.php:561-584`; legacy screen `lite:includes/Admin/Settings.php:605-615`) | `seller` (shown as "Vendor"), `admin` | `seller` | `seller`: shipping is added to the Vendor's Earning. `admin`: shipping is added to the admin's total and the Vendor gets none of it. |
 
-The setup wizard and onboarding also write this key (`lite:includes/Admin/SetupWizard.php:483-529`, `lite:includes/Admin/OnboardingSetup/Steps/BasicStep.php:52`). Changing it affects only orders whose recipient has not yet been resolved.
+The setup wizard and onboarding also write this key (`lite:includes/Admin/SetupWizard.php:483`, `:527`, `lite:includes/Admin/OnboardingSetup/Steps/BasicStep.php:52`). Changing it affects only orders whose recipient has not yet been resolved.
 
 ## Worked example
 
@@ -52,4 +52,4 @@ Most marketplaces let Vendors ship their own goods and pay the carrier, so the V
 - Treat the `shipping_fee_recipient` order meta as part of the financial record (see Lite ADR 0013).
 - If per-Vendor shipping recipients are ever needed, implement them as an earlier-priority `dokan_shipping_fee_recipient` filter so the freeze still captures the result.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

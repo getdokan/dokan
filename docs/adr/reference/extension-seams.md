@@ -58,7 +58,7 @@ Dokan Lite is designed to be extended in place. Add-ons do not call a separate A
 | `dokan_is_dashboard_nav_dependency_resolved` | filter | `lite:includes/VendorNavMenuChecker.php:163` | Force a route to the React or legacy page. | Yes |
 | `dokan_get_navigation_url` | filter | `lite:includes/functions.php:2131` | Final Vendor dashboard URL for a page name. | Yes |
 | `dokan_rest_api_class_map` | filter | `lite:includes/REST/Manager.php:225` | Map of controller file → controller class registered on `rest_api_init`. | Yes |
-| `dokan_admin_menu` | action | `lite:includes/Admin/Menu.php:71` | Add submenu pages under the Dokan admin menu. | Yes |
+| `dokan_admin_menu` | action | `lite:includes/Admin/Menu.php:72` | Add submenu pages under the Dokan admin menu. | Yes |
 | `dokan_menu_capability` | filter | `lite:includes/functions.php:41` | Capability for the Dokan admin menu (default `manage_woocommerce`). | Not found in Pro |
 | `dokan-admin-routes` | filter | `lite:includes/Assets.php:288` | Legacy Vue admin SPA routes. | Yes |
 | `dokan_admin_dashboard_pages` | filter | `lite:includes/Admin/Dashboard/Dashboard.php:72` | React admin dashboard pages (`Pageable` objects). | Yes (through `AbstractPage` subclasses) |
@@ -71,16 +71,16 @@ Dokan Lite is designed to be extended in place. Add-ons do not call a separate A
 | `dokan_cli_commands` | filter | `lite:includes/CLI/Manager.php:40` | `wp dokan <command>` registry ([ADR-0008](../0008-lite-owns-the-wp-dokan-cli-namespace.md)). | Yes |
 | `dokan_upgrade_upgrades` | filter | `lite:includes/Upgrade/Manager.php:59` | Versioned upgrader classes. | Yes |
 | `dokan_register_scripts` | action | `lite:includes/Assets.php:308` | After Lite registers all its scripts and styles. | Yes |
-| `dokan_enqueue_scripts` | action | `lite:includes/Assets.php:1020` | After Lite enqueues frontend scripts. | Yes |
+| `dokan_enqueue_scripts` | action | `lite:includes/Assets.php:1022` | After Lite enqueues frontend scripts. | Yes |
 | `dokan_enqueue_admin_scripts` | action | `lite:includes/Assets.php:150` | After Lite enqueues admin scripts. | Yes |
 | `dokan-vue-admin-scripts` | action | `lite:includes/Assets.php:109` | Before the legacy Vue admin app script is enqueued. | Yes |
-| `dokan_admin_localize_script` | filter | `lite:includes/Assets.php:1473` | Data localized to the legacy Vue admin app (`window.dokan`). | Yes |
-| `dokan_localized_args` | filter | `lite:includes/Assets.php:902` | Data localized to frontend scripts. | Yes |
-| `dokan_react_frontend_localized_args` | filter | `lite:includes/Assets.php:1103` | Data localized as `window.dokanFrontend`. | Yes |
-| `dokan-dashboard-routes` | JS filter (`wp.hooks`) | `lite:src/routing/index.tsx:76` | Vendor dashboard React routes. | Yes |
+| `dokan_admin_localize_script` | filter | `lite:includes/Assets.php:1477` | Data localized to the legacy Vue admin app (`window.dokan`). | Yes |
+| `dokan_localized_args` | filter | `lite:includes/Assets.php:904` | Data localized to frontend scripts. | Yes |
+| `dokan_react_frontend_localized_args` | filter | `lite:includes/Assets.php:1107` | Data localized as `window.dokanFrontend`. | Yes |
+| `dokan-dashboard-routes` | JS filter (`wp.hooks`) | `lite:src/routing/index.tsx:89` | Vendor dashboard React routes. | Yes |
 | `dokan-admin-dashboard-routes` | JS filter (`wp.hooks`) | `lite:src/admin/dashboard/components/Dashboard.tsx:110` | React admin dashboard routes. | Yes |
-| `Slot` / `PluginArea` | JS components | `lite:src/layout/index.tsx:118-128`, `lite:src/admin/dashboard/components/Layout.tsx:23-34` | Named fill points and plugin scopes inside both React apps. | Yes |
-| `dokan_add_route` / `window.dokan.libs` | JS globals | `lite:src/utils/Bootstrap.js:87-133` | Legacy Vue admin route components and shared libraries. | Yes |
+| `Slot` / `PluginArea` | JS components | `lite:src/layout/index.tsx:118-130`, `lite:src/admin/dashboard/components/Layout.tsx:23-37` | Named fill points and plugin scopes inside both React apps. | Yes |
+| `dokan_add_route` / `window.dokan.libs` | JS globals | `lite:src/utils/Bootstrap.js:87-143` | Legacy Vue admin route components and shared libraries. | Yes |
 
 **Related ADRs:** [ADR-0001](../0001-single-bounded-context-across-lite-and-pro.md) (single bounded context; Pro depends on Lite), [ADR-0016](../0016-services-are-resolved-eagerly-from-a-tagged-container.md) (tagged container and the `Hookable` pass), [ADR-0017](../0017-rest-versions-are-additive-controller-subclasses.md) (REST controllers in the class map), [ADR-0019](../0019-schema-migrations-are-version-named-upgrader-classes.md) (`dokan_upgrade_upgrades`), [ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md) and [ADR-0003](../0003-settings-legacy-mirror-mode.md) (settings filters), [ADR-0008](../0008-lite-owns-the-wp-dokan-cli-namespace.md) (`dokan_cli_commands`).
 
@@ -134,8 +134,8 @@ Lite uses two techniques to detect Pro. Neither is defined in a way that is spec
 | Technique | Location | Behavior |
 |---|---|---|
 | `dokan()->is_pro_exists()` | `lite:dokan-class.php:404` | Returns `apply_filters( 'dokan_is_pro_exists', false )`. This is the filterable check. Pro flips it to `true`; tests can also override it (see the comment at `lite:includes/Admin/Settings/Schema/SettingsSchema.php:39-42`). Used for example to gate Pro-only settings fields (`SettingsSchema::get_schema`), to hide the "Get Pro" link (`WeDevs_Dokan::plugin_action_links`), and to fill `hasPro`, `proNag` and `proVersion` in the admin localization (`Assets::get_admin_localized_scripts`). |
-| `function_exists( 'dokan_pro' )` | 9 lines across `includes/`, `templates/` and `dokan-class.php`, for example `lite:dokan-class.php:290`, `lite:includes/Order/Admin/Hooks.php:444`, `lite:includes/Product/Hooks.php:430`, and templates under `lite:templates/settings/`, `lite:templates/products/` and `lite:templates/withdraw/` | Checks whether Pro's global accessor function is defined. `dokan_pro()` is **not** defined by Lite. `includes()` uses it to skip loading `includes/reports.php` when Pro is present. Some Lite templates additionally ask Pro whether a given Pro module is active before showing UI. |
-| `DOKAN_PRO_PLUGIN_VERSION` | `lite:includes/Admin/Menu.php:66` | Read only after `is_pro_exists()` returns `true`, to decide whether Lite registers the legacy "Vendors" submenu. |
+| `function_exists( 'dokan_pro' )` | 9 lines across `includes/`, `templates/` and `dokan-class.php`, for example `lite:dokan-class.php:290`, `lite:includes/Order/Admin/Hooks.php:444`, `lite:includes/Product/Hooks.php:476`, and templates under `lite:templates/settings/`, `lite:templates/products/` and `lite:templates/withdraw/` | Checks whether Pro's global accessor function is defined. `dokan_pro()` is **not** defined by Lite. `includes()` uses it to skip loading `includes/reports.php` when Pro is present. Some Lite templates additionally ask Pro whether a given Pro module is active before showing UI. |
+| `DOKAN_PRO_PLUGIN_VERSION` | `lite:includes/Admin/Menu.php:67` | Read only after `is_pro_exists()` returns `true`, to decide whether Lite registers the legacy "Vendors" submenu. |
 
 A third-party add-on that is not Pro should not filter `dokan_is_pro_exists`, because Lite treats a `true` result as permission to call Pro's accessor (for example `dokan_pro()->version` in `Assets::get_admin_localized_scripts`).
 
@@ -236,8 +236,9 @@ flowchart TD
 
 1. `dokan_get_dashboard_nav()` (`lite:includes/functions-dashboard-navigation.php:32`) builds the default menus. Each item may carry `title`, `icon`, `icon_name`, `url`, `pos`, `permission`, `react_route` and `submenu`.
 2. `dokan_get_dashboard_settings_nav` (`:107`) filters the Settings submenu, then `dokan_get_dashboard_nav` (`:114`) filters the full menu.
-3. For each menu, `dokan_dashboard_nav_submenu` (`:131`) filters its submenu. Missing `pos` defaults to 190 for menus and 200 for submenu items. Items are sorted by `pos` and filtered through `dokan_check_menu_permission()` (`:176`), which hides an item whose `permission` capability the current user lacks. A menu with no submenu is kept as is (the submenu step is skipped for it). A menu that had submenu items but lost all of them to the permission filter is removed.
-4. `dokan_dashboard_nav()` (`:198`) renders the menu; it exposes presentation filters such as `dokan_dashboard_nav_menu_key`, `dokan_vendor_dashboard_menu_title` and `dokan_dashboard_nav_common_link`.
+3. For each menu, `dokan_dashboard_nav_submenu` (`:131`) filters its submenu. Missing `pos` defaults to 190 for menus and 200 for submenu items. Items are sorted by `pos` and filtered through `dokan_check_menu_permission()` (`:207`), which hides an item whose `permission` capability the current user lacks. A menu with no submenu is kept as is (the submenu step is skipped for it). A menu that had submenu items but lost all of them to the permission filter is removed.
+4. `dokan_dashboard_nav()` (`:229`) renders the menu; it exposes presentation filters such as `dokan_dashboard_nav_menu_key`, `dokan_vendor_dashboard_menu_title` and `dokan_dashboard_nav_common_link`.
+5. `dokan_get_restricted_dashboard_routes()` (`:178`) collects the URL-hash routes of menu items whose `is_switched_on` flag is `false` (items the Store Admin turned off in the Menu Manager). The result is localized as `window.dokanFrontend.restrictedRoutes`, and `withRouter()` renders the 403 page for those routes.
 5. To serve a new legacy PHP page, an add-on adds its endpoint with `dokan_query_var_filter` (`lite:includes/Rewrites.php:84`). Each var becomes an `EP_PAGES` rewrite endpoint. `dokan_rewrite_rules_loaded` (`lite:includes/Rewrites.php:134`) fires after Lite's rules are added.
 6. The dashboard shortcode (`Dashboard::render_shortcode`) checks that the user is a Vendor, filters `$wp->query_vars` through `dokan_dashboard_shortcode_query_vars`, renders Lite's own pages (each guarded by a capability), and otherwise fires `dokan_load_custom_template` with the query vars (`lite:includes/Shortcodes/Dashboard.php:123`). The add-on renders its template from that action. The new-product page is delegated to `dokan_render_new_product_template` (`lite:includes/Shortcodes/Dashboard.php:66`).
 
@@ -274,7 +275,7 @@ Add-ons add `__FILE__ => My\Controller::class` pairs. The array literal in Lite 
 
 ### 4.7 Admin page registration
 
-- **Admin menu.** `Menu::add_admin_menu()` registers the Dokan top-level menu with `dokan_admin_menu_capability()` (filter `dokan_menu_capability`, default `manage_woocommerce`, `lite:includes/functions.php:40-41`) and fires `dokan_admin_menu( $capability, $menu_position )` (`lite:includes/Admin/Menu.php:71`), then `dokan_admin_menu_after_help` and `dokan_admin_menu_after_settings`.
+- **Admin menu.** `Menu::add_admin_menu()` registers the Dokan top-level menu with `dokan_admin_menu_capability()` (filter `dokan_menu_capability`, default `manage_woocommerce`, `lite:includes/functions.php:40-41`) and fires `dokan_admin_menu( $capability, $menu_position )` (`lite:includes/Admin/Menu.php:72`), then `dokan_admin_menu_after_help` and `dokan_admin_menu_after_settings`.
 - **Legacy Vue admin SPA.** Routes come from `Assets::get_vue_admin_routes()` through `dokan-admin-routes` (`lite:includes/Assets.php:223`, `:288`) and are localized as `routes`. An add-on enqueues its bundle on `dokan-vue-admin-scripts` (`:109`), which runs after `dokan-vue-bootstrap` and before `dokan-vue-admin`, and calls `dokan_add_route( Component )` (`lite:src/utils/Bootstrap.js:91`) so the component is found by name in `window.dokan.routeComponents`.
 - **React admin dashboard.** `Dashboard::get_pages()` (`lite:includes/Admin/Dashboard/Dashboard.php:71`) applies `dokan_admin_dashboard_pages` and throws `InvalidArgumentException` for any entry that is not a `Pageable`. `register_menu()` (hooked to `dokan_admin_menu` priority 99, `:53`) adds a submenu link `admin.php?page=dokan-dashboard#/{route}` per page. The simplest way to add a page is to extend `AbstractPage` and register it in the container: as a `Hookable`, it enlists itself on `dokan_admin_dashboard_pages` on admin requests only, since `AbstractPage::register_hooks` returns early when `is_admin()` is false (`lite:includes/Admin/Dashboard/Pages/AbstractPage.php:18-22`). Per-page settings pass through `dokan_admin_dashboard_page_settings` (`:272`) and the whole payload through `dokan_admin_dashboard_pages_settings` (`:282`). The page's React component is contributed through the `dokan-admin-dashboard-routes` JS filter (section 4.8).
 
@@ -284,18 +285,18 @@ Add-ons add `__FILE__ => My\Controller::class` pairs. The array literal in Lite 
 
 | Filter | Fired at | Value | Notes |
 |---|---|---|---|
-| `dokan-dashboard-routes` | `lite:src/routing/index.tsx:76` | `Array<DokanRoute>` | Evaluated by `getRoutes()` inside the Vendor dashboard `App` component (`lite:src/dashboard/index.tsx:31`). Lite appends a catch-all `dokan-404` route after the filter. Wrap components with the exported `withRouter( Component, capabilities )` to receive router props and a capability check that renders the 403 page. |
+| `dokan-dashboard-routes` | `lite:src/routing/index.tsx:89` | `Array<DokanRoute>` | Evaluated by `getRoutes()` inside the Vendor dashboard `App` component (`lite:src/dashboard/index.tsx:31`). Lite appends a catch-all `dokan-404` route after the filter. Wrap components with the exported `withRouter( Component, capabilities, routePath )` to receive router props and a check that renders the 403 page when a capability is missing or `routePath` is in `window.dokanFrontend.restrictedRoutes`. |
 | `dokan-admin-dashboard-routes` | `lite:src/admin/dashboard/components/Dashboard.tsx:110` | `Array<DokanAdminRoute>` | Lite appends a catch-all `dokan-404` route after the filter. |
 
 **Slot/Fill and `PluginArea`.** Both React apps wrap their layout in `SlotFillProvider` and render a `PluginArea`, so a plugin registered with `@wordpress/plugins` can render `Fill`s:
 
-- Vendor dashboard: `SlotFillProvider` and `<PluginArea scope={ route.id } />` in `lite:src/layout/index.tsx:118-128`. Layout slots include `dokan-before-header`, `dokan-header-after-title`, `dokan-header-actions` and `dokan-after-header` (`lite:src/layout/Header.tsx`), `dokan-layout-content-area-before` / `-after` (`lite:src/layout/ContentArea.tsx:9-11`), `dokan-footer-area` (`lite:src/layout/Footer.tsx:4`), and before/after slots on the 403, 404 and 500 pages. Shared components add namespaced slots, for example `dokan-before-vendor-data-table-${ tableNameSpace }` (`lite:src/components/dataviews/DataViewTable.tsx:150`).
-- Admin dashboard: `SlotFillProvider` and `<PluginArea scope={ 'dokan-admin-dashboard-' + route.id } />` in `lite:src/admin/dashboard/components/Layout.tsx:23-34`.
+- Vendor dashboard: `SlotFillProvider` and `<PluginArea scope={ route.id } />` in `lite:src/layout/index.tsx:118-130`. Layout slots include `dokan-before-header`, `dokan-header-after-title`, `dokan-header-actions` and `dokan-after-header` (`lite:src/layout/Header.tsx`), `dokan-layout-content-area-before` / `-after` (`lite:src/layout/ContentArea.tsx:9-11`), `dokan-footer-area` (`lite:src/layout/Footer.tsx:4`), and before/after slots on the 403, 404 and 500 pages. Shared components add namespaced slots, for example `dokan-before-vendor-data-table-${ tableNameSpace }` (`lite:src/components/dataviews/DataViewTable.tsx:150`).
+- Admin dashboard: `SlotFillProvider` and `<PluginArea scope={ 'dokan-admin-dashboard-' + route.id } />` in `lite:src/admin/dashboard/components/Layout.tsx:23-37`.
 - The slot catalogue and conventions are in [docs/slots/](../../slots/README.md).
 
 **Other `wp.hooks` filters.** Lite fires many component-level filters, for example `dokan_product_list_table_fields`, `dokan_product_list_table_actions`, `dokan_admin_dashboard_tools_sections`, `dokan-admin-vendor-tabs` and `dokan_vendor_add_edit_commission_types`. In the legacy Vue code, `dokan.hooks` is an alias for `window.wp.hooks` (`lite:src/utils/Bootstrap.js:146`), so `dokan.hooks.applyFilters( 'getDokanAppCustomComponents', [] )` (`lite:src/admin/App.vue:21`) is the same bus.
 
-**`window.dokan` globals.** Webpack exposes shared bundles on `window.dokan` using `library: { name: [ 'dokan', ... ], type: 'window' }` (`lite:webpack-entries.js:56-99`, `lite:webpack.config.js:35-67`). Exposed names include `components`, `utilities`, `reactHooks`, `coreStore`, `vendorsStore`, `productsStore`, `productCategoriesStore`, `productEditorStore`, `productEditor`, `dokanUI` and `pluginUI`. The matching WordPress script handles are registered in `Assets::get_scripts()`, for example `dokan-react-components`, `dokan-utilities`, `dokan-hooks` and `dokan-stores-core` (`lite:includes/Assets.php:654-699`). An add-on bundle should declare these handles as script dependencies so the globals exist when it runs. The legacy Vue libraries are on `window.dokan.libs` (`lite:src/utils/Bootstrap.js:97-133`) and are read with `dokan_get_lib( name )`.
+**`window.dokan` globals.** Webpack exposes shared bundles on `window.dokan` using `library: { name: [ 'dokan', ... ], type: 'window' }` (`lite:webpack-entries.js:54-103`, `lite:webpack.config.js:35-69`). Exposed names include `components`, `utilities`, `reactHooks`, `coreStore`, `vendorsStore`, `productsStore`, `productCategoriesStore`, `productEditorStore`, `productEditor`, `dokanUI` and `pluginUI`. The matching WordPress script handles are registered in `Assets::get_scripts()`, for example `dokan-react-components`, `dokan-utilities`, `dokan-hooks` and `dokan-stores-core` (`lite:includes/Assets.php:654-697`). An add-on bundle should declare these handles as script dependencies so the globals exist when it runs. The legacy Vue libraries are on `window.dokan.libs` (`lite:src/utils/Bootstrap.js:97-143`) and are read with `dokan_get_lib( name )`.
 
 ---
 
@@ -314,8 +315,8 @@ The table in section 1.1 lists the main seams with their fire sites. Additional 
 | `dokan_get_url_for_react_route` | filter | `lite:includes/VendorNavMenuChecker.php:196` | Route fragment used in the React URL. |
 | `dokan_admin_menu_after_help`, `dokan_admin_menu_after_settings` | action | `Menu::add_admin_menu` | Positioned admin submenu insertion points. |
 | `dokan_admin_dashboard_page_settings` | filter | `lite:includes/Admin/Dashboard/Dashboard.php:272` | Settings of one React admin page. |
-| `dokan_enqueue_admin_dashboard_script` | action | `lite:includes/Admin/Menu.php:187` | While the admin dashboard page renders. |
-| `dokan-frontend-routes` | filter | `lite:includes/Assets.php:295` | Legacy Vue frontend routes, localized as `routes` in the frontend localization (`:913`). |
+| `dokan_enqueue_admin_dashboard_script` | action | `lite:includes/Admin/Menu.php:191` | While the admin dashboard page renders. |
+| `dokan-frontend-routes` | filter | `lite:includes/Assets.php:295` | Legacy Vue frontend routes, localized as `routes` in the frontend localization (`:915`). |
 | `dokan_settings_general_site_options` and other `dokan_settings_*` filters | filter | `Settings::get_settings_fields` | Per-section legacy field arrays. |
 | `dokan_admin_settings_schema_*` | filter/action | `SchemaValidator` | Validation behavior of the flat schema. |
 
@@ -331,7 +332,7 @@ The table in section 1.1 lists the main seams with their fire sites. Additional 
 | `woocommerce_email_classes` | [WooCommerce] | `wc:includes/class-wc-emails.php:339` | `Emails\Manager::load_dokan_emails` (priority 35, `lite:includes/Emails/Manager.php:17`) | Adds Dokan emails, then fires `dokan_email_classes`. |
 | `dokan_get_dashboard_nav` | [Lite] | `lite:includes/functions-dashboard-navigation.php:114` | `VendorNavMenuChecker::convert_to_react_menu` (999) | React-route conversion. |
 | `dokan_get_navigation_url` | [Lite] | `lite:includes/functions.php:2131` | `VendorNavMenuChecker::maybe_rewrite_to_react_route` (5) | React URL rewriting. |
-| `dokan_admin_menu` | [Lite] | `lite:includes/Admin/Menu.php:71` | `Admin\Dashboard\Dashboard::register_menu` (99) | React admin page submenus. |
+| `dokan_admin_menu` | [Lite] | `lite:includes/Admin/Menu.php:72` | `Admin\Dashboard\Dashboard::register_menu` (99) | React admin page submenus. |
 | `dokan_admin_dashboard_pages` | [Lite] | `lite:includes/Admin/Dashboard/Dashboard.php:72` | `AbstractPage::enlist` | Self-registration of pages. |
 
 ---
@@ -435,7 +436,7 @@ Controllers added through `dokan_rest_api_class_map` define their own routes and
 ## Known gaps
 
 - Lite fires no filter or action for container service registration. `Container` is an empty League subclass, so add-ons rely on calling League's API (`addServiceProvider()`, `extend()`) on the shared instance. The exact timing guarantees for providers added after `woocommerce_loaded` (for example whether their `Hookable` services are ever registered) were not traced beyond `init_hooks()`.
-- "Consumed by Pro" was determined by single-line grep for `add_filter`/`add_action`/`addFilter` with an exact quoted hook name, plus `AbstractPage` subclass and `Fill` counts. Multiline registrations, dynamic hook names, or indirect consumption may be missed; seams marked "Not found in Pro" may still be used. Positioned admin-menu actions (`dokan_admin_menu_after_help` at `lite:includes/Admin/Menu.php:90`, `dokan_admin_menu_after_settings` at `:108`) were not checked against Pro.
+- "Consumed by Pro" was determined by single-line grep for `add_filter`/`add_action`/`addFilter` with an exact quoted hook name, plus `AbstractPage` subclass and `Fill` counts. Multiline registrations, dynamic hook names, or indirect consumption may be missed; seams marked "Not found in Pro" may still be used. Positioned admin-menu actions (`dokan_admin_menu_after_help` at `lite:includes/Admin/Menu.php:91`, `dokan_admin_menu_after_settings` at `:112`) were not checked against Pro.
 - `docs/settings/extending.md` names the flat option `dokan_settings`, while the code uses `dokan_admin_settings` (`SettingsRepository::OPTION_KEY`) and the ADRs agree with the code.
 - `docs/feature-override/readme.md` carries a TODO header, uses `route` and `react_route` interchangeably, and names `dokan_is_dashboard_nav_dependency_cleared` in prose while the code fires `dokan_is_dashboard_nav_dependency_resolved`. Its Lite dependency example (`''` and `products` routes) does not match the current list in `VendorNavMenuChecker` (`settings/store` and `withdraw`).
 - `docs/slots/dashboard-layout-slots.md` does not list every `Slot` used in `src/` (for example `dokan-header-after-title`, the error-page slots, and component slots in `DokanModal`, `Tab`, `AdminTab`, `sortable-list` and the admin Vendor pages). A complete slot catalogue was not compiled here.
@@ -443,4 +444,4 @@ Controllers added through `dokan_rest_api_class_map` define their own routes and
 - The exact moment at which an add-on's `dokan-dashboard-routes` filter must be registered was inferred from `getRoutes()` being called inside the `App` component; the mounting code after `domReady` was not traced line by line, and Lite does not document a required script dependency for add-on route bundles.
 - The full list of component-level `wp.hooks` filters in `src/` (roughly 75 files call `applyFilters`) is not enumerated here.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

@@ -14,12 +14,12 @@ A level's setting is used when its percentage **or** its flat value, trimmed, is
 - An empty string means "not set at this level", and resolution continues with the next level (`AbstractStrategy::get_eligible_strategy()`, `lite:includes/Commission/Strategies/AbstractStrategy.php:55-63`).
 - Once a level is chosen, an empty half of its formula counts as zero: `get_percentage_value()` and `get_flat_value()` use `floatval()` (`lite:includes/Commission/Model/Setting.php:220-222`, `:263-265`).
 
-The product editor states this intent to the admin: "When the value is 0, no commissions will be deducted from this vendor." (`lite:includes/Product/Hooks.php:521-522`). The global category-based description says the same for categories: "If 0 is given in value, then the marketplace will deduct no commission from vendors" (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:728`).
+The product editor states this intent to the admin: "When the value is 0, no commissions will be deducted from this vendor." (`lite:includes/Product/Hooks.php:567-568`). The global category-based description says the same for categories: "If 0 is given in value, then the marketplace will deduct no commission from vendors" (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:725`).
 
 The save paths preserve the difference between `''` and `0`:
 
-- Product: `Hooks::save_per_product_commission_options()` keeps `''` when the field is submitted empty and stores the formatted number otherwise (`lite:includes/Product/Hooks.php:563-603`).
-- Vendor: `Vendor\Manager::create()` and `update()` accept either a numeric value or `''` (`lite:includes/Vendor/Manager.php:289-295`, `:413-419`).
+- Product: `Hooks::save_per_product_commission_options()` keeps `''` when the field is submitted empty and stores the formatted number otherwise (`lite:includes/Product/Hooks.php:609-649`).
+- Vendor: `Vendor\Manager::create()` and `update()` accept either a numeric value or `''` (`lite:includes/Vendor/Manager.php:296-302`, `:432-438`).
 
 ## Settings that change it
 
@@ -31,8 +31,10 @@ The save paths preserve the difference between `''` and `0`:
 
 Validation that can turn a typed value into an empty one:
 
-- Product percentage outside 0–100 is discarded and stored as `''` (`lite:includes/Product/Hooks.php:577-583`); a negative product flat fee is stored as `''` (`:585-593`). The product then falls through to the Vendor or global Commission formula rather than charging zero.
-- When the global `commission_type` being saved is `flat` or `fixed` (`$clickable_types = [ 'flat', 'fixed' ]`, `lite:includes/Admin/Settings.php:96`), a global percentage outside 0–100 is replaced by the previously saved value (`Settings::validate_fixed_price_values()`, `lite:includes/Admin/Settings.php:95-108`). The new settings page requires both global fields to be non-empty (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:705-712`).
+- Product percentage outside 0–100 is discarded and stored as `''` (`lite:includes/Product/Hooks.php:623-629`); a negative product flat fee is stored as `''` (`:631-639`). What happens next depends on the other field:
+  - If the other field is also empty, the product level is not applicable and the product falls through to the Vendor or global Commission formula rather than charging zero.
+  - If the other field holds a value, `is_applicable()` still passes, so the product level wins with the discarded half counted as 0. An out-of-range percentage with a flat fee of 1.00 charges 0 % + 1.00 per unit; a negative flat fee with a valid percentage charges that percentage and no flat fee.
+- When the global `commission_type` being saved is `flat` or `fixed` (`$clickable_types = [ 'flat', 'fixed' ]`, `lite:includes/Admin/Settings.php:96`), a global percentage outside 0–100 is replaced by the previously saved value (`Settings::validate_fixed_price_values()`, `lite:includes/Admin/Settings.php:95-108`). The new settings page requires both global fields to be non-empty (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:701-709`).
 
 ## Worked example
 
@@ -41,7 +43,10 @@ Settings: global `fixed`, 10 % + 2.00. Vendor V: case A `dokan_admin_percentage 
 - Case A: Vendor level is applicable. Commission = 50 × 0 % + 0 = 0.00. Earning = 50.00.
 - Case B: Vendor level is skipped, global applies. Commission = 50 × 10 % + 2.00 = 7.00. Earning = 43.00.
 
-Product variant: product percentage typed as `150` → stored as `''` → with case B the Vendor level is skipped too, so Commission is again 7.00 from the global Commission formula, not 150 % and not 0.
+Product variants, both with Vendor V as in case B:
+
+- Product percentage typed as `150`, product flat fee left empty → percentage stored as `''`, so both product fields are empty and the product level is skipped. The Vendor level is skipped too, so Commission is again 7.00 from the global Commission formula, not 150 % and not 0.
+- Product percentage typed as `150`, product flat fee `1.00` → percentage stored as `''`, but the flat fee keeps the product level applicable. Commission = 50 × 0 % + 1.00 × 1 = 1.00. Earning = 49.00.
 
 ## Edge cases
 
@@ -56,11 +61,11 @@ The UI copy on both the product field and the category table explicitly promises
 ## Consequences & risks
 
 - Reports cannot tell "zero by choice" from "zero because nothing applies" without looking at the frozen `_dokan_commission_source` item meta.
-- Silent normalisation of out-of-range product values to `''` means a typo makes the product inherit a different, usually higher, Commission formula instead of producing an error.
+- Silent normalisation of out-of-range product values to `''` means a typo produces no error. When the other field is empty, the product inherits a different, usually higher, Commission formula; when the other field is set, the product charges only that other half.
 
 ## Recommendations
 
 - Reject out-of-range product commission values with a visible error instead of storing `''`.
 - In the Vendor and product UIs, label empty fields "Inherit" and show the inherited Commission formula, so `''` and `0` are visibly different.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

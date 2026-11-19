@@ -65,7 +65,7 @@ Single-vendor variant: one Vendor order of 118.80 paid with a 3.75 fee gives a f
 
 ## Edge cases
 
-- **Fee arrives before the order is synced.** Vendor orders without a `dokan_orders` row are skipped; because the hook also fires on later status changes, the fee is applied on the next status change after the row exists.
+- **Fee arrives before the order is synced.** Vendor orders without a `dokan_orders` row are skipped; because the hook also fires on later status changes, the fee is applied on the next status change of the paid parent Order after the row exists. It has to be the parent's status change: the processing fee meta sits on the paid Order, and a status change on a Suborder alone normally finds no fee meta on the Suborder, so the routine returns early (`:60-64`, `:126-141`).
 - **Applied once.** The `dokan_gateway_fee` meta check prevents a second deduction when several hooks fire. A gateway integration that writes `dokan_gateway_fee` itself before the status change therefore takes over and Lite's routine skips that Vendor order.
 - **Order total of zero.** The routine assumes a non-zero Order total; orders with a zero total do not report a processing fee in practice.
 - **Parent fee lines.** Fee lines that stay on a multi-vendor parent are part of the Order total used as the denominator, so the Vendor orders' shares sum to less than the full fee and the remainder is not charged to anyone's Earning.
@@ -86,4 +86,4 @@ PayPal Standard and its successors report a single fee per payment and know noth
 - Write `dokan_gateway_fee_paid_by` explicitly in Lite's routine instead of relying on the empty-value fallback.
 - Round the prorated fee to `wc_get_price_decimals()`.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

@@ -19,15 +19,15 @@ This ADR documents the mechanism only. It does not restate or re-argue ADR-0004.
 
 `dokan_sync_insert_order` is registered on the same two hooks at priority 20 (`lite:includes/Order/Hooks.php:45-46`) so that a single-vendor Order is synced into Dokan's tables after the split has tagged it.
 
-**Split.** `Order\Manager::maybe_split_orders()` (`lite:includes/Order/Manager.php:896`):
+**Split.** `Order\Manager::maybe_split_orders()` (`lite:includes/Order/Manager.php:943-1009`):
 
-1. Returns at once if the Order already carries `_dokan_vendor_id` (`:910`). That meta is both "this is a Vendor order" and the idempotency marker that makes repeated calls harmless.
+1. Returns at once if the Order already carries `_dokan_vendor_id` (`:957`). That meta is both "this is a Vendor order" and the idempotency marker that makes repeated calls harmless.
 2. Deletes existing child orders first when called with `$force_create` or when `has_sub_order` is already set.
 3. Groups line items by Vendor with `dokan_get_sellers_by()`, which reads each product's `post_author` ([ADR-0011](./0011-product-ownership-is-post-author.md)).
-4. **One Vendor:** fires `dokan_create_parent_order`, writes `_dokan_vendor_id` on the Order itself (`:940`), saves, and fires `dokan_checkout_update_order_meta`. No Suborder is created.
+4. **One Vendor:** fires `dokan_create_parent_order`, writes `_dokan_vendor_id` on the Order itself (`:987`), saves, and fires `dokan_checkout_update_order_meta`. No Suborder is created.
 5. **Several Vendors:** writes `has_sub_order = true` on the parent, saves, then calls `create_sub_order()` once per Vendor.
 
-**Suborder construction.** `Order\Manager::create_sub_order()` (`lite:includes/Order/Manager.php:582`) builds a new `WC_Order` with `created_via = dokan` (`:612`) and `_dokan_vendor_id` (`:622`), copies customer, addresses, currency and payment method, clones the Vendor's line items (adding `_dokan_parent_order_item_id`), copies shipping lines whose `seller_id` item meta matches, rebuilds tax and coupon lines, fires `dokan_create_sub_order_before_calculate_totals`, runs `calculate_totals()`, copies the parent's status, links the parent with `set_parent_id()` (`:653`), saves, updates total sales, and fires `dokan_checkout_update_order_meta( $suborder_id, $seller_id )`. Any `Throwable` is logged and returned as `WP_Error( 'dokan-suborder-error' )`.
+**Suborder construction.** `Order\Manager::create_sub_order()` (`lite:includes/Order/Manager.php:627-715`) builds a new `WC_Order` with `created_via = dokan` (`:657`) and `_dokan_vendor_id` (`:667`), copies customer, addresses, currency and payment method, clones the Vendor's line items (adding `_dokan_parent_order_item_id`), copies shipping lines whose `seller_id` item meta matches, rebuilds tax and coupon lines, fires `dokan_create_sub_order_before_calculate_totals`, runs `calculate_totals()`, copies the parent's status, links the parent with `set_parent_id()` (`:700`), saves, updates total sales, and fires `dokan_checkout_update_order_meta( $suborder_id, $seller_id )`. Any `Throwable` is logged and returned as `WP_Error( 'dokan-suborder-error' )`.
 
 **Orders created outside checkout.** Orders created in WP-admin are split lazily: `Hooks::on_order_status_change` calls `maybe_split_orders()` when an order with no parent and no `has_sub_order` changes status in admin (`lite:includes/Order/Hooks.php:100-109`), and `dokan_sync_insert_order` also runs on `woocommerce_process_shop_order_meta` priority 60 in admin (`lite:includes/Order/Hooks.php:54-56`; WooCommerce fires it at `wc:includes/admin/class-wc-admin-meta-boxes.php:262` and `wc:src/Internal/Admin/Orders/Edit.php:318`). The status listener runs on `woocommerce_order_status_changed`, fired at `wc:includes/class-wc-order.php:478`.
 
@@ -81,4 +81,4 @@ sequenceDiagram
 - Behaviour when a Suborder is created already in a final status, and whether a status transition then follows for the ledger row, is listed as a gap in `docs/adr/reference/orders-commission-fees.md`.
 - Whether any supported payment gateway creates orders through a path that fires neither checkout hook was not surveyed.
 
-_Verified against Lite @63ad89353 / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-10-14._
+_Verified against Lite @fbae0ce7d / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-11-19._

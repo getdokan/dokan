@@ -186,7 +186,7 @@ Because the definitions are shared, `dokan()->order` always returns the same `Or
 
 ### 3.2 Service providers
 
-All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceProvider::boot()` adds them in this order (`ServiceProvider.php:60-75`).
+All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceProvider::boot()` adds them in this order (`ServiceProvider.php:60-74`).
 
 | Provider | Tag(s) | Shared? | Services |
 |---|---|---|---|
@@ -201,7 +201,7 @@ All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceP
 | `AdminDashboardServiceProvider` | `admin-dashboard-service` + interfaces | shared | `Admin\Dashboard\Dashboard`, `LegacySwitcher`, and the pages `Modules`, `Tools`, `Status`, `ProFeatures`, `Withdraw`, `Vendors`, `ReverseWithdrawal`, `Extensions`, `SetupGuide` (constructed with `AdminSetupGuide`) and `Settings` |
 | `AdminSetupGuideServiceProvider` | `admin-setup-guide-service` + interfaces | shared | `Admin\OnboardingSetup\AdminSetupGuide` and the steps `BasicStep`, `CommissionStep`, `WithdrawStep`, `AppearanceStep` |
 | `ModelServiceProvider` | none applied | **not shared** (`add`) | `Models\VendorBalance`, `VendorOrderStats`, `AdminDashboardStats` and their `DataStore\*Store` classes. The class declares `TAG = 'ajax-service'`, but `register()` never applies it. |
-| `AdminSettingsServiceProvider` | `admin-settings-service` + interfaces | shared | `SettingsRegistry`, `SchemaValidator`, `SettingsRepository`, `LegacySettingsBridge`, `LegacySettingsRepository`, `BridgeBootstrap`, `LegacyMirror`. Because the container does not autowire, the provider passes explicit constructor arguments to two definitions (`lite:includes/DependencyManagement/Providers/AdminSettingsServiceProvider.php:44-53`): `LegacySettingsBridge` receives the shared `SettingsRepository`, and `LegacySettingsRepository` receives the shared `SettingsRepository` and `LegacySettingsBridge`. It also binds `SettingsRepositoryInterface` and `LegacySettingsRepositoryInterface` to the same shared instances (`:62-67`). Together these keep the whole settings stack on one repository snapshot instead of letting a class build its own repository when a nullable constructor parameter falls back to `null` ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md), [ADR-0003](../0003-settings-legacy-mirror-mode.md)). |
+| `AdminSettingsServiceProvider` | `admin-settings-service` + interfaces | shared | `SettingsRegistry`, `SchemaValidator`, `SettingsRepository`, `LegacySettingsBridge`, `LegacySettingsRepository`, `BridgeBootstrap`, `LegacyMirror`. Because the container does not autowire, the provider passes explicit constructor arguments to two definitions (`lite:includes/DependencyManagement/Providers/AdminSettingsServiceProvider.php:44-55`): `LegacySettingsBridge` receives the shared `SettingsRepository`, and `LegacySettingsRepository` receives the shared `SettingsRepository` and `LegacySettingsBridge`. It also binds `SettingsRepositoryInterface` and `LegacySettingsRepositoryInterface` to the same shared instances (`:62-67`). Together these keep the whole settings stack on one repository snapshot instead of letting a class build its own repository when a nullable constructor parameter falls back to `null` ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md), [ADR-0003](../0003-settings-legacy-mirror-mode.md)). |
 | `CaptchaServiceProvider` | `captcha-services` + interfaces | shared | `Captcha\Manager`, `GoogleRecaptchaV3Provider`, `CloudflareTurnstileProvider` |
 | `CliServiceProvider` | `cli-service` | shared | `CLI\Manager` |
 
@@ -211,7 +211,7 @@ All providers live in `lite:includes/DependencyManagement/Providers/`. `ServiceP
 |---|---|---|
 | `WeDevs_Dokan` | `lite:dokan-class.php:23` | Plugin singleton and service locator (section 2.2). |
 | `Core` | `lite:includes/Core.php:14` | Cross-cutting request behavior: blocks wp-admin for Vendors, Customers and Vendor Staff, scopes the media library to the current Vendor, adds body classes, sets Store-page titles, requires login and the Vendor role on the dashboard page, and handles the post-activation setup-wizard redirect. |
-| `Install\Installer` | `lite:includes/Install/Installer.php:15` | Creates roles, capabilities, pages, tables and the cron action, and sets the initial options. |
+| `Install\Installer` | `lite:includes/Install/Installer.php:18` | Creates roles, capabilities, pages, tables and the cron action, sets the initial options, and queues a one-time `dokan_order_stats` backfill when needed. |
 | `Upgrade\Manager` | `lite:includes/Upgrade/Manager.php:5` | Upgrade orchestrator (`dokan()->upgrades`). |
 | `Upgrade\Upgrades` | `lite:includes/Upgrade/Upgrades.php:5` | Lite's version-to-upgrader registry and version checks. |
 | `Upgrade\Hooks` | `lite:includes/Upgrade/Hooks.php:9` | Wires the registry into the filters and starts the three commission batch upgraders. |
@@ -323,7 +323,8 @@ flowchart TD
     F4 --> F5["create_tables: 7 custom tables via dbDelta"]
     F5 --> F6["reverse withdrawal base product, product_design, dokan_store_name for admins"]
     F6 --> F7["schedule_cron_jobs: dokan_daily_midnight_cron"]
-    F7 --> G{"WC active and upgrade required?"}
+    F7 --> F8["maybe_backfill_order_stats: WC Analytics import if dokan_order_stats is empty"]
+    F8 --> G{"WC active and upgrade required?"}
     G -->|"Yes"| G1["upgrades->do_upgrade()"]
     G -->|"No"| H
     G1 --> H["new Rewrites, register_rule(), flush_rewrite_rules()"]
@@ -333,11 +334,12 @@ flowchart TD
     I1 --> J["activate(): flush_rewrite_rules() again if WC present"]
 ```
 
-Notes, each taken from `Installer::do_install()` (`lite:includes/Install/Installer.php:16`):
+Notes, each taken from `Installer::do_install()` (`lite:includes/Install/Installer.php:19`):
 
-- `setup_pages()` (`:226`) returns early once `dokan_pages_created` is set. It saves the created page IDs through `dokan_save_legacy_settings_section( 'dokan_pages', … )`, which writes through the settings repository ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md)).
-- `user_roles()` (`:167`) adds the `seller` role. `seller` is the legacy WordPress role name for a **Vendor** (see `CONTEXT.md`). The role gets WordPress post, product and term capabilities plus `dokandar`. `dokandar` is also added to `administrator` and `shop_manager`. Every capability returned by `dokan_get_all_caps()` is added to `seller`, `administrator` and `shop_manager`.
-- `schedule_cron_jobs()` (`:95`) removes any existing `dokan_daily_midnight_cron` Action Scheduler action and reschedules it with `WC()->queue()->schedule_cron( midnight, '0 0 * * *', 'dokan_daily_midnight_cron', [], 'dokan' )`. Lite has no callback for this hook; it is consumed by Dokan Pro.
+- `setup_pages()` (`:346`) returns early once `dokan_pages_created` is set. It saves the created page IDs through `dokan_save_legacy_settings_section( 'dokan_pages', … )`, which writes through the settings repository ([ADR-0002](../0002-flat-dokan-admin-settings-as-canonical-store.md)).
+- `user_roles()` (`:287`) adds the `seller` role. `seller` is the legacy WordPress role name for a **Vendor** (see `CONTEXT.md`). The role gets WordPress post, product and term capabilities plus `dokandar`. `dokandar` is also added to `administrator` and `shop_manager`. Every capability returned by `dokan_get_all_caps()` is added to `seller`, `administrator` and `shop_manager`.
+- `schedule_cron_jobs()` (`:215`) removes any existing `dokan_daily_midnight_cron` Action Scheduler action and reschedules it with `WC()->queue()->schedule_cron( midnight, '0 0 * * *', 'dokan_daily_midnight_cron', [], 'dokan' )`. Lite has no callback for this hook; it is consumed by Dokan Pro.
+- `maybe_backfill_order_stats()` (`:88`) runs only when WooCommerce Analytics is enabled and the filter `dokan_analytics_backfill_order_stats_on_activation` (default `true`) allows it. If WooCommerce has orders but `dokan_order_stats` is empty, it starts a full `ReportsSync::regenerate_report_data()` import. When WooCommerce refuses because another import is queued, it records the attempt count in `dokan_order_stats_backfill_pending` and retries through the `dokan_order_stats_backfill_retry` Action Scheduler action with doubling delays, giving up after 8 attempts.
 - On a fresh install, the `_dokan_setup_page_redirect` transient (30 seconds) makes `Core::redirect_after_activate` (`admin_init` priority 999) send the Site Admin to the setup wizard.
 
 ### 4.3 Database upgrades
@@ -406,9 +408,9 @@ Templates, all on `template_include` priority 99:
 
 - `init` priority 10 → `register_all_scripts()` (`:301`) registers every handle from `get_styles()` (`:316`) and `get_scripts()` (`:419`). It uses `wp_register_style`/`wp_register_script` with `wp_set_script_translations( …, 'dokan-lite' )`, then fires `dokan_register_scripts`.
 - In admin: `admin_enqueue_scripts` priority 5 → `load_dokan_global_scripts`, priority 8 → `load_dokan_admin_notices_scripts`, priority 10 → `enqueue_admin_scripts` (`:77`, which fires `dokan-vue-admin-scripts` and `dokan_enqueue_admin_scripts`).
-- On the frontend: `wp_enqueue_scripts` priority 5 → `load_dokan_global_scripts` (`:1028`), default priority → `enqueue_front_scripts` (`:839`, which fires `dokan_enqueue_scripts`). `init` → `register_wc_admin_scripts`.
-- The Vendor dashboard bundles load only when `dokan_is_seller_dashboard()` is true, when the request is a product edit page, or when `dokan_forced_load_scripts` returns true (`:947`).
-- Script versions default to `DOKAN_PLUGIN_VERSION`. Some styles use `filemtime`. The `.min` suffix is dropped when `SCRIPT_DEBUG` is set (`get_prefix()`, `:1388`).
+- On the frontend: `wp_enqueue_scripts` priority 5 → `load_dokan_global_scripts` (`:1030`), default priority → `enqueue_front_scripts` (`:839`, which fires `dokan_enqueue_scripts`). `init` → `register_wc_admin_scripts`.
+- The Vendor dashboard bundles load only when `dokan_is_seller_dashboard()` is true, when the request is a product edit page, or when `dokan_forced_load_scripts` returns true (`:949`).
+- Script versions default to `DOKAN_PLUGIN_VERSION`. Some styles use `filemtime`. The `.min` suffix is dropped when `SCRIPT_DEBUG` is set (`get_prefix()`, `:1392`).
 
 ### 4.7 Cache
 
@@ -495,7 +497,7 @@ Templates, all on `template_include` priority 99:
 
 ## 6. Data storage
 
-### 6.1 Custom tables created by `Installer::create_tables()` (`lite:includes/Install/Installer.php:331`)
+### 6.1 Custom tables created by `Installer::create_tables()` (`lite:includes/Install/Installer.php:451`)
 
 All tables use `CREATE TABLE IF NOT EXISTS … ENGINE=InnoDB` with the site charset and collation, run through `dbDelta`.
 
@@ -507,7 +509,7 @@ All tables use `CREATE TABLE IF NOT EXISTS … ENGINE=InnoDB` with the site char
 | `{prefix}dokan_refund` | `id` PK AI, `order_id`, `seller_id`, `refund_amount` decimal(19,4), `refund_reason` text, `item_qtys` varchar(200), `item_totals` text, `item_tax_totals` text, `restock_items` varchar(10), `date` timestamp, `status` int(1), `method` varchar(30) | PK |
 | `{prefix}dokan_vendor_balance` | `id` PK AI, `vendor_id`, `trn_id`, `trn_type` varchar(30), `perticulars` text, `debit` decimal(19,4), `credit` decimal(19,4), `status` varchar(30), `trn_date` timestamp, `balance_date` timestamp | PK |
 | `{prefix}dokan_reverse_withdrawal` | `id` PK AI, `trn_id`, `trn_type` varchar(200) default `order_commission`, `vendor_id`, `note` mediumtext, `debit`, `credit` decimal(19,4), `trn_date` int unsigned | PK, `trn_date`, `vendor_id_trn_date`, `vendor_id`, `trn_id_type`, `vendor_id_trn_date_type`. Created by `ReverseWithdrawal\InstallerHelper::create_reverse_withdrawal_table`. |
-| `{prefix}dokan_order_stats` | `order_id` PK, `vendor_id`, `order_type` tinyint (0 to 9, documented in the column comment), `vendor_earning`, `vendor_gateway_fee`, `vendor_shipping_fee`, `vendor_discount`, `vendor_shipping_tax`, `vendor_order_tax`, `admin_earning`, `admin_commission`, `admin_gateway_fee`, `admin_shipping_fee`, `admin_discount`, `admin_shipping_tax`, `admin_order_tax`, `admin_subsidy` (all double) | PK, `vendor_id`, `order_type`. Created by `create_dokan_order_stats_table` (`:551`). The `V_5_0_0` upgrader adds the newer columns on older installs. |
+| `{prefix}dokan_order_stats` | `order_id` PK, `vendor_id`, `order_type` tinyint (0 to 9, documented in the column comment), `vendor_earning`, `vendor_gateway_fee`, `vendor_shipping_fee`, `vendor_discount`, `vendor_shipping_tax`, `vendor_order_tax`, `admin_earning`, `admin_commission`, `admin_gateway_fee`, `admin_shipping_fee`, `admin_discount`, `admin_shipping_tax`, `admin_order_tax`, `admin_subsidy` (all double) | PK, `vendor_id`, `order_type`. Created by `create_dokan_order_stats_table` (`:671`). The `V_5_0_0` upgrader adds the newer columns on older installs. |
 
 `seller_id` and `vendor_id` both refer to the **Vendor**'s user ID. `seller_id` is a legacy column name. `$wpdb->dokan_withdraw`, `dokan_orders`, `dokan_announcement`, `dokan_refund` and `dokan_vendor_balance` are shortcut properties set on `init` priority 1.
 
@@ -646,4 +648,4 @@ REST routes are registered by the `api` service (`REST\Manager`) and are out of 
 - `Installer::create_page()` looks for an existing page with `get_page_by_path( $page['post_title'] )` (by title, not slug). How this behaves with localized titles was not verified.
 - The callbacks attached to the commission batch hooks (`process_product_batch` and the others) and the code that schedules them were not traced further.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

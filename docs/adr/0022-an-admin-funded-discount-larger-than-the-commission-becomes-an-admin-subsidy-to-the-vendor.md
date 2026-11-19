@@ -45,4 +45,4 @@ The docblock of `get_vendor_earning_subtotal()` states the purpose: return the V
 
 - Label the subsidy explicitly wherever Vendor Earnings are shown, so Vendors understand why their Earning exceeds the price the customer paid.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

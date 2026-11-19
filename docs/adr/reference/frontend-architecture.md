@@ -71,14 +71,14 @@ All entries come from `lite:webpack-entries.js:1` (including the five store libr
 | `Assets::register_all_scripts()` | `lite:includes/Assets.php:301` | `init` priority 10; fires `dokan_register_scripts` at line 308 |
 | `Assets::enqueue_front_scripts()` | `lite:includes/Assets.php:839` | `wp_enqueue_scripts` (front end only) |
 | `Assets::enqueue_admin_scripts()` | `lite:includes/Assets.php:77` | `admin_enqueue_scripts` priority 10 |
-| `Assets::load_dokan_global_scripts()` | `lite:includes/Assets.php:1028` | `wp_enqueue_scripts` / `admin_enqueue_scripts` priority 5 |
+| `Assets::load_dokan_global_scripts()` | `lite:includes/Assets.php:1030` | `wp_enqueue_scripts` / `admin_enqueue_scripts` priority 5 |
 | `Assets::register_wc_admin_scripts()` | `lite:includes/Assets.php:813` | `init` (front end only) |
 | `Admin\Dashboard\Dashboard` | `lite:includes/DependencyManagement/Providers/AdminDashboardServiceProvider.php:38`; hooks at `lite:includes/Admin/Dashboard/Dashboard.php:52` | `Hookable` service tagged `admin-dashboard-service` |
 | `Dashboard\Templates\NewDashboard` | `lite:includes/Dashboard/Templates/Manager.php:34`; class at `lite:includes/Dashboard/Templates/NewDashboard.php:7` | Instantiated by the dashboard templates manager |
 | `Shortcodes\FullWidthVendorLayout` | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:27`; hooks at `lite:includes/Shortcodes/FullWidthVendorLayout.php:28` | `Hookable` common service |
 | `VendorNavMenuChecker` | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:23`; constructor at `lite:includes/VendorNavMenuChecker.php:54` | Common service |
 | `Vendor\ApiMeta` | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:28`; field at `lite:includes/Vendor/ApiMeta.php:28` | Common service |
-| `Analytics\Assets` | `lite:includes/DependencyManagement/Providers/AnalyticsServiceProvider.php:35` | Analytics service provider |
+| `Analytics\Assets` | `lite:includes/DependencyManagement/Providers/AnalyticsServiceProvider.php:36` | Analytics service provider |
 | `Intelligence\Assets` | `lite:includes/DependencyManagement/Providers/IntelligenceServiceProvider.php:31` | Intelligence service provider |
 
 ## 3. Key classes and modules
@@ -100,8 +100,8 @@ All entries come from `lite:webpack-entries.js:1` (including the five store libr
 | Module | File | Responsibility |
 |---|---|---|
 | Vendor dashboard SPA root | `lite:src/dashboard/index.tsx:30` | `App` eagerly resolves the current user from `dokan/core`, maps routes through `withRouter` + `Layout`, builds a hash router, mounts on `domReady` (line 133). |
-| Route registry | `lite:src/routing/index.tsx:73` (`getRoutes`), `lite:src/routing/routes.tsx:11` | Lite's vendor routes (`/products`, `/products/create`, `/products/:productId/edit`, `/orders`, `/withdraw`, `/withdraw-requests`, `/reverse-withdrawal`, `/settings/store`) filtered by `dokan-dashboard-routes`; a `*` 404 route is appended last. |
-| `withRouter` | `lite:src/routing/index.tsx:24` | Higher-order component: checks every required capability with `select( coreStore ).hasCap()`; renders `Forbidden` (`src/layout/403.tsx`) if any is missing; otherwise injects router props (`navigate`, `params`, `location`, `matches`, `navigation`, `redirect`, `replace`, `useParams`, `createSearchParams`, `useSearchParams`). |
+| Route registry | `lite:src/routing/index.tsx:86` (`getRoutes`), `lite:src/routing/routes.tsx:11` | Lite's vendor routes (`/products`, `/products/create`, `/products/:productId/edit`, `/orders`, `/withdraw`, `/withdraw-requests`, `/reverse-withdrawal`, `/settings/store`) filtered by `dokan-dashboard-routes`; a `*` 404 route is appended last. |
+| `withRouter` | `lite:src/routing/index.tsx:37` | Higher-order component `withRouter( Component, capabilities, routePath )`: checks every required capability with `select( coreStore ).hasCap()`; renders `Forbidden` (`src/layout/403.tsx`) if any is missing or if `routePath` falls under `window.dokanFrontend.restrictedRoutes` (menus the Store Admin switched off in the Menu Manager, `isRestrictedRoute()` at `:26`); otherwise injects router props (`navigate`, `params`, `location`, `matches`, `navigation`, `redirect`, `replace`, `useParams`, `createSearchParams`, `useSearchParams`). |
 | Vendor `Layout` | `lite:src/layout/index.tsx:107` | Wraps every vendor route in a Plugin UI `ThemeProvider`, a `SlotFillProvider`, `Header`/`ContentArea`/`Footer`, `PluginArea scope={ route.id }` and `DokanToaster`; also syncs the PHP-rendered sidebar menu's active state via `data-react-route` (line 67). |
 | Vendor `Header` | `lite:src/layout/Header.tsx` | Title and back button (both filterable) plus the header slots. |
 | Admin dashboard root | `lite:src/admin/dashboard/components/Dashboard.tsx:130` | Builds admin routes (`getAdminRoutes()` line 29) filtered by `dokan-admin-dashboard-routes` (line 109), wraps each in the admin `Layout`, hash router. |
@@ -118,7 +118,7 @@ All entries come from `lite:webpack-entries.js:1` (including the five store libr
 
 ### 4.1 Build, register, enqueue
 
-The build and the PHP registration are coupled through the dependency-extraction plugin. Lite replaces the default `DependencyExtractionWebpackPlugin` from `@wordpress/scripts` with one configured with its own `requestToExternal` and `requestToHandle` (`lite:webpack.config.js:133`, `lite:webpack-dependency-mapping.js:144`, `lite:webpack-dependency-mapping.js:193`). For every bundle, webpack writes `[name].asset.php` listing the WordPress script handles the bundle needs. PHP reads those files to register the bundle with the right dependencies.
+The build and the PHP registration are coupled through the dependency-extraction plugin. Lite replaces the default `DependencyExtractionWebpackPlugin` from `@wordpress/scripts` with one configured with its own `requestToExternal` and `requestToHandle` (`lite:webpack.config.js:134`, `lite:webpack-dependency-mapping.js:144`, `lite:webpack-dependency-mapping.js:193`). For every bundle, webpack writes `[name].asset.php` listing the WordPress script handles the bundle needs. PHP reads those files to register the bundle with the right dependencies.
 
 ```mermaid
 flowchart TD
@@ -150,20 +150,20 @@ Import specifier mapping (`lite:webpack-dependency-mapping.js:144`):
 | `@wordpress/ui` | Bundled (returns `false`) | None |
 | Other `@wordpress/*` | Default `wp.*` mapping of the plugin | `wp-*` |
 
-A static `externals` block also maps `jquery`, `chart.js`, `moment` and some `@woocommerce/blocks-*` packages to their globals (`lite:webpack.config.js:104`).
+A static `externals` block also maps `jquery`, `chart.js`, `moment` and some `@woocommerce/blocks-*` packages to their globals (`lite:webpack.config.js:105`).
 
 Two consequences follow:
 
 - **Lite consumes its own libraries through the globals.** `src/dashboard/index.tsx` imports `@dokan/stores/core` and `@dokan/utilities`, so the built `frontend.asset.php` lists `dokan-stores-core`, `dokan-utilities`, `dokan-react-components`, `dokan-plugin-ui`, `dokan-ui`, `dokan-product-editor-utils`, `dokan-hooks`, `dokan-stores-products`, `dokan-stores-product-categories` and `dokan-stores-product-editor`. The handle names in `Assets::get_scripts()` (lines 654-800) and the names produced by `requestToHandle` must stay identical.
 - **Shared UI kits are loaded once.** `src/externals/plugin-ui.js` and `src/externals/dokan-ui.js` import the packages by deep path so the bundles do not re-export themselves. Deep imports such as `@getdokan/dokan-ui/dist/components/...` elsewhere stay bundled with their consumer. If `plugin-ui.asset.php` or `dokan-ui.asset.php` is missing, `Assets::get_scripts()` logs an error via `dokan_log()` and skips the handle (line 753 onward), and WordPress then refuses to print every bundle that depends on it.
 
-CSS output: the custom `MiniCssExtractPlugin` writes `../css/[name].css` (`lite:webpack.config.js:122`). Only the dependency-extraction plugin is filtered out of `@wordpress/scripts`' default plugins (`lite:webpack.config.js:119`), so the defaults also run: `MiniCSSExtractPlugin` with `filename: '[name].css'` and `RtlCssPlugin` (`node_modules/@wordpress/scripts/config/webpack.config.js`, lines 415 and 419). They write CSS and `-rtl.css` next to the JS in `assets/js/`. The build therefore emits CSS in both directories. `Assets::get_styles()` and `Dashboard::register_admin_dashboard_scripts()` read `assets/css/`; `FullWidthVendorLayout::register_vendor_dashboard_assets()` and `Analytics\Assets::register_scripts()` read `assets/js/vendor-dashboard/.../index.css`.
+CSS output: the custom `MiniCssExtractPlugin` writes `../css/[name].css` (`lite:webpack.config.js:123`). Only the dependency-extraction plugin is filtered out of `@wordpress/scripts`' default plugins (`lite:webpack.config.js:119`), so the defaults also run: `MiniCSSExtractPlugin` with `filename: '[name].css'` and `RtlCssPlugin` (`node_modules/@wordpress/scripts/config/webpack.config.js`, lines 415 and 419). They write CSS and `-rtl.css` next to the JS in `assets/js/`. The build therefore emits CSS in both directories. `Assets::get_styles()` and `Dashboard::register_admin_dashboard_scripts()` read `assets/css/`; `FullWidthVendorLayout::register_vendor_dashboard_assets()` and `Analytics\Assets::register_scripts()` read `assets/js/vendor-dashboard/.../index.css`.
 
 ### 4.2 The `window.dokan` namespace
 
 Every library entry uses webpack's `library: { type: 'window', name: [ 'dokan', X ] }`, which compiles to `(window.dokan = window.dokan || {}).X = exports` (confirmed in the built `core-store.js` and `utilities.js`). They extend whatever `window.dokan` object already exists.
 
-On the front end, `Assets::enqueue_front_scripts()` creates the base object with `wp_localize_script( 'dokan-util-helper', 'dokan', $localize_data )` (`lite:includes/Assets.php:933`). `dokan-util-helper` is registered with `in_footer => false`, so that object is printed in the head before the library bundles. On the legacy `toplevel_page_dokan` admin page, the object comes from `wp_localize_script( 'dokan-vue-vendor', 'dokan', ... )` (`lite:includes/Assets.php:103`). Where neither runs, the first library bundle creates the object. Because `wp_localize_script` emits `var dokan = {...}`, the localised object must be printed before any library bundle, otherwise it would replace the libraries. On the front end, the head placement of `dokan-util-helper` ensures this. `Assets.php:932` also attaches the same `dokan` localisation to `dokan-i18n-jed`, which is registered for the footer and marked for removal. The only Lite code that depends on `dokan-i18n-jed` is the setup wizard's `dokan-vue-bootstrap` registration (`lite:includes/Admin/SetupWizard.php:115`).
+On the front end, `Assets::enqueue_front_scripts()` creates the base object with `wp_localize_script( 'dokan-util-helper', 'dokan', $localize_data )` (`lite:includes/Assets.php:935`). `dokan-util-helper` is registered with `in_footer => false`, so that object is printed in the head before the library bundles. On the legacy `toplevel_page_dokan` admin page, the object comes from `wp_localize_script( 'dokan-vue-vendor', 'dokan', ... )` (`lite:includes/Assets.php:103`). Where neither runs, the first library bundle creates the object. Because `wp_localize_script` emits `var dokan = {...}`, the localised object must be printed before any library bundle, otherwise it would replace the libraries. On the front end, the head placement of `dokan-util-helper` ensures this. `Assets.php:934` also attaches the same `dokan` localisation to `dokan-i18n-jed`, which is registered for the footer and marked for removal. The only Lite code that depends on `dokan-i18n-jed` is the setup wizard's `dokan-vue-bootstrap` registration (`lite:includes/Admin/SetupWizard.php:115`).
 
 | Global | Set by | Contents |
 |---|---|---|
@@ -173,12 +173,12 @@ On the front end, `Assets::enqueue_front_scripts()` creates the base object with
 | `window.dokan.coreStore`, `vendorsStore`, `productsStore`, `productCategoriesStore`, `productEditorStore` | Store bundles (`dokan-stores-*`) | Store descriptors (also registered with `@wordpress/data`) |
 | `window.dokan.productEditor` | `product-editor-utils` (`dokan-product-editor-utils`) | Product editor public API |
 | `window.dokan.pluginUI`, `window.dokan.dokanUI` | `plugin-ui` (`dokan-plugin-ui`), `dokan-ui` (`dokan-ui`) | Shared UI kits |
-| `dokan` (localised fields) | `Assets.php:933` (front end), `Assets.php:103` (legacy admin) | AJAX URL, nonces, currency format, i18n strings, `rest` root/nonce, Vue `routes`, `urls`, `orderStatuses`; filtered by `dokan_localized_args`, `dokan_frontend_localize_script`, `dokan_admin_localize_script` |
-| `dokan.libs.*`, `dokan.api`, `dokan.routeComponents`, `dokan.hooks`, `dokan.addFilterComponent`, `dokan_get_lib()`, `dokan_add_route()`, `window.__` | `lite:src/utils/Bootstrap.js:14`, `:87`-`:163` | Legacy Vue runtime: Vue, Router, moment, ListTable, Multiselect, Chart, Modal, GoogleMaps, Mapbox, vendor field components, etc. |
-| `dokan_helper` | `lite:includes/Assets.php:1093` | Date/time formats, week start, reverse withdrawal flag, picker and SweetAlert locales (`dokan_helper_localize_script`) |
-| `dokanFrontend` | `lite:includes/Assets.php:1100` on `dokan-react-frontend` | `currency` from `Assets::get_localized_price()` plus product listing data (`dokan_react_frontend_localized_args`) |
+| `dokan` (localised fields) | `Assets.php:935` (front end), `Assets.php:103` (legacy admin) | AJAX URL, nonces, currency format, i18n strings, `rest` root/nonce, Vue `routes`, `urls`, `orderStatuses`; filtered by `dokan_localized_args`, `dokan_frontend_localize_script`, `dokan_admin_localize_script` |
+| `dokan.libs.*`, `dokan.api`, `dokan.routeComponents`, `dokan.hooks`, `dokan.addFilterComponent`, `dokan_get_lib()`, `dokan_add_route()`, `window.__` | `lite:src/utils/Bootstrap.js:14`, `:87`-`:165` | Legacy Vue runtime: Vue, Router, moment, ListTable, Multiselect, Chart, Modal, GoogleMaps, Mapbox, vendor field components, etc. |
+| `dokan_helper` | `lite:includes/Assets.php:1095` | Date/time formats, week start, reverse withdrawal flag, picker and SweetAlert locales (`dokan_helper_localize_script`) |
+| `dokanFrontend` | `lite:includes/Assets.php:1104` on `dokan-react-frontend` | `currency` from `Assets::get_localized_price()`, `restrictedRoutes` (from `dokan_get_restricted_dashboard_routes()`, only for a logged-in user on the Vendor dashboard), plus product listing data (`dokan_react_frontend_localized_args`) |
 | `dokanAdmin` | `lite:includes/Assets.php:113` | Commission types, reserved slugs (`dokan_vue_admin_localize_script`) |
-| `dokan_admin_product`, `dokan_promo`, `dokanRegistrationI18n`, `DokanValidateMsg` | `lite:includes/Assets.php:147`, `:71`, `:938`, `:1133` | Page-specific data for legacy scripts |
+| `dokan_admin_product`, `dokan_promo`, `dokanRegistrationI18n`, `DokanValidateMsg` | `lite:includes/Assets.php:147`, `:71`, `:940`, `:1137` | Page-specific data for legacy scripts |
 | `dokanAdminDashboard` | Inline script in `Dashboard::register_admin_dashboard_scripts()` (`lite:includes/Admin/Dashboard/Dashboard.php:415`) | Currency, countries/states, `dokan_admin` nonce, banner dimensions, admin URLs (`dokan_admin_dashboard_localize_scripts`) |
 | `dokanAdminDashboardSettings` | Inline script in `Dashboard::enqueue_scripts()` (`lite:includes/Admin/Dashboard/Dashboard.php:571`) | Per-page settings keyed by page id plus `header_info`, `help_menu_items`; read by `src/admin/dashboard/settings/getSettings.ts` and `src/admin/dashboard/components/Header.tsx` |
 | `dokanAdminSwitching`, `dokanAdminPanelHeaderSettings`, `dokanSetupGuideBanner` | `Dashboard.php:534`, `:454`, `:492` | Panel switch nonce, header logo/info, setup guide URL and completion flag |
@@ -225,7 +225,7 @@ sequenceDiagram
     R->>R: PluginArea scope is route.id, Slots rendered
 ```
 
-While the current user is resolving, `App` renders `Skeleton`. If resolution fails, it logs the error and renders `InternalError` (`src/layout/500.tsx`). Its retry button invalidates both the core-data and the `dokan/core` resolutions (`lite:src/dashboard/index.tsx:49`). Routes default to the `dokandar` capability when a route declares none (line 71). After mounting, `addPrimaryColorVariant()` derives `--colors-primary-*` CSS variables from `--dokan-button-background-color`.
+While the current user is resolving, `App` renders `Skeleton`. If resolution fails, it logs the error and renders `InternalError` (`src/layout/500.tsx`). Its retry button invalidates both the core-data and the `dokan/core` resolutions (`lite:src/dashboard/index.tsx:49`). Routes default to the `dokandar` capability when a route declares none (line 71), and each route's `path` is passed to `withRouter` so Menu Manager restrictions apply (line 72). After mounting, `addPrimaryColorVariant()` derives `--colors-primary-*` CSS variables from `--dokan-button-background-color`.
 
 `Layout` also keeps the PHP-rendered sidebar in sync. On each navigation, `handleMenuActiveStates()` (`lite:src/layout/index.tsx:67`) toggles `active`/`current` classes on `.dokan-dashboard-menu li[data-react-route=...]`.
 
@@ -260,7 +260,7 @@ On the `toplevel_page_dokan` screen, `Assets::enqueue_admin_scripts()` (`lite:in
 3. Fires `dokan-vue-admin-scripts` so other plugins can register Vue route components.
 4. Enqueues `dokan-vue-admin` and localises `dokanAdmin`.
 
-`src/admin/router/index.js` registers Lite's components with `dokan_add_route()`. It then replaces each component name in `dokan.routes` (the PHP array from `apply_filters( 'dokan-admin-routes', ... )`, `lite:includes/Assets.php:288`) with the registered component before it constructs the Vue router. `Admin\Menu::dashboard()` renders the `#dokan-vue-admin` container (`lite:includes/Admin/Menu.php:203`).
+`src/admin/router/index.js` registers Lite's components with `dokan_add_route()`. It then replaces each component name in `dokan.routes` (the PHP array from `apply_filters( 'dokan-admin-routes', ... )`, `lite:includes/Assets.php:288`) with the registered component before it constructs the Vue router. `Admin\Menu::dashboard()` renders the `#dokan-vue-admin` container (`lite:includes/Admin/Menu.php:207`).
 
 `dokan-vue-frontend` is registered (`lite:includes/Assets.php:552`) with an empty, filterable route table (`dokan-frontend-routes`), but Lite itself does not enqueue it.
 
@@ -295,14 +295,14 @@ Component-local state, React context (the vendor `ThemeContext`) and the `@wedev
 | `dokan_enqueue_admin_scripts` | action | `Assets::enqueue_admin_scripts()` (line 150) | Enqueue extra admin assets; receives `$hook` |
 | `dokan-vue-admin-scripts` | action | `Assets::enqueue_admin_scripts()` (line 109) | Load Vue route components before `dokan-vue-admin` |
 | `dokan_enqueue_admin_dashboard_script` | action | `Admin\Menu::dashboard_script()` | Legacy admin dashboard assets |
-| `dokan_localized_args` | filter | `Assets.php:902` | Front-end `dokan` localisation |
-| `dokan_frontend_localize_script` | filter | `Assets.php:903` | Vue/REST part of the front-end `dokan` object |
-| `dokan_admin_localize_script` | filter | `Assets::get_admin_localized_scripts()` (line 1473) | Legacy admin `dokan` object |
-| `dokan_vue_admin_localize_script` | filter | `Assets::get_vue_admin_localized_scripts()` (line 1547) | `dokanAdmin` |
+| `dokan_localized_args` | filter | `Assets.php:904` | Front-end `dokan` localisation |
+| `dokan_frontend_localize_script` | filter | `Assets.php:905` | Vue/REST part of the front-end `dokan` object |
+| `dokan_admin_localize_script` | filter | `Assets::get_admin_localized_scripts()` (line 1477) | Legacy admin `dokan` object |
+| `dokan_vue_admin_localize_script` | filter | `Assets::get_vue_admin_localized_scripts()` (line 1551) | `dokanAdmin` |
 | `dokan_promo_notice_localize_script` | filter | `Assets.php:58` | `dokan_promo` |
-| `dokan_helper_localize_script` | filter | `Assets.php:1032` | `dokan_helper` |
-| `dokan_react_frontend_localized_args` | filter | `Assets.php:1103` | `dokanFrontend` (Lite itself adds product listing args via `add_product_listing_localized_args()`) |
-| `dokan_force_load_extra_args`, `dokan_forced_load_scripts` | filter | `Assets.php:1280`, `:947` | Force-load extra localisation / dashboard scripts |
+| `dokan_helper_localize_script` | filter | `Assets.php:1034` | `dokan_helper` |
+| `dokan_react_frontend_localized_args` | filter | `Assets.php:1107` | `dokanFrontend` (Lite itself adds product listing args via `add_product_listing_localized_args()`) |
+| `dokan_force_load_extra_args`, `dokan_forced_load_scripts` | filter | `Assets.php:1284`, `:949` | Force-load extra localisation / dashboard scripts |
 | `dokan-admin-routes`, `dokan-frontend-routes` | filter | `Assets.php:288`, `:295` | Legacy Vue route tables |
 | `dokan_admin_dashboard_pages` | filter | `Dashboard::get_pages()` (`lite:includes/Admin/Dashboard/Dashboard.php:72`) | Admin dashboard page list (`Pageable` instances only) |
 | `dokan_admin_dashboard_page_settings`, `dokan_admin_dashboard_pages_settings` | filter | `Dashboard::settings()` (lines 272, 282) | `dokanAdminDashboardSettings` contents |
@@ -335,7 +335,7 @@ Route and layout filters (the main seams):
 
 | Hook | Type | Where | Value |
 |---|---|---|---|
-| `dokan-dashboard-routes` | filter | `lite:src/routing/index.tsx:75` | Array of `DokanRoute` (`id`, `path`, `element`, `title`, `capabilities`, `header`, `footer`, `backUrl`, `order`, `parent`, `icon`) |
+| `dokan-dashboard-routes` | filter | `lite:src/routing/index.tsx:88` | Array of `DokanRoute` (`id`, `path`, `element`, `title`, `capabilities`, `header`, `footer`, `backUrl`, `order`, `parent`, `icon`) |
 | `dokan-admin-dashboard-routes` | filter | `lite:src/admin/dashboard/components/Dashboard.tsx:109` | Array of `DokanAdminRoute` (`id`, `path`, `element`, `parent`) |
 | `dokan-vendor-dashboard-header-title` | filter | `lite:src/layout/Header.tsx:38` | Header title |
 | `dokan-vendor-<kebab(route id)>-dashboard-header-backUrl` | filter | `lite:src/layout/Header.tsx:60` | Back URL; `:param` tokens are replaced from route params |
@@ -393,7 +393,7 @@ The frontend does not register REST routes or AJAX actions itself. It consumes e
 | `/wp/v2/users/me`, `/wp/v2/users/{id}` | GET | `dokan/core` via `@wordpress/core-data` |
 | `/dokan/v1/settings` | GET | `dokan/core` `getStoreSettings` |
 | `/dokan/v1/admin/settings` | GET | `dokan/core` `getGlobalSettings`, admin settings page |
-| `/dokan/v1/admin/settings/{scopeId}` | PUT | Admin settings page save (`src/admin/dashboard/pages/settings/index.tsx:213`) |
+| `/dokan/v1/admin/settings/{scopeId}` | PUT | Admin settings page save (`src/admin/dashboard/pages/settings/index.tsx:233`) |
 | `/dokan/v1/stores`, `/dokan/v1/stores/{id}`, `/dokan/v1/stores/{id}/stats` | GET | `dokan/vendors` |
 | `/dokan/v1/products/best_selling` | GET | `dokan/vendors` `getTopProducts` |
 | `/dokan/v2/products`, `/dokan/v2/products/{id}` | GET | `dokan/products` resolvers |
@@ -481,4 +481,4 @@ On the PHP side, the localisation filters in section 5.1 (`dokan_react_frontend_
 - **Vendor analytics, intelligence and the setup wizard** are covered here only as bundles and mount points. Their internal flows belong in their own subsystem docs.
 - **Legacy jQuery code under `assets/src/js/`** is listed as entries only; its behaviour is documented with the owning subsystems.
 
-_Verified against Lite @63ad89353 / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-10-14._
+_Verified against Lite @fbae0ce7d / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-11-19._

@@ -88,4 +88,4 @@ Shipping and tax are pass-through money: a carrier or a tax authority is the rea
 - When adding a new kind of non-product money, add a matching pair of `get_vendor_*` / `get_admin_*` getters and include them in both totals, rather than adjusting the line-item filters.
 - Consider exposing an explicit "fees breakdown" in REST responses so integrators stop inferring Commission from `order_total − net_amount`.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

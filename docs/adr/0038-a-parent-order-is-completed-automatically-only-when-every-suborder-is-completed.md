@@ -8,12 +8,12 @@ Status changes normally flow from a multi-vendor Order down to its Suborders ([A
 
 ## Rule
 
-**[Lite]** Whenever a Suborder changes status, Dokan checks all Suborders of the same parent. If every one of them is `completed`, it sets the parent Order to `completed`. No other Suborder status is ever copied up.
+**[Lite]** Whenever a Suborder changes status, Dokan checks all non-trashed Suborders of the same parent. If every one of them is `completed`, it sets the parent Order to `completed`. No other Suborder status is ever copied up.
 
-- `Order\Hooks::on_sub_order_change` runs on `woocommerce_order_status_changed` at priority 99 (`lite:includes/Order/Hooks.php:38`, method at `:391-430`).
-- It returns at once for an order whose `parent_id` is 0 (`:393-395`), so it acts only on Suborders. A single-vendor Order has no parent and therefore no roll-up; its own status is the Vendor order status.
-- It loads all siblings with `Manager::get_child_orders( $parent_id )` (`:398-403`). Before checking, it may auto-complete digital-only siblings (see [ADR-0043](./0043-paid-digital-only-suborders-are-completed-automatically-unless-paid-with-a-manual-gateway.md)).
-- If any sibling's status is not exactly `completed`, nothing happens (`:418-421`). Otherwise it calls `update_status( 'wc-completed', 'Mark parent order completed when all child orders are completed.' )` on the parent (`:426-429`).
+- `Order\Hooks::on_sub_order_change` runs on `woocommerce_order_status_changed` at priority 99 (`lite:includes/Order/Hooks.php:38`, method at `:393-449`).
+- It returns at once for an order whose `parent_id` is 0 (`:395-397`), so it acts only on Suborders. A single-vendor Order has no parent and therefore no roll-up; its own status is the Vendor order status.
+- It loads the siblings with `Manager::get_child_orders( $parent_id )` (`:400-405`). That helper calls `wc_get_orders()` without a `status` argument (`lite:includes/Order/Manager.php:508-523`), so WooCommerce's default status list applies and trashed Suborders are not returned. Before checking, it may auto-complete digital-only siblings (`:410-419`; see [ADR-0043](./0043-paid-digital-only-suborders-are-completed-automatically-unless-paid-with-a-manual-gateway.md)).
+- If any returned sibling's status is not exactly `completed`, nothing happens (`:421-424`). Otherwise it calls `update_status( 'wc-completed', 'Mark parent order completed when all child orders are completed.' )` on the parent (`:429-448`; `:433-445` only decide which customer email is sent).
 - The check runs on every Suborder status change, not only on moves to `completed`, so the parent completes as soon as the last open Suborder completes, whatever triggered it.
 
 Cancelled, refunded, failed, on-hold and processing Suborders never change the parent. In particular, a Vendor cancelling or refunding their Suborder leaves the parent Order in whatever status it had.
@@ -34,13 +34,14 @@ Alternative: in step 2 Vendor B cancels #302 instead. Siblings: `completed` and 
 ## Edge cases
 
 - **One cancelled Suborder blocks completion forever.** Because the check demands `completed` for every sibling, a multi-vendor Order where one Vendor's part was cancelled or refunded never completes automatically.
+- **A trashed Suborder does not block completion.** Trashed Suborders are not returned by `get_child_orders()`, so they are left out of the check. If the remaining Suborders are all `completed`, the next status change of any remaining Suborder completes the parent (see [ADR-0045](./0045-trashing-an-order-parks-its-vendor-earning-and-deleting-it-in-wp-admin-erases-its-ledger-rows.md)).
 - **The parent is set to `completed` even if it was cancelled.** The roll-up does not look at the parent's current status. Example: #301 is `completed` and #302 is `on-hold` when the Store Admin cancels #300. The downward copy leaves both Suborders alone (`completed` and `on-hold` do not accept `wc-cancelled`). If Vendor B later completes #302, every Suborder is `completed` and #300 moves from `cancelled` back to `completed`.
 - **The parent has no ledger rows.** Completing the parent changes no Vendor money directly; the Earnings belong to the Suborders, which were already `completed` (Lite ADR 0004).
 - **Parent completion re-enters the downward copy.** `update_status()` on the parent fires `woocommerce_order_status_changed` for the parent, so `on_order_status_change` runs again; with every Suborder already `completed`, it changes nothing.
 
 ## Why
 
-No recorded decision beyond the method's docblock ("Mark the parent order as complete when all the child order are completed", `lite:includes/Order/Hooks.php:381-390`). Completion is the one state where the customer-facing Order can be derived unambiguously from its Vendor orders; for mixed outcomes there is no single correct parent status, so Dokan leaves it alone.
+No recorded decision beyond the method's docblock ("Mark the parent order as complete when all the child order are completed", `lite:includes/Order/Hooks.php:383-392`). Completion is the one state where the customer-facing Order can be derived unambiguously from its Vendor orders; for mixed outcomes there is no single correct parent status, so Dokan leaves it alone.
 
 ## Consequences & risks
 
@@ -53,4 +54,4 @@ No recorded decision beyond the method's docblock ("Mark the parent order as com
 - Consider rolling up a parent to `cancelled` or `refunded` when every Suborder reached that same final status, and to `completed` when every Suborder is in a final state with at least one `completed`, so mixed outcomes do not leave the parent open forever.
 - Skip the roll-up when the parent is already `cancelled` or `refunded`, so a late Suborder event cannot re-open a closed Order.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

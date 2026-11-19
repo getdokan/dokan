@@ -45,8 +45,8 @@ Related reading:
 | `ReverseWithdrawalController` added to the map | `lite:includes/ReverseWithdrawal/ReverseWithdrawal.php:84`, entry at `:97` | `dokan_rest_api_class_map` filter |
 | `Intelligence\REST\AIRequestController` added to the map | `lite:includes/Intelligence/Admin/Settings.php:16`, entry at `:153` | `dokan_rest_api_class_map` filter |
 | Abilities hookables (`ProductAbilityScope`, `OrderAbilityScope`, `DokanAbilityRegistrar`) | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:29-31` | `Hookable` services; `register_hooks()` is called by the loop at `lite:dokan-class.php:276` |
-| `WeDevs\Dokan\Ajax` | `lite:includes/DependencyManagement/Providers/AjaxServiceProvider.php:39` | Tagged `ajax-service`; resolved only when `DOING_AJAX` is true, at `lite:dokan-class.php:330`. Hooks are added in the constructor at `lite:includes/Ajax.php:18`. |
-| REST validation helpers (`dokan_rest_validate_store_id`, `dokan_rest_validate_order_id`) | `lite:includes/functions-rest-api.php:14`, `:52` | Composer `files` autoload, `lite:composer.json:46`, so they are available before the plugin boots |
+| `WeDevs\Dokan\Ajax` | `lite:includes/DependencyManagement/Providers/AjaxServiceProvider.php:39` | Tagged `ajax-service`; resolved only when `DOING_AJAX` is true, at `lite:dokan-class.php:330`. Hooks are added in the constructor at `lite:includes/Ajax.php:19`. |
+| REST validation helpers (`dokan_rest_validate_store_id`, `dokan_rest_validate_order_id`) | `lite:includes/functions-rest-api.php:14`, `:53` | Composer `files` autoload, `lite:composer.json:46`, so they are available before the plugin boots |
 
 `Manager::register_rest_routes()` iterates the class map. For each entry it skips missing files, `require_once`s the file, skips classes that do not exist or are not `WP_REST_Controller` instances, instantiates the controller and calls `register_routes()`.
 
@@ -71,7 +71,7 @@ Related reading:
 | `WeDevs\Dokan\Abilities\Definitions\AbstractVendorAbility` | `lite:includes/Abilities/Definitions/AbstractVendorAbility.php:23` | Base for Dokan-native abilities: shared `check_permission()` and the `guard()` re-check inside `execute()`. |
 | `CurrentVendor`, `VendorStatsGet`, `WithdrawsQuery`, `VendorsQuery` | `lite:includes/Abilities/Definitions/CurrentVendor.php:19`, `VendorStatsGet.php:12`, `WithdrawsQuery.php:12`, `VendorsQuery.php:17` | The four `dokan/*` abilities (section 7). |
 | `WeDevs\Dokan\Abilities\Support\VendorPayload` | `lite:includes/Abilities/Support/VendorPayload.php:17` | Builds the `{ id, store_name }` vendor object attached to ability output. |
-| `WeDevs\Dokan\Ajax` | `lite:includes/Ajax.php:11` | Vendor-dashboard and storefront `admin-ajax.php` handlers (section 7). |
+| `WeDevs\Dokan\Ajax` | `lite:includes/Ajax.php:12` | Vendor-dashboard and storefront `admin-ajax.php` handlers (section 7). |
 
 ## 4. Execution flow
 
@@ -79,7 +79,7 @@ Related reading:
 
 `ProductController` and `OrderController` extend `Abstracts\DokanRESTController`. For these controllers the decision is split across two stages. The `permission_callback` checks a capability. The `validation_before_update_item()` / `validation_before_delete_item()` step, called at the top of `DokanRESTController::update_item()` and `::delete_item()`, checks Ownership. For example:
 
-- `OrderController::update_order_permissions_check` (`lite:includes/REST/OrderController.php:821`) checks only `dokan_manage_order` and the `order_status_change` setting. `OrderController::validation_before_update_item` (`lite:includes/REST/OrderController.php:228`) then compares `dokan_get_current_user_id()` with `dokan_get_seller_id_by_order()` and returns an error when they differ.
+- `OrderController::update_order_permissions_check` (`lite:includes/REST/OrderController.php:820`) checks only `dokan_manage_order` and the `order_status_change` setting. `OrderController::validation_before_update_item` (`lite:includes/REST/OrderController.php:228`) then compares `dokan_get_current_user_id()` with `dokan_get_seller_id_by_order()` and returns an error when they differ.
 - `ProductController::validation_before_update_item` and `::validation_before_delete_item` compare the store ID with the product author and allow a mismatch only for `manage_options` (ADR-0005 explains why `ProductController` still uses `manage_options`).
 
 List endpoints are scoped in the query instead. `DokanRESTController::prepare_objects_query` sets `author` to `dokan_get_current_user_id()` unless the caller holds `dokan_admin_menu_capability()` and passed an `id`. `OrderController::get_items` forces `seller_id` to `dokan_get_current_user_id()` unless the caller holds `manage_options`. Routes with a public `permission_callback` pin the author themselves with `set_forced_author()`. `StoreController::get_store_products` does this for `GET /dokan/v1/stores/{id}/products` and also forces `status=publish`.
@@ -110,9 +110,11 @@ sequenceDiagram
 
 ### 4.2 Store updates (`PUT /dokan/v1/stores/{id}` and `/dokan/v1/settings`)
 
-`StoreController::update_store_permissions_check` (`lite:includes/REST/StoreController.php:376`) resolves the requested ID with `get_vendor_id_for_user()`, so a Vendor Staff ID resolves to its Vendor, and then calls `can_access_vendor_store()`. That method lets `manage_woocommerce` through and otherwise requires the resolved Vendor to equal the caller's own Vendor. `StoreController::update_store` (`lite:includes/REST/StoreController.php:394`) repeats the same resolution and access check inside the callback. It then removes restricted fields and calls `dokan()->vendor->update()`.
+`StoreController::update_store_permissions_check` (`lite:includes/REST/StoreController.php:383`) resolves the requested ID with `get_vendor_id_for_user()`, so a Vendor Staff ID resolves to its Vendor, and then calls `can_access_vendor_store()`. That method lets `manage_woocommerce` through and otherwise requires the resolved Vendor to equal the caller's own Vendor. On multisite it also requires `VendorUtil::current_user_can_manage_vendor()`, which limits a non-super-admin to Vendors who are members of the current site. `StoreController::update_store` (`lite:includes/REST/StoreController.php:401`) repeats the resolution and the `can_access_vendor_store()` check inside the callback. It then removes restricted fields and calls `dokan()->vendor->update()`.
 
-`StoreController::get_restricted_fields_for_update` (`lite:includes/REST/StoreController.php:461`) removes `email` and `password` for callers who are neither a Site Admin nor a Vendor (that is, Vendor Staff). For callers without `manage_options` it also removes four commission field names (`dokan_admin_percentage`, `dokan_admin_percentage_type`, `dokan_admin_additional_fee`, `admin_category_commission`). ADR-0005 records that **Operating Terms are enforced by `Vendor\Manager::update()`**. That method writes `enabled`, `featured` and `trusted` (Direct Publishing) only for `manage_woocommerce` (`lite:includes/Vendor/Manager.php:381`). The list is filterable through `dokan_rest_store_restricted_fields_for_update`.
+`StoreController::get_restricted_fields_for_update` (`lite:includes/REST/StoreController.php:468`) removes `email` and `password` for callers who are neither a Site Admin nor a Vendor (that is, Vendor Staff). For callers without `manage_options` it also removes `dokan_admin_percentage`, `dokan_admin_percentage_type`, `dokan_admin_additional_fee` and `admin_category_commission`. These are the stored meta keys, not the request parameters that `Vendor\Manager::update()` reads (`admin_commission_type`, `admin_commission`, `admin_additional_fee`, `admin_category_commission`), so only `admin_category_commission` is actually removed by this list. The guard that keeps a Vendor from changing Commission is elsewhere: ADR-0005 records that **Operating Terms are enforced by `Vendor\Manager::update()`** (`lite:includes/Vendor/Manager.php:330`), which writes `enabled`, `featured`, `trusted` (Direct Publishing) and all four Commission fields only inside `current_user_can( 'manage_woocommerce' )` (`lite:includes/Vendor/Manager.php:400`). The list is filterable through `dokan_rest_store_restricted_fields_for_update`.
+
+Per-product Commission has a matching guard on product REST saves. `Product\Hooks::protect_per_product_commission_meta()` (`lite:includes/Product/Hooks.php:665`, hooked to WooCommerce's `woocommerce_rest_pre_insert_product_object` at `:63`) runs on every product REST route (`wc/v2`, `wc/v3`, `dokan/v1`, `dokan/v3`) after the request's meta is applied. For a caller without `manage_woocommerce`, it puts back the stored values of the keys from `Commission\Settings\Product::admin_only_meta_keys()` (`_per_product_admin_commission`, `_per_product_admin_commission_type`, `_per_product_admin_additional_fee`), or removes them when nothing is stored. This is the same gate the wp-admin product screen uses in `save_per_product_commission_options()`.
 
 `StoreSettingController` (`/dokan/v1/settings`) has a different permission callback. `StoreSettingController::get_settings_permission_callback` calls `get_vendor()` with no request, so it only confirms that the caller is logged in and that `dokan()->vendor->get( dokan_get_current_user_id() )` returns a record with a non-empty ID. `update_settings()` then copies the `vendor_id` parameter into `id` and calls `StoreController::update_store`. Per-store access is therefore decided by the `can_access_vendor_store()` check inside `update_store()`, not by the permission callback.
 
@@ -224,8 +226,8 @@ This subsystem adds **no custom tables, post types or transients**. It reads and
 
 | Kind | Key | Used for |
 |---|---|---|
-| Role (`wp_user_roles` option) | `seller` | Created by `Installer::user_roles` (`lite:includes/Install/Installer.php:174`). |
-| Role capabilities | `dokandar` and the 41 `dokan_*` capabilities | Granted to `seller`, `administrator` and `shop_manager` (`lite:includes/Install/Installer.php:211-217`). |
+| Role (`wp_user_roles` option) | `seller` | Created by `Installer::user_roles` (`lite:includes/Install/Installer.php:294`). |
+| Role capabilities | `dokandar` and the 41 `dokan_*` capabilities | Granted to `seller`, `administrator` and `shop_manager` (`lite:includes/Install/Installer.php:331-338`). |
 | User meta | `_vendor_id` | The Vendor a Vendor Staff user acts for. Read by `dokan_get_current_user_id()` and `VendorUtil::get_vendor_id_for_user()`. |
 | Post column | `wp_posts.post_author` | Product Ownership (see products.md). |
 | Option `dokan_selling` | `order_status_change` | When `off`, Vendors may not change order status (`OrderController::update_order_permissions_check`, the order-status AJAX handlers). |
@@ -241,7 +243,7 @@ All routes below are relative to `/wp-json/`. Unless stated, the permission call
 
 | Controller (file) | Route | Methods | Permission callback → rule |
 |---|---|---|---|
-| `StoreController` (`lite:includes/REST/StoreController.php:21`) | `dokan/v1/stores` | GET | `__return_true` |
+| `StoreController` (`lite:includes/REST/StoreController.php:22`) | `dokan/v1/stores` | GET | `__return_true` |
 | | `dokan/v1/stores` | POST | `permission_check_for_manageable_part` → `manage_woocommerce` |
 | | `dokan/v1/stores/{id}` | GET | `__return_true` (fields hidden through `dokan_rest_store_restricted_fields_for_view`) |
 | | `dokan/v1/stores/{id}` | PUT/PATCH | `update_store_permissions_check` → `can_access_vendor_store()` (section 4.2) |
@@ -274,7 +276,7 @@ All routes below are relative to `/wp-json/`. Unless stated, the permission call
 | | `dokan/v1/withdraw/payment_methods` | GET | `dokan_manage_withdraw` |
 | | `dokan/v1/withdraw/batch` | PUT/PATCH | `manage_woocommerce` |
 | `CommissionControllerV1` (`lite:includes/REST/CommissionControllerV1.php:14`) | `dokan/v1/commission` | GET | `get_permissions_check` → `manage_woocommerce`; otherwise `dokandar` plus `dokan_add_product` or `dokan_edit_product`, and any `vendor_id` / `product_id` must belong to the caller |
-| `CustomersController` (`lite:includes/REST/CustomersController.php:14`) | `dokan/v1/customers`, `/{id}`, `/batch` (inherited), `/customers/search` | GET / POST / PUT / DELETE | `check_permission()` → caller must be a Vendor. For `view`/`edit`/`delete` with an `id`, the target must not hold a protected capability (`dokan_rest_protected_user_caps`), must not be a Vendor, and must have ordered from this Vendor. `edit` refuses password changes and email changes. |
+| `CustomersController` (`lite:includes/REST/CustomersController.php:15`) | `dokan/v1/customers`, `/{id}`, `/batch` (inherited), `/customers/search` | GET / POST / PUT / DELETE | `check_permission()` → caller must be a Vendor. For `view`/`edit`/`delete` with an `id`, the target must not hold a protected capability (`dokan_rest_protected_user_caps`), must not be a Vendor, and must have ordered from this Vendor. `edit` refuses password changes and email changes. |
 | `DokanDataCountriesController` / `DokanDataContinentsController` (`lite:includes/REST/DokanDataCountriesController.php:9`, `DokanDataContinentsController.php:9`) | `dokan/v1/data/countries`, `/{location}`; `dokan/v1/data/continents`, `/{location}` (inherited) | GET | `check_dokan_permission` → `dokan_admin_menu_capability()` or `dokandar` |
 | `VendorDashboardController` (`lite:includes/REST/VendorDashboardController.php:19`) | `dokan/v1/vendor-dashboard`, `/profile`, `/sales`, `/products`, `/orders` | GET | `is_user_logged_in`; callbacks scope data to `dokan_get_current_user_id()` |
 | | `dokan/v1/vendor-dashboard/preferences` | GET | `__return_true` |
@@ -333,7 +335,7 @@ WooCommerce abilities that Lite scopes in place (it does not re-register them): 
 
 ### 7.5 AJAX actions (`WeDevs\Dokan\Ajax`)
 
-Registered in `Ajax::__construct` (`lite:includes/Ajax.php:18-63`). "Owner check" means the handler confirms the record belongs to the acting Vendor before acting.
+Registered in `Ajax::__construct` (`lite:includes/Ajax.php:19-65`). "Owner check" means the handler confirms the record belongs to the acting Vendor before acting.
 
 | Action | Handler | Nonce (action / how checked) | Capability | Owner check |
 |---|---|---|---|---|
@@ -361,13 +363,13 @@ Registered in `Ajax::__construct` (`lite:includes/Ajax.php:18-63`). "Owner check
 
 Other Lite classes register their own `wp_ajax_*` handlers outside `Ajax.php` (for example `Order\Ajax`, `ReverseWithdrawal\Ajax`, `Product\Hooks`, `Withdraw\Hooks`, `Admin\Settings` and the admin notice classes). They are documented with their subsystems.
 
-**Nonce sources.** `wp_create_nonce( 'dokan_reviews' )` is localized for the frontend at `lite:includes/Assets.php:862`, `dokan_admin` for admin screens at `:1476`, and the REST cookie nonce `wp_rest` at `:63`, `:907` and `:1479`. The legacy Vue admin client sends `window.dokan.rest.nonce` as `X-WP-Nonce` (`lite:src/utils/Api.js:40`). WordPress core validates it in its cookie authentication handler before any Dokan `permission_callback` runs.
+**Nonce sources.** `wp_create_nonce( 'dokan_reviews' )` is localized for the frontend at `lite:includes/Assets.php:862`, `dokan_admin` for admin screens at `:1480`, and the REST cookie nonce `wp_rest` at `:63`, `:909` and `:1483`. The legacy Vue admin client sends `window.dokan.rest.nonce` as `X-WP-Nonce` (`lite:src/utils/Api.js:40`). WordPress core validates it in its cookie authentication handler before any Dokan `permission_callback` runs.
 
 ## 8. Permissions & capabilities
 
 ### 8.1 Roles and capabilities
 
-`Installer::user_roles` (`lite:includes/Install/Installer.php:167`) creates the `seller` role, labelled "Vendor". The role holds native post capabilities, the WooCommerce product capabilities (`edit_product`, `edit_products`, `publish_products`, `delete_products`, `read_private_products`, `edit_published_products` and related), `edit_shop_orders`, `upload_files`, product-term capabilities, and `dokandar`. It does not hold `edit_others_products`. The installer then grants `dokandar` to `shop_manager` and `administrator`, and grants every `dokan_*` capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager`.
+`Installer::user_roles` (`lite:includes/Install/Installer.php:287`) creates the `seller` role, labelled "Vendor". The role holds native post capabilities, the WooCommerce product capabilities (`edit_product`, `edit_products`, `publish_products`, `delete_products`, `read_private_products`, `edit_published_products` and related), `edit_shop_orders`, `upload_files`, product-term capabilities, and `dokandar`. It does not hold `edit_others_products`. The installer then grants `dokandar` to `shop_manager` and `administrator`, and grants every `dokan_*` capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager`.
 
 `dokan_get_all_caps()` (`lite:includes/functions.php:2835`) defines 41 capabilities in eight groups:
 
@@ -454,4 +456,4 @@ Route `args` declare `type`, `sanitize_callback` and `validate_callback`; for ex
 - Apart from `src/utils/Api.js`, the React and Vue clients under `src/` were not reviewed for how they attach the `wp_rest` nonce.
 - `DokanAbilityRegistrar` also hooks `abilities_api_categories_init`, but neither installed copy of the Abilities API (WordPress core or WooCommerce's bundled one) fires that hook. Which Abilities API version fires it was not determined.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

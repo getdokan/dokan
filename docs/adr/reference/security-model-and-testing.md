@@ -40,10 +40,10 @@ Related reading:
 | Minimum PHP | `lite:dokan-class.php:44` (`$min_php = '7.4'`), checked by `WeDevs_Dokan::is_supported_php` (`lite:dokan-class.php:126`) | Activation refuses to proceed on an unsupported PHP version (`WeDevs_Dokan::activate`). |
 | Activation / deactivation | `lite:dokan-class.php:73-74` | `register_activation_hook` → `WeDevs_Dokan::activate` → `Installer::do_install()`, which registers roles and capabilities. |
 | WooCommerce feature declarations | Hooked at `lite:dokan-class.php:76` on `before_woocommerce_init`; body at `lite:dokan-class.php:237` | Declares HPOS (`custom_order_tables`) and Cart/Checkout Blocks (`cart_checkout_blocks`) compatibility. WooCommerce fires `before_woocommerce_init` at `wc:includes/class-woocommerce.php:998`. |
-| Role and capability install | `Installer::user_roles` (`lite:includes/Install/Installer.php:167`, `add_role` at line 174) | Creates the `seller` role and grants `dokandar` plus every `dokan_*` capability (see §8). |
+| Role and capability install | `Installer::user_roles` (`lite:includes/Install/Installer.php:287`, `add_role` at line 294) | Creates the `seller` role and grants `dokandar` plus every `dokan_*` capability (see §8). |
 | Abilities layer registration | `lite:includes/DependencyManagement/Providers/CommonServiceProvider.php:29-31` | Registers `ProductAbilityScope`, `OrderAbilityScope` and `DokanAbilityRegistrar` as `Hookable` services; `WeDevs_Dokan::init_hooks` calls `register_hooks()` on each (`lite:dokan-class.php:276-279`). |
-| Admin order permissions | `Order\Controller::init_classes` (`lite:includes/Order/Controller.php:42-44`) | Instantiates `Order\Admin\Permissions` only when `is_admin()`. |
-| AJAX handlers | `WeDevs\Dokan\Ajax` (`lite:includes/Ajax.php:11`) | Registers the `wp_ajax_*` / `wp_ajax_nopriv_*` actions. |
+| Admin order permissions | `Order\Controller::init_classes` (`lite:includes/Order/Controller.php:42-45`) | Instantiates `Order\Admin\Permissions` only when `is_admin()`. |
+| AJAX handlers | `WeDevs\Dokan\Ajax` (`lite:includes/Ajax.php:12`) | Registers the `wp_ajax_*` / `wp_ajax_nopriv_*` actions. |
 | PHPUnit bootstrap | `lite:tests/php/bootstrap.php:1` | Loads WooCommerce and Dokan on `muplugins_loaded`, forces HPOS on, installs both plugins on `setup_theme`. |
 | Playwright configs | `lite:tests/pw/e2e.config.ts`, `lite:tests/pw/api.config.ts`, `lite:tests/pw/playwright.config.ts` | Project chains and tag filters (see §4.6). |
 | CI workflows | `lite:.github/workflows/phpunit.yml`, `phpcs.yml`, `e2e_api_tests.yml`, `deploy.yml` | See §4.7. |
@@ -60,8 +60,8 @@ Related reading:
 | `dokan_get_all_caps()` | `lite:includes/functions.php:2835` | The 41 `dokan_*` capabilities, grouped (overview, report, order, coupon, review, withdraw, product, menu); filterable via `dokan_get_all_cap`. |
 | `dokan_admin_menu_capability()` | `lite:includes/functions.php:40` | Returns `manage_woocommerce`, filterable via `dokan_menu_capability`. |
 | `dokan_get_seller_id_by_order()` | `lite:includes/Order/functions.php:296` | Resolves an order's Vendor from `{prefix}dokan_orders.seller_id` (cached). |
-| `Order\Manager::is_seller_has_order` | `lite:includes/Order/Manager.php:393` | `SELECT 1 FROM {prefix}dokan_orders WHERE seller_id = %d AND order_id = %d`. |
-| `Order\Manager::all` | `lite:includes/Order/Manager.php:31` | Order queries; a `seller_id` argument becomes a `_dokan_vendor_id` meta query (line 122). |
+| `Order\Manager::is_seller_has_order` | `lite:includes/Order/Manager.php:394` | `SELECT 1 FROM {prefix}dokan_orders WHERE seller_id = %d AND order_id = %d`. |
+| `Order\Manager::all` | `lite:includes/Order/Manager.php:32` | Order queries; a `seller_id` argument becomes a `_dokan_vendor_id` meta query (line 122). |
 | `Abstracts\DokanRESTController::prepare_objects_query` | `lite:includes/Abstracts/DokanRESTController.php:333` | Forces `author` to `dokan_get_current_user_id()` unless the caller holds `dokan_admin_menu_capability()` and passes `id`. |
 | `Traits\VendorAuthorizable` | `lite:includes/Traits/VendorAuthorizable.php:7` | Shared Vendor-route checks: `check_permission()` (`dokandar`, line 16), `can_access_vendor_store()`, `get_vendor_id_for_user()`, `validate_store_id()`, `is_staff_only()`. |
 | `REST\DokanBaseAdminController::check_permission` | `lite:includes/REST/DokanBaseAdminController.php:26` | Admin routes require `manage_woocommerce`. |
@@ -72,7 +72,7 @@ Related reading:
 | `Abilities\OrderAbilityScope` | `lite:includes/Abilities/OrderAbilityScope.php:43` | Applies Vendor Scope and Ownership to WooCommerce's order abilities across CPT and HPOS stores. |
 | `Abilities\Definitions\AbstractVendorAbility` | `lite:includes/Abilities/Definitions/AbstractVendorAbility.php:23` | Base for Dokan-native abilities: `check_permission()` (line 100) and `guard()` (line 154). |
 | `Abilities\DokanAbilityRegistrar` | `lite:includes/Abilities/DokanAbilityRegistrar.php:27` | Registers the `dokan` ability category and the four Dokan-native abilities. |
-| `Ajax::change_order_status` | `lite:includes/Ajax.php:363` | Reference example of the AJAX pattern (nonce → capability → Ownership). |
+| `Ajax::change_order_status` | `lite:includes/Ajax.php:354` | Reference example of the AJAX pattern (nonce → capability → Ownership). |
 | `Test\DokanTestCase` | `lite:tests/php/src/DokanTestCase.php:23` | Base PHPUnit case: REST server, users fixture, Brain Monkey and Mockery lifecycle, request helpers. |
 | `Test\DokanAjaxTestCase` | `lite:tests/php/src/DokanAjaxTestCase.php:11` | Base case for AJAX tests (`WP_Ajax_UnitTestCase`). |
 | `Test\Factories\DokanFactory` | `lite:tests/php/src/Factories/DokanFactory.php:6` | Fixture factory exposing `customer`, `seller`, `coupon`, `product`, `order`, `shipping`. |
@@ -111,7 +111,7 @@ The full per-route table lives in [rest-api-and-permissions.md §7](./rest-api-a
 1. **`permission_callback` checks a capability.** Examples: `WithdrawController::get_items_permissions_check` returns `current_user_can( 'dokan_manage_withdraw' )`; `VendorAuthorizable::check_permission` returns `current_user_can( 'dokandar' )`; `DokanBaseAdminController::check_permission` returns `current_user_can( 'manage_woocommerce' )`.
 2. **Ownership is checked per record**, either in the permission callback itself (`WithdrawController::get_item_permissions_check` compares the withdraw's `user_id` with the caller), in a `validation_before_update_item()` / `validation_before_delete_item()` step called by `DokanRESTController::update_item()` / `::delete_item()` (`OrderController::validation_before_update_item` compares `dokan_get_current_user_id()` with `dokan_get_seller_id_by_order()`), or with `VendorAuthorizable::can_access_vendor_store()` for store records.
 3. **List endpoints are scoped in the query.** `DokanRESTController::prepare_objects_query` pins `author`; `WithdrawController::get_items` pins `user_id` to `dokan_get_current_user_id()` for non-admins; `StoreController::get_store_products` pins the author and forces `status=publish` on a public route.
-4. **Operating Terms** (Commission, Selling Activation, Direct Publishing, featured status) are applied only for a Store Admin: `Vendor\Manager::update` (`lite:includes/Vendor/Manager.php:323`) wraps those writes in `current_user_can( 'manage_woocommerce' )` (line 381). ADR-0005 identifies this gate as the real protection for Operating Terms.
+4. **Operating Terms** (Commission, Selling Activation, Direct Publishing, featured status) are applied only for a Store Admin: `Vendor\Manager::update` (`lite:includes/Vendor/Manager.php:330`) wraps those writes in `current_user_can( 'manage_woocommerce' )` (line 400). ADR-0005 identifies this gate as the real protection for Operating Terms. The REST store update's restricted-field list (`StoreController::get_restricted_fields_for_update`) names the stored meta keys rather than the request parameters `Vendor\Manager::update` reads, so it removes only `admin_category_commission`; it is not what blocks a Vendor's Commission change. Per-product Commission meta written through any product REST route is held to the same `manage_woocommerce` gate by `Product\Hooks::protect_per_product_commission_meta()` (`lite:includes/Product/Hooks.php:665`).
 
 ### 4.3 AJAX pattern
 
@@ -132,7 +132,7 @@ sequenceDiagram
     A-->>B: "wp_send_json_success(escaped label HTML)"
 ```
 
-Unauthenticated (`wp_ajax_nopriv_*`) handlers also verify a nonce where they accept a form submission. Examples are `Ajax::contact_seller` (`dokan_contact_seller` nonce, `lite:includes/Ajax.php:412`) and `Ajax::seller_listing_search` (`dokan-seller-listing-search` nonce, line 650).
+Unauthenticated (`wp_ajax_nopriv_*`) handlers also verify a nonce where they accept a form submission. Examples are `Ajax::contact_seller` (`dokan_contact_seller` nonce, `lite:includes/Ajax.php:402`) and `Ajax::seller_listing_search` (`dokan-seller-listing-search` nonce, line 640).
 
 ### 4.4 Abilities layer: Ability Context and the Ownership gate (ADR-0006, ADR-0007)
 
@@ -341,7 +341,7 @@ ADR-0007 considered and rejected widening `Order\Admin\Permissions::map_meta_cap
 | Capabilities `dokan_*` (41) | Granted to `seller`, `administrator`, `shop_manager` | Action model for Vendors and Vendor Staff. |
 | User meta `_vendor_id` | On a Vendor Staff user | Parent Vendor resolved by `dokan_get_current_user_id()`. |
 | Order meta `_dokan_vendor_id` | On each Vendor order | Vendor filter for order queries and the wp-admin meta-cap mapping. |
-| Table `{prefix}dokan_orders` | `id` bigint PK, `order_id` bigint (indexed), `seller_id` bigint (indexed), `order_total` decimal(19,4), `net_amount` decimal(19,4), `order_status` varchar(30); created by `Installer::create_sync_table` (`lite:includes/Install/Installer.php:372`, DDL at line 375) | Order → Vendor lookup used by Ownership checks. |
+| Table `{prefix}dokan_orders` | `id` bigint PK, `order_id` bigint (indexed), `seller_id` bigint (indexed), `order_total` decimal(19,4), `net_amount` decimal(19,4), `order_status` varchar(30); created by `Installer::create_sync_table` (`lite:includes/Install/Installer.php:492`, DDL at line 495) | Order → Vendor lookup used by Ownership checks. |
 | Table `{prefix}dokan_withdraw` | `user_id` column | Withdrawal ownership (see [withdraw-and-reverse-withdrawal.md](./withdraw-and-reverse-withdrawal.md)). |
 | `wp_posts.post_author` | Products | Product ownership. |
 | Option `dokan_selling` → `order_status_change` | Admin setting | When not `on`, Vendors cannot change order status (`Ajax::change_order_status`, `OrderController::update_order_permissions_check`). |
@@ -355,7 +355,7 @@ The complete route list with permission callbacks is in [rest-api-and-permission
 
 | Surface | Authentication | CSRF protection | Authorization |
 |---|---|---|---|
-| `dokan/v1`, `v2`, `v3` (Vendor and public routes) | WordPress cookie or application credentials | `wp_rest` nonce, localized to scripts by `Assets` (`lite:includes/Assets.php:63`, `:907`, `:1479`) and checked by WordPress core's REST cookie authentication | `permission_callback` capability + Ownership (§4.2) |
+| `dokan/v1`, `v2`, `v3` (Vendor and public routes) | WordPress cookie or application credentials | `wp_rest` nonce, localized to scripts by `Assets` (`lite:includes/Assets.php:63`, `:909`, `:1483`) and checked by WordPress core's REST cookie authentication | `permission_callback` capability + Ownership (§4.2) |
 | `dokan/v1/admin` | Same | Same | `DokanBaseAdminController::check_permission` → `manage_woocommerce` |
 | `admin-ajax.php` (`WeDevs\Dokan\Ajax`, 29 `wp_ajax_*` registrations, plus handlers in other classes) | Cookie | `check_ajax_referer()` / `wp_verify_nonce()` with per-action nonce names | Capability + `dokan_is_seller_has_order()` / `dokan_is_product_author()` (§4.3) |
 | Dashboard form posts | Cookie | `wp_nonce_field()` + `wp_verify_nonce()`, e.g. `dokan_add_new_product` (`lite:includes/Dashboard/Templates/Products.php:296`), `dokan_edit_product` (line 469), `dokan_withdraw` (`lite:includes/Withdraw/Hooks.php:166`) | Capability + Ownership in the handler |
@@ -369,7 +369,7 @@ The complete route list with permission callbacks is in [rest-api-and-permission
 
 ### 8.1 Roles and capabilities installed by Lite
 
-`Installer::user_roles` creates the `seller` role (display name "Vendor") with WordPress post capabilities, WooCommerce product capabilities (`edit_products`, `publish_products`, `delete_products`, and others), `edit_shop_orders`, `upload_files` and `dokandar`. It then adds `dokandar` to `administrator` and `shop_manager`, and adds every capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager` (`lite:includes/Install/Installer.php:211-217`).
+`Installer::user_roles` creates the `seller` role (display name "Vendor") with WordPress post capabilities, WooCommerce product capabilities (`edit_products`, `publish_products`, `delete_products`, and others), `edit_shop_orders`, `upload_files` and `dokandar`. It then adds `dokandar` to `administrator` and `shop_manager`, and adds every capability from `dokan_get_all_caps()` to `seller`, `administrator` and `shop_manager` (`lite:includes/Install/Installer.php:331-338`).
 
 The 41 `dokan_*` capabilities by group:
 
@@ -446,26 +446,26 @@ Lite does not register a `vendor_staff` role. It only recognises the capability 
 
 ## Testing inventory
 
-### PHPUnit: `tests/php/src` (102 `*Test.php` files)
+### PHPUnit: `tests/php/src` (118 `*Test.php` files)
 
 | Area | Test files | Notes |
 |---|---|---|
-| `REST/` | 28 | Includes the authorization and ownership tests: `StoreControllerAuthorizationTest`, `CommissionControllerAuthorizationTest`, `ProductControllerV3BatchAuthorizationTest`, `OrderBulkActionsOwnershipTest`, `OrderDownloadsGrantOwnershipTest`, `OrderDownloadsRevokeOwnershipTest`, `StoreProductsScopeTest`, `StoreCategoriesCommissionDisclosureTest`, `AdminPluginInstallCapabilityTest`, `AdminSettingsFieldSanitizeTest`. |
-| `Admin/` | 20 | Plus one non-test support file. Includes `UserProfileCommissionTest`, which checks that saving the wp-admin user profile leaves the Vendor-level Commission formula unchanged. |
-| `Analytics/` | 15 | Plus one non-test support file. |
-| `Orders/` | 8 | Includes `BulkOrderStatusOwnershipTest`. |
+| `REST/` | 34 | Includes the authorization and ownership tests: `StoreControllerAuthorizationTest`, `CommissionControllerAuthorizationTest`, `ProductControllerV3BatchAuthorizationTest`, `OrderBulkActionsOwnershipTest`, `OrderDownloadsGrantOwnershipTest`, `OrderDownloadsRevokeOwnershipTest`, `StoreProductsScopeTest`, `StoreCategoriesCommissionDisclosureTest`, `AdminPluginInstallCapabilityTest`, `AdminSettingsFieldSanitizeTest`, `ProductRestUnsafeMetaTest`, `PublicProductPrivateFieldsTest`, `VendorStatusMultisiteScopeTest`. |
+| `Admin/` | 21 | Plus one non-test support file. Includes `UserProfileCommissionTest`, which checks that saving the wp-admin user profile leaves the Vendor-level Commission formula unchanged. |
+| `Analytics/` | 16 | Plus one non-test support file. |
+| `Orders/` | 9 | Includes `BulkOrderStatusOwnershipTest`. |
 | `Commission/` | 6 | |
-| `Abilities/` | 4 | `OrderAbilityScopeTest`, `ProductAbilityScopeTest`, `DokanNativeAbilitiesTest`, `VendorPayloadTest`: 79 test methods, covering cross-vendor denial, staff capability gating on reads and writes, order-create denial, MCP pre-flight flagging, query scoping, and filterable capabilities. This is the dense coverage ADR-0007 asks for. |
+| `Abilities/` | 5 | `OrderAbilityScopeTest`, `ProductAbilityScopeTest`, `DokanNativeAbilitiesTest`, `VendorPayloadTest`, `RequestContextTest`: 82 test methods, covering cross-vendor denial, staff capability gating on reads and writes, order-create denial, MCP pre-flight flagging, query scoping, and filterable capabilities. This is the dense coverage ADR-0007 asks for. |
 | `Withdrawal/` | 3 | |
-| `Vendor/` | 3 | |
+| `Vendor/` | 5 | |
 | `Product/` | 2 | Plus one non-test support file (`Dokan_Object_Injection_Probe`). |
-| `Abstracts/`, `Cache/`, `CatalogMode/`, `Coupon/`, `Intelligence/`, `Models/`, `ReverseWithdrawal/`, `Shortcodes/`, `Traits/` | 1 each | `CatalogMode/CatalogModeBulkEditOwnershipTest` and `ReverseWithdrawal/PaymentAmountReconciliationTest` are in the `security` group. |
-| Top level | 4 | `RegistrationTest`, `DokanFactoryTest`, `ReactUrlGenerationTest`, `VendorNavMenuCheckerTest`. |
+| `Abstracts/`, `Cache/`, `CatalogMode/`, `Coupon/`, `Install/`, `Intelligence/`, `Models/`, `ReverseWithdrawal/`, `Shortcodes/`, `Traits/`, `Upgrade/` | 1 each | `CatalogMode/CatalogModeBulkEditOwnershipTest` and `ReverseWithdrawal/PaymentAmountReconciliationTest` are in the `security` group. |
+| Top level | 6 | `RegistrationTest`, `BecomeAVendorTest`, `DashboardRestrictedRoutesTest`, `DokanFactoryTest`, `ReactUrlGenerationTest`, `VendorNavMenuCheckerTest`. |
 | `Factories/` | 0 (7 support files) | `DokanFactory`, `SellerFactory`, `CustomerFactory`, `ProductFactory`, `OrderFactory`, `CouponFactory`, `ShippingFactory`. |
 | `Helpers/` | 0 (7 support files) | `Dokan_Test_Helpers` and `WC_Helper_{Coupon,Customer,Order,Product,Queue,Shipping}`. |
 | `CustomAssertion/` | 0 (2 support files) | `DBAssertionTrait`, `NestedArrayAssertionTrait`. |
 
-The most-used `@group` annotations are `admin-settings` (21), `analytics` (16), `rest-api` (11), `dokan-authorization` (11), `orders` (10), `security` (9) and `commission` (6).
+The most-used `@group` annotations are `admin-settings` (21), `analytics` (18), `dokan-authorization` (16), `security` (12), `rest-api` (11), `orders` (11) and `commission` (6).
 
 Brain Monkey's `setUp()`/`tearDown()` lifecycle is wired into `DokanTestCase`, and Mockery is integrated through `MockeryPHPUnitIntegration`. A search of `tests/php/src` found `Brain\Monkey` imported only in `DokanTestCase` itself. Most tests are integration tests against a real WordPress + WooCommerce install rather than function-mocking tests.
 
@@ -508,4 +508,4 @@ Tag usage across `tests/pw/tests/` (single-quoted tag literals such as `'@pro'`)
 - **Playwright detail.** `tests/pw/README.md`, `setup.md`, `test-cases.md` and `feature-map/feature-map.yml` were only partly read. Per-feature spec ownership and the full meaning of secondary tags (`@migration`, `@new-ui`, `@v2`; `tests/pw/README.md` describes `@exploratory` as smoke-level coverage with relaxed assertions) are not documented here beyond their counts.
 - **AJAX inventory.** Only `WeDevs\Dokan\Ajax` and a few other handlers were inspected. A complete list of every `wp_ajax_*` action with its nonce and capability is not included.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

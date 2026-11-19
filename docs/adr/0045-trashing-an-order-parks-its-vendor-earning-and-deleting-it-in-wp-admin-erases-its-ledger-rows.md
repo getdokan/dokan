@@ -25,19 +25,19 @@ Store Admins trash test orders, fraudulent orders and duplicates, and sometimes 
 
 - trashes every Suborder when a parent Order is trashed (`$child->delete( false )`, `lite:includes/Order/Admin/Hooks.php:462-476`, hooked at `:40` for HPOS and `:53` for posts storage), which parks each Suborder's Earning through the listener above;
 - restores every trashed Suborder through the data store when the parent is restored (`lite:includes/Order/Admin/Hooks.php:488-518`, hooked at `:41` / `:54`), which restores their ledger status;
-- on permanent deletion (`woocommerce_delete_order` on HPOS, `delete_post` on posts storage, `:42` / `:55`) calls `Order\Manager::delete_seller_order_with_suborders()` (`lite:includes/Order/Manager.php:559-571`).
+- on permanent deletion (`woocommerce_delete_order` on HPOS, `delete_post` on posts storage, `:42` / `:55`) calls `Order\Manager::delete_seller_order_with_suborders()` (`lite:includes/Order/Manager.php:604-616`).
 
-**Delete.** `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php:490-547`) removes, for the order id:
+**Delete.** `Order\Manager::delete_seller_order()` (`lite:includes/Order/Manager.php:535-593`) removes, for the order id:
 
-- the `dokan_orders` row (`:505`);
-- `dokan_refund` rows (`:513-518`), then fires `dokan_after_deleting_seller_order` (`:523`);
-- `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw` (`:525-531`);
-- Reverse withdrawal rows of types `order_commission`, `manual_order_commission` and `order_refund` for the order (`:537-543`).
+- the `dokan_orders` row (`:550`);
+- `dokan_refund` rows (`:558-563`), then fires `dokan_after_deleting_seller_order` (`:568`);
+- `dokan_vendor_balance` rows whose `trn_id` is the order id and whose `trn_type` is `dokan_orders`, `dokan_refund` or `dokan_withdraw` (`:571-577`);
+- Reverse withdrawal rows of types `order_commission`, `manual_order_commission` and `order_refund` for the order (`:583-589`).
 
 How Suborders are reached depends on the order storage.
 
 - **HPOS.** `OrdersTableDataStore::delete()` calls `upshift_or_delete_child_orders()` (`wc:src/Internal/DataStores/Orders/OrdersTableDataStore.php:2691`) *before* it fires `woocommerce_delete_order` (`:2724`). `shop_order` is not hierarchical (`wc:includes/class-wc-post-types.php:469`), so that method runs `$child_order->delete( true )` on every order whose `parent_order_id` is the parent, with no status filter (`:2819-2858`). In WP-admin each Suborder deletion fires `woocommerce_delete_order` for the Suborder, so Dokan's handler erases its rows, trashed or not. When the parent's own `woocommerce_delete_order` fires afterwards, `get_child_orders()` in `delete_seller_order_with_suborders()` finds nothing left to delete.
-- **Posts storage.** `delete_seller_order_with_suborders()` deletes each Suborder returned by `get_child_orders()` permanently (`lite:includes/Order/Manager.php:563-570`), which re-enters the same handler for that Suborder. `get_child_orders()` uses WooCommerce's default status list, which leaves out `trash` (`wc:includes/class-wc-order-query.php:27`), so Suborders that were already trashed together with the parent are not deleted by this step; their rows are erased when the Suborders themselves are deleted, which WooCommerce's "Empty Trash" does because it deletes every trashed order one by one (`wc:src/Internal/Admin/Orders/ListTable.php:1446-1456`, `:1601-1615`). Until then they stay parked at `wc-trash`. Once deleted, the Earning disappears from the ledger entirely, as if the order had never existed.
+- **Posts storage.** `delete_seller_order_with_suborders()` deletes each Suborder returned by `get_child_orders()` permanently (`lite:includes/Order/Manager.php:608-615`), which re-enters the same handler for that Suborder. `get_child_orders()` uses WooCommerce's default status list, which leaves out `trash` (`wc:includes/class-wc-order-query.php:27`), so Suborders that were already trashed together with the parent are not deleted by this step; their rows are erased when the Suborders themselves are deleted, which WooCommerce's "Empty Trash" does because it deletes every trashed order one by one (`wc:src/Internal/Admin/Orders/ListTable.php:1446-1456`, `:1601-1615`). Until then they stay parked at `wc-trash`. Once deleted, the Earning disappears from the ledger entirely, as if the order had never existed.
 
 ## Settings that change it
 
@@ -57,7 +57,7 @@ Order #300 → #301 (Vendor A, 54.00, `completed`) and #302 (Vendor B, 36.00, `c
 
 - **Deletion outside WP-admin keeps the rows.** Orders deleted by REST calls, WP-CLI, cron jobs or payment webhooks do not load `Order\Admin\Hooks`, so their ledger rows remain with their last status and keep counting if that status is an earning status. On HPOS, deleting a parent Order there still deletes its Suborders (WooCommerce's child-order cleanup above), but their ledger rows remain as orphans that point to orders which no longer exist and still count.
 - **Trashing with `wp_trash_post()` directly on posts storage** (the legacy order list's Trash link) does not fire `woocommerce_trash_order`; WooCommerce's own `wp_trash_post` handler does not fire it either (`wc:includes/class-wc-post-data.php:62`, `:468-496`). The trashed order's own rows keep their previous status. Its Suborders, which Dokan trashes through the data store, are parked normally.
-- **Withdraw rows are matched by number.** The delete query removes `dokan_withdraw` Balance rows whose `trn_id` equals the order id. Withdraw rows store the Withdraw id in `trn_id` (`lite:includes/Withdraw/Hooks.php:131-140`), so this clause matches an unrelated Withdraw that happens to share the number.
+- **Withdraw rows are matched by number.** The delete query removes `dokan_withdraw` Balance rows whose `trn_id` equals the order id. Withdraw rows store the Withdraw id in `trn_id` (`lite:includes/Withdraw/Hooks.php:130-141`), so this clause matches an unrelated Withdraw that happens to share the number.
 - **Refund credits are deleted too.** Deleting a refunded order removes both its debit and its refund credits, so the net effect on the Balance is zero only if they matched.
 
 ## Why
@@ -76,4 +76,4 @@ No recorded decision beyond the method docblocks ("Delete sub orders and from do
 - Remove `dokan_withdraw` from the delete query, or match Withdraw rows by a real link to the order, so unrelated Withdraw rows cannot be deleted.
 - Consider blocking permanent deletion of Vendor orders whose Earning has already been paid out, or at least warning the Store Admin.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

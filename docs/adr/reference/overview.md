@@ -239,4 +239,4 @@ The excluded cash-on-delivery case connects both ledgers: with the Withdraw sett
 - The diagram does not show the lazy split for orders created in WP-admin, the Reverse withdrawal failed actions, or Withdraw cancellation; see [orders-commission-fees.md §4.1](./orders-commission-fees.md#41-checkout-to-suborders-to-commission-to-balance), [withdraw-and-reverse-withdrawal.md B4.2](./withdraw-and-reverse-withdrawal.md#b42-accrual-payment-and-enforcement) and [A4.1](./withdraw-and-reverse-withdrawal.md#a41-status-model).
 - The component diagram groups classes into components for readability. The grouping is an editorial view; the container's actual registration is in [bootstrap-and-container.md §2.4 and §2.5](./bootstrap-and-container.md#24-dokan-name-service-map).
 
-_Verified against Lite @63ad89353 / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-10-14._
+_Verified against Lite @fbae0ce7d / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-11-19._

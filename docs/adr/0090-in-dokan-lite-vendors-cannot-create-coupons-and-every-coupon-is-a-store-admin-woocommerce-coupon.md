@@ -11,12 +11,12 @@ Teammates and support staff regularly ask "can a Vendor make their own coupon?" 
 **Dokan Lite has no Vendor coupon screen, endpoint or editor. The only coupons in a Lite-only marketplace are ordinary WooCommerce coupons created by the Store Admin, and they apply to any Vendor's products according to WooCommerce's own restrictions, with one Dokan restriction for fixed cart coupons.**
 
 - **No Vendor coupon UI.** Lite registers no "Coupons" Vendor dashboard menu, no coupon form and no Vendor coupon REST route. It only reserves the pieces an add-on needs:
-  - the Vendor capabilities `dokan_add_coupon`, `dokan_edit_coupon`, `dokan_delete_coupon` and `dokan_view_coupon_menu` in `dokan_get_all_caps()` (`lite:includes/functions.php:2859-2863`, `:2885`), which the installer grants to the `seller`, `administrator` and `shop_manager` roles (`lite:includes/Install/Installer.php:204-217`); holding them has no effect until an add-on adds a coupon screen;
-  - `dokan_get_coupon_edit_url()`, which builds a link to a `coupons` Vendor dashboard page (`lite:includes/functions.php:2027-2044`).
+  - the Vendor capabilities `dokan_add_coupon`, `dokan_edit_coupon`, `dokan_delete_coupon` and `dokan_view_coupon_menu` in `dokan_get_all_caps()` (`lite:includes/functions.php:2859-2863`, `:2885`), which the installer grants to the `seller`, `administrator` and `shop_manager` roles (`lite:includes/Install/Installer.php:324-338`); holding them has no effect until an add-on adds a coupon screen;
+  - `dokan_get_coupon_edit_url()`, which builds a link to a `coupons` Vendor dashboard page (`lite:includes/functions.php:2027-2046`).
 - **Store Admin coupons cross Vendors.** A coupon created in WooCommerce → Marketing → Coupons is validated by WooCommerce (`WC_Discounts::is_coupon_valid()`, `wc:includes/class-wc-discounts.php:1246-1291`). Lite adds no Vendor scoping: a `percent` or `fixed_product` coupon with no product restrictions discounts eligible items of every Vendor in the cart.
 - **Fixed cart coupons stay single-vendor.** See [ADR-0089](./0089-a-fixed-cart-coupon-can-be-used-only-when-every-product-in-the-cart-comes-from-one-vendor.md).
 - **Every coupon is Vendor-funded in commission** unless an add-on writes the funding meta; see [ADR-0025](./0025-coupon-discounts-reduce-commission-according-to-who-funds-the-coupon.md).
-- **Add-on seams.** Add-ons may add Vendor coupons and Vendor limits through `dokan_coupon_is_valid` (`lite:includes/Order/Hooks.php:491`), `dokan_wc_coupon_applied` (`lite:includes/Vendor/Coupon.php:124`), `dokan_coupon_should_validate` (`lite:includes/Vendor/Coupon.php:119`) and the coupon meta keys copied into `_dokan_coupon_info` (`lite:includes/Vendor/Coupon.php:172-181`).
+- **Add-on seams.** Add-ons may add Vendor coupons and Vendor limits through `dokan_coupon_is_valid` (`lite:includes/Order/Hooks.php:510`), `dokan_wc_coupon_applied` (`lite:includes/Vendor/Coupon.php:124`), `dokan_coupon_should_validate` (`lite:includes/Vendor/Coupon.php:119`) and the coupon meta keys copied into `_dokan_coupon_info` (`lite:includes/Vendor/Coupon.php:172-181`).
 
 ## Settings that change it
 
@@ -49,4 +49,4 @@ Lite keeps the marketplace core (orders, Suborders, commission, Balance) and lea
 
 - Grant the coupon capabilities only when a coupon screen is actually available, or label them as add-on capabilities in the staff-permission UI.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

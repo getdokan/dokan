@@ -19,7 +19,7 @@ When the Commission formula is **Category Based**, the admin fills a table with 
 | Setting | Default | Behaviour |
 |---|---|---|
 | `dokan_selling[commission_type]` | `fixed` | Only `category_based` activates the global table. |
-| `dokan_selling[commission_category_based_values]` | `[]` | Shape `{ all: {percentage, flat}, items: { <term_id>: {percentage, flat} } }`. The settings page requires a non-empty All Categories value (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:728`, `:759-800`). |
+| `dokan_selling[commission_category_based_values]` | `[]` | Shape `{ all: {percentage, flat}, items: { <term_id>: {percentage, flat} } }`. The settings page requires a non-empty All Categories value (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:725`, `:755-794`). |
 | `dokan_selling[reset_sub_category_when_edit_all_category]` | `on` | Editor behaviour only. `on`: editing a parent category copies its values to all nested subcategories (`lite:src/components/commission/CategoryBasedCommission.tsx:125-138`), and editing All Categories clears every specific category entry (`:204-207`). `off`: each category keeps its own value. In both modes, editing a category removes entries whose values equal All Categories (`:140-152`). Changing the toggle later does not rewrite stored entries. |
 | Vendor `dokan_admin_percentage_type` = `category_based` and `admin_category_commission` | empty | As above, but for that Vendor's products only. The Vendor's `reset_sub_category` meta plays the same editor-only role. |
 | `dokan_selling[product_category_style]` | `single` | `single`: products carry one chosen category. `multiple`: products may carry several; only the first is used for commission. |
@@ -41,7 +41,7 @@ Settings: global `category_based`. `all = { percentage: 5, flat: 0 }`. `items[12
 
 ## Why
 
-The settings UI states that the All Categories value "serves as your marketplace's default rate and cannot be empty" (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:728`), which is why it is the fallback. Copying values to subcategories at edit time keeps the runtime lookup to a single key. No recorded reason was found for using only the first chosen category.
+The settings UI states that the All Categories value "serves as your marketplace's default rate and cannot be empty" (`lite:includes/Admin/Settings/Schema/SettingsSchema.php:725`), which is why it is the fallback. Copying values to subcategories at edit time keeps the runtime lookup to a single key. No recorded reason was found for using only the first chosen category.
 
 ## Consequences & risks
 
@@ -53,4 +53,4 @@ The settings UI states that the All Categories value "serves as your marketplace
 - Show the category that decided the Commission formula on the order Commission meta box.
 - Make the empty-entry case fall back to All Categories, matching what the UI suggests.
 
-_Verified against Lite @e1ce7fc81 / WooCommerce 11.2.1 — 2026-10-22._
+_Verified against Lite @fbae0ce7d / WooCommerce 11.2.1 — 2026-11-19._

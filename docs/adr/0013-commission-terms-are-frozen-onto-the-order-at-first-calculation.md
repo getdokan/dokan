@@ -59,4 +59,4 @@ flowchart TD
 - Whether any caller fires `dokan_recalculate_order_commission_and_adjust_vendor_balance` expecting `RecalculateCommissions` to run was not searched outside Lite.
 - The Formula classes under `includes/Commission/Formula/` are referenced by the `V_3_14_0` upgrader and, for the `Fixed::SOURCE` constant, by `Settings\DefaultSetting`, but `Calculator` does not instantiate them; their long-term status is not recorded in code.
 
-_Verified against Lite @63ad89353 / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-10-14._
+_Verified against Lite @fbae0ce7d / Pro @a8a98c732 / WooCommerce 11.2.1 — 2026-11-19._
