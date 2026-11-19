@@ -6,7 +6,7 @@ import { SocialField } from './SocialField';
 import { SectionProps } from './types';
 import { getSocialPlatformsArray } from '@src/admin/dashboard/config/socialPlatforms';
 
-export const SocialOptions = ( { vendor, setData }: SectionProps ) => {
+export const SocialOptions = ( { vendor, mergeData }: SectionProps ) => {
     const socialPlatforms = useMemo(
         () => getSocialPlatformsArray( 'w-10 h-10' ),
         []
@@ -34,8 +34,7 @@ export const SocialOptions = ( { vendor, setData }: SectionProps ) => {
                                         }
                                         placeholder={ platform.placeholder }
                                         onChange={ ( value ) => {
-                                            setData( 'social', {
-                                                ...vendor?.social,
+                                            mergeData( 'social', {
                                                 [ platform.key ]: value,
                                             } );
                                         } }
