@@ -1,18 +1,40 @@
-import { useState, useEffect } from '@wordpress/element';
-import { useDebounce } from '@wordpress/compose';
-import { SimpleInput } from "@getdokan/dokan-ui";
+import { useState, useEffect, useMemo, useRef } from '@wordpress/element';
+import { debounce } from '@wordpress/compose';
+import { SimpleInput } from '@getdokan/dokan-ui';
 
 const DebouncedInput = ( {
     value: externalValue = '',
     onChange,
     delay = 500,
     component = '',
+    flushOnUnmount = false,
     ...props
 } ) => {
     const [ internalValue, setInternalValue ] = useState( externalValue );
 
-    // Create debounced function using WordPress compose
-    const debouncedOnChange = useDebounce( onChange, delay );
+    // Keep the latest onChange so the debounced call never fires a stale closure.
+    const onChangeRef = useRef( onChange );
+    onChangeRef.current = onChange;
+
+    // Stable debounced function: parent re-renders must not cancel pending input.
+    const debouncedOnChange = useMemo(
+        () =>
+            debounce( ( newValue ) => {
+                onChangeRef.current?.( newValue );
+            }, delay ),
+        [ delay ]
+    );
+
+    // Opt-in: deliver (not drop) pending input when unmounting, e.g. on a tab switch.
+    useEffect( () => {
+        return () => {
+            if ( flushOnUnmount ) {
+                debouncedOnChange.flush();
+            } else {
+                debouncedOnChange.cancel();
+            }
+        };
+    }, [ debouncedOnChange, flushOnUnmount ] );
 
     // Update internal value when external value changes
     useEffect( () => {
@@ -24,10 +46,7 @@ const DebouncedInput = ( {
         const newValue = event.target.value;
         setInternalValue( newValue );
 
-        // Call debounced onChange
-        if ( debouncedOnChange ) {
-            debouncedOnChange( newValue );
-        }
+        debouncedOnChange( newValue );
     };
 
     const Component = component ?? '';
