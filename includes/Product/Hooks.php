@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Product;
 
 use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Settings\Product as ProductCommissionSettings;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
@@ -55,6 +56,7 @@ class Hooks {
         add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
+        add_filter( 'woocommerce_rest_pre_insert_product_object', [ $this, 'protect_per_product_commission_meta' ] );
 
         add_filter( 'woocommerce_new_product_variation_data', [ $this, 'set_new_variation_author_to_vendor' ] );
     }
@@ -602,7 +604,36 @@ class Hooks {
         );
     }
 
+    /**
+     * Keep a REST product save from changing the per-product admin commission unless a store admin sent it.
+     *
+     * Runs after WooCommerce has copied the request's meta onto the product, on its own product
+     * routes (wc/v2, wc/v3) as well as Dokan's (dokan/v1, dokan/v3). A vendor's entries for these
+     * keys — sent by key, or by a meta id that retargets the admin's row — are undone by putting
+     * the stored values back, behind the same gate as save_per_product_commission_options().
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WC_Data $product Product assembled from the request, not yet saved.
+     *
+     * @return \WC_Data
+     */
+    public function protect_per_product_commission_meta( $product ) {
+        if ( ! $product instanceof WC_Product || current_user_can( 'manage_woocommerce' ) ) {
+            return $product;
+        }
 
+        foreach ( ProductCommissionSettings::admin_only_meta_keys() as $key ) {
+            // A stored value wins over anything the request carried; without one the key must not appear at all.
+            if ( $product->get_id() && metadata_exists( 'post', $product->get_id(), $key ) ) {
+                $product->update_meta_data( $key, get_post_meta( $product->get_id(), $key, true ) );
+            } else {
+                $product->delete_meta_data( $key );
+            }
+        }
+
+        return $product;
+    }
 
     /**
      * Add product brand taxonomy template
