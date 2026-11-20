@@ -18,7 +18,7 @@ Related documents: [orders-commission-fees.md](orders-commission-fees.md), [with
 | `seller` role and capability grants (stored in the `{prefix}user_roles` option) | [Lite] |
 | Admin settings options (`dokan_admin_settings` and legacy `dokan_<section>` rows) | [Lite], see ADR-0002 and ADR-0003 |
 | Orders, order items, refunds, products, customers, Analytics lookup tables (`wc_orders`, `wc_order_stats`, ...) | [WooCommerce]. Lite stores data alongside them through WooCommerce CRUD and joins against them. |
-| Rows in `dokan_announcement` and `dokan_refund` | Lite creates both tables. Lite code never inserts into either; both are filled by Dokan Pro (Lite does delete `dokan_refund` rows when a Vendor order is deleted). |
+| Rows in `dokan_announcement` and `dokan_refund` | Lite creates both tables. Lite code never inserts into either; both are filled from outside Lite (consumed by Dokan Pro; Lite does delete `dokan_refund` rows when a Vendor order is deleted). |
 | Other `dokan_*` tables that appear in `uninstall.php` | Created by Dokan Pro. Out of scope here. |
 
 Lite registers **no custom post types, post statuses or taxonomies**. A search for `register_post_type`, `register_taxonomy` and `register_post_status` under `includes/` finds nothing. Lite reuses WooCommerce's `product`, `shop_order`, `shop_order_refund` and the core `page` type. The only post-type registration change it makes is to filter `woocommerce_register_post_type_product`, which maps the `edit_post` meta capability to `edit_product` (`lite:includes/wc-template.php::dokan_manage_capability_for_woocommerce_product()`, registered by the top-level `add_filter( 'woocommerce_register_post_type_product', ... )` in that file). WooCommerce fires that filter in `wc:includes/class-wc-post-types.php::register_post_types()`.
@@ -210,7 +210,7 @@ Writer: `DataStore::update()` (`lite:includes/Analytics/Reports/Orders/Stats/Dat
 
 ### 4.6 `{prefix}dokan_refund`: refund request table
 
-Created by `Installer::create_refund_table()` (`lite:includes/Install/Installer.php::create_refund_table()`). It was first introduced by `V_2_4_11::create_refund_table`. Lite only defines the schema and deletes rows in `Order\Manager::delete_seller_order()`. Rows are written by Dokan Pro.
+Created by `Installer::create_refund_table()` (`lite:includes/Install/Installer.php::create_refund_table()`). It was first introduced by `V_2_4_11::create_refund_table`. Lite only defines the schema and deletes rows in `Order\Manager::delete_seller_order()`. Writers are outside Lite (consumed by Dokan Pro).
 
 | Column | Type | Null / default |
 |---|---|---|

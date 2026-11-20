@@ -37,7 +37,7 @@ Dokan Lite is designed to be extended in place. Add-ons do not call a separate A
 | `dokan_loaded` | action | `lite:dokan-class.php::init_plugin()` | Signals that Lite's helper files are loaded and its hooks registered. The canonical "Dokan is ready, boot now" hook. | Yes |
 | `dokan_is_pro_exists` | filter | `lite:dokan-class.php::is_pro_exists()` | Backs `dokan()->is_pro_exists()`. Defaults to `false`. | Yes |
 | `dokan_get_container()` / `dokan()->get_container()` | function | `lite:dokan.php::dokan_get_container()`, `lite:dokan-class.php::get_container()` | Return the shared DI container for `get()`, `has()`, `addServiceProvider()` and `extend()`. | Yes |
-| `Hookable` tag | interface | `lite:dokan-class.php::init_hooks()` (the `Hookable` loop) | Every container service implementing `WeDevs\Dokan\Contracts\Hookable` gets `register_hooks()` called during `init_hooks()`. | Yes (Pro classes implement the interface) |
+| `Hookable` tag | interface | `lite:dokan-class.php::init_hooks()` (the `Hookable` loop) | Every container service implementing `WeDevs\Dokan\Contracts\Hookable` gets `register_hooks()` called during `init_hooks()`. | Yes |
 | `dokan_get_class_container` | filter | `lite:dokan-class.php::init_classes()` | Adds objects to the legacy property map read by `dokan()->__get()`. | Yes |
 | `dokan_template_path` | filter | `lite:dokan-class.php::template_path()` | Theme sub-directory searched for template overrides (default `dokan/`). | Not found in Pro |
 | `dokan_set_template_path` | filter | `lite:includes/functions.php::dokan_get_template_part()` | Replaces the plugin template directory used by `dokan_get_template_part()`. | Yes |
@@ -61,7 +61,7 @@ Dokan Lite is designed to be extended in place. Add-ons do not call a separate A
 | `dokan_admin_menu` | action | `lite:includes/Admin/Menu.php::add_admin_menu()` | Add submenu pages under the Dokan admin menu. | Yes |
 | `dokan_menu_capability` | filter | `lite:includes/functions.php::dokan_admin_menu_capability()` | Capability for the Dokan admin menu (default `manage_woocommerce`). | Not found in Pro |
 | `dokan-admin-routes` | filter | `lite:includes/Assets.php::get_vue_admin_routes()` | Legacy Vue admin SPA routes. | Yes |
-| `dokan_admin_dashboard_pages` | filter | `lite:includes/Admin/Dashboard/Dashboard.php::get_pages()` | React admin dashboard pages (`Pageable` objects). | Yes (through `AbstractPage` subclasses) |
+| `dokan_admin_dashboard_pages` | filter | `lite:includes/Admin/Dashboard/Dashboard.php::get_pages()` | React admin dashboard pages (`Pageable` objects). | Yes |
 | `dokan_admin_dashboard_pages_settings` | filter | `lite:includes/Admin/Dashboard/Dashboard.php::settings()` | Settings payload localized to the React admin app. | Yes |
 | `dokan_email_classes` | filter | `lite:includes/Emails/Manager.php::load_dokan_emails()` | Dokan emails added to WooCommerce's email list. | Yes |
 | `dokan_get_all_cap` | filter | `lite:includes/functions.php::dokan_get_all_caps()` | Vendor capability catalogue. | Yes |

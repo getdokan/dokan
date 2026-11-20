@@ -20,7 +20,7 @@ Terminology follows `CONTEXT.md`: **Order** is the customer-facing WooCommerce o
 | `dokan_vendor_balance` ledger writes for orders and refunds | [Lite] | Order sync, status hooks, `RefundHandler`, `Fees`, `VendorBalanceUpdateHandler` |
 | `dokan_vendor_balance` ledger writes for Withdraws | [Lite] | `WeDevs\Dokan\Withdraw\Hooks::update_vendor_balance` (covered only as a ledger writer here) |
 | Shipping package split per Vendor, shipping tax rate | [Lite] | `WeDevs\Dokan\Shipping\Hooks`, `WeDevs\Dokan\Shipping\Tax` |
-| `dokan_refund` table | [Lite] creates and cleans up rows | Rows are written by Dokan Pro (consumed by Dokan Pro); Lite never inserts into it |
+| `dokan_refund` table | [Lite] creates and cleans up rows | Lite never inserts into it; writers are outside Lite (consumed by Dokan Pro) |
 | Refund accounting when Dokan Pro is active | consumed by Dokan Pro | `RefundHandler::handle_refund` returns early when `dokan()->is_pro_exists()` |
 | Order objects, statuses, refunds, stock, checkout | [WooCommerce] | Dokan reacts to WooCommerce hooks |
 
@@ -78,7 +78,7 @@ Because the `commission-service` definitions are registered with `shared = false
 | `WeDevs\Dokan\Fees` | `lite:includes/Fees.php` | Fee recipients (`::get_shipping_fee_recipient()`, `::get_tax_fee_recipient()`, `::get_shipping_tax_fee_recipient()`), gateway fee (`::calculate_gateway_fee()`). |
 | `WeDevs\Dokan\Models\VendorBalance` | `lite:includes/Models/VendorBalance.php` | Model for a ledger row; constants `TRN_TYPE_DOKAN_ORDERS`, `TRN_TYPE_DOKAN_WITHDRAW`, `TRN_TYPE_DOKAN_REFUND`. |
 | `WeDevs\Dokan\Models\DataStore\VendorBalanceStore` | `lite:includes/Models/DataStore/VendorBalanceStore.php` | Data store for the ledger; `::get_total_earning_by_vendor()`. |
-| `WeDevs\Dokan\Shipping\Hooks` | `lite:includes/Shipping/Hooks.php` | Per-Vendor shipping packages (Lite without Pro), shipping item `seller_id` meta, shipping tax rate. |
+| `WeDevs\Dokan\Shipping\Hooks` | `lite:includes/Shipping/Hooks.php` | Per-Vendor shipping packages (when no add-on supplies it), shipping item `seller_id` meta, shipping tax rate. |
 | `WeDevs\Dokan\Shipping\Tax` | `lite:includes/Shipping/Tax.php` | Picks the shipping tax class from a Vendor's package contents. |
 
 ---
@@ -242,9 +242,9 @@ Each shipping/tax figure is net of refunds when `should_adjust_refund` is true (
 
 Refunds are recorded against the Vendor order; refunds on a parent Order are outside the model (ADR-0004, `CONTEXT.md` "Refund").
 
-**Path A: WooCommerce refund (Lite without Pro).** `wc_create_refund()` (`wc:includes/wc-order-functions.php::wc_create_refund()`) saves the order and then fires `woocommerce_order_refunded`. `lite:includes/Order/RefundHandler.php::handle_refund()`:
+**Path A: WooCommerce refund (no add-on owns refunds).** `wc_create_refund()` (`wc:includes/wc-order-functions.php::wc_create_refund()`) saves the order and then fires `woocommerce_order_refunded`. `lite:includes/Order/RefundHandler.php::handle_refund()`:
 
-1. Returns if Dokan Pro is active (Pro owns refund accounting).
+1. Returns if `dokan()->is_pro_exists()` is true (refund accounting is then left to the add-on).
 2. Returns if the refund is a parent-order refund (`OrderType::DOKAN_PARENT_ORDER_REFUND`).
 3. Computes the Vendor's portion through filter `dokan_vendor_earning_in_refund`, which `RefundHandler::get_vendor_earning_in_refund` answers with `OrderRefundCommission::get_vendor_total_refund()`: the prorated line-item Earning (`Calculator::calculate_for_refund`, which rounds the admin share and gives the Vendor the remainder), plus refunded tax and shipping tax whose recipient is the Vendor, plus refunded shipping if the Vendor is the shipping recipient, minus any gateway fee returned to the Vendor (filter `dokan_refund_gateway_fee`, default 0).
 4. Fires `dokan_refund_adjust_vendor_balance( $vendor_refund, $refund, $order, $vendor_refund )` (in Lite the payout amount and the earning amount passed are the same value) and `dokan_refund_adjust_dokan_orders( $vendor_refund, $refund, $order )`.
@@ -381,11 +381,11 @@ Always (Lite and Pro), `Shipping\Hooks::add_shipping_method_rate` on `woocommerc
 | `woocommerce_order_item_get_formatted_meta_data` | [WooCommerce] `wc:includes/class-wc-order-item.php::get_formatted_meta_data()` | `Fees::hide_extra_data` |
 | `woocommerce_thankyou_ppec_paypal` | [WooCommerce] dynamic `woocommerce_thankyou_{payment_method}` in `wc:templates/checkout/thankyou.php` (and `wc:src/Blocks/BlockTypes/OrderConfirmation/AdditionalInformation.php::render_content()`), for the `ppec_paypal` gateway of [Third-party: PayPal Express Checkout] | `Fees::calculate_gateway_fee` (10) |
 | `woocommerce_paypal_payments_order_captured` | [Third-party: WooCommerce PayPal Payments] (plugin not installed here; fire site not verified) | `Fees::calculate_gateway_fee` (99) |
-| `woocommerce_cart_shipping_packages` | [WooCommerce] `wc:includes/class-wc-cart.php::get_shipping_packages()` | `Shipping\Hooks::split_shipping_packages` (Lite without Pro) |
-| `woocommerce_shipping_package_name` | [WooCommerce] `wc:includes/class-wc-cart.php::get_shipping_package_name()` | `Shipping\Hooks::change_shipping_pack_name` (Lite without Pro) |
-| `woocommerce_checkout_create_order_shipping_item` | [WooCommerce] `wc:includes/class-wc-checkout.php::create_order_shipping_lines()` | `Shipping\Hooks::add_shipping_pack_meta` (Lite without Pro) |
+| `woocommerce_cart_shipping_packages` | [WooCommerce] `wc:includes/class-wc-cart.php::get_shipping_packages()` | `Shipping\Hooks::split_shipping_packages` (when no add-on supplies it) |
+| `woocommerce_shipping_package_name` | [WooCommerce] `wc:includes/class-wc-cart.php::get_shipping_package_name()` | `Shipping\Hooks::change_shipping_pack_name` (when no add-on supplies it) |
+| `woocommerce_checkout_create_order_shipping_item` | [WooCommerce] `wc:includes/class-wc-checkout.php::create_order_shipping_lines()` | `Shipping\Hooks::add_shipping_pack_meta` (when no add-on supplies it) |
 | `woocommerce_shipping_method_add_rate` | [WooCommerce] `wc:includes/abstracts/abstract-wc-shipping-method.php::add_rate()` | `Shipping\Hooks::add_shipping_method_rate` |
-| `dokan_refund_adjust_vendor_balance` | [Lite] (also fired by Dokan Pro) | `RefundHandler::insert_into_balance_table` (10) |
+| `dokan_refund_adjust_vendor_balance` | [Lite] (add-ons may fire it too) | `RefundHandler::insert_into_balance_table` (10) |
 | `dokan_refund_should_insert_into_vendor_balance` | [Lite] | `RefundHandler::exclude_cod_payment` (10) |
 | `dokan_vendor_earning_in_refund` | [Lite] | `RefundHandler::get_vendor_earning_in_refund` (10) |
 | `dokan_refund_after_dokan_orders_updated` | [Lite] | `RefundHandler::clear_order_caches` (10) |
