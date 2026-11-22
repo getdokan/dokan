@@ -3,6 +3,7 @@ import { useState } from '@wordpress/element';
 import GeneralTab from './InformationTabs/GeneralTab';
 import OverviewTab from './InformationTabs/OverviewTab';
 import WithdrawTab from './InformationTabs/WithdrawTab';
+import SignupAnswersTab from './InformationTabs/SignupAnswersTab';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
 import { Slot } from '@wordpress/components';
 
@@ -42,6 +43,18 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 component: WithdrawTab,
                 position: 5,
             },
+            // Only on sites with a Vendor Registration Form block; the answers come from it.
+            // @ts-ignore
+            ...( window.dokanAdminDashboard?.hasVendorRegistrationForm
+                ? [
+                      {
+                          name: 'signup-answers',
+                          title: __( 'Sign-up answers', 'dokan-lite' ),
+                          component: SignupAnswersTab,
+                          position: 2,
+                      },
+                  ]
+                : [] ),
         ],
         vendor
     );
@@ -89,19 +102,19 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                 : undefined,
             onStatusChange: onDataUpdate
                 ? ( status: boolean ) =>
-                    onDataUpdate( 'verification', { enabled: status } )
+                      onDataUpdate( 'verification', { enabled: status } )
                 : undefined,
             onPlanChange: onDataUpdate
                 ? ( planId: string ) =>
-                    onDataUpdate( 'subscription', { planId } )
+                      onDataUpdate( 'subscription', { planId } )
                 : undefined,
             onWithdrawRequest: onDataUpdate
                 ? ( amount: number, method: string ) =>
-                    onDataUpdate( 'withdraw', { amount, method } )
+                      onDataUpdate( 'withdraw', { amount, method } )
                 : undefined,
             onBadgeToggle: onDataUpdate
                 ? ( badgeId: string, award: boolean ) =>
-                    onDataUpdate( 'badges', { badgeId, award } )
+                      onDataUpdate( 'badges', { badgeId, award } )
                 : undefined,
         };
 

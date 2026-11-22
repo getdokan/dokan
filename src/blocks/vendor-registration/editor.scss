@@ -1,0 +1,406 @@
+// Editor-only UI of the Vendor Registration Form block: sidebar panels and canvas helpers.
+$accent: #3858e9;
+$muted: #757575;
+$border: #e0e0e0;
+
+.dokan-vreg-editor {
+	&__help,
+	&__muted {
+		margin: 6px 0;
+		color: $muted;
+		font-size: 12px;
+	}
+
+	&__label {
+		margin: 12px 0 8px;
+		color: #1e1e1e;
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	&__legend {
+		display: flex;
+		gap: 12px;
+		color: $muted;
+		font-size: 12px;
+
+		span {
+			display: inline-flex;
+			align-items: center;
+			gap: 2px;
+		}
+	}
+
+	&__required-mark {
+		color: $accent;
+	}
+
+	&__texts > * + * {
+		margin-top: 12px;
+	}
+
+	&__step {
+		margin-top: 12px;
+	}
+
+	&__step-head {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 6px;
+	}
+
+	&__step-badge {
+		flex: none;
+		padding: 2px 8px;
+		border-radius: 10px;
+		background: #1e1e1e;
+		color: #fff;
+		font-size: 11px;
+		font-weight: 600;
+	}
+
+	&__step-title {
+		flex: 1;
+		min-width: 0;
+		padding: 2px 4px;
+		border: 1px solid transparent;
+		border-radius: 2px;
+		background: transparent;
+		font-size: 13px;
+
+		&:hover,
+		&:focus {
+			border-color: $border;
+		}
+	}
+
+	&__section {
+		margin-bottom: 8px;
+		border: 1px solid $border;
+		border-radius: 4px;
+		background: #fff;
+
+		&.is-hidden &-title {
+			color: $muted;
+			text-decoration: line-through;
+		}
+
+		&.is-drop-target {
+			box-shadow: 0 0 0 2px $accent;
+		}
+	}
+
+	&__section-head {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		padding: 4px;
+	}
+
+	&__rename {
+		flex: 1;
+		min-width: 0;
+		padding: 2px 4px;
+		font-weight: 600;
+	}
+
+	&__section-title {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		padding: 0;
+		border: 0;
+		background: none;
+		font-weight: 600;
+		text-align: left;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		cursor: pointer;
+	}
+
+	&__count {
+		padding: 0 6px;
+		border-radius: 8px;
+		background: #f0f0f0;
+		color: $muted;
+		font-size: 11px;
+	}
+
+	&__icon.is-lock {
+		display: inline-flex;
+		padding: 4px;
+		color: $muted;
+	}
+
+	&__section-body {
+		padding: 0 8px 8px;
+		border-top: 1px solid $border;
+	}
+
+	&__row {
+		position: relative;
+		padding: 6px 0;
+		border-bottom: 1px solid #f0f0f0;
+
+		&.is-off &-label,
+		&.is-dimmed &-label {
+			color: $muted;
+		}
+
+		&.is-drop-before::before,
+		&.is-drop-after::after {
+			position: absolute;
+			right: 0;
+			left: 0;
+			height: 2px;
+			background: $accent;
+			content: "";
+		}
+
+		&.is-drop-before::before {
+			top: -1px;
+		}
+
+		&.is-drop-after::after {
+			bottom: -1px;
+		}
+
+		&:hover .dokan-vreg-editor__drag {
+			opacity: 1;
+		}
+	}
+
+	&__row-main {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__drag {
+		display: inline-flex;
+		margin-left: -6px;
+		color: $muted;
+		cursor: grab;
+		opacity: 0;
+	}
+
+	&__row-name {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-width: 0;
+		padding: 0;
+		border: 0;
+		background: none;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	&__row-label {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__row-key {
+		overflow: hidden;
+		padding: 0;
+		background: none;
+		color: $muted;
+		font-size: 11px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	&__row-icons {
+		display: flex;
+		align-items: center;
+	}
+
+	&__required {
+		color: #bbb;
+
+		&.is-required {
+			color: $accent;
+		}
+	}
+
+	&__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		padding-left: 14px;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	&__tag {
+		display: inline-flex;
+		align-items: center;
+		gap: 2px;
+		padding: 1px 6px;
+		border: 0;
+		border-radius: 2px;
+		background: #f0f0f0;
+		color: #3c3c3c;
+		font-size: 11px;
+
+		&.is-woo {
+			background: #fcf3dc;
+			color: #8a6100;
+			cursor: pointer;
+		}
+
+		&.is-view {
+			background: #eef0fb;
+			color: $accent;
+		}
+	}
+
+	&__add-field,
+	&__add-step,
+	&__reset {
+		margin-top: 8px;
+	}
+
+	&__reset {
+		display: block;
+	}
+
+	&__field-editor {
+		margin: 8px 0;
+		padding: 12px;
+		border: 1px solid $border;
+		border-radius: 4px;
+		background: #fafafa;
+
+		> * + * {
+			margin-top: 12px;
+		}
+	}
+
+	&__suggestions {
+		border: 1px solid $border;
+		border-radius: 4px;
+		background: #fff;
+	}
+
+	&__suggestions-head {
+		display: flex;
+		justify-content: space-between;
+		padding: 6px 8px;
+		color: $muted;
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	&__suggestion {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 2px 8px;
+		width: 100%;
+		padding: 6px 8px;
+		border: 0;
+		border-top: 1px solid #f0f0f0;
+		background: none;
+		text-align: left;
+		cursor: pointer;
+
+		&:hover {
+			background: #f6f7fe;
+		}
+
+		code {
+			grid-column: 1 / -1;
+			padding: 0;
+			background: none;
+			color: $muted;
+			font-size: 11px;
+		}
+	}
+
+	&__meta-key {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		color: $muted;
+		font-size: 12px;
+
+		code {
+			overflow: hidden;
+			padding: 2px 6px;
+			border: 1px solid $border;
+			border-radius: 2px;
+			background: #fff;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		&.is-reused code {
+			border-color: #b8e6bf;
+			background: #edfaef;
+			color: #00702e;
+		}
+	}
+
+	&__options .components-base-control {
+		flex: 1;
+	}
+
+	&__option + &__option {
+		margin-top: 6px;
+	}
+
+	&__option-input {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__option-value {
+		padding: 0;
+		background: none;
+		color: $muted;
+		font-size: 11px;
+	}
+
+	&__field-actions,
+	&__modal-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+	}
+
+	&__viewing-as {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 20px;
+		padding-bottom: 16px;
+		border-bottom: 1px solid $border;
+		font-size: 13px;
+	}
+}
+
+// Canvas: rows Dokan settings switch on render as a labelled placeholder.
+.dokan-vreg__row--placeholder {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px;
+	border: 1px dashed #c3c4c7;
+	border-radius: var(--dokan-vreg-input-radius, 6px);
+	color: #757575;
+	font-size: 0.85em;
+}
+
+.editor-styles-wrapper .dokan-vreg .dokan-vreg__step-item,
+.editor-styles-wrapper .dokan-vreg .dokan-vreg__next,
+.editor-styles-wrapper .dokan-vreg .dokan-vreg__back {
+	cursor: pointer;
+}

@@ -1,0 +1,81 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dokan/vendor-registration",
+	"version": "1.0.0",
+	"title": "Vendor Registration Form",
+	"category": "dokan",
+	"icon": "store",
+	"description": "A vendor sign-up form you can customise: fields, steps, login box and design.",
+	"keywords": [
+		"vendor",
+		"registration",
+		"sign up",
+		"onboarding"
+	],
+	"textdomain": "dokan-lite",
+	"attributes": {
+		"splitSteps": {
+			"type": "boolean",
+			"default": false
+		},
+		"steps": {
+			"type": "array",
+			"default": []
+		},
+		"sections": {
+			"type": "array",
+			"default": []
+		},
+		"texts": {
+			"type": "object",
+			"default": {}
+		},
+		"termsPageId": {
+			"type": "integer"
+		},
+		"login": {
+			"type": "object",
+			"default": {}
+		},
+		"styles": {
+			"type": "object",
+			"default": {}
+		},
+		"extensions": {
+			"type": "object",
+			"default": {}
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		},
+		"__experimentalBorder": {
+			"color": true,
+			"radius": true,
+			"style": true,
+			"width": true
+		},
+		"shadow": true
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}
