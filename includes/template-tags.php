@@ -219,28 +219,11 @@ function dokan_order_listing_status_filter() {
         $status_class = isset( $_GET['order_status'] ) ? sanitize_text_field( wp_unslash( $_GET['order_status'] ) ) : $status_class;
     }
 
-    /**
-     * Filter the list of order statuses to exclude.
-     *
-     * This filter allows developers to modify the array of order statuses that
-     * should be excluded from the displayed list. It is useful for removing
-     * statuses dynamically based on specific conditions or configurations.
-     *
-     * @since 3.10.4
-     *
-     * @param array $exclude_statuses Array of order status slugs to be excluded.
-     */
-    $exclude_statuses = (array) apply_filters( 'dokan_vendor_dashboard_excluded_order_statuses', [ 'wc-checkout-draft' ] );
 
-    // Convert the indexed array to an associative array where the values become keys & Get WooCommerce order statuses.
-    $exclude_statuses  = array_flip( $exclude_statuses );
-    $wc_order_statuses = wc_get_order_statuses();
 
-    // Remove keys from $wc_order_statuses that are found in $exclude_statuses.
-    $filtered_statuses = array_diff_key( $wc_order_statuses, $exclude_statuses );
-
+    $dokan_order_statuses = dokan()->order->get_dokan_order_statuses();
     // Directly prepend the custom 'All' status to the WooCommerce order statuses.
-    $order_statuses = array_merge( [ 'all' => 'All' ], $filtered_statuses );
+    $order_statuses = array_merge( [ 'all' => 'All' ], $dokan_order_statuses );
 
     /**
      * Determine the order listing statuses on the Dokan dashboard.
