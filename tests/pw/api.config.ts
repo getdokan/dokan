@@ -1,8 +1,12 @@
 import { defineConfig, expect } from '@playwright/test';
 import { parseBoolean } from '@utils/helpers';
 import { customExpect } from '@utils/pwMatchers';
+import { blockedSpecs, blockedTagPattern } from '@utils/planFilter';
 import 'dotenv/config';
 const { CI, BASE_URL, NO_SETUP, ADMIN, ADMIN_PASSWORD, DOKAN_PRO } = process.env;
+/* Package workflow only (DOKAN_PLAN set): specs and @module-<id> tests the plan does not offer. Empty otherwise. */
+const planIgnore = blockedSpecs('api').map(spec => `**/tests/api/${spec.file}`);
+const planTag = blockedTagPattern();
 
 export default defineConfig({
     /* test directory */
@@ -10,7 +14,7 @@ export default defineConfig({
     /* Include tests based on the pattern */
     grep: [/@lite/, /@pro/],
     /* Exclude tests based on the pattern */
-    grepInvert: parseBoolean(DOKAN_PRO) ? [] : [/@pro/],
+    grepInvert: [...(parseBoolean(DOKAN_PRO) ? [] : [/@pro/]), ...(planTag ? [planTag] : [])],
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/api/test-artifacts/',
     /* Path to the global setup file. This file will be required and run before all the tests. */
@@ -101,6 +105,7 @@ export default defineConfig({
         {
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
+            testIgnore: planIgnore,
             /* whether not to run setup tests before running actual tests */
             dependencies: parseBoolean(NO_SETUP) ? [] : ['api_setup'],
             /* whether not to run teardown tests after running actual tests */

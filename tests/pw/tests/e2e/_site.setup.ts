@@ -6,6 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { helpers, BASE_URL, toPath } from '@utils/helpers';
 import { log } from '@utils/logger';
+import { activatePlanLicense, activatePlanModules } from '@utils/planSetup';
 
 const { CI } = process.env;
 
@@ -212,6 +213,8 @@ setup.describe('site setup', () => {
     });
 
     setup('set dokan license', { tag: ['@pro'] }, async () => {
+        // Package workflow: activate the lane's real key and fail loud, never fall back to the seed.
+        if (process.env.DOKAN_PLAN) return await activatePlanLicense(apiUtils, payloads.adminAuth);
         setup.skip(!process.env.LICENSE_KEY, 'LICENSE_KEY env var not set – skipping license setup (fork PR or unconfigured secret)');
         try {
             await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
@@ -222,6 +225,8 @@ setup.describe('site setup', () => {
     });
 
     setup('activate all dokan modules', { tag: ['@pro'] }, async () => {
+        // Package workflow: exactly the modules the plan unlocks, all of them active, or setup fails.
+        if (process.env.DOKAN_PLAN) return await activatePlanModules(apiUtils, payloads.adminAuth);
         // 'auction' requires woocommerce-simple-auctions. Even though that plugin is activated above,
         // it may fail silently (try-catch). Including 'auction' in the batch causes the entire request
         // to be rejected with 400 when the plugin is absent, leaving all other modules unactivated.
