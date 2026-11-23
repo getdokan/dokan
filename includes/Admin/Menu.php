@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Admin\Dashboard\Pages\BlackFriday;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Extensions;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
 use WeDevs\Dokan\Admin\Notices\Helper;
@@ -93,6 +94,9 @@ class Menu {
             // Dashboard::register_menu()'s auto-append (via 'hidden' => true) so we can
             // place them precisely under Help and Settings here.
             $this->append_dashboard_page_submenu( ProFeatures::class, $slug, $capability, $menu_position );
+
+            // TODO BFCM-2026-REMOVE: seasonal entry placed between "Pro Features" and "Settings"; drop with the page after the campaign.
+            $this->append_dashboard_page_submenu( BlackFriday::class, $slug, $capability, $menu_position );
 
             $submenu[ $slug ][] = [ __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
 

@@ -1,3 +1,37 @@
+### v5.3.5 ( Nov 19, 2026 ) ###
+
+- **update:** Updating from a version older than 5.0.0 now adds the new order report columns in one step, so the update finishes faster on large stores and can no longer stop half-way.
+- **fix:** Vendors can no longer change the admin commission on their own products through the REST API, which could push their earnings above the order total.
+- **fix:** Vendors can no longer save unsafe or WooCommerce-reserved product data through the product REST API.
+- **fix:** WooCommerce Analytics no longer shows zero orders and revenue on stores that already had orders before Dokan was activated. Dokan now rebuilds the order data on its own and shows a notice while it runs.
+- **fix:** The admin vendor form no longer loses what was typed when switching tabs, and a failed save now opens the tab with the problem field and focuses it.
+
+### v5.3.4 ( Nov 05, 2026 ) ###
+
+- **new:** Added a Black Friday 2026 offers page to the Dokan admin.
+- **update:** Added CartPilot and FlyAffiliate to the setup wizard's recommended add-ons, with a Show More option for the extra add-ons.
+- **update:** Added CartPilot and FlyAffiliate to the admin Extensions page.
+- **fix:** Prevented unauthenticated visitors from reading private product data through a crafted request made to look like an MCP request.
+- **fix:** The vendor customer list now counts only the vendor's own customers, so its totals and pages match the list and searches no longer reveal other registered users.
+- **fix:** Customers who buy from several vendors no longer receive duplicate order emails when WooCommerce's deferred emails feature is turned on.
+- **fix:** Improved compatibility with WooCommerce 11.3 so the vendor analytics pages keep their layout and no longer log deprecation warnings.
+- **fix:** Vendor registration forms no longer accept a shop URL that already belongs to another vendor.
+- **fix:** The new vendor dashboard order list no longer shows order status actions when the admin has turned off order status changes for vendors.
+- **fix:** The Reverse Withdrawal Invoice email now works in the WooCommerce email preview and test email instead of showing an error.
+- **fix:** Vendor dashboard reports no longer show "Something went wrong" after an update because a browser or CDN served outdated files.
+- **fix:** The commission settings now name the empty field and explain that 0 is allowed when a commission amount is missing.
+
+### v5.3.3 ( Oct 30, 2026 ) ###
+
+- **fix:** Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.
+- **fix:** Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.
+- **fix:** The store contact form now sends email from the store's own address and uses the visitor's email only for replies, so it can no longer be used to spoof the sender or add extra recipients.
+- **fix:** Prevented subsite admins on a multisite network from changing the selling status of vendors who belong to other sites.
+- **fix:** Reverse withdrawal payments can no longer be discounted with coupons, and the vendor's balance is now credited only with the amount actually paid.
+- **fix:** Products created through the vendor products API now respect the vendor's selling status and are held for review when the vendor isn't allowed to publish directly.
+- **fix:** Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.
+- **fix:** A vendor's social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.
+
 ### v5.3.2 ( Oct 22, 2026 ) ###
 
 - **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.

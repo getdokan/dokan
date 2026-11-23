@@ -171,7 +171,7 @@ function dokan_get_dashboard_nav(): array {
  * Legacy pages are refused server-side on `dokan_dashboard_shortcode_query_vars`; the hash
  * router cannot be, so the vendor dashboard gets this list and renders "no permission" itself.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.3
  *
  * @return string[] Routes without surrounding slashes, e.g. `settings/social`.
  */

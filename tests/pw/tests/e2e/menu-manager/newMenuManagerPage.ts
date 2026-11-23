@@ -87,10 +87,6 @@ export class NewMenuManagerPage {
         await dbUtils.setOptionValue('dokan_menu_manager', { dashboard_menu_manager: { left_menus: {}, settings_sub_menu: subMenus } }, true);
     }
 
-    static async setAppearance(values: { vendor_layout_style?: 'latest' | 'legacy'; store_header_template?: string }): Promise<void> {
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, values);
-    }
-
     // ---- Navigation ----
     /** Fresh navigation — sidebarNav is localized at page load, so reload picks up the seed. */
     async goto(): Promise<void> {
@@ -121,41 +117,6 @@ export class NewMenuManagerPage {
 
     async isForbidden(): Promise<boolean> {
         return await this.page.getByText('Permission Denied').first().waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
-    }
-
-    forbiddenView(): Locator {
-        return this.page.getByText('Permission Denied', { exact: true });
-    }
-
-    backToDashboard(): Locator {
-        return this.page.getByRole('link', { name: 'Back to Dashboard' });
-    }
-
-    async restrictedRoutes(): Promise<string[]> {
-        return await this.page.evaluate(() => (window as any).dokanFrontend?.restrictedRoutes ?? []);
-    }
-
-    /** Collapse the sidebar and hover a parent icon to open its flyout (collapsed icons carry no accessible name, so match by href). */
-    async openCollapsedFlyout(parentHrefFragment: string): Promise<Locator> {
-        await this.page.getByRole('button', { name: 'Toggle sidebar menu' }).click();
-        await this.navLink(parentHrefFragment).first().hover();
-        const flyout = this.page.locator(newMenuManagerSelectors.submenuFlyout);
-        await flyout.waitFor({ state: 'visible' });
-        return flyout;
-    }
-
-    /** A legacy PHP dashboard page (e.g. 'settings/social/'), gated server-side by Pro's AccessRestriction. */
-    async gotoLegacy(path: string): Promise<void> {
-        await this.page.goto(toPath(`dashboard/${path}`));
-        await this.page.waitForLoadState('domcontentloaded');
-    }
-
-    legacyNoPermission(): Locator {
-        return this.page.getByText('You have no permission to view this page');
-    }
-
-    storeSocialLinks(): Locator {
-        return this.page.locator(newMenuManagerSelectors.storeSocialLinks);
     }
 
     /** The route's own form rendered (the positive counterpart of isForbidden). */

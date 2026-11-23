@@ -67,6 +67,8 @@ const entryPoints = {
     },
     'dokan-status': '/src/Status/index.tsx',
     'dokan-pro-features': '/src/ProFeatures/index.tsx',
+    // TODO BFCM-2026-REMOVE: seasonal page, remove after the campaign.
+    'dokan-black-friday': '/src/BlackFriday/index.tsx',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
     // intelligence
     'dokan-intelligence': './src/intelligence/index.tsx',

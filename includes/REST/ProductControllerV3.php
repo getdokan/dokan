@@ -52,6 +52,10 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return new WP_Error( 'dokan_rest_cannot_create', __( 'You do not have permission to create products.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
+        if ( ! current_user_can( 'manage_woocommerce' ) && ! dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
+            return new WP_Error( 'dokan_rest_cannot_create', __( 'Your account is not enabled for selling.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
         return true;
     }
 
@@ -350,6 +354,9 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return $invalid;
         }
 
+        // On update only a requested status is moderated, like the v1 API; a create without status defaults to publish in WooCommerce.
+        $this->enforce_publish_moderation( $product, $creating || isset( $request['status'] ) );
+
         $product = $this->apply_image_positions( $product, $request );
 
         /**
@@ -373,6 +380,32 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         }
 
         return $product;
+    }
+
+    /**
+     * Apply the vendor's default product status when a vendor asks for a live status, as the v1 API does.
+     *
+     * @since 5.3.3
+     *
+     * @param WC_Data $product          Product assembled from the request, not yet saved.
+     * @param bool    $status_requested Whether the request sets the product's status.
+     *
+     * @return void
+     */
+    protected function enforce_publish_moderation( $product, bool $status_requested ): void {
+        $live_statuses = [ 'publish', 'future' ];
+
+        if ( ! $status_requested || ! $product instanceof WC_Product || ! in_array( $product->get_status(), $live_statuses, true ) || current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        // WooCommerce defaults a missing status to publish; a disabled vendor always gets pending.
+        $vendor_id      = dokan_get_current_user_id();
+        $allowed_status = dokan_is_seller_enabled( $vendor_id ) ? dokan_get_default_product_status( $vendor_id ) : 'pending';
+
+        if ( 'publish' !== $allowed_status ) {
+            $product->set_status( $allowed_status );
+        }
     }
 
     /**

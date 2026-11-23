@@ -6,6 +6,9 @@ import BackButton from '@src/admin/onboard/components/BackButton';
 import NextButton from '@src/admin/onboard/components/NextButton';
 import SinglePlugin from '@src/admin/onboard/components/SinglePlugin';
 
+// Three rows of the two-column grid; the rest sit behind "Show More".
+const COLLAPSED_ADDON_COUNT = 6;
+
 const AddonsScreen = ( {
     onNext,
     onBack,
@@ -16,6 +19,7 @@ const AddonsScreen = ( {
 } ) => {
     const [ localSelectedAddons, setLocalSelectedAddons ] =
         useState( selectedPlugins );
+    const [ showAllAddons, setShowAllAddons ] = useState( false );
 
     // Map API addons to UI format if available
     const displayAddons =
@@ -33,6 +37,18 @@ const AddonsScreen = ( {
                   info: addon,
               } ) )
             : [];
+
+    const primaryAddons = displayAddons.slice( 0, COLLAPSED_ADDON_COUNT );
+    const moreAddons = displayAddons.slice( COLLAPSED_ADDON_COUNT );
+
+    const renderAddon = ( addon ) => (
+        <SinglePlugin
+            addon={ addon }
+            isSelected={ localSelectedAddons.includes( addon.id ) }
+            toggleAddon={ toggleAddon }
+            key={ addon.id }
+        />
+    );
 
     // Update parent component when selected addons change
     useEffect( () => {
@@ -80,17 +96,74 @@ const AddonsScreen = ( {
                         ) }
                     </p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-10">
-                        { displayAddons.map( ( addon ) => (
-                            <SinglePlugin
-                                addon={ addon }
-                                isSelected={ localSelectedAddons.includes(
-                                    addon.id
-                                ) }
-                                toggleAddon={ toggleAddon }
-                                key={ addon.id }
-                            />
-                        ) ) }
+                    <div className="mb-10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            { primaryAddons.map( renderAddon ) }
+                        </div>
+
+                        { moreAddons.length > 0 && (
+                            <>
+                                { /* Kept mounted so the rows can slide open and shut; `invisible` takes them out of tab order while closed. */ }
+                                <div
+                                    id="dokan-onboard-more-addons"
+                                    className={ `grid transition-[grid-template-rows,visibility] duration-300 ease-out motion-reduce:transition-none ${
+                                        showAllAddons
+                                            ? 'grid-rows-[1fr] visible'
+                                            : 'grid-rows-[0fr] invisible'
+                                    }` }
+                                >
+                                    <div className="overflow-hidden">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
+                                            { moreAddons.map( renderAddon ) }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center mt-3">
+                                    <button
+                                        type="button"
+                                        onClick={ () =>
+                                            setShowAllAddons( ! showAllAddons )
+                                        }
+                                        aria-expanded={ showAllAddons }
+                                        aria-controls="dokan-onboard-more-addons"
+                                        className="inline-flex items-center gap-1.5 rounded-full border-0 bg-transparent px-3 py-1.5 cursor-pointer text-sm font-medium text-[#7047EB] transition-colors hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7047EB]"
+                                    >
+                                        { showAllAddons
+                                            ? __( 'Show Less', 'dokan-lite' )
+                                            : __( 'Show More', 'dokan-lite' ) }
+                                        { ! showAllAddons && (
+                                            <span
+                                                aria-hidden="true"
+                                                className="rounded-full bg-indigo-100 px-1.5 text-xs leading-5"
+                                            >
+                                                +{ moreAddons.length }
+                                            </span>
+                                        ) }
+                                        <svg
+                                            aria-hidden="true"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 16 16"
+                                            fill="none"
+                                            className={ `transition-transform duration-300 motion-reduce:transition-none ${
+                                                showAllAddons
+                                                    ? 'rotate-180'
+                                                    : ''
+                                            }` }
+                                        >
+                                            <path
+                                                d="M4 6l4 4 4-4"
+                                                stroke="currentColor"
+                                                strokeWidth="1.5"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </>
+                        ) }
                     </div>
 
                     <div className="flex justify-between flex-wrap">
