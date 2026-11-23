@@ -99,9 +99,9 @@ const getPlans = (): Plan[] => [
                 'We build, host and run your marketplace for you',
                 'dokan-lite'
             ),
-            oldPrice: '$7,497',
+            oldPrice: '$7497',
             off: __( '60% OFF', 'dokan-lite' ),
-            price: '$2,999',
+            price: '$2999',
             period: __( '/first year', 'dokan-lite' ),
             cta: __( 'Buy Now', 'dokan-lite' ),
         },
