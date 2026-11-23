@@ -4,6 +4,58 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.6',
+        'released' => '2026-11-23',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'The Black Friday page in the Dokan admin now shows the current Black Friday deals, including the Enterprise Bundle, Black Friday prices for the Lifetime and Annual plans, and a live countdown.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Vendor dashboard menu links that are set to open in a new tab, such as wePOS, now do so from the new dashboard sidebar, including its collapsed menu.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The product variations pagination in the vendor product editor now shows the missing "of" between the page numbers.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.3.5',
+        'released' => '2026-11-19',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Updating from a version older than 5.0.0 now adds the new order report columns in one step, so the update finishes faster on large stores and can no longer stop half-way.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Vendors can no longer change the admin commission on their own products through the REST API, which could push their earnings above the order total.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendors can no longer save unsafe or WooCommerce-reserved product data through the product REST API.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'WooCommerce Analytics no longer shows zero orders and revenue on stores that already had orders before Dokan was activated. Dokan now rebuilds the order data on its own and shows a notice while it runs.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The admin vendor form no longer loses what was typed when switching tabs, and a failed save now opens the tab with the problem field and focuses it.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.3.4',
         'released' => '2026-11-05',
         'changes'  => [
@@ -270,6 +322,10 @@ $changelog = [
                 ],
                 [
                     'title'       => 'Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The v2 and v3 orders REST endpoints no longer throw a fatal error when listing, viewing, or updating orders.',
                     'description' => '',
                 ],
             ],
@@ -654,6 +710,10 @@ $changelog = [
                 ],
                 [
                     'title'       => 'Enabled the "View in site" button for all published products.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The vendor earning preview in the new product editor no longer fails with a server error when the product has categories selected.',
                     'description' => '',
                 ],
             ],

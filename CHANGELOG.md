@@ -1,3 +1,9 @@
+### v5.3.6 ( Nov 23, 2026 ) ###
+
+- **update:** The Black Friday page in the Dokan admin now shows the current Black Friday deals, including the Enterprise Bundle, Black Friday prices for the Lifetime and Annual plans, and a live countdown.
+- **fix:** Vendor dashboard menu links that are set to open in a new tab, such as wePOS, now do so from the new dashboard sidebar, including its collapsed menu.
+- **fix:** The product variations pagination in the vendor product editor now shows the missing "of" between the page numbers.
+
 ### v5.3.5 ( Nov 19, 2026 ) ###
 
 - **update:** Updating from a version older than 5.0.0 now adds the new order report columns in one step, so the update finishes faster on large stores and can no longer stop half-way.
@@ -77,6 +83,7 @@
 - **fix:** Vendors can now reorder product gallery images by dragging them in the new product editor.
 - **fix:** REST pagination links now point at the endpoint that actually served the request instead of the controller's shared base route.
 - **fix:** Stopped listening to a deprecated WooCommerce hook that flooded the debug log with notices on every vendor analytics page.
+- **fix:** The v2 and v3 orders REST endpoints no longer throw a fatal error when listing, viewing, or updating orders.
 
 ### v5.1.2 ( Sep 17, 2026 ) ###
 
@@ -186,6 +193,7 @@
 - **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
 - **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
 - **fix:** Enabled the "View in site" button for all published products.
+- **fix:** The vendor earning preview in the new product editor no longer fails with a server error when the product has categories selected.
 
 ### v5.0.5 ( Jun 19, 2026 ) ###
 
