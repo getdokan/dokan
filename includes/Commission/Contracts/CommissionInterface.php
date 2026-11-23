@@ -41,6 +41,15 @@ interface CommissionInterface
     public function get_vendor_net_earning(): float;
 
     /**
+     * Get the admin's net earning from admin-type orders.
+     *
+     * @since 5.0.0
+     *
+     * @return float
+     */
+    public function get_admin_net_earning(): float;
+
+    /**
      * Get the admin commission.
      * Returns the admin net commission when positive, otherwise zero.
      *

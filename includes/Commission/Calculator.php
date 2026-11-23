@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Commission;
 
+use Automattic\WooCommerce\Utilities\NumberUtil;
 use WeDevs\Dokan\Commission\AbstractCommissionCalculator;
 use WeDevs\Dokan\Commission\Model\Commission;
 use WeDevs\Dokan\Commission\Model\Setting;
@@ -113,8 +114,10 @@ class Calculator extends AbstractCommissionCalculator {
     public function calculate(): Commission {
         $raw_admin_commission = $this->calculate_raw_admin_commission();
 
+        // Round only the admin's share and let the vendor take the exact remainder.
+        // Rounding both shares leaves a fraction of a cent credited to neither party.
         $net_amount       = $this->get_total();
-        $admin_commission = min( $raw_admin_commission, $net_amount );
+        $admin_commission = min( NumberUtil::round( $raw_admin_commission, wc_get_price_decimals() ), $net_amount );
 
         $vendor_earning = $net_amount - $admin_commission;
 
@@ -197,8 +200,10 @@ class Calculator extends AbstractCommissionCalculator {
 
         $refund_amount = abs( $refund_amount );
 
-		$vendor_earning_for_refund   = ( $vendor_earning / $item_total ) * $refund_amount;
-		$admin_commission_for_refund = ( $admin_commission / $item_total ) * $refund_amount;
+		// Split the refund the same way calculate() splits a sale, so the amounts
+		// refunded always add back up to the amount taken off the order.
+		$admin_commission_for_refund = NumberUtil::round( ( $admin_commission / $item_total ) * $refund_amount, wc_get_price_decimals() );
+		$vendor_earning_for_refund   = $refund_amount - $admin_commission_for_refund;
 
         $commission->set_vendor_net_earning( $vendor_earning_for_refund );
         $commission->set_admin_net_commission( $admin_commission_for_refund );

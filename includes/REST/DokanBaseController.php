@@ -46,7 +46,11 @@ abstract class DokanBaseController extends WP_REST_Controller {
         $max_pages = ceil( $total_items / $per_page );
 
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        $base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ?? $this->rest_base ) ) );
+
+        // Link the route that served the request: vendor controllers share `vendor` as rest_base, and some bases still hold an unresolved regex.
+        $route = $request->get_route();
+        $path  = ! empty( $route ) ? $route : sprintf( '/%s/%s', $this->namespace, $this->base ?? $this->rest_base );
+        $base  = add_query_arg( $request->get_query_params(), rest_url( $path ) );
 
         if ( $page > 1 ) {
             $prev_page = $page - 1;

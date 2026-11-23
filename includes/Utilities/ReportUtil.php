@@ -66,7 +66,7 @@ class ReportUtil {
     public static function get_exclude_order_statuses(): array {
         $excluded_statuses = \WC_Admin_Settings::get_option( 'woocommerce_excluded_report_order_statuses', [ 'pending', 'failed', 'cancelled' ] );
         $excluded_statuses = array_merge(
-            [ 'auto-draft', 'trash' ],
+            [ 'auto-draft', 'trash', 'checkout-draft' ],
             array_map( 'esc_sql', $excluded_statuses )
         );
         $excluded_statuses = apply_filters( 'woocommerce_analytics_excluded_order_statuses', $excluded_statuses );

@@ -72,6 +72,11 @@ class ProductBulkEdit {
         // loop through the products and update the status
         if ( ! empty( $product_ids ) ) {
             foreach ( $product_ids as $product_id ) {
+                // Only edit the vendor's own products; skip foreign ids, mirroring the sibling bulk-delete handler.
+                if ( ! dokan_is_product_author( $product_id ) ) {
+                    continue;
+                }
+
                 // get existing product data
                 $catalog_mode_data = Helper::get_catalog_mode_data_by_product( $product_id );
                 $count++;

@@ -129,6 +129,8 @@ class Hooks {
                 if ( is_callable( [ $sub_order, 'update_status' ] ) ) {
                     $current_status = $sub_order->get_status();
                     if ( $this->is_status_change_allowed( $current_status, $new_status ) ) {
+                        // The customer already gets the parent order's email.
+                        EmailHooks::flag_synced_status( $sub_order, $new_status );
                         $sub_order->update_status( $new_status );
                     } else {
                         $this->log_skipped_status_update( $sub_order->get_id(), $current_status, $new_status );
@@ -411,6 +413,7 @@ class Hooks {
         foreach ( $sub_orders as $sub_order ) {
             // if the order is a downloadable and virtual product, then we need to set the status to complete
             if ( 'processing' === $sub_order->get_status() && $order->is_paid() && ! in_array( $order->get_payment_method(), $excluded_gateways, true ) && ! $sub_order->needs_processing() ) {
+                EmailHooks::flag_auto_completed( $sub_order );
                 $sub_order->set_status( 'completed', __( 'Marked as completed because it contains digital products only.', 'dokan-lite' ) );
                 $sub_order->save();
             }
@@ -424,7 +427,23 @@ class Hooks {
         // seems like all the child orders are completed
         // mark the parent order as complete
         if ( $all_complete ) {
-            $parent_order = wc_get_order( $parent_order_id );
+            $parent_order     = wc_get_order( $parent_order_id );
+            $covers_suborders = false;
+
+            // The parent's completed email covers Suborders auto-completed whose own email is still queued.
+            foreach ( $sub_orders as $sub_order ) {
+                $fresh_sub_order = wc_get_order( $sub_order->get_id() );
+
+                if ( $fresh_sub_order && EmailHooks::skip_auto_completed_email( $fresh_sub_order ) ) {
+                    $covers_suborders = true;
+                }
+            }
+
+            // Otherwise the customer already got each Suborder's completed email.
+            if ( ! $covers_suborders ) {
+                EmailHooks::flag_synced_status( $parent_order, 'completed' );
+            }
+
             $parent_order->update_status( 'wc-completed', __( 'Mark parent order completed when all child orders are completed.', 'dokan-lite' ) );
         }
     }

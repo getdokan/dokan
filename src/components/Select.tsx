@@ -16,8 +16,14 @@ export type DefaultOption = {
     [ key: string ]: unknown;
 };
 
-export interface SelectProps< Option = DefaultOption >
-    extends Omit< PropsOf< typeof SearchableSelect< Option > >, 'components' > {
+export interface SelectProps<
+    Option = DefaultOption,
+    IsMulti extends boolean = false,
+> extends Omit<
+        PropsOf< typeof SearchableSelect< Option, IsMulti > >,
+        'components' | 'isMulti'
+    > {
+    isMulti?: IsMulti;
     /**
      * Icon element to render inside the control.
      */
@@ -32,13 +38,29 @@ export interface SelectProps< Option = DefaultOption >
      * You can also pass a function to compute the title from the selected option.
      */
     selectedTitle?: string | ( ( option: Option ) => string );
-    components?: PropsOf< typeof SearchableSelect< Option > >[ 'components' ];
+    components?:
+        | PropsOf< typeof SearchableSelect< Option, IsMulti > >[ 'components' ]
+        | Record< string, any >;
 }
 
-function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
-    // Default portal target for the dropdown menu so it isn't clipped by parent containers
-    const defaultMenuPortalTarget =
-        typeof document !== 'undefined' ? document.body : undefined;
+function Select< Option = DefaultOption, IsMulti extends boolean = false >(
+    props: SelectProps< Option, IsMulti >
+) {
+    // Default portal target wrapped with 'dokan-layout' so Tailwind scoped styles apply
+    const defaultMenuPortalTarget = (() => {
+        if ( typeof document === 'undefined' ) {
+            return undefined;
+        }
+        const id = 'dokan-select-menu-portal';
+        let el = document.getElementById( id );
+        if ( ! el ) {
+            el = document.createElement( 'div' );
+            el.id = id;
+            el.className = 'dokan-layout';
+            document.body.appendChild( el );
+        }
+        return el;
+    })();
 
     return (
         <SearchableSelect
@@ -48,9 +70,9 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
                 DropdownIndicator,
                 SingleValue,
                 ValueContainer,
-                MultiValue,
+                MultiValue: MultiValue as any,
                 Option,
-                ...( props?.components ? props.components : {} ),
+                ...( props?.components ? ( props.components as any ) : {} ),
             } }
             styles={ styles }
             className="shadow-none"

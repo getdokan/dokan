@@ -97,10 +97,18 @@ export default class summaryReport implements Reporter {
                 }
                 break;
             case 'flaky':
-                summary.flaky_tests.push(test.title);
-                const index = summary.failed_tests.indexOf(test.title);
-                if (index !== -1) {
-                    summary.failed_tests.splice(index, 1);
+                // Passed on retry: still count it as a pass (the suite did not fail),
+                // but ALSO record it as flaky so the report surfaces the instability
+                // instead of hiding it as a clean pass.
+                summary.passed_tests.push(test.title);
+                if (!summary.flaky_tests.includes(test.title)) {
+                    summary.flaky_tests.push(test.title);
+                }
+                {
+                    const index = summary.failed_tests.indexOf(test.title);
+                    if (index !== -1) {
+                        summary.failed_tests.splice(index, 1);
+                    }
                 }
                 break;
             default:
@@ -115,7 +123,10 @@ export default class summaryReport implements Reporter {
         summary.suite_duration_formatted = getFormattedDuration(summary.suite_duration);
 
         const results = [...Object.values(this.testResults)];
-        summary.passed = results.filter(x => x === 'expected').length;
+        // Flaky (passed-on-retry) still counts toward `passed` so the build stays
+        // green and total = passed + failed + skipped reconciles; `flaky` is reported
+        // as its real count (a subset of passed) so instability is visible, not hidden.
+        summary.passed = results.filter(x => x === 'expected' || x === 'flaky').length;
         summary.failed = results.filter(x => x === 'unexpected').length;
         summary.flaky = results.filter(x => x === 'flaky').length;
         summary.skipped = results.filter(x => x === 'skipped').length;

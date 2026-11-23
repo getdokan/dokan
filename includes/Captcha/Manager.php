@@ -29,6 +29,11 @@ class Manager implements Hookable {
         // Hook to render extra form fields if needed
         add_action( 'dokan_contact_form', [ $this, 'maybe_render_contact_form_field' ], 20 );
 
+        // Render & validate captcha on the Dokan (`register_form`) and WooCommerce My Account (`woocommerce_register_form`) registration forms.
+        add_action( 'register_form', [ $this, 'maybe_render_registration_field' ], 20 );
+        add_action( 'woocommerce_register_form', [ $this, 'maybe_render_registration_field' ], 20 );
+        add_action( 'woocommerce_register_post', [ $this, 'validate_registration_captcha' ], 20, 3 );
+
         // Allow providers to inject their settings fields into admin settings
         add_filter( 'dokan_settings_fields', [ $this, 'filter_settings_fields' ], 10, 2 );
     }
@@ -132,6 +137,86 @@ class Manager implements Hookable {
     /** Echoes provider fields into contact form, keeping backward compatibility */
     public function maybe_render_contact_form_field( $seller_id ): void { // phpcs:ignore WordPress.NamingConventions.ValidVariableName
         echo $this->render_field_html( 'dokan_contact_seller_recaptcha', [ 'seller_id' => $seller_id ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    }
+
+    /**
+     * Render the captcha field on the registration form.
+     *
+     * Hooked to both `register_form` (Dokan vendor registration & onboarding templates) and
+     * `woocommerce_register_form` (WooCommerce My Account registration). A static guard makes
+     * sure the field is output only once per request, avoiding a duplicate token field/widget.
+     *
+     * @since 5.0.6
+     *
+     * @return void
+     */
+    public function maybe_render_registration_field(): void {
+        static $rendered = false;
+
+        if ( $rendered ) {
+            return;
+        }
+
+        // Skip wp-login.php: it also fires `register_form` but has no token script and is validated by WordPress core, not here.
+        if ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) {
+            return;
+        }
+
+        if ( ! $this->get_active_provider() ) {
+            return;
+        }
+
+        // Make sure the active provider's front-end assets are loaded on the registration page.
+        $this->register_assets();
+
+        $rendered = true;
+
+        echo $this->render_field_html( 'dokan_registration_recaptcha' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    }
+
+    /**
+     * Validate the captcha token submitted with a registration request.
+     *
+     * Hooked to `woocommerce_register_post`, which fires for every WooCommerce registration
+     * after the registration nonce has already been verified upstream. Adds an error to the
+     * registration error bag when verification fails, which aborts the registration.
+     *
+     * @since 5.0.6
+     *
+     * @param string    $username          Submitted username.
+     * @param string    $email             Submitted email.
+     * @param \WP_Error $validation_errors Registration error bag.
+     *
+     * @return void
+     */
+    public function validate_registration_captcha( $username, $email, $validation_errors ): void {
+        // Enforce only on a real registration-form submit; programmatic wc_create_new_customer() callers post no `register` field nor captcha.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Presence check only; WooCommerce verifies the registration nonce before this hook fires.
+        if ( ! isset( $_POST['register'] ) ) {
+            return;
+        }
+
+        // Captcha is rendered on the registration form only, not during checkout account creation.
+        if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+            return;
+        }
+
+        // REST / WP-CLI registrations do not render the captcha field; skip to avoid a lockout.
+        if ( defined( 'REST_REQUEST' ) || defined( 'WP_CLI' ) ) {
+            return;
+        }
+
+        // No active/ready provider means no captcha was rendered; nothing to validate.
+        if ( ! $this->get_active_provider() ) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verifies the registration nonce before this hook fires.
+        $token = isset( $_POST['dokan_recaptcha_token'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_recaptcha_token'] ) ) : '';
+
+        if ( ! $this->validate( 'dokan_registration_recaptcha', $token ) ) {
+            $validation_errors->add( 'dokan_captcha_error', __( 'Captcha verification failed. Please try again.', 'dokan-lite' ) );
+        }
     }
 
     /**

@@ -74,8 +74,12 @@ const findReports = (dir: string): void => {
         if (isDirectory) {
             findReports(fullPath); // Recurse into all directories
         } else if (file === 'coverage.json') {
-            // Push the file path if it matches REPORT_TYPE
-            if (fullPath.includes(`${path.sep}${REPORT_TYPE}${path.sep}`)) {
+            // Only consume coverage from this suite's own shard artifacts
+            // (all-reports/test-artifact-<REPORT_TYPE>*). See the matching
+            // guard in mergeSummaryReport.ts — the api job's setup run writes
+            // files under playwright-report/e2e/ into test-artifact-api, which
+            // a bare path-segment match would wrongly merge into e2e results.
+            if (fullPath.includes(`test-artifact-${REPORT_TYPE}`) && fullPath.includes(`${path.sep}${REPORT_TYPE}${path.sep}`)) {
                 console.log(`Matched file: ${fullPath}`);
                 reportPaths.push(fullPath);
             }

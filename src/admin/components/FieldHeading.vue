@@ -1,7 +1,7 @@
 <template>
     <div class="field_data">
         <h3 class="field_heading" scope="row">
-            {{ fieldData.label }}
+            {{ decodedLabel }}
             <span v-if="fieldData.icon_class">
             </span>
             <span v-if="( fieldData.tooltip || fieldData.field_icon )">
@@ -24,6 +24,22 @@
         name : 'FieldHeading',
 
         props : ['fieldData'],
+
+        computed: {
+            decodedLabel() {
+                const label = ( this.fieldData && this.fieldData.label ) || '';
+
+                // Early passes if the label not found.
+                if ( ! label || typeof document === 'undefined' ) {
+                    return label;
+                }
+
+                // Decode html entities in the label.
+                const el = document.createElement( 'textarea' );
+                el.innerHTML = label;
+                return el.value;
+            }
+        },
 
         methods: {
             restoreDefaultImage() {

@@ -1,5 +1,5 @@
 import { debounce } from '@wordpress/compose';
-import { useCallback, useMemo, useState } from '@wordpress/element';
+import { RawHTML, useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import CategoryRow from './CategoryRow';
 import CategoryTree from './CategoryTree';
@@ -20,9 +20,7 @@ import {
     validatePercentage,
 } from './utils';
 
-const CategoryBasedCommission: React.FC<
-    CategoryBasedCommissionProps
-> = ( {
+const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
     categories,
     commissionValues,
     currency,
@@ -30,6 +28,10 @@ const CategoryBasedCommission: React.FC<
     onCommissionChange,
     display = true,
     debounceDelay = 500,
+    validationError,
+    headerClassName = '',
+    rowClassName = '',
+    autoExpandCustomized = false,
 } ) => {
     // Initialize commission state with proper memoization
     const initialCommission = useMemo( (): CommissionValues => {
@@ -47,7 +49,12 @@ const CategoryBasedCommission: React.FC<
     const [ expandedIds, setExpandedIds ] = useState<
         Array< string | number >
     >( [] );
-    const [ allCategoryOpen, setAllCategoryOpen ] = useState( false );
+    // Open the list on load when a category already has a custom amount (opt-in via the prop).
+    const [ allCategoryOpen, setAllCategoryOpen ] = useState(
+        () =>
+            autoExpandCustomized &&
+            Object.keys( commissionValues?.items || {} ).length > 0
+    );
 
     // Memoize categories to avoid dependency issues
     const categoriesMemo = useMemo( () => categories || {}, [ categories ] );
@@ -274,6 +281,7 @@ const CategoryBasedCommission: React.FC<
         getCommissionValue: getCommissionValueCallback,
         formatValue: formatValueCallback,
         currency,
+        highlightEmpty: !! validationError,
     };
 
     const categoriesList = useMemo(
@@ -287,7 +295,7 @@ const CategoryBasedCommission: React.FC<
 
     return (
         <div className="w-full bg-white overflow-auto">
-            <CommissionHeader />
+            <CommissionHeader className={ headerClassName } />
             <div className="border-t border-[#E9E9E9]">
                 <CategoryRow
                     category={ {
@@ -302,6 +310,7 @@ const CategoryBasedCommission: React.FC<
                     hasChildren={ categoriesList.length > 0 }
                     onToggle={ handleToggle }
                     commissionInputsProps={ commissionInputsProps }
+                    className={ rowClassName }
                 />
                 { allCategoryOpen && (
                     <CategoryTree
@@ -309,9 +318,17 @@ const CategoryBasedCommission: React.FC<
                         expandedIds={ expandedIds }
                         onToggle={ handleToggle }
                         commissionInputsProps={ commissionInputsProps }
+                        rowClassName={ rowClassName }
                     />
                 ) }
             </div>
+            { validationError && (
+                <div className="p-4 border-[#E9E9E9]">
+                    <p className="text-sm text-destructive">
+                        <RawHTML>{ validationError }</RawHTML>
+                    </p>
+                </div>
+            ) }
         </div>
     );
 };

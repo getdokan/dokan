@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Product;
 
 use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Settings\Product as ProductCommissionSettings;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
@@ -36,6 +37,9 @@ class Hooks {
         // Add WooCommerce product brands support.
         add_action( 'dokan_new_product_added', [ $this, 'update_product_brands_by_id' ], 10, 2 );
         add_action( 'dokan_product_updated', [ $this, 'update_product_brands_by_id' ], 10, 2 );
+        // Creating a product has to record its chosen category too, or nothing downstream knows what was picked.
+        add_action( 'dokan_new_product_added', [ $this, 'sync_category_data_for_commission' ] );
+        add_action( 'dokan_product_updated', [ $this, 'sync_category_data_for_commission' ] );
         add_action( 'dokan_product_edit_after_pricing_fields', [ $this, 'add_product_brand_template_in_edit_product' ] );
         add_action( 'dokan_new_product_after_product_category', [ $this, 'add_product_brand_template_in_add_product' ] );
 
@@ -44,6 +48,10 @@ class Hooks {
         add_action( 'woocommerce_before_single_product', [ $this, 'own_product_not_purchasable_notice' ] );
         // product review action hook
         add_action( 'comment_notification_recipients', [ $this, 'product_review_notification_recipients' ], 10, 2 );
+        // Every REST route that saves a product or variation passes one of these, Dokan Pro's variations route included.
+        add_filter( 'woocommerce_rest_pre_insert_product_object', [ $this, 'drop_unsafe_meta_from_rest_save' ], 10, 2 );
+        add_filter( 'woocommerce_rest_pre_insert_product_variation_object', [ $this, 'drop_unsafe_meta_from_rest_save' ], 10, 2 );
+        add_filter( 'dokan_rest_pre_insert_product_variation_object', [ $this, 'drop_unsafe_meta_from_rest_save' ], 10, 2 );
         // Init Product Cache Class
         new VendorStoreInfo();
         new ProductCache();
@@ -52,6 +60,70 @@ class Hooks {
         add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
+        add_filter( 'woocommerce_rest_pre_insert_product_object', [ $this, 'protect_per_product_commission_meta' ] );
+
+        add_filter( 'woocommerce_new_product_variation_data', [ $this, 'set_new_variation_author_to_vendor' ] );
+    }
+
+    /**
+     * Give a new variation its product's vendor as author.
+     *
+     * WooCommerce stamps whoever creates it, so a variation an admin adds would fall outside the vendor's scope.
+     *
+     * @since 5.3.0
+     *
+     * @param array $data Post data WooCommerce inserts for the variation.
+     *
+     * @return array
+     */
+    public function set_new_variation_author_to_vendor( $data ) {
+        $vendor_id = empty( $data['post_parent'] ) ? 0 : dokan_get_vendor_by_product( $data['post_parent'], true );
+
+        if ( $vendor_id ) {
+            $data['post_author'] = $vendor_id;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Keep unsafe raw meta out of a product or variation REST save, unless a Store Admin sends it.
+     *
+     * Unsafe is a key WooCommerce owns, such as `_product_attributes` or a variation's `attribute_*`,
+     * or a value holding a serialized PHP object.
+     *
+     * @since 5.3.5
+     *
+     * @param \WC_Data              $product Product or variation assembled from the request, not yet saved.
+     * @param \WP_REST_Request|null $request Request the save came from.
+     *
+     * @return \WC_Data
+     */
+    public function drop_unsafe_meta_from_rest_save( $product, $request = null ) {
+        if ( ! $product instanceof WC_Product || empty( $request['meta_data'] ) || current_user_can( 'manage_woocommerce' ) ) {
+            return $product;
+        }
+
+        $internal_keys = \WC_Data_Store::load( 'product' )->get_internal_meta_keys();
+        $is_variation  = $product instanceof \WC_Product_Variation;
+
+        if ( $is_variation ) {
+            // The variation data store also owns this key, on top of the product list.
+            $internal_keys[] = '_cogs_value_is_additive';
+        }
+
+        foreach ( $product->get_meta_data() as $meta ) {
+            // A variation stores its attribute values as `attribute_*` rows, which WooCommerce writes from `attributes`.
+            $is_variation_attribute = $is_variation && 0 === stripos( (string) $meta->key, 'attribute_' );
+
+            if ( $is_variation_attribute || in_array( $meta->key, $internal_keys, true ) || ProductAttribute::contains_php_object( $meta->value ) ) {
+                // Unsafe meta goes back to what is stored, which for a new entry is nothing.
+                $meta->key   = $meta->get_data()['key'];
+                $meta->value = $meta->id ? $meta->get_data()['value'] : null;
+            }
+        }
+
+        return $product;
     }
 
     /**
@@ -129,12 +201,13 @@ class Hooks {
             }
 
             $output .= '<li>';
-            $output .= '<a href="' . get_post_permalink( $result->ID ) . '">';
+            // Escape every vendor-controlled value below before it is injected into the AJAX search markup.
+            $output .= '<a href="' . esc_url( get_post_permalink( $result->ID ) ) . '">';
             $output .= '<div class="dokan-ls-product-image">';
             $output .= '<img src="' . $get_product_image . '">';
             $output .= '</div>';
             $output .= '<div class="dokan-ls-product-data">';
-            $output .= '<h3>' . $get_name . '</h3>';
+            $output .= '<h3>' . esc_html( $get_name ) . '</h3>';
 
             if ( ! empty( $price ) ) {
                 $output .= '<div class="product-price">';
@@ -150,15 +223,15 @@ class Hooks {
                 foreach ( $categories as $category ) {
                     if ( $category->parent ) {
                         $parent = get_term_by( 'id', $category->parent, 'product_cat' );
-                        $output .= '<span>' . $parent->name . '</span>';
+                        $output .= '<span>' . esc_html( $parent->name ) . '</span>';
                     }
-                    $output .= '<span>' . $category->name . '</span>';
+                    $output .= '<span>' . esc_html( $category->name ) . '</span>';
                 }
                 $output .= '</div>';
             }
 
             if ( ! empty( $sku ) ) {
-                $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . $sku . '</div>';
+                $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . esc_html( $sku ) . '</div>';
             }
 
             $output .= '</div>';
@@ -195,11 +268,11 @@ class Hooks {
         <div class="dokan-store-products-filter-area dokan-clearfix">
             <form class="dokan-store-products-ordeby" method="get">
                 <input type="text" name="product_name" class="product-name-search dokan-store-products-filter-search"
-                       placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
-                       data-store_id="<?php echo esc_attr( $store_id ); ?>">
+                        placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
+                        data-store_id="<?php echo esc_attr( $store_id ); ?>">
                 <div id="dokan-store-products-search-result" class="dokan-ajax-store-products-search-result"></div>
                 <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme"
-                       value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
+                        value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
 
                 <?php if ( is_array( $orderby_options['catalogs'] ) && isset( $orderby_options['orderby'] ) ) : ?>
                     <select name="product_orderby" class="orderby orderby-search"
@@ -575,7 +648,36 @@ class Hooks {
         );
     }
 
+    /**
+     * Keep a REST product save from changing the per-product admin commission unless a store admin sent it.
+     *
+     * Runs after WooCommerce has copied the request's meta onto the product, on its own product
+     * routes (wc/v2, wc/v3) as well as Dokan's (dokan/v1, dokan/v3). A vendor's entries for these
+     * keys — sent by key, or by a meta id that retargets the admin's row — are undone by putting
+     * the stored values back, behind the same gate as save_per_product_commission_options().
+     *
+     * @since 5.3.5
+     *
+     * @param \WC_Data $product Product assembled from the request, not yet saved.
+     *
+     * @return \WC_Data
+     */
+    public function protect_per_product_commission_meta( $product ) {
+        if ( ! $product instanceof WC_Product || current_user_can( 'manage_woocommerce' ) ) {
+            return $product;
+        }
 
+        foreach ( ProductCommissionSettings::admin_only_meta_keys() as $key ) {
+            // A stored value wins over anything the request carried; without one the key must not appear at all.
+            if ( $product->get_id() && metadata_exists( 'post', $product->get_id(), $key ) ) {
+                $product->update_meta_data( $key, get_post_meta( $product->get_id(), $key, true ) );
+            } else {
+                $product->delete_meta_data( $key );
+            }
+        }
+
+        return $product;
+    }
 
     /**
      * Add product brand taxonomy template
@@ -623,6 +725,26 @@ class Hooks {
         }
 
         $brand_ids = $product_data['product_brand'] ?? array();
+        if ( ! count( $brand_ids ) ) {
+            return;
+		}
         dokan()->product->save_brands( $product_id, $brand_ids );
+    }
+
+    /**
+     * Sync category data for commission
+     *
+     * @since 5.0.6
+     *
+     * @param int   $product_id   The ID of the product being created or updated.
+     *
+     * @return void
+     */
+    public function sync_category_data_for_commission( int $product_id ): void {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return;
+        }
+
+        $this->update_product_categories( $product_id );
     }
 }

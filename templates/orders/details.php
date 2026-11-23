@@ -116,35 +116,79 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
 
             <?php do_action( 'dokan_order_detail_after_order_items', $order ); ?>
 
-            <div class="dokan-left dokan-order-billing-address">
-                <div class="dokan-panel dokan-panel-default">
-                    <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Billing Address', 'dokan-lite' ); ?></strong></div>
-                    <div class="dokan-panel-body">
-                        <?php
-                        if ( $order->get_formatted_billing_address() ) {
-                            echo wp_kses_post( $order->get_formatted_billing_address() );
-                        } else {
-                            esc_html_e( 'No billing address set.', 'dokan-lite' );
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
+            <?php
+            /**
+             * Filter whether to render the billing address section on the vendor order details page.
+             *
+             * @since 5.0.2
+             *
+             * @param bool      $show  Whether to display the billing address. Default true.
+             * @param \WC_Order $order Order object.
+             */
+            if ( apply_filters( 'dokan_order_details_show_billing_address', true, $order ) ) :
 
-            <div class="dokan-left dokan-order-shipping-address">
-                <div class="dokan-panel dokan-panel-default">
-                    <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Shipping Address', 'dokan-lite' ); ?></strong></div>
-                    <div class="dokan-panel-body">
-                        <?php
-                        if ( $order->get_formatted_shipping_address() ) {
-                            echo wp_kses_post( $order->get_formatted_shipping_address() );
-                        } else {
-                            esc_html_e( 'No shipping address set.', 'dokan-lite' );
-                        }
-                        ?>
+                /**
+                 * Filter the formatted billing address rendered on the vendor order details page.
+                 *
+                 * @since 5.0.2
+                 *
+                 * @param string    $formatted_billing_address Formatted billing address HTML.
+                 * @param \WC_Order $order                     Order object.
+                 */
+                $formatted_billing_address = apply_filters( 'dokan_order_details_billing_address', $order->get_formatted_billing_address(), $order );
+                ?>
+                <div class="dokan-left dokan-order-billing-address">
+                    <div class="dokan-panel dokan-panel-default">
+                        <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Billing Address', 'dokan-lite' ); ?></strong></div>
+                        <div class="dokan-panel-body">
+                            <?php
+                            if ( $formatted_billing_address ) {
+                                echo wp_kses_post( $formatted_billing_address );
+                            } else {
+                                esc_html_e( 'No billing address set.', 'dokan-lite' );
+                            }
+                            ?>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
+
+            <?php
+            /**
+             * Filter whether to render the shipping address section on the vendor order details page.
+             *
+             * @since 5.0.2
+             *
+             * @param bool      $show  Whether to display the shipping address. Default true.
+             * @param \WC_Order $order Order object.
+             */
+            if ( apply_filters( 'dokan_order_details_show_shipping_address', true, $order ) ) :
+
+                /**
+                 * Filter the formatted shipping address rendered on the vendor order details page.
+                 *
+                 * @since 5.0.2
+                 *
+                 * @param string    $formatted_shipping_address Formatted shipping address HTML.
+                 * @param \WC_Order $order                      Order object.
+                 */
+                $formatted_shipping_address = apply_filters( 'dokan_order_details_shipping_address', $order->get_formatted_shipping_address(), $order );
+                ?>
+                <div class="dokan-left dokan-order-shipping-address">
+                    <div class="dokan-panel dokan-panel-default">
+                        <div class="dokan-panel-heading"><strong><?php esc_html_e( 'Shipping Address', 'dokan-lite' ); ?></strong></div>
+                        <div class="dokan-panel-body">
+                            <?php
+                            if ( $formatted_shipping_address ) {
+                                echo wp_kses_post( $formatted_shipping_address );
+                            } else {
+                                esc_html_e( 'No shipping address set.', 'dokan-lite' );
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <div class="clear"></div>
 

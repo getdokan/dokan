@@ -67,6 +67,8 @@ const entryPoints = {
     },
     'dokan-status': '/src/Status/index.tsx',
     'dokan-pro-features': '/src/ProFeatures/index.tsx',
+    // TODO BFCM-2026-REMOVE: seasonal page, remove after the campaign.
+    'dokan-black-friday': '/src/BlackFriday/index.tsx',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
     // intelligence
     'dokan-intelligence': './src/intelligence/index.tsx',
@@ -85,6 +87,22 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'product-editor-store': {
+        import: '/src/stores/productEditor/store.ts',
+        library: {
+            name: [ 'dokan', 'productEditorStore' ],
+            type: 'window',
+        },
+    },
+    'product-editor-utils': {
+        import: './src/dashboard/product-editor/exports.ts',
+        library: {
+            name: [ 'dokan', 'productEditor' ],
+            type: 'window',
+        },
+    },
+    'vendor-onboarding': '/assets/src/less/vendor-onboarding.less',
+    'vendor-onboarding-js': './assets/src/js/vendor-onboarding.js',
     'dokan-admin-commission-suborder-metabox':
         './src/styles/dokan-admin-commission-suborder-metabox.css',
 

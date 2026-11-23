@@ -16,10 +16,48 @@ var Dokan_Vendor_Registration = {
         $( '#seller-url', form ).on( 'keyup', this.renderUrl );
         $( '#seller-url', form ).on( 'focusout', this.checkSlugAvailability );
 
+        // Generate the invisible reCAPTCHA v3 token right before the form is submitted.
+        form.on( 'submit', this.maybeInjectRecaptchaToken );
+
         this.validationLocalized();
         this.handlePasswordStrengthObserver();
         // this.validate(this);
         $( document ).trigger( 'dokan_event_seller_registration_form' );
+    },
+
+    // On submit, populate the empty reCAPTCHA v3 token field; no-op for Turnstile (self-fills) or when no provider is configured.
+    maybeInjectRecaptchaToken: function(e) {
+        const $form = $( this ),
+            $token  = $form.find( '.dokan_recaptcha_token' );
+
+        // No captcha field (provider not configured) or token already set (Turnstile).
+        if ( ! $token.length || $token.val() ) {
+            return;
+        }
+
+        // The helper and the localized site key only exist when reCAPTCHA v3 is active.
+        if ( 'undefined' === typeof dokan_google_recaptcha || 'undefined' === typeof dokan_execute_recaptcha ) {
+            return;
+        }
+
+        e.preventDefault();
+
+        // A programmatic submit drops the clicked button's value, so re-add the `register` field WooCommerce requires.
+        if ( ! $form.find( 'input[name=register][type=hidden]' ).length ) {
+            $( '<input>', { type: 'hidden', name: 'register', value: 'Register' } ).appendTo( $form );
+        }
+
+        // Disable the submit button so a double-click can't fire a second submit while the token is generated.
+        const $submitButton = $form.find( '[type=submit]' ).prop( 'disabled', true ),
+            submitForm = function() {
+                $submitButton.prop( 'disabled', false );
+                $form.off( 'submit', Dokan_Vendor_Registration.maybeInjectRecaptchaToken );
+                $form.get( 0 ).submit();
+            };
+
+        // Submit once the reCAPTCHA step settles, either way: with the token on success, or with an empty token on failure so the server returns a clear error instead of the form hanging.
+        dokan_execute_recaptcha( 'form.register .dokan_recaptcha_token', 'dokan_registration_recaptcha' )
+            .then( submitForm, submitForm );
     },
 
     validate: function(self) {
@@ -67,6 +105,13 @@ var Dokan_Vendor_Registration = {
         var chk_value = $( this ).val();
 
         if ( $( this ).prop( "checked" ) ) {
+            const form = $( this ).closest( 'form' );
+
+            // A taken shop URL or a weak password keeps the submit button locked.
+            if ( form.find( '#url-alart-mgs' ).hasClass( 'text-danger' ) || form.find( '.woocommerce-password-strength' ).is( '.short:visible, .bad:visible' ) ) {
+                return;
+            }
+
             $( 'input[name=register]' ).removeAttr( 'disabled' );
             $( 'button[name=register]' ).removeAttr( 'disabled' );
             $( 'input[name=dokan_migration]' ).removeAttr( 'disabled' );
@@ -116,6 +161,9 @@ var Dokan_Vendor_Registration = {
         }
 
         var row = self.closest('.form-row');
+        const form = self.closest( 'form' );
+        const submitButton = form.find( '[type=submit]' );
+
         row.block({ message: null, overlayCSS: { background: '#fff url(' + dokan.ajax_loader + ') no-repeat center', opacity: 0.6 } });
 
         $.post( dokan.ajaxurl, data, function(resp) {
@@ -123,11 +171,14 @@ var Dokan_Vendor_Registration = {
             if ( resp.success === true ) {
                 $('#url-alart').removeClass('text-danger').addClass('text-success');
                 $('#url-alart-mgs').removeClass('text-danger').addClass('text-success').text(dokan.seller.available);
-                $('.woocommerce-form-register__submit').prop('disabled', false);
+                // An unticked terms box or a weak password keeps the button locked.
+                const termsUnticked = form.find( '.tc_check_box:not(:checked)' ).length > 0,
+                      weakPassword  = form.find( '.woocommerce-password-strength' ).is( '.short:visible, .bad:visible' );
+                submitButton.prop( 'disabled', termsUnticked || weakPassword );
             } else {
                 $('#url-alart').removeClass('text-success').addClass('text-danger');
                 $('#url-alart-mgs').removeClass('text-success').addClass('text-danger').text(dokan.seller.notAvailable);
-                $('.woocommerce-form-register__submit').prop('disabled', true);
+                submitButton.prop( 'disabled', true );
             }
 
             row.unblock();
@@ -153,45 +204,47 @@ var Dokan_Vendor_Registration = {
     },
 
     handlePasswordStrengthObserver: function() {
-        // Identify the password input element to observe.
-        const elementToObserve  = document.querySelector( '.woocommerce-form-register .password-input' ),
+        // WooCommerce wraps the field and adds the strength meter after this runs, so anchor on the field itself.
+        const passwordField     = document.querySelector( '.woocommerce-form-register #reg_password' ),
               AllowedClassNames = [ 'good', 'strong' ];
 
         // If registration password input field is not exists.
-        if ( ! elementToObserve ) {
+        if ( ! passwordField ) {
             return;
         }
 
+        // The meter lands next to the field's wrapper, so watch the whole row.
+        const elementToObserve = passwordField.closest( '.form-row' ) || passwordField.parentElement;
+
         // Create a new instance of `MutationObserver` named `observer`.
-        const observer = new MutationObserver( ( mutationList, observer ) => {
+        const observer = new MutationObserver( ( mutationList ) => {
             for ( const mutation of mutationList ) {
-                // Check if the mutation element class list contains at least an allowed class names.
-                if ( AllowedClassNames.some( className => mutation.target.classList.contains( className ) ) ) {
+                // WooCommerce re-enables the button on a good or strong password, so re-apply the locks.
+                if ( mutation.target.classList && AllowedClassNames.some( className => mutation.target.classList.contains( className ) ) ) {
                     this.ensureShopSlugAvailability();
                 }
             }
         });
 
-        // Call `observe()` on that MutationObserver instance.
-        observer.observe( elementToObserve, { subtree: true, childList: true } );
+        // The meter's strength class changes on every keystroke, so watch class attributes too.
+        observer.observe( elementToObserve, { subtree: true, childList: true, attributes: true, attributeFilter: [ 'class' ] } );
     },
 
     ensureShopSlugAvailability: function() {
-        const slugAvailabilityStatus = $( '#url-alart-mgs' ).hasClass( 'text-success' ),
+        const urlStatus              = $( '#url-alart-mgs' ),
+              form                   = urlStatus.closest( 'form' ),
+              slugAvailabilityStatus = urlStatus.hasClass( 'text-success' ),
               registrationRoleInput  = $( '.vendor-customer-registration input[name="role"]:checked' ),
-              submitButton           = $( '.woocommerce-form-register__submit' );
+              submitButton           = form.find( '[type=submit]' ),
+              termsUnticked          = form.find( '.tc_check_box:not(:checked)' ).length > 0;
 
         // Check if the registration role is `seller`.
         if ( 'seller' !== registrationRoleInput.val() ) {
             return;
         }
 
-        // Enable/disable submit button based on shop slug availability.
-        if ( slugAvailabilityStatus ) {
-            submitButton.prop( 'disabled', false );
-        } else {
-            submitButton.prop( 'disabled', true );
-        }
+        // The button stays locked until the URL is available and the terms box is ticked.
+        submitButton.prop( 'disabled', ! slugAvailabilityStatus || termsUnticked );
     }
 };
 

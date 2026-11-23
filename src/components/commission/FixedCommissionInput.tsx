@@ -1,6 +1,12 @@
-import { MaskedInput } from '@getdokan/dokan-ui';
+import { Badge, MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
-import { RawHTML, useCallback, useMemo, useState } from '@wordpress/element';
+import {
+    RawHTML,
+    useCallback,
+    useMemo,
+    useRef,
+    useState,
+} from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { CombineInputProps, FixedCommissionInputValues } from './types';
 import { twMerge } from 'tailwind-merge';
@@ -12,11 +18,15 @@ const FixedCommissionInput = ( {
     description,
     hookKey,
     onValueChange,
+    isAutomated = false,
     display = true,
     debounceDelay = 500,
+    validationError,
 }: CombineInputProps ) => {
     const [ localValues, setLocalValues ] =
         useState< FixedCommissionInputValues >( values );
+    // Read when a debounced change fires, so it never commits a stale sibling value.
+    const latestValues = useRef< FixedCommissionInputValues >( values );
 
     // Utility functions
     const unFormatValue = useCallback(
@@ -42,7 +52,7 @@ const FixedCommissionInput = ( {
 
     const formatValue = useCallback(
         ( value: number | string ): string => {
-            if ( value === '' || value === 0 ) {
+            if ( value === '' ) {
                 return '';
             }
 
@@ -64,39 +74,44 @@ const FixedCommissionInput = ( {
     // Handle percentage change
     const handlePercentageChange = useCallback(
         ( value: string ) => {
+            const unformatted = unFormatValue( value );
+            let validatedValue: string | number = unformatted;
+
             // Validate percentage (0-100)
-            let validatedValue = value;
-            if ( value !== '' ) {
-                const numValue = parseFloat( unFormatValue( value ) );
+            if ( unformatted !== '' ) {
+                const numValue = parseFloat( unformatted );
                 if ( isNaN( numValue ) || numValue < 0 || numValue > 100 ) {
                     validatedValue = '';
+                } else {
+                    validatedValue = numValue;
                 }
             }
 
             const newValues = {
-                ...localValues,
-                admin_percentage:
-                    parseFloat( unFormatValue( validatedValue ) ) || 0,
+                ...latestValues.current,
+                admin_percentage: validatedValue,
             };
-
+            latestValues.current = newValues;
             setLocalValues( newValues );
             onValueChange( newValues );
         },
-        [ localValues, unFormatValue, onValueChange ]
+        [ unFormatValue, onValueChange ]
     );
 
     // Handle fixed amount change
     const handleFixedChange = useCallback(
         ( value: string ) => {
-            const newValues = {
-                ...localValues,
-                additional_fee: parseFloat( unFormatValue( value ) ) || 0,
-            };
+            const unformatted = unFormatValue( value );
 
+            const newValues = {
+                ...latestValues.current,
+                additional_fee: unformatted,
+            };
+            latestValues.current = newValues;
             setLocalValues( newValues );
             onValueChange( newValues );
         },
-        [ localValues, unFormatValue, onValueChange ]
+        [ unFormatValue, onValueChange ]
     );
 
     // Debounced handlers
@@ -112,6 +127,7 @@ const FixedCommissionInput = ( {
 
     // Update local values when props change
     useMemo( () => {
+        latestValues.current = values;
         setLocalValues( values );
     }, [ values ] );
 
@@ -119,16 +135,22 @@ const FixedCommissionInput = ( {
         return null;
     }
 
-    // Check if we have title or description content
-    const hasContent = title || description;
+    // Check if we have title, description, or validation error
+    const hasContent = title || description || validationError;
+
+    // Outline the wrapper, because dokan-ui's own border classes win on the input.
+    const invalidRing = ( value: number | string ): string =>
+        validationError && String( value ?? '' ).trim() === ''
+            ? 'rounded ring-1 ring-destructive'
+            : '';
 
     return (
         <div
             id={ hookKey }
-            className="@container/combine grid grid-cols-12 p-4 gap-2"
+            className="@container/combine grid grid-cols-12 p-4 gap-2 w-full"
         >
             { hasContent && (
-                <div className="flex flex-col @xl/combine:col-span-7 col-span-12 gap-1">
+                <div className="flex flex-col justify-center @xl/combine:col-span-7 col-span-12 gap-1">
                     { title && (
                         <h2 className="text-sm @md/combine:text-base leading-6 font-semibold text-gray-900">
                             <RawHTML>{ title }</RawHTML>
@@ -137,6 +159,11 @@ const FixedCommissionInput = ( {
                     { description && (
                         <p className="text-xs @md/combine:text-sm font-normal text-[#828282] mt-1">
                             <RawHTML>{ description }</RawHTML>
+                        </p>
+                    ) }
+                    { validationError && (
+                        <p className="text-sm text-destructive">
+                            <RawHTML>{ validationError }</RawHTML>
                         </p>
                     ) }
                 </div>
@@ -148,37 +175,80 @@ const FixedCommissionInput = ( {
                     hasContent ? 'justify-end' : 'justify-start'
                 ) }
             >
-                <MaskedInput
-                    value={ formatValue( localValues.admin_percentage ) }
-                    addOnRight={ <span>{ __( '%', 'dokan-lite' ) }</span> }
-                    onChange={ ( e ) =>
-                        debouncedPercentageChange( e.target.value )
-                    }
-                    maskRule={ {
-                        numeral: true,
-                        delimiter: currency?.thousand ?? ',',
-                        numeralDecimalMark: currency?.decimal ?? '.',
-                        numeralDecimalScale: currency?.precision ?? 2,
-                    } }
-                    className={ `w-24 h-10 rounded rounded-r-none focus:border-gray-300 focus:ring-0 !border-r-0 !rounded-r-none` }
-                />
+                { isAutomated ? (
+                    <Badge
+                        color="gray"
+                        className="px-3 py-1 text-sm font-medium"
+                        label={ __( 'Automated', 'dokan-lite' ) }
+                    />
+                ) : (
+                    <>
+                        <div
+                            className={ invalidRing(
+                                localValues.admin_percentage
+                            ) }
+                        >
+                            <MaskedInput
+                                value={ formatValue(
+                                    localValues.admin_percentage
+                                ) }
+                                input={ { placeholder: '0' } }
+                                addOnRight={
+                                    <span>{ __( '%', 'dokan-lite' ) }</span>
+                                }
+                                onChange={ ( e ) =>
+                                    debouncedPercentageChange( e.target.value )
+                                }
+                                // Commit the pending value before Save reads the form.
+                                onBlur={ () =>
+                                    debouncedPercentageChange.flush()
+                                }
+                                maskRule={ {
+                                    numeral: true,
+                                    delimiter: currency?.thousand ?? ',',
+                                    numeralDecimalMark:
+                                        currency?.decimal ?? '.',
+                                    numeralDecimalScale:
+                                        currency?.precision ?? 2,
+                                } }
+                                // `!m-0` removes WP admin's 1px input margin, which would split the input from its addon.
+                                className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !border-r-0 !rounded-r-none` }
+                            />
+                        </div>
 
-                <div className="text-gray-500 text-lg">
-                    { __( '+', 'dokan-lite' ) }
-                </div>
+                        <div className="text-gray-500 text-lg">
+                            { __( '+', 'dokan-lite' ) }
+                        </div>
 
-                <MaskedInput
-                    addOnLeft={ currency?.symbol }
-                    value={ formatValue( localValues.additional_fee ) }
-                    onChange={ ( e ) => debouncedFixedChange( e.target.value ) }
-                    maskRule={ {
-                        numeral: true,
-                        delimiter: currency?.thousand ?? ',',
-                        numeralDecimalMark: currency?.decimal ?? '.',
-                        numeralDecimalScale: currency?.precision ?? 2,
-                    } }
-                    className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !border-l-0 !rounded-l-none` }
-                />
+                        <div
+                            className={ invalidRing(
+                                localValues.additional_fee
+                            ) }
+                        >
+                            <MaskedInput
+                                addOnLeft={ currency?.symbol }
+                                value={ formatValue(
+                                    localValues.additional_fee
+                                ) }
+                                input={ { placeholder: '0' } }
+                                onChange={ ( e ) =>
+                                    debouncedFixedChange( e.target.value )
+                                }
+                                onBlur={ () => debouncedFixedChange.flush() }
+                                maskRule={ {
+                                    numeral: true,
+                                    delimiter: currency?.thousand ?? ',',
+                                    numeralDecimalMark:
+                                        currency?.decimal ?? '.',
+                                    numeralDecimalScale:
+                                        currency?.precision ?? 2,
+                                } }
+                                // Keep the left border: dokan-ui's addOnLeft span has none on its right, so the input draws the seam.
+                                className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !m-0 !rounded-l-none` }
+                            />
+                        </div>
+                    </>
+                ) }
             </div>
         </div>
     );

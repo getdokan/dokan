@@ -49,6 +49,7 @@ class ServiceProvider extends BootableServiceProvider {
         'widgets'             => \WeDevs\Dokan\Widgets\Manager::class,
         'admin_notices'       => \WeDevs\Dokan\Admin\Notices\Manager::class,
         'tracker'             => \WeDevs\Dokan\Tracker::class,
+        'product_editor'        => \WeDevs\Dokan\ProductEditor\FormSchema::class,
 	];
 
 	/**
@@ -68,7 +69,9 @@ class ServiceProvider extends BootableServiceProvider {
 		$this->getContainer()->addServiceProvider( new AdminDashboardServiceProvider() );
 		$this->getContainer()->addServiceProvider( new AdminSetupGuideServiceProvider() );
 		$this->getContainer()->addServiceProvider( new ModelServiceProvider() );
-        $this->getContainer()->addServiceProvider( new CaptchaServiceProvider() );
+		$this->getContainer()->addServiceProvider( new AdminSettingsServiceProvider() );
+		$this->getContainer()->addServiceProvider( new CaptchaServiceProvider() );
+		$this->getContainer()->addServiceProvider( new CliServiceProvider() );
 	}
 
     /**

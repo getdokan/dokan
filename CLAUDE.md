@@ -4,6 +4,13 @@
 
 Dokan Lite is a multi-vendor e-commerce marketplace plugin for WordPress, powered by WooCommerce. Version 4.2.8. Requires PHP 7.4+ and WooCommerce 8.5.0+.
 
+## Domain Model
+
+- **`CONTEXT.md`** — the canonical ubiquitous-language glossary for the whole Dokan bounded context (Lite **and** Pro). Read it before naming things or discussing domain concepts; use its canonical terms (e.g. Vendor not seller, Suborder vs Vendor order, Commission = admin's share) and respect its _Avoid_ lists.
+- **`docs/adr/`** — Architecture Decision Records. Check here before "fixing" surprising behavior (e.g. parent orders ignoring refunds/stock is deliberate — ADR-0004). Cross-cutting Lite+Pro decisions live here; Pro-only decisions live in dokan-pro's `docs/adr/`.
+- **Business-logic questions** ("how is commission calculated?", "when can a vendor withdraw?") — answer from `docs/adr/` first: each business-rule ADR's filename and H1 state the rule, with settings branches and worked examples. `docs/adr/decisions-index.md` groups them by domain; `docs/adr/reference/` holds the source-cited subsystem docs (how things are wired); `docs/adr/eval/business-questions.md` is the regression question bank — after changing business logic, update the affected ADR and its questions.
+- New root-level files must be added to `.distignore` or they ship in the release zip.
+
 ## Available Skills
 
 The `.claude/skills/` directory contains procedural HOW-TO instructions:
@@ -13,6 +20,10 @@ The `.claude/skills/` directory contains procedural HOW-TO instructions:
 - **`dokan-frontend-dev`** — Frontend conventions: React/TypeScript components, Vue legacy, Tailwind, Webpack, state management
 - **`dokan-code-review`** — Code review standards: critical violations to flag, PR checklist verification, severity levels
 - **`dokan-git`** — Git and GitHub operations: branching, PR templates, CI checks
+- **`dokan-qa-automation`** — Playwright E2E and REST API test conventions under `tests/pw/`: page objects, tags, ApiUtils, schemas, CI compatibility
+- **`dokan-setting-impact`** — Settings ripple across the Store Admin → Vendor → Customer tiers: impact map plus Plan / Build / Review / Test gates. **Invoke when planning any change that adds, changes, or reads configuration a Store Admin sets.**
+- **`dokan-run-test-suite`** — Run the Playwright suite (local or CI). **Invoke when the team asks to "run the suite", trigger CI, or debug a failed run.**
+- **`dokan-wp-env-worktrees`** — Configure `wp-env` across git worktrees with isolated (default) or shared databases; resolve port conflicts when running two environments at once.
 
 ## Build & Development Commands
 
@@ -40,6 +51,11 @@ npm run test:phpunit       # Start env, run tests, stop env
 npm run env:start          # Start wp-env
 npm run env:stop           # Stop wp-env
 ```
+
+> `.wp-env.json` is the committed, shared base config (CI reads it — don't edit
+> it for local needs). Put per-machine/per-worktree settings (ports, a
+> `../dokan-pro` mount, LAN site URL) in `.wp-env.override.json`, which is
+> gitignored. See the `dokan-wp-env-worktrees` skill for worktree setup.
 
 ## Architecture
 
@@ -112,12 +128,45 @@ Services accessed via `dokan()->service_name` magic getter. Major services:
 ### REST API
 38 controllers under `includes/REST/` with multiple API versions (v1, v2, v3) for backward compatibility. Covers: orders, products, vendors/stores, withdrawals, commissions, customers, product attributes, admin dashboard stats.
 
+## Secrets in Test Fixtures (GitHub Push Protection)
+
+GitHub Push Protection scans every push and **rejects commits containing strings that match real credential patterns** — even in test code, comments, or docs. A blocked push forces a history rewrite to land. Prevent this at write time.
+
+**Never write credential-shaped literals anywhere in the repo.** This includes fake/sample/placeholder values in PHPUnit tests, Playwright fixtures, factories, docblocks, and Markdown. Provider scanners pattern-match on prefix + entropy, not on context — `sk_live_…`, `pk_live_…`, `rk_live_…`, `AKIA…`, `ghp_…`, `xoxb-…`, `AIza…`, `eyJ…` (JWT), bare 32+ hex/base64 blobs, etc. all trip detection regardless of whether they're "real."
+
+**Use neutral, obviously-fake shapes instead:**
+- Generic prefixes: `test_secret_xxx`, `fake_api_key_123`, `EXAMPLE_TOKEN_VALUE`
+- Drop the provider prefix entirely: `fake_app_secret_a1b2c3...` not `sk_live_a1b2c3...`
+- For Stripe-shaped tests specifically: use Stripe's documented test values (`sk_test_…`) — scanners allowlist these — or invent a non-Stripe prefix.
+- For tests that need to verify masking/redaction of a specific format, parametrize the prefix via a constant and pick one that doesn't match any real provider.
+
+**If a push is blocked:** do NOT use the GitHub "allow secret" unblock link for fixture data — rewrite history to remove the literal. The unblock link is only for genuine secrets that were intentionally committed and need rotation tracking.
+
+**Rewrite recipe (filter-branch, works without `git-filter-repo`):**
+
+```bash
+FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch -f --tree-filter '
+  if [ -f path/to/file.php ]; then
+    sed -i "" "s/OLD_SECRET_STRING/NEUTRAL_REPLACEMENT/g" path/to/file.php
+  fi
+' develop..HEAD
+```
+
+After rewriting, **the old commits stay alive if anything still references them.** Verify with `git log -S "OLD_SECRET_STRING" --all --source --oneline` — the `--source` column tells you which ref is holding it. Common culprits to clear before GC:
+
+- `refs/original/*` — filter-branch's automatic backup: `git for-each-ref --format='%(refname)' refs/original/ | xargs -n1 git update-ref -d`
+- `refs/stash` — any `git stash` made before the rewrite still anchors the pre-rewrite parent commit: `git stash drop` (or `git stash clear`)
+- Other local branches/tags pointing at the old SHA — reset or delete them
+
+Then `git reflog expire --expire=now --all && git gc --prune=now`. Re-run the `git log -S … --all` check; it must return empty before force-pushing. Use `git push --force-with-lease` so a concurrent teammate push doesn't get clobbered silently. Teammates with clones must `git fetch && git reset --hard origin/<branch>` since SHAs changed.
+
 ## Coding Standards
 
 - **PHP**: WordPress Coding Standards (WPCS) via PHPCS
 - **JS/TS**: ESLint with `@wordpress/scripts` config
 - **CSS**: Stylelint
 - **TypeScript**: Strict mode, ESNext target, React-JSX
+- **`@since` for new code**: use the literal placeholder token `@since DOKAN_SINCE` (and `@deprecated DOKAN_SINCE` / `@version DOKAN_SINCE`) — the release tooling replaces it with the real version at tag time. Never hardcode or guess a version number (e.g. `@since 5.1.0`) for unreleased code.
 
 ## Key Patterns
 

@@ -1,98 +1,92 @@
 import { Page, expect } from '@playwright/test';
-import { BasePage } from '@pages/basePage';
-import { data, user } from '@utils/testData';
-import { selector } from '@pages/selectors';
+import { user } from '@utils/testData';
+import { BasePage } from './basePage';
 
+/**
+ * Login page object.
+ *
+ * Self-contained: uses only Playwright primitives (no shared selector/helper
+ * library) and resolves URLs against the `baseURL` from `playwright.config.ts`.
+ * Mirrors the inlined login flow in `tests/e2e/_auth.setup.ts`.
+ */
 export class LoginPage extends BasePage {
     constructor(page: Page) {
         super(page);
     }
 
-    // user login
-    async login(user: user, storageState?: string): Promise<void> {
-        await this.loginFrontend(user, storageState);
+    // Username of the currently logged-in WP user, or undefined when logged out.
+    private async getCurrentUser(): Promise<string | undefined> {
+        const cookies = await this.page.context().cookies();
+        const cookie = cookies.find(c => c.name?.startsWith('wordpress_logged_in_'));
+        if (!cookie?.value) {
+            return undefined;
+        }
+        return decodeURIComponent(cookie.value).split('|')[0];
     }
 
-    // user login frontend
-    async loginFrontend(user: user, storageState?: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.myAccount);
-        const currentUser = await this.getCurrentUser();
+    // Frontend (my-account) login.
+    async login(user: user, storageState?: string): Promise<void> {
+        if (!this.page.url().includes('my-account')) {
+            await this.page.goto('my-account', { waitUntil: 'domcontentloaded' });
+        }
 
-        // skip if user is already logged in
-        if (user.username === currentUser) {
+        const current = await this.getCurrentUser();
+        if (current === user.username) {
             return;
         }
-
-        // logout if other user is already logged in
-        if (user.username !== currentUser && currentUser !== undefined) {
-            // todo : got undefined for using storage.json
-            // else if ((user.username !== currentUser) || (currentUser === undefined)) {
-            await this.logoutFrontend();
+        if (current) {
+            await this.logout();
         }
 
-        // login user
-        await this.clearAndType(selector.frontend.username, user.username);
-        await this.clearAndType(selector.frontend.userPassword, user.password);
+        await this.page.locator('#username').fill(user.username);
+        await this.page.locator('#password').fill(user.password);
         if (storageState) {
-            await this.check(selector.frontend.rememberMe);
+            await this.page.locator('#rememberme').check();
         }
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302);
+        // Don't race on the login 302 — click, let the load settle, then verify
+        // via the logged-in cookie.
+        await this.page.locator('//button[@value="Log in"]').click();
+        await this.page.waitForLoadState('load');
+        await expect
+            .poll(async () => await this.getCurrentUser(), { timeout: 15000 })
+            .toBe(user.username);
         if (storageState) {
             await this.page.context().storageState({ path: storageState });
         }
-        const loggedInUser = await this.getCurrentUser();
-        expect(loggedInUser).toBe(user.username);
     }
 
-    // user login backend
-    async loginBackend(user: user, url: string = data.subUrls.backend.login, storageState?: string): Promise<void> {
-        await this.gotoUntilNetworkidle(url);
-        const emailField = await this.isVisible(selector.backend.email);
-        if (emailField) {
-            await this.clearAndType(selector.backend.email, user.username);
-            await this.clearAndType(selector.backend.password, user.password);
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminDashboard, selector.backend.login);
-            if (storageState) {
-                await this.page.context().storageState({ path: storageState });
-            }
-            const loggedInUser = await this.getCurrentUser();
-            expect(loggedInUser).toBe(user.username);
-        }
-    }
-
-    // user logout
+    // Frontend (my-account) logout.
     async logout(): Promise<void> {
-        await this.logoutFrontend();
+        if (!this.page.url().includes('my-account')) {
+            await this.page.goto('my-account', { waitUntil: 'domcontentloaded' });
+        }
+        await this.page.locator('.woocommerce-MyAccount-navigation-link--customer-logout > a').click();
+        await this.page.waitForLoadState('load');
     }
 
-    // user logout frontend
-    async logoutFrontend(): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.myAccount);
-        await this.clickAndWaitForLoadState(selector.frontend.customerLogout);
-        const loggedInUser = await this.getCurrentUser();
-        expect(loggedInUser).toBeUndefined();
-    }
-
-    // admin login
-    async adminLogin(user: user, storageState?: string) {
-        await this.loginBackend(user, data.subUrls.backend.adminLogin, storageState);
-    }
-
-    // admin logout
-    async logoutBackend(): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.adminLogin);
-        await this.addAttributeValue(selector.backend.userMenu, 'class', 'hover'); // force hover on user menu
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout, 302);
-        await this.toContainText(selector.backend.logoutSuccessMessage, 'You are now logged out.');
-        const loggedInUser = await this.getCurrentUser();
-        expect(loggedInUser).toBeUndefined();
-    }
-
-    // switch user
-    async switchUser(user: user): Promise<void> {
-        const currentUser = await this.getCurrentUser();
-        if (currentUser !== user.username) {
-            await this.loginBackend(user);
+    // Backend (wp-admin) login.
+    async adminLogin(user: user, storageState?: string): Promise<void> {
+        await this.page.goto('wp-admin', { waitUntil: 'domcontentloaded' });
+        const hasLoginForm = await this.page.locator('#user_login').isVisible().catch(() => false);
+        if (hasLoginForm) {
+            await this.page.locator('#user_login').fill(user.username);
+            await this.page.locator('#user_pass').fill(user.password);
+            // Submit without auto-waiting on the post-login navigation: the
+            // wp-admin dashboard render is slow on CI, so dispatch the click and
+            // confirm via the logged-in cookie below.
+            await this.page.locator('#wp-submit').dispatchEvent('click');
+        }
+        await expect
+            .poll(async () => await this.getCurrentUser(), { timeout: 30000 })
+            .toBe(user.username);
+        // The cookie is set on the login 302, before the browser lands on
+        // /wp-admin/. Let that redirect commit, or the caller's next goto is
+        // "interrupted by another navigation to /wp-admin/".
+        if (hasLoginForm) {
+            await this.page.waitForURL(url => !url.pathname.includes('wp-login.php'), { waitUntil: 'commit' });
+        }
+        if (storageState) {
+            await this.page.context().storageState({ path: storageState });
         }
     }
 }

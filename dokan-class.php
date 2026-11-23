@@ -16,7 +16,9 @@ use WeDevs\Dokan\DependencyManagement\Container;
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
  * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
+ * @property WeDevs\Dokan\Dashboard\Manager $dashboard Instance of \WeDevs\Dokan\Dashboard\Manager class
  * @property WeDevs\Dokan\Registration $registration Instance of WeDevs\Dokan\Registration class
+ * @property WeDevs\Dokan\ProductEditor\FormSchema $product_editor Instance of WeDevs\Dokan\ProductEditor\FormSchema class
  */
 final class WeDevs_Dokan {
 
@@ -25,7 +27,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '4.3.3';
+    public $version = '5.3.5';
 
     /**
      * Instance of self
@@ -216,6 +218,7 @@ final class WeDevs_Dokan {
         defined( 'DOKAN_PLUGIN_VERSION' ) || define( 'DOKAN_PLUGIN_VERSION', $this->version );
         defined( 'DOKAN_DIR' ) || define( 'DOKAN_DIR', __DIR__ );
         defined( 'DOKAN_INC_DIR' ) || define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
+        defined( 'DOKAN_TEMPLATE_DIR' ) || define( 'DOKAN_TEMPLATE_DIR', __DIR__ . '/templates' );
         defined( 'DOKAN_LIB_DIR' ) || define( 'DOKAN_LIB_DIR', __DIR__ . '/lib' );
         defined( 'DOKAN_PLUGIN_ASSEST' ) || define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', DOKAN_FILE ) );
 
@@ -326,6 +329,11 @@ final class WeDevs_Dokan {
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
             $ajax_services = $this->get_container()->get( 'ajax-service' );
         }
+
+        // Boot the WP-CLI command registry only when running under WP-CLI.
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+            $cli_services = $this->get_container()->get( 'cli-service' );
+        }
     }
 
     /**
@@ -411,7 +419,7 @@ final class WeDevs_Dokan {
             $links[] = '<a href="https://dokan.co/wordpress/" style="color: #389e38;font-weight: bold;" target="_blank">' . __( 'Get Pro', 'dokan-lite' ) . '</a>';
         }
 
-        $links[] = '<a href="' . admin_url( 'admin.php?page=dokan#/settings' ) . '">' . __( 'Settings', 'dokan-lite' ) . '</a>';
+        $links[] = '<a href="' . dokan_get_admin_page_url( 'settings' ) . '">' . __( 'Settings', 'dokan-lite' ) . '</a>';
         $links[] = '<a href="https://dokan.co/docs/wordpress/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;

@@ -117,9 +117,9 @@ class Assets implements Hookable {
             true
         );
 
+		// WooCommerce 11.3 dropped the wc-admin-layout stylesheet, and an unregistered dependency makes WordPress skip this style.
 		$dep = array(
 			'wc-components',
-			'wc-admin-layout',
 			'wc-customer-effort-score',
 			// 'wc-product-editor',
 			'wp-components',
@@ -158,8 +158,8 @@ class Assets implements Hookable {
                     'seller_id'          => dokan_get_current_user_id(),
                     'orderListPageUlr'   => dokan_get_navigation_url( 'orders' ),
                     'vendorAnalyticsUrl' => dokan_get_navigation_url( 'analytics' ),
-                    'dashboardPath' => wp_parse_url( dokan_get_navigation_url(), PHP_URL_PATH ),
-                    'reportsPath'   => wp_parse_url( dokan_get_navigation_url( 'reports' ), PHP_URL_PATH ),
+                    'dashboardPath'      => wp_parse_url( dokan_get_navigation_url(), PHP_URL_PATH ),
+                    'reportsPath'        => wp_parse_url( dokan_get_navigation_url( 'reports' ), PHP_URL_PATH ),
                 ]
             ), 'before'
         );

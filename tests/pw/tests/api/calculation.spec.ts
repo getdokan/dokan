@@ -26,7 +26,7 @@ test.describe.serial('commission calculation test', () => {
         await apiUtils.dispose();
     });
 
-    // test.skip('calculation (debug)', { tag: ['@lite'] }, async () => {
+    // test('calculation (debug)', { tag: ['@lite'] }, async () => {
     //     const orderId = '4100';
     //     const [orderResponse, orderResponseBody] = await apiUtils.getSingleOrder(orderId);
     //     await assertOrderCalculation([orderResponse, orderResponseBody, orderId]);

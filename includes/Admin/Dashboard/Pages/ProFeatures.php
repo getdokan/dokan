@@ -28,6 +28,7 @@ class ProFeatures extends AbstractPage {
             'route'      => 'pro-features',
             'capability' => $capability,
             'position'   => 99,
+            'hidden'     => true, // Rendered via Menu::append_dashboard_page_submenu() so it sits directly under "Help".
         ];
 	}
 
@@ -113,6 +114,8 @@ class ProFeatures extends AbstractPage {
                 'in_footer' => true,
             ]
         );
+
+        wp_set_script_translations( 'dokan-pro-features', 'dokan-lite' );
 
         wp_register_style( 'dokan-pro-features', DOKAN_PLUGIN_ASSEST . '/css/dokan-pro-features.css', [], $asset_file['version'] );
     }

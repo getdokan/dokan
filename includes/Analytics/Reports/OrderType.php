@@ -19,6 +19,10 @@ class OrderType {
     public const DOKAN_PARENT_ORDER_REFUND = 3;
     public const DOKAN_SUBORDER_REFUND = 4;
     public const DOKAN_SINGLE_ORDER_REFUND = 5;
+    public const DOKAN_ADVERTISEMENT_PRODUCT_ORDER = 6;
+    public const DOKAN_ADVERTISEMENT_REFUND_ORDER = 7;
+    public const DOKAN_SUBSCRIPTION_ORDER = 8;
+    public const DOKAN_SUBSCRIPTION_REFUND_ORDER = 9;
 
     /**
      * Checks if the given order is related to a Dokan suborder.
@@ -44,11 +48,19 @@ class OrderType {
     /**
      * Determines the type of the given order based on its relation to Dokan suborders and refunds.
      *
+     * @since 5.0.0
+     *
      * @param \WC_Abstract_Order $order The order object to classify.
      *
      * @return int The order type constant.
      */
     public function get_type( \WC_Abstract_Order $order ): int {
+        // Check for special order types first (advertisement and subscription).
+        $special_order_type = $this->get_special_order_type( $order );
+        if ( $special_order_type ) {
+            return $special_order_type;
+        }
+
         $is_suborder_related = $this->is_dokan_suborder_related( $order );
 
         if ( $is_suborder_related ) {
@@ -87,6 +99,44 @@ class OrderType {
     }
 
     /**
+     * Gets the special order type (advertisement or subscription) if applicable.
+     *
+     * This method applies a filter hook that allows external modules (like advertisement
+     * or subscription modules) to determine the order type from their own context.
+     *
+     * @since 5.0.0
+     *
+     * @param \WC_Abstract_Order $order The order object to check.
+     *
+     * @return int|null The special order type constant, or null if not a special order.
+     */
+    protected function get_special_order_type( \WC_Abstract_Order $order ): ?int {
+        $is_refund = $order instanceof WC_Order_Refund;
+
+        // For refunds, get the parent order to check the type.
+        $order_to_check = $is_refund ? wc_get_order( $order->get_parent_id() ) : $order;
+
+        if ( ! $order_to_check ) {
+            return null;
+        }
+
+        /**
+         * Filter hook to determine a special order type from external modules.
+         *
+         * This filter allows modules like Product Advertisement or Vendor Subscription
+         * to return their specific order type when they detect their order.
+         *
+         * @since 5.0.0
+         *
+         * @param int|null  $order_type     The order type constant, or null if not a special order.
+         * @param \WC_Order $order_to_check The order object to check (parent order for refunds).
+         * @param bool      $is_refund      Whether the original order is a refund.
+         * @param \WC_Order $order          The original order object (could be refund).
+         */
+        return apply_filters( 'dokan_get_order_type', null, $order_to_check, $is_refund, $order );
+    }
+
+    /**
      * Gets the list of order types relevant to admin users.
      *
      * @return array List of admin order type constants.
@@ -111,6 +161,10 @@ class OrderType {
             self::DOKAN_SUBORDER,
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
+            self::DOKAN_ADVERTISEMENT_PRODUCT_ORDER,
+            self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+            self::DOKAN_SUBSCRIPTION_ORDER,
+            self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
         ];
     }
 
@@ -148,6 +202,8 @@ class OrderType {
             self::DOKAN_PARENT_ORDER_REFUND,
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
+            self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+            self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
         ];
     }
 
@@ -172,13 +228,15 @@ class OrderType {
         return [
             self::DOKAN_PARENT_ORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
+            self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+            self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
         ];
     }
 
     /**
-     * Gets the list of refund types relevant to admin users.
+     * Gets the list of all order types.
      *
-     * @return array List of admin refund type constants.
+     * @return array List of all order type constants.
      */
     public function get_all_order_types(): array {
         return [
@@ -188,6 +246,45 @@ class OrderType {
             self::DOKAN_PARENT_ORDER_REFUND,
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
+            self::DOKAN_ADVERTISEMENT_PRODUCT_ORDER,
+            self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+            self::DOKAN_SUBSCRIPTION_ORDER,
+            self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
         ];
+    }
+
+    /**
+     * Gets the list of order types relevant to admin earnings.
+     *
+     * @since 5.0.0
+     *
+     * @return array
+     */
+    public function get_admin_earning_order_types(): array {
+        return apply_filters(
+            'dokan_admin_earning_order_types',
+            [
+                self::DOKAN_ADVERTISEMENT_PRODUCT_ORDER,
+                self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+                self::DOKAN_SUBSCRIPTION_ORDER,
+                self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
+            ]
+        );
+    }
+
+    /**
+     * Determines if the given order is of a type relevant to admin users.
+     *
+     * @since 5.0.0
+     *
+     * @param \WC_Abstract_Order $order The order object to check.
+     *
+     * @return bool True if the order type is relevant to admin users, false otherwise.
+     */
+    public function is_admin_order_type( \WC_Abstract_Order $order ): bool {
+        $admin_earning_order_types = $this->get_admin_earning_order_types();
+        $order_type                = $this->get_type( $order );
+
+        return in_array( $order_type, $admin_earning_order_types, true );
     }
 }

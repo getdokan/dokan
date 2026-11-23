@@ -11,6 +11,7 @@ import { dispatch } from "@wordpress/data";
  * Internal dependencies
  */
 import { getRequestByIdString } from "../../../lib/async-requests";
+import { searchFilterSettings } from "../../../utils/search-filter-settings";
 import { getTaxCode } from "./utils";
 
 const TAXES_REPORT_CHARTS_FILTER = "dokan_analytics_taxes_report_charts";
@@ -87,25 +88,29 @@ const filterValues = [
     label: __("Comparison", 'dokan-lite'),
     value: "compare-taxes",
     chartMode: "item-comparison",
-    settings: {
-      type: "taxes",
-      param: "taxes",
-      getLabels: getRequestByIdString(NAMESPACE + "/taxes", (tax) => ({
-        id: tax.id,
-        key: tax.id,
-        label: getTaxCode(tax),
-      })),
-      labels: {
-        helpText: __(
-          "Check at least two tax codes below to compare",
-          'dokan-lite'
-        ),
+    settings: searchFilterSettings(
+      {
+        type: "taxes",
         placeholder: __("Search for tax codes to compare", 'dokan-lite'),
-        title: __("Compare Tax Codes", 'dokan-lite'),
-        update: __("Compare", 'dokan-lite'),
       },
-      onClick: addCesSurveyForAnalytics,
-    },
+      {
+        param: "taxes",
+        getLabels: getRequestByIdString(NAMESPACE + "/taxes", (tax) => ({
+          id: tax.id,
+          key: tax.id,
+          label: getTaxCode(tax),
+        })),
+        labels: {
+          helpText: __(
+            "Check at least two tax codes below to compare",
+            'dokan-lite'
+          ),
+          title: __("Compare Tax Codes", 'dokan-lite'),
+          update: __("Compare", 'dokan-lite'),
+        },
+        onClick: addCesSurveyForAnalytics,
+      }
+    ),
   },
 ];
 

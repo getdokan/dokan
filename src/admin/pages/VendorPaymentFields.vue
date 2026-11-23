@@ -170,7 +170,8 @@ export default {
         },
 
         getId() {
-            return this.$route.params.id;
+            // Templates read this as "are we editing?" and the string "0" is truthy; parseInt keeps the numeric pin from #3290.
+            return parseInt( this.$route.params.id, 10 ) || 0;
         },
     }
 };

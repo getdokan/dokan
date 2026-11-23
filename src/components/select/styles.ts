@@ -4,7 +4,7 @@ const styles = {
         borderRadius: '0.40rem',
         minHeight: '2.5rem',
         boxShadow: 'none',
-        marginTop: -1,
+        marginTop: 0,
         outline: 'none',
         ':focus': { outline: 'none' },
         ':focus-within': { outline: 'none' },

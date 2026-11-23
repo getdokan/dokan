@@ -4,3 +4,5 @@ export * from '@woocommerce/date';
 export * from './hexToHls';
 export * from './Truncate';
 export * from './SanitizeHtml';
+export * from './downloadCSV';
+export * from './getTranslatedStrings';

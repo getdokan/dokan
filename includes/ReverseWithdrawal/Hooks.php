@@ -249,12 +249,13 @@ class Hooks {
      */
     public function add_reverse_withdrawal_nav( $urls ) {
         $urls['reverse-withdrawal'] = [
-            'title'      => esc_html__( 'Reverse Withdrawal', 'dokan-lite' ),
-            'icon'       => '<i class="fas fa-dollar-sign"></i>',
-            'url'        => dokan_get_navigation_url( 'reverse-withdrawal' ),
-            'pos'        => 71,
-            'icon_name'  => 'Redo2',
-            'permission' => 'dokan_view_withdraw_menu',
+            'title'       => esc_html__( 'Reverse Withdrawal', 'dokan-lite' ),
+            'icon'        => '<i class="fas fa-dollar-sign"></i>',
+            'url'         => dokan_get_navigation_url( 'reverse-withdrawal' ),
+            'pos'         => 71,
+            'icon_name'   => 'Redo2',
+            'permission'  => 'dokan_view_withdraw_menu',
+            'react_route' => 'reverse-withdrawal',
         ];
 
         return $urls;

@@ -1,24 +1,19 @@
-import { FullConfig, request } from '@playwright/test';
-import { ApiUtils } from '@utils/apiUtils';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join } from 'path';
 
-async function globalSetup(config: FullConfig) {
-    console.log('Global Setup running....');
-
-    // get site url structure
-    let serverUrl = config.projects[0]?.use.baseURL as string;
-    const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));
-    for (let i = 0; i < 3; i++) {
-        const headers = await apiUtils.getSiteHeaders(serverUrl);
-        if (headers.link) {
-            serverUrl = headers.link.includes('rest_route') ? serverUrl + '/?rest_route=' : serverUrl + '/wp-json';
-            process.env.SERVER_URL = serverUrl;
-            break;
-        }
-        console.log('retrying...');
+async function globalSetup(): Promise<void> {
+    // Reset wp-data/debug.log so the surfaced log reflects only the current run.
+    // The file is bind-mounted into the wp-env container at
+    // /var/www/html/wp-data/debug.log via the "wp-data": "./wp-data" mapping.
+    const logDir = join(__dirname, 'wp-data');
+    const logPath = join(logDir, 'debug.log');
+    try {
+        mkdirSync(logDir, { recursive: true });
+        writeFileSync(logPath, '');
+        console.log(`[global-setup] reset ${logPath}`);
+    } catch (err) {
+        console.warn(`[global-setup] could not reset ${logPath}: ${(err as Error).message}`);
     }
-    console.log('ServerUrl:', serverUrl);
-
-    console.log('Global Setup Finished!');
 }
 
 export default globalSetup;

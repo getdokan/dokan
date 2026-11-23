@@ -5,7 +5,21 @@ namespace WeDevs\Dokan\Commission\Model;
 use WeDevs\Dokan\Commission\Contracts\CommissionInterface;
 
 class Commission implements CommissionInterface {
+
+    /**
+     * Admin's net commission amount.
+     *
+     * @var float
+     */
     protected float $admin_net_commission;
+
+    /**
+     * Admin's net earning from admin-type orders (subscriptions, advertisements, etc.).
+     *
+     * @var float
+     */
+    protected float $admin_net_earning;
+
     /**
      * Vendor Earning without subsidy.
      *
@@ -55,9 +69,36 @@ class Commission implements CommissionInterface {
     }
 
     /**
+     * Set the admin's net earning.
+     *
+     * @since 5.0.0
+     *
+     * @param float $admin_net_earning The net earning amount for the admin.
+     *
+     * @return Commission
+     */
+    public function set_admin_net_earning( float $admin_net_earning ): self {
+        $this->admin_net_earning = $admin_net_earning;
+
+        return $this;
+    }
+
+    /**
+     * Get the admin's net earning.
+     *
+     * @since 5.0.0
+     *
+     * @return float The net earning amount for the admin.
+     */
+    public function get_admin_net_earning(): float {
+        return $this->admin_net_earning ?? 0;
+    }
+
+    /**
      * Set the vendor's net earning.
      *
      * @param float $vendor_earning The earning amount for the vendor.
+     *
      * @return self
      */
     public function set_vendor_net_earning( float $vendor_earning ): self {

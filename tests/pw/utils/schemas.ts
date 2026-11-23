@@ -208,10 +208,10 @@ const productVariationSchema = z.object({
     price: z.string(),
     regular_price: z.string(),
     sale_price: z.string(),
-    date_on_sale_from: z.null(),
-    date_on_sale_from_gmt: z.null(),
-    date_on_sale_to: z.null(),
-    date_on_sale_to_gmt: z.null(),
+    date_on_sale_from: z.string().nullable(),
+    date_on_sale_from_gmt: z.string().nullable(),
+    date_on_sale_to: z.string().nullable(),
+    date_on_sale_to_gmt: z.string().nullable(),
     on_sale: z.boolean(),
     visible: z.boolean(),
     purchasable: z.boolean(),
@@ -223,7 +223,7 @@ const productVariationSchema = z.object({
     tax_status: z.string(),
     tax_class: z.string(),
     manage_stock: z.boolean(),
-    stock_quantity: z.null(),
+    stock_quantity: z.number().nullable(),
     in_stock: z.boolean(),
     backorders: z.string(),
     backorders_allowed: z.boolean(),
@@ -653,7 +653,14 @@ const ordersSummarySchema = z.object({
 const orderDownloadSchema = z.object({
     permission_id: z.string().or(z.number()),
     download_id: z.string().or(z.number()),
-    product_id: z.string().or(z.number()),
+    product_id: z.string().or(z.number()).optional(),
+    product: z
+        .object({
+            id: z.string().or(z.number()),
+            name: z.string().optional(),
+            thumbnail: z.any().optional(),
+        })
+        .optional(),
     order_id: z.string().or(z.number()),
     order_key: z.string(),
     user_email: z.string().email(),
@@ -892,7 +899,7 @@ const settingV2Schema = z.object({
     label: z.string(),
     description: z.string(),
     parent_id: z.string().or(z.number()).optional(),
-    sub_groups: z.array(z.any()), // Adjust the type of sub_groups if you know the specific structure
+    sub_groups: z.array(z.any()).optional(), // Adjust the type of sub_groups if you know the specific structure
     _links: z.object({
         options: z.object({ href: z.string().url() }),
         collection: z.object({ href: z.string().url() }),
@@ -954,6 +961,16 @@ const attributeTermSchema = z.object({
     menu_order: z.number(),
     count: z.number(),
     _links: linksSchema,
+});
+
+// Dokan 5.0.5: the list (get-all) and create term endpoints return a slim "dropdown"
+// shape ({ id, name, value, label }) for the React product editor, while get-single,
+// update, delete and batch still return the full WC term shape (attributeTermSchema).
+const attributeTermDropdownSchema = z.object({
+    id: z.string().or(z.number()),
+    name: z.string(),
+    value: z.string().or(z.number()),
+    label: z.string(),
 });
 
 const abuseReportSchema = z.object({
@@ -1164,7 +1181,7 @@ const storeReviewSchemaStoreEndpoint = z.object({
     author: z.object({
         id: z.string().or(z.number()),
         name: z.string(),
-        email: z.string().email(),
+        email: z.string().email().optional(),
         url: z.string().optional(),
         avatar: z.string().url(),
     }),
@@ -1688,10 +1705,11 @@ export const schemas = {
 
     // attribute terms schema
     attributeTermsSchema: {
-        attributeTermSchema: attributeTermSchema,
-        attributeTermsSchema: z.array(attributeTermSchema),
+        attributeTermSchema: attributeTermSchema, // get-single, update, delete (full WC shape)
+        attributeTermDropdownSchema: attributeTermDropdownSchema, // create (slim dropdown shape)
+        attributeTermsSchema: z.array(attributeTermDropdownSchema), // get-all returns slim dropdown items
         batchUpdateAttributesSchema: z.object({
-            update: z.array(attributeTermSchema),
+            update: z.array(attributeTermSchema), // batch update returns full WC shape
         }),
     },
 
@@ -2137,22 +2155,20 @@ export const schemas = {
             withdraw_limit: z.string(),
             withdraw_threshold: z.number(),
             withdraw_methods: z.array(z.string()),
+            // API returns an object: {} when there is no prior withdrawal, or a
+            // single withdraw record when there is one (not an array).
             last_withdraw: z
-                .array(
-                    z
-                        .object({
-                            id: z.string().or(z.number()).optional(),
-                            user_id: z.string().or(z.number()).optional(),
-                            amount: z.string().optional(),
-                            date: z.string().optional(),
-                            status: z.string().optional(),
-                            method: z.string().optional(),
-                            note: z.string().optional(),
-                            details: z.string().optional(),
-                            ip: z.string().optional(),
-                        })
-                        .optional(),
-                )
+                .object({
+                    id: z.string().or(z.number()).optional(),
+                    user_id: z.string().or(z.number()).optional(),
+                    amount: z.string().optional(),
+                    date: z.string().optional(),
+                    status: z.string().optional(),
+                    method: z.string().optional(),
+                    note: z.string().optional(),
+                    details: z.string().optional(),
+                    ip: z.string().optional(),
+                })
                 .optional(),
         }),
         withdrawSchema: withdrawSchema,
@@ -2518,19 +2534,19 @@ export const schemas = {
             social: socialSchema,
             payment: paymentSchema,
             phone: z.string(),
-            show_email: z.string(),
+            show_email: z.boolean(),
             address: addressSchema,
             location: z.string(),
-            banner: z.number(),
-            icon: z.string().or(z.number()),
-            gravatar: z.number(),
-            enable_tnc: z.string(),
-            store_tnc: z.string(),
-            show_min_order_discount: z.string(),
+            banner: z.string(),
+            icon: z.string().or(z.number()).optional(),
+            gravatar: z.string(),
+            toc_enabled: z.boolean(),
+            store_toc: z.string(),
+            show_min_order_discount: z.string().optional(),
             store_seo: storeSeo.optional(),
-            dokan_store_time_enabled: z.string(),
-            dokan_store_open_notice: z.string(),
-            dokan_store_close_notice: z.string(),
+            dokan_store_time_enabled: z.string().optional(),
+            dokan_store_open_notice: z.string().optional(),
+            dokan_store_close_notice: z.string().optional(),
             dokan_store_time: storeTimeSchema.optional(),
             sale_only_here: z.boolean().optional(),
             company_name: z.string().optional(),
@@ -2542,7 +2558,7 @@ export const schemas = {
             find_address: z.string().optional(),
             catalog_mode: catalogModeSchema.optional(),
             order_min_max: orderMinMaxSchema.optional(),
-            categories: z.array(categorySchema).optional(),
+            categories: z.array(productCategorySchema).optional(),
             vendor_biography: z.string().optional(),
             show_support_btn_product: z.string().optional(),
             support_btn_name: z.string().optional(),
@@ -2587,7 +2603,7 @@ export const schemas = {
             company_id_number: z.string().optional(),
             bank_name: z.string().optional(),
             bank_iban: z.string().optional(),
-            categories: z.array(categorySchema).optional(),
+            categories: z.array(productCategorySchema).optional(),
             _links: linksSchema,
         }),
 
@@ -2750,7 +2766,20 @@ export const schemas = {
     },
 
     // rank math schema
+    // store-current-editable-post returns a plain boolean (true on success).
     rankMathSchema: z.boolean(),
+
+    // editor-data returns Rank Math's localized metabox payload — a large object.
+    // Assert the stable keys the editor relies on rather than the full shape
+    // (Rank Math adds/removes keys across versions). `schemas` is appended by Dokan.
+    rankMathEditorDataSchema: z
+        .object({
+            objectID: z.union([z.string(), z.number()]),
+            objectType: z.string(),
+            assessor: z.any(),
+            schemas: z.any(),
+        })
+        .passthrough(),
 
     // seller badge schema
     sellerBadgeSchema: {
@@ -2937,7 +2966,7 @@ export const schemas = {
                 z.object({
                     id: z.string(),
                     value: z.string(),
-                    must_use: z.string().optional(),
+                    must_use: z.boolean().optional(),
                     desc: z.string().optional(),
                 }),
             ),

@@ -4,9 +4,10 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
+import { helpers, parseBoolean } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
+const isPro = parseBoolean(DOKAN_PRO);
 
 setup.describe('setup woocommerce settings', () => {
     setup.use({ extraHTTPHeaders: payloads.adminAuth });
@@ -52,7 +53,7 @@ setup.describe('setup woocommerce settings', () => {
         await apiUtils.updateShippingZoneMethod(zoneId, methodId, payloads.addShippingMethodFlatRateCost);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
-        if (DOKAN_PRO) {
+        if (isPro) {
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
@@ -141,6 +142,12 @@ setup.describe('setup user settings', () => {
         // create store product
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
         helpers.createEnvVar('PRODUCT_ID_V2', productId);
+    });
+
+    setup('add vendor3 product', { tag: ['@lite'] }, async () => {
+        await apiUtils.deleteAllProducts(data.predefined.vendor3.simpleProduct.product1.name, payloads.vendor3Auth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor3.simpleProduct.product1.name }, payloads.vendor3Auth);
+        helpers.createEnvVar('PRODUCT_ID_V3', productId);
     });
 
     setup('add vendor1 coupon', { tag: ['@pro'] }, async () => {

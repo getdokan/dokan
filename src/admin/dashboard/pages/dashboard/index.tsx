@@ -9,32 +9,12 @@ import AllTimeStatsSection from './sections/AllTimeStatsSection';
 import TopPerformingVendorsSection from './sections/TopPerformingVendorsSection';
 import MostReviewedProductsSection from './sections/MostReviewedProductsSection';
 import MostReportedVendorsSection from './sections/MostReportedVendorsSection';
-import AdminNotices from './components/AdminNotices';
-import { applyFilters } from '@wordpress/hooks';
+import { AdminHeader } from '@src/components';
 
 function Dashboard() {
-    const noticeScopes = applyFilters( 'dokan_admin_dashboard_notices_scopes', [
-        { scope: 'global', endpoint: 'admin' },
-        { scope: '', endpoint: 'admin' },
-        { scope: 'promo', endpoint: 'promo' },
-    ] );
-
     return (
-        <div>
-            <h1 className="wp-heading-inline">
-                { __( 'Dashboard', 'dokan-lite' ) }
-            </h1>
-            <hr className="wp-header-end" />
-
-            { noticeScopes?.map( ( noticeConfig ) => (
-                <AdminNotices
-                    key={ `${ noticeConfig.endpoint }-${
-                        noticeConfig.scope || 'local'
-                    }` }
-                    endpoint={ noticeConfig.endpoint }
-                    scope={ noticeConfig.scope }
-                />
-            ) ) }
+        <div className="dokan-admin-dashboard-layout">
+            <AdminHeader />
 
             { /* Render todo section. */ }
             <TodoSection />

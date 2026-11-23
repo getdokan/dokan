@@ -1,6 +1,7 @@
 <?php
 
 use WeDevs\Dokan\ProductCategory\Helper;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 
 // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 global $post;

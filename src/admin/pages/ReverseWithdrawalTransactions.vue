@@ -225,7 +225,8 @@ export default {
 
     computed: {
         ID() {
-            return this.$route.params.store_id;
+            // Pin to a numeric ID so a crafted route param can't traverse the REST path into another endpoint (XSS).
+            return String( parseInt( this.$route.params.store_id, 10 ) || 0 );
         },
 
         getCurrentPage() {

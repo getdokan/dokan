@@ -11,11 +11,47 @@ import {
     useState,
 } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
+import { decodeEntities } from '@wordpress/html-entities';
 import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import CountBubble from './CountBubble';
 import SubmenuPopover from './SubmenuPopover';
+
+// Pick the submenu whose URL is the longest prefix of currentUrl so nested
+// routes (e.g. orders/new) don't also activate their parent list (orders).
+export const getActiveSubmenuKey = (
+    submenu: any,
+    url: string
+): string | null => {
+    let activeKey: string | null = null;
+    let activeLength = 0;
+    Object.entries( submenu || {} ).forEach( ( [ subkey, subitem ]: any ) => {
+        if (
+            subitem?.url &&
+            url.startsWith( subitem.url ) &&
+            subitem.url.length > activeLength
+        ) {
+            activeKey = subkey;
+            activeLength = subitem.url.length;
+        }
+    } );
+    return activeKey;
+};
+
+// Switched off from the menu manager (Pro); items it never touched carry no flag.
+export const isSwitchedOff = ( item: any ): boolean =>
+    'is_switched_on' in item && ! item.is_switched_on;
+
+// Labels arrive HTML-escaped from esc_html__, so decode for display (&amp; -> &) while JSX still escapes markup.
+const getMenuTitle = ( hookName: string, menuItem: any ): string =>
+    decodeEntities(
+        applyFilters(
+            hookName,
+            menuItem?.menu_manager_title || menuItem?.title,
+            menuItem
+        ) as string
+    );
 
 const Sidebar = ( {
     collapsed,
@@ -135,17 +171,9 @@ const Sidebar = ( {
 
         Object.entries( ( sidebarNav as any ) || {} ).forEach(
             ( [ key, item ]: any ) => {
-                let hasActiveChild = false;
-
-                if ( item?.submenu ) {
-                    Object.values( item.submenu ).forEach( ( sub: any ) => {
-                        if ( sub?.url && currentUrl.startsWith( sub.url ) ) {
-                            hasActiveChild = true;
-                        }
-                    } );
-                }
-
-                initial[ key ] = hasActiveChild;
+                initial[ key ] = item?.submenu
+                    ? getActiveSubmenuKey( item.submenu, currentUrl ) !== null
+                    : false;
             }
         );
 
@@ -203,7 +231,7 @@ const Sidebar = ( {
             <aside
                 style={ { top: windowWidth > 600 ? adminBar : 0 } }
                 className={ twMerge(
-                    'dokan-frontend-sidebar bg-primary-500 text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
+                    'dokan-frontend-sidebar bg-primary-500 text-white fixed start-0 bottom-0 z-20 flex flex-col transition-all duration-200',
                     collapsed
                         ? windowWidth <= 768
                             ? 'w-0 max-w-0'
@@ -263,11 +291,7 @@ const Sidebar = ( {
                         <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
                             { Object.entries( sidebarNav || {} ).map(
                                 ( [ key, item ]: any ) => {
-                                    // If switched off from the menu manager.
-                                    if (
-                                        'is_switched_on' in item &&
-                                        ! item.is_switched_on
-                                    ) {
+                                    if ( isSwitchedOff( item ) ) {
                                         return null;
                                     }
 
@@ -281,22 +305,15 @@ const Sidebar = ( {
                                         item?.url &&
                                         currentUrl.startsWith( item.url );
 
-                                    // Detect if any child submenu item is active
-                                    let hasActiveChild = false;
-                                    if ( hasSub ) {
-                                        Object.values( item.submenu ).forEach(
-                                            ( sub: any ) => {
-                                                if (
-                                                    sub?.url &&
-                                                    currentUrl.startsWith(
-                                                        sub.url
-                                                    )
-                                                ) {
-                                                    hasActiveChild = true;
-                                                }
-                                            }
-                                        );
-                                    }
+                                    // Detect which child submenu item is active (longest-prefix match)
+                                    const activeSubkey = hasSub
+                                        ? getActiveSubmenuKey(
+                                              item.submenu,
+                                              currentUrl
+                                          )
+                                        : null;
+                                    const hasActiveChild =
+                                        activeSubkey !== null;
 
                                     // In collapsed state, mark parent as active when a child is active
                                     const isParentActiveCollapsed =
@@ -307,14 +324,11 @@ const Sidebar = ( {
                                     );
 
                                     const menuItemRef = getMenuItemRef( key );
-                                    const menuTitle = applyFilters(
+                                    const menuTitle = getMenuTitle(
                                         'dokan_sidebar_menu_title',
-                                        item?.menu_manager_title || item?.title,
                                         item
-                                    ) as string;
-                                    const isMenuItemActive =
-                                        isParentActive ||
-                                        isParentActiveCollapsed;
+                                    );
+                                    const isMenuItemActive =  isParentActive || isParentActiveCollapsed ;
 
                                     return (
                                         <li
@@ -395,7 +409,7 @@ const Sidebar = ( {
                                                     ) }
                                                 </span>
                                                 { ! collapsed && (
-                                                    <span className="ml-2">
+                                                    <span className="ms-2">
                                                         { menuTitle }
                                                     </span>
                                                 ) }
@@ -412,19 +426,19 @@ const Sidebar = ( {
                                                     ( isExpanded ? (
                                                         <LucideIcons.ChevronUp
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
+                                                                'ms-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
-                                                                    ? 'ml-2'
-                                                                    : 'ml-auto'
+                                                                    ? 'ms-2'
+                                                                    : 'ms-auto'
                                                             ) }
                                                         />
                                                     ) : (
                                                         <LucideIcons.ChevronDown
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
+                                                                'ms-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
-                                                                    ? 'ml-2'
-                                                                    : 'ml-auto'
+                                                                    ? 'ms-2'
+                                                                    : 'ms-auto'
                                                             ) }
                                                         />
                                                     ) ) }
@@ -448,28 +462,23 @@ const Sidebar = ( {
                                                                 subkey,
                                                                 subitem,
                                                             ]: any ) => {
-                                                                // If switched off from the menu manager.
                                                                 if (
-                                                                    'is_switched_on' in
-                                                                        subitem &&
-                                                                    ! subitem.is_switched_on
+                                                                    isSwitchedOff(
+                                                                        subitem
+                                                                    )
                                                                 ) {
                                                                     return null;
                                                                 }
 
                                                                 const isSubActive =
-                                                                    subitem?.url &&
-                                                                    currentUrl.startsWith(
-                                                                        subitem.url
-                                                                    );
+                                                                    subkey ===
+                                                                    activeSubkey;
 
                                                                 const subMenuTitle =
-                                                                    applyFilters(
+                                                                    getMenuTitle(
                                                                         'dokan_sidebar_submenu_title',
-                                                                        subitem?.menu_manager_title ||
-                                                                            subitem?.title,
                                                                         subitem
-                                                                    ) as string;
+                                                                    );
 
                                                                 return (
                                                                     <li
@@ -495,7 +504,7 @@ const Sidebar = ( {
                                                                             }
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
-                                                                            <span className="ml-2">
+                                                                            <span className="ms-2">
                                                                                 {
                                                                                     subMenuTitle
                                                                                 }

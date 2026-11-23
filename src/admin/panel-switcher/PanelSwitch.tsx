@@ -20,9 +20,12 @@ const PanelSwitch = () => {
             'dashboard',
             'withdraw',
             'vendors',
+            'settings',
             'changelog',
             'store-reviews',
             'verifications',
+            'tools',
+            'dummy-data',
             'product-advertising',
             'reverse-withdrawal',
             'announcement',
@@ -32,6 +35,8 @@ const PanelSwitch = () => {
             'wholesale-customer',
             'admin-store-support',
             'product-qa',
+            'reports',
+            'request-for-quote',
         ]
     ) as string[];
 
@@ -66,15 +71,16 @@ const PanelSwitch = () => {
         return null;
     }
 
+    const page = new URLSearchParams( window.location.search ).get( 'page' );
+
     // Build the switching URL using addQueryArgs.
     // eslint-disable-next-line @wordpress/no-unused-vars-before-return
     const switchingUrl = addQueryArgs( admin_url, {
         dokan_admin_switching_nonce: nonce,
         dokan_action: 'switch_admin_panel',
         legacy_key: baseUrl,
+        switch_to: page !== 'dokan-dashboard' ? 'new' : 'legacy',
     } );
-
-    const page = new URLSearchParams( window.location.search ).get( 'page' );
 
     return (
         <span className="new-dashboard-url my-8 text-sm font-medium">

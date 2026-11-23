@@ -209,4 +209,52 @@ class OrderUtil {
 
         return WCOrderUtil::get_table_for_order_meta();
     }
+
+    /**
+     * Determine whether customer-identifying details (billing/shipping address, billing full name, customer email)
+     * should be rendered in vendor order emails.
+     *
+     * Centralizes the gate so the same hook value is honored across all vendor email templates
+     * (vendor-new-order / vendor-completed-order, HTML and plain text).
+     *
+     * @since 5.0.2
+     *
+     * @param WC_Order $order Order object.
+     *
+     * @return bool True to render customer details, false to hide.
+     */
+    public static function should_show_email_customer_details( $order ): bool {
+
+        /**
+         * Filter whether to render customer-identifying details (billing/shipping address, billing full name,
+         * customer email) in vendor order emails.
+         *
+         * @since 5.0.2
+         *
+         * @param bool     $show  Whether to render customer details. Default true.
+         * @param WC_Order $order Order object.
+         */
+        return (bool) apply_filters( 'dokan_email_show_customer_details', true, $order );
+    }
+
+    /**
+     * Whether the current user may act on the given order in a bulk operation.
+     *
+     * A vendor may act only on their own orders; admins and shop managers (manage_woocommerce)
+     * may act on any order. Centralizing this keeps every bulk-order entry point — the REST
+     * bulk-actions endpoint and the legacy vendor-dashboard bulk form — guarded by one rule.
+     *
+     * @since 5.0.11
+     *
+     * @param int|string $order_id Order id to check.
+     *
+     * @return bool
+     */
+    public static function current_user_can_manage_order( $order_id ): bool {
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        return dokan_is_seller_has_order( dokan_get_current_user_id(), absint( $order_id ) );
+    }
 }

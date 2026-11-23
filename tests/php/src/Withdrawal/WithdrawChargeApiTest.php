@@ -117,6 +117,8 @@ class WithdrawChargeApiTest extends DokanTestCase {
             ]
         );
 
+        $user_obj = get_user_by( 'id', $user );
+        $user_obj->add_cap( 'dokan_manage_withdraw' );
         wp_set_current_user( $user );
 
         $response = $this->get_request( $this->rest_base . '/charges' );
@@ -183,6 +185,8 @@ class WithdrawChargeApiTest extends DokanTestCase {
             ]
         );
 
+        $user_obj = get_user_by( 'id', $user );
+        $user_obj->add_cap( 'dokan_manage_withdraw' );
         wp_set_current_user( $user );
 
         $response = $this->get_request(

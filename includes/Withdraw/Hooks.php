@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
-use Automattic\WooCommerce\Utilities\NumberUtil;
-
 class Hooks {
 
     /**
@@ -112,7 +110,11 @@ class Hooks {
     public function update_vendor_balance( $withdraw ) {
         global $wpdb;
 
-        if ( NumberUtil::round( dokan_get_seller_balance( $withdraw->get_user_id(), false ), 2 ) < NumberUtil::round( $withdraw->get_amount(), 2 ) ) {
+        // Compare in integer cents — over-rejecting on float drift would leave an approved withdraw with no offsetting credit row.
+        $balance_cents = (int) round( (float) dokan_get_seller_balance( $withdraw->get_user_id(), false ) * 100 );
+        $amount_cents  = (int) round( (float) $withdraw->get_amount() * 100 );
+
+        if ( $balance_cents < $amount_cents ) {
             return;
         }
 

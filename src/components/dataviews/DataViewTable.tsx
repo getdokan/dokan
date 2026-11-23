@@ -10,8 +10,8 @@ import type {
 import { kebabCase, snakeCase } from '@dokan/utilities';
 import { useEffect } from '@wordpress/element';
 import { useWindowDimensions } from '@dokan/hooks';
-import { __, setLocaleData } from '@wordpress/i18n';
-import './style.scss';
+import { setLocaleData } from '@wordpress/i18n';
+import { getTranslatedStrings } from '@src/utilities/getTranslatedStrings';
 
 type ItemWithId = { id: string };
 
@@ -54,11 +54,6 @@ const applyFiltersToTableElements = (
         { ...props }
     );
 };
-
-export const getTranslatedStrings = () => ( {
-    Actions: [ __( 'Actions', 'dokan-lite' ) ],
-    'No results': [ __( 'No results', 'dokan-lite' ) ],
-} );
 
 const DataViewTable = ( props: DataViewsProps< Item > ) => {
     if ( ! props.namespace ) {

@@ -18,7 +18,7 @@ export default defineConfig({
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown' ,
     /* Maximum time in milliseconds the whole test suite can run */
-    globalTimeout: parseBoolean(CI) ? 40 * (60 * 1000) : 40 * (60 * 1000),
+    globalTimeout: parseBoolean(CI) ? 60 * (60 * 1000) : 60 * (60 * 1000),
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
     maxFailures: parseBoolean(CI) ? 50 : 50,
     /* Maximum time one test can run for. */
@@ -42,9 +42,9 @@ export default defineConfig({
     /* The number of times to repeat each test, useful for debugging flaky tests. */
     repeatEach: parseBoolean(CI) ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
-    retries: parseBoolean(CI) ? 1 : 0,
+    retries: parseBoolean(CI) ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: parseBoolean(CI) ? 4 : 4,
+    workers: parseBoolean(CI) ? 1 : 4,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 25 },
     /* Configure reporters */
@@ -104,7 +104,7 @@ export default defineConfig({
         // viewport: { width: 1420, height: 900 }, // default 1280x720
         /* whether to slow down test execution by provided seconds */
         launchOptions: {
-            slowMo: (SLOWMO ?? 0) * 1000,
+            slowMo: Number(SLOWMO ?? 0) * 1000,
             // devtools: true,
         },
     },

@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Admin\Dashboard\Pages\BlackFriday;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Extensions;
+use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
 use WeDevs\Dokan\Admin\Notices\Helper;
 
 class Menu {
@@ -28,7 +31,7 @@ class Menu {
     public function add_admin_menu() {
         global $submenu;
 
-        $capability = dokana_admin_menu_capability();
+        $capability = dokan_admin_menu_capability();
         if ( ! current_user_can( $capability ) ) {
             return;
         }
@@ -69,8 +72,46 @@ class Menu {
         do_action( 'dokan_admin_menu', $capability, $menu_position );
 
         if ( current_user_can( $capability ) ) {
+            // Legacy (Vue) Tools entry. The new (React) Tools entry comes from the
+            // Dashboard Pages system; LegacySwitcher keeps whichever the admin prefers,
+            // and Pro's submenu reorder positions it between Modules and Status.
+            $submenu[ $slug ][] = [ esc_html__( 'Tools', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/tools' ];
+
             $submenu[ $slug ][] = [ esc_html__( 'Help', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
+
+            /**
+             * Fires after the Dokan "Help" submenu item is added, before "Settings".
+             * Hook here to insert items between Help and Settings.
+             *
+             * @since 5.0.0
+             *
+             * @param string $capability    Capability required to view the menu.
+             * @param string $menu_position Dokan top-level menu position.
+             */
+            do_action( 'dokan_admin_menu_after_help', $capability, $menu_position );
+
+            // ProFeatures and Extensions are dashboard Page services that opt out of
+            // Dashboard::register_menu()'s auto-append (via 'hidden' => true) so we can
+            // place them precisely under Help and Settings here.
+            $this->append_dashboard_page_submenu( ProFeatures::class, $slug, $capability, $menu_position );
+
+            // TODO BFCM-2026-REMOVE: seasonal entry placed between "Pro Features" and "Settings"; drop with the page after the campaign.
+            $this->append_dashboard_page_submenu( BlackFriday::class, $slug, $capability, $menu_position );
+
             $submenu[ $slug ][] = [ __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
+
+            /**
+             * Fires after the Dokan "Settings" submenu item is added.
+             * Hook here to insert items between Settings and Chat with us.
+             *
+             * @since 5.0.0
+             *
+             * @param string $capability    Capability required to view the menu.
+             * @param string $menu_position Dokan top-level menu position.
+             */
+            do_action( 'dokan_admin_menu_after_settings', $capability, $menu_position );
+
+            $this->append_dashboard_page_submenu( Extensions::class, $slug, $capability, $menu_position );
         }
 
         // Add a chat with us link if Dokan Pro is not installed.
@@ -91,6 +132,42 @@ class Menu {
         // phpcs:enable
 
         add_action( $dashboard, [ $this, 'dashboard_script' ] );
+    }
+
+    /**
+     * Append a dashboard Page service's submenu entry under the Dokan top-level menu.
+     *
+     * Used for pages that opt out of {@see \WeDevs\Dokan\Admin\Dashboard\Dashboard::register_menu()}
+     * via 'hidden' => true so their position relative to the static Help/Settings entries
+     * can be controlled here.
+     *
+     * @since 5.0.0
+     *
+     * @param string $page_class    Fully-qualified Pageable service class name.
+     * @param string $parent_slug   Parent menu slug (the Dokan top-level menu).
+     * @param string $capability    Capability required to view the menu.
+     * @param string $menu_position Dokan top-level menu position.
+     *
+     * @return void
+     */
+    protected function append_dashboard_page_submenu( string $page_class, string $parent_slug, string $capability, string $menu_position ): void {
+        global $submenu;
+
+        $page = dokan_get_container()->get( $page_class );
+        $args = $page->menu( $capability, $menu_position );
+
+        if ( empty( $args ) ) {
+            return;
+        }
+
+        $route = trim( $args['route'] ?? $page->get_id(), ' /' );
+
+        // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        $submenu[ $parent_slug ][] = [
+            $args['menu_title'],
+            $capability,
+            'admin.php?page=dokan-dashboard#/' . $route,
+        ];
     }
 
     /**

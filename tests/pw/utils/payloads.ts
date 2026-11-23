@@ -4,7 +4,32 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
-const { ADMIN, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, VENDOR_ID, VENDOR2_ID, PRODUCT_ID, PRODUCT_ID_V2, TAG_ID, ATTRIBUTE_ID } = process.env;
+const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, VENDOR_ID, VENDOR2_ID, PRODUCT_ID, PRODUCT_ID_V2, TAG_ID, ATTRIBUTE_ID } = process.env;
+
+// CATEGORY_ID is seeded by `_env.setup.ts` ("add categories") and persisted
+// to .env via helpers.createEnvVar. payloads.ts is imported before that
+// setup runs, so destructuring CATEGORY_ID once at module load would
+// capture the pre-seed value (often missing on a fresh CI run). Read it
+// lazily at factory invocation, and fall back to `[{}]` when no real id
+// is available yet — that preserves the legacy admin-auth setup path
+// (which doesn't enforce the category requirement) while still attaching
+// a valid id whenever the seed has run (vendor-auth path needs the id
+// to avoid the v1/products "Category must be required" 404).
+const categoriesPayload = () => {
+    const id = Number(process.env.CATEGORY_ID);
+    return Number.isFinite(id) && id > 0 ? [{ id }] : [{}];
+};
+
+/**
+ * A billing phone that passes a MOBILE-number check.
+ *
+ * Stripe Link validates the billing phone as a mobile number and rejects the reserved fictional
+ * `(555) 555-5555` range. When it does, WooCommerce Blocks refuses to submit the checkout at all —
+ * no Store API request fires and no order is created — so a checkout test fails with no visible
+ * card error. Keep every checkout seed pointed at this one constant so the value can be changed in
+ * a single place if a validator ever rejects it again.
+ */
+export const MOBILE_TEST_PHONE = '+14152367890';
 
 export const payloads = {
     // wp
@@ -69,6 +94,7 @@ export const payloads = {
     adminAuth: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) },
     vendorAuth: { Authorization: basicAuth(VENDOR, USER_PASSWORD) },
     vendor2Auth: { Authorization: basicAuth(VENDOR2, USER_PASSWORD) },
+    vendor3Auth: { Authorization: basicAuth(VENDOR3, USER_PASSWORD) },
     customerAuth: { Authorization: basicAuth(CUSTOMER, USER_PASSWORD) },
 
     admin: {
@@ -119,7 +145,7 @@ export const payloads = {
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         status: 'publish',
-        categories: [{}],
+        categories: categoriesPayload(),
         description: '<p>test description</p>',
     }),
 
@@ -231,23 +257,6 @@ export const payloads = {
             {
                 key: 'dokan_geo_address',
                 value: 'Dhaka, Bangladesh',
-            },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
             },
             {
                 key: '_product_addons',
@@ -408,7 +417,7 @@ export const payloads = {
         // date_on_sale_from: helpers.currentDateTime,
         // date_on_sale_to: helpers.addDays(helpers.currentDateTime, 10),
         status: 'publish',
-        categories: [{}],
+        categories: categoriesPayload(),
         tags: [{}],
         featured: true,
         description: '<p>test description</p>',
@@ -433,23 +442,6 @@ export const payloads = {
             {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
-            },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
             },
             // {
             //     key: '_product_addons',
@@ -540,7 +532,7 @@ export const payloads = {
         date_on_sale_from: helpers.currentDateTime,
         date_on_sale_to: helpers.addDays(helpers.currentDateTime, 10),
         status: 'publish',
-        categories: [{}],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -564,23 +556,6 @@ export const payloads = {
             {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
-            },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
             },
             // {
             // key: '_dokan_min_max_meta',
@@ -650,7 +625,7 @@ export const payloads = {
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
 
         status: 'publish',
-        categories: [{}],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -674,23 +649,6 @@ export const payloads = {
             {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
-            },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
             },
             // {
             // key: '_dokan_min_max_meta',
@@ -746,7 +704,7 @@ export const payloads = {
         type: 'simple',
         regular_price: '100',
         status: 'publish',
-        categories: [{}],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -770,23 +728,6 @@ export const payloads = {
             {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
-            },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
             },
             {
                 key: '_sale_price_label',
@@ -846,7 +787,7 @@ export const payloads = {
         regular_price: faker.finance.amount({ min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '100',
         status: 'publish',
-        categories: [{}],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -867,7 +808,7 @@ export const payloads = {
         type: 'variable',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         status: 'publish',
-        categories: [{}],
+        categories: categoriesPayload(),
         // attributes: [
         // 	{
         // 		'id'       : 28,
@@ -910,7 +851,7 @@ export const payloads = {
         downloads: [],
         download_limit: 100,
         download_expiry: 365,
-        categories: [{}],
+        categories: categoriesPayload(),
     }),
 
     createSimpleSubscriptionProduct: () => ({
@@ -922,7 +863,7 @@ export const payloads = {
         short_description: '<p>test short description</p>\n',
         price: '100',
         regular_price: '100',
-        categories: [{}],
+        categories: categoriesPayload(),
         meta_data: [
             {
                 key: '_subscription_price',
@@ -969,7 +910,7 @@ export const payloads = {
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
-        categories: [{}],
+        categories: categoriesPayload(),
         duration_type: 'customer',
         duration_unit: 'day',
         duration: 1,
@@ -1245,7 +1186,7 @@ export const payloads = {
         purchasable: true,
         // virtual: false,
         // downloadable: false,
-        categories: [{}],
+        categories: categoriesPayload(),
         tags: [{}],
         meta_data: [
             {
@@ -1653,7 +1594,7 @@ export const payloads = {
         catalog_visibility: 'hidden',
         description: '<p>This is Dokan reverse withdrawal payment product, do not delete.</p>\n',
         regular_price: '0',
-        categories: [{}],
+        categories: categoriesPayload(),
         virtual: true,
         tax_status: 'none',
         sold_individually: true,
@@ -1671,7 +1612,7 @@ export const payloads = {
         catalog_visibility: 'hidden',
         description: '<p>This is Dokan advertisement payment product, do not delete.</p>\n',
         regular_price: '0',
-        categories: [{}],
+        categories: categoriesPayload(),
         virtual: true,
         tax_status: 'taxable',
         sold_individually: true,
@@ -1876,7 +1817,12 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            // A REAL-FORMAT US mobile, deliberately not a 555 number. Stripe Link validates the
+            // billing phone as a MOBILE number and rejects the reserved fictional 555 range with
+            // "Your mobile phone number is invalid.", which blocks the WooCommerce Blocks checkout
+            // from submitting at all — no POST /wc/store/v1/checkout, no order, and every Stripe
+            // block-checkout test then fails on "no new order". Do not swap this back to a 555 number.
+            phone: MOBILE_TEST_PHONE,
         },
 
         shipping: {
@@ -1926,7 +1872,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            phone: MOBILE_TEST_PHONE,
         },
 
         shipping: {
@@ -1969,7 +1915,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             email: 'customer1@email.com',
-            phone: '(555) 555-5555',
+            phone: MOBILE_TEST_PHONE,
         },
 
         shipping: {
@@ -2251,7 +2197,7 @@ export const payloads = {
         // title        : 'dokan',
         // description  : 'Just another WordPress site',
         // url          : 'http://dokan.test',
-        email: 'shashwata@wedevs.com',
+        email: 'shohan@wedevs.com',
         timezone: 'Asia/Dhaka',
         date_format: 'F j, Y',
         time_format: 'g:i a',
@@ -3634,14 +3580,15 @@ export const payloads = {
         liveChat: 'live_chat',
         liveSearch: 'live_search',
         mangopay: 'mangopay',
-        moip: 'moip',
+        paystack: 'paystack',
+        vendorSupport: 'vendor_support',
         minMaxQuantities: 'order_min_max',
         paypalMarketplace: 'paypal_marketplace',
         printful: 'printful',
         productAddon: 'product_addon',
         productAdvertising: 'product_advertising',
         productEnquiry: 'product_enquiry',
-        productFormManager: 'product_form_customization',
+        //productFormManager: 'product_form_customization',
         productSubscription: 'vsp',
         productQa: 'product_qa',
         rankMath: 'rank_math',
@@ -3698,7 +3645,7 @@ export const payloads = {
     // product review
 
     updateProductReview: {
-        status: 'approved',
+        status: 'approve',
     },
 
     // store review
@@ -3776,7 +3723,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: 'yes',
+        show_email: true,
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -4099,7 +4046,7 @@ export const payloads = {
         company_id_number: '123456789',
         bank_name: 'bank name',
         bank_iban: 'bank iban',
-        categories: [{}],
+        categories: categoriesPayload(),
         admin_commission: '',
         admin_additional_fee: '0.00',
         admin_commission_type: 'flat',
@@ -4198,7 +4145,7 @@ export const payloads = {
     },
 
     createStore1: {
-        user_login: VENDOR ,
+        user_login: VENDOR,
         user_pass: USER_PASSWORD,
         user_nicename: `${VENDOR}store`, // store url
         email: `${VENDOR}@email.com`,
@@ -4355,6 +4302,159 @@ export const payloads = {
         email: `${VENDOR2}@email.com`,
         store_name: `${VENDOR2}store`,
         first_name: VENDOR2,
+        last_name: 'v',
+        role: 'seller',
+        notify_vendor: 'yes',
+        social: {
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
+        },
+        phone: '0123456789',
+        show_email: true,
+        address: {
+            street_1: 'abc street',
+            street_2: 'xyz street',
+            city: 'New York',
+            zip: '10003',
+            state: 'NY',
+            country: 'US',
+        },
+        location: '40.7127753,-74.0059728',
+        banner_id: 0,
+        gravatar_id: 0,
+        enable_tnc: true,
+        store_tnc: 'test Vendor terms and conditions',
+        featured: true,
+        enabled: true,
+        trusted: true, // publish product directly
+        payment: {
+            paypal: {
+                email: 'paypal@g.c',
+            },
+            bank: {
+                ac_name: 'account name',
+                ac_type: 'personal',
+                ac_number: '1234567',
+                bank_name: 'bank name',
+                bank_addr: 'bank address',
+                routing_number: '123456',
+                iban: '123456',
+                swift: '12345',
+            },
+            skrill: {
+                email: 'skrill@g.c',
+            },
+            dokan_custom: {
+                withdraw_method_name: 'Bksh',
+                withdraw_method_type: 'Phone',
+                value: '0123456789',
+            },
+            // "stripe": false,
+            // stripe_express: false,
+            // 'dokan-moip-connect': true,
+            // dokan_razorpay: false,
+        },
+        // store_open_close: {
+        //     enabled: 'yes',
+        //     time: {
+        //         monday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         tuesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         wednesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         thursday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         friday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         saturday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //         sunday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:59 pm'],
+        //         },
+        //     },
+        //     open_notice: 'Store is open',
+        //     close_notice: 'Store is closed',
+        // },
+        sale_only_here: 'yes',
+        company_name: faker.company.name(),
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
+        categories: [
+            {
+                // id: 74,
+                // name: 'Uncategorized',
+                // slug: 'uncategorized',
+            },
+        ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
+        admin_commission: '5',
+        admin_additional_fee: '5',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
+        // store_seo: {
+        //     'dokan-seo-meta-title': 'meta title',
+        //     'dokan-seo-meta-desc': 'meta description',
+        //     'dokan-seo-meta-keywords': 'meta keywords',
+        //     'dokan-seo-og-title': 'facebook title',
+        //     'dokan-seo-og-desc': 'facebook description',
+        //     'dokan-seo-og-image': '0',
+        //     'dokan-seo-twitter-title': 'twitter title',
+        //     'dokan-seo-twitter-desc': 'twitter description',
+        //     'dokan-seo-twitter-image': '0',
+        // },
+    },
+
+    // vendor3 — the permanent NON-CONNECTED Stripe Express vendor. Identical to
+    // createStore2 except for the identity; the paypal payment block below is what
+    // makes a manual withdraw possible while no Stripe account is ever attached.
+    createStore3: {
+        user_login: VENDOR3,
+        user_pass: USER_PASSWORD,
+        user_nicename: `${VENDOR3}store`,
+        email: `${VENDOR3}@email.com`,
+        store_name: `${VENDOR3}store`,
+        first_name: VENDOR3,
         last_name: 'v',
         role: 'seller',
         notify_vendor: 'yes',
@@ -5033,6 +5133,13 @@ export const payloads = {
     vendorRegistrationShortcode: {
         title: 'Vendor-registration',
         content: '[dokan-vendor-registration]',
+        status: 'publish',
+    },
+
+    // vendor onboarding registration shortcode (Dokan 5.0.0+)
+    vendorOnboardingShortcode: {
+        title: 'Vendor-onboarding',
+        content: '[dokan-vendor-onboarding-registration]',
         status: 'publish',
     },
 

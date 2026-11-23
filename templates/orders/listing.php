@@ -169,11 +169,11 @@ if ( $user_orders ) {
                             foreach ( $actions as $action_item ) {
                                 $icon = isset( $action_item['icon'] ) ? $action_item['icon'] : '';
                                 printf(
-                                    '<a class="dokan-btn dokan-btn-default dokan-btn-sm dokan-btn-action-confirm tips" 
-                                        href="%s" 
+                                    '<a class="dokan-btn dokan-btn-default dokan-btn-sm dokan-btn-action-confirm tips"
+                                        href="%s"
                                         data-confirm-message="%s"
-                                        data-toggle="tooltip" 
-                                        data-placement="top" 
+                                        data-toggle="tooltip"
+                                        data-placement="top"
                                         title="%s">%s</a> ',
                                     esc_url( $action_item['url'] ),
                                     esc_attr( $action_item['confirm_message'] ?? '' ),

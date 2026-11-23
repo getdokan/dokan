@@ -8,12 +8,6 @@
             },
             "typescript": {
                 "project": "./tsconfig.json"
-            },
-            "alias": {
-                "map": [
-                    ["@dokan", "./src"]
-                ],
-                "extensions": [".js", ".jsx", ".ts", ".tsx"]
             }
         }
     }

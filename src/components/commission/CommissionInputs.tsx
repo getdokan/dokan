@@ -12,7 +12,16 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     getCommissionValue,
     formatValue: formatValueProp,
     currency,
+    highlightEmpty = false,
 } ) => {
+    // Outline the wrapper, because dokan-ui's own border classes win on the input.
+    const invalidRing = ( type: 'percentage' | 'flat' ): string =>
+        highlightEmpty &&
+        isAllCategory &&
+        String( getCommissionValue( type, categoryId ) || '' ).trim() === ''
+            ? ' rounded ring-1 ring-destructive'
+            : '';
+
     const handlePercentageChange = ( value: string ) => {
         // Handle real-time updates with debounce
         if ( isAllCategory ) {
@@ -33,21 +42,17 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
 
     return (
         <div className="flex items-center">
-            <div className="w-[142px]">
+            <div className={ `w-[142px]${ invalidRing( 'percentage' ) }` }>
                 <DebouncedInput
                     component={ MaskedInput }
-                    input={ {
-                        type: 'number',
-                    } }
                     value={ formatValueProp(
                         getCommissionValue( 'percentage', categoryId ) || ''
                     ) }
+                    input={ { placeholder: '0' } }
                     addOnRight={
                         <span className="text-[#575757] text-sm">%</span>
                     }
-                    onChange={ ( e ) =>
-                        handlePercentageChange( e.target.value )
-                    }
+                    onChange={ handlePercentageChange }
                     onBlur={ ( e ) =>
                         onBlur(
                             e.target.value,
@@ -56,7 +61,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                             isAllCategory
                         )
                     }
-                    className={ `w-full h-10 pl-6  text-sm bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !border-r-0 !rounded-r-none` }
+                    className={ `w-full h-10 pl-6  text-sm bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !m-0 !border-r-0 !rounded-r-none` }
                     maskRule={ {
                         numeral: true,
                         delimiter: currency.thousand,
@@ -68,7 +73,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
             <div className="mx-2">
                 <Plus />
             </div>
-            <div className="w-[120px]">
+            <div className={ `w-[120px]${ invalidRing( 'flat' ) }` }>
                 <DebouncedInput
                     component={ MaskedInput }
                     addOnLeft={
@@ -79,7 +84,8 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                     value={ formatValueProp(
                         getCommissionValue( 'flat', categoryId ) || ''
                     ) }
-                    onChange={ ( e ) => handleFlatChange( e.target.value ) }
+                    input={ { placeholder: '0' } }
+                    onChange={ handleFlatChange }
                     onBlur={ ( e ) =>
                         onBlur(
                             e.target.value,
@@ -94,7 +100,10 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                         numeralDecimalMark: currency.decimal,
                         numeralDecimalScale: currency.precision,
                     } }
-                    className={ `w-full h-10 pl-6 pr-3 text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !border-l-0 !rounded-l-none` }
+                    // Left border stays: dokan-ui's addOnLeft span already ships
+                    // `border-r-0`, so removing this side too leaves a 1px hole
+                    // at the seam rather than a single shared line.
+                    className={ `w-full h-10 pl-6 pr-3 text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB]/20 transition-colors placeholder-[#828282] text-[#575757] !m-0 !rounded-l-none` }
                 />
             </div>
         </div>

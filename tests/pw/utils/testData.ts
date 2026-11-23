@@ -7,6 +7,7 @@ const {
     ADMIN_PASSWORD,
     VENDOR,
     VENDOR2,
+    VENDOR3,
     CUSTOMER,
     CUSTOMER2,
     USER_PASSWORD,
@@ -44,7 +45,50 @@ const {
     TEST_MERCHANT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE,
-} = process.env;
+} = process.env as unknown as {
+    ADMIN: string;
+    ADMIN_PASSWORD: string;
+    VENDOR: string;
+    VENDOR2: string;
+    VENDOR3: string;
+    CUSTOMER: string;
+    CUSTOMER2: string;
+    USER_PASSWORD: string;
+    SITE_PATH: string;
+    BASE_URL: string;
+    SITE_LANGUAGE: string;
+    SITE_TITLE: string;
+    ADMIN_EMAIL: string;
+    DB_HOST_NAME: string;
+    DATABASE: string;
+    DB_USER_NAME: string;
+    DB_USER_PASSWORD: string;
+    DB_PREFIX: string;
+    GMAP: string;
+    MAPBOX: string;
+    LICENSE_KEY: string;
+    CATEGORY_ID: string;
+    VONAGE_API_KEY: string;
+    VONAGE_API_SECRET: string;
+    FB_APP_ID: string;
+    FB_APP_SECRET: string;
+    TALKJS_APP_ID: string;
+    TALKJS_APP_SECRET: string;
+    PRINTFUL_APP_ID: string;
+    PRINTFUL_APP_SECRET: string;
+    TEST_PUBLISH_KEY_STRIPE: string;
+    TEST_SECRET_KEY_STRIPE: string;
+    CLIENT_ID_STRIPE: string;
+    SANDBOX_CLIENT_ID_MANGOPAY: string;
+    SANDBOX_API_KEY_MANGOPAY: string;
+    TEST_KEY_ID_RAZORPAY: string;
+    TEST_KEY_SECRET_RAZORPAY: string;
+    TEST_PUBLISH_KEY_STRIPE_EXPRESS: string;
+    TEST_SECRET_KEY_STRIPE_EXPRESS: string;
+    TEST_MERCHANT_ID_PAYPAL_MARKETPLACE: string;
+    TEST_CLIENT_ID_PAYPAL_MARKETPLACE: string;
+    TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE: string;
+};
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
@@ -71,6 +115,7 @@ export const data = {
         adminAuth: { extraHTTPHeaders: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) } },
         vendorAuth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR, ADMIN_PASSWORD) } },
         vendor2Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR2, ADMIN_PASSWORD) } },
+        vendor3Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR3, ADMIN_PASSWORD) } },
         customerAuth: { extraHTTPHeaders: { Authorization: basicAuth(CUSTOMER, ADMIN_PASSWORD) } },
     },
 
@@ -78,6 +123,7 @@ export const data = {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
         vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
+        vendor3AuthFile: 'playwright/.auth/vendor3StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
         customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
@@ -91,6 +137,10 @@ export const data = {
 
         vendor2Auth: {
             storageState: 'playwright/.auth/vendor2StorageState.json',
+        },
+
+        vendor3Auth: {
+            storageState: 'playwright/.auth/vendor3StorageState.json',
         },
 
         customerAuth: {
@@ -117,7 +167,7 @@ export const data = {
 
     plugin: {
         pluginsLite: ['basic-auth', 'dokan', 'woocommerce'],
-        plugins: ['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
+        plugins: ['basic-auth', 'dokan', 'dokan-pro', 'dokan-invoice', 'woocommerce', 'woocommerce-bookings', 'woocommerce-pdf-invoices-packing-slips', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
         dokanPro: ['dokan-pro'],
         activeClass: 'active',
         pluginName: {
@@ -128,8 +178,10 @@ export const data = {
             basicAuth: 'Basic-Auth-master/basic-auth',
             dokanLite: 'dokan-lite/dokan',
             dokanPro: 'dokan-pro/dokan-pro',
+            dokanInvoice: 'dokan-invoice/dokan-invoice',
             woocommerce: 'woocommerce/woocommerce',
             woocommerceBookings: 'woocommerce-bookings/woocommerce-bookings',
+            woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips/woocommerce-pdf-invoices-packing-slips',
             woocommerceProductAddons: 'woocommerce-product-addons/woocommerce-product-addons',
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions/woocommerce-simple-auctions',
             woocommerceSubscriptions: 'woocommerce-subscriptions/woocommerce-subscriptions',
@@ -509,7 +561,7 @@ export const data = {
         },
 
         productInfo: {
-            title: `${faker.commerce.productName()}_${faker.string.nanoid(5)}`,
+            title: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
 
             permalink: `_${faker.string.nanoid(10)}`,
 
@@ -524,7 +576,11 @@ export const data = {
 
             tags: {
                 tags: ['accessories'],
-                randomTags: [faker.string.nanoid(5)],
+                // The legacy product editor used to drop a new tag name that starts with a digit
+                // (DOK-105, fixed in dokan-pro #6219). Keep the regular tag letter-first;
+                // digitLeadingTags is the case that guards the fix.
+                randomTags: [faker.string.alpha(1) + faker.string.nanoid(4)],
+                digitLeadingTags: [`${faker.number.int({ min: 1, max: 9 })}${faker.string.alpha(4)}`],
             },
 
             images: {
@@ -533,8 +589,8 @@ export const data = {
             },
 
             description: {
-                shortDescription: 'test short description',
-                description: 'test long description',
+                shortDescription: faker.lorem.lines(1),
+                description: faker.lorem.lines(1),
             },
 
             downloadableOptions: {
@@ -1048,6 +1104,7 @@ export const data = {
                 setupWizardSelling: 'wp-admin/admin.php?page=dokan-setup&step=selling',
                 setupWizardCommission: 'wp-admin/admin.php?page=dokan-setup&step=commission',
                 setupWizardWithdraw: 'wp-admin/admin.php?page=dokan-setup&step=withdraw',
+                dokanNew: 'wp-admin/admin.php?page=dokan-dashboard',
                 dokan: 'wp-admin/admin.php?page=dokan#',
 
                 // only lite
@@ -1075,7 +1132,8 @@ export const data = {
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
-                subscriptions: 'wp-admin/admin.php?page=dokan#/subscriptions',
+                // migrated DataViews page is on page=dokan-dashboard (page=dokan is the legacy list)
+                subscriptions: 'wp-admin/admin.php?page=dokan-dashboard#/subscriptions',
                 verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
@@ -1118,6 +1176,7 @@ export const data = {
         frontend: {
             // customer
             myAccount: 'my-account',
+            vendorOnboarding: 'vendor-onboarding',
             myOrders: 'my-orders',
             requestForQuote: 'request-quote',
             requestedQuote: 'my-account/request-a-quote',
@@ -1155,7 +1214,7 @@ export const data = {
             bookedDayBlocks: '?wc-ajax=wc_bookings_find_booked_day_blocks',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
-            productDetails: (productName: string) => `product/${productName}`,
+            productDetails: (productName: string) => `shop/uncategorized/${productName}`,
             orderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
             orderReceivedDetails: (orderId: string, orderKey: string) => `checkout/order-received/${orderId}/?key=${orderKey}`,
             vendorDetails: (storeName: string) => `store/${storeName}`,
@@ -1172,6 +1231,7 @@ export const data = {
             vDashboard: {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
+                newDashboard: 'dashboard/?path=%2Fanalytics%2FOverview',
                 products: 'dashboard/products',
                 productEdit: (productId: string, nonce: string) => `dashboard/products/?product_id=${productId}&action=edit&_dokan_edit_product_nonce=${nonce}`,
                 spmv: 'dashboard/products-search',
@@ -1181,6 +1241,7 @@ export const data = {
                 quoteDetails: (quotId: string) => `dashboard/requested-quotes/${quotId}`,
                 coupons: 'dashboard/coupons',
                 reports: 'dashboard/reports',
+                reports_new: 'dashboard/reports/?path=%2Fanalytics%2Fproducts',
                 statement: 'dashboard/reports/?chart=sales_statement',
                 deliveryTime: 'dashboard/delivery-time-dashboard',
                 reviews: 'dashboard/reviews',
@@ -1309,6 +1370,232 @@ export const data = {
         password: ADMIN_PASSWORD,
     },
 
+    // Admin Settings Migration
+    adminSettingsMigration: {
+        urls: {
+            oldAdminSettings: 'wp-admin/admin.php?page=dokan#/settings',
+            newAdminSettings: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
+        },
+
+        selectors: {
+            oldUI: {
+                generalMenu: '//div[@class="nav-title" and contains(text(),"General")]',
+                sellingOptionsMenu: '//div[@class="nav-title" and contains(text(),"Selling Options")]',
+                vendorStoreUrlField: '#dokan_general\\[custom_store_url\\]',
+                singleSellerModeField: '.enable_single_seller_mode .switch',
+                dublicateProductField: '.vendor_duplicate_product .switch',
+                allowVendorCreateOrderField: '.allow_vendor_create_manual_order .switch',
+                onePageProductCreationField: '.one_step_product_create .switch',
+                productPopupField: '.disable_product_popup .switch',
+                orderStatusChangeField: '.order_status_change .switch',
+                selectAnyCategoryField: '.dokan_any_category_selection .switch',
+                auctionFunctionsField: '.new_seller_enable_auction .switch',
+                saveChanges: '//input[@id="submit" and @value="Save Changes"]',
+                successMessage: 'Setting has been saved successfully.',
+                hideCustomerInfo: '.hide_customer_info .switch',
+                enableGuestUserEnquiry: '.enable_guest_user_enquiry .switch',
+                catalogModeHideAddToCartButton: '.catalog_mode_hide_add_to_cart_button .switch',
+                liveSearchMenu: '//div[@class="nav-title" and contains(text(),"Live Search")]',
+                sellingMenu: '//div[@class="nav-title" and contains(text(),"Selling")]',
+                addressFieldsOptionField: '.enabled_address_on_reg .switch',
+                enableTermsAndConditions: '.enable_tc_on_reg .switch',
+                disableWelcomeWizard: '.disable_welcome_wizard .switch',
+                vendorSetupWizardMessageField: '.setup_wizard_message textarea',
+            },
+
+            // React settings UI (Dokan 5.0.0+). Sidebar entries are role=button
+            // matched by accessible name; fields carry data-testid="settings-field-<id>".
+            newUI: {
+                // Sidebar navigation (accessible names for getByRole)
+                generalNav: 'General',
+                marketplaceNav: 'Marketplace',
+                vendorsNav: 'Vendors',
+                vendorOnboardingNav: 'Vendor Onboarding',
+                socialOnboardingNav: 'Social Onboarding',
+                vendorCapabilitiesNav: 'Vendor Capabilities',
+                vendorSubscriptionNav: 'Vendor Subscription',
+                storeStatsNav: 'Store Stats',
+                saveButtonName: 'Save Changes',
+                // "Content loaded" marker: every field subpage renders at least one
+                // settings-field-* node (the settings-section-content-* wrapper is not
+                // present on all subpages, e.g. Vendor Onboarding).
+                sectionContent: '[data-testid^="settings-field-"]',
+                successMessage: '.notice-success, .updated',
+
+                // Marketplace fields
+                vendorStoreUrlField: '[data-testid="settings-field-vendor_store_url_slug"]',
+                singleSellerModeField: '[data-testid="settings-field-enable_single_seller_mode"]',
+                storeCategoryField: '[data-testid="settings-field-store_category_mode"]',
+                showCustomerDetailsField: '[data-testid="settings-field-show_customer_details_to_vendors"]',
+                guestProductEnquiryField: '[data-testid="settings-field-guest_product_enquiry"]',
+                addToCartVisibilityField: '[data-testid="settings-field-catalog_mode_add_to_cart_button_visibility"]',
+                liveSearchOptionField: '[data-testid="settings-field-live_search_option"]',
+
+                // Vendor onboarding fields
+                enableSellingField: '[data-testid="settings-field-vendor_auto_enable_selling"]',
+                addressFieldsField: '[data-testid="settings-field-vendor_registration_address_fields"]',
+                termsConditionsField: '[data-testid="settings-field-terms_conditions"]',
+                welcomeWizardField: '[data-testid="settings-field-vendor_welcome_wizard_enabled"]',
+                setupWizardMessageField: '[data-testid="settings-field-vendor_setup_wizard_message"]',
+                setupWizardLogoField: '[data-testid="settings-field-vendor_setup_wizard_logo"]',
+            },
+        },
+
+        testData: {
+            initialStoreUrl: 'store-initial',
+            updatedStoreUrlFromNew: 'new-store-updated',
+            updatedStoreUrlFromOld: 'old-store-updated',
+            finalStoreUrl: 'store-final',
+            initialWizardMessage: 'Congratulations! Your marketplace is ready.',
+            updatedWizardMessageFromOld: 'Welcome to the new Dokan dashboard!',
+            finalWizardMessage: 'Get started with your marketplace',
+        },
+    },
+
+    // Vendor Store Settings migration: new React page (dashboard/new/#settings/store)
+    // <-> legacy vendor dashboard (dashboard/settings/store). Both persist to the same
+    // `dokan_profile_settings` meta, so edits must round-trip either direction. Built-in
+    // plugin-ui variants (text/switch/textarea/rich_text) expose a stable `#<id>` anchor
+    // and get full UI vice-versa coverage here; custom/composite variants (image,
+    // multiselect, radio, number, map, schedule grid, bank, vacation) have no stable
+    // anchor and are covered exhaustively by the REST API spec instead.
+    vendorStoreSettingsMigration: {
+        urls: {
+            newStoreSettings: 'dashboard/new/#settings/store',
+            legacyStoreSettings: 'dashboard/settings/store',
+            schemaEndpoint: 'dokan/v1/vendor-settings/store',
+        },
+
+        selectors: {
+            newUI: {
+                panel: '#settings-tabpanel-store_settings',
+                tabButton: (tab: string) => `#settings-tab-store_settings-tab_${tab}`,
+                // plugin-ui v2 dropped the `#settings-section-content-*` id; the card carries a testid.
+                sectionContent: (section: string) => `[data-testid="settings-section-${section}"]`,
+                // Built-in variants put the schema field id on the field wrapper div.
+                fieldInput: (id: string) => `#${id} input`,
+                fieldSwitch: (id: string) => `#${id} [role="switch"]`,
+                fieldTextarea: (id: string) => `#${id} textarea`,
+                // plugin-ui's rich_text editor is a custom contentEditable div.
+                fieldRichText: (id: string) => `#${id} [contenteditable]`,
+                saveButtonName: /save changes/i,
+                cancelButtonName: /^cancel$/i,
+                savedToast: 'Store settings saved.',
+                scheduleField: '.dokan-vendor-store-schedule-field',
+                opensAtPlaceholder: 'Opens at',
+                addTimeSlot: 'Add time slot',
+                imageField: '.dokan-vendor-image-field',
+                mediaModal: '.media-modal',
+                mediaFileInput: '.media-modal input[type="file"]',
+                selectAndCrop: 'Select and Crop',
+                cropImage: 'Crop image',
+                removeImage: 'Remove image',
+                vacationStyle: (style: string) => `input[type="radio"][value="${style}"]`,
+                addVacation: 'Add New Vacation',
+                vacationDialogTitle: 'Add Vacation Schedule',
+                selectDateRange: 'Select date range',
+                applyRange: 'Apply',
+                vacationMessage: 'Vacation Message',
+                deleteConfirm: 'Yes, Delete',
+                mapSearch: 'Search your store address…',
+            },
+            legacyUI: {
+                saveButton: 'button.dokan-update-setting-top-button',
+                saveSuccessMessage: 'Your information has been saved successfully',
+                timeInput: (kind: 'opening' | 'closing', day: string) => `input[name="${kind}_time[${day}][]"]`,
+                imageInput: (name: string) => `input[name="${name}"]`,
+                mapAddress: 'input[name="find_address"]',
+                storeSettingsMenuLink: 'a.submenu-link[href$="/dashboard/settings/store/"]',
+                // TinyMCE iframe body for a legacy rich-text editor id.
+                tinymceBody: (editorId: string) => `iframe#${editorId}_ifr`,
+            },
+        },
+
+        // Tabs and the section cards each tab must render (asserted by the tab/section
+        // render test). Mirrors the schema for the fully-loaded (Pro-active) vendor.
+        layout: {
+            general: ['company_banner', 'store_information', 'vendor_biography_section'],
+            location: ['store_map_section', 'location_details'],
+            schedule: ['store_schedule', 'store_vacation'],
+            business: ['catalog_mode_section', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'],
+            policies: ['terms_conditions'],
+        },
+
+        // Sections contributed by Pro modules — absent on a Lite-only site, so the
+        // render test asserts them only when the run is Pro-gated.
+        proSections: ['store_vacation', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'],
+
+        // Standalone vice-versa fields (built-in variants). `kind` drives the new-page
+        // read/write; `legacyKind` the legacy one. `requires` names a parent switch that
+        // must be on for the field to be editable. Switches carry no `values` (toggled).
+        syncFields: [
+            // --- General ---
+            { label: 'Store Title', tab: 'general', section: 'company_banner', gate: '@lite', kind: 'text', id: 'store_name', legacy: '#dokan_store_name', legacyKind: 'text', values: { fromNew: 'Store Alpha', fromLegacy: 'Store Legacy', final: 'Store Final' } },
+            { label: 'Phone', tab: 'general', section: 'store_information', gate: '@lite', kind: 'text', id: 'phone', legacy: '#setting_phone', legacyKind: 'text', values: { fromNew: '01711000001', fromLegacy: '01711000002', final: '01711000003' } },
+            { label: 'Show email address', tab: 'general', section: 'store_information', gate: '@lite', kind: 'switch', id: 'show_email', legacy: 'input[type="checkbox"][name="setting_show_email"]', legacyKind: 'checkbox' },
+            { label: 'Store Biography', tab: 'general', section: 'vendor_biography_section', gate: '@pro', kind: 'richtext', id: 'vendor_biography', legacy: '', legacyKind: 'tinymce', legacyEditor: 'vendor_biography', values: { fromNew: 'Biography from the new page', fromLegacy: 'Biography from the legacy page', final: 'Biography final value' } },
+
+            // --- Location ---
+            { label: 'Multiple store locations', tab: 'location', section: 'location_details', gate: '@pro', kind: 'switch', id: 'dokan_store_multiple_location', legacy: '#multiple-store-location', legacyKind: 'checkbox' },
+
+            // --- Schedule ---
+            // Note: the store-schedule toggle + open/close notices are covered by the
+            // API spec, not here. Enabling store-time activates the legacy form's
+            // schedule-grid submit-guard (store-form.php), which blocks saving the whole
+            // legacy form until the grid is valid — an old-form quirk unrelated to the
+            // migration. Keeping store-time off in the UI suite keeps every legacy save
+            // reliable; the vacation flow (below) still exercises the Schedule tab.
+
+            // --- Business ---
+            { label: 'Remove Add to Cart', tab: 'business', section: 'catalog_mode_section', gate: '@lite', kind: 'switch', id: 'catalog_mode_hide_add_to_cart_button', legacy: '#catalog_mode_hide_add_to_cart_button', legacyKind: 'checkbox' },
+            { label: 'Request a Quote', tab: 'business', section: 'catalog_mode_section', gate: '@pro', kind: 'switch', id: 'catalog_mode_request_a_quote_enabled', legacy: '#catalog_mode_request_a_quote_support', legacyKind: 'checkbox', requires: 'catalog_mode_hide_add_to_cart_button' },
+            { label: 'Show support button', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn', legacy: '#support_checkbox', legacyKind: 'checkbox' },
+            { label: 'Support on product page', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'switch', id: 'show_support_btn_product', legacy: '#support_checkbox_product', legacyKind: 'checkbox' },
+            { label: 'Support button name', tab: 'business', section: 'support_button_visibility', gate: '@pro', kind: 'text', id: 'support_btn_name', legacy: '#dokan_support_btn_name', legacyKind: 'text', values: { fromNew: 'Ask Alpha', fromLegacy: 'Ask Legacy', final: 'Ask Final' } },
+        ],
+
+        // Cross-field flows tested bespoke (a parent + its required/composite partner).
+        combined: {
+            // Set-cart-amount min/max: two custom vendor_number inputs in one section.
+            minMax: {
+                tab: 'business',
+                section: 'set_cart_amount_min_max',
+                legacyMin: '#min_amount_to_order',
+                legacyMax: '#max_amount_to_order',
+                fromNew: { min: '10', max: '100' },
+                fromLegacy: { min: '20', max: '200' },
+                invalid: { min: '500', max: '50' },
+                invalidMessage: /can't be less than the minimum/i,
+            },
+        },
+
+        images: [
+            { id: 'banner', index: 0, file: 'utils/sampleData/banner.png', legacyInput: 'dokan_banner' },
+            { id: 'gravatar', index: 1, file: 'utils/sampleData/avatar.png', legacyInput: 'dokan_gravatar' },
+        ],
+
+        // Legacy-saved schedule the old page accepted (open == close); seeded with store hours off.
+        legacySchedule: { monday: { status: 'open', opening_time: ['9:00 am'], closing_time: ['9:00 am'] } },
+
+        // store_name is required — clearing it must block the save with this message.
+        requiredField: {
+            id: 'store_name',
+            tab: 'general',
+            section: 'company_banner',
+            message: /Store title is required/i,
+        },
+
+        // Documented schema defaults, asserted by the defaults check.
+        defaults: {
+            store_name: '',
+            phone: '',
+            show_email: 'no',
+            enable_tnc: 'off',
+            dokan_store_time_enabled: 'no',
+            catalog_mode_hide_add_to_cart_button: 'off',
+        },
+    },
+
     // vendor
     vendor: {
         username: VENDOR,
@@ -1318,6 +1605,14 @@ export const data = {
 
         vendor2: {
             username: VENDOR2,
+            password: USER_PASSWORD,
+        },
+
+        // The permanent NON-CONNECTED Stripe Express vendor: never seeded with an
+        // Express account, so "not connected" is a stable property of this vendor
+        // instead of a per-spec mutation of vendor2.
+        vendor3: {
+            username: VENDOR3,
             password: USER_PASSWORD,
         },
 
@@ -2062,16 +2357,16 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 40,
+            totalModules: 42,
             modulesVideoLink: 19,
             productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
-            storeManagement: 10,
-            payment: 6,
+            storeManagement: 11,
+            payment: 7,
             orderManagement: 2,
-            vendorManagement: 1,
+            vendorManagement: 2,
         },
 
         modules: [
@@ -2300,13 +2595,12 @@ export const data = {
                 'Reverse Withdrawal',
                 'Badge',
                 'Product Q&A',
-                'Return Request',
-                'Staff',
+                'Return Requests',
                 'Followers',
                 // 'Subscription',
                 'Booking',
                 'Announcements',
-                'Analytics',
+                'Store Stats',
                 'Tools',
                 'Auction',
                 'Support',
@@ -2396,8 +2690,8 @@ export const data = {
             settingTitle: 'Social Settings',
             platform: 'facebook',
             facebook: {
-                appId: FB_APP_ID,
-                appSecret: FB_APP_SECRET,
+                appId: FB_APP_ID || 'test-fb-app-id',
+                appSecret: FB_APP_SECRET || 'test-fb-app-secret',
             },
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2492,8 +2786,11 @@ export const data = {
             smsSentError: 'Unable to send sms. Contact admin',
             activeGateway: 'nexmo', // nexmo, twilio
             vonage: {
-                apiKey: VONAGE_API_KEY,
-                apiSecret: VONAGE_API_SECRET,
+                // Default to placeholders when the env vars are unset (e.g. CI has no Vonage secrets):
+                // this test only verifies the SMS-gateway settings form saves, not real Vonage delivery,
+                // so a non-empty string is enough. Without the fallback, fill(undefined) throws.
+                apiKey: VONAGE_API_KEY || 'test-vonage-api-key',
+                apiSecret: VONAGE_API_SECRET || 'test-vonage-api-secret',
             },
 
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2511,8 +2808,8 @@ export const data = {
         liveChat: {
             settingTitle: 'Live Chat Settings',
             chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
-            talkJsAppId: TALKJS_APP_ID,
-            talkJsAppSecret: TALKJS_APP_SECRET,
+            talkJsAppId: TALKJS_APP_ID || 'test-talkjs-app-id',
+            talkJsAppSecret: TALKJS_APP_SECRET || 'test-talkjs-app-secret',
             chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2596,8 +2893,8 @@ export const data = {
         // Printful Settings
         printful: {
             settingTitle: 'Printful Settings',
-            clientId: PRINTFUL_APP_ID,
-            secretKey: PRINTFUL_APP_SECRET,
+            clientId: PRINTFUL_APP_ID || 'test-printful-client-id',
+            secretKey: PRINTFUL_APP_SECRET || 'test-printful-secret-key',
             popupTitle: 'Size Guide',
             popupTextColor: '#000000',
             popupBackgroundColor: '#FFFFFF',
@@ -2693,6 +2990,7 @@ export const data = {
         dashboard: '[dokan-dashboard]',
         dokanSubscriptionPacks: '[dps_product_pack]',
         vendorRegistration: '[dokan-vendor-registration]',
+        vendorOnboardingRegistration: '[dokan-vendor-onboarding-registration]',
         bestSellingProduct: '[dokan-best-selling-product]',
         topRatedProduct: '[dokan-top-rated-product]',
         customerMigration: '[dokan-customer-migration]',
@@ -2709,8 +3007,10 @@ export const data = {
     },
 
     bookings: {
-        startDate: new Date(),
-        endDate: helpers.futureDate(new Date(), 1), // future date must be less than maximum duration
+        // Site time, not runner time: the site is seeded UTC+6, so a UTC runner past 18:00 picks a
+        // day the calendar already renders `not-bookable` and the day cell can never match.
+        startDate: helpers.siteToday(),
+        endDate: helpers.futureDate(helpers.siteToday(), 1), // future date must be less than maximum duration
     },
 
     uniqueId: {
@@ -2726,6 +3026,15 @@ export const data = {
                 product1: {
                     name: 'p1_v2 (simple)',
                     productName: () => 'p1_v2 (simple)',
+                },
+            },
+        },
+
+        vendor3: {
+            simpleProduct: {
+                product1: {
+                    name: 'p1_v3 (simple)',
+                    productName: () => 'p1_v3 (simple)',
                 },
             },
         },
@@ -2793,6 +3102,7 @@ export const data = {
             followFromSingleStore: 'singleStore',
             vendor1: `${VENDOR}store`,
             vendor2: `${VENDOR2}store`,
+            vendor3: `${VENDOR3}store`,
             vendor1FullName: `${VENDOR} v1`,
             shopUrl: `${VENDOR}store`,
         },
@@ -2841,11 +3151,19 @@ export const data = {
         },
 
         // debugInfo
+        // WP_DEBUG_LOG is set to a path inside the wp-data mapping so the log
+        // surfaces on the host at tests/pw/wp-data/debug.log (the wp-env mapping
+        // "wp-data": "./wp-data" mounts that directory into /var/www/html/wp-data).
         debugInfo: {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
-            WP_DEBUG_LOG: true,
-            WP_DEBUG_DISPLAY: true,
+            WP_DEBUG_LOG: '/var/www/html/wp-data/debug.log',
+            // Keep PHP notices/deprecations OUT of the response body. With DISPLAY on,
+            // a WP-core deprecation (e.g. WP 7.0 kses.php preg_replace(null)) prints before
+            // headers and corrupts wp_redirect()/wp_safe_redirect() Location headers, which
+            // breaks admin-login and order-status redirects in the browser tests. Errors are
+            // still captured via WP_DEBUG + WP_DEBUG_LOG above.
+            WP_DEBUG_DISPLAY: false,
         },
 
         // site info
@@ -2865,15 +3183,19 @@ export const data = {
 
         // plugins
         plugins: {
-            basicAuth: 'Basic-Auth',
+            basicAuth: 'master',
             woocommerce: 'woocommerce',
             dokan: 'dokan',
             dokanLite: 'dokan-lite',
             dokanPro: 'dokan-pro',
+            dokanInvoice: 'dokan-invoice',
             woocommerceBookings: 'woocommerce-bookings',
             woocommerceSubscriptions: 'woocommerce-subscriptions',
             woocommerceProductAddons: 'woocommerce-product-addons',
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
+            woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips',
+            rankMath: 'seo-by-rank-math',
+            emailLog: 'email-log',
         },
     },
 
@@ -2887,13 +3209,18 @@ export const data = {
             createDb: `wp db create`,
             cleanDb: `wp db clean --yes`,
             setConfig: (key: string, value: string) => `wp config set ${key} ${value} --add`,
-            setDebugConfig: (key: string, value: boolean) => `wp config set ${key} ${value} --add --raw`,
+            setDebugConfig: (key: string, value: boolean | string) =>
+                typeof value === 'string'
+                    ? `wp config set ${key} '${value}' --add`
+                    : `wp config set ${key} ${value} --add --raw`,
             installWp: (core: any) => `wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
             installTheme: (theme: string) => `wp theme install ${theme} --activate`,
             installPlugin: (plugin: string) => `wp plugin install ${plugin} --activate --force`,
             activatePlugin: (plugin: string) => `wp plugin activate ${plugin}`,
             activateTheme: (theme: string) => `wp theme activate ${theme}`,
+            updateOption: (name: string, value: string) => `wp option update ${name} ${value}`,
             rewritePermalink: `wp rewrite structure /%postname%/`,
+            flushRewrite: `wp rewrite flush --hard`,
         },
         makePath: (path: string) => `mkdir -p ${path}`,
         deleteFolder: (path: string) => `rm -rf ${path}`,
@@ -2901,6 +3228,7 @@ export const data = {
         cloneBasicAuth: (path: string) => `cd ${path} && git clone https://github.com/WP-API/Basic-Auth.git`,
         cloneDokanLite: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan.git`,
         cloneDokanPro: (path: string) => `cd ${path} && git clone -b test_utils https://github.com/getdokan/dokan-pro.git`,
+        cloneDokanInvoice: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan-invoice.git`,
         checkoutToDevelop: (path: string) => `cd ${path} && git checkout develop`,
         buildPlugin: (path: string) => `cd ${path} && composer i --no-dev && composer du -o && npm i && npm run build`,
     },

@@ -165,11 +165,32 @@ class Dashboard implements Hookable {
         $dashboard_url            = admin_url( 'admin.php?page=' . $dashboard_page_slug );
         $changelog_url            = admin_url( 'admin.php?page=' . $changelog_page_slug );
 
+        /**
+         * Filters the admin header support button configuration.
+         *
+         * @since 5.0.0
+         *
+         * @param array $support_button {
+         *     Support button configuration.
+         *
+         *     @type string $label Button label text.
+         *     @type string $url   URL to open when clicked.
+         * }
+         */
+        $get_support_btn = apply_filters(
+            'dokan_admin_header_support_button',
+            [
+                'label' => esc_html__( 'Get Support', 'dokan-lite' ),
+                'url'   => 'https://wordpress.org/support/plugin/dokan-lite/',
+            ]
+        );
+
         $header_info = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
             'dashboard_url'   => $dashboard_url,
             'has_new_version' => Helper::dokan_has_new_version(),
+            'support_button'  => $get_support_btn,
             'help_menu_items' => apply_filters(
                 'dokan_admin_setup_guides_help_menu_items',
                 [
@@ -182,13 +203,6 @@ class Dashboard implements Hookable {
                         'external' => false,
                     ],
                     [
-                        'id'       => 'get-support',
-                        'title'    => esc_html__( 'Get Support', 'dokan-lite' ),
-                        'url'      => 'https://dokan.co/contact/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
-                        'icon'     => 'support',
-                        'external' => true,
-                    ],
-                    [
                         'id'       => 'community',
                         'title'    => esc_html__( 'Community', 'dokan-lite' ),
                         'url'      => 'https://www.facebook.com/groups/dokanMultivendor',
@@ -198,7 +212,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'documentation',
                         'title'    => esc_html__( 'Documentation', 'dokan-lite' ),
-                        'url'      => 'https://wedevs.com/docs/dokan/getting-started/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'url'      => 'https://dokan.co/docs/wordpress/getting-started/?utm_campaign=dokan-lite&utm_medium=wp-admin&utm_source=plugin',
                         'icon'     => 'documentation',
                         'external' => true,
                     ],
@@ -219,14 +233,14 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'feature-request',
                         'title'    => __( 'Request a Feature', 'dokan-lite' ),
-                        'url'      => 'https://wedevs.com/account/dokan-feature-requests/',
+                        'url'      => 'https://pluginfeedback.dokan.co',
                         'icon'     => 'feature-request',
                         'external' => true,
                     ],
                     [
                         'id'       => 'import-dummy-data',
                         'title'    => __( 'Import dummy data', 'dokan-lite' ),
-                        'url'      => $legacy_dashboard_url . '#/dummy-data',
+                        'url'      => $dashboard_url . '#/dummy-data',
                         'icon'     => 'import-data',
                         'external' => false,
                     ],
@@ -538,9 +552,7 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function enqueue_scripts() {
-        $screen = get_current_screen();
-
-        if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {
+        if ( ! $this->is_dokan_admin_page( [ 'dokan', 'dokan-dashboard' ] ) ) {
             return;
         }
 
@@ -564,6 +576,24 @@ class Dashboard implements Hookable {
     }
 
     /**
+     * Check whether the current admin request targets one of the given Dokan pages.
+     *
+     * Matches the locale-stable `page` slug rather than the screen id, whose prefix
+     * is derived from the translatable menu title and breaks on non-Latin locales.
+     *
+     * @since 5.0.6
+     *
+     * @param array<string> $page_slugs Admin page slugs to match against.
+     *
+     * @return bool
+     */
+    protected function is_dokan_admin_page( array $page_slugs ): bool {
+        global $plugin_page;
+
+        return is_string( $plugin_page ) && in_array( $plugin_page, $page_slugs, true );
+    }
+
+    /**
      * Runs before admin notices action and hides them.
      *
      * @since 4.1.0
@@ -571,8 +601,7 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function inject_before_notices(): void {
-        $screen = get_current_screen();
-        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+        if ( ! $this->is_dokan_admin_page( [ 'dokan-dashboard' ] ) ) {
             return;
         }
 
@@ -593,8 +622,7 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function inject_after_notices(): void {
-        $screen = get_current_screen();
-        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+        if ( ! $this->is_dokan_admin_page( [ 'dokan-dashboard' ] ) ) {
             return;
         }
 

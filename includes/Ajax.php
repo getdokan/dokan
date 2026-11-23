@@ -4,6 +4,7 @@ namespace WeDevs\Dokan;
 
 use WC_Customer;
 use WC_Data_Store;
+use WeDevs\Dokan\Utilities\VendorUtil;
 
 /**
  * Ajax handler for Dokan
@@ -56,6 +57,66 @@ class Ajax {
         add_action( 'wp_ajax_nopriv_dokan_login_user', [ $this, 'login_user' ] );
 
         add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
+
+        // Admin Tools page (free): page installation + cache clearing.
+        add_action( 'wp_ajax_create_pages', [ $this, 'create_pages' ] );
+        add_action( 'wp_ajax_check_all_dokan_pages_exists', [ $this, 'check_all_dokan_pages_exists' ] );
+        add_action( 'wp_ajax_dokan_clear_caches', [ $this, 'clear_caches' ] );
+    }
+
+    /**
+     * Create the Dokan default pages (legacy Vue admin Tools page).
+     *
+     * @since 5.0.9
+     *
+     * @return void
+     */
+    public function create_pages() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You don\'t have enough permission', 'dokan-lite' ), 403 );
+        }
+
+        $tools = new \WeDevs\Dokan\Admin\Tools\ToolsActions();
+
+        wp_send_json_success( $tools->create_default_pages() );
+    }
+
+    /**
+     * Check whether all Dokan pages exist (legacy Vue admin Tools page).
+     *
+     * @since 5.0.9
+     *
+     * @return void
+     */
+    public function check_all_dokan_pages_exists() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You don\'t have enough permission', 'dokan-lite' ), 403 );
+        }
+
+        $tools = new \WeDevs\Dokan\Admin\Tools\ToolsActions();
+
+        wp_send_json_success( $tools->check_all_dokan_pages_exists() );
+    }
+
+    /**
+     * Clear all Dokan caches (legacy Vue admin Tools page).
+     *
+     * @since 5.0.9
+     *
+     * @return void
+     */
+    public function clear_caches() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Nonce verification failed', 'dokan-lite' ), 403 );
+        }
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You don\'t have enough permission', 'dokan-lite' ), 403 );
+        }
+
+        $tools = new \WeDevs\Dokan\Admin\Tools\ToolsActions();
+
+        wp_send_json_success( $tools->clear_dokan_caches() );
     }
 
     /**
@@ -112,36 +173,26 @@ class Ajax {
 
         global $user_ID;
 
-        $url_slug = isset( $_POST['url_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['url_slug'] ) ) : '';
-        $check    = true;
-        $user     = get_user_by( 'slug', $url_slug );
+        $url_slug        = isset( $_POST['url_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['url_slug'] ) ) : '';
+        $exclude_user_id = 0;
 
-        if ( false !== $user ) {
-            $check = false;
+        // A user becoming a vendor may keep their own nicename, as the Become a Vendor handler allows.
+        if ( is_user_logged_in() && ! dokan_is_user_seller( $user_ID ) ) {
+            $exclude_user_id = (int) $user_ID;
         }
 
-        // check if a customer wants to migrate, his username should be available
-        if ( is_user_logged_in() && dokan_is_user_customer( $user_ID ) ) {
-            $current_user = wp_get_current_user();
-
-            if ( $user && $current_user->user_nicename === $user->user_nicename ) {
-                $check = true;
-            }
+        // An admin editing a vendor may keep that vendor's nicename; is_admin() is always true under admin-ajax.
+        if ( current_user_can( 'manage_woocommerce' ) && isset( $_POST['vendor_id'] ) ) {
+            $exclude_user_id = intval( $_POST['vendor_id'] );
         }
 
-        if ( is_admin() && isset( $_POST['vendor_id'] ) ) {
-            $vendor = get_user_by( 'id', intval( $_POST['vendor_id'] ) );
-
-            if ( $vendor && $user && $vendor->user_nicename === $user->user_nicename ) {
-                $check = true;
-            }
-        }
+        $check = VendorUtil::is_shop_url_available( $url_slug, $exclude_user_id );
 
         if ( $check ) {
             wp_send_json_success(
                 [
                     'message' => __( 'Available', 'dokan-lite' ),
-                    'url'     => sanitize_user( $url_slug ),
+                    'url'     => VendorUtil::sanitize_shop_url( $url_slug ),
                 ]
             );
         }
@@ -231,6 +282,10 @@ class Ajax {
             wp_die( - 1 );
         }
 
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), intval( wp_unslash( $_POST['order_id'] ) ) ) ) {
+            wp_die( - 1 );
+        }
+
         $order_id     = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
         $product_ids  = isset( $_POST['product_ids'] ) ? intval( $_POST['product_ids'] ) : 0;
         $loop         = isset( $_POST['loop'] ) ? intval( $_POST['loop'] ) : 0;
@@ -251,7 +306,13 @@ class Ajax {
 
         foreach ( $product_ids as $product_id ) {
             $product = dokan()->product->get( $product_id );
-            $files   = $product->get_downloads();
+
+            // Only grant downloads for the vendor's own products, never another vendor's files.
+            if ( ! $product || ! dokan_is_product_author( $product_id ) ) {
+                continue;
+            }
+
+            $files = $product->get_downloads();
 
             if ( ! $order->get_billing_email() ) {
                 wp_die();
@@ -302,7 +363,20 @@ class Ajax {
         $order_id     = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : '';
         $order_status = isset( $_POST['order_status'] ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : '';
 
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
+            wp_send_json_error( __( 'You have no permission to manage this order', 'dokan-lite' ) );
+
+            return;
+        }
+
         $order = dokan()->order->get( $order_id );
+
+        if ( ! $order ) {
+            wp_send_json_error( __( 'Invalid order.', 'dokan-lite' ) );
+
+            return;
+        }
+
         $order->update_status( $order_status );
 
         // Get the new order status. This is needed since plugin/theme authors might
@@ -387,6 +461,15 @@ class Ajax {
         $order_id      = intval( $_POST['order_id'] );
         $permission_id = absint( $_POST['permission_id'] );
 
+        // Resolve the order from the permission itself, then verify the current
+        // vendor owns that order. Trusting the posted order_id alone would allow a
+        // vendor to pair their own order_id with another vendor's permission_id.
+        $download_permission = new \WC_Customer_Download( $permission_id );
+
+        if ( ! $download_permission->get_id() || ! dokan_is_seller_has_order( dokan_get_current_user_id(), $download_permission->get_order_id() ) ) {
+            wp_die( - 1 );
+        }
+
         $data_store = WC_Data_Store::load( 'customer-download' );
         $data_store->delete_by_id( $permission_id );
 
@@ -411,6 +494,10 @@ class Ajax {
         $post_id   = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : '';
         $note      = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
         $note_type = isset( $_POST['note_type'] ) ? sanitize_text_field( wp_unslash( $_POST['note_type'] ) ) : '';
+
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $post_id ) ) {
+            die( - 1 );
+        }
 
         $is_customer_note = ( $note_type === 'customer' ) ? 1 : 0;
 
@@ -454,6 +541,10 @@ class Ajax {
         $shipping_number   = isset( $_POST['shipping_number'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_number'] ) ) : '';
         $shipping_number   = trim( stripslashes( $shipping_number ) );
         $shipped_date      = isset( $_POST['shipped_date'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['shipped_date'] ) ) ) : '';
+
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $post_id ) ) {
+            die( - 1 );
+        }
 
         $ship_info = __( 'Shipping provider: ', 'dokan-lite' ) . $shipping_provider . '<br />' . __( 'Shipping number: ', 'dokan-lite' ) . $shipping_number . '<br />' . __( 'Shipped date: ', 'dokan-lite' ) . $shipped_date;
 
@@ -522,6 +613,18 @@ class Ajax {
         $note_id = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : '';
 
         if ( $note_id > 0 ) {
+            $comment = get_comment( $note_id );
+
+            // Only allow deleting genuine order notes whose parent order belongs to
+            // the current vendor. Without this, a raw note_id deletes any comment.
+            if ( ! $comment || 'order_note' !== $comment->comment_type ) {
+                die( - 1 );
+            }
+
+            if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $comment->comment_post_ID ) ) {
+                die( - 1 );
+            }
+
             wp_delete_comment( $note_id );
         }
 

@@ -19,24 +19,19 @@ export const customMatchers = {
     },
 
     toBeSecureHeader(headers: any) {
-        // todo: update this method
-        let pass;
-        pass = headers['content-type'] === 'application/json; charset=UTF-8';
-        pass = headers['x-content-type-options'] === 'nosniff';
-        pass = headers['access-control-expose-headers'] === 'X-WP-Total, X-WP-TotalPages, Link';
-        pass = headers['access-control-allow-headers'] === 'Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type';
-        pass = headers['allow'] === 'GET, POST,';
-        if (pass) {
-            return {
-                message: () => 'passed',
-                pass: true,
-            };
-        } else {
-            return {
-                message: () => 'failed',
-                pass: false,
-            };
-        }
+        const checks: { name: string; ok: boolean }[] = [
+            { name: 'content-type', ok: headers['content-type'] === 'application/json; charset=UTF-8' },
+            { name: 'x-content-type-options', ok: headers['x-content-type-options'] === 'nosniff' },
+            { name: 'access-control-expose-headers', ok: headers['access-control-expose-headers'] === 'X-WP-Total, X-WP-TotalPages, Link' },
+            { name: 'access-control-allow-headers', ok: headers['access-control-allow-headers'] === 'Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type' },
+            { name: 'allow', ok: headers['allow'] === 'GET, POST,' },
+        ];
+        const failed = checks.filter(c => !c.ok).map(c => c.name);
+        const pass = failed.length === 0;
+        return {
+            message: () => (pass ? 'passed' : `failed: ${failed.join(', ')}`),
+            pass,
+        };
     },
 
     toBeWithinRange(received: number, floor: number, ceiling: number) {

@@ -4,9 +4,11 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
+import { helpers, parseBoolean } from '@utils/helpers';
+import { ensureStripeExpressConfigured } from './stripe-express/helpers';
 
 const { DOKAN_PRO } = process.env;
+const isPro = parseBoolean(DOKAN_PRO);
 
 setup.describe('setup woocommerce settings', () => {
     setup.use({ extraHTTPHeaders: payloads.adminAuth });
@@ -52,7 +54,7 @@ setup.describe('setup woocommerce settings', () => {
         await apiUtils.updateShippingZoneMethod(zoneId, methodId, payloads.addShippingMethodFlatRateCost);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
-        if (DOKAN_PRO) {
+        if (isPro) {
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
@@ -74,6 +76,15 @@ setup.describe('setup woocommerce settings', () => {
         // await apiUtils.updatePaymentGateway('dokan_razorpay', payloads.razorpay);
         // await apiUtils.updatePaymentGateway('dokan_stripe_express', payloads.stripeExpress);
         // }
+    });
+
+    // Per-shard Stripe Express config: activate the stripe_express module (deactivate the
+    // conflicting legacy stripe/Connect module), write the gateway test keys, enable the
+    // withdraw method. No-op without keys (the @pro Stripe Express specs self-skip), and the
+    // mu-plugin returns gracefully when Dokan Pro is absent (lite runs). Makes every shard
+    // self-sufficient so the @pro Express specs don't each have to re-configure the gateway.
+    setup('configure stripe express gateway', { tag: ['@pro'] }, async () => {
+        await ensureStripeExpressConfigured();
     });
 
     setup('add categories', { tag: ['@lite'] }, async () => {
@@ -98,6 +109,12 @@ setup.describe('setup woocommerce settings', () => {
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
         helpers.createEnvVar('ATTRIBUTE_ID', attributeId);
+        // Dokan 5.0.5 gates attribute-term creation behind the dokan_selling `add_new_attribute`
+        // option (ProductAttributeController::create_attribute_term_permissions_check → 403 otherwise).
+        // The canonical selling settings (which enable it) are applied later in setup; apply the full
+        // set here via setOptionValue so the option row exists on a fresh DB. updateOptionValue would
+        // read-then-merge and crash (`undefined.option_value`) when the row is absent.
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
@@ -116,12 +133,36 @@ setup.describe('setup woocommerce settings', () => {
         await dbUtils.setOptionValue('woocommerce_task_list_reminder_bar_hidden', 'yes', false);
     });
 
+    setup('dismiss dokan admin setup guide banner', { tag: ['@lite'] }, async () => {
+        // The "Complete your marketplace setup" banner renders on every admin dashboard
+        // page until setup is marked complete. Mark it complete so the banner is gone
+        // and does not affect any test.
+        await dbUtils.setOptionValue('dokan_admin_setup_guide_steps_completed', '1', false);
+    });
+
     setup('disable woocommerce variable product tour', { tag: ['@lite'] }, async () => {
         await dbUtils.setUserMeta('1', 'woocommerce_admin_variable_product_tour_shown', 'yes', false);
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
         await dbUtils.updateOptionValue('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
+    });
+
+    setup('dismiss vendor announcement modal', { tag: ['@pro'] }, async () => {
+        // Dokan Pro 5.0.0+ pops a "Latest unread announcement" modal on every
+        // vendor dashboard page. The modal opens when `latestUnread.id !==
+        // lastDismissedId` — strict inequality, so a sentinel meta won't work.
+        // Mark every announcement row as 'read' for our test vendors so
+        // `latestUnread` query returns null and the modal never renders.
+        // Table: wp_dokan_announcement (id, user_id, status='unread'|'read'|'trash')
+        const dbPrefix = process.env.DB_PREFIX || 'wp';
+        const ids = [process.env.VENDOR_ID, process.env.VENDOR2_ID, process.env.VENDOR3_ID].filter(Boolean) as string[];
+        for (const userId of ids) {
+            await dbUtils.dbQuery(
+                `UPDATE ${dbPrefix}_dokan_announcement SET status = 'read' WHERE user_id = ? AND status = 'unread'`,
+                [userId]
+            );
+        }
     });
 
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {
@@ -177,6 +218,14 @@ setup.describe('setup user settings', () => {
         helpers.createEnvVar('PRODUCT_ID_V2', productId);
     });
 
+    setup('add vendor3 product', { tag: ['@lite'] }, async () => {
+        // p1_v3 belongs to the permanent NON-CONNECTED vendor — the fixture the Stripe
+        // Express non-connected-seller specs buy from.
+        await apiUtils.deleteAllProducts(data.predefined.vendor3.simpleProduct.product1.name, payloads.vendor3Auth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor3.simpleProduct.product1.name }, payloads.vendor3Auth);
+        helpers.createEnvVar('PRODUCT_ID_V3', productId);
+    });
+
     setup('add vendor1 coupon', { tag: ['@pro'] }, async () => {
         // create store coupon
         const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
@@ -223,6 +272,14 @@ setup.describe('setup dokan settings', () => {
     setup('admin set dokan privacy policy settings', { tag: ['@lite'] }, async () => {
         const [, pageId] = await apiUtils.createPage(payloads.privacyPolicyPage, payloads.adminAuth);
         await dbUtils.setOptionValue(dbData.dokan.optionName.privacyPolicy, { ...dbData.dokan.privacyPolicySettings, privacy_page: pageId });
+    });
+
+    // Pro gates login behind email verification; the email-verification spec turns it on and only
+    // restores it in afterAll, so an interrupted run leaves every login blocked by the
+    // "Didn't get the email? Send again" notice. Force it off and clear the pending flag here.
+    setup('admin disable dokan email verification', { tag: ['@pro'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
+        await dbUtils.clearPendingEmailVerification();
     });
 
     setup('admin set dokan color settings', { tag: ['@pro'] }, async () => {

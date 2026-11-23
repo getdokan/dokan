@@ -2,6 +2,7 @@
 
 use WeDevs\Dokan\Utilities\ReportUtil;
 use WeDevs\Dokan\Dashboard\Templates\Dashboard;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 
 /**
  * Sort navigation menu items by position
@@ -29,6 +30,12 @@ function dokan_nav_sort_by_pos( $a, $b ) {
  * @return array
  */
 function dokan_get_dashboard_nav(): array {
+    // The "Vendor Product Editor" setting drives the whole product UI, so the legacy editor also keeps the legacy listing page.
+    // TODO: Drop this toggle once the legacy product pages are removed — then always register the new (React) product page.
+    $use_new_product_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred();
+    // Same contract for Settings → Store: the "Vendor Store Settings" toggle picks the legacy form or the React page.
+    $use_new_settings_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_store_settings_legacy_preferred();
+
     $menus = [
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
@@ -41,18 +48,19 @@ function dokan_get_dashboard_nav(): array {
         'products'  => [
             'title'      => __( 'Products', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-briefcase"></i>',
-            'url'        => dokan_get_navigation_url( 'products' ),
+            'url'        => dokan_get_navigation_url( 'products', $use_new_product_ui ),
             'pos'        => 30,
             'icon_name'  => 'Box',
             'permission' => 'dokan_view_product_menu',
         ],
         'orders'    => [
-            'title'      => __( 'Orders', 'dokan-lite' ),
-            'icon'       => '<i class="fas fa-shopping-cart"></i>',
-            'url'        => dokan_get_navigation_url( 'orders' ),
-            'pos'        => 50,
-            'icon_name'  => 'ShoppingCart',
-            'permission' => 'dokan_view_order_menu',
+            'title'       => __( 'Orders', 'dokan-lite' ),
+            'icon'        => '<i class="fas fa-shopping-cart"></i>',
+            'url'         => dokan_get_navigation_url( 'orders' ),
+            'pos'         => 50,
+            'icon_name'   => 'ShoppingCart',
+            'permission'  => 'dokan_view_order_menu',
+            'react_route' => 'orders',
         ],
         'withdraw'  => [
             'title'       => __( 'Withdraw', 'dokan-lite' ),
@@ -67,7 +75,7 @@ function dokan_get_dashboard_nav(): array {
             'title'     => __( 'Settings', 'dokan-lite' ),
             'icon'      => '<i class="fas fa-cog"></i>',
             'icon_name' => 'Settings',
-            'url'       => dokan_get_navigation_url( 'settings/store' ),
+            'url'       => dokan_get_navigation_url( 'settings/store', $use_new_settings_ui ),
             'pos'       => 200,
         ],
     ];
@@ -76,7 +84,7 @@ function dokan_get_dashboard_nav(): array {
         'store'   => [
             'title'      => __( 'Store', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-university"></i>',
-            'url'        => dokan_get_navigation_url( 'settings/store' ),
+            'url'        => dokan_get_navigation_url( 'settings/store', $use_new_settings_ui ),
             'pos'        => 30,
             'permission' => 'dokan_view_store_settings_menu',
         ],
@@ -155,6 +163,37 @@ function dokan_get_dashboard_nav(): array {
     $nav_menus = array_filter( $nav_menus, 'dokan_check_menu_permission' );
 
     return $nav_menus;
+}
+
+/**
+ * SPA routes under a dashboard menu the admin switched off (Menu Manager, Pro).
+ *
+ * Legacy pages are refused server-side on `dokan_dashboard_shortcode_query_vars`; the hash
+ * router cannot be, so the vendor dashboard gets this list and renders "no permission" itself.
+ *
+ * @since 5.3.3
+ *
+ * @return string[] Routes without surrounding slashes, e.g. `settings/social`.
+ */
+function dokan_get_restricted_dashboard_routes(): array {
+    $routes = [];
+
+    foreach ( dokan_get_dashboard_nav() as $menu ) {
+        foreach ( array_merge( [ $menu ], array_values( $menu['submenu'] ?? [] ) ) as $item ) {
+            // Items the Menu Manager never touched carry no flag.
+            if ( ! array_key_exists( 'is_switched_on', $item ) || $item['is_switched_on'] ) {
+                continue;
+            }
+
+            $hash = wp_parse_url( $item['url'] ?? '', PHP_URL_FRAGMENT );
+
+            if ( $hash ) {
+                $routes[] = trim( strtok( $hash, '?' ), '/' );
+            }
+        }
+    }
+
+    return array_values( array_unique( array_filter( $routes ) ) );
 }
 
 /**

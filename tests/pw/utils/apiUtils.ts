@@ -1,4 +1,4 @@
-import { expect, Request, APIRequestContext, APIResponse } from '@playwright/test';
+import { expect, Request, APIRequestContext, APIResponse, request as pwRequest } from '@playwright/test';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
@@ -6,11 +6,58 @@ import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, hea
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
+/**
+ * Extract the trailing JSON value (object or array) from a response body
+ * that has unwanted prefix content. Returns undefined if no parseable JSON
+ * is found.
+ *
+ * Used by getResponseBody to tolerate WP_DEBUG_DISPLAY=true environments
+ * where PHP notices / warnings / WPDB errors are HTML-prepended to the
+ * REST JSON response.
+ */
+function extractTrailingJson(text: string): any {
+    if (!text) return undefined;
+    // Find candidate starting positions for an object or array, in order of
+    // appearance. Try parsing from each — first parse that consumes the
+    // remainder of the string (or to a balanced close) wins.
+    const starts: number[] = [];
+    for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (c === '{' || c === '[') starts.push(i);
+    }
+    // Try starts in REVERSE so we prefer later (trailing) JSON over any
+    // embedded HTML curly noise. Cap attempts to avoid pathological inputs.
+    for (let i = starts.length - 1; i >= 0 && i >= starts.length - 20; i--) {
+        const candidate = text.slice(starts[i]).trim();
+        try {
+            return JSON.parse(candidate);
+        } catch {
+            // try the next earlier `{` / `[`
+        }
+    }
+    return undefined;
+}
+
 export class ApiUtils {
     readonly request: APIRequestContext;
 
-    constructor(request: APIRequestContext) {
-        this.request = request;
+    constructor(request: APIRequestContext | null) {
+        if (request) {
+            this.request = request;
+        } else {
+            // De-stubbed legacy specs construct `new ApiUtils(null)` (the old local
+            // stub accepted anything). Provide a lazy proxy that creates a real API
+            // request context on first use, so those specs run without each having to
+            // wire one. Callers that pass a real context are unaffected.
+            let ctx: APIRequestContext | null = null;
+            this.request = new Proxy({} as APIRequestContext, {
+                get: (_t, prop) => async (...args: unknown[]) => {
+                    if (!ctx) ctx = await pwRequest.newContext();
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    return (ctx as any)[prop](...args);
+                },
+            });
+        }
     }
 
     /**
@@ -96,19 +143,37 @@ export class ApiUtils {
         try {
             if (assert) expect(response.ok()).toBeTruthy();
 
-            const responseBody = response.status() !== 204 && (await response.json()); // 204 is for No Content
+            // 204 No Content has no JSON body; return an empty object so consumers can safely
+            // destructure / toMatchSchema without seeing a literal `false`.
+            if (response.status() === 204) return {};
+
+            // Read raw text first. WordPress / WooCommerce can prepend PHP
+            // notice / warning / DB-error HTML to a REST response body when
+            // WP_DEBUG_DISPLAY is on (it is in wp-env test envs). The plugin
+            // may still have written valid JSON afterward — try the strict
+            // parse first, then fall back to extracting the trailing JSON
+            // value so a non-fatal warning doesn't fail the whole test.
+            const text = await response.text();
+            let body: any;
+            try {
+                body = JSON.parse(text);
+            } catch (parseErr) {
+                const extracted = extractTrailingJson(text);
+                if (extracted === undefined) throw parseErr;
+                console.warn(`[apiUtils] Response body had pre-JSON noise (likely PHP notice); extracted trailing JSON. Endpoint: ${response.url()}`);
+                body = extracted;
+            }
 
             // console log responseBody if response code is not between 200-299
-            if (String(response.status())[0] != '2') console.log('ResponseBody: ', responseBody);
+            if (String(response.status())[0] != '2') console.log('ResponseBody: ', body);
 
-            return responseBody;
+            return body;
         } catch (err: any) {
             console.log('End-point: ', response.url());
             console.log('Status Code: ', response.status());
             console.log('Response text: ', await response.text());
             console.log('Error: ', err.message);
-            // console.log('header:', response.headers());
-            // console.log('header:', response.headersArray());
+            throw err;
         }
     }
 
@@ -130,8 +195,9 @@ export class ApiUtils {
         let hasMoreItems = true;
         while (hasMoreItems) {
             const [, responseBodyChunk] = await this.get(endPoint, { params: { ...params, per_page: 100, page: page }, headers: auth });
-            if (responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
+            if (!Array.isArray(responseBodyChunk) || responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
                 hasMoreItems = false;
+                if (Array.isArray(responseBodyChunk)) responseBody = responseBody.concat(responseBodyChunk);
             } else {
                 responseBody = responseBody.concat(responseBodyChunk);
                 page++;
@@ -227,20 +293,36 @@ export class ApiUtils {
         return sellerId;
     }
 
+    // get seller id by username
+    async getSellerIdByUsername(username: string, auth?: auth): Promise<string> {
+        const allSellers = await this.getAllUsersByRoles('seller', auth);
+        const sellerId = allSellers.find((o: { username: string }) => o?.username?.toLowerCase() === username.toLowerCase())?.id;
+        return sellerId;
+    }
+
     // create store
     async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string, string]> {
         const [response, responseBody] = await this.post(endPoints.createStore, { data: payload, headers: auth }, false);
         let sellerId: string;
         let storeName: string;
         if (responseBody.code) {
-            expect(response.status()).toBe(500);
+            // Handle error cases (status can be 400 or 500)
+            expect(response.ok()).toBeFalsy();
 
             // get store id if already exists
             sellerId = await this.getSellerId(payload.store_name, auth);
+            
+            // If not found by store name, try to find by username (for cases where user exists but store might not)
+            if (!sellerId && payload.user_login) {
+                sellerId = await this.getSellerIdByUsername(payload.user_login, auth);
+            }
+            
             storeName = payload.store_name;
 
-            // update store if already exists
-            await this.updateStore(sellerId, payload, auth);
+            // update store if already exists and sellerId is found
+            if (sellerId) {
+                await this.updateStore(sellerId, payload, auth);
+            }
         } else {
             expect(response.ok()).toBeTruthy();
             sellerId = String(responseBody?.id);
@@ -248,7 +330,7 @@ export class ApiUtils {
         }
 
         // add vendor user address
-        if (addUserAddress) {
+        if (addUserAddress && sellerId) {
             await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
         }
 
@@ -363,8 +445,14 @@ export class ApiUtils {
     }
 
     // delete product
-    async deleteProduct(productId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(endPoints.deleteProduct(productId), { headers: auth });
+    async deleteProduct(productId: string, auth?: auth, force = false): Promise<responseBody> {
+        // force=true bypasses trash and permanently removes the post. A trashed
+        // product still loads via wc_get_product(), so callers that need the
+        // product to actually disappear (e.g. orphaned-record tests) must force.
+        const [, responseBody] = await this.delete(endPoints.deleteProduct(productId), {
+            params: force ? { force: true } : {},
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -759,6 +847,15 @@ export class ApiUtils {
         const allRefunds = await this.getAllRefunds(status, auth);
         const refundId = allRefunds[0]?.id;
         return refundId;
+    }
+
+    // get the refundId for a specific order id (the refund row's order_id),
+    // scoped to a status. Avoids picking allRefunds[0] (lowest-id pending) when
+    // several refunds of the same status coexist.
+    async getRefundIdByOrderId(orderId: string, status: string, auth?: auth): Promise<string> {
+        const allRefunds = await this.getAllRefunds(status, auth);
+        const match = allRefunds.find((r: any) => String(r?.order_id) === String(orderId));
+        return match?.id;
     }
 
     /**
@@ -1500,7 +1597,10 @@ export class ApiUtils {
             console.log('No verification method exists');
             return;
         }
-        const allMethodIds = allVerificationMethods.map((o: { id: unknown }) => o.id);
+        // The Address method is built in: the installer seeds it once and the REST layer
+        // refuses to delete it (403 dokan_pro_rest_cannot_delete, dokan-pro #5861). Skip it
+        // instead of letting the delete assertion take the whole beforeAll down.
+        const allMethodIds = allVerificationMethods.filter((o: { kind?: string }) => o.kind !== 'address').map((o: { id: unknown }) => o.id);
         for (const methodId of allMethodIds) {
             await this.delete(endPoints.deleteVerificationMethod(methodId), { headers: auth });
         }

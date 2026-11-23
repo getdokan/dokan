@@ -9,19 +9,30 @@ import {
     SimpleInput,
 } from '@getdokan/dokan-ui';
 import { DokanTooltip as Tooltip } from '@dokan/components';
-import * as LucideIcons from 'lucide-react';
 import { dateI18n, getSettings } from '@wordpress/date';
 // Import Dokan components
 import {
-    AdminDataViews as DataViews,
+    DataViews,
     DateTimeHtml,
     VendorAsyncSelect,
     DateRangePicker,
     AsyncSelect,
     DokanModal,
+    getActionLabel,
 } from '@dokan/components';
 
-import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
+import {
+    Trash,
+    ArrowDown,
+    Home,
+    Calendar,
+    CreditCard,
+    Eye,
+    Check,
+    XCircle,
+    MessageSquare,
+    Download,
+} from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -269,38 +280,11 @@ const WithdrawPage = () => {
         );
     };
 
-    const getActionLabel = ( iconName, label ) => {
-        if ( ! ( iconName && label ) ) {
-            return <></>;
-        }
-
-        const Icon = LucideIcons[ iconName ];
-        return (
-            <div className="dokan-layout">
-                <span className="inline-flex items-center gap-2.5">
-                    <Icon size={ 16 } className="!fill-none" />
-                    { label }
-                </span>
-            </div>
-        );
-    };
-
-    // Define actions for table rows
     const actions = [
         {
             id: 'view',
-            label: () => getActionLabel( 'Eye', __( 'View', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'View', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Eye size={ 16 } className="fill-none!" />, __( 'View', 'dokan-lite' ) ),
+            icon: <Eye size={ 16 } className="fill-none!" />,
             isPrimary: false,
             callback: ( items ) => {
                 openModal( 'view', items );
@@ -308,84 +292,75 @@ const WithdrawPage = () => {
         },
         {
             id: 'approved',
-            label: () =>
-                getActionLabel( 'Check', __( 'Approve', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Approve', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Check size={ 16 } className="fill-none!" />, __( 'Approve', 'dokan-lite' ) ),
+            icon: <Check size={ 16 } className="fill-none!" />,
             isPrimary: false,
             supportsBulk: true,
+            isDestructive: true,
+            confirmTone: 'positive',
+            confirmTitle: __( 'Approve Withdrawal', 'dokan-lite' ),
+            confirmMessage: __(
+                'Are you sure you want to approve the selected withdrawal(s)?',
+                'dokan-lite'
+            ),
+            confirmButtonLabel: __( 'Approve', 'dokan-lite' ),
             isEligible: ( item ) => item?.status === 'pending',
-            callback: ( items ) => {
+            callback: async ( items: any[] ) => {
                 const failedItems = items.filter( ( item ) => {
-                    const requestedAmount = parseFloat( item?.amount ) || 0;
-                    const currentBalance = parseFloat( item?.user?.balance ) || 0;
-                    
-                    return currentBalance < requestedAmount;
+                    // Compare in integer cents so float drift can't reject an exact-balance request — mirrors the backend approval guard.
+                    const requestedCents = Math.round(
+                        ( parseFloat( item?.amount ) || 0 ) * 100
+                    );
+                    const balanceCents = Math.round(
+                        ( parseFloat( item?.user?.balance ) || 0 ) * 100
+                    );
+
+                    return balanceCents < requestedCents;
                 } );
 
                 if ( failedItems.length > 0 ) {
-                    // Extract the store names and save them to state
-                    const storeNames = failedItems.map( 
-                        ( item ) => item?.user?.store_name || __( 'Unknown Vendor', 'dokan-lite' ) 
+                    const storeNames = failedItems.map(
+                        ( item ) =>
+                            item?.user?.store_name ||
+                            __( 'Unknown Vendor', 'dokan-lite' )
                     );
-                    
+
                     setInsufficientVendors( storeNames );
                     setShowInsufficientBalanceModal( true );
                     return;
                 }
 
-                openModal( 'approve', items );
+                await handleBulkAction(
+                    'approved',
+                    items.map( ( item ) => item.id )
+                );
             },
         },
         {
             id: 'cancelled',
-            label: () =>
-                getActionLabel( 'XCircle', __( 'Cancel', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Cancel', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <XCircle size={ 16 } className="fill-none!" />, __( 'Cancel', 'dokan-lite' ) ),
+            icon: <XCircle size={ 16 } className="fill-none!" />,
             isPrimary: false,
             supportsBulk: true,
+            isDestructive: true,
+            confirmTitle: __( 'Cancel Withdrawal', 'dokan-lite' ),
+            confirmMessage: __(
+                'Are you sure you want to cancel the selected withdrawal(s)?',
+                'dokan-lite'
+            ),
+            confirmButtonLabel: __( 'Cancel Withdrawal', 'dokan-lite' ),
             isEligible: ( item ) => item?.status === 'pending',
-            callback: ( items ) => {
-                openModal( 'cancel', items );
+            callback: async ( items: any[] ) => {
+                await handleBulkAction(
+                    'cancelled',
+                    items.map( ( item ) => item.id )
+                );
             },
         },
         {
             id: 'add-note',
-            label: () =>
-                getActionLabel(
-                    'MessageSquare',
-                    __( 'Add Note', 'dokan-lite' )
-                ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Add Note', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <MessageSquare size={ 16 } className="fill-none!" />, __( 'Add Note', 'dokan-lite' ) ),
+            icon: <MessageSquare size={ 16 } className="fill-none!" />,
             isPrimary: false,
             isEligible: ( item ) => item?.status !== 'approved',
             callback: ( items ) => {
@@ -394,46 +369,28 @@ const WithdrawPage = () => {
         },
         {
             id: 'delete',
-            label: () =>
-                getActionLabel( 'Trash', __( 'Delete', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Delete', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Trash size={ 16 } className="fill-none!" />, __( 'Delete', 'dokan-lite' ) ),
+            icon: <Trash size={ 16 } className="fill-none!" />,
             supportsBulk: true,
+            isDestructive: true,
+            confirmTitle: __( 'Delete Withdrawal', 'dokan-lite' ),
+            confirmMessage: __(
+                'Are you sure you want to delete the selected withdrawal(s)? This action cannot be undone.',
+                'dokan-lite'
+            ),
+            confirmButtonLabel: __( 'Delete', 'dokan-lite' ),
             isEligible: ( item ) => item?.status !== 'approved',
-            callback: ( items ) => {
-                openModal( 'delete', items );
+            callback: async ( items: any[] ) => {
+                await handleBulkAction(
+                    'delete',
+                    items.map( ( item ) => item.id )
+                );
             },
         },
         {
             id: 'paypal',
-            label: () =>
-                getActionLabel(
-                    'Download',
-                    __( 'Download PayPal mass payment file', 'dokan-lite' )
-                ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __(
-                            'Download PayPal mass payment file',
-                            'dokan-lite'
-                        ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Download size={ 16 } className="fill-none!" />, __( 'Download PayPal mass payment file', 'dokan-lite' ) ),
+            icon: <Download size={ 16 } className="fill-none!" />,
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => 'paypal' === item?.method,
@@ -555,18 +512,10 @@ const WithdrawPage = () => {
         } ) );
     };
 
-    // Create tabs with status counts
-    const tabs = WITHDRAW_STATUSES.map( ( status ) => ( {
-        name: status.value,
-        icon: (
-            <div className="flex items-center gap-1.5 px-2">
-                { status.label }
-                <span className="text-xs font-light text-[#A5A5AA]">
-                    ({ statusCounts[ status.value ] })
-                </span>
-            </div>
-        ),
-        title: status.label,
+    const tabItems = WITHDRAW_STATUSES.map( ( status ) => ( {
+        value: status.value,
+        label: status.label,
+        count: statusCounts[ status.value as keyof typeof statusCounts ],
     } ) );
 
     const tabsAdditionalContents = [
@@ -1039,180 +988,40 @@ const WithdrawPage = () => {
             </h2>
 
             { /* Data Table */ }
-            <DataViews
-                data={ data }
-                namespace="withdraw-admin-data-view"
-                defaultLayouts={ defaultLayouts }
-                fields={ fields }
-                getItemId={ ( item ) => item.id }
-                onChangeView={ setView }
-                paginationInfo={ {
-                    totalItems,
-                    totalPages: Math.ceil( totalItems / view.perPage ),
-                } }
-                view={ view }
-                selection={ selection }
-                onChangeSelection={ setSelection }
-                actions={ actions }
-                isLoading={ isLoading }
-                tabs={ {
-                    tabs,
-                    onSelect: handleTabSelect,
-                    initialTabName: activeStatus,
-                    additionalComponents: tabsAdditionalContents,
-                } }
-                filter={ {
-                    fields: filterFields,
-                    onFilterRemove: ( filterId ) =>
-                        clearSingleFilter( filterId ),
-                    onReset: () => clearFilter(),
-                } }
-            />
-
-            { /* DokanModal for approve, cancel, delete actions */ }
-            { modalState.isOpen && modalState.type === 'approve' && (
-                <DokanModal
-                    isOpen={ modalState.isOpen }
-                    namespace={ `approve-withdrawal-${ modalState.items.length }` }
-                    onClose={ closeModal }
-                    onConfirm={ async () => {
-                        await handleBulkAction(
-                            'approved',
-                            modalState.items.map( ( item ) => item.id )
-                        );
-                        closeModal();
+            <div className="dokan-admin-dashboard-datatable">
+                <DataViews
+                    data={ data }
+                    namespace="withdraw-admin-data-view"
+                    defaultLayouts={ defaultLayouts }
+                    fields={ fields }
+                    getItemId={ ( item ) => item.id }
+                    onChangeView={ setView }
+                    paginationInfo={ {
+                        totalItems,
+                        totalPages: Math.ceil( totalItems / view.perPage ),
                     } }
-                    dialogTitle={ __( 'Approve Withdrawal', 'dokan-lite' ) }
-                    confirmButtonText={ __( 'Approve', 'dokan-lite' ) }
-                    confirmationTitle={ __( 'Confirm Approval', 'dokan-lite' ) }
-                    confirmationDescription={
-                        modalState.items.length === 1
-                            ? __(
-                                  'Are you sure you want to approve this withdrawal?',
-                                  'dokan-lite'
-                              )
-                            : sprintf(
-                                  __(
-                                      'Are you sure you want to approve these %d withdrawals?',
-                                      'dokan-lite'
-                                  ),
-                                  modalState.items.length
-                              )
-                    }
-                    confirmButtonVariant="primary"
-                    dialogIcon={
-                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-green-50 border border-green-50 rounded-full">
-                            <svg
-                                className="w-6 h-6 text-green-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M5 13l4 4L19 7"
-                                />
-                            </svg>
-                        </div>
-                    }
-                />
-            ) }
-
-            { modalState.isOpen && modalState.type === 'cancel' && (
-                <DokanModal
-                    isOpen={ modalState.isOpen }
-                    namespace={ `cancel-withdrawal-${ modalState.items.length }` }
-                    onClose={ closeModal }
-                    onConfirm={ async () => {
-                        await handleBulkAction(
-                            'cancelled',
-                            modalState.items.map( ( item ) => item.id )
-                        );
-                        closeModal();
+                    view={ view }
+                    selection={ selection }
+                    onChangeSelection={ setSelection }
+                    actions={ actions }
+                    isLoading={ isLoading }
+                    tabs={ {
+                        items: tabItems,
+                        onSelect: ( name ) => {
+                            setSelection( [] );
+                            handleTabSelect( name );
+                        },
+                        defaultValue: activeStatus,
+                        headerContent: tabsAdditionalContents,
                     } }
-                    dialogTitle={ __( 'Cancel Withdrawal', 'dokan-lite' ) }
-                    confirmButtonText={ __(
-                        'Cancel Withdrawal',
-                        'dokan-lite'
-                    ) }
-                    confirmationTitle={ __(
-                        'Confirm Cancellation',
-                        'dokan-lite'
-                    ) }
-                    confirmationDescription={
-                        modalState.items.length === 1
-                            ? __(
-                                  'Are you sure you want to cancel this withdrawal?',
-                                  'dokan-lite'
-                              )
-                            : sprintf(
-                                  __(
-                                      'Are you sure you want to cancel these %d withdrawals?',
-                                      'dokan-lite'
-                                  ),
-                                  modalState.items.length
-                              )
-                    }
-                    confirmButtonVariant="primary"
-                    dialogIcon={
-                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-orange-50 border border-orange-50 rounded-full">
-                            <svg
-                                className="w-6 h-6 text-orange-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </div>
-                    }
-                />
-            ) }
-
-            { modalState.isOpen && modalState.type === 'delete' && (
-                <DokanModal
-                    isOpen={ modalState.isOpen }
-                    namespace={ `delete-withdrawal-${ modalState.items.length }` }
-                    onClose={ closeModal }
-                    onConfirm={ async () => {
-                        await handleBulkAction(
-                            'delete',
-                            modalState.items.map( ( item ) => item.id )
-                        );
-                        closeModal();
+                    filter={ {
+                        fields: filterFields,
+                        onFilterRemove: ( filterId ) =>
+                            clearSingleFilter( filterId ),
+                        onReset: () => clearFilter(),
                     } }
-                    dialogTitle={ __( 'Delete Withdrawal', 'dokan-lite' ) }
-                    confirmButtonText={ __( 'Delete', 'dokan-lite' ) }
-                    confirmationTitle={ __( 'Confirm Deletion', 'dokan-lite' ) }
-                    confirmationDescription={
-                        modalState.items.length === 1
-                            ? __(
-                                  'Are you sure you want to delete this withdrawal? This action cannot be undone.',
-                                  'dokan-lite'
-                              )
-                            : sprintf(
-                                  __(
-                                      'Are you sure you want to delete these %d withdrawals? This action cannot be undone.',
-                                      'dokan-lite'
-                                  ),
-                                  modalState.items.length
-                              )
-                    }
-                    confirmButtonVariant="primary"
-                    dialogIcon={
-                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-red-50 border border-red-50 rounded-full">
-                            <Trash size={ 24 } className="text-red-600" />
-                        </div>
-                    }
                 />
-            ) }
+            </div>
 
             { modalState.isOpen &&
                 modalState.type === 'add-note' &&
