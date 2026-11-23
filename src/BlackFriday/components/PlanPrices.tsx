@@ -140,16 +140,20 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-col gap-2">
                     <h2 className="m-0 text-[32px] font-bold leading-[42px] text-[#0e0e0f]">
-                        { __(
-                            'Early Bird Prices on Every Dokan Plan',
-                            'dokan-lite'
-                        ) }
+                        { billing === 'annual'
+                            ? __( 'Black Friday Prices', 'dokan-lite' )
+                            : __(
+                                  'Black Friday Prices on Every Dokan Plan',
+                                  'dokan-lite'
+                              ) }
                     </h2>
                     <p className="m-0 text-[18px] text-[#575757]">
-                        { __(
-                            'The bigger the plan, the bigger the discount. Prices go up on Nov 20.',
-                            'dokan-lite'
-                        ) }
+                        { billing === 'annual'
+                            ? __( 'Prices go up on Nov 20.', 'dokan-lite' )
+                            : __(
+                                  'The bigger the plan, the bigger the discount. Prices go up on Nov 20.',
+                                  'dokan-lite'
+                              ) }
                     </p>
                 </div>
 
