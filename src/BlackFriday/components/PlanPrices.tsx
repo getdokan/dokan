@@ -4,7 +4,18 @@ import { __, sprintf } from '@wordpress/i18n';
 
 type Billing = 'annual' | 'lifetime';
 
-type Price = { sites: string; oldPrice: string; off: string; price: string };
+type Price = {
+    sites: string;
+    oldPrice: string;
+    off: string;
+    price: string;
+    // Set when a tab sells a different product in this column: the Annual tab offers Managed Marketplace where Lifetime offers Enterprise.
+    id?: string;
+    name?: string;
+    badge?: [ string, string ];
+    period?: string;
+    cta?: string;
+};
 
 type Plan = {
     id: string;
@@ -78,10 +89,21 @@ const getPlans = (): Plan[] => [
             'bg-[#c9f8d4] text-[#14532d]',
         ],
         annual: {
-            sites: __( '20 sites', 'dokan-lite' ),
-            oldPrice: '$999/yr',
-            off: __( '40% OFF', 'dokan-lite' ),
-            price: '$599',
+            id: 'managed-marketplace',
+            name: __( 'Managed Marketplace', 'dokan-lite' ),
+            badge: [
+                __( 'Black Friday Special', 'dokan-lite' ),
+                'bg-[#c9f8d4] text-[#14532d]',
+            ],
+            sites: __(
+                'We build, host and run your marketplace for you',
+                'dokan-lite'
+            ),
+            oldPrice: '$7,497',
+            off: __( '60% OFF', 'dokan-lite' ),
+            price: '$2,999',
+            period: __( '/first year', 'dokan-lite' ),
+            cta: __( 'Buy Now', 'dokan-lite' ),
         },
         lifetime: {
             sites: __( '10 site licenses', 'dokan-lite' ),
@@ -158,7 +180,9 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                 { getPlans().map( ( plan, index ) => {
                     const highlighted = plan.id === HIGHLIGHTED_PLAN;
                     const price = plan[ billing ];
-                    const badge = billing === 'lifetime' && plan.badge;
+                    const name = price.name ?? plan.name;
+                    const badge =
+                        price.badge ?? ( billing === 'lifetime' && plan.badge );
 
                     return (
                         <div
@@ -168,13 +192,13 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                                 index
                             ) }` }
                         >
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-wrap items-center gap-2">
                                 <h3 className="m-0 text-[18px] font-semibold text-[#0e0e0f]">
-                                    { plan.name }
+                                    { name }
                                 </h3>
                                 { badge && (
                                     <span
-                                        className={ `rounded-full px-2 py-[3px] text-[11px] font-medium ${ badge[ 1 ] }` }
+                                        className={ `whitespace-nowrap rounded-full px-2 py-[3px] text-[11px] font-medium ${ badge[ 1 ] }` }
                                     >
                                         { badge[ 0 ] }
                                     </span>
@@ -199,12 +223,12 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                                     { price.price }
                                 </span>
                                 <span className="text-[14px] text-[#575757]">
-                                    { period }
+                                    { price.period ?? period }
                                 </span>
                             </div>
 
                             <a
-                                href={ urls[ plan.id ] }
+                                href={ urls[ price.id ?? plan.id ] }
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={ `mt-auto flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg py-3 text-[14px] font-medium no-underline transition-colors ${
@@ -213,12 +237,15 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                                         : 'border border-[#d4d4d8] bg-white text-[#0e0e0f] hover:bg-[#f4efff] hover:text-[#0e0e0f] focus:text-[#0e0e0f]'
                                 }` }
                             >
-                                { sprintf(
-                                    /* translators: %s: plan name, e.g. "Business" */
-                                    __( 'Upgrade to %s', 'dokan-lite' ),
-                                    plan.name
+                                { price.cta ??
+                                    sprintf(
+                                        /* translators: %s: plan name, e.g. "Business" */
+                                        __( 'Upgrade to %s', 'dokan-lite' ),
+                                        name
+                                    ) }
+                                { ! price.cta && (
+                                    <span aria-hidden="true">→</span>
                                 ) }
-                                <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     );

@@ -97,7 +97,7 @@ class BlackFriday extends AbstractPage {
         }
 
         $plans = [];
-        foreach ( [ 'starter', 'professional', 'business', 'enterprise' ] as $plan ) {
+        foreach ( [ 'starter', 'professional', 'business', 'enterprise', 'managed-marketplace' ] as $plan ) {
             $plans[ $plan ] = self::cta_url( 'plan-' . $plan, self::DEAL_URL );
         }
 
