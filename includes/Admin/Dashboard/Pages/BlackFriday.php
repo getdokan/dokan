@@ -97,7 +97,7 @@ class BlackFriday extends AbstractPage {
         }
 
         $plans = [];
-        foreach ( [ 'starter', 'professional', 'business', 'enterprise' ] as $plan ) {
+        foreach ( [ 'starter', 'professional', 'business', 'enterprise', 'managed-marketplace' ] as $plan ) {
             $plans[ $plan ] = self::cta_url( 'plan-' . $plan, self::DEAL_URL );
         }
 
@@ -105,7 +105,6 @@ class BlackFriday extends AbstractPage {
             'assets_url' => DOKAN_PLUGIN_ASSEST . '/images/black-friday',
             'urls'       => [
                 'claim_deal'        => self::cta_url( 'hero-claim-deal', self::DEAL_URL ),
-                'entrepreneur_pack' => self::cta_url( 'entrepreneur-pack', self::DEAL_URL ),
                 'enterprise_bundle' => self::cta_url( 'enterprise-bundle', self::DEAL_URL ),
                 'plans'             => $plans,
                 'book_call'         => self::cta_url( 'book-a-call', 'https://calendly.com/dokan-support/30min?back=1' ),

@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.3.4\n"
+"Project-Id-Version: Dokan 5.3.6\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-05T10:40:32+00:00\n"
+"POT-Creation-Date: 2026-11-23T09:54:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -254,7 +254,7 @@ msgstr ""
 #: includes/Admin/Settings/Schema/SettingsSchema.php:283
 #: includes/Admin/Tools/ToolsActions.php:25
 #: includes/functions-dashboard-navigation.php:41
-#: includes/Install/Installer.php:238
+#: includes/Install/Installer.php:358
 #: assets/js/components.js:2
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vendor-dashboard/reports/index.js:2
@@ -449,6 +449,7 @@ msgid "Build a self-serve help center for your marketplace. Publish vendor-speci
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:214
+#: assets/js/dokan-black-friday.js:1
 msgid "TryAura"
 msgstr ""
 
@@ -1054,7 +1055,7 @@ msgstr ""
 #: includes/Admin/Settings/Schema/SettingsSchema.php:595
 #: includes/Admin/Settings/Schema/SettingsSchema.php:620
 #: includes/Admin/SetupWizard.php:491
-#: includes/Install/Installer.php:175
+#: includes/Install/Installer.php:295
 #: includes/Order/Admin/Hooks.php:105
 #: includes/Order/Admin/Hooks.php:423
 #: includes/wc-template.php:21
@@ -1689,7 +1690,7 @@ msgstr ""
 
 #: includes/Admin/Settings.php:531
 #: includes/Admin/Settings.php:584
-#: includes/Product/Hooks.php:517
+#: includes/Product/Hooks.php:563
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -1945,7 +1946,7 @@ msgstr ""
 #: includes/Admin/Settings.php:783
 #: includes/Admin/Settings/Schema/SettingsSchema.php:302
 #: includes/Admin/Tools/ToolsActions.php:37
-#: includes/Install/Installer.php:250
+#: includes/Install/Installer.php:370
 #: templates/global/header-menu.php:52
 msgid "My Orders"
 msgstr ""
@@ -1983,8 +1984,8 @@ msgstr ""
 #: includes/Admin/Settings.php:808
 #: includes/Admin/Settings/Schema/SettingsSchema.php:1310
 #: includes/Admin/Tools/ToolsActions.php:43
-#: includes/Install/Installer.php:256
-#: includes/Upgrade/Upgrades/V_5_0_0.php:74
+#: includes/Install/Installer.php:376
+#: includes/Upgrade/Upgrades/V_5_0_0.php:77
 msgid "Vendor Onboarding"
 msgstr ""
 
@@ -3459,7 +3460,7 @@ msgstr ""
 
 #: includes/Admin/Tools/ToolsActions.php:31
 #: includes/Customizer.php:392
-#: includes/Install/Installer.php:244
+#: includes/Install/Installer.php:364
 msgid "Store List"
 msgstr ""
 
@@ -3913,7 +3914,7 @@ msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:642
-#: includes/Product/Hooks.php:91
+#: includes/Product/Hooks.php:137
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -3939,6 +3940,18 @@ msgstr ""
 
 #: includes/Ajax.php:1174
 msgid "id param is required"
+msgstr ""
+
+#: includes/Analytics/Reports/Orders/Stats/BackfillNotice.php:86
+msgid "Dokan is rebuilding its analytics data"
+msgstr ""
+
+#: includes/Analytics/Reports/Orders/Stats/BackfillNotice.php:87
+msgid "Your existing orders are being imported into Dokan reports in the background. Until it finishes, WooCommerce Analytics and Dokan reports show partial numbers. On stores with many orders this can take a while."
+msgstr ""
+
+#: includes/Analytics/Reports/Orders/Stats/BackfillNotice.php:92
+msgid "View import progress"
 msgstr ""
 
 #: includes/Analytics/VendorDashboardManager.php:74
@@ -7122,7 +7135,7 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:229
+#: includes/Product/Hooks.php:275
 #: templates/products/listing-filter.php:110
 #: assets/js/components.js:2
 #: assets/js/dashboard-charts.js:1
@@ -7180,30 +7193,30 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:98
+#: includes/Product/Hooks.php:144
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:188
+#: includes/Product/Hooks.php:234
 #: templates/orders/commission-meta-box-html.php:85
 #: assets/js/frontend.js:2
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:225
+#: includes/Product/Hooks.php:271
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:233
+#: includes/Product/Hooks.php:279
 msgid "Shop order"
 msgstr ""
 
-#: includes/Product/Hooks.php:451
+#: includes/Product/Hooks.php:497
 msgid "As this is your own product, the \"Add to Cart\" button has been removed. Please visit as a guest to view it."
 msgstr ""
 
-#: includes/Product/Hooks.php:521
-#: includes/Product/Hooks.php:522
+#: includes/Product/Hooks.php:567
+#: includes/Product/Hooks.php:568
 #: assets/js/vue-admin.js:2
 msgid "When the value is 0, no commissions will be deducted from this vendor."
 msgstr ""
@@ -16633,15 +16646,15 @@ msgid "off"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Ends %s"
+msgid "+ $2,085 in free add-ons"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Black Friday Deals · Lowest price of the year"
+msgid "Black Friday Deals"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Up to 60% Off Dokan Pro"
+msgid "Up to 55% Off Dokan Pro"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16673,7 +16686,7 @@ msgid "Up to 55% off"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Enterprise bundle worth $7,080"
+msgid "Enterprise bundle worth $8,227"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16685,7 +16698,7 @@ msgid "Last chance this year"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Live now"
+msgid "Live Now"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16701,79 +16714,107 @@ msgid "%1$s – %2$s"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Early Bird exclusive · Limited time"
+msgid "Min"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "The Entrepreneur Pack"
+msgid "Black Friday Exclusive Bundle"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "launching your marketplace without a yearly bill"
+msgid "Dokan Enterprise Lifetime"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "one time"
+msgid "10 sites, all features and modules"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Grab the Entrepreneur Pack"
+msgid "55% OFF"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "<strong>Dokan Business</strong>, lifetime license for 1 site"
+msgid "wePOS Starter Lifetime"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "All Pro features unlocked"
+msgid "Point of sale for WooCommerce"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "42+ premium modules: bookings, auctions, RFQ, vendor staff"
+msgid "AI virtual try on"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Lifetime updates and ticket support"
+msgid "StoreGrowth Starter Lifetime"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Black Friday bundle · Save $8,000+"
+msgid "Upsells and conversion tools"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Enterprise Lifetime + 6 Add-ons"
+msgid "FlyAffiliate Lifetime"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "agencies and operators running serious marketplaces"
+msgid "Run your own affiliate program"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "SAVE $8,000+"
+msgid "Dokan Mobile App, 1 Year"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Save $8,000 & Unlock Pro"
+msgid "Branded app for your marketplace"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "<strong>Dokan Enterprise</strong> lifetime, 10 sites"
+msgid "Dokan Vendor App, 1 Year"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "wePOS, TryAura, StoreGrowth, FlyAffiliate lifetime"
+msgid "Vendors manage their stores on the go"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Dokan Customer App & Vendor App for 1 year"
+msgid "FREE"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "$8,080 in total value"
+msgid "Bought separately"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Best for:"
+msgid "Total value $<s>8,227</s>"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "72% Savings"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "You save <strong>$5,979</strong>"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "Limited time offer"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "%d%% Claimed"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "Get the Enterprise Bundle"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "Deal ends in <time>%1$dd %2$dh %3$dm</time>"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "One time payment"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16846,7 +16887,8 @@ msgid "Annual"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Lifetime · Save up to 60%"
+#: assets/js/dokan-pro-features.js:2
+msgid "Lifetime"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16854,11 +16896,19 @@ msgid "/yr"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Early Bird Prices on Every Dokan Plan"
+msgid "one time"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "The bigger the plan, the bigger the discount. Prices go up on Nov 20."
+msgid "Black Friday Prices"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "Black Friday Prices on Every Dokan Plan"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "The bigger the plan, the bigger the discount."
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16874,7 +16924,7 @@ msgid "1 site"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "30% OFF"
+msgid "25% OFF"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16882,7 +16932,7 @@ msgid "1 site license"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "35% OFF"
+msgid "30% OFF"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16898,7 +16948,7 @@ msgid "3 site licenses"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "40% OFF"
+msgid "35% OFF"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16910,7 +16960,7 @@ msgid "5 site licenses"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "45% OFF"
+msgid "40% OFF"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -16922,7 +16972,15 @@ msgid "Biggest Saving"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
+msgid "Managed Marketplace"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
 msgid "20 sites"
+msgstr ""
+
+#: assets/js/dokan-black-friday.js:1
+msgid "/first year"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
@@ -17416,10 +17474,6 @@ msgstr ""
 
 #: assets/js/dokan-pro-features.js:2
 msgid "Annually"
-msgstr ""
-
-#: assets/js/dokan-pro-features.js:2
-msgid "Lifetime"
 msgstr ""
 
 #: assets/js/dokan-pro-features.js:2

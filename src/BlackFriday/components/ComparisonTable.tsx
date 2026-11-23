@@ -39,7 +39,7 @@ const getRows = (): Array< [ string, string, string ] > => {
 };
 
 const headingClass =
-    'px-6 py-4 text-[13px] font-semibold uppercase leading-normal tracking-[0.78px]';
+    'px-6 py-4 text-[13px] font-semibold uppercase leading-4 tracking-[0.78px]';
 
 // Lite vs Pro feature comparison table.
 const ComparisonTable = () => {
@@ -54,7 +54,7 @@ const ComparisonTable = () => {
                 <h2 className="m-0 text-[32px] font-bold leading-[42px] text-[#0e0e0f]">
                     { __( 'What You Unlock with Dokan Pro', 'dokan-lite' ) }
                 </h2>
-                <p className="m-0 text-[18px] leading-normal text-[#575757]">
+                <p className="m-0 text-[18px] text-[#575757]">
                     { __(
                         'Your marketplace runs on Lite today. Here is what Pro adds.',
                         'dokan-lite'
@@ -94,11 +94,11 @@ const ComparisonTable = () => {
                                     index % 2 ? 'bg-[#fcfcfd]' : 'bg-white'
                                 }` }
                             >
-                                <td className="px-6 py-[15px] text-[16px] leading-normal text-[#2a2a2e]">
+                                <td className="px-6 py-[15px] text-[16px] leading-[19px] text-[#2a2a2e]">
                                     { feature }
                                 </td>
                                 <td
-                                    className={ `px-6 py-[15px] text-center text-[15px] leading-normal ${
+                                    className={ `px-6 py-[15px] text-center text-[15px] leading-[18px] ${
                                         lite === yes
                                             ? 'text-[#2a2a2e]'
                                             : 'text-[#9a9aa3]'
@@ -106,8 +106,8 @@ const ComparisonTable = () => {
                                 >
                                     { lite }
                                 </td>
-                                <td className="bg-[#7047eb]/6 px-6 py-[15px] text-center text-[15px] font-bold leading-normal text-[#7047eb]">
-                                    <span className="inline-flex items-center gap-2">
+                                <td className="bg-[#7047eb]/6 px-6 py-[15px] text-center text-[15px] font-bold leading-[18px] text-[#7047eb]">
+                                    <span className="flex items-center justify-center gap-2">
                                         { pro === yes && <CheckBadge /> }
                                         { pro }
                                     </span>
