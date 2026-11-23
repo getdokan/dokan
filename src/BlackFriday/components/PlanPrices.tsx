@@ -137,14 +137,14 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                                   'dokan-lite'
                               ) }
                     </h2>
-                    <p className="m-0 text-[18px] text-[#575757]">
-                        { billing === 'annual'
-                            ? __( 'Prices go up on Nov 20.', 'dokan-lite' )
-                            : __(
-                                  'The bigger the plan, the bigger the discount. Prices go up on Nov 20.',
-                                  'dokan-lite'
-                              ) }
-                    </p>
+                    { billing === 'lifetime' && (
+                        <p className="m-0 text-[18px] text-[#575757]">
+                            { __(
+                                'The bigger the plan, the bigger the discount.',
+                                'dokan-lite'
+                            ) }
+                        </p>
+                    ) }
                 </div>
 
                 <div
