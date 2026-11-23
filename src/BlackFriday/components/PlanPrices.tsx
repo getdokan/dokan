@@ -9,12 +9,10 @@ type Price = {
     oldPrice: string;
     off: string;
     price: string;
-    // Set when a tab sells a different product in this column: the Annual tab offers Managed Marketplace where Lifetime offers Enterprise.
+    // Set when a tab sells a different product in this column: the Annual tab offers Managed Marketplace where Lifetime offers Enterprise (the design keeps the column's "Upgrade to Enterprise" button).
     id?: string;
     name?: string;
-    badge?: [ string, string ];
     period?: string;
-    cta?: string;
 };
 
 type Plan = {
@@ -91,19 +89,11 @@ const getPlans = (): Plan[] => [
         annual: {
             id: 'managed-marketplace',
             name: __( 'Managed Marketplace', 'dokan-lite' ),
-            badge: [
-                __( 'Black Friday Special', 'dokan-lite' ),
-                'bg-[#c9f8d4] text-[#14532d]',
-            ],
-            sites: __(
-                'We build, host and run your marketplace for you',
-                'dokan-lite'
-            ),
-            oldPrice: '$7497',
+            sites: __( '20 sites', 'dokan-lite' ),
+            oldPrice: '$7497/',
             off: __( '60% OFF', 'dokan-lite' ),
             price: '$2999',
             period: __( '/first year', 'dokan-lite' ),
-            cta: __( 'Buy Now', 'dokan-lite' ),
         },
         lifetime: {
             sites: __( '10 site licenses', 'dokan-lite' ),
@@ -184,9 +174,7 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                 { getPlans().map( ( plan, index ) => {
                     const highlighted = plan.id === HIGHLIGHTED_PLAN;
                     const price = plan[ billing ];
-                    const name = price.name ?? plan.name;
-                    const badge =
-                        price.badge ?? ( billing === 'lifetime' && plan.badge );
+                    const badge = billing === 'lifetime' && plan.badge;
 
                     return (
                         <div
@@ -198,7 +186,7 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                         >
                             <div className="flex flex-wrap items-center gap-2">
                                 <h3 className="m-0 text-[18px] font-semibold text-[#0e0e0f]">
-                                    { name }
+                                    { price.name ?? plan.name }
                                 </h3>
                                 { badge && (
                                     <span
@@ -241,15 +229,12 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                                         : 'border border-[#d4d4d8] bg-white text-[#0e0e0f] hover:bg-[#f4efff] hover:text-[#0e0e0f] focus:text-[#0e0e0f]'
                                 }` }
                             >
-                                { price.cta ??
-                                    sprintf(
-                                        /* translators: %s: plan name, e.g. "Business" */
-                                        __( 'Upgrade to %s', 'dokan-lite' ),
-                                        name
-                                    ) }
-                                { ! price.cta && (
-                                    <span aria-hidden="true">→</span>
+                                { sprintf(
+                                    /* translators: %s: plan name, e.g. "Business" */
+                                    __( 'Upgrade to %s', 'dokan-lite' ),
+                                    plan.name
                                 ) }
+                                <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     );
