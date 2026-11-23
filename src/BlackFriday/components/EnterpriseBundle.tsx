@@ -1,5 +1,5 @@
 // TODO BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off.
-import { createInterpolateElement } from '@wordpress/element';
+import { createInterpolateElement, Fragment } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { pad, useTimeLeft } from './Countdown';
 import { ArrowRight, ShieldCheck, Sparkle } from './Icons';
@@ -69,18 +69,18 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
     ];
 
     return (
-        <section className="dokan-bf-bundle grid grid-cols-1 gap-[13px] rounded-[20px] p-6 xl:grid-cols-[514fr_499fr]">
+        <section className="dokan-bf-bundle grid grid-cols-1 gap-[13px] rounded-[21px] py-6 ps-[25px] pe-6 xl:grid-cols-[514fr_499fr]">
             <div className="flex min-w-0 flex-col items-start gap-[17px]">
-                <span className="inline-flex h-[46px] items-center rounded-[19px] bg-[#ffd857] px-[19px] text-[18px] font-bold uppercase leading-[1.2] tracking-[2px] text-[#080c34]">
+                <span className="ms-0.5 inline-flex min-h-[46px] w-[419px] max-w-full items-center justify-center rounded-[19px] bg-[#ffd857] px-[19px] py-1 text-center text-[18px] font-bold uppercase leading-[1.2] tracking-[2px] text-[#080c34]">
                     { __( 'Black Friday Exclusive Bundle', 'dokan-lite' ) }
                 </span>
 
-                <div className="flex w-full flex-1 flex-col justify-between gap-[35px] rounded-[19px] bg-white/70 px-[13px] py-[14px]">
-                    <ul className="m-0 flex list-none flex-col gap-[6px] p-0">
+                <div className="flex w-full flex-1 flex-col justify-between gap-[35px] rounded-[19px] bg-white/70 px-[13px] pb-[9px] pt-[14px]">
+                    <ul className="m-0 flex list-none flex-col gap-[6.4px] p-0">
                         { getItems().map( ( item ) => (
                             <li
                                 key={ item.name }
-                                className={ `m-0 flex min-h-[55px] items-center rounded-[13px] border-[0.7px] border-solid py-2 ps-[34px] pe-[11px] ${
+                                className={ `m-0 flex min-h-[55.5px] items-center rounded-[13px] border-[0.7px] border-solid py-2 ps-[34px] pe-[11px] ${
                                     item.off
                                         ? 'gap-[11px] border-[#f7eaf7] bg-[rgba(255,246,251,0.6)]'
                                         : 'gap-[18px] border-[#f0f1fa] bg-white/25'
@@ -121,24 +121,24 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                 </div>
             </div>
 
-            <div className="flex min-w-0 flex-col items-stretch rounded-[19px] bg-white px-[18px] pb-[22px] pt-[23px]">
-                <div className="flex flex-wrap items-center justify-between gap-2 ps-[25px]">
-                    <span className="text-[20px] leading-[1.2] text-[#a9a3c4]">
+            <div className="flex min-w-0 flex-col items-stretch rounded-[19px] bg-white pb-[22px] ps-[17px] pe-[27px] pt-[23px]">
+                <div className="flex flex-wrap items-start justify-between gap-2 ps-[26px]">
+                    <span className="mt-[15px] text-[20px] leading-[1.2] text-[#a9a3c4]">
                         { createInterpolateElement(
                             __( 'Total value $<s>8,227</s>', 'dokan-lite' ),
                             { s: <s /> }
                         ) }
                     </span>
-                    <span className="inline-flex h-[46px] items-center rounded-full bg-[#fce6fd] px-6 text-[19px] font-black leading-[1.2] text-[#92068f]">
+                    <span className="-me-[10px] inline-flex h-[46px] w-[146px] items-center justify-center rounded-full bg-[#fce6fd] text-[19px] font-black leading-[1.2] text-[#92068f]">
                         { __( '72% Savings', 'dokan-lite' ) }
                     </span>
                 </div>
 
-                <span className="mt-1.5 ps-[21px] text-[53px] font-bold leading-[1.25] text-black">
+                <span className="mt-1.5 ps-[21.5px] text-[53px] font-bold leading-[1.25] text-black">
                     $2,247.75
                 </span>
 
-                <span className="ms-[17px] mt-1.5 inline-flex h-12 items-center gap-2 self-start rounded-lg bg-[#e4fbf3] px-2.5 text-[24px] font-bold leading-[1.2] text-[#007d5d]">
+                <span className="ms-[18px] mt-2 inline-flex h-12 items-center gap-2 self-start rounded-lg bg-[#e4fbf3] px-2.5 text-[24px] font-bold leading-[1.2] text-[#007d5d]">
                     <Sparkle />
                     { createInterpolateElement(
                         __( 'You save <strong>$5,979</strong>', 'dokan-lite' ),
@@ -146,22 +146,19 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                     ) }
                 </span>
 
-                <div className="mt-4 flex flex-col gap-2.5 rounded-[21px] border border-solid border-[#eeebff] px-[23px] pb-[26px] pt-[22px]">
+                <div className="mt-4 flex flex-col gap-[10.4px] rounded-[21px] border border-solid border-[#eeebff] px-[23px] pb-[22px] pt-[22px]">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                         <span className="pb-2 text-[18px] font-black leading-[1.2] text-[#08051c]">
                             { __( 'Limited time offer', 'dokan-lite' ) }
                         </span>
                         <div
-                            className="flex items-start gap-[7px]"
+                            className="me-[2.5px] flex w-[159px] items-start justify-between"
                             role="timer"
                         >
                             { units.map( ( [ value, label ], index ) => (
-                                <div
-                                    key={ label }
-                                    className="flex items-start gap-[7px]"
-                                >
+                                <Fragment key={ label }>
                                     { index > 0 && (
-                                        <span className="flex h-[42px] items-center text-[19px] font-bold text-[#8282a4]">
+                                        <span className="flex h-[42px] items-center text-[19px] font-bold leading-[1.2] text-[#8282a4]">
                                             :
                                         </span>
                                     ) }
@@ -173,7 +170,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                                             { label }
                                         </span>
                                     </div>
-                                </div>
+                                </Fragment>
                             ) ) }
                         </div>
                     </div>
@@ -198,13 +195,13 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                     href={ url }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mx-[15px] mt-[26px] flex items-center justify-center gap-[9px] rounded-[4px] bg-[#7047eb] px-[39px] py-5 text-[15.5px] font-bold leading-[1.3] text-white no-underline transition-colors hover:bg-[#5d39c4] hover:text-white focus:text-white"
+                    className="mx-[10.5px] mt-[26px] flex items-center justify-center gap-[9px] rounded-[4px] bg-[#7047eb] px-[39px] py-5 text-[15.5px] font-bold leading-[1.3] text-white no-underline transition-colors hover:bg-[#5d39c4] hover:text-white focus:text-white"
                 >
                     { __( 'Get the Enterprise Bundle', 'dokan-lite' ) }
                     <ArrowRight />
                 </a>
 
-                <p className="m-0 mt-10 text-center text-[15.5px] leading-[1.2] text-[#8282a4]">
+                <p className="m-0 mt-10 ps-[7px] text-center text-[15.5px] leading-[1.2] text-[#8282a4]">
                     { createInterpolateElement(
                         sprintf(
                             /* translators: %s: time left until the bundle offer ends, e.g. "3d 15h 16m" */

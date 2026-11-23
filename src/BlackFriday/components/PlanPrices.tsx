@@ -123,7 +123,7 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                             'dokan-lite'
                         ) }
                     </h2>
-                    <p className="m-0 text-[18px] leading-normal text-[#575757]">
+                    <p className="m-0 text-[18px] leading-[1.21] text-[#575757]">
                         { __(
                             'The bigger the plan, the bigger the discount. Prices go up on Nov 20.',
                             'dokan-lite'
@@ -142,7 +142,7 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                             type="button"
                             aria-pressed={ billing === value }
                             onClick={ () => setBilling( value ) }
-                            className={ `cursor-pointer rounded-full border-0 px-5 py-2.5 text-[15px] leading-normal transition-colors ${
+                            className={ `cursor-pointer rounded-full border-0 px-5 py-2.5 text-[15px] leading-[1.21] transition-colors ${
                                 billing === value
                                     ? 'bg-[#7047eb] font-bold text-white'
                                     : 'bg-transparent text-[#575757]'
@@ -169,27 +169,27 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                             ) }` }
                         >
                             <div className="flex items-center gap-2">
-                                <h3 className="m-0 text-[18px] font-semibold leading-normal text-[#0e0e0f]">
+                                <h3 className="m-0 text-[18px] font-semibold leading-[1.21] text-[#0e0e0f]">
                                     { plan.name }
                                 </h3>
                                 { badge && (
                                     <span
-                                        className={ `rounded-full px-2 py-[3px] text-[11px] font-medium leading-normal ${ badge[ 1 ] }` }
+                                        className={ `rounded-full px-2 py-[3px] text-[11px] font-medium leading-[1.21] ${ badge[ 1 ] }` }
                                     >
                                         { badge[ 0 ] }
                                     </span>
                                 ) }
                             </div>
 
-                            <p className="m-0 text-[14px] leading-normal text-[#575757]">
+                            <p className="m-0 text-[14px] leading-[1.21] text-[#575757]">
                                 { price.sites }
                             </p>
 
                             <div className="flex items-center gap-2">
-                                <s className="text-[16px] leading-normal text-[#828282]">
+                                <s className="text-[16px] leading-[1.21] text-[#828282]">
                                     { price.oldPrice }
                                 </s>
-                                <span className="rounded-full bg-[#e7e1fd] px-2.5 py-[3px] text-[13px] font-bold leading-normal text-[#2a1a6e]">
+                                <span className="rounded-full bg-[#e7e1fd] px-2.5 py-[3px] text-[13px] font-bold leading-[1.21] text-[#2a1a6e]">
                                     { price.off }
                                 </span>
                             </div>
@@ -198,7 +198,7 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                                 <span className="text-[30px] font-bold leading-10 text-[#0e0e0f]">
                                     { price.price }
                                 </span>
-                                <span className="text-[14px] leading-normal text-[#575757]">
+                                <span className="text-[14px] leading-[1.21] text-[#575757]">
                                     { period }
                                 </span>
                             </div>
@@ -207,10 +207,10 @@ const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
                                 href={ urls[ plan.id ] }
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={ `mt-auto flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg border py-3 text-[14px] font-medium leading-normal no-underline transition-colors ${
+                                className={ `mt-auto flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg py-3 text-[14px] font-medium leading-[1.21] no-underline transition-colors ${
                                     highlighted
-                                        ? 'border-[#7047eb] bg-[#7047eb] text-white hover:bg-[#5d39c4] hover:text-white focus:text-white'
-                                        : 'border-[#d4d4d8] bg-white text-[#0e0e0f] hover:bg-[#f4efff] hover:text-[#0e0e0f] focus:text-[#0e0e0f]'
+                                        ? 'bg-[#7047eb] text-white hover:bg-[#5d39c4] hover:text-white focus:text-white'
+                                        : 'border border-[#d4d4d8] bg-white text-[#0e0e0f] hover:bg-[#f4efff] hover:text-[#0e0e0f] focus:text-[#0e0e0f]'
                                 }` }
                             >
                                 { sprintf(

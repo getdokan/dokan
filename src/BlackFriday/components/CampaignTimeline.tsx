@@ -99,11 +99,11 @@ const CampaignTimeline = () => {
                         }` }
                     >
                         <div className="flex w-full items-center justify-between gap-3">
-                            <h3 className="m-0 text-[18px] font-semibold leading-normal text-[#1a1a1c]">
+                            <h3 className="m-0 text-[18px] font-semibold leading-[1.21] text-[#1a1a1c]">
                                 { phase.title }
                             </h3>
                             <span
-                                className={ `inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold leading-normal tracking-[0.88px] ${ chipClass }` }
+                                className={ `inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold leading-[1.21] tracking-[0.88px] ${ chipClass }` }
                             >
                                 { dotClass && (
                                     <span
@@ -113,7 +113,7 @@ const CampaignTimeline = () => {
                                 { chipLabel }
                             </span>
                         </div>
-                        <p className="m-0 text-[14px] leading-normal text-[#758598]">
+                        <p className="m-0 text-[14px] leading-[1.21] text-[#758598]">
                             { sprintf(
                                 /* translators: 1: phase start date, 2: phase end date */
                                 __( '%1$s – %2$s', 'dokan-lite' ),
@@ -128,7 +128,7 @@ const CampaignTimeline = () => {
                         >
                             { phase.offer }
                         </p>
-                        <p className="m-0 text-[14px] leading-normal text-[#4a5565]">
+                        <p className="m-0 text-[14px] leading-[1.21] text-[#4a5565]">
                             { phase.extra }
                         </p>
                     </article>

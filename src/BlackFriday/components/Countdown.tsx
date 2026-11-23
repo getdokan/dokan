@@ -54,12 +54,12 @@ const Countdown = ( { endsAt }: { endsAt: string } ) => {
             { units.map( ( [ value, label ] ) => (
                 <div
                     key={ label }
-                    className="flex w-[51px] flex-col items-center gap-px rounded-[10px] border border-white/15 bg-white/8 py-[7px]"
+                    className="flex w-[51px] flex-col items-center gap-px rounded-[10px] border border-white/16 bg-white/8 py-[7px]"
                 >
                     <span className="text-[18px] font-semibold leading-[23px] text-white">
                         { pad( value ) }
                     </span>
-                    <span className="text-[8px] font-bold uppercase leading-normal tracking-[0.6px] text-[#a9a3c4]">
+                    <span className="text-[8px] font-bold uppercase leading-[1.21] tracking-[0.6px] text-[#a9a3c4]">
                         { label }
                     </span>
                 </div>

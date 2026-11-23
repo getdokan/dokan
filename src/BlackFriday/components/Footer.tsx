@@ -4,8 +4,8 @@ import { __ } from '@wordpress/i18n';
 
 // Expert-call link and the pricing disclaimer.
 const Footer = ( { bookCallUrl }: { bookCallUrl: string } ) => (
-    <footer className="flex flex-wrap items-center justify-between gap-2 px-2 text-[14px] leading-normal text-[#575757]">
-        <p className="m-0">
+    <footer className="flex flex-wrap items-center justify-between gap-2 px-2">
+        <p className="m-0 text-[14px] leading-[1.21] text-[#575757]">
             { createInterpolateElement(
                 __(
                     'Not sure which plan fits? <a>Book a free 1:1 call with a Dokan expert</a>',
@@ -24,7 +24,7 @@ const Footer = ( { bookCallUrl }: { bookCallUrl: string } ) => (
                 }
             ) }
         </p>
-        <p className="m-0 text-[#828282]">
+        <p className="m-0 text-[14px] leading-[1.21] text-[#828282]">
             { __(
                 'Discounts apply to first purchase only. Prices exclude VAT.',
                 'dokan-lite'
