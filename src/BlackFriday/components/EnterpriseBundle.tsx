@@ -204,15 +204,14 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                 <p className="m-0 mt-10 ps-[7px] text-center text-[15.5px] leading-[1.2] text-[#8282a4]">
                     { createInterpolateElement(
                         sprintf(
-                            /* translators: %s: time left until the bundle offer ends, e.g. "3d 15h 16m" */
-                            __( 'Deal ends in <time>%s</time>', 'dokan-lite' ),
-                            sprintf(
-                                /* translators: 1: days, 2: hours, 3: minutes left */
-                                __( '%1$dd %2$dh %3$dm', 'dokan-lite' ),
-                                days,
-                                hours,
-                                minutes
-                            )
+                            /* translators: 1: days, 2: hours, 3: minutes left, e.g. "3d 15h 16m" */
+                            __(
+                                'Deal ends in <time>%1$dd %2$dh %3$dm</time>',
+                                'dokan-lite'
+                            ),
+                            days,
+                            hours,
+                            minutes
                         ),
                         { time: <span className="text-[#e10104]" /> }
                     ) }

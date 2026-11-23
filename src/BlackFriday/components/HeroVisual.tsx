@@ -31,7 +31,7 @@ const HeroVisual = ( { assetsUrl }: { assetsUrl: string } ) => (
         { [ -67, 49 ].map( ( left ) => (
             <img
                 key={ left }
-                src={ `${ assetsUrl }/hero-five.png` }
+                src={ `${ assetsUrl }/hero-five.webp` }
                 alt=""
                 width={ 184 }
                 height={ 196 }

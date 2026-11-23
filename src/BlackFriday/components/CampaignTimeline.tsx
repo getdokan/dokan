@@ -1,7 +1,7 @@
 // TODO BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off.
 import { __, sprintf } from '@wordpress/i18n';
 import { dateI18n } from '@wordpress/date';
-import { BLACK_FRIDAY_ENDS_AT, EARLY_BIRD_ENDS_AT } from '../settings';
+import { BLACK_FRIDAY_ENDS_AT } from '../settings';
 
 type PhaseStatus = 'ended' | 'live' | 'next' | 'later';
 
@@ -16,7 +16,7 @@ type Phase = {
 const getPhases = (): Phase[] => [
     {
         startsAt: '2026-11-05T00:00:00Z',
-        endsAt: EARLY_BIRD_ENDS_AT,
+        endsAt: '2026-11-20T23:59:59Z',
         title: __( 'Early Bird', 'dokan-lite' ),
         offer: __( 'Up to 60% off', 'dokan-lite' ),
         extra: __( 'Entrepreneur Pack: $999 lifetime', 'dokan-lite' ),
@@ -60,20 +60,27 @@ const getStatuses = ( phases: Phase[], now = Date.now() ): PhaseStatus[] => {
 
 const formatDay = ( date: string ) => dateI18n( 'M j', date, 'UTC' );
 
-// Label, chip colours and status dot colour (none for upcoming phases).
-const getChips = (): Record< PhaseStatus, [ string, string, string ] > => ( {
-    live: [
-        __( 'Live Now', 'dokan-lite' ),
-        'bg-[#0d0235] text-white',
-        'bg-[#4fffc2]',
-    ],
-    next: [ __( 'Next', 'dokan-lite' ), 'bg-[#f4efff] text-[#7047eb]', '' ],
-    later: [ __( 'Later', 'dokan-lite' ), 'bg-[#f4efff] text-[#7047eb]', '' ],
-    ended: [
-        __( 'Ended', 'dokan-lite' ),
-        'bg-[#0d0235] text-white',
-        'bg-[#e5484d]',
-    ],
+type Chip = { label: string; chip: string; dot?: string };
+
+const getChips = (): Record< PhaseStatus, Chip > => ( {
+    live: {
+        label: __( 'Live Now', 'dokan-lite' ),
+        chip: 'bg-[#0d0235] text-white',
+        dot: 'bg-[#4fffc2]',
+    },
+    next: {
+        label: __( 'Next', 'dokan-lite' ),
+        chip: 'bg-[#f4efff] text-[#7047eb]',
+    },
+    later: {
+        label: __( 'Later', 'dokan-lite' ),
+        chip: 'bg-[#f4efff] text-[#7047eb]',
+    },
+    ended: {
+        label: __( 'Ended', 'dokan-lite' ),
+        chip: 'bg-[#0d0235] text-white',
+        dot: 'bg-[#e5484d]',
+    },
 } );
 
 // Early Bird → Black Friday → Cyber Monday timeline with live status chips.
@@ -87,7 +94,7 @@ const CampaignTimeline = () => {
             { phases.map( ( phase, index ) => {
                 const status = statuses[ index ];
                 const isLive = status === 'live';
-                const [ chipLabel, chipClass, dotClass ] = chips[ status ];
+                const { label, chip, dot } = chips[ status ];
 
                 return (
                     <article
@@ -103,14 +110,14 @@ const CampaignTimeline = () => {
                                 { phase.title }
                             </h3>
                             <span
-                                className={ `inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold leading-[1.21] tracking-[0.88px] ${ chipClass }` }
+                                className={ `inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold leading-[1.21] tracking-[0.88px] ${ chip }` }
                             >
-                                { dotClass && (
+                                { dot && (
                                     <span
-                                        className={ `size-[6px] rounded-full ${ dotClass }` }
+                                        className={ `size-[6px] rounded-full ${ dot }` }
                                     />
                                 ) }
-                                { chipLabel }
+                                { label }
                             </span>
                         </div>
                         <p className="m-0 text-[14px] leading-[1.21] text-[#758598]">
