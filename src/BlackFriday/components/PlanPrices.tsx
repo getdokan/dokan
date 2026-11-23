@@ -24,14 +24,14 @@ const getPlans = (): Plan[] => [
         annual: {
             sites: __( '1 site', 'dokan-lite' ),
             oldPrice: '$149/yr',
-            off: __( '30% OFF', 'dokan-lite' ),
-            price: '$104',
+            off: __( '25% OFF', 'dokan-lite' ),
+            price: '$112',
         },
         lifetime: {
             sites: __( '1 site license', 'dokan-lite' ),
             oldPrice: '$745',
-            off: __( '35% OFF', 'dokan-lite' ),
-            price: '$484',
+            off: __( '30% OFF', 'dokan-lite' ),
+            price: '$522',
         },
     },
     {
@@ -40,14 +40,14 @@ const getPlans = (): Plan[] => [
         annual: {
             sites: __( '3 sites', 'dokan-lite' ),
             oldPrice: '$249/yr',
-            off: __( '35% OFF', 'dokan-lite' ),
-            price: '$161',
+            off: __( '30% OFF', 'dokan-lite' ),
+            price: '$174',
         },
         lifetime: {
             sites: __( '3 site licenses', 'dokan-lite' ),
             oldPrice: '$1,245',
-            off: __( '40% OFF', 'dokan-lite' ),
-            price: '$747',
+            off: __( '35% OFF', 'dokan-lite' ),
+            price: '$809',
         },
     },
     {
@@ -60,14 +60,14 @@ const getPlans = (): Plan[] => [
         annual: {
             sites: __( '5 sites', 'dokan-lite' ),
             oldPrice: '$499/yr',
-            off: __( '40% OFF', 'dokan-lite' ),
-            price: '$299',
+            off: __( '35% OFF', 'dokan-lite' ),
+            price: '$324',
         },
         lifetime: {
             sites: __( '5 site licenses', 'dokan-lite' ),
             oldPrice: '$2,495',
-            off: __( '45% OFF', 'dokan-lite' ),
-            price: '$1,372',
+            off: __( '40% OFF', 'dokan-lite' ),
+            price: '$1,497',
         },
     },
     {
@@ -80,14 +80,14 @@ const getPlans = (): Plan[] => [
         annual: {
             sites: __( '20 sites', 'dokan-lite' ),
             oldPrice: '$999/yr',
-            off: __( '45% OFF', 'dokan-lite' ),
-            price: '$549',
+            off: __( '40% OFF', 'dokan-lite' ),
+            price: '$599',
         },
         lifetime: {
             sites: __( '10 site licenses', 'dokan-lite' ),
             oldPrice: '$4,995',
-            off: __( '60% OFF', 'dokan-lite' ),
-            price: '$1,998',
+            off: __( '55% OFF', 'dokan-lite' ),
+            price: '$2,247',
         },
     },
 ];
@@ -100,13 +100,13 @@ const cellBorderClass = ( highlighted: boolean, index: number ) =>
               index ? 'border-t' : ''
           } sm:even:border-l sm:[&:nth-child(-n+2)]:border-t-0 xl:border-l xl:border-t-0 xl:first:border-l-0`;
 
-// Early Bird prices for every plan with an Annual / Lifetime switch.
+// Black Friday prices for every plan with an Annual / Lifetime switch.
 const PlanPrices = ( { urls }: { urls: Record< string, string > } ) => {
     const [ billing, setBilling ] = useState< Billing >( 'lifetime' );
 
     const toggles: Array< [ Billing, string ] > = [
         [ 'annual', __( 'Annual', 'dokan-lite' ) ],
-        [ 'lifetime', __( 'Lifetime · Save up to 60%', 'dokan-lite' ) ],
+        [ 'lifetime', __( 'Lifetime', 'dokan-lite' ) ],
     ];
     const period =
         billing === 'annual'

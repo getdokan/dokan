@@ -2,7 +2,7 @@
 import './black-friday.css';
 import Hero from './components/Hero';
 import CampaignTimeline from './components/CampaignTimeline';
-import FeaturedDeals from './components/FeaturedDeals';
+import EnterpriseBundle from './components/EnterpriseBundle';
 import ComparisonTable from './components/ComparisonTable';
 import PlanPrices from './components/PlanPrices';
 import Footer from './components/Footer';
@@ -16,7 +16,7 @@ const BlackFridayPage = () => {
         <div className="dokan-black-friday flex flex-col gap-6 pb-6">
             <Hero campaign={ campaign } />
             <CampaignTimeline />
-            <FeaturedDeals urls={ campaign.urls } />
+            <EnterpriseBundle url={ campaign.urls.enterprise_bundle } />
             <ComparisonTable />
             <PlanPrices urls={ campaign.urls.plans } />
             <Footer bookCallUrl={ campaign.urls.book_call } />

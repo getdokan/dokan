@@ -7,10 +7,10 @@ const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-const pad = ( value: number ) => String( value ).padStart( 2, '0' );
+export const pad = ( value: number ) => String( value ).padStart( 2, '0' );
 
-// Live DD:HH:MM:SS countdown to the campaign deadline.
-const Countdown = ( { endsAt }: { endsAt: string } ) => {
+// Days, hours, minutes and seconds left until the deadline, ticking every second.
+export const useTimeLeft = ( endsAt: string ) => {
     const deadline = Date.parse( endsAt );
     const [ remaining, setRemaining ] = useState( () =>
         Math.max( 0, deadline - Date.now() )
@@ -30,11 +30,23 @@ const Countdown = ( { endsAt }: { endsAt: string } ) => {
         return () => clearInterval( timer );
     }, [ deadline ] );
 
+    return {
+        days: Math.floor( remaining / DAY ),
+        hours: Math.floor( remaining / HOUR ) % 24,
+        minutes: Math.floor( remaining / MINUTE ) % 60,
+        seconds: Math.floor( remaining / SECOND ) % 60,
+    };
+};
+
+// Live DD:HH:MM:SS countdown to the campaign deadline.
+const Countdown = ( { endsAt }: { endsAt: string } ) => {
+    const { days, hours, minutes, seconds } = useTimeLeft( endsAt );
+
     const units: Array< [ number, string ] > = [
-        [ Math.floor( remaining / DAY ), __( 'Days', 'dokan-lite' ) ],
-        [ Math.floor( remaining / HOUR ) % 24, __( 'Hours', 'dokan-lite' ) ],
-        [ Math.floor( remaining / MINUTE ) % 60, __( 'Mins', 'dokan-lite' ) ],
-        [ Math.floor( remaining / SECOND ) % 60, __( 'Secs', 'dokan-lite' ) ],
+        [ days, __( 'Days', 'dokan-lite' ) ],
+        [ hours, __( 'Hours', 'dokan-lite' ) ],
+        [ minutes, __( 'Mins', 'dokan-lite' ) ],
+        [ seconds, __( 'Secs', 'dokan-lite' ) ],
     ];
 
     return (
