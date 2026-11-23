@@ -4,8 +4,8 @@ import { __ } from '@wordpress/i18n';
 
 // Expert-call link and the pricing disclaimer.
 const Footer = ( { bookCallUrl }: { bookCallUrl: string } ) => (
-    <footer className="flex flex-wrap items-center justify-between gap-2 px-2 text-[14px] leading-normal text-[#575757]">
-        <p className="m-0">
+    <footer className="flex flex-wrap items-center justify-between gap-2 px-2 text-[14px]">
+        <p className="m-0 text-[#575757]">
             { createInterpolateElement(
                 __(
                     'Not sure which plan fits? <a>Book a free 1:1 call with a Dokan expert</a>',
