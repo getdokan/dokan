@@ -43,6 +43,16 @@ export const getActiveSubmenuKey = (
 export const isSwitchedOff = ( item: any ): boolean =>
     'is_switched_on' in item && ! item.is_switched_on;
 
+// Nav items may open in a new tab (wePOS "View POS"); third-party URLs opened that way must not get window.opener.
+export const getLinkTarget = ( item: any ) => {
+    const target = item?.target || '_self';
+
+    return {
+        target,
+        rel: target === '_self' ? undefined : 'noopener noreferrer',
+    };
+};
+
 // Labels arrive HTML-escaped from esc_html__, so decode for display (&amp; -> &) while JSX still escapes markup.
 const getMenuTitle = ( hookName: string, menuItem: any ): string =>
     decodeEntities(
@@ -374,9 +384,7 @@ const Sidebar = ( {
                                                         ? 'true'
                                                         : 'false'
                                                 }
-                                                target={
-                                                    item.target || '_self'
-                                                }
+                                                { ...getLinkTarget( item ) }
                                             >
                                                 { /* Icon: turn white when its popover is visible */ }
                                                 <span
@@ -498,10 +506,9 @@ const Sidebar = ( {
                                                                                 isSubActive &&
                                                                                     'active'
                                                                             ) }
-                                                                            target={
-                                                                                subitem.target ||
-                                                                                '_self'
-                                                                            }
+                                                                            { ...getLinkTarget(
+                                                                                subitem
+                                                                            ) }
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
                                                                             <span className="ms-2">
