@@ -71,7 +71,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
     return (
         <section className="dokan-bf-bundle grid grid-cols-1 gap-[13px] rounded-[21px] py-6 ps-[25px] pe-6 xl:grid-cols-[514fr_499fr]">
             <div className="flex min-w-0 flex-col items-start gap-[17px]">
-                <span className="ms-0.5 inline-flex min-h-[46px] w-[419px] max-w-full items-center justify-center rounded-[19px] bg-[#ffd857] px-[19px] py-1 text-center text-[18px] font-bold uppercase leading-[1.2] tracking-[2px] text-[#080c34]">
+                <span className="ms-0.5 inline-flex min-h-[46px] w-[419px] max-w-full items-center justify-center rounded-[19px] bg-[#ffd857] px-[19px] py-1 text-center text-[18px] font-bold uppercase tracking-[2px] text-[#080c34]">
                     { __( 'Black Friday Exclusive Bundle', 'dokan-lite' ) }
                 </span>
 
@@ -98,7 +98,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                                     { item.price }
                                 </s>
                                 <span
-                                    className={ `inline-flex h-[28px] shrink-0 items-center justify-center rounded-[9px] text-[11px] font-black leading-[1.2] ${
+                                    className={ `inline-flex h-[28px] shrink-0 items-center justify-center rounded-[9px] text-[11px] font-black ${
                                         item.off
                                             ? 'w-[63px] bg-[#fff4ed] text-[#ed7620]'
                                             : 'w-[50px] bg-[#e4fbf3] text-[#15ba6d]'
@@ -121,15 +121,16 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                 </div>
             </div>
 
+            { /* The uneven offsets in this card are the Figma frame's own: its content sits about 5px left of centre. */ }
             <div className="flex min-w-0 flex-col items-stretch rounded-[19px] bg-white pb-[22px] ps-[17px] pe-[27px] pt-[23px]">
                 <div className="flex flex-wrap items-start justify-between gap-2 ps-[26px]">
-                    <span className="mt-[15px] text-[20px] leading-[1.2] text-[#a9a3c4]">
+                    <span className="mt-[15px] text-[20px] text-[#a9a3c4]">
                         { createInterpolateElement(
                             __( 'Total value $<s>8,227</s>', 'dokan-lite' ),
                             { s: <s /> }
                         ) }
                     </span>
-                    <span className="-me-[10px] inline-flex h-[46px] w-[146px] items-center justify-center rounded-full bg-[#fce6fd] text-[19px] font-black leading-[1.2] text-[#92068f]">
+                    <span className="-me-[10px] inline-flex h-[46px] w-[146px] items-center justify-center rounded-full bg-[#fce6fd] text-[19px] font-black text-[#92068f]">
                         { __( '72% Savings', 'dokan-lite' ) }
                     </span>
                 </div>
@@ -138,7 +139,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                     $2,247.75
                 </span>
 
-                <span className="ms-[18px] mt-2 inline-flex h-12 items-center gap-2 self-start rounded-lg bg-[#e4fbf3] px-2.5 text-[24px] font-bold leading-[1.2] text-[#007d5d]">
+                <span className="ms-[18px] mt-2 inline-flex h-12 items-center gap-2 self-start rounded-lg bg-[#e4fbf3] px-2.5 text-[24px] font-bold text-[#007d5d]">
                     <Sparkle />
                     { createInterpolateElement(
                         __( 'You save <strong>$5,979</strong>', 'dokan-lite' ),
@@ -148,7 +149,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
 
                 <div className="mt-4 flex flex-col gap-[10.4px] rounded-[21px] border border-solid border-[#eeebff] px-[23px] pb-[22px] pt-[22px]">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                        <span className="pb-2 text-[18px] font-black leading-[1.2] text-[#08051c]">
+                        <span className="pb-2 text-[18px] font-black text-[#08051c]">
                             { __( 'Limited time offer', 'dokan-lite' ) }
                         </span>
                         <div
@@ -158,15 +159,15 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                             { units.map( ( [ value, label ], index ) => (
                                 <Fragment key={ label }>
                                     { index > 0 && (
-                                        <span className="flex h-[42px] items-center text-[19px] font-bold leading-[1.2] text-[#8282a4]">
+                                        <span className="flex h-[42px] items-center text-[19px] font-bold text-[#8282a4]">
                                             :
                                         </span>
                                     ) }
                                     <div className="flex w-[42px] flex-col items-center gap-[5px]">
-                                        <span className="flex size-[42px] items-center justify-center rounded-[10px] bg-[#f4f4f4] text-[17px] font-black leading-[1.2] text-[#08051c]">
+                                        <span className="flex size-[42px] items-center justify-center rounded-[10px] bg-[#f4f4f4] text-[17px] font-black text-[#08051c]">
                                             { pad( value ) }
                                         </span>
-                                        <span className="text-[13.8px] leading-[1.2] text-[#8282a4]">
+                                        <span className="text-[13.8px] text-[#8282a4]">
                                             { label }
                                         </span>
                                     </div>
@@ -182,7 +183,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                         />
                     </div>
 
-                    <span className="text-[14.6px] leading-[1.2] text-[#8282a4]">
+                    <span className="text-[14.6px] text-[#8282a4]">
                         { sprintf(
                             /* translators: %d: share of the bundle offer already claimed */
                             __( '%d%% Claimed', 'dokan-lite' ),
@@ -201,7 +202,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                     <ArrowRight />
                 </a>
 
-                <p className="m-0 mt-10 ps-[7px] text-center text-[15.5px] leading-[1.2] text-[#8282a4]">
+                <p className="m-0 mt-10 ps-[7px] text-center text-[15.5px] text-[#8282a4]">
                     { createInterpolateElement(
                         sprintf(
                             /* translators: 1: days, 2: hours, 3: minutes left, e.g. "3d 15h 16m" */
@@ -217,7 +218,7 @@ const EnterpriseBundle = ( { url }: { url: string } ) => {
                     ) }
                 </p>
 
-                <p className="m-0 mt-auto flex items-center justify-center gap-[17px] pt-[51px] text-[15.5px] leading-[1.2] text-[#8282a4]">
+                <p className="m-0 mt-auto flex items-center justify-center gap-[17px] pt-[51px] text-[15.5px] text-[#8282a4]">
                     <ShieldCheck />
                     { __( 'One time payment', 'dokan-lite' ) }
                 </p>

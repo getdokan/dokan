@@ -54,7 +54,7 @@ const ComparisonTable = () => {
                 <h2 className="m-0 text-[32px] font-bold leading-[42px] text-[#0e0e0f]">
                     { __( 'What You Unlock with Dokan Pro', 'dokan-lite' ) }
                 </h2>
-                <p className="m-0 text-[18px] leading-[1.21] text-[#575757]">
+                <p className="m-0 text-[18px] text-[#575757]">
                     { __(
                         'Your marketplace runs on Lite today. Here is what Pro adds.',
                         'dokan-lite'

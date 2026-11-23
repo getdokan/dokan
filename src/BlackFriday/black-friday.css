@@ -3,6 +3,13 @@
 
 .dokan-black-friday {
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.21; /* Figma's text boxes use the font's own line height, not Tailwind's 1.5. */
+}
+
+/* wp-admin sizes every <p> at 13px/1.5, which would override what the page sets on a parent. */
+.dokan-black-friday p {
+    font-size: inherit;
+    line-height: inherit;
 }
 
 .dokan-black-friday .dokan-bf-hero {
@@ -20,5 +27,6 @@
 
 /* Black Friday exclusive bundle: pale blue band behind the product list and price card. */
 .dokan-black-friday .dokan-bf-bundle {
+    line-height: 1.2;
     background-image: linear-gradient(90deg, #f0f5ff 0%, #e8eeff 43%, #eef9ff 75%, #dde8ff 100%);
 }

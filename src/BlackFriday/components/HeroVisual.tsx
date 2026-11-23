@@ -62,7 +62,7 @@ const HeroVisual = ( { assetsUrl }: { assetsUrl: string } ) => (
             { __( 'off', 'dokan-lite' ) }
         </span>
 
-        <span className="absolute -left-[13px] top-[199px] inline-flex h-[27.5px] w-[157.5px] -rotate-[10.15deg] items-center whitespace-nowrap rounded-full bg-white px-[10px] text-[11.3px] font-bold leading-[1.21] text-[#7047eb]">
+        <span className="absolute -left-[13px] top-[199px] inline-flex h-[27.5px] w-[157.5px] -rotate-[10.15deg] items-center whitespace-nowrap rounded-full bg-white px-[10px] text-[11.3px] font-bold text-[#7047eb]">
             { __( '+ $2,085 in free add-ons', 'dokan-lite' ) }
         </span>
     </div>
