@@ -293,10 +293,7 @@ registerBlockType( metadata.name, {
                     />
                     <SelectControl
                         label={ __( 'Store picture position', 'dokan-lite' ) }
-                        help={ __(
-                            'Applies to grid view.',
-                            'dokan-lite'
-                        ) }
+                        help={ __( 'Applies to grid view.', 'dokan-lite' ) }
                         value={ attributes.avatarPosition ?? '' }
                         options={ [
                             {

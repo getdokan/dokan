@@ -246,7 +246,7 @@ registerBlockType( metadata.name, {
                             <TextControl
                                 label={ __( 'Open text', 'dokan-lite' ) }
                                 help={ __(
-                                    'The vendor\'s own message shows first.',
+                                    "The vendor's own message shows first.",
                                     'dokan-lite'
                                 ) }
                                 placeholder={ __( 'Store Open', 'dokan-lite' ) }

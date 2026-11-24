@@ -25,12 +25,29 @@
 		#dokan-store-listing-filter-wrap {
 			display: block;
 
+			// Controls wrap and the select shrinks, so nothing runs past the bar.
 			.right {
 				justify-content: space-between;
 				margin-top: 15px;
+				flex-wrap: wrap;
+				gap: 15px;
+
+				.item {
+					min-width: 0;
+					max-width: 100%;
+				}
 
 				.item.sort-by {
+					display: flex;
+					flex-wrap: wrap;
+					align-items: center;
+					gap: 8px;
 					margin: 0;
+				}
+
+				select[name="stores_orderby"] {
+					min-width: 0;
+					max-width: 100%;
 				}
 			}
 		}

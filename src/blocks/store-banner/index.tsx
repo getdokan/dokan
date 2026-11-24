@@ -30,9 +30,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody
-                    title={ __( 'Settings', 'dokan-lite' ) }
-                >
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <RangeControl
                         label={ __( 'Height (px)', 'dokan-lite' ) }
                         help={ __(

@@ -31,9 +31,7 @@ registerBlockType( metadata.name, {
             setAttributes={ setAttributes }
         >
             <InspectorControls>
-                <PanelBody
-                    title={ __( 'Settings', 'dokan-lite' ) }
-                >
+                <PanelBody title={ __( 'Settings', 'dokan-lite' ) }>
                     <SelectControl
                         label={ __( 'Shape', 'dokan-lite' ) }
                         value={ attributes.shape ?? 'circle' }

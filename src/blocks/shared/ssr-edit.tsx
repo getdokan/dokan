@@ -18,13 +18,8 @@ import ServerSideRender from '@wordpress/server-side-render';
 export const withoutStackingSupports = (
     attributes: Record< string, unknown >
 ): Record< string, unknown > => {
-    const {
-        backgroundColor,
-        gradient,
-        borderColor,
-        style,
-        ...rest
-    } = attributes;
+    const { backgroundColor, gradient, borderColor, style, ...rest } =
+        attributes;
 
     if ( ! style || typeof style !== 'object' ) {
         return rest;
