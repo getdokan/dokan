@@ -358,4 +358,45 @@ class SyncTest extends DokanTestCase {
         $webhooks->subscribe_imported( 0, $this->seller_id1, 'PB' );
         $this->assertSame( [ [ 'unsubscribe', [ 'PC' ] ], [ 'subscribe', [ 'PA' ] ] ], $calls, 'PC freed its slot; PB already has one' );
     }
+
+    public function test_turning_instant_updates_off_cancels_the_registered_url_and_frees_the_slots() {
+        $calls = [];
+        add_filter(
+            'pre_http_request', function ( $pre, $args, $url ) use ( &$calls ) {
+                if ( preg_match( '#webhook/(set|product/unsubscribe)#', $url, $m ) ) {
+                    $calls[] = [ $m[1], json_decode( $args['body'], true ) ];
+                }
+
+                return $pre;
+            }, 5, 3
+        );
+
+        $state = [
+            'registered_at' => time(),
+            'url'           => 'https://old-address.example/wp-json/dokan/v1/cj-dropshipping/webhook',
+            'failed'        => 0,
+            'pids'          => [ 'PA', 'PB' ],
+        ];
+        update_option( Webhooks::OPTION, $state );
+
+        // CJ refuses: instant updates stay on so the admin can try again.
+        $this->cj['code'] = 1600000;
+        try {
+            ( new Webhooks() )->turn_off();
+            $this->fail( 'CJ refused, so turning off must fail' );
+        } catch ( \WeDevs\Dokan\CJDropshipping\Api\ApiException $e ) {
+            $this->assertSame( $state, get_option( Webhooks::OPTION ) );
+        }
+
+        $calls            = [];
+        $this->cj['code'] = 200;
+        ( new Webhooks() )->turn_off();
+
+        $this->assertSame( 'set', $calls[0][0] );
+        $this->assertSame( 'CANCEL', $calls[0][1]['stock']['type'] );
+        $this->assertSame( [ $state['url'] ], $calls[0][1]['stock']['callbackUrls'], 'Cancels the URL CJ was given, not today\'s' );
+        $this->assertSame( [ 'product/unsubscribe', [ 'productIds' => [ 'PA', 'PB' ] ] ], $calls[1] );
+        $this->assertFalse( get_option( Webhooks::OPTION ) );
+        $this->assertNull( Webhooks::summary() );
+    }
 }

@@ -316,10 +316,54 @@ class Webhooks implements Hookable {
         }
 
         try {
-            ( new Catalog() )->cancel_webhooks( self::url() );
+            ( new Catalog() )->cancel_webhooks( self::registered_url() );
         } catch ( ApiException $e ) {
             dokan_log( '[CJ Dropshipping] Webhook cancel failed: ' . $e->getMessage(), 'error' );
         }
+    }
+
+    /**
+     * Turn instant updates off: CJ stops pushing and the products give back their slots.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     * @throws ApiException When CJ can't cancel; instant updates stay on.
+     */
+    public function turn_off(): void {
+        $state = get_option( self::OPTION );
+
+        if ( ! is_array( $state ) ) {
+            return;
+        }
+
+        $catalog = new Catalog();
+        $catalog->cancel_webhooks( self::registered_url() );
+
+        $pids = array_map( 'strval', (array) ( $state['pids'] ?? [] ) );
+
+        try {
+            if ( $pids ) {
+                $catalog->unsubscribe( $pids );
+            }
+        } catch ( ApiException $e ) {
+            dokan_log( '[CJ Dropshipping] Webhook unsubscribe failed: ' . $e->getMessage(), 'error' );
+        }
+
+        $this->forget();
+    }
+
+    /**
+     * The URL CJ was given, which may differ from today's if the site address changed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    protected static function registered_url(): string {
+        $state = get_option( self::OPTION );
+
+        return is_array( $state ) && ! empty( $state['url'] ) ? (string) $state['url'] : self::url();
     }
 
     /**

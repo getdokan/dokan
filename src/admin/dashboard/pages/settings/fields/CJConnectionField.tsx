@@ -91,6 +91,14 @@ export default function CJConnectionField( { element }: Props ) {
         );
     };
 
+    const turnOffWebhooks = () =>
+        run(
+            apiFetch< Connection >( {
+                path: 'dokan/v1/admin/cj-dropshipping/webhooks',
+                method: 'DELETE',
+            } )
+        );
+
     const disconnect = () => {
         setConfirming( false );
         run( apiFetch< Connection >( { path: PATH, method: 'DELETE' } ) );
@@ -276,7 +284,7 @@ export default function CJConnectionField( { element }: Props ) {
                         </span>
                     ) }
                     { ! confirmingWebhooks ? (
-                        <div>
+                        <div className="flex gap-2">
                             <Button
                                 variant="outline"
                                 onClick={ () => setConfirmingWebhooks( true ) }
@@ -286,6 +294,16 @@ export default function CJConnectionField( { element }: Props ) {
                                     ? __( 'Register again', 'dokan-lite' )
                                     : __( 'Turn on', 'dokan-lite' ) }
                             </Button>
+                            { connection?.webhooks && (
+                                <Button
+                                    variant="outline"
+                                    onClick={ turnOffWebhooks }
+                                    disabled={ busy }
+                                    data-testid="cj-webhooks-off"
+                                >
+                                    { __( 'Turn off', 'dokan-lite' ) }
+                                </Button>
+                            ) }
                         </div>
                     ) : (
                         <div className="flex flex-col gap-2">

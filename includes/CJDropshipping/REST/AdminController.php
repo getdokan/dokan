@@ -69,6 +69,11 @@ class AdminController extends DokanBaseAdminController {
                     'callback'            => [ $this, 'register_webhooks' ],
                     'permission_callback' => [ $this, 'check_permission' ],
                 ],
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'turn_off_webhooks' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
             ]
         );
 
@@ -160,6 +165,23 @@ class AdminController extends DokanBaseAdminController {
     public function register_webhooks() {
         try {
             ( new Webhooks() )->register();
+        } catch ( ApiException $e ) {
+            return self::to_error( $e );
+        }
+
+        return rest_ensure_response( ( new Connection() )->summary() );
+    }
+
+    /**
+     * Turn instant updates off; stock goes back to the scheduled check only.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function turn_off_webhooks() {
+        try {
+            ( new Webhooks() )->turn_off();
         } catch ( ApiException $e ) {
             return self::to_error( $e );
         }
