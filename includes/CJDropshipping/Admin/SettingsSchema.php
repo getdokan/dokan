@@ -21,6 +21,22 @@ class SettingsSchema implements Hookable {
      */
     public function register_hooks(): void {
         add_filter( 'dokan_get_admin_settings_schema', [ $this, 'append_schema' ], 20 );
+        add_filter( 'dokan_rest_admin_settings_sanitize_field', [ $this, 'sanitize_vendor_terms' ], 10, 3 );
+    }
+
+    /**
+     * Sanitize the vendor terms: plain text, one point per line.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $value   Submitted value.
+     * @param array  $field   Field.
+     * @param string $variant Field variant.
+     *
+     * @return mixed
+     */
+    public function sanitize_vendor_terms( $value, $field, $variant ) {
+        return 'cj_vendor_terms' === $variant ? Settings::sanitize_vendor_terms( $value ) : $value;
     }
 
     /**
@@ -187,10 +203,10 @@ class SettingsSchema implements Hookable {
         $fields[] = [
             'id'           => 'cj_vendor_terms',
             'type'         => 'field',
-            'variant'      => 'textarea',
+            'variant'      => 'cj_vendor_terms',
             'section_id'   => 'cj_connection_section',
             'title'        => __( 'What vendors confirm before selling CJ products', 'dokan-lite' ),
-            'description'  => __( 'Vendors tick "I understand" under this text once, before their first import. One point per line.', 'dokan-lite' ),
+            'description'  => __( 'Vendors tick "I understand" under these points once, before their first import.', 'dokan-lite' ),
             'default'      => Settings::default_vendor_terms(),
             'legacy_key'   => [
                 'option' => Settings::OPTION,

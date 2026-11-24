@@ -82,6 +82,16 @@ class AdminRestTest extends DokanTestCase {
         $this->assertSame( Status::DISCONNECTED, Status::get_state() );
     }
 
+    public function test_vendor_terms_are_saved_as_plain_points_one_per_line() {
+        $schema = new SettingsSchema();
+
+        $this->assertSame(
+            "First point\nSecond point",
+            $schema->sanitize_vendor_terms( "<b>First</b> point\r\n\n  \nSecond point\n", [], 'cj_vendor_terms' )
+        );
+        $this->assertSame( '<b>kept</b>', $schema->sanitize_vendor_terms( '<b>kept</b>', [], 'textarea' ), 'Other fields are left alone' );
+    }
+
     public function test_schema_adds_cj_subpage_with_unique_ids() {
         $elements = ( new SettingsSchema() )->append_schema( [] );
         $ids      = array_column( $elements, 'id' );

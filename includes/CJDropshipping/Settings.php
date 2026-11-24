@@ -250,6 +250,21 @@ class Settings {
     }
 
     /**
+     * Clean the vendor terms before they are saved: plain text, one point per line, no empty points.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $value Submitted text.
+     *
+     * @return string
+     */
+    public static function sanitize_vendor_terms( $value ): string {
+        $points = array_map( 'sanitize_text_field', explode( "\n", str_replace( "\r", '', (string) $value ) ) );
+
+        return implode( "\n", array_filter( $points, 'strlen' ) );
+    }
+
+    /**
      * Text vendors confirm before selling CJ products; the admin can edit it (E8).
      *
      * @since DOKAN_SINCE
