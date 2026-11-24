@@ -43,7 +43,10 @@ const StartStep = ( { status, onAccepted }: Props ) => {
             <ul className="my-2 flex flex-col gap-2 p-0 text-sm text-gray-800">
                 { status.terms.map( ( line ) => (
                     <li key={ line } className="flex list-none gap-2">
-                        <span aria-hidden="true" className="text-gray-500">
+                        <span
+                            aria-hidden="true"
+                            className="text-lg font-bold leading-5 text-gray-900"
+                        >
                             •
                         </span>
                         <span>{ line }</span>
