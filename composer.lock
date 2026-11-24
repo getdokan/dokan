@@ -145,16 +145,16 @@
     "packages-dev": [
         {
             "name": "antecedent/patchwork",
-            "version": "2.2.4",
+            "version": "2.2.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antecedent/patchwork.git",
-                "reference": "d5d5c6032b7109477163b68e25ff531f7654ebf9"
+                "reference": "1ea49951bdf0d2d7c0bd436ffd95215e08ed30ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/d5d5c6032b7109477163b68e25ff531f7654ebf9",
-                "reference": "d5d5c6032b7109477163b68e25ff531f7654ebf9",
+                "url": "https://api.github.com/repos/antecedent/patchwork/zipball/1ea49951bdf0d2d7c0bd436ffd95215e08ed30ed",
+                "reference": "1ea49951bdf0d2d7c0bd436ffd95215e08ed30ed",
                 "shasum": ""
             },
             "require": {
@@ -189,9 +189,9 @@
             ],
             "support": {
                 "issues": "https://github.com/antecedent/patchwork/issues",
-                "source": "https://github.com/antecedent/patchwork/tree/2.2.4"
+                "source": "https://github.com/antecedent/patchwork/tree/2.2.5"
             },
-            "time": "2026-10-25T05:26:39+00:00"
+            "time": "2026-11-10T09:08:20+00:00"
         },
         {
             "name": "brain/monkey",
@@ -1162,16 +1162,16 @@
         },
         {
             "name": "phpcompatibility/phpcompatibility-paragonie",
-            "version": "2.0.0-alpha2",
+            "version": "2.0.0-alpha3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie.git",
-                "reference": "7a979711c87d8202b52f56c56bd719d09d8ed7f5"
+                "reference": "aa2baa7027d2491732420d0cffc12a749e89e97c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityParagonie/zipball/7a979711c87d8202b52f56c56bd719d09d8ed7f5",
-                "reference": "7a979711c87d8202b52f56c56bd719d09d8ed7f5",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityParagonie/zipball/aa2baa7027d2491732420d0cffc12a749e89e97c",
+                "reference": "aa2baa7027d2491732420d0cffc12a749e89e97c",
                 "shasum": ""
             },
             "require": {
@@ -1229,7 +1229,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-29T13:09:49+00:00"
+            "time": "2026-11-17T20:00:34+00:00"
         },
         {
             "name": "phpcompatibility/phpcompatibility-wp",
@@ -1237,12 +1237,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "44177e4d86921bd508cca449c602c9f27cf9e0e8"
+                "reference": "b475f1d61eb600b72e93f640d1265639c8fc3610"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/44177e4d86921bd508cca449c602c9f27cf9e0e8",
-                "reference": "44177e4d86921bd508cca449c602c9f27cf9e0e8",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/b475f1d61eb600b72e93f640d1265639c8fc3610",
+                "reference": "b475f1d61eb600b72e93f640d1265639c8fc3610",
                 "shasum": ""
             },
             "require": {
@@ -1297,7 +1297,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-10-27T19:03:44+00:00"
+            "time": "2026-11-17T21:25:26+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -1795,16 +1795,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.38",
+            "version": "9.6.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8b5f757e8e92071bfdbfa93943f94f84c4e31007"
+                "reference": "133394556c813b61aa3481a87bef8419d8ec95c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8b5f757e8e92071bfdbfa93943f94f84c4e31007",
-                "reference": "8b5f757e8e92071bfdbfa93943f94f84c4e31007",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/133394556c813b61aa3481a87bef8419d8ec95c0",
+                "reference": "133394556c813b61aa3481a87bef8419d8ec95c0",
                 "shasum": ""
             },
             "require": {
@@ -1878,7 +1878,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.38"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.39"
             },
             "funding": [
                 {
@@ -1886,7 +1886,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-05T05:44:26+00:00"
+            "time": "2026-11-13T11:05:34+00:00"
         },
         {
             "name": "psr/container",
@@ -4004,12 +4004,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "132bab229cdabdfb8036997b29f14d154e0fa385"
+                "reference": "2e453c5a47b02bf249ca88de45faaa5e27de77bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/132bab229cdabdfb8036997b29f14d154e0fa385",
-                "reference": "132bab229cdabdfb8036997b29f14d154e0fa385",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/2e453c5a47b02bf249ca88de45faaa5e27de77bb",
+                "reference": "2e453c5a47b02bf249ca88de45faaa5e27de77bb",
                 "shasum": ""
             },
             "require": {
@@ -4063,7 +4063,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-11-04T18:39:24+00:00"
+            "time": "2026-11-20T22:52:08+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",

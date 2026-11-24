@@ -64,6 +64,12 @@ const SubmenuPopover = ( {
                                 <li key={ subkey }>
                                     <a
                                         href={ subitem.url }
+                                        target={ subitem.target || '_self' }
+                                        rel={
+                                            subitem.target === '_blank'
+                                                ? 'noopener noreferrer'
+                                                : undefined
+                                        }
                                         className={ twMerge(
                                             'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm focus:!outline-none transition-colors duration-150',
                                             // Tailwind utilities are !important, so the grey would beat `.active` text color.

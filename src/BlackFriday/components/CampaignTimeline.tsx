@@ -1,7 +1,7 @@
 // TODO BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off.
 import { __, sprintf } from '@wordpress/i18n';
 import { dateI18n } from '@wordpress/date';
-import { EARLY_BIRD_ENDS_AT } from '../settings';
+import { BLACK_FRIDAY_ENDS_AT } from '../settings';
 
 type PhaseStatus = 'ended' | 'live' | 'next' | 'later';
 
@@ -16,17 +16,17 @@ type Phase = {
 const getPhases = (): Phase[] => [
     {
         startsAt: '2026-11-05T00:00:00Z',
-        endsAt: EARLY_BIRD_ENDS_AT,
+        endsAt: '2026-11-20T23:59:59Z',
         title: __( 'Early Bird', 'dokan-lite' ),
         offer: __( 'Up to 60% off', 'dokan-lite' ),
         extra: __( 'Entrepreneur Pack: $999 lifetime', 'dokan-lite' ),
     },
     {
         startsAt: '2026-11-20T00:00:00Z',
-        endsAt: '2026-11-29T23:59:59Z',
+        endsAt: BLACK_FRIDAY_ENDS_AT,
         title: __( 'Black Friday', 'dokan-lite' ),
         offer: __( 'Up to 55% off', 'dokan-lite' ),
-        extra: __( 'Enterprise bundle worth $7,080', 'dokan-lite' ),
+        extra: __( 'Enterprise bundle worth $8,227', 'dokan-lite' ),
     },
     {
         startsAt: '2026-11-29T00:00:00Z',
@@ -60,11 +60,27 @@ const getStatuses = ( phases: Phase[], now = Date.now() ): PhaseStatus[] => {
 
 const formatDay = ( date: string ) => dateI18n( 'M j', date, 'UTC' );
 
-const getChips = (): Record< PhaseStatus, [ string, string ] > => ( {
-    live: [ __( 'Live now', 'dokan-lite' ), 'bg-[#0d0235] text-white' ],
-    next: [ __( 'Next', 'dokan-lite' ), 'bg-[#f4efff] text-[#7047eb]' ],
-    later: [ __( 'Later', 'dokan-lite' ), 'bg-[#f4efff] text-[#7047eb]' ],
-    ended: [ __( 'Ended', 'dokan-lite' ), 'bg-[#f1f1f4] text-[#9a9aa3]' ],
+type Chip = { label: string; chip: string; dot?: string };
+
+const getChips = (): Record< PhaseStatus, Chip > => ( {
+    live: {
+        label: __( 'Live Now', 'dokan-lite' ),
+        chip: 'bg-[#0d0235] text-white',
+        dot: 'bg-[#4fffc2]',
+    },
+    next: {
+        label: __( 'Next', 'dokan-lite' ),
+        chip: 'bg-[#f4efff] text-[#7047eb]',
+    },
+    later: {
+        label: __( 'Later', 'dokan-lite' ),
+        chip: 'bg-[#f4efff] text-[#7047eb]',
+    },
+    ended: {
+        label: __( 'Ended', 'dokan-lite' ),
+        chip: 'bg-[#0d0235] text-white',
+        dot: 'bg-[#e5484d]',
+    },
 } );
 
 // Early Bird → Black Friday → Cyber Monday timeline with live status chips.
@@ -78,7 +94,7 @@ const CampaignTimeline = () => {
             { phases.map( ( phase, index ) => {
                 const status = statuses[ index ];
                 const isLive = status === 'live';
-                const [ chipLabel, chipClass ] = chips[ status ];
+                const { label, chip, dot } = chips[ status ];
 
                 return (
                     <article
@@ -90,19 +106,21 @@ const CampaignTimeline = () => {
                         }` }
                     >
                         <div className="flex w-full items-center justify-between gap-3">
-                            <h3 className="m-0 text-[18px] font-semibold leading-normal text-[#1a1a1c]">
+                            <h3 className="m-0 text-[18px] font-semibold text-[#1a1a1c]">
                                 { phase.title }
                             </h3>
                             <span
-                                className={ `inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase leading-normal tracking-[0.88px] ${ chipClass }` }
+                                className={ `inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-[0.88px] ${ chip }` }
                             >
-                                { isLive && (
-                                    <span className="size-[6px] rounded-full bg-[#e5484d]" />
+                                { dot && (
+                                    <span
+                                        className={ `size-[6px] rounded-full ${ dot }` }
+                                    />
                                 ) }
-                                { chipLabel }
+                                { label }
                             </span>
                         </div>
-                        <p className="m-0 text-[14px] leading-normal text-[#758598]">
+                        <p className="m-0 text-[14px] text-[#758598]">
                             { sprintf(
                                 /* translators: 1: phase start date, 2: phase end date */
                                 __( '%1$s – %2$s', 'dokan-lite' ),
@@ -117,7 +135,7 @@ const CampaignTimeline = () => {
                         >
                             { phase.offer }
                         </p>
-                        <p className="m-0 text-[14px] leading-normal text-[#4a5565]">
+                        <p className="m-0 text-[14px] text-[#4a5565]">
                             { phase.extra }
                         </p>
                     </article>

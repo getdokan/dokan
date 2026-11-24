@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.3.4
+Stable tag: 5.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -379,6 +379,18 @@ A. Please report security bugs found in the source code of the plugin through th
 
 == Changelog ==
 
+= v5.3.6 ( Nov 23, 2026 ) =
+- **update:** The Black Friday page in the Dokan admin now shows the current Black Friday deals, including the Enterprise Bundle, Black Friday prices for the Lifetime and Annual plans, and a live countdown.
+- **fix:** Vendor dashboard menu links that are set to open in a new tab, such as wePOS, now do so from the new dashboard sidebar, including its collapsed menu.
+- **fix:** The product variations pagination in the vendor product editor now shows the missing "of" between the page numbers.
+
+= v5.3.5 ( Nov 19, 2026 ) =
+- **update:** Updating from a version older than 5.0.0 now adds the new order report columns in one step, so the update finishes faster on large stores and can no longer stop half-way.
+- **fix:** Vendors can no longer change the admin commission on their own products through the REST API, which could push their earnings above the order total.
+- **fix:** Vendors can no longer save unsafe or WooCommerce-reserved product data through the product REST API.
+- **fix:** WooCommerce Analytics no longer shows zero orders and revenue on stores that already had orders before Dokan was activated. Dokan now rebuilds the order data on its own and shows a notice while it runs.
+- **fix:** The admin vendor form no longer loses what was typed when switching tabs, and a failed save now opens the tab with the problem field and focuses it.
+
 = v5.3.4 ( Nov 05, 2026 ) =
 - **new:** Added a Black Friday 2026 offers page to the Dokan admin.
 - **update:** Added CartPilot and FlyAffiliate to the setup wizard's recommended add-ons, with a Show More option for the extra add-ons.
@@ -406,23 +418,5 @@ A. Please report security bugs found in the source code of the plugin through th
 = v5.3.2 ( Oct 22, 2026 ) =
 - **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.
 - **fix:** Saving a vendor from the WordPress Users screen no longer resets their custom commission to the global rate.
-
-= v5.3.1 ( Oct 15, 2026 ) =
-- **new:** Add-ons can now adjust how an order's earnings are split between the vendor and the admin, so features like vendor-funded affiliate commissions show the correct amounts.
-- **fix:** Saving a downloadable product from the vendor dashboard no longer resets buyers' existing download limits, expiry dates, and download counts.
-- **fix:** Creating a vendor from the admin with selling enabled no longer loses the vendor's phone, address, payment details, and social links.
-- **fix:** Vendors can now see download permissions for variable products and variable subscriptions on an order.
-- **fix:** The admin dashboard now shows the actual error message when a section fails to load instead of a generic "An error occurred".
-- **fix:** REST API requests now return the real error message instead of failing with a server error when certain Dokan errors occur.
-
-= v5.3.0 ( Oct 08, 2026 ) =
-- **new:** Introduced a redesigned vendor Store Settings page in the new vendor dashboard.
-- **new:** Add-ons and extensions can now show their own options on the new vendor Store Settings page.
-- **update:** Admins can switch vendors between the new and classic Store Settings page from the Appearance settings, and existing sites stay on the classic page by default.
-- **update:** Added a `dokan_product_editor_after_save` action so features can save their own data right after a product is saved in the new product editor.
-- **fix:** Prevented vendors from changing a customer's password or login email through the customers REST endpoint.
-- **fix:** Prevented vendors from storing serialized PHP objects in product meta through the products REST endpoint, closing a PHP object injection vulnerability.
-- **fix:** Vendor store maps now open on the default location set in the Geolocation settings, and saving store settings no longer removes a vendor from geolocation search results.
-- **fix:** The setup guide now shows an error with a retry option when a step fails to load or save instead of silently moving on, and stops you from continuing while the required admin commission is empty.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

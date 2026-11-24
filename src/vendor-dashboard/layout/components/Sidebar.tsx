@@ -244,7 +244,7 @@ const Sidebar = ( {
                     href={ siteUrl || '/' }
                     className={ twMerge(
                         'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md',
-                        collapsed ? 'px-5 justify-center' : 'px-8',
+                        collapsed ? 'px-5 justify-center' : 'px-8'
                     ) }
                 >
                     { siteIcon ? (
@@ -367,10 +367,21 @@ const Sidebar = ( {
                                                             ? 'w-0 max-w-0'
                                                             : 'w-10 max-w-10 justify-center'
                                                         : 'text-sm px-3',
-                                                    (isMenuItemActive) &&
-                                                        'active'
+                                                    isMenuItemActive && 'active'
                                                 ) }
-                                                data-active={ isMenuItemActive ? 'true' : 'false' }
+                                                data-active={
+                                                    isMenuItemActive
+                                                        ? 'true'
+                                                        : 'false'
+                                                }
+                                                target={
+                                                    item.target || '_self'
+                                                }
+                                                rel={
+                                                    item.target === '_blank'
+                                                        ? 'noopener noreferrer'
+                                                        : undefined
+                                                }
                                             >
                                                 { /* Icon: turn white when its popover is visible */ }
                                                 <span
@@ -492,6 +503,16 @@ const Sidebar = ( {
                                                                                 isSubActive &&
                                                                                     'active'
                                                                             ) }
+                                                                            target={
+                                                                                subitem.target ||
+                                                                                '_self'
+                                                                            }
+                                                                            rel={
+                                                                                subitem.target ===
+                                                                                '_blank'
+                                                                                    ? 'noopener noreferrer'
+                                                                                    : undefined
+                                                                            }
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
                                                                             <span className="ms-2">

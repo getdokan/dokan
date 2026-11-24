@@ -23,6 +23,7 @@ function Edit( props ) {
         useDispatch( store );
     const toast = useToast();
     const [ saving, setSaving ] = useState( false );
+    const [ focusErrorsTrigger, setFocusErrorsTrigger ] = useState( 0 );
     const [ originalVendor, setOriginalVendor ] = useState< Vendor | null >(
         null
     );
@@ -69,6 +70,9 @@ function Edit( props ) {
         );
 
         if ( validatedErrors.length > 0 || ! shouldSubmit ) {
+            if ( validatedErrors.length > 0 ) {
+                setFocusErrorsTrigger( ( n ) => n + 1 );
+            }
             return;
         }
 
@@ -204,6 +208,7 @@ function Edit( props ) {
                 requiredFields={ requiredFields }
                 formKey="dokan-edit-vendor"
                 createForm={ false }
+                focusErrorsTrigger={ focusErrorsTrigger }
             />
 
             { /*Add new vendor header*/ }

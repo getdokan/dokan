@@ -7,10 +7,10 @@ const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
-const pad = ( value: number ) => String( value ).padStart( 2, '0' );
+export const pad = ( value: number ) => String( value ).padStart( 2, '0' );
 
-// Live DD:HH:MM:SS countdown to the campaign deadline.
-const Countdown = ( { endsAt }: { endsAt: string } ) => {
+// Days, hours, minutes and seconds left until the deadline, ticking every second.
+export const useTimeLeft = ( endsAt: string ) => {
     const deadline = Date.parse( endsAt );
     const [ remaining, setRemaining ] = useState( () =>
         Math.max( 0, deadline - Date.now() )
@@ -30,11 +30,23 @@ const Countdown = ( { endsAt }: { endsAt: string } ) => {
         return () => clearInterval( timer );
     }, [ deadline ] );
 
+    return {
+        days: Math.floor( remaining / DAY ),
+        hours: Math.floor( remaining / HOUR ) % 24,
+        minutes: Math.floor( remaining / MINUTE ) % 60,
+        seconds: Math.floor( remaining / SECOND ) % 60,
+    };
+};
+
+// Live DD:HH:MM:SS countdown to the campaign deadline.
+const Countdown = ( { endsAt }: { endsAt: string } ) => {
+    const { days, hours, minutes, seconds } = useTimeLeft( endsAt );
+
     const units: Array< [ number, string ] > = [
-        [ Math.floor( remaining / DAY ), __( 'Days', 'dokan-lite' ) ],
-        [ Math.floor( remaining / HOUR ) % 24, __( 'Hours', 'dokan-lite' ) ],
-        [ Math.floor( remaining / MINUTE ) % 60, __( 'Mins', 'dokan-lite' ) ],
-        [ Math.floor( remaining / SECOND ) % 60, __( 'Secs', 'dokan-lite' ) ],
+        [ days, __( 'Days', 'dokan-lite' ) ],
+        [ hours, __( 'Hours', 'dokan-lite' ) ],
+        [ minutes, __( 'Mins', 'dokan-lite' ) ],
+        [ seconds, __( 'Secs', 'dokan-lite' ) ],
     ];
 
     return (
@@ -42,12 +54,12 @@ const Countdown = ( { endsAt }: { endsAt: string } ) => {
             { units.map( ( [ value, label ] ) => (
                 <div
                     key={ label }
-                    className="flex w-[51px] flex-col items-center gap-px rounded-[10px] border border-white/15 bg-white/8 py-[7px]"
+                    className="flex w-[51px] flex-col items-center gap-px rounded-[10px] border border-white/16 bg-white/8 py-[7px]"
                 >
                     <span className="text-[18px] font-semibold leading-[23px] text-white">
                         { pad( value ) }
                     </span>
-                    <span className="text-[8px] font-bold uppercase leading-normal tracking-[0.6px] text-[#a9a3c4]">
+                    <span className="text-[8px] font-bold uppercase tracking-[0.6px] text-[#a9a3c4]">
                         { label }
                     </span>
                 </div>

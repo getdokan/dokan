@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
 import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 import { REACT_ROOT, PHP_FATAL, waitForRootReady as dvWaitForRootReady, hasNoPhpFatal as dvHasNoPhpFatal } from '@utils/dataViews';
 
 // ============================================
@@ -22,6 +23,21 @@ export const newMenuManagerSelectors = {
     sidebar: 'aside.dokan-frontend-sidebar',
     navAnchors: 'aside.dokan-frontend-sidebar nav a',
     phpFatal: PHP_FATAL,
+    // The collapsed-sidebar flyout (SubmenuPopover) has no accessible role or name.
+    submenuFlyout: '.dokan-submenu-popover',
+    storeSocialLinks: 'ul.store-social a',
+} as const;
+
+// The vendor1 social links seeded by _env.setup — re-applied so the store-header assertions never depend on another spec.
+export const seededSocialLinks = {
+    fb: 'https://www.facebook.com/',
+    twitter: 'https://www.twitter.com/',
+    pinterest: 'https://www.pinterest.com/',
+    linkedin: 'https://www.linkedin.com/',
+    youtube: 'https://www.youtube.com/',
+    instagram: 'https://www.instagram.com/',
+    flickr: 'https://www.flickr.com/',
+    threads: 'https://www.threads.net/',
 } as const;
 
 // NOTE (verified live): is_switched_on is run through wc_string_to_bool, which
