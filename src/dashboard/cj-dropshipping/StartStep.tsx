@@ -39,9 +39,15 @@ const StartStep = ( { status, onAccepted }: Props ) => {
                     'dokan-lite'
                 ) }
             </p>
-            <ul className="list-disc pl-5 space-y-1 text-sm text-gray-800">
+            { /* Bullets drawn here: the dashboard CSS removes list markers. */ }
+            <ul className="my-2 flex flex-col gap-2 p-0 text-sm text-gray-800">
                 { status.terms.map( ( line ) => (
-                    <li key={ line }>{ line }</li>
+                    <li key={ line } className="flex list-none gap-2">
+                        <span aria-hidden="true" className="text-gray-500">
+                            •
+                        </span>
+                        <span>{ line }</span>
+                    </li>
                 ) ) }
             </ul>
             <div className="flex items-center gap-2 text-sm">
