@@ -26,6 +26,8 @@ class Importer {
 
     public const IMAGES_HOOK = 'dokan_cj_import_images';
 
+    public const IMAGES_UPDATE_HOOK = 'dokan_cj_update_images';
+
     protected ProductDetails $details;
 
     protected LinkRepository $links;

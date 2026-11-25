@@ -9,6 +9,7 @@ use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
 use WeDevs\Dokan\CJDropshipping\Data\VariantRepository;
 use WeDevs\Dokan\CJDropshipping\Product\BlockedCategories;
 use WeDevs\Dokan\CJDropshipping\Product\Drafts;
+use WeDevs\Dokan\CJDropshipping\Product\Hooks;
 use WeDevs\Dokan\CJDropshipping\Product\Importer;
 use WeDevs\Dokan\CJDropshipping\Product\Stock;
 use WeDevs\Dokan\CJDropshipping\Queue;
@@ -185,6 +186,10 @@ class Synchronizer implements Hookable {
         $variants = array_column( $details['variants'], null, 'vid' );
         $links    = $this->links->for_cj_product( $pid );
         $blocked  = [];
+
+        foreach ( array_unique( array_map( 'intval', array_column( $links, 'parent_id' ) ) ) as $parent_id ) {
+            Hooks::check_images( $parent_id, $details );
+        }
 
         // Off sale first: a later stock save mustn't find the product published (B8).
         foreach ( array_unique( array_map( 'intval', array_column( $links, 'parent_id' ) ) ) as $parent_id ) {

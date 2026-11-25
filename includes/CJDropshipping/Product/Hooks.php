@@ -7,6 +7,7 @@ use WeDevs\Dokan\CJDropshipping\Api\Points;
 use WeDevs\Dokan\CJDropshipping\Api\ProductDetails;
 use WeDevs\Dokan\CJDropshipping\Data\LinkRepository;
 use WeDevs\Dokan\CJDropshipping\Data\VariantRepository;
+use WeDevs\Dokan\CJDropshipping\Queue;
 use WeDevs\Dokan\CJDropshipping\Settings;
 use WeDevs\Dokan\CJDropshipping\Vendor\Alerts;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
@@ -24,7 +25,10 @@ class Hooks implements Hookable {
     // Vendor can't change these on a CJ product (epic §2).
     public const LOCKED_FIELDS = [ 'sku', 'manage_stock', 'stock_quantity', 'stock_status', 'backorders', 'virtual', 'downloadable' ];
 
-    public const META_KEYS = [ LinkRepository::LINKED_META, '_dokan_cj_pid', '_dokan_cj_sku', '_dokan_cj_source_url', BlockedCategories::META, BlockedCategories::OVERRIDE_META ];
+    // CJ's photo addresses at the last import or sync, to spot CJ replacing a photo.
+    public const IMAGES_META = '_dokan_cj_images';
+
+    public const META_KEYS = [ LinkRepository::LINKED_META, '_dokan_cj_pid', '_dokan_cj_sku', '_dokan_cj_source_url', BlockedCategories::META, BlockedCategories::OVERRIDE_META, self::IMAGES_META ];
 
     protected LinkRepository $links;
 
@@ -57,6 +61,7 @@ class Hooks implements Hookable {
         add_filter( 'woocommerce_product_export_skip_meta_keys', [ $this, 'skip_export_meta' ] );
         add_filter( 'woocommerce_get_availability_text', [ $this, 'hide_stock_number' ], 20, 2 );
         add_action( Importer::IMAGES_HOOK, [ $this, 'import_images' ] );
+        add_action( Importer::IMAGES_UPDATE_HOOK, [ $this, 'update_images' ] );
         add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_rest_flags' ], 20, 2 );
         add_filter( 'dokan_rest_prepare_product_object', [ $this, 'add_rest_flags' ], 20, 2 );
     }
@@ -398,6 +403,278 @@ class Hooks implements Hookable {
                 $variation->set_image_id( $image_id );
                 $variation->save();
             }
+        }
+
+        update_post_meta( $product->get_id(), self::IMAGES_META, self::image_list( $cached ) );
+    }
+
+    /**
+     * Queue a photo update when CJ's photo addresses changed since the last import or sync.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int   $product_id Parent product id.
+     * @param array $details    CJ product details.
+     *
+     * @return void
+     */
+    public static function check_images( int $product_id, array $details ): void {
+        $saved = get_post_meta( $product_id, self::IMAGES_META, true );
+        $list  = self::image_list( $details );
+
+        // Imported before this check: start from CJ's photos today.
+        if ( ! is_array( $saved ) ) {
+            update_post_meta( $product_id, self::IMAGES_META, $list );
+
+            return;
+        }
+
+        if ( ! self::same_images( $saved, $list ) ) {
+            Queue::enqueue( Importer::IMAGES_UPDATE_HOOK, [ 'product_id' => $product_id ] );
+        }
+    }
+
+    /**
+     * Swap in CJ's new photos; photos the vendor added, replaced or removed stay as they are.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id Parent product id.
+     *
+     * @return void
+     */
+    public function update_images( $product_id ): void {
+        $product = wc_get_product( (int) $product_id );
+        $pid     = $product ? (string) $product->get_meta( '_dokan_cj_pid' ) : '';
+        $saved   = $product ? get_post_meta( $product->get_id(), self::IMAGES_META, true ) : '';
+
+        if ( ! $product || '' === $pid || ! is_array( $saved ) ) {
+            return;
+        }
+
+        $saved = wp_parse_args(
+            $saved, [
+				'main'     => '',
+				'gallery'  => [],
+				'variants' => [],
+			]
+        );
+
+        try {
+            $details = ( new ProductDetails() )->get( $pid, Points::BACKGROUND, DAY_IN_SECONDS );
+        } catch ( ApiException $e ) {
+            return;
+        }
+
+        $new       = self::image_list( $details );
+        $vendor_id = (int) get_post_field( 'post_author', $product->get_id() );
+        $old_ids   = [];
+        $changed   = 0;
+
+        // Main photo: only while the product still shows CJ's previous one.
+        $current = (int) $product->get_image_id();
+
+        if ( '' !== $new['main'] && $new['main'] !== $saved['main'] && $this->shows( $current, $saved['main'] ) ) {
+            $image_id = $this->sideload( $new['main'], $product->get_id(), $vendor_id );
+
+            if ( $image_id ) {
+                $product->set_image_id( $image_id );
+                $old_ids[] = $current;
+                ++$changed;
+            }
+        }
+
+        // Gallery: drop CJ photos CJ dropped, add CJ's new ones; the vendor's own stay.
+        $gallery = array_map( 'intval', $product->get_gallery_image_ids() );
+        $keep    = [];
+
+        foreach ( $gallery as $image_id ) {
+            $source = self::source( $image_id );
+
+            if ( '' !== $source && in_array( $source, $saved['gallery'], true ) && ! in_array( $source, $new['gallery'], true ) ) {
+                $old_ids[] = $image_id;
+                ++$changed;
+                continue;
+            }
+
+            $keep[] = $image_id;
+        }
+
+        $limit = (int) apply_filters( 'dokan_cj_import_gallery_limit', -1, $vendor_id );
+
+        foreach ( array_diff( $new['gallery'], $saved['gallery'] ) as $url ) {
+            if ( $limit >= 0 && count( $keep ) >= $limit ) {
+                break;
+            }
+
+            $image_id = $this->sideload( $url, $product->get_id(), $vendor_id );
+
+            if ( $image_id && ! in_array( $image_id, $keep, true ) ) {
+                $keep[] = $image_id;
+                ++$changed;
+            }
+        }
+
+        if ( $keep !== $gallery ) {
+            $product->set_gallery_image_ids( $keep );
+        }
+
+        $product->save();
+
+        // Variation photos, the same way as the main photo.
+        foreach ( $this->links->for_parent( $product->get_id() ) as $link ) {
+            $vid = (string) $link['vid'];
+            $url = $new['variants'][ $vid ] ?? '';
+            $old = $saved['variants'][ $vid ] ?? '';
+
+            if ( (int) $link['product_id'] === $product->get_id() || '' === $url || $url === $old ) {
+                continue;
+            }
+
+            $variation = wc_get_product( (int) $link['product_id'] );
+            $current   = $variation ? (int) $variation->get_image_id() : 0;
+
+            if ( ! $variation || ! $this->shows( $current, $old ) ) {
+                continue;
+            }
+
+            $image_id = $this->sideload( $url, $product->get_id(), $vendor_id );
+
+            if ( $image_id ) {
+                $variation->set_image_id( $image_id );
+                $variation->save();
+                $old_ids[] = $current;
+                ++$changed;
+            }
+        }
+
+        update_post_meta( $product->get_id(), self::IMAGES_META, $new );
+
+        foreach ( array_unique( array_filter( $old_ids ) ) as $image_id ) {
+            $this->delete_if_unused( (int) $image_id, $vendor_id );
+        }
+
+        if ( $changed ) {
+            Alerts::add(
+                $vendor_id,
+                'images_updated',
+                $product->get_id(),
+                sprintf(
+                    /* translators: %s: product name */
+                    __( 'CJ changed the photos of "%s", so your product now shows CJ\'s new photos. Photos you added or replaced yourself were kept.', 'dokan-lite' ),
+                    $product->get_name()
+                )
+            );
+        }
+    }
+
+    /**
+     * CJ's photo addresses: main photo, gallery and each variant's photo.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $details CJ product details.
+     *
+     * @return array{main: string, gallery: string[], variants: array<string, string>}
+     */
+    public static function image_list( array $details ): array {
+        $images   = array_values( array_unique( array_filter( array_merge( [ (string) ( $details['image'] ?? '' ) ], (array) ( $details['images'] ?? [] ) ) ) ) );
+        $variants = [];
+
+        foreach ( (array) ( $details['variants'] ?? [] ) as $variant ) {
+            if ( ! empty( $variant['image'] ) ) {
+                $variants[ (string) $variant['vid'] ] = (string) $variant['image'];
+            }
+        }
+
+        ksort( $variants );
+
+        return [
+            'main'     => (string) ( $images[0] ?? '' ),
+            'gallery'  => array_slice( $images, 1 ),
+            'variants' => $variants,
+        ];
+    }
+
+    /**
+     * Same photos, ignoring the gallery order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $a Photo list.
+     * @param array $b Photo list.
+     *
+     * @return bool
+     */
+    protected static function same_images( array $a, array $b ): bool {
+        $gallery_a  = (array) ( $a['gallery'] ?? [] );
+        $gallery_b  = (array) ( $b['gallery'] ?? [] );
+        $variants_a = (array) ( $a['variants'] ?? [] );
+        $variants_b = (array) ( $b['variants'] ?? [] );
+
+        sort( $gallery_a );
+        sort( $gallery_b );
+        ksort( $variants_a );
+        ksort( $variants_b );
+
+        return ( $a['main'] ?? '' ) === ( $b['main'] ?? '' ) && $gallery_a === $gallery_b && $variants_a === $variants_b;
+    }
+
+    /**
+     * Whether a product still shows CJ's photo from this address (or none, when CJ had none).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int    $image_id Current attachment id.
+     * @param string $url      CJ's previous address.
+     *
+     * @return bool
+     */
+    protected function shows( int $image_id, string $url ): bool {
+        return $image_id ? '' !== $url && self::source( $image_id ) === $url : '' === $url;
+    }
+
+    /**
+     * CJ address an attachment was downloaded from, empty for the vendor's own uploads.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $image_id Attachment id.
+     *
+     * @return string
+     */
+    protected static function source( int $image_id ): string {
+        return (string) get_post_meta( $image_id, '_dokan_cj_source_url', true );
+    }
+
+    /**
+     * Delete a replaced CJ photo copy no product uses any more.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $image_id  Attachment id.
+     * @param int $vendor_id Vendor whose copy it is.
+     *
+     * @return void
+     */
+    protected function delete_if_unused( int $image_id, int $vendor_id ): void {
+        global $wpdb;
+
+        if ( '' === self::source( $image_id ) || (int) get_post_field( 'post_author', $image_id ) !== $vendor_id ) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $used = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT 1 FROM {$wpdb->postmeta} WHERE ( meta_key = '_thumbnail_id' AND meta_value = %s ) OR ( meta_key = '_product_image_gallery' AND FIND_IN_SET( %s, meta_value ) ) LIMIT 1",
+                (string) $image_id,
+                (string) $image_id
+            )
+        );
+
+        if ( ! $used ) {
+            wp_delete_attachment( $image_id, true );
         }
     }
 
