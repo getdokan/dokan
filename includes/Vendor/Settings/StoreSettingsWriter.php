@@ -11,14 +11,14 @@ namespace WeDevs\Dokan\Vendor\Settings;
  * `dokan_store_profile_settings_args` filter → canonical meta write →
  * `dokan_store_profile_saved` action (which also invalidates the vendor cache).
  *
- * @since DOKAN_SINCE
+ * @since 5.3.0
  */
 class StoreSettingsWriter {
 
     /**
      * Persist a legacy-keyed slice of store settings for a vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param int   $vendor_id Vendor user ID.
      * @param array $slice     Legacy-keyed values to merge in.

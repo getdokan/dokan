@@ -10,6 +10,7 @@ use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
+use WP_User_Query;
 
 class CustomersController extends WC_REST_Customers_Controller {
 
@@ -82,6 +83,19 @@ class CustomersController extends WC_REST_Customers_Controller {
             }
         }
 
+        // A vendor may edit a customer's profile, but changing its login password or email would hand over the account.
+        if ( 'edit' === $action ) {
+            // A missing or blank password is not a change (WooCommerce skips it on save).
+            $new_password = $request->get_param( 'password' );
+            if ( ! in_array( $new_password, [ null, '' ], true ) ) {
+                return new WP_Error( 'dokan_rest_forbidden_field', __( 'You are not allowed to change this customer\'s password.', 'dokan-lite' ), [ 'status' => rest_authorization_required_code() ] );
+            }
+
+            if ( $this->is_email_change( $request->get_param( 'email' ), $target_id ) ) {
+                return new WP_Error( 'dokan_rest_forbidden_field', __( 'You are not allowed to change this customer\'s email address.', 'dokan-lite' ), [ 'status' => rest_authorization_required_code() ] );
+            }
+        }
+
         return true;
     }
 
@@ -132,6 +146,32 @@ class CustomersController extends WC_REST_Customers_Controller {
     }
 
     /**
+     * Whether a requested email differs from the customer's current login email.
+     *
+     * Re-sending the current email is not a change. A non-string value (possible in batch items,
+     * which skip request validation) counts as a change, so it is rejected before sanitize_email().
+     *
+     * @since 5.3.0
+     *
+     * @param mixed $new_email   Requested email, or null when the field is absent.
+     * @param int   $customer_id Target customer ID.
+     *
+     * @return bool
+     */
+    protected function is_email_change( $new_email, int $customer_id ): bool {
+        if ( null === $new_email ) {
+            return false;
+        }
+
+        $customer = get_userdata( $customer_id );
+        if ( ! $customer ) {
+            return false;
+        }
+
+        return ! is_string( $new_email ) || sanitize_email( $new_email ) !== $customer->user_email;
+    }
+
+    /**
      * Check if the current user has vendor permissions.
      *
      * Doubles as a callback on the woocommerce_rest_check_permissions
@@ -166,28 +206,52 @@ class CustomersController extends WC_REST_Customers_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_items( $request ) {
-        return $this->perform_vendor_action(
-            function () use ( $request ) {
-                $response = parent::get_items( $request );
-                if ( is_wp_error( $response ) || ! ( $response instanceof WP_REST_Response ) ) {
-                    return $response;
+        add_filter( 'woocommerce_rest_customer_query', [ $this, 'mark_vendor_customer_query' ] );
+        add_action( 'pre_user_query', [ $this, 'restrict_query_to_vendor_customers' ] );
+        try {
+            return $this->perform_vendor_action(
+                function () use ( $request ) {
+                    return parent::get_items( $request );
                 }
+            );
+        } finally {
+            remove_filter( 'woocommerce_rest_customer_query', [ $this, 'mark_vendor_customer_query' ] );
+            remove_action( 'pre_user_query', [ $this, 'restrict_query_to_vendor_customers' ] );
+        }
+    }
 
-                $vendor_id = dokan_get_current_user_id();
-                $data = array_values(
-                    array_filter(
-                        (array) $response->get_data(),
-                        static function ( $item ) use ( $vendor_id ) {
-							$id = is_array( $item ) ? ( $item['id'] ?? 0 ) : 0;
-							return $id && dokan_customer_has_order_from_this_seller( $id, $vendor_id );
-                        }
-                    )
-                );
+    /**
+     * Tag the customer list query with the vendor, so only that query gets restricted.
+     *
+     * @since 5.3.4
+     *
+     * @param array $prepared_args WP_User_Query arguments.
+     *
+     * @return array
+     */
+    public function mark_vendor_customer_query( $prepared_args ) {
+        $prepared_args['dokan_vendor_customers'] = dokan_get_current_user_id();
+        // The users cache salt isn't bumped by order writes, so a cached result could miss a newly related customer.
+        $prepared_args['cache_results'] = false;
 
-                $response->set_data( $data );
-                return $response;
-            }
-        );
+        return $prepared_args;
+    }
+
+    /**
+     * Limit the customer list to the vendor's own customers in SQL, so the rows and the total headers match.
+     *
+     * @since 5.3.4
+     *
+     * @param WP_User_Query $query User query.
+     *
+     * @return void
+     */
+    public function restrict_query_to_vendor_customers( $query ) {
+        $vendor_id = $query->get( 'dokan_vendor_customers' );
+        if ( null !== $vendor_id ) {
+            // A tagged query always gets restricted; an unknown vendor matches no one.
+            dokan()->order->restrict_user_query_to_seller_customers( $query, absint( $vendor_id ) );
+        }
     }
 
     /**

@@ -17,9 +17,6 @@
 - **Legacy per-page options:** `dokan_general`, `dokan_selling`, `dokan_withdraw`, etc. (30 sections)
 - **Bridge class:** `WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge`
 - **Bootstrap listener:** `WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap` (wires `update_option_dokan_settings`)
-- **Generated schema:** `includes/Admin/Settings/Schema/Generated/csv_fields.php` (do not edit by hand)
-- **Generator:** `tools/migration/generate_schema_fragment.php`
-- **Feature flag:** wp_option `dokan_csv_schema_enabled` (default `false`)
 
 ## Adding a new field to the migration
 

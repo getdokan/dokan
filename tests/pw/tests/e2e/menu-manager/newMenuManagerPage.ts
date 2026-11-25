@@ -1,6 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
 import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 import { REACT_ROOT, PHP_FATAL, waitForRootReady as dvWaitForRootReady, hasNoPhpFatal as dvHasNoPhpFatal } from '@utils/dataViews';
 
 // ============================================
@@ -22,6 +23,21 @@ export const newMenuManagerSelectors = {
     sidebar: 'aside.dokan-frontend-sidebar',
     navAnchors: 'aside.dokan-frontend-sidebar nav a',
     phpFatal: PHP_FATAL,
+    // The collapsed-sidebar flyout (SubmenuPopover) has no accessible role or name.
+    submenuFlyout: '.dokan-submenu-popover',
+    storeSocialLinks: 'ul.store-social a',
+} as const;
+
+// The vendor1 social links seeded by _env.setup — re-applied so the store-header assertions never depend on another spec.
+export const seededSocialLinks = {
+    fb: 'https://www.facebook.com/',
+    twitter: 'https://www.twitter.com/',
+    pinterest: 'https://www.pinterest.com/',
+    linkedin: 'https://www.linkedin.com/',
+    youtube: 'https://www.youtube.com/',
+    instagram: 'https://www.instagram.com/',
+    flickr: 'https://www.flickr.com/',
+    threads: 'https://www.threads.net/',
 } as const;
 
 // NOTE (verified live): is_switched_on is run through wc_string_to_bool, which
@@ -66,6 +82,11 @@ export class NewMenuManagerPage {
         await dbUtils.setOptionValue('dokan_menu_manager', { dashboard_menu_manager: { left_menus: leftMenus } }, true);
     }
 
+    /** Same for the Settings sub menu rows (store, payment, shipping, social, seo). */
+    static async seedSettingsSubMenus(subMenus: Record<string, MenuManagerLeftMenu>): Promise<void> {
+        await dbUtils.setOptionValue('dokan_menu_manager', { dashboard_menu_manager: { left_menus: {}, settings_sub_menu: subMenus } }, true);
+    }
+
     // ---- Navigation ----
     /** Fresh navigation — sidebarNav is localized at page load, so reload picks up the seed. */
     async goto(): Promise<void> {
@@ -82,6 +103,25 @@ export class NewMenuManagerPage {
 
     async hasNoPhpFatal(): Promise<boolean> {
         return await dvHasNoPhpFatal(this.page);
+    }
+
+    /** Deep-link a React route by hash (e.g. 'settings/social') — a switched-off one must render Permission Denied. */
+    async gotoRoute(route: string): Promise<void> {
+        await this.page.goto(toPath(`dashboard/new/#${route}`));
+        // A hash-only change is a same-document navigation: reload so dokanFrontend.restrictedRoutes is re-localized after a DB seed.
+        await this.page.reload();
+        await this.page.waitForLoadState('domcontentloaded');
+        await dvWaitForRootReady(this.page);
+        await this.page.waitForTimeout(600);
+    }
+
+    async isForbidden(): Promise<boolean> {
+        return await this.page.getByText('Permission Denied').first().waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
+    }
+
+    /** The route's own form rendered (the positive counterpart of isForbidden). */
+    async routeRendered(selector: string): Promise<boolean> {
+        return await this.page.locator(selector).first().waitFor({ state: 'visible', timeout: 10000 }).then(() => true).catch(() => false);
     }
 
     // ---- Reads ----

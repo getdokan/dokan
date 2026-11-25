@@ -2,8 +2,9 @@ import { Popover } from '@wordpress/components';
 import { twMerge } from 'tailwind-merge';
 // eslint-disable-next-line import/named
 import { RefObject, useEffect, useState } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 import { isRTL } from '@wordpress/i18n';
-import { getActiveSubmenuKey } from './Sidebar';
+import { getActiveSubmenuKey, isSwitchedOff } from './Sidebar';
 
 const SubmenuPopover = ( {
     submenu,
@@ -53,19 +54,32 @@ const SubmenuPopover = ( {
                 <ul className="flex flex-col">
                     { Object.entries( submenu || {} ).map(
                         ( [ subkey, subitem ]: any ) => {
+                            if ( isSwitchedOff( subitem ) ) {
+                                return null;
+                            }
+
                             const isSubActive = subkey === activeSubkey;
 
                             return (
                                 <li key={ subkey }>
                                     <a
                                         href={ subitem.url }
+                                        target={ subitem.target || '_self' }
+                                        rel={
+                                            subitem.target === '_blank'
+                                                ? 'noopener noreferrer'
+                                                : undefined
+                                        }
                                         className={ twMerge(
-                                            'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors duration-150',
-                                            isSubActive && 'active'
+                                            'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm focus:!outline-none transition-colors duration-150',
+                                            // Tailwind utilities are !important, so the grey would beat `.active` text color.
+                                            isSubActive
+                                                ? 'active'
+                                                : 'text-[#828282]'
                                         ) }
                                     >
                                         <span className="ms-1">
-                                            { subitem.title }
+                                            { decodeEntities( subitem.title ) }
                                         </span>
                                         { subitem.counts > 0 && (
                                             <span className="ms-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white sidebar-submenu-bubble">

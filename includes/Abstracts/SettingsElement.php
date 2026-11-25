@@ -427,7 +427,7 @@ abstract class SettingsElement {
 	/**
 	 * Get element validation array.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
 	 *
 	 * @return array
 	 */
@@ -446,7 +446,7 @@ abstract class SettingsElement {
 	/**
 	 * Set Validations.
      *
-     * @SINCE DOKAN_SINCE
+     * @SINCE 5.2.0
 	 *
 	 * @param array $validations Validations.
 	 *
@@ -461,7 +461,7 @@ abstract class SettingsElement {
 	/**
 	 * Add Validation to the SettingsElement.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 5.2.0
 	 *
 	 * Supports multiple formats:
 	 *
@@ -519,7 +519,7 @@ abstract class SettingsElement {
 	/**
 	 * Check if a string is a valid validation rule name.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 5.2.0
 	 *
 	 * @param mixed $value The value to check.
 	 *
@@ -587,7 +587,7 @@ abstract class SettingsElement {
 	/**
 	 * Validate the Data.
 	 *
-	 * @since DOKAN_SINCE Updated to support error messages from data_validation.
+	 * @since 5.2.0 Updated to support error messages from data_validation.
 	 *
 	 * @param mixed $data Data to store.
 	 *
@@ -678,7 +678,7 @@ abstract class SettingsElement {
 	/**
 	 * Data Validation condition.
 	 *
-	 * @since DOKAN_SINCE Updated return type to support error messages.
+	 * @since 5.2.0 Updated return type to support error messages.
 	 *
 	 * @param mixed $data Data for validation.
 	 *

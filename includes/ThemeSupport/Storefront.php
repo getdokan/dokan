@@ -58,6 +58,12 @@ class Storefront {
     public function reset_style() {
         $style = '';
 
+        // Theme sidebar (get_sidebar) renders inside Dokan's already sized sidebar column,
+        // so Storefront's `.right-sidebar .widget-area` width would apply a second time.
+        if ( dokan_is_store_page() ) {
+            $style .= '#dokan-secondary.dokan-store-sidebar .widget-area { width: 100%; float: none; margin-right: 0; margin-left: 0; }';
+        }
+
         // Check if the current page is dokan vendor dashboard page
         if ( dokan_is_seller_dashboard() ) {
             // Styles to fix date range picker js broken layout issue

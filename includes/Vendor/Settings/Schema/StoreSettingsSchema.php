@@ -30,14 +30,14 @@ use WeDevs\Dokan\Vendor\Settings\StoreScheduleValidator;
  *
  *     apply_filters( 'dokan_get_vendor_settings_schema', $elements, $vendor_id )
  *
- * @since DOKAN_SINCE
+ * @since 5.3.0
  */
 class StoreSettingsSchema {
 
     /**
      * Build the flat schema with populated values for a vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param int $vendor_id Vendor user ID.
      *
@@ -67,7 +67,7 @@ class StoreSettingsSchema {
          * its value lands in (defaults to the field id). Use `priority` to
          * slot cards into the page order (Lite cards use 10–90).
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.0
          *
          * @param array $elements  Flat schema elements with values.
          * @param int   $vendor_id Vendor user ID.
@@ -82,7 +82,7 @@ class StoreSettingsSchema {
      *
      * Mirrors the admin schema convention (a `===`/`!==` show/hide couple).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param string $key   Controlling field id.
      * @param mixed  $value Value that reveals the dependent field.
@@ -113,7 +113,7 @@ class StoreSettingsSchema {
     /**
      * Page and subpage skeleton the section cards hang from.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @return array
      */
@@ -147,7 +147,7 @@ class StoreSettingsSchema {
      * active tab's children, so nothing may be left tabless. Tabs that end up
      * with no cards are dropped.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $elements Flat schema elements, schema filter applied.
      *
@@ -187,7 +187,7 @@ class StoreSettingsSchema {
     /**
      * The Store page's line tabs, in strip order.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @return array
      */
@@ -220,7 +220,7 @@ class StoreSettingsSchema {
     /**
      * Valid tab ids: the base tabs plus any injected through the schema filter.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $elements Flat schema elements.
      * @param array $tabs     Base tabs.
@@ -243,7 +243,7 @@ class StoreSettingsSchema {
      * Whether an element is a store-subpage card that belongs under a tab: a
      * section, or a section-less card field (e.g. Live Chat).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $element Schema element.
      *
@@ -263,7 +263,7 @@ class StoreSettingsSchema {
     /**
      * Branding card: store title, banner, and logo.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $info Vendor store info (`dokan_get_store_info()`).
      *
@@ -348,7 +348,7 @@ class StoreSettingsSchema {
     /**
      * Crop config for a `vendor_image` field — the picker crops to exactly this size.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param int $width  Target crop width.
      * @param int $height Target crop height.
@@ -365,7 +365,7 @@ class StoreSettingsSchema {
     /**
      * Store Information card: phone and email visibility.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $info Vendor store info.
      *
@@ -436,7 +436,7 @@ class StoreSettingsSchema {
      * `dokan_get_vendor_settings_schema` filter rather than Lite standing
      * itself down for them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $info Vendor store info.
      *
@@ -479,7 +479,7 @@ class StoreSettingsSchema {
      * Store Map card — only when a map provider API key is configured, same
      * gate as the legacy form (`dokan_has_map_api_key()`).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $info Vendor store info.
      *
@@ -529,7 +529,7 @@ class StoreSettingsSchema {
     /**
      * Store Schedule card — gated by the admin appearance option, same as legacy.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $info Vendor store info.
      *
@@ -623,7 +623,7 @@ class StoreSettingsSchema {
      * Terms & Conditions card — only when the admin allows vendor ToC.
      * Renders last on the page (priority 90), collapsed by default.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $info Vendor store info.
      *
@@ -700,7 +700,7 @@ class StoreSettingsSchema {
      * Catalog mode card — only when the admin enabled the feature; sub-fields
      * follow the same per-option admin gates as the legacy render.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param int $vendor_id Vendor user ID.
      *

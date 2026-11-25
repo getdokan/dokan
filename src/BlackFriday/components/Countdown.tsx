@@ -1,0 +1,71 @@
+// TODO BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off.
+import { useEffect, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
+export const pad = ( value: number ) => String( value ).padStart( 2, '0' );
+
+// Days, hours, minutes and seconds left until the deadline, ticking every second.
+export const useTimeLeft = ( endsAt: string ) => {
+    const deadline = Date.parse( endsAt );
+    const [ remaining, setRemaining ] = useState( () =>
+        Math.max( 0, deadline - Date.now() )
+    );
+
+    useEffect( () => {
+        const timer = setInterval( () => {
+            const left = Math.max( 0, deadline - Date.now() );
+            setRemaining( left );
+
+            // Nothing left to count, so stop re-rendering a 00:00:00:00 clock.
+            if ( ! left ) {
+                clearInterval( timer );
+            }
+        }, SECOND );
+
+        return () => clearInterval( timer );
+    }, [ deadline ] );
+
+    return {
+        days: Math.floor( remaining / DAY ),
+        hours: Math.floor( remaining / HOUR ) % 24,
+        minutes: Math.floor( remaining / MINUTE ) % 60,
+        seconds: Math.floor( remaining / SECOND ) % 60,
+    };
+};
+
+// Live DD:HH:MM:SS countdown to the campaign deadline.
+const Countdown = ( { endsAt }: { endsAt: string } ) => {
+    const { days, hours, minutes, seconds } = useTimeLeft( endsAt );
+
+    const units: Array< [ number, string ] > = [
+        [ days, __( 'Days', 'dokan-lite' ) ],
+        [ hours, __( 'Hours', 'dokan-lite' ) ],
+        [ minutes, __( 'Mins', 'dokan-lite' ) ],
+        [ seconds, __( 'Secs', 'dokan-lite' ) ],
+    ];
+
+    return (
+        <div className="flex gap-[7px]" role="timer">
+            { units.map( ( [ value, label ] ) => (
+                <div
+                    key={ label }
+                    className="flex w-[51px] flex-col items-center gap-px rounded-[10px] border border-white/16 bg-white/8 py-[7px]"
+                >
+                    <span className="text-[18px] font-semibold leading-[23px] text-white">
+                        { pad( value ) }
+                    </span>
+                    <span className="text-[8px] font-bold uppercase tracking-[0.6px] text-[#a9a3c4]">
+                        { label }
+                    </span>
+                </div>
+            ) ) }
+        </div>
+    );
+};
+
+export default Countdown;

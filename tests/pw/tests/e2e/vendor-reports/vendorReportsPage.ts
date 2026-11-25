@@ -166,8 +166,63 @@ export class VendorReportsPage {
     }
 
     // ---- Navigation ----
+
+    /**
+     * `page.goto` for a vendor-reports URL, tolerating the app's OWN client-side redirect.
+     *
+     * `reports/helper.ts::shouldBlockNavigation()` sends report paths to their canonical analytics
+     * URL with `document.location.href = …`. When that fires before DOMContentLoaded the browser
+     * cancels the original navigation and `goto()` rejects with `net::ERR_ABORTED`, even though the
+     * page then loads perfectly — a race, so it fails intermittently on CI only.
+     *
+     * ONLY `ERR_ABORTED` is swallowed, and only to re-wait for the redirected page; every other
+     * navigation error still throws, and callers keep asserting that the page actually rendered.
+     */
+    private async gotoReportUrl(url: string): Promise<void> {
+        await this.page.goto(url, { waitUntil: 'domcontentloaded' }).catch((err: unknown) => {
+            if (!/ERR_ABORTED/.test(String(err))) {
+                throw err;
+            }
+        });
+        await this.page.waitForLoadState('domcontentloaded');
+
+        /*
+         * Wait for the page to STOP MOVING, not merely to have content once.
+         *
+         * Two earlier attempts failed on CI and each taught something:
+         *   1. Swallowing ERR_ABORTED alone — `waitForLoadState` then returned instantly against the
+         *      cancelled, blank document, whose load event had already fired.
+         *   2. Polling for rendered content — that passed against the PRE-redirect page, and the
+         *      redirect then blanked it, so `assertAnalyticsShell` still saw bodyLen <= 50 a moment
+         *      later. Content alone is not a settled page.
+         *
+         * `shouldBlockNavigation()` can redirect a report path more than once, so the only safe
+         * signal is the URL holding still AND the body having content on the same observation.
+         * Both must be true twice running before this returns.
+         */
+        const deadline = Date.now() + 45_000;
+        let lastUrl = '';
+        let stable = 0;
+        let bodyLen = 0;
+        while (Date.now() < deadline) {
+            const currentUrl = this.page.url();
+            bodyLen = (await this.page.locator('body').innerText().catch(() => '')).trim().length;
+            stable = currentUrl === lastUrl && bodyLen > 50 ? stable + 1 : 0;
+            lastUrl = currentUrl;
+            if (stable >= 2) {
+                return;
+            }
+            await this.page.waitForTimeout(500);
+        }
+        throw new Error(
+            `${url} never settled: the URL kept changing or the body stayed empty for 45s ` +
+                `(final url ${this.page.url()}, body ${bodyLen} chars). The vendor analytics app redirects ` +
+                'report paths client-side, so a page that never settles means the redirect chain did not finish.',
+        );
+    }
+
     private async gotoReports(): Promise<void> {
-        await this.page.goto(toPath(vendorReportsData.reportsUrl), { waitUntil: 'domcontentloaded' });
+        await this.gotoReportUrl(toPath(vendorReportsData.reportsUrl));
     }
 
     // The classic `?chart=sales_statement` URL is ignored by the React analytics
@@ -188,7 +243,7 @@ export class VendorReportsPage {
     }
 
     private async gotoAnalytics(report: string): Promise<void> {
-        await this.page.goto(this.analyticsUrl(report), { waitUntil: 'domcontentloaded' });
+        await this.gotoReportUrl(this.analyticsUrl(report));
         await this.waitForAnalyticsReady();
     }
 
@@ -481,10 +536,12 @@ export class VendorReportsPage {
         const urls = [toPath(vendorReportsData.reportsUrl), this.analyticsUrl('products'), this.analyticsUrl('orders')];
         for (const url of urls) {
             const start = Date.now();
-            await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+            await this.gotoReportUrl(url);
             const elapsed = Date.now() - start;
-            expect(elapsed).toBeLessThan(30000);
-            expect(await this.hasNoPhpFatal()).toBe(true);
+            expect(elapsed, `${url} should load within the 30s budget`).toBeLessThan(30000);
+            // Timing alone is not a load: a page that errored out instantly would "pass" the budget.
+            // Assert the reports shell actually rendered (this also re-checks for a PHP fatal).
+            await this.assertAnalyticsShell();
         }
     }
 

@@ -79,6 +79,12 @@ export class LoginPage extends BasePage {
         await expect
             .poll(async () => await this.getCurrentUser(), { timeout: 30000 })
             .toBe(user.username);
+        // The cookie is set on the login 302, before the browser lands on
+        // /wp-admin/. Let that redirect commit, or the caller's next goto is
+        // "interrupted by another navigation to /wp-admin/".
+        if (hasLoginForm) {
+            await this.page.waitForURL(url => !url.pathname.includes('wp-login.php'), { waitUntil: 'commit' });
+        }
         if (storageState) {
             await this.page.context().storageState({ path: storageState });
         }

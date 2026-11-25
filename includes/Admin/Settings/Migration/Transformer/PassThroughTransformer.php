@@ -9,7 +9,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * when a field has no `legacy_transformer` attribute. Values move between
  * legacy and new shapes unchanged.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class PassThroughTransformer implements TransformerInterface {
 

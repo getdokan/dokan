@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 // --- Dataset Definitions ---
 
@@ -37,22 +38,22 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Email Verification',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_verification >> #dokan_settings_verification_email-verification-page',
+    selector: '[data-testid="settings-menu-verification"] >> [data-testid="settings-menu-email-verification-page"]',
     fields: [
         {
-            selector: '#dokan_settings_verification_email-verification-page_email-verification-content_enabled button',
+            selector: '[data-testid="settings-field-email_verification_enabled"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
             // Textarea for 'Registration Notice'
-            selector: '#dokan_settings_verification_email-verification-page_email-verification-content_registration_notice textarea',
+            selector: '[data-testid="settings-field-registration_notice"] textarea',
             type: 'text',
             value: 'Please verify your email to complete registration.',
         },
         {
             // Textarea for 'Login Notice'
-            selector: '#dokan_settings_verification_email-verification-page_email-verification-content_login_notice textarea',
+            selector: '[data-testid="settings-field-login_notice"] textarea',
             type: 'text',
             value: 'Your email is unverified. Please check your inbox.',
         },
@@ -60,6 +61,9 @@ const newDataset = {
 };
 
 // --- Test Suite ---
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Email Verification Settings Synchronization', () => {
     let loginPage: LoginPage;

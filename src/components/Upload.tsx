@@ -8,6 +8,7 @@ type UploadTypes = {
     as?: React.ElementType;
     title?: string;
     buttonText?: string;
+    uploaderParams?: Record< string, string >;
 };
 
 const Upload = ( {
@@ -17,6 +18,7 @@ const Upload = ( {
     className,
     title,
     buttonText,
+    uploaderParams,
     ...props
 }: UploadTypes ) => {
     const uploadHandler = () => {
@@ -28,6 +30,29 @@ const Upload = ( {
             },
             multiple, // Set to true to allow multiple selection
         } );
+        if ( uploaderParams ) {
+            // Extra plupload multipart params, e.g. `type: 'downloadable_product'` routes uploads into woocommerce_uploads.
+            mediaFrame.on( 'ready', () => {
+                // A frame has no uploader when the upload limit is exceeded or the browser is unsupported.
+                const uploaderWindow = mediaFrame.uploader;
+
+                if ( ! uploaderWindow ) {
+                    return;
+                }
+
+                // Once plupload is live only param() reaches it; before that the pending options are the only target.
+                if ( uploaderWindow.uploader ) {
+                    uploaderWindow.uploader.param( { ...uploaderParams } );
+                    return;
+                }
+
+                // Merge so WordPress' own params (nonce, post_id) survive alongside ours.
+                uploaderWindow.options.uploader.params = {
+                    ...uploaderWindow.options.uploader.params,
+                    ...uploaderParams,
+                };
+            } );
+        }
         mediaFrame.on( 'select', () => {
             const attachment = mediaFrame.state().get( 'selection' );
             if ( multiple ) {

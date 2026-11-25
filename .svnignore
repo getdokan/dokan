@@ -33,3 +33,5 @@ composer.json
 docs
 CHANGELOG.md
 DEVELOPER.md
+CLAUDE.md
+CONTEXT.md

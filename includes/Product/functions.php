@@ -174,8 +174,8 @@ function dokan_save_product( $args ) {
 function dokan_product_output_variations() {
     global $post, $wpdb;
 
-    // Get attributes
-    $attributes = maybe_unserialize( get_post_meta( $post->ID, '_product_attributes', true ) );
+    // get_post_meta() already unserializes once; drop the second unserialize and keep only arrays to avoid object injection.
+    $attributes = array_filter( (array) get_post_meta( $post->ID, '_product_attributes', true ), 'is_array' );
 
     // See if any are set
     $variation_attribute_found = false;
@@ -252,7 +252,7 @@ function dokan_product_output_variations() {
                         <span class="dokan-variation-default-label dokan-left float-none"><i class="fas fa-question-circle tips" title="<?php esc_attr_e( 'Default Form Values: These are the attributes that will be pre-selected on the frontend.', 'dokan-lite' ); ?>" aria-hidden="true"></i></span>
 
                         <?php
-                            $default_attributes = maybe_unserialize( get_post_meta( $post->ID, '_default_attributes', true ) );
+                            $default_attributes = get_post_meta( $post->ID, '_default_attributes', true );
 
                         foreach ( $attributes as $attribute ) {
 
@@ -330,7 +330,7 @@ function dokan_product_output_variations() {
                                     <option value="<?php echo esc_attr( $i ); ?>"><?php echo esc_html( $i ); ?></option>
                                 <?php } ?>
                             </select>
-                            <?php esc_html_x( 'of', 'number of pages', 'dokan-lite' ); ?> <span class="total-pages"><?php echo esc_html( $variations_total_pages ); ?></span>
+                            <?php echo esc_html_x( 'of', 'number of pages', 'dokan-lite' ); ?> <span class="total-pages"><?php echo esc_html( $variations_total_pages ); ?></span>
                         </span>
                         <a class="next-page" title="<?php esc_attr_e( 'Go to the next page', 'dokan-lite' ); ?>" href="#">&rsaquo;</a>
                         <a class="last-page" title="<?php esc_attr_e( 'Go to the last page', 'dokan-lite' ); ?>" href="#">&raquo;</a>

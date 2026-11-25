@@ -209,17 +209,16 @@ class AdminSetupGuide {
     }
 
     /**
-     * Describe the settings options for frontend.
+     * Step navigation metadata for the frontend.
+     *
+     * The wizard fetches each step's field schema lazily over REST
+     * (`/dokan/v1/admin/setup-guide/{id}`), so only the step list is injected here.
      *
      * @since 4.0.0
      *
      * @return array
      */
     public function settings(): array {
-        return array_reduce(
-            $this->get_steps(), function ( $settings, AbstractStep $step ) {
-				return array_merge( $settings, [ $step->get_id() => $step->settings() ] );
-			}, [ 'steps' => $this->get_steps_mapper() ]
-        );
+        return [ 'steps' => $this->get_steps_mapper() ];
     }
 }

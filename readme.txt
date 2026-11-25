@@ -2,12 +2,12 @@
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.9
-Tested up to: 7.0
+Requires at least: 7.0
+Tested up to: 7.1
 WC requires at least: 8.5.0
-WC tested up to: 10.4.3
+WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.0.9
+Stable tag: 5.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,14 +15,14 @@ Transform your WooCommerce site into a multivendor marketplace with Dokan – an
 
 == Description ==
 
-= Want to build a marketplace where multiple vendors sell, and you earn on every transaction? Dokan is the easiest and fastest way to launch a multivendor marketplace on WordPress. =
+= Want to build a multivendor marketplace where multiple vendors sell, and you earn on every transaction? Dokan is the easiest and fastest way to launch a multivendor marketplace on WordPress. =
 
-[Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is a well-established AI-powered WooCommerce multivendor marketplace plugin for WordPress — powering over 40,000 live multivendor marketplaces worldwide. Build your own multi vendor marketplace for physical products, digital downloads, bookings, auctions, or subscriptions — without writing a single line of code.
+[Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is a well established AI powered WooCommerce multivendor marketplace plugin for WordPress, powering over 40,000 live multivendor marketplaces worldwide. Build your own multi vendor marketplace for physical products, digital downloads, bookings, auctions, or subscriptions without writing a single line of code.
 
-Dokan is built and maintained by weDevs — a WordPress-focused software company with 13 years in the ecosystem, trusted by over 1 million users across its product portfolio.
+Dokan is built and maintained by weDevs, a WordPress focused software company with 13 years in the ecosystem, trusted by over 1 million users across its product portfolio.
 Dokan is under active development, with regular releases, security improvements, and ongoing compatibility updates for the latest versions of WordPress and WooCommerce.
 
-Hear what reputed WordPress influencer and online business strategist, Darrel Wilson, has to say about Dokan Multivendor Marketplace.
+Hear what reputed WordPress influencer and online business strategist, Darrel Wilson, has to say about Dokan Multi vendor Marketplace Solution.
 
 [youtube https://www.youtube.com/watch?v=nDAxNypVxdw]
 
@@ -37,7 +37,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 👉 **Confused about how to get started?** Read our blogs from [weDevs](https://wedevs.com/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and [Dokan](https://dokan.co/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 👉 **Docs & Support:** [Access Now](https://dokan.co/docs/wordpress/)
 
-**Here is how you can build your multivendor marketplace with Dokan.**
+**Here is how you can build your multi vendor marketplace with Dokan.**
 
 [youtube https://www.youtube.com/watch?v=_Vv5T7qqhoE&t=1s]
 
@@ -74,7 +74,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 👏 “Dokan is a product with a huge potential. And has evolved during the last years. We have implemented a stable marketplace environment serving hundreds of satisfied customers using this tool.”
 
-👏 “Dokan is the most complete multivendor plugin/product one can ever found.”
+👏 “Dokan is the most complete multi vendor plugin/product one can ever found.”
 
 👏 “I have been using Dokan for 3 years. Overall experiences with the software are awesome!”
 
@@ -96,8 +96,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 To provide a comprehensive frontend experience, every vendor has a [personalized customizable dashboard](https://dokan.co/wordpress/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) on the store frontend. They can easily navigate and control every aspect of their marketplace from there. Backend access is restricted to only the admin, which sets Dokan apart from other marketplace plugins. However, all Dokan [modules](https://dokan.co/wordpress/modules/) are frontend compatible so that both the admin and vendors can enjoy the benefits and advanced features of Dokan.
 
-Dokan (Pro) comes with a free, fully responsive eCommerce theme - [Dokani](https://dokan.co/wordpress/dokani-theme/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) with special widgets to ensure you can customize the theme however you like.
-
+Dokan (Pro) comes with a free, fully responsive eCommerce theme - [Dokani](https://dokan.co/wordpress/dokani-theme/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) With special widgets that let you customize your theme however you like and build any type of multivendor store.
 Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-theme/), a customizable and fully responsive WordPress theme for any hotel booking management site.
 
 = IT’S FAST AND EASY TO USE =
@@ -116,7 +115,7 @@ See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdoka
 
 = A SCALABLE MARKET =
 
-Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create marketplaces that offer –
+Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create multi seller marketplaces that offer –
 
 * Physical products
 * Downloadable products
@@ -126,7 +125,7 @@ Dokan Multivendor Marketplace plugin allows you to have an unlimited number of v
 
 = EARN IN MULTIPLE WAYS =
 
-Profit doesn’t only rely on sales. Dokan offers multiple ways to earn money, including vendor commissions and product-based commissions. You can also create subscription packs that allow you to charge for product uploads, product category selection, and time period restrictions.
+Profit doesn’t only rely on sales. Dokan offers multiple ways to earn money by creating a multivendor marketplace with features that let you collect vendor commissions and product-based commissions. You can also create subscription packs that allow you to charge for product uploads, product category selection, and time period restrictions.
 
 = PUTS YOU IN CONTROL =
 
@@ -352,6 +351,10 @@ A. Obviously, you can use this on a single seller site to give them a nice front
 = Q. How to upgrade to the Pro version?
 A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://dokan.co/contact/) staff first.
 
+= Q. Where do I report security bugs found in this plugin? =
+
+A. Please report security bugs found in the source code of the plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/b5c1bc9d-d476-434a-a833-9e06895dab7a). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 == Screenshots ==
 
 1. Dokan Install
@@ -376,50 +379,44 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v5.0.9 ( Jul 14, 2026 ) =
-- **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
-- **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
-- **fix:** Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.
-- **fix:** Vendors can no longer give their customers download access to another vendor's downloadable files.
-- **fix:** Vendors can no longer change another vendor's product attributes.
-- **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
-- **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
+= v5.3.6 ( Nov 23, 2026 ) =
+- **update:** The Black Friday page in the Dokan admin now shows the current Black Friday deals, including the Enterprise Bundle, Black Friday prices for the Lifetime and Annual plans, and a live countdown.
+- **fix:** Vendor dashboard menu links that are set to open in a new tab, such as wePOS, now do so from the new dashboard sidebar, including its collapsed menu.
+- **fix:** The product variations pagination in the vendor product editor now shows the missing "of" between the page numbers.
 
-= v5.0.8 ( Jul 06, 2026 ) =
-- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
+= v5.3.5 ( Nov 19, 2026 ) =
+- **update:** Updating from a version older than 5.0.0 now adds the new order report columns in one step, so the update finishes faster on large stores and can no longer stop half-way.
+- **fix:** Vendors can no longer change the admin commission on their own products through the REST API, which could push their earnings above the order total.
+- **fix:** Vendors can no longer save unsafe or WooCommerce-reserved product data through the product REST API.
+- **fix:** WooCommerce Analytics no longer shows zero orders and revenue on stores that already had orders before Dokan was activated. Dokan now rebuilds the order data on its own and shows a notice while it runs.
+- **fix:** The admin vendor form no longer loses what was typed when switching tabs, and a failed save now opens the tab with the problem field and focuses it.
 
-= v5.0.7 ( Jun 29, 2026 ) =
-- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
-- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
+= v5.3.4 ( Nov 05, 2026 ) =
+- **new:** Added a Black Friday 2026 offers page to the Dokan admin.
+- **update:** Added CartPilot and FlyAffiliate to the setup wizard's recommended add-ons, with a Show More option for the extra add-ons.
+- **update:** Added CartPilot and FlyAffiliate to the admin Extensions page.
+- **fix:** Prevented unauthenticated visitors from reading private product data through a crafted request made to look like an MCP request.
+- **fix:** The vendor customer list now counts only the vendor's own customers, so its totals and pages match the list and searches no longer reveal other registered users.
+- **fix:** Customers who buy from several vendors no longer receive duplicate order emails when WooCommerce's deferred emails feature is turned on.
+- **fix:** Improved compatibility with WooCommerce 11.3 so the vendor analytics pages keep their layout and no longer log deprecation warnings.
+- **fix:** Vendor registration forms no longer accept a shop URL that already belongs to another vendor.
+- **fix:** The new vendor dashboard order list no longer shows order status actions when the admin has turned off order status changes for vendors.
+- **fix:** The Reverse Withdrawal Invoice email now works in the WooCommerce email preview and test email instead of showing an error.
+- **fix:** Vendor dashboard reports no longer show "Something went wrong" after an update because a browser or CDN served outdated files.
+- **fix:** The commission settings now name the empty field and explain that 0 is allowed when a commission amount is missing.
 
-= v5.0.6 ( Jun 26, 2026 ) =
-- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
-- **update:** Added weDocs to the admin Extensions page as an installable add-on.
-- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
-- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
-- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
-- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
-- **fix:** Enabled the "View in site" button for all published products.
+= v5.3.3 ( Oct 30, 2026 ) =
+- **fix:** Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.
+- **fix:** Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.
+- **fix:** The store contact form now sends email from the store's own address and uses the visitor's email only for replies, so it can no longer be used to spoof the sender or add extra recipients.
+- **fix:** Prevented subsite admins on a multisite network from changing the selling status of vendors who belong to other sites.
+- **fix:** Reverse withdrawal payments can no longer be discounted with coupons, and the vendor's balance is now credited only with the amount actually paid.
+- **fix:** Products created through the vendor products API now respect the vendor's selling status and are held for review when the vendor isn't allowed to publish directly.
+- **fix:** Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.
+- **fix:** A vendor's social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.
 
-= v5.0.5 ( Jun 19, 2026 ) =
-- **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
-- **update:** Updated price formatting in the product editor to use locale-specific display.
-- **fix:** Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.
-- **fix:** Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.
-- **fix:** Restricted the Products REST endpoint so vendors can no longer access other vendors' products via the id parameter.
-- **fix:** Decoded HTML entities in product category labels for correct rendering.
-- **fix:** Corrected the product edit URL and improved dashboard navigation for the new product UI.
-
-= v5.0.4 ( Jun 08, 2026 ) =
-- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
-- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
-- **fix:** Allowed vendors to create new product tags inline from the new product editor.
-- **fix:** Resolved withdraw approval failing on an exact fractional balance.
-- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
-
-= v5.0.3 ( May 21, 2026 ) =
-- **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
-- **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
-- **fix:** Translated the "Actions" column header on vendor dashboard DataViews tables.
+= v5.3.2 ( Oct 22, 2026 ) =
+- **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.
+- **fix:** Saving a vendor from the WordPress Users screen no longer resets their custom commission to the global rate.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

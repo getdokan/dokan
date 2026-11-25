@@ -206,11 +206,15 @@ test.describe('Admin Modules (pro-modules) functionality', () => {
 
             // Discover the catalogue; skip cleanly if this module is not present
             // in the current build (e.g. a Lite-only environment).
-            const allIds = await apiUtils.getAllModuleIds({}, payloads.adminAuth);
-            test.skip(!allIds.includes(moduleId), `module "${moduleId}" not present in this build`);
+            const catalogue = await apiUtils.getAllModules({}, payloads.adminAuth);
+            const original = catalogue.find((m: { id: string; active?: boolean }) => m.id === moduleId);
+            test.skip(!original, `module "${moduleId}" not present in this build`);
 
-            // Capture the original state so we can restore it after the test.
-            const wasActive = allIds.includes(moduleId); // present == known; refine via activate/deactivate below.
+            // Capture the ORIGINAL ACTIVE STATE, not mere presence. The catalogue lists every
+            // module regardless of state, so `getAllModuleIds().includes()` is always true and
+            // would make the reset below unconditionally deactivate — leaving Store Reviews off
+            // for every later spec on this shard (it broke adminDataViewsMigration's tab assertions).
+            const wasActive = original?.active === true;
 
             // Activate -> verify it reports active in the catalogue.
             const [activateRes] = await apiUtils.activateModules(moduleId, payloads.adminAuth);
@@ -226,11 +230,10 @@ test.describe('Admin Modules (pro-modules) functionality', () => {
             target = after.find((m: { id: string; active?: boolean }) => m.id === moduleId);
             expect(target?.active, 'module reports inactive after deactivation').toBe(false);
 
-            // RESET to the observed-original (best-effort): the catalogue lists
-            // every module regardless of state, so we restore by re-deactivating
-            // (the safe default) — leaving the environment as we found it.
+            // RESET to the observed original state — the test ends deactivated, so only an
+            // originally-active module needs re-activating.
             if (wasActive) {
-                await apiUtils.deactivateModules(moduleId, payloads.adminAuth);
+                await apiUtils.activateModules(moduleId, payloads.adminAuth);
             }
         });
     });

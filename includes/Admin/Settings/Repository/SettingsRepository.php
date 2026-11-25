@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Admin\Settings\Repository;
 /**
  * Default settings repository backed by the `dokan_admin_settings` wp_option.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class SettingsRepository implements SettingsRepositoryInterface {
 
@@ -66,7 +66,7 @@ final class SettingsRepository implements SettingsRepositoryInterface {
          * empty array effectively blocks the write (the diff becomes
          * empty and the option is not touched).
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array<string,mixed> $slice   Incoming change set.
          * @param array<string,mixed> $current Payload currently in storage.
@@ -92,7 +92,7 @@ final class SettingsRepository implements SettingsRepositoryInterface {
          * that foreign writes that bypass the repository are handled by
          * the backstop path explicitly.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array<string,mixed> $changed Added/modified entries.
          * @param array<string,mixed> $current Payload before the write.

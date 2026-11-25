@@ -7,6 +7,7 @@ use WC_Product_Simple;
 use WC_REST_Products_Controller;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\Model;
+use WeDevs\Dokan\ProductEditor\Elements;
 use WeDevs\Dokan\ProductEditor\FormSchema;
 use WeDevs\Dokan\ProductEditor\PayloadResolver;
 use WeDevs\Dokan\Traits\VendorAuthorizable;
@@ -49,6 +50,10 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     public function create_item_permissions_check( $request ) {
         if ( ! current_user_can( 'dokan_add_product' ) ) {
             return new WP_Error( 'dokan_rest_cannot_create', __( 'You do not have permission to create products.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        if ( ! current_user_can( 'manage_woocommerce' ) && ! dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
+            return new WP_Error( 'dokan_rest_cannot_create', __( 'Your account is not enabled for selling.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
         return true;
@@ -320,6 +325,208 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
+     * Prepare a single product for create or update.
+     *
+     * Every save funnels through here - WooCommerce routes create, update and batch alike through
+     * save_object() - so form-level validation runs once here instead of per endpoint, and it judges
+     * the product WooCommerce assembled rather than the raw payload. The product itself is not written
+     * until save_object() calls save() on what this returns, though the parent call can already have
+     * created attachment records when a payload sends images by URL; the vendor form only ever sends
+     * attachment ids.
+     *
+     * @since 5.0.16
+     *
+     * @param WP_REST_Request $request  Full details about the request.
+     * @param bool            $creating Whether a new product is being created.
+     *
+     * @return WC_Data|WP_Error
+     */
+    protected function prepare_object_for_database( $request, $creating = false ) {
+        $product = parent::prepare_object_for_database( $request, $creating );
+
+        if ( is_wp_error( $product ) ) {
+            return $product;
+        }
+
+        $invalid = $this->validate_required_downloads( $request, $product );
+
+        if ( is_wp_error( $invalid ) ) {
+            return $invalid;
+        }
+
+        // On update only a requested status is moderated, like the v1 API; a create without status defaults to publish in WooCommerce.
+        $this->enforce_publish_moderation( $product, $creating || isset( $request['status'] ) );
+
+        $product = $this->apply_image_positions( $product, $request );
+
+        /**
+         * Filters a vendor product prepared for the database, before it is saved.
+         *
+         * Scoped to vendor dashboard saves, unlike WooCommerce's own
+         * `woocommerce_rest_pre_insert_product_object`. Return a WP_Error to reject the save, which
+         * is how extensions enforce required fields they add to the product form.
+         *
+         * @since 5.0.16
+         *
+         * @param WC_Data         $product  Product assembled from the request, not yet saved.
+         * @param WP_REST_Request $request  Full details about the request.
+         * @param bool            $creating Whether a new product is being created.
+         */
+        $product = apply_filters( "dokan_rest_pre_insert_{$this->post_type}_object", $product, $request, $creating );
+
+        // Existing buyers get added files and lose removed ones, the same permission sync the legacy editor runs before saving.
+        if ( ! $creating && $product instanceof WC_Product && $product->is_downloadable() && null !== $request->get_param( Elements::DOWNLOADS ) ) {
+            do_action( 'dokan_process_file_download', $product->get_id(), 0, $product->get_downloads() );
+        }
+
+        return $product;
+    }
+
+    /**
+     * Apply the vendor's default product status when a vendor asks for a live status, as the v1 API does.
+     *
+     * @since 5.3.3
+     *
+     * @param WC_Data $product          Product assembled from the request, not yet saved.
+     * @param bool    $status_requested Whether the request sets the product's status.
+     *
+     * @return void
+     */
+    protected function enforce_publish_moderation( $product, bool $status_requested ): void {
+        $live_statuses = [ 'publish', 'future' ];
+
+        if ( ! $status_requested || ! $product instanceof WC_Product || ! in_array( $product->get_status(), $live_statuses, true ) || current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        // WooCommerce defaults a missing status to publish; a disabled vendor always gets pending.
+        $vendor_id      = dokan_get_current_user_id();
+        $allowed_status = dokan_is_seller_enabled( $vendor_id ) ? dokan_get_default_product_status( $vendor_id ) : 'pending';
+
+        if ( 'publish' !== $allowed_status ) {
+            $product->set_status( $allowed_status );
+        }
+    }
+
+    /**
+     * Restore the vendor's featured/gallery split after WooCommerce has consumed `images`.
+     *
+     * WooCommerce takes the featured image from array index 0, and its v3 images schema has no
+     * `position` at all, so a product saved with gallery images but no featured image loses its
+     * first gallery image to the featured slot — with a single gallery image the gallery ends up
+     * empty. PayloadResolver::resolve_images() tags every entry with the position the vendor
+     * actually chose, so the split is reapplied here.
+     *
+     * Payloads this plugin did not resolve carry no positions and are left to WooCommerce.
+     *
+     * @since 5.0.19
+     *
+     * @param WC_Data|WC_Product $product Product assembled from the request, not yet saved.
+     * @param WP_REST_Request    $request Full details about the request.
+     *
+     * @return WC_Data|WC_Product
+     */
+    protected function apply_image_positions( $product, $request ) {
+        $images = $request['images'];
+
+        // Nothing to restore: not a product, no images in the request, or an empty array WooCommerce already cleared.
+        if ( ! $product instanceof WC_Product || ! is_array( $images ) || empty( $images ) ) {
+            return $product;
+        }
+
+        $featured = 0;
+        $gallery  = [];
+
+        foreach ( $images as $image ) {
+            if ( ! is_array( $image ) || ! isset( $image['id'], $image['position'] ) ) {
+                return $product;
+            }
+
+            $id = absint( $image['id'] );
+
+            if ( 0 === absint( $image['position'] ) ) {
+                $featured = $id;
+                continue;
+            }
+
+            $gallery[] = $id;
+        }
+
+        $product->set_image_id( $featured > 0 ? $featured : '' );
+        $product->set_gallery_image_ids( $gallery );
+
+        return $product;
+    }
+
+    /**
+     * Reject a downloadable product saved without a file while the form marks "Downloadable Files" as required.
+     *
+     * The required flag lives in the form schema, where Dokan Pro's Product Form Manager writes it, so it is
+     * read back from the schema rather than hard-coded. Browser-side validation alone can be bypassed, which
+     * is how incomplete downloadable products reach the review queue.
+     *
+     * Judged on the assembled product rather than on the payload, because the payload can be shaped to dodge
+     * the rule: WooCommerce turns a product downloadable from `downloadable` alone and only reads `downloads`
+     * when that key is sent, and it drops file-less rows in save_downloadable_files(). A save that leaves
+     * both fields alone, such as quick edit, stays out of scope.
+     *
+     * Deliberately scoped to this one field: the schema marks several fields required that a partial form
+     * never renders yet still submits empty - the quick-create modal omits the required Description - so
+     * enforcing every required field here would reject those saves outright. Extensions that need their own
+     * rules can hook `dokan_rest_pre_insert_product_object`.
+     *
+     * Product variations are out of reach here: WooCommerce saves them through WC_REST_Product_Variations_Controller,
+     * which never enters this controller, so a downloadable variation is guarded in the browser only.
+     *
+     * @since 5.0.16
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     * @param WC_Data         $product Product assembled from the request, not yet saved.
+     *
+     * @return WP_Error|null Error when the required file is missing, null otherwise.
+     */
+    protected function validate_required_downloads( $request, $product ) {
+        $touches_downloads = null !== $request->get_param( Elements::DOWNLOADS )
+            || null !== $request->get_param( Elements::DOWNLOADABLE );
+
+        if ( ! $touches_downloads || ! $product instanceof WC_Product ) {
+            return null;
+        }
+
+        if ( ! $product->is_downloadable() ) {
+            return null;
+        }
+
+        // WooCommerce drops rows on empty() alone, so a whitespace-only file still arrives here - and still saves when the field is optional.
+        foreach ( $product->get_downloads() as $download ) {
+            if ( '' !== trim( (string) $download->get_file() ) ) {
+                return null;
+            }
+        }
+
+        // Only a save with nothing attached needs the schema, which is expensive to build - and never its resolved values.
+        $product_type = $product->get_type();
+        $field        = FormSchema::get_field( dokan()->product_editor->get_schema(), Elements::DOWNLOADS );
+
+        if ( ! $field || ! FormSchema::is_required( $field, $product_type ) || ! FormSchema::is_visible( $field, $product_type ) ) {
+            return null;
+        }
+
+        $label = FormSchema::get_label( $field, $product_type );
+        $label = '' !== $label ? $label : __( 'Downloadable Files', 'dokan-lite' );
+
+        return new WP_Error(
+            'dokan_rest_product_download_required',
+            sprintf(
+                /* translators: %s: label of the downloadable files field. */
+                __( '%s is required. Please attach at least one downloadable file.', 'dokan-lite' ),
+                $label
+            ),
+            [ 'status' => 400 ]
+        );
+    }
+
+    /**
      * Replace WooCommerce's admin-oriented "approved download directory" rejection with vendor-friendly guidance.
      *
      * WooCommerce raises product_invalid_download whenever a downloadable file can't be used — most often because
@@ -344,6 +551,35 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             __( 'The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin.', 'dokan-lite' ),
             $error->get_error_data()
         );
+    }
+
+    /**
+     * Keep each still-attached file on its stored download id.
+     *
+     * The product editor sends a file's attachment id as `id`; an unchanged URL keeps its stored id so buyers' permissions stay valid.
+     * Ids are queued per URL, so two files sharing one URL each keep their own id instead of collapsing into one.
+     *
+     * @since 5.3.1
+     *
+     * @param WC_Product $product    Product being saved, still holding its stored downloads.
+     * @param array      $downloads  Downloads from the request.
+     * @param int        $deprecated Deprecated variation id, passed through to WooCommerce.
+     *
+     * @return WC_Product
+     */
+    protected function save_downloadable_files( $product, $downloads, $deprecated = 0 ) {
+        $stored_ids = [];
+        foreach ( $product->get_downloads() as $download_id => $download ) {
+            $stored_ids[ $download->get_file() ][] = $download_id;
+        }
+
+        foreach ( $downloads as $key => $file ) {
+            if ( isset( $file['file'] ) && ! empty( $stored_ids[ $file['file'] ] ) ) {
+                $downloads[ $key ]['id'] = array_shift( $stored_ids[ $file['file'] ] );
+            }
+        }
+
+        return parent::save_downloadable_files( $product, $downloads, $deprecated );
     }
 
     /**
@@ -427,6 +663,19 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 
         $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
         $fields = dokan()->product_editor->get_schema( $product_id );
+
+        // Preselect the requested product type on a brand-new product, e.g. the
+        // "Add New Auction Product" button opens ...#/products/create?type=auction.
+        $requested_type = (string) $request->get_param( 'type' );
+        if ( $is_new_product && array_key_exists( $requested_type, wc_get_product_types() ) ) {
+            foreach ( $fields as &$field ) {
+                if ( Elements::TYPE === ( $field['id'] ?? '' ) ) {
+                    $field['value'] = $requested_type;
+                    break;
+                }
+            }
+            unset( $field );
+        }
         $layouts = FormSchema::get_layouts();
         $is_enabled = dokan_get_option( 'dokan_ai_image_gen_availability', 'dokan_ai', 'off' ) === 'on';
         $manager = dokan()->get_container()->get( Manager::class );

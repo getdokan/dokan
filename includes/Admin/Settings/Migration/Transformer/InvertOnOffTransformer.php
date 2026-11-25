@@ -11,7 +11,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * `on` ("enabled"). Any value other than `on`/`off` is passed through
  * unchanged so unexpected stored values are not silently mutated.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class InvertOnOffTransformer implements TransformerInterface {
 

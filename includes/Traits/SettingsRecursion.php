@@ -5,14 +5,14 @@ namespace WeDevs\Dokan\Traits;
 /**
  * Trait for handling recursive settings replacement.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 trait SettingsRecursion {
 
     /**
      * Handle settings recursively replace.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $existing
      * @param array $new_settings
@@ -46,7 +46,7 @@ trait SettingsRecursion {
     /**
      * Check if an array is a list.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $settings
      *

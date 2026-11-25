@@ -4,6 +4,13 @@
 
 Dokan Lite is a multi-vendor e-commerce marketplace plugin for WordPress, powered by WooCommerce. Version 4.2.8. Requires PHP 7.4+ and WooCommerce 8.5.0+.
 
+## Domain Model
+
+- **`CONTEXT.md`** — the canonical ubiquitous-language glossary for the whole Dokan bounded context (Lite **and** Pro). Read it before naming things or discussing domain concepts; use its canonical terms (e.g. Vendor not seller, Suborder vs Vendor order, Commission = admin's share) and respect its _Avoid_ lists.
+- **`docs/adr/`** — Architecture Decision Records. Check here before "fixing" surprising behavior (e.g. parent orders ignoring refunds/stock is deliberate — ADR-0004). Cross-cutting Lite+Pro decisions live here; Pro-only decisions live in dokan-pro's `docs/adr/`.
+- **Business-logic questions** ("how is commission calculated?", "when can a vendor withdraw?") — answer from `docs/adr/` first: each business-rule ADR's filename and H1 state the rule, with settings branches and worked examples. `docs/adr/decisions-index.md` groups them by domain; `docs/adr/reference/` holds the source-cited subsystem docs (how things are wired); `docs/adr/eval/business-questions.md` is the regression question bank — after changing business logic, update the affected ADR and its questions.
+- New root-level files must be added to `.distignore` or they ship in the release zip.
+
 ## Available Skills
 
 The `.claude/skills/` directory contains procedural HOW-TO instructions:
@@ -14,7 +21,9 @@ The `.claude/skills/` directory contains procedural HOW-TO instructions:
 - **`dokan-code-review`** — Code review standards: critical violations to flag, PR checklist verification, severity levels
 - **`dokan-git`** — Git and GitHub operations: branching, PR templates, CI checks
 - **`dokan-qa-automation`** — Playwright E2E and REST API test conventions under `tests/pw/`: page objects, tags, ApiUtils, schemas, CI compatibility
+- **`dokan-setting-impact`** — Settings ripple across the Store Admin → Vendor → Customer tiers: impact map plus Plan / Build / Review / Test gates. **Invoke when planning any change that adds, changes, or reads configuration a Store Admin sets.**
 - **`dokan-run-test-suite`** — Run the Playwright suite (local or CI). **Invoke when the team asks to "run the suite", trigger CI, or debug a failed run.**
+- **`dokan-wp-env-worktrees`** — Configure `wp-env` across git worktrees with isolated (default) or shared databases; resolve port conflicts when running two environments at once.
 
 ## Build & Development Commands
 
@@ -42,6 +51,11 @@ npm run test:phpunit       # Start env, run tests, stop env
 npm run env:start          # Start wp-env
 npm run env:stop           # Stop wp-env
 ```
+
+> `.wp-env.json` is the committed, shared base config (CI reads it — don't edit
+> it for local needs). Put per-machine/per-worktree settings (ports, a
+> `../dokan-pro` mount, LAN site URL) in `.wp-env.override.json`, which is
+> gitignored. See the `dokan-wp-env-worktrees` skill for worktree setup.
 
 ## Architecture
 

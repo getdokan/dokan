@@ -12,7 +12,7 @@ use DateTime;
  * variant-agnostic and the schedule rules live next to the field that owns
  * them.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.0
  */
 class StoreScheduleValidator {
 
@@ -21,7 +21,7 @@ class StoreScheduleValidator {
      * `{ status: 'open'|'close', opening_time: string[], closing_time: string[] }`
      * with canonical `g:i a` strings. Closed days carry empty time arrays.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param mixed $value Submitted schedule keyed by day.
      *
@@ -54,13 +54,19 @@ class StoreScheduleValidator {
      * in `g:i a` format with the opening time before the closing time (the
      * full-day `12:00 am`–`11:59 pm` pair satisfies this).
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
-     * @param mixed $value Normalized schedule keyed by day.
+     * @param mixed $value      Normalized schedule keyed by day.
+     * @param array $all_values Every field value keyed by id (stored values overlaid with the submitted ones).
      *
      * @return string[] Error messages (empty when valid).
      */
-    public static function validate( $value ): array {
+    public static function validate( $value, array $all_values = [] ): array {
+        // Hours behind a switched-off schedule aren't on the form; stale legacy data there must not block an unrelated save.
+        if ( 'yes' !== ( $all_values['dokan_store_time_enabled'] ?? 'yes' ) ) {
+            return [];
+        }
+
         $errors = [];
         // One lookup for all days — each dokan_get_translated_days( $day ) call rebuilds the full week.
         $day_labels = dokan_get_translated_days();
@@ -79,7 +85,7 @@ class StoreScheduleValidator {
     /**
      * Validate the opening/closing time pairs of a single open day.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param string $day_label Translated day name for messages.
      * @param array  $day_data  Normalized day entry.

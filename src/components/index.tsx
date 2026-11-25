@@ -6,7 +6,8 @@ export {
     VIEW_LAYOUTS,
 } from '@wordpress/dataviews/wp';
 export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
-export { DataViews, Switch, LabeledSwitch } from '@wedevs/plugin-ui';
+export { default as DataViews } from './dataviews/DokanDataViews';
+export { Switch, LabeledSwitch } from '@wedevs/plugin-ui';
 
 export { DokanSwitch } from './Switch';
 export { default as DokanModal } from './modals/DokanModal';
@@ -90,6 +91,11 @@ export type {
     WeeklyMessages,
     WeeklyTimeSlotsProps,
 } from './WeeklyTimeSlots';
+
+// Provider-agnostic map location picker (Google Maps / Mapbox). Shared by the
+// admin Location settings (Default Location) and the vendor store map.
+export { default as MapPicker } from './MapPicker';
+export type { MapPickerProps, MapLocation, MapProvider } from './MapPicker';
 
 // Commission Components
 export * from './commission';

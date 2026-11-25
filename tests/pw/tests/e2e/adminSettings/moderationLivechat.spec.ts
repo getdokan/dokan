@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 const oldDataset = [
     {
@@ -36,31 +37,36 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Moderation -> livechat',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_moderation >> #dokan_settings_moderation_livechat',
+    selector: '[data-testid="settings-menu-moderation"] >> [data-testid="settings-menu-livechat"]',
     fields: [
         {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_enabled button',
-            type: 'switch',
-            value: true
-        },
-        // {
-        //     There is problem of some fields. Todo: Fix those selectors later.
-        //     selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_provider div[role="radio"][aria-checked="true"]:has-text("Tawk.to")',
-        //     type: 'radio',
-        //     value: true
-        // },
-        {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_vendor_page_button button',
+            selector: '[data-testid="settings-field-livechat_enabled"] [role="switch"]',
             type: 'switch',
             value: true
         },
         {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_product_page_button div[role="radio"][aria-label="Above Product Tab"]',
-            type: 'radio',
-            value: 'true',
+            // `customize_radio` variant — the legacy side asserts the Tawk.to
+            // option, so it has to be set here. Without it the provider stays
+            // at its `talkjs` default and the legacy check fails.
+            selector: '[data-testid="settings-field-livechat_provider"]',
+            type: 'customize-radio',
+            value: 'tawkto',
+        },
+        {
+            selector: '[data-testid="settings-field-livechat_vendor_page_button"] [role="switch"]',
+            type: 'switch',
+            value: true
+        },
+        {
+            selector: '[data-testid="settings-field-livechat_product_page_button"]',
+            type: 'customize-radio',
+            value: 'above_tab',
         },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Moderation -> livechat', () => {
     let loginPage: LoginPage;

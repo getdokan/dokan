@@ -157,7 +157,7 @@ class ProductController extends DokanRESTController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
-                    'args'                => $this->get_collection_params(),
+                    'args'                => array_merge( $this->get_collection_params(), $this->get_exclude_types_param() ),
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
                 [
@@ -210,6 +210,7 @@ class ProductController extends DokanRESTController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_product_summary' ],
+                    'args'                => $this->get_exclude_types_param(),
                     'permission_callback' => [ $this, 'get_product_summary_permissions_check' ],
                 ],
             ]
@@ -559,16 +560,8 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
-        // Match the list's exclusion scope so tab counts can't drift from it —
-        // Pro modules add `product_pack` etc. via this filter.
-        $exclude_types = array_values(
-            array_unique(
-                array_merge(
-                    [ 'booking', 'auction' ],
-                    (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
-                )
-            )
-        );
+        // Match the list's exclusion scope so tab counts can't drift from it.
+        $exclude_types = $this->get_exclude_types( $request );
 
         $data = [
             'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
@@ -590,6 +583,54 @@ class ProductController extends DokanRESTController {
         $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Get the product types excluded from the vendor product listing.
+     *
+     * The vendor product list sends its own `exclude_types` set — omitting the
+     * types it wants shown (e.g. it drops `auction` to reveal auctions). Every
+     * other request (the manual order product picker, the legacy page) sends
+     * nothing and falls back to the default `[ 'auction', 'booking' ]`, so those
+     * keep excluding them.
+     *
+     * @since 5.0.10
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array
+     */
+    protected function get_exclude_types( $request ) {
+        $exclude_types = $request->get_param( 'exclude_types' );
+
+        // Null-check before casting: `(array) null` is `[]`, which would make
+        // `??` skip the default and drop the exclusion for requests that send
+        // nothing (e.g. the manual order picker).
+        return null !== $exclude_types
+            ? array_values( (array) $exclude_types )
+            : [ 'auction', 'booking' ];
+    }
+
+    /**
+     * Collection param schema for `exclude_types`.
+     *
+     * Product type slugs to hide from the vendor listing. Consumed by
+     * get_exclude_types(); the vendor product list sends it (omitting the types
+     * it wants shown, e.g. `auction`).
+     *
+     * @since 5.0.10
+     *
+     * @return array
+     */
+    protected function get_exclude_types_param() {
+        return [
+            'exclude_types' => [
+                'description'       => __( 'Product type slugs to exclude from the vendor listing (e.g. booking).', 'dokan-lite' ),
+                'type'              => 'array',
+                'items'             => [ 'type' => 'string' ],
+                'sanitize_callback' => 'wp_parse_slug_list',
+            ],
+        ];
     }
 
     /**
@@ -913,8 +954,8 @@ class ProductController extends DokanRESTController {
             $args[ $on_sale_key ] = ! empty( $args[ $on_sale_key ] ) && is_array( $args[ $on_sale_key ] ) ? array_merge( $args[ $on_sale_key ], $on_sale_ids ) : $on_sale_ids;
         }
 
-        // Force the post_type argument, since it's not a user input variable.
-        if ( ! empty( $request['sku'] ) ) {
+        // Force the post_type argument, since it's not a user input variable. Downloadable files can live on variations, so the downloadable picker lists those too.
+        if ( ! empty( $request['sku'] ) || true === dokan_string_to_bool( $request->get_param( 'only_downloadable' ) ) ) {
             $args['post_type'] = [ 'product', 'product_variation' ];
         } else {
             $args['post_type'] = $this->post_type;
@@ -922,7 +963,7 @@ class ProductController extends DokanRESTController {
 
         // Exclude product types that belong to separate dashboards
         // (e.g. auction, booking, subscription — registered by their Pro modules).
-        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        $exclude_types = $this->get_exclude_types( $request );
         if ( ! empty( $exclude_types ) ) {
             $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                 'taxonomy' => 'product_type',
@@ -932,10 +973,49 @@ class ProductController extends DokanRESTController {
             ];
         }
 
+        // WP_Query's `s` can't match SKUs — reuse WP Admin's WooCommerce product search so SKU, numeric-ID and variation-SKU lookups behave identically here.
+        if ( isset( $request['search'] ) && '' !== $request['search'] && 'product' === $this->post_type ) {
+            $data_store = \WC_Data_Store::load( 'product' );
+
+            if ( $data_store->has_callable( 'search_products' ) ) {
+                /**
+                 * Filters the maximum number of products the product search may match.
+                 *
+                 * Null (default) keeps the match set unbounded so a vendor's own product is never
+                 * truncated away before the `author` constraint applies; large marketplaces can
+                 * bound the query at the cost of that guarantee.
+                 *
+                 * @since 5.0.11
+                 *
+                 * @param int|null $limit Maximum matches, or null for unlimited.
+                 */
+                $search_limit = apply_filters( 'dokan_rest_product_search_limit', null );
+
+                // All statuses searched — vendors must find their drafts; the query's `author` arg keeps results vendor-scoped.
+                $search_ids = array_filter( wp_parse_id_list( $data_store->search_products( wc_clean( $request['search'] ), '', true, true, $search_limit ) ) );
+
+                // Search runs last so any post__in set above (`include` param, on_sale) narrows the matches instead of being widened by them.
+                if ( ! empty( $args['post__in'] ) ) {
+                    $search_ids = array_intersect( $search_ids, wp_parse_id_list( $args['post__in'] ) );
+                }
+
+                // WP_Query ignores post__not_in once post__in is set, so honour `exclude` by hand.
+                if ( ! empty( $args['post__not_in'] ) ) {
+                    $search_ids = array_diff( $search_ids, wp_parse_id_list( $args['post__not_in'] ) );
+                }
+
+                // A zero-match search must return nothing — an empty post__in would drop the constraint and return the whole catalogue.
+                $args['post__in'] = ! empty( $search_ids ) ? $search_ids : [ 0 ];
+
+                unset( $args['s'] );
+            }
+        }
+
         /**
          * Filter the WP_Query args before executing the product listing query.
          * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
-         * filtering for both v1 and v2 REST endpoints.
+         * filtering for both v1 and v2 REST endpoints. Note: `post__in` may already
+         * carry the search/on_sale constraints — callbacks should narrow it, never widen it.
          *
          * @since 5.0.0
          *
@@ -955,10 +1035,19 @@ class ProductController extends DokanRESTController {
      * @return WP_REST_Response|array|WP_Error
      */
     protected function prepare_data_for_response( $product, $request ) {
+        // Public routes share this serializer, so vendor-only fields are blanked for other callers.
+        $can_view_private = $this->can_view_private_product_data( $product );
+
         $context   = ! empty( $request['context'] ) ? $request['context'] : 'view';
         $author_id = get_post_field( 'post_author', $product->get_id() );
         $store     = dokan()->vendor->get( $author_id );
-        $data      = [
+
+        $purchase_note = '';
+        if ( $can_view_private ) {
+            $purchase_note = 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context );
+        }
+
+        $data = [
             'id'                    => $product->get_id(),
             'name'                  => $product->get_name( $context ),
             'slug'                  => $product->get_slug( $context ),
@@ -988,7 +1077,7 @@ class ProductController extends DokanRESTController {
             'total_sales'           => $product->get_total_sales( $context ),
             'virtual'               => $product->is_virtual(),
             'downloadable'          => $product->is_downloadable(),
-            'downloads'             => $this->get_downloads( $product ),
+            'downloads'             => $can_view_private ? $this->get_downloads( $product ) : [],
             'download_limit'        => $product->get_download_limit( $context ),
             'download_expiry'       => $product->get_download_expiry( $context ),
             'external_url'          => $product->is_type( 'external' ) ? $product->get_product_url( $context ) : '',
@@ -1020,7 +1109,7 @@ class ProductController extends DokanRESTController {
             'upsell_ids'            => array_map( 'absint', $product->get_upsell_ids( $context ) ),
             'cross_sell_ids'        => array_map( 'absint', $product->get_cross_sell_ids( $context ) ),
             'parent_id'             => $product->get_parent_id( $context ),
-            'purchase_note'         => 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context ),
+            'purchase_note'         => $purchase_note,
             'categories'            => $this->get_taxonomy_terms( $product ),
             'tags'                  => $this->get_taxonomy_terms( $product, 'tag' ),
             'images'                => $this->get_images( $product ),
@@ -1029,7 +1118,7 @@ class ProductController extends DokanRESTController {
             'variations'            => $product->is_type( 'variable' ) ? $product->get_children() : [],
             'grouped_products'      => $product->is_type( 'grouped' ) ? $product->get_children() : [],
             'menu_order'            => $product->get_menu_order( $context ),
-            'meta_data'             => $product->get_meta_data(),
+            'meta_data'             => $can_view_private ? $product->get_meta_data() : $this->get_public_meta_data( $product ),
             'store'                 => [
                 'id'      => $store->get_id(),
                 'name'    => $store->get_shop_name(),
@@ -1037,16 +1126,16 @@ class ProductController extends DokanRESTController {
                 'avatar'  => $store->get_avatar(),
                 'address' => $store->get_address(),
             ],
-            'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
+            'row_actions'           => $can_view_private ? dokan_product_get_row_action( $product->get_id(), false ) : [],
         ];
 
         $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
         $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
 
-        $earning           = dokan()->commission->get_earning_by_product( $product );
+        $earning           = $can_view_private ? dokan()->commission->get_earning_by_product( $product ) : null;
         $data['earning']   = is_numeric( $earning ) ? (float) $earning : null;
         $data['page_view'] = (int) get_post_meta( $product->get_id(), 'pageview', true );
-        $data['edit_url']  = dokan_edit_product_url( $product->get_id() );
+        $data['edit_url']  = $can_view_private ? dokan_edit_product_url( $product->get_id() ) : '';
 
         $data = apply_filters( 'dokan_rest_product_data_prepare', $data, $product->get_id() );
 
@@ -1054,6 +1143,52 @@ class ProductController extends DokanRESTController {
         $response->add_links( $this->prepare_links( $product, $request ) );
 
         return apply_filters( "dokan_rest_prepare_{$this->post_type}_object", $response, $product, $request );
+    }
+
+    /**
+     * Whether the current user may see a product's vendor-only fields (download files, earning, purchase note, meta data).
+     *
+     * @since 5.3.3
+     *
+     * @param WC_Product $product Product instance.
+     *
+     * @return bool
+     */
+    protected function can_view_private_product_data( $product ): bool {
+        // Defence in depth: a product with post_author 0 would otherwise match an anonymous caller's user id 0.
+        if ( ! is_user_logged_in() ) {
+            return false;
+        }
+
+        return current_user_can( 'manage_woocommerce' )
+            || ( dokan_is_product_author( $product->get_id() ) && current_user_can( 'dokan_view_product_menu' ) );
+    }
+
+    /**
+     * Product meta entries that any caller may see, opted in through `dokan_rest_public_product_meta_keys`.
+     *
+     * @since 5.3.3
+     *
+     * @param WC_Product $product Product instance.
+     *
+     * @return array
+     */
+    protected function get_public_meta_data( $product ): array {
+        // Buyer-facing meta keys only; nothing is public unless a module opts its key in.
+        $public_keys = (array) apply_filters( 'dokan_rest_public_product_meta_keys', [], $product );
+
+        if ( empty( $public_keys ) ) {
+            return [];
+        }
+
+        return array_values(
+            array_filter(
+                $product->get_meta_data(),
+                function ( $meta ) use ( $public_keys ) {
+                    return in_array( $meta->key, $public_keys, true );
+                }
+            )
+        );
     }
 
     /**
@@ -1383,6 +1518,10 @@ class ProductController extends DokanRESTController {
         // Allow set meta_data.
         if ( is_array( $request['meta_data'] ) ) {
             foreach ( $request['meta_data'] as $meta ) {
+                // A serialized PHP object left in meta would be revived by a later maybe_unserialize() call; never store one.
+                if ( ProductAttribute::contains_php_object( $meta['value'] ) ) {
+                    continue;
+                }
                 $product->update_meta_data( $meta['key'], $meta['value'], isset( $meta['id'] ) ? $meta['id'] : '' );
             }
         }

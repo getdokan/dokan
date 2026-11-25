@@ -162,7 +162,17 @@ export class NoticeAndPromotionPage {
             } else if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
                 await this.multipleElementVisible(value);
             } else {
-                await expect(this.page.locator(value)).toBeVisible();
+                // Dokan's promotion feed can serve MORE THAN ONE live promotion, and the notice
+                // slider renders a slide per promotion — so these selectors legitimately match
+                // n >= 1 elements and a bare toBeVisible() throws a strict-mode violation.
+                // Wait web-first on the first match (this is the settle point), then require
+                // every match to be visible — stricter than the original single-element assert.
+                const matches = this.page.locator(value);
+                await expect(matches.first(), `at least one "${key}" element must render`).toBeVisible();
+                const count = await matches.count();
+                for (let i = 0; i < count; i++) {
+                    await expect(matches.nth(i), `"${key}" element ${i + 1} of ${count} must be visible`).toBeVisible();
+                }
             }
         }
     }

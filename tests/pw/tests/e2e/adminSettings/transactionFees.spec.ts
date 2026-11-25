@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 const oldDataset = [
     {
@@ -31,25 +32,28 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Transaction -> Fees',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_transaction >> #dokan_settings_transaction_fees',
+    selector: '[data-testid="settings-menu-transaction"] >> [data-testid="settings-menu-fees"]',
     fields: [
         {
-            selector: '#dokan_settings_transaction_fees_fees_shipping_fee button[name="seller"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-shipping_fee_recipient"]',
+            type: 'radio-capsule',
+            value: 'Vendor',
         },
         {
-            selector: '#dokan_settings_transaction_fees_fees_product_tax_fee button[name="seller"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-product_tax_fee_recipient"]',
+            type: 'radio-capsule',
+            value: 'Vendor',
         },
         {
-            selector: '#dokan_settings_transaction_fees_fees_shipping_tax_fee button[name="seller"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-shipping_tax_fee_recipient"]',
+            type: 'radio-capsule',
+            value: 'Vendor',
         },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Transaction -> Fees', () => {
     let loginPage: LoginPage;

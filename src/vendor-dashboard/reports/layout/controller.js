@@ -43,7 +43,7 @@ export const getPages = () => {
   const initialBreadcrumbs = [["", __( 'Dashboard', 'dokan-lite' )]];
 
   if ( getAdminSetting( 'isAnalyticsEnabled' ) ) {
-    pages.push({
+    const overviewPage = {
       container   : Dashboard,
       path        : "/analytics/overview",
       breadcrumbs : [
@@ -54,7 +54,13 @@ export const getPages = () => {
       wpOpenMenu  : "toplevel_page_wc-admin-path--analytics-overview",
       navArgs     : { id : "woocommerce-analytics-overview" },
       capability  : "dokandar",
-    });
+    };
+
+    pages.push( overviewPage );
+
+    // Default route: render the Overview inline at the dashboard root (empty `path` query),
+    // so hitting `/dashboard/` shows Overview without a redirect — avoiding the double page load.
+    pages.push({ ...overviewPage, path: "/" });
   }
 
   /**

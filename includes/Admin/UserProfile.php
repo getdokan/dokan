@@ -17,6 +17,7 @@ class UserProfile {
 
         add_action( 'personal_options_update', array( $this, 'save_meta_fields' ) );
         add_action( 'edit_user_profile_update', array( $this, 'save_meta_fields' ) );
+        add_action( 'user_profile_update_errors', array( $this, 'validate_store_url' ), 10, 3 );
 
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
     }
@@ -519,6 +520,37 @@ class UserProfile {
     }
 
     /**
+     * Report a store URL another user already has on the admin profile screen.
+     *
+     * @since 5.3.4
+     *
+     * @param \WP_Error $errors Errors shown on the profile screen.
+     * @param bool      $update Whether an existing user is being saved.
+     * @param object    $user   User data being saved.
+     *
+     * @return void
+     */
+    public function validate_store_url( $errors, $update, $user ) {
+        if ( ! $update || ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        if ( ! isset( $_POST['dokan_update_user_profile_info_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_update_user_profile_info_nonce'] ) ), 'dokan_update_user_profile_info' ) ) {
+            return;
+        }
+
+        if ( ! isset( $_POST['dokan_store_url'] ) ) {
+            return;
+        }
+
+        $store_url = VendorUtil::sanitize_shop_url( sanitize_text_field( wp_unslash( $_POST['dokan_store_url'] ) ) );
+
+        if ( ! VendorUtil::is_shop_url_available( $store_url, (int) $user->ID ) ) {
+            $errors->add( 'dokan_store_url', __( 'Shop URL is not available', 'dokan-lite' ) );
+        }
+    }
+
+    /**
      * Save user data
      *
      * @param int $user_id
@@ -540,8 +572,6 @@ class UserProfile {
 
         $selling         = sanitize_text_field( wp_unslash( $_POST['dokan_enable_selling'] ) );
         $publishing      = isset( $_POST['dokan_publish'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_publish'] ) ) : '';
-        $percentage      = isset( $_POST['dokan_admin_percentage'] ) && $_POST['dokan_admin_percentage'] !== '' ? sanitize_text_field( wp_unslash( $_POST['dokan_admin_percentage'] ) ) : '';
-        $percentage_type = empty( $_POST['dokan_admin_percentage_type'] ) ? 'percentage' : sanitize_text_field( wp_unslash( $_POST['dokan_admin_percentage_type'] ) );
         $feature_seller  = isset( $_POST['dokan_feature'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_feature'] ) ) : '';
         $store_settings  = dokan_get_store_info( $user_id );
 
@@ -560,12 +590,17 @@ class UserProfile {
         }
 
         if ( isset( $_POST['dokan_store_url'] ) ) {
-            wp_update_user(
-                array(
-                    'ID'            => $user_id,
-                    'user_nicename' => sanitize_title( wp_unslash( $_POST['dokan_store_url'] ) ),
-                )
-            );
+            $store_url = VendorUtil::sanitize_shop_url( sanitize_text_field( wp_unslash( $_POST['dokan_store_url'] ) ) );
+
+            // A taken URL is reported by validate_store_url(); wp_update_user() would silently rename it.
+            if ( VendorUtil::is_shop_url_available( $store_url, (int) $user_id ) ) {
+                wp_update_user(
+                    array(
+                        'ID'            => $user_id,
+                        'user_nicename' => $store_url,
+                    )
+                );
+            }
         }
 
         update_user_meta( $user_id, 'dokan_profile_settings', $store_settings );
@@ -581,8 +616,6 @@ class UserProfile {
         }
 
         update_user_meta( $user_id, 'dokan_publishing', $publishing );
-        update_user_meta( $user_id, 'dokan_admin_percentage', wc_format_decimal( $percentage ) );
-        update_user_meta( $user_id, 'dokan_admin_percentage_type', $percentage_type );
         update_user_meta( $user_id, 'dokan_feature_seller', $feature_seller );
         update_user_meta( $user_id, 'dokan_store_name', $store_settings['store_name'] );
 
