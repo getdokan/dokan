@@ -119,4 +119,20 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
             $this->assertEquals( $expected, $report_data->totals->{"total_$key"}, $key . ' Mismatch: Expected: ' . $expected . ' Got: ' . $val );
         }
     }
+
+    /**
+     * Gross sales count the sub-orders, so with no coupons or refunds they equal net sales.
+     *
+     * @return void
+     */
+    public function test_gross_sales_include_sub_orders() {
+        $this->create_multi_vendor_order();
+
+        $this->run_all_pending_queue();
+
+        $report_data = ( new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query( [ 'fields' => [ 'gross_sales', 'net_revenue' ] ], 'orders-stats' ) )->get_data();
+
+        $this->assertGreaterThan( 0, $report_data->totals->net_revenue );
+        $this->assertEquals( $report_data->totals->net_revenue, $report_data->totals->gross_sales );
+    }
 }
