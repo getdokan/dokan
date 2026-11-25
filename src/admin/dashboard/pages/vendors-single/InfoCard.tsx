@@ -25,6 +25,7 @@ export const paymentMethods = ( methods: PaymentDetails ) => {
         { key: 'dokan_custom', name: __( 'Dokan Custom', 'dokan-lite' ) },
         { key: 'dokan_razorpay', name: __( 'Dokan Razorpay', 'dokan-lite' ) },
         { key: 'stripe_express', name: __( 'Stripe Express', 'dokan-lite' ) },
+        { key: 'stripe', name: __( 'Stripe Connect', 'dokan-lite' ) },
         {
             key: 'dokan-moip-connect',
             name: __( 'Dokan Moip Connect', 'dokan-lite' ),
@@ -58,6 +59,7 @@ export const paymentMethods = ( methods: PaymentDetails ) => {
                 break;
             case 'dokan_razorpay':
             case 'stripe_express':
+            case 'stripe':
             case 'dokan-moip-connect':
                 isActive = !! value;
                 break;

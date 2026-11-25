@@ -29,6 +29,7 @@ export type PaymentDetails = {
     };
     dokan_razorpay?: boolean;
     stripe_express?: boolean;
+    stripe?: boolean;
     'dokan-moip-connect'?: boolean;
 };
 
