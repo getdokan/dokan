@@ -542,7 +542,13 @@ class VendorOnboardingControllerTest extends DokanTestCase {
      * @test
      */
     public function payment_step_lists_paypal_when_withdraw_settings_were_never_saved() {
-        delete_option( 'dokan_withdraw' );
+        // The shape dokan_withdraw_get_active_methods() returns from its default; the saved shape is keyed by method.
+        add_filter(
+            'dokan_get_active_withdraw_methods',
+            static function () {
+                return [ 'paypal' ];
+            }
+        );
         wp_set_current_user( $this->seller_id1 );
 
         $gateways = [];
