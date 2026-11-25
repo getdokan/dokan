@@ -24,6 +24,9 @@ import { applyFilters } from '@wordpress/hooks';
 import UserCard from '@src/components/UserCard';
 import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
+import SwitchToVendorDialog, {
+    UserSwitchingStatus,
+} from './vendor-switch/SwitchToVendorDialog';
 
 const defaultLayouts = {
     table: { density: 'comfortable' },
@@ -120,6 +123,32 @@ const VendorsPage = ( props ) => {
 
     // Keep track of current selection in DataViews so we can clear it after bulk actions
     const [ selection, setSelection ] = useState< string[] >( [] );
+
+    const userSwitching =
+        dokanAdminDashboardSettings?.vendors?.user_switching || {};
+    const [ switchingStatus, setSwitchingStatus ] =
+        useState< UserSwitchingStatus >( userSwitching.status || 'active' );
+    const [ vendorToSwitch, setVendorToSwitch ] = useState< Vendor | null >(
+        null
+    );
+
+    // Before User Switching is active, offer "Switch to" only to users who can install or activate it.
+    const canSwitchTo = ( item: Vendor ) => {
+        if ( switchingStatus === 'active' ) {
+            return !! item?.switch_url;
+        }
+
+        // Nobody can switch to themselves.
+        if ( item?.id === userSwitching.current_user_id ) {
+            return false;
+        }
+
+        if ( switchingStatus === 'inactive' ) {
+            return !! userSwitching.can_activate;
+        }
+
+        return !! ( userSwitching.can_install && userSwitching.can_activate );
+    };
 
     const [ data, setData ] = useState< Vendor[] >( [] );
     const [ isLoading, setIsLoading ] = useState< boolean >( false );
@@ -530,14 +559,17 @@ const VendorsPage = ( props ) => {
                                     ),
                                     isPrimary: false,
                                     supportsBulk: false,
-                                    isEligible: ( item: Vendor ) =>
-                                        item?.switch_url &&
-                                        item?.switch_url.length &&
-                                        dokanAdminDashboardSettings?.vendors
-                                            ?.is_vendor_switching_enabled,
+                                    isEligible: canSwitchTo,
                                     callback: ( item ) => {
                                         const vendor: Vendor =
                                             item[ 0 ] as Vendor;
+
+                                        if ( switchingStatus !== 'active' ) {
+                                            setVendorToSwitch( vendor );
+
+                                            return;
+                                        }
+
                                         window.location.href =
                                             vendor?.switch_url;
                                     },
@@ -664,6 +696,20 @@ const VendorsPage = ( props ) => {
                     />
                 </div>
             </div>
+
+            <SwitchToVendorDialog
+                vendor={ vendorToSwitch }
+                status={ switchingStatus }
+                onClose={ ( activated ) => {
+                    setVendorToSwitch( null );
+
+                    // Once active, the vendors' switch links come with the list.
+                    if ( activated ) {
+                        setSwitchingStatus( 'active' );
+                        fetchVendors();
+                    }
+                } }
+            />
 
             { /* Plugin Area for Extensions */ }
             <PluginArea scope="dokan-admin-vendors-list-page" />

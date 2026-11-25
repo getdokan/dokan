@@ -44,15 +44,37 @@ class UserSwitch {
     }
 
     /**
+     * Get the User Switching plugin status.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string One of `active`, `inactive` or `not_installed`.
+     */
+    public function get_plugin_status(): string {
+        if ( $this->is_feature_active() ) {
+            return 'active';
+        }
+
+        return file_exists( WP_PLUGIN_DIR . '/user-switching/user-switching.php' ) ? 'inactive' : 'not_installed';
+    }
+
+    /**
      * Add localize scription for loading if feature available or not
      *
      * @since 3.0.6
+     * @since DOKAN_SINCE Added `user_switching` so the admin can be offered to install or activate the plugin.
      *
      * @return array
      */
     public function add_localize_data( $localize_data ) {
         $localize_data['is_vendor_switching_enabled'] = $this->is_feature_active();
         $localize_data['is_vendor_legacy_page']       = get_transient( 'dokan_legacy_vendors_page' );
+        $localize_data['user_switching']              = [
+            'status'          => $this->get_plugin_status(),
+            'can_install'     => current_user_can( 'install_plugins' ),
+            'can_activate'    => current_user_can( 'activate_plugins' ),
+            'current_user_id' => get_current_user_id(),
+        ];
 
         return $localize_data;
     }
@@ -61,6 +83,7 @@ class UserSwitch {
      * Populate switch url for user
      *
      * @since 3.0.6
+     * @since DOKAN_SINCE The switch lands in the vendor dashboard.
      *
      * @return array
      */
@@ -80,6 +103,12 @@ class UserSwitch {
         }
 
         $data['switch_url'] = html_entity_decode( user_switching::maybe_switch_url( new WP_User( $store_id ) ) );
+        $dashboard_url      = dokan_get_navigation_url();
+
+        // Land in the vendor dashboard; without a target the switch ends on the home page.
+        if ( $data['switch_url'] && $dashboard_url ) {
+            $data['switch_url'] = add_query_arg( 'redirect_to', rawurlencode( $dashboard_url ), $data['switch_url'] );
+        }
 
         return $data;
     }
