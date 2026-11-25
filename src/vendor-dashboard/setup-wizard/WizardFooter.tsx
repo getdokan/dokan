@@ -53,6 +53,8 @@ export default function WizardFooter( {
                     <Button
                         variant="ghost"
                         className="gap-1 border border-transparent text-gray-500 hover:border-gray-200 hover:bg-gray-50 hover:text-gray-900"
+                        // A save still in flight would navigate again when it resolves.
+                        disabled={ busy || advancing }
                         onClick={ () => goTo( previous ) }
                     >
                         <ChevronLeft
@@ -71,6 +73,7 @@ export default function WizardFooter( {
                         <Button
                             variant="ghost"
                             className="border border-transparent text-gray-500 hover:border-gray-200 hover:bg-gray-50 hover:text-gray-900"
+                            disabled={ busy || advancing }
                             onClick={ advance }
                         >
                             { __( 'Skip', 'dokan-lite' ) }

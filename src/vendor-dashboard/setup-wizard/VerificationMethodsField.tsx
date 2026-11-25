@@ -111,7 +111,8 @@ const VerificationMethodsField = ( {
             return;
         }
 
-        const replacedRequestId = row.requestId;
+        // Only a pending request is being replaced; a rejected or approved one is the admin's decision and stays on record.
+        const replacedRequestId = 'pending' === row.status ? row.requestId : 0;
 
         patchRow( method.id, { submitting: true } );
 

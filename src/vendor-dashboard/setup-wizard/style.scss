@@ -35,13 +35,13 @@
     flex: 1 1 auto;
     flex-direction: column;
     min-height: 0;
-    text-align: left;
+    text-align: start;
 
     // Exposes the form scroller's timeline to the pinned heading/footer, which sit outside it.
     timeline-scope: --dokan-vsw-scroll;
 
-    // Onboarding is pre-brand, so it keeps the Figma purple even when the customizer re-tints the dashboard.
-    --primary: #7047eb;
+    // Pro's Color Scheme Customizer covers the setup wizard (Pro ADR-0108); Dokan purple when it is off.
+    --primary: var(--dokan-button-background-color, #7047eb);
 
     // wc-setup.css hard-aligns card copy left; let each step wrapper decide.
     h1,

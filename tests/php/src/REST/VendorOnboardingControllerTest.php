@@ -14,6 +14,8 @@ use WeDevs\Dokan\Vendor\SetupWizard;
  * The load-bearing one is the differential: the same store-step input driven
  * through the legacy wizard `$_POST` pipeline and through REST must land the
  * identical owned keys in `dokan_profile_settings`.
+ *
+ * @group setup-wizard
  */
 class VendorOnboardingControllerTest extends DokanTestCase {
 
@@ -42,6 +44,9 @@ class VendorOnboardingControllerTest extends DokanTestCase {
         parent::set_up();
 
         $_POST = [];
+
+        // The payment step describes only the methods the admin enabled, and saves nothing else.
+        update_option( 'dokan_withdraw', [ 'withdraw_methods' => [ 'paypal' => 'paypal', 'bank' => 'bank' ] ] );
 
         $this->seam_b_calls = [];
         $this->seam_a_calls = 0;
@@ -405,5 +410,197 @@ class VendorOnboardingControllerTest extends DokanTestCase {
 
         // No map key configured in this environment → the map field is gated out, like the legacy view.
         $this->assertArrayNotHasKey( 'store_map', $by_id );
+
+        // Server-side hooks stay on the server, as on the Store settings response.
+        $this->assertArrayNotHasKey( 'validation_func', $by_id['address'] );
+    }
+
+    /**
+     * A staff user to act for seller 1, holding only what Pro's Vendor Staff
+     * module always grants (`dokandar`) plus the given dashboard capabilities.
+     *
+     * @param string[] $caps Extra capabilities.
+     *
+     * @return int Staff user ID.
+     */
+    protected function create_staff( array $caps = [] ): int {
+        $staff_id = self::factory()->user->create( [ 'role' => 'subscriber' ] );
+        $staff    = new \WP_User( $staff_id );
+
+        foreach ( array_merge( [ 'vendor_staff', 'dokandar' ], $caps ) as $cap ) {
+            $staff->add_cap( $cap );
+        }
+
+        update_user_meta( $staff_id, '_vendor_id', $this->seller_id1 );
+
+        return $staff_id;
+    }
+
+    /**
+     * Staff save into their Vendor's store, so each step needs the dashboard
+     * capability that guards the same fields; the Vendor needs only `dokandar`.
+     *
+     * @test
+     */
+    public function staff_need_the_matching_dashboard_capability_per_step() {
+        $store   = [ 'address' => $this->owned_field_values()['address'] ];
+        $payment = [ 'payment_methods' => [ 'paypal' => [ 'email' => 'staff@example.com' ] ] ];
+
+        wp_set_current_user( $this->create_staff() );
+        $this->assertSame( 403, $this->put_request( $this->route, [ 'values' => $store ] )->get_status() );
+        $this->assertSame( 403, $this->put_request( '/dokan/v1/vendor-onboarding/payment', [ 'values' => $payment ] )->get_status() );
+        $this->assertSame( 403, $this->get_request( '/dokan/v1/vendor-onboarding/payment' )->get_status() );
+
+        wp_set_current_user( $this->create_staff( [ 'dokan_view_store_settings_menu' ] ) );
+        $this->assertSame( 200, $this->put_request( $this->route, [ 'values' => $store ] )->get_status() );
+        $this->assertSame( 403, $this->put_request( '/dokan/v1/vendor-onboarding/payment', [ 'values' => $payment ] )->get_status() );
+
+        wp_set_current_user( $this->create_staff( [ 'dokan_view_store_payment_menu' ] ) );
+        $this->assertSame( 200, $this->put_request( '/dokan/v1/vendor-onboarding/payment', [ 'values' => $payment ] )->get_status() );
+        $this->assertSame( 'staff@example.com', $this->get_profile_meta( $this->seller_id1 )['payment']['paypal']['email'] );
+
+        wp_set_current_user( $this->seller_id1 );
+        $this->assertSame( 200, $this->put_request( '/dokan/v1/vendor-onboarding/payment', [ 'values' => $payment ] )->get_status() );
+    }
+
+    /**
+     * Only the gateways and field keys the step declares reach `payment`.
+     *
+     * @test
+     */
+    public function payment_save_keeps_only_declared_gateways_and_fields() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->put_request(
+            '/dokan/v1/vendor-onboarding/payment',
+            [
+                'values' => [
+                    'payment_methods' => [
+                        'paypal'        => [
+                            'email'       => 'golden.vendor@example.com',
+                            'not_a_field' => 'x',
+                        ],
+                        'bank'          => [
+                            'ac_name'   => 'John Doe',
+                            'ac_number' => [ 'not', 'a', 'string' ],
+                        ],
+                        'mangopay'      => [ 'user_id' => '999' ],
+                        'made_up_rails' => [ 'k' => 'v' ],
+                    ],
+                ],
+            ]
+        );
+
+        $this->assertSame( 200, $response->get_status() );
+
+        $payment = $this->get_profile_meta( $this->seller_id1 )['payment'];
+
+        $this->assertSame( [ 'email' => 'golden.vendor@example.com' ], $payment['paypal'] );
+        $this->assertSame( 'John Doe', $payment['bank']['ac_name'] );
+        $this->assertArrayNotHasKey( 'ac_number', $payment['bank'] );
+        $this->assertArrayNotHasKey( 'mangopay', $payment );
+        $this->assertArrayNotHasKey( 'made_up_rails', $payment );
+    }
+
+    /**
+     * Saving the payment step again must not add its weight again, nor re-add
+     * the address weight the store step already counted.
+     *
+     * @test
+     */
+    public function payment_save_counts_the_payment_weight_once() {
+        wp_set_current_user( $this->seller_id1 );
+
+        update_user_meta(
+            $this->seller_id1,
+            'dokan_profile_settings',
+            [
+                'address'            => $this->owned_field_values()['address'],
+                'profile_completion' => [
+                    'address'       => 10,
+                    'progress'      => 10,
+                    'progress_vals' => [
+                        'address_val'        => 10,
+                        'payment_method_val' => 30,
+                    ],
+                ],
+            ]
+        );
+
+        $payment = [ 'payment_methods' => [ 'paypal' => [ 'email' => 'golden.vendor@example.com' ] ] ];
+
+        foreach ( [ 1, 2 ] as $save ) {
+            $this->assertSame( 200, $this->put_request( '/dokan/v1/vendor-onboarding/payment', [ 'values' => $payment ] )->get_status() );
+            $this->assertSame( 40, $this->get_profile_meta( $this->seller_id1 )['profile_completion']['progress'], "after payment save $save" );
+        }
+    }
+
+    /**
+     * With withdraw settings never saved the option defaults to a plain list,
+     * and the step must still describe PayPal.
+     *
+     * @test
+     */
+    public function payment_step_lists_paypal_when_withdraw_settings_were_never_saved() {
+        // The shape dokan_withdraw_get_active_methods() returns from its default; the saved shape is keyed by method.
+        add_filter(
+            'dokan_get_active_withdraw_methods',
+            static function () {
+                return [ 'paypal' ];
+            }
+        );
+        wp_set_current_user( $this->seller_id1 );
+
+        $gateways = [];
+        foreach ( $this->get_request( '/dokan/v1/vendor-onboarding/payment' )->get_data() as $element ) {
+            if ( 'payment_methods' === $element['id'] ) {
+                $gateways = wp_list_pluck( $element['gateways'], 'id' );
+            }
+        }
+
+        $this->assertContains( 'paypal', $gateways );
+    }
+
+    /**
+     * A payload that leaves a `legacy_post_key` field out replays its current
+     * value, so a legacy handler never reads the missing key as "cleared".
+     *
+     * @test
+     */
+    public function omitted_legacy_post_fields_replay_their_current_value() {
+        wp_set_current_user( $this->seller_id1 );
+
+        add_filter(
+            'dokan_setup_wizard_schema',
+            function ( $elements, $vendor_id, $step ) {
+                if ( 'store' === $step ) {
+                    $elements[] = [
+                        'id'              => 'legacy_terms',
+                        'type'            => 'field',
+                        'variant'         => 'text',
+                        'section_id'      => 'store_details',
+                        'non_meta'        => true,
+                        'legacy_post_key' => 'legacy_terms_post',
+                        'value'           => 'current-terms',
+                    ];
+                }
+
+                return $elements;
+            },
+            10,
+            3
+        );
+
+        $seen = null;
+        add_action(
+            'dokan_seller_wizard_store_field_save',
+            function () use ( &$seen ) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Asserting the compat bag verbatim.
+                $seen = $_POST['legacy_terms_post'] ?? null;
+            }
+        );
+
+        $this->assertSame( 200, $this->dispatch_put( [ 'address' => $this->owned_field_values()['address'] ] )->get_status() );
+        $this->assertSame( 'current-terms', $seen );
     }
 }

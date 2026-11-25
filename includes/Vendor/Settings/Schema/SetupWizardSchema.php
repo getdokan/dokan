@@ -159,7 +159,8 @@ class SetupWizardSchema {
     public static function get_payment_schema( int $vendor_id ): array {
         $info     = (array) dokan_get_store_info( $vendor_id );
         $payment  = (array) ( $info['payment'] ?? [] );
-        $active   = array_keys( (array) dokan_withdraw_get_active_methods() );
+        // Values, not keys: a never-saved option defaults to the plain list [ 'paypal' ], a saved one to [ 'paypal' => 'paypal' ].
+        $active   = array_values( (array) dokan_withdraw_get_active_methods() );
         $gateways = [];
         $values   = [];
 

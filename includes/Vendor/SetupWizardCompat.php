@@ -34,9 +34,12 @@ class SetupWizardCompat {
         $bag = [];
 
         foreach ( $fields_by_id as $field_id => $field ) {
-            if ( ! empty( $field['legacy_post_key'] ) && array_key_exists( $field_id, $sanitized ) ) {
-                $bag[ (string) $field['legacy_post_key'] ] = $sanitized[ $field_id ];
+            if ( empty( $field['legacy_post_key'] ) ) {
+                continue;
             }
+
+            // A payload that leaves the field out replays its current value — legacy handlers read a missing key as "cleared" (Pro resets store categories to the default).
+            $bag[ (string) $field['legacy_post_key'] ] = array_key_exists( $field_id, $sanitized ) ? $sanitized[ $field_id ] : ( $field['value'] ?? null );
         }
 
         $this->fire( 'dokan_seller_wizard_store_field_save', $vendor_id, $bag );

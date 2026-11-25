@@ -24,6 +24,8 @@ use WeDevs\Dokan\Test\Helpers\TestableSellerSetupWizard;
  * (`dokan_store_profile_settings_args`) never fires, seam order, foreign-key
  * survival, the legacy `$_POST['error_*']` channel, and the complete-address
  * re-save progress double-count (parity, not endorsement).
+ *
+ * @group setup-wizard
  */
 class SetupWizardStoreSaveGoldenTest extends DokanTestCase {
 

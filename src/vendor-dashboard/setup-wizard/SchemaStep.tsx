@@ -23,6 +23,7 @@ export default function SchemaStep( { payload }: { payload: WizardPayload } ) {
     );
     const [ saving, setSaving ] = useState< boolean >( false );
     const saveRef = useRef< ( () => void ) | null >( null );
+    const hasErrorsRef = useRef< boolean >( false );
     const resultRef = useRef< ( ( ok: boolean ) => void ) | null >( null );
     const endpoint = payload.endpoint;
 
@@ -84,6 +85,11 @@ export default function SchemaStep( { payload }: { payload: WizardPayload } ) {
                 resolve( true );
                 return;
             }
+            // The engine skips the save while a field still shows an error, so the promise would never settle and Next would stay disabled.
+            if ( hasErrorsRef.current ) {
+                resolve( false );
+                return;
+            }
             resultRef.current = resolve;
             saveRef.current();
         } );
@@ -99,9 +105,10 @@ export default function SchemaStep( { payload }: { payload: WizardPayload } ) {
                 onSave={ handleSave }
                 applyFilters={ applyFilters }
                 hookPrefix="dokan_vendor"
-                renderSaveButton={ ( { onSave } ) => {
+                renderSaveButton={ ( { onSave, hasErrors } ) => {
                     // The wizard footer owns the action; the engine's save bar renders empty.
                     saveRef.current = onSave;
+                    hasErrorsRef.current = hasErrors;
                     return null;
                 } }
             />
