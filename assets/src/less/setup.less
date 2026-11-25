@@ -462,7 +462,8 @@ body.dokan-vendor-setup-wizard.dokan-vsw {
                 display: block;
                 height: 100%;
                 border-radius: 999px;
-                background: linear-gradient(90deg, #7047eb, #9061f9);
+                // The customizer's button colour when Pro sets one (Pro ADR-0108).
+                background: var(--dokan-button-background-color, #7047eb);
                 box-shadow: 0 0 6px rgba(112, 71, 235, 0.35);
                 transition: width 0.4s ease;
             }

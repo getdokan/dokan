@@ -8,7 +8,7 @@ export default function CreatingOverlay() {
             <LoaderCircle
                 size={ 22 }
                 aria-hidden="true"
-                className="animate-spin fill-none text-[#7047eb]"
+                className="animate-spin fill-none text-[var(--dokan-button-background-color,#7047eb)]"
             />
             { __( 'Creating your Store', 'dokan-lite' ) }
         </div>
