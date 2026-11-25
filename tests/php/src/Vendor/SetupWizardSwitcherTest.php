@@ -95,8 +95,10 @@ class SetupWizardSwitcherTest extends DokanTestCase {
         $this->assertTrue( $this->switcher->is_store_settings_legacy_preferred() );
         $this->assertTrue( $this->switcher->is_product_editor_legacy_preferred() );
 
+        // Explicit 'legacy': the flat-settings bridge keeps keys a direct dokan_appearance write omits.
         $this->set_appearance(
             [
+                'vendor_setup_wizard'   => 'legacy',
                 'vendor_store_settings' => 'latest',
                 'vendor_product_editor' => 'latest',
             ]
