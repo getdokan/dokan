@@ -55,7 +55,8 @@ export default function DokanCombineInput( { element }: Props ) {
             hookKey={ element.id }
             // plugin-ui can't validate the object value, so flag an empty commission here.
             validationError={
-                fixedCommissionError( values ) || element.validationError
+                fixedCommissionError( values, element.title ) ||
+                element.validationError
             }
             onValueChange={ ( updated ) => updateValue( element.id, updated ) }
         />

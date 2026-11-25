@@ -2,6 +2,7 @@ import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminSellerBadgesPage, adminSellerBadgesData } from './adminSellerBadgesPage';
 import { ApiUtils } from '@utils/apiUtils';
+import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import path from 'path';
 
@@ -37,7 +38,13 @@ const ids: { published?: string; publishTarget?: string; draftTarget?: string } 
 // via updateBatchSellerBadges('publish'|'draft', [id]) so each test owns a known
 // starting state and tests never race each other.
 async function seedBadge(b: { eventType: string; badgeName: string }, createPayload: any, status: 'publish' | 'draft'): Promise<string> {
-    const [, badgeId] = await apiUtils.createSellerBadge({ ...createPayload, badge_name: b.badgeName }, payloads.adminAuth);
+    const payload = { ...createPayload, badge_name: b.badgeName };
+    const [responseBody, badgeId] = await apiUtils.createSellerBadge(payload, payloads.adminAuth);
+    // A reused badge keeps the name its creator gave it (the seller-badge and API specs seed the
+    // same event types), so rename it or the name-based searches below find nothing.
+    if (badgeId && responseBody?.code === 'invalid-event-type') {
+        await apiUtils.put(endPoints.updateSellerBadge(badgeId), { data: payload, headers: payloads.adminAuth });
+    }
     if (badgeId) {
         await apiUtils.updateBatchSellerBadges(status, [badgeId], payloads.adminAuth);
     }

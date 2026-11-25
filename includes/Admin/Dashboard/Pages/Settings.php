@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Admin\Dashboard\Pages;
 /**
  * The settings page class.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class Settings extends AbstractPage {
 

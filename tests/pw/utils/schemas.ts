@@ -2966,7 +2966,7 @@ export const schemas = {
                 z.object({
                     id: z.string(),
                     value: z.string(),
-                    must_use: z.string().optional(),
+                    must_use: z.boolean().optional(),
                     desc: z.string().optional(),
                 }),
             ),

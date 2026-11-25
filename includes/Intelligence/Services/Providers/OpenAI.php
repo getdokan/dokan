@@ -38,7 +38,7 @@ class OpenAI extends Provider {
     /**
      * Get the image url.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return string
      */

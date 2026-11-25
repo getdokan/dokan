@@ -96,7 +96,9 @@
 
                 <template v-if="! getId()">
                     <div class="column">
-                        <label for="user-login">{{ __( 'Username', 'dokan-lite') }}</label><span class="required-field">*</span>
+                        <label for="user-login">{{ __( 'Username', 'dokan-lite') }}</label>
+                        <span class="required-field">*</span>
+
                         <input type="text" class="dokan-form-input"
                             id="user-login"
                             v-model="vendorInfo.user_login"
@@ -120,14 +122,25 @@
 
                     <div class="column">
                         <label for="store-password">{{ __( 'Password', 'dokan-lite') }}</label>
-                        <input
-                            id="store-password"
-                            v-if="showPassword"
-                            type="text"
-                            v-model="vendorInfo.user_pass"
-                            class="dokan-form-input"
-                            placeholder="********"
-                        >
+                        <span class="required-field">*</span>
+
+                        <div class="password-field">
+                            <input
+                                id="store-password"
+                                :type="passwordVisible ? 'text' : 'password'"
+                                v-model="vendorInfo.user_pass"
+                                :class="{'dokan-form-input': true, 'has-error': getError('user_pass')}"
+                                :placeholder="getError( 'user_pass' ) ? __( 'Password is required', 'dokan-lite' ) : __( 'Enter password or Generate', 'dokan-lite' )"
+                            >
+
+                            <button type="button"
+                                class="password-toggle"
+                                :aria-pressed="passwordVisible ? 'true' : 'false'"
+                                :aria-label="passwordVisible ? __( 'Hide password', 'dokan-lite' ) : __( 'Show password', 'dokan-lite' )"
+                                @click.prevent="passwordVisible = ! passwordVisible">
+                                <span class="dashicons" :class="passwordVisible ? 'dashicons-hidden' : 'dashicons-visibility'"></span>
+                            </button>
+                        </div>
 
                         <password-generator
                             @passwordGenerated="setPassword"
@@ -180,7 +193,8 @@ export default {
     data() {
         return {
             showStoreUrl: true,
-            showPassword: false,
+            // The generated password is readable only on request; masking is the resting state.
+            passwordVisible: false,
             otherStoreUrl: null,
             banner: '',
             defaultUrl: dokan.urls.siteUrl + dokan.urls.storePrefix + '/',
@@ -237,8 +251,10 @@ export default {
         this.checkStoreName = debounce( this.checkStore, this.delay );
         this.checkUsername = debounce( this.searchUsername, this.delay );
         this.checkEmail = debounce( this.searchEmail, this.delay );
+        // Cancel only drops the generated value; the input stays so a required field is always fillable.
         this.$root.$on( 'passwordCancelled', () => {
-            this.showPassword = false;
+            this.vendorInfo.user_pass = '';
+            this.passwordVisible = false;
         } );
     },
 
@@ -256,8 +272,8 @@ export default {
 
         // getId function has been used to identify whether is it vendor edit page or not
         getId() {
-            // Pin to a numeric ID so a crafted route param can't traverse the REST path into another endpoint (XSS).
-            return String( parseInt( this.$route.params.id, 10 ) || 0 );
+            // Templates read this as "are we editing?" and the string "0" is truthy; parseInt keeps the numeric pin from #3290.
+            return parseInt( this.$route.params.id, 10 ) || 0;
         },
 
         onSelectBanner( image ) {
@@ -378,7 +394,6 @@ export default {
         },
 
         setPassword( password ) {
-            this.showPassword = true;
             this.vendorInfo.user_pass = password;
         },
 

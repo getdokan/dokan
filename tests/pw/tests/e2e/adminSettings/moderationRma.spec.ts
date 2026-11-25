@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 const oldDataset = [
     {
@@ -36,30 +37,33 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Moderation -> rma',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_moderation >> #dokan_settings_moderation_rma',
+    selector: '[data-testid="settings-menu-moderation"] >> [data-testid="settings-menu-rma"]',
     fields: [
         {
-            selector: '#rma_order_status',
-            type: 'dropdown',
+            selector: '[data-testid="settings-field-rma_order_status"] button[role="combobox"]',
+            type: 'radix-dropdown',
             value: 'Completed',
         },
         {
-            selector: '#dokan_settings_moderation_rma_rma_settings_rma_refund_requests button[role="switch"]',
+            selector: '[data-testid="settings-field-rma_refund_requests"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_moderation_rma_rma_settings_rma_coupon_requests button[role="switch"]',
+            selector: '[data-testid="settings-field-rma_coupon_requests"] [role="switch"]',
             type: 'switch',
             value: false,
         },
         {
-            selector: '#dokan_settings_moderation_rma_refund_policy_settings_rma_refund_policy .ql-editor',
-            type: 'textarea',
+            selector: '[data-testid="settings-field-rma_refund_policy"] [contenteditable="true"]',
+            type: 'richtext',
             value: 'Refund policy text',
         },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Moderation -> rma', () => {
     let loginPage: LoginPage;

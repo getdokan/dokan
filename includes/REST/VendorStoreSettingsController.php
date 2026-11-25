@@ -17,7 +17,7 @@ use WP_REST_Server;
  * the current vendor. PUT saves a flat key-value map through the legacy save
  * pipeline (both Pro seams fire), returning the refreshed schema.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.0
  */
 class VendorStoreSettingsController extends DokanBaseVendorController {
 
@@ -56,7 +56,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Register REST routes.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @return void
      */
@@ -89,7 +89,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Permission check — same capability the legacy store settings page uses.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @return bool
      */
@@ -100,7 +100,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * GET handler — flat schema with values for the acting vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -123,7 +123,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * Validation failures return `400` with an `errors` map keyed by field id,
      * which plugin-ui merges into per-field error state.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -234,7 +234,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
          * category (flagged `non_meta` so the mapper leaves it out of the
          * profile slice). Mirrors admin's `dokan_after_saving_settings`.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.0
          *
          * @param int   $vendor_id    Vendor user ID.
          * @param array $sanitized    Sanitized values keyed by field id.
@@ -262,7 +262,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Build the filtered schema response for a vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param int $vendor_id Vendor user ID.
      *
@@ -274,7 +274,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
         /**
          * Filter the vendor Store settings REST response.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.0
          *
          * @param array $schema    Flat schema elements with values.
          * @param int   $vendor_id Vendor user ID.
@@ -292,7 +292,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Resolve the acting vendor, or a 404 error when the user owns no store.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @return int|WP_Error Vendor user ID, or an error response.
      */
@@ -316,7 +316,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * The plugin-ui engine emits dot-path keys (`page.subpage.field_id`) that
      * mirror its internal tree; the schema is keyed by the leaf id alone.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param string $key Submitted key.
      *
@@ -332,7 +332,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Index the schema's field elements by id.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $schema Flat schema elements.
      *
@@ -359,7 +359,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * returns `true`, `false`, a message, or a list of messages — so multi-error
      * and cross-field checks live on the field that owns them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $field      The field schema element.
      * @param mixed $value      The sanitized value.
@@ -404,13 +404,22 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             }
         }
 
+        // A new banner/logo must be an image this vendor (or the acting staff member) uploaded; keeping the saved one never blocks a save.
+        if ( 'vendor_image' === $variant && $value && (int) $value !== (int) ( $field['value'] ?? 0 ) ) {
+            $owned = current_user_can( 'manage_woocommerce' ) || dokan_is_valid_owner( (int) $value, $vendor_id ) || dokan_is_valid_owner( (int) $value, get_current_user_id() );
+
+            if ( ! $owned || ! wp_attachment_is_image( (int) $value ) ) {
+                $errors[] = __( 'Please choose an image from your media library.', 'dokan-lite' );
+            }
+        }
+
         /**
          * Filter the per-field validation errors for vendor settings.
          *
          * Lets Pro add validation for its own variants or layer cross-field
          * rules on top (mirrors `dokan_rest_admin_settings_validate_field`).
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.0
          *
          * @param string[] $errors  Accumulated error messages (may be empty).
          * @param array    $field   The field schema element.
@@ -423,7 +432,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Evaluate one declarative rule against a value.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param string $rule    Rule name (`required`, `not_empty`, `min_value`, `max_value`).
      * @param mixed  $value   The sanitized value.
@@ -465,7 +474,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Sanitize a submitted value based on the field variant.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.0
      *
      * @param array $field The field schema element.
      * @param mixed $value The raw submitted value.
@@ -493,7 +502,12 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 $enabled  = $field['enable_state']['value'] ?? 'on';
                 $disabled = $field['disable_state']['value'] ?? 'off';
 
-                return in_array( $value, [ $enabled, $disabled ], true ) ? $value : $disabled;
+                if ( in_array( $value, [ $enabled, $disabled ], true ) ) {
+                    return $value;
+                }
+
+                // API clients send booleans and on/yes-style flags; they mean the switch position, not a literal to store.
+                return filter_var( $value, FILTER_VALIDATE_BOOLEAN ) ? $enabled : $disabled;
 
             case 'number':
                 return is_numeric( $value ) ? $value + 0 : 0;
@@ -504,10 +518,12 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 return sanitize_text_field( (string) $value );
 
             case 'vendor_image':
-                return absint( $value );
+                // Not absint(): -5 must reach validation as invalid, not become attachment 5.
+                return (int) $value;
 
             case 'vendor_address':
-                $value = (array) $value;
+                // A partial payload keeps the sub-keys it never sent.
+                $value = (array) $value + (array) ( $field['value'] ?? [] );
 
                 return [
                     'street_1' => sanitize_text_field( (string) ( $value['street_1'] ?? '' ) ),
@@ -519,7 +535,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 ];
 
             case 'vendor_map':
-                $value = (array) $value;
+                $value = (array) $value + (array) ( $field['value'] ?? [] );
 
                 return [
                     'location'     => sanitize_text_field( (string) ( $value['location'] ?? '' ) ),
@@ -541,7 +557,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                  * Mirrors `dokan_rest_admin_settings_sanitize_field` so Pro can
                  * handle its own variants injected via the schema filter.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.3.0
                  *
                  * @param mixed  $value   The pre-sanitized value.
                  * @param array  $field   The field schema element.

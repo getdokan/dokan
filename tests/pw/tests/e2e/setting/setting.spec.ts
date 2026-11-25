@@ -46,8 +46,9 @@ test.describe('Settings test', () => {
         // the #tc_agree checkbox only renders when a Terms & Conditions page is
         // configured (seller-registration-form.php gates on
         // dokan_get_terms_condition_url()). Point reg_tc_page at the published
-        // "Terms And Conditions" page (id 22).
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.page, { reg_tc_page: '22' });
+        // "Terms And Conditions" page, resolved by title: its id differs between sites.
+        const [, tocPageId] = await apiUtils.createPage(payloads.tocPage, payloads.adminAuth);
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.page, { reg_tc_page: tocPageId });
 
         // These tests drive the CLASSIC vendor dashboard (they assert legacy
         // markers like `ul.dokan-dashboard-menu` and the classic seller-warning
@@ -107,10 +108,15 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set store terms and conditions (general settings)', { tag: ['@lite', '@vendor'] }, async () => {
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'on' });
+        // This option is GLOBAL and the test deliberately ends on 'off', which is NOT the seeded
+        // default ('on'). Left that way it hides the store TOC tab for every later spec on the
+        // shard — singleStore.spec.ts carries a defensive re-seed purely because of this. Capture
+        // and restore so the on/off assertions stay, without the leak.
+        const [originalGeneral] = await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'on' });
         await vendor.setStoreTermsAndConditions('on');
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'off' });
         await vendor.setStoreTermsAndConditions('off');
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: originalGeneral?.seller_enable_terms_and_conditions ?? 'on' });
     });
 
     test('admin can set store products per page (general settings)', { tag: ['@lite', '@customer'] }, async () => {

@@ -8,6 +8,19 @@ import type { SettingsElement } from '@wedevs/plugin-ui';
 export const fieldKeyOf = ( element: SettingsElement ): string =>
     ( element.dependency_key as string ) || element.id;
 
+// Next transient `new-N` id for a client-added table row. Derived from the rows
+// themselves, not a per-mount counter: the engine remounts fields on tab
+// switches while unsaved (and just-saved) rows keep their `new-N` ids, so a
+// reset counter would hand out a duplicate id and overwrite the earlier row.
+export const nextTransientRowId = ( rows: Array< { id: string } > ): string => {
+    const highest = rows.reduce( ( max, row ) => {
+        const match = /^new-(\d+)$/.exec( String( row.id ) );
+        return match ? Math.max( max, Number( match[ 1 ] ) ) : max;
+    }, 0 );
+
+    return `new-${ highest + 1 }`;
+};
+
 // The red required marker shared by the custom field controls.
 export const RequiredMark = () => (
     <span

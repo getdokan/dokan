@@ -10,7 +10,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  * `legacy_transformer` attribute (FQCN string). When absent the bridge uses
  * the {@see PassThroughTransformer}.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 interface TransformerInterface {
 

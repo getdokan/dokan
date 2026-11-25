@@ -23,7 +23,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration\Transformer;
  *     ],
  *     'legacy_transformer' => DoubleInputTransformer::class,
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class DoubleInputTransformer implements TransformerInterface {
 

@@ -72,7 +72,7 @@ namespace WeDevs\Dokan\Admin\Settings\Schema;
  * }
  * ```
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 class SchemaValidator {
 
@@ -215,7 +215,7 @@ class SchemaValidator {
      * Can be bypassed via the `DOKAN_DISABLE_SCHEMA_VALIDATION` constant or
      * the `dokan_admin_settings_schema_skip_validation` filter.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of settings schema elements.
      *
@@ -236,7 +236,7 @@ class SchemaValidator {
          * Return `true` to bypass all validation checks. Useful for performance
          * in production or when a plugin needs to temporarily disable validation.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param bool  $skip     Whether to skip validation. Default false.
          * @param array $elements The schema elements about to be validated.
@@ -257,7 +257,7 @@ class SchemaValidator {
          * Use this to run custom pre-validation checks. The validator instance
          * is passed so you can call `$validator->add_error()` or `$validator->add_warning()`.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array          $elements  The schema elements being validated.
          * @param SchemaValidator $validator The validator instance.
@@ -282,7 +282,7 @@ class SchemaValidator {
          *
          * Use this to run custom post-validation logic or logging.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array          $result    Validation result with 'errors' and 'warnings' arrays.
          * @param array          $elements  The schema elements that were validated.
@@ -295,7 +295,7 @@ class SchemaValidator {
          *
          * Third parties can suppress specific errors/warnings or add their own.
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array{errors: string[], warnings: string[]} $result   The validation result.
          * @param array                                       $elements The schema elements that were validated.
@@ -309,7 +309,7 @@ class SchemaValidator {
      * Third parties can add new element types or modify which properties
      * are required for existing types.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array<string, string[]> Map of element type => required property keys.
      */
@@ -327,7 +327,7 @@ class SchemaValidator {
          * } );
          * ```
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array<string, string[]> $properties Map of type => required property keys.
          */
@@ -340,7 +340,7 @@ class SchemaValidator {
      * Defines which pointer keys (e.g., `page_id`) reference which element types (e.g., `page`).
      * This map is used across multiple validation checks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return array<string, string> Map of pointer key => expected parent element type.
      */
@@ -358,7 +358,7 @@ class SchemaValidator {
          * } );
          * ```
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param array<string, string> $map Pointer key => expected parent element type.
          */
@@ -372,7 +372,7 @@ class SchemaValidator {
      * The validator does NOT restrict which specific container type is valid
      * for which child type — allowing flexible nesting.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @return string[] Element type strings that must have a parent pointer.
      */
@@ -388,7 +388,7 @@ class SchemaValidator {
          * } );
          * ```
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string[] $types Element type names that require at least one parent pointer.
          */
@@ -402,7 +402,7 @@ class SchemaValidator {
      * required properties map are present and non-empty. Elements with an
      * unrecognized type generate a warning suggesting filter registration.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      */
@@ -448,7 +448,7 @@ class SchemaValidator {
      * For every parent pointer key found on an element (e.g., `page_id`, `section_id`),
      * verifies that an element of the expected type exists with that ID.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      */
@@ -491,7 +491,7 @@ class SchemaValidator {
      * Does not restrict which container type is valid for which child type,
      * allowing flexible nesting (e.g., a section inside a subpage, tab, or any container).
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      */
@@ -536,7 +536,7 @@ class SchemaValidator {
      * This ensures no element is "orphaned" — every element is reachable from
      * a root page and will appear in the rendered settings UI.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      */
@@ -633,7 +633,7 @@ class SchemaValidator {
      * can legitimately exist in different sections, e.g., "enabled"
      * in both reverse_withdrawal and email-verification).
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      */
@@ -675,7 +675,7 @@ class SchemaValidator {
      * Unknown variants generate a warning (not an error) since they may be
      * registered by Pro or third-party plugins that load after Lite.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      */
@@ -697,7 +697,7 @@ class SchemaValidator {
          * } );
          * ```
          *
-         * @since DOKAN_SINCE
+         * @since 5.2.0
          *
          * @param string[] $variants List of known variant strings.
          */
@@ -735,7 +735,7 @@ class SchemaValidator {
      * no storage slot, so an id collision between a fieldgroup and a field is
      * harmless (and used intentionally in the schema, e.g., `google_map_api_key`).
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array $elements Flat array of schema elements.
      */
@@ -769,7 +769,7 @@ class SchemaValidator {
      * Useful in the `dokan_admin_settings_schema_before_validate` action hook
      * for adding custom validation errors from external code.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $message Human-readable error message.
      */
@@ -783,7 +783,7 @@ class SchemaValidator {
      * Useful in the `dokan_admin_settings_schema_before_validate` action hook
      * for adding custom validation warnings from external code.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param string $message Human-readable warning message.
      */
@@ -796,7 +796,7 @@ class SchemaValidator {
      *
      * Warnings are non-blocking and do not cause this to return false.
      *
-     * @since DOKAN_SINCE
+     * @since 5.2.0
      *
      * @param array{errors: string[], warnings: string[]} $result Validation result from `validate()`.
      *

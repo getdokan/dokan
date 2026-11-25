@@ -1,6 +1,6 @@
 import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { dateI18n, getSettings as getDateSettings } from '@wordpress/date';
+import { gmdateI18n, getSettings as getDateSettings } from '@wordpress/date';
 import { DateRangePicker } from '@wedevs/plugin-ui';
 import { Calendar } from 'lucide-react';
 
@@ -26,12 +26,13 @@ const toYmd = ( date?: Date ): string =>
         : '';
 
 // Format a stored Y-m-d value with the site's date format for display.
+// A calendar date has no timezone: pin it to UTC midnight and format in UTC,
+// so no browser→site timezone shift can move it to the neighbouring day.
 export const formatRangeDate = ( value?: string ): string => {
-    if ( ! value ) {
-        return '';
+    if ( ! value || ! parseYmd( value ) ) {
+        return value || '';
     }
-    const settings = getDateSettings();
-    return dateI18n( settings.formats.date, value, settings.timezone.string );
+    return gmdateI18n( getDateSettings().formats.date, `${ value }T00:00:00Z` );
 };
 
 // Calendar-prefixed range trigger + plugin-ui range calendar, shared by the vacation composer field and the history edit modal.

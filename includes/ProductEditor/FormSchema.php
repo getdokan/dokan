@@ -63,6 +63,7 @@ class FormSchema {
         'gallery',
         'attribute',
         'location_map',
+        'spmv_search',
     ];
 
     /**
@@ -121,6 +122,79 @@ class FormSchema {
             }
         }
         return $fields;
+    }
+
+    /**
+     * Find a field in a flat schema by id.
+     *
+     * Sections and fields share one id namespace, so the type is part of the match: a section - or an item an
+     * extension adds through `dokan_product_editor_prepared_schema` - carrying the same id must not answer for
+     * the field, since it has no `requireds` map and would silently switch a rule off.
+     *
+     * @since 5.0.16
+     *
+     * @param array  $schema Flat schema items.
+     * @param string $id     Field id to find.
+     *
+     * @return array|null
+     */
+    public static function get_field( array $schema, string $id ): ?array {
+        $matches = wp_list_filter(
+            $schema,
+            [
+				'id'   => $id,
+				'type' => 'field',
+			]
+        );
+
+        return $matches ? reset( $matches ) : null;
+    }
+
+    /**
+     * Resolve a field's label for a product type, falling back to its shared label.
+     *
+     * Fields can vary by product type through the `labels`, `requireds` and `visibilities` maps, which
+     * Dokan Pro's Product Form Manager writes into. These three resolvers are the PHP counterpart of
+     * `resolveLabel`, `resolveRequired` and `resolveVisibility` in
+     * `src/dashboard/product-editor/utils.tsx`, so both sides read the schema the same way.
+     *
+     * @since 5.0.16
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return string
+     */
+    public static function get_label( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): string {
+        return (string) ( $field['labels'][ $product_type ] ?? $field['label'] ?? '' );
+    }
+
+    /**
+     * Whether a field must be filled in for a product type.
+     *
+     * @since 5.0.16
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return bool
+     */
+    public static function is_required( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): bool {
+        return (bool) ( $field['requireds'][ $product_type ] ?? $field['required'] ?? false );
+    }
+
+    /**
+     * Whether a field is rendered for a product type.
+     *
+     * @since 5.0.16
+     *
+     * @param array  $field        Schema field.
+     * @param string $product_type Product type the field is resolved for.
+     *
+     * @return bool
+     */
+    public static function is_visible( array $field, string $product_type = Elements::PRODUCT_TYPE_SIMPLE ): bool {
+        return (bool) ( $field['visibilities'][ $product_type ] ?? $field['visibility'] ?? true );
     }
 
     /**
@@ -588,8 +662,7 @@ class FormSchema {
                 'variant'          => 'async_select',
                 'placeholder'      => __( 'Select product categories', 'dokan-lite' ),
                 'value'            => [],
-                // Loaded on demand as a nested tree instead of embedding the whole
-                // category hierarchy in the schema, which bloats memory on large catalogs.
+                // Loaded on demand as a nested tree so the whole category hierarchy never bloats the schema on large catalogs.
                 'api_endpoint'     => '/dokan/v1/products/categories/tree',
                 'tree'             => true,
                 // Honor the admin "single vs. multiple" category selection setting.
@@ -606,8 +679,7 @@ class FormSchema {
                 'variant'          => 'async_select',
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
-                // Tags load on demand from WooCommerce core (searchable/paginated) instead of
-                // embedding the whole tag taxonomy in the schema, which can exhaust memory on large stores.
+                // Tags load on demand from WooCommerce core (searchable/paginated) so the whole tag taxonomy never bloats the schema on large stores.
                 'api_endpoint'     => '/wc/v3/products/tags',
                 'creatable'        => 'on' === $can_create_tags,
                 'visibility'       => true,
@@ -805,6 +877,7 @@ class FormSchema {
                 'visibility'   => true,
             ],
         ];
+        // Track the Downloadable checkbox per product type: where a vendor cannot tick it, they must not be asked to fill the section it reveals.
         $downloadable_fields = [
             [
                 'id'           => Elements::SECTION_DOWNLOADABLE,
@@ -813,6 +886,7 @@ class FormSchema {
                 'label'        => __( 'Downloadable Options', 'dokan-lite' ),
                 'description'  => __( 'Configure your downloadable product settings', 'dokan-lite' ),
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
                 'dependencies' => $dep_downloadable,
             ],
             [
@@ -826,6 +900,7 @@ class FormSchema {
                 'description'  => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
             ],
             [
                 'id'           => Elements::DOWNLOAD_LIMIT,
@@ -837,6 +912,7 @@ class FormSchema {
                 'description'  => __( 'Leave blank for unlimited re-downloads.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
             ],
             [
                 'id'           => Elements::DOWNLOAD_EXPIRY,
@@ -848,6 +924,7 @@ class FormSchema {
                 'description'  => __( 'Enter the number of days before a download link expires, or leave blank.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'visibility'   => true,
+                'visibilities' => $digital_field_visibilities,
             ],
         ];
         $others_fields = [
@@ -1079,19 +1156,23 @@ class FormSchema {
                 $to = $product->get_date_on_sale_to( 'edit' );
                 return $to ? $to->date( 'Y-m-d' ) : '';
             case Elements::CATEGORIES:
-                // Async select expects [ { value, label }, ... ] so selected categories render
-                // without the full category tree being embedded in the schema.
-                $category_options = self::terms_to_async_options( $product->get_category_ids(), 'product_cat' );
+                // The term list carries every ancestor of the picked category, so read back what the vendor chose.
+                $chosen_categories = ProductCategoryHelper::get_product_chosen_category( $product );
 
-                // Single-category stores keep one selection; surface only the first saved term.
-                if ( ProductCategoryHelper::product_category_selection_is_single() ) {
-                    return array_slice( $category_options, 0, 1 );
+                if ( empty( $chosen_categories ) ) {
+                    // Products saved outside Dokan recorded no selection, so fall back to the deepest term of each branch (not get_saved_products_category(), which self-heals by writing terms and a read must not).
+                    $chosen_categories = ProductCategoryHelper::generate_chosen_categories( $product->get_category_ids() );
                 }
 
-                return $category_options;
+                // Single-category stores keep one selection; narrow before building options, because terms_to_async_options() re-sorts by name and slicing after it would surface the alphabetically-first category rather than the one the vendor picked.
+                if ( ProductCategoryHelper::product_category_selection_is_single() ) {
+                    $chosen_categories = array_slice( $chosen_categories, 0, 1 );
+                }
+
+                // Async select expects [ { value, label }, ... ] so selections render without embedding the whole tree.
+                return self::terms_to_async_options( $chosen_categories, 'product_cat' );
             case Elements::TAGS:
-                // Async select expects [ { value, label }, ... ] so selected tags render
-                // without the full tag list being embedded in the schema.
+                // Async select expects [ { value, label }, ... ] so selections render without embedding the whole tag list.
                 return self::terms_to_async_options( $product->get_tag_ids(), 'product_tag' );
             case Elements::BRANDS:
                 if ( method_exists( $product, 'get_brand_ids' ) ) {

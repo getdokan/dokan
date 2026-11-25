@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 const oldDataset = [
     {
@@ -41,35 +42,38 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor -> single_product_multi_vendor',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_vendor >> #dokan_settings_vendor_single_product_multi_vendor',
+    selector: '[data-testid="settings-menu-vendor"] >> [data-testid="settings-menu-single_product_multi_vendor"]',
     fields: [
         {
-            selector: '#dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_single_product_multiple_vendor button[role="switch"]',
+            selector: '[data-testid="settings-field-single_product_multiple_vendor"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_sell_item_button_text input[type="field"]',
+            selector: '[data-testid="settings-field-sell_item_button_text"] input',
             type: 'text',
             value: 'Sell This Item---',
         },
         {
-            selector: '#dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_available_vendor_display_area_title input[type="field"]',
+            selector: '[data-testid="settings-field-available_vendor_display_area_title"] input',
             type: 'text',
             value: 'Other Available Vendor---',
         },
         {
-            selector: '#dokan_settings_vendor_single_product_multi_vendor_single_product_multi_vendor_available_vendor_section_display_position div[role="radio"][aria-label="Top of Product Tab"]',
-            type: 'radio',
-            value: 'true', // Options: 'Search with Suggestion Box', 'Autoload Replace Current Content'
+            selector: '[data-testid="settings-field-available_vendor_section_display_position"]',
+            type: 'customize-radio',
+            value: 'top_of_product_tab', // Options: 'Search with Suggestion Box', 'Autoload Replace Current Content'
         },
         {
-            selector: '#spmv_products_display',
-            type: 'dropdown',
+            selector: '[data-testid="settings-field-spmv_products_display"] button[role="combobox"]',
+            type: 'radix-dropdown',
             value: 'Top rated vendor',
         },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Vendor -> single_product_multi_vendor', () => {
     let loginPage: LoginPage;

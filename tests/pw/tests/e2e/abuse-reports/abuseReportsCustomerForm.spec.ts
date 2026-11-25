@@ -134,7 +134,7 @@ test.describe('Abuse Reports — Customer Form @pro', () => {
 
         expect(submitFired, 'No submit-form AJAX request should fire when no reason is selected').toBe(false);
         expect(
-            await customerPage.locator(flow.abuseReports.confirmOkButton).isVisible().catch(() => false),
+            await flow.confirmOk().isVisible(),
             'Success confirmation must NOT appear when submit was blocked by validation',
         ).toBe(false);
         // The form should still be open (reason radio still visible).
@@ -241,7 +241,7 @@ test.describe('Abuse Reports — Customer Form @pro', () => {
         expect(invalid, 'Malformed email should be HTML5-invalid (typeMismatch)').toBe(true);
         // No success confirmation should ever appear.
         expect(
-            await guestPage.locator(flow.abuseReports.confirmOkButton).isVisible().catch(() => false),
+            await flow.confirmOk().isVisible(),
             'Success confirmation must NOT appear for an invalid email',
         ).toBe(false);
 
@@ -388,7 +388,7 @@ test.describe('Abuse Reports — Customer Form @pro', () => {
         await submitBtn.dblclick();
 
         // Wait for the success confirmation (proves the single submit landed).
-        await customerPage.locator(flow.abuseReports.confirmOkButton).waitFor({ state: 'visible', timeout: 15000 });
+        await flow.confirmOk().waitFor({ state: 'visible', timeout: 15000 });
         await flow.confirmAbuseReportSubmission();
 
         // Allow any stray second request to surface before counting.
@@ -431,7 +431,7 @@ test.describe('Abuse Reports — Customer Form @pro', () => {
 
         // The izimodal report popup closes once the request resolves; the
         // success sweetalert (OK button) then renders the same message.
-        await customerPage.locator(flow.abuseReports.confirmOkButton).waitFor({ state: 'visible', timeout: 15000 });
+        await flow.confirmOk().waitFor({ state: 'visible', timeout: 15000 });
 
         // The report form's reason radio should be gone (modal closed).
         expect(

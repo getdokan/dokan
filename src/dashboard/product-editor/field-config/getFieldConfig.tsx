@@ -4,8 +4,8 @@ import { __experimentalInputControlPrefixWrapper as InputControlPrefixWrapper } 
 import { Info } from 'lucide-react';
 import { getFieldConfigFrom } from './index';
 import { FormItem } from '../types';
-import { resolveDependency } from '../utils';
-import { isEmpty, runSchemaValidations } from './validations';
+import { isEmpty, resolveDependency } from '../utils';
+import { runSchemaValidations } from './validations';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { RawHTML } from '@wordpress/element';

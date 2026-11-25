@@ -10,6 +10,7 @@ import { STORE_KEY as CES_STORE_KEY } from "@woocommerce/customer-effort-score";
  * Internal dependencies
  */
 import { getCouponLabels } from "../../../lib/async-requests";
+import { searchFilterSettings } from "../../../utils/search-filter-settings";
 
 const COUPON_REPORT_CHARTS_FILTER = "dokan_analytics_coupons_report_charts";
 const COUPON_REPORT_FILTERS_FILTER = "dokan_analytics_coupons_report_filters";
@@ -77,35 +78,43 @@ const filterValues = [
         value: "single_coupon",
         chartMode: "item-comparison",
         path: ["select_coupon"],
-        settings: {
-          type: "coupons",
-          param: "coupons",
-          getLabels: getCouponLabels,
-          labels: {
+        settings: searchFilterSettings(
+          {
+            type: "coupons",
             placeholder: __("Type to search for a coupon", 'dokan-lite'),
-            button: __("Single Coupon", 'dokan-lite'),
           },
-        },
+          {
+            param: "coupons",
+            getLabels: getCouponLabels,
+            labels: {
+              button: __("Single Coupon", 'dokan-lite'),
+            },
+          }
+        ),
       },
     ],
   },
   {
     label: __("Comparison", 'dokan-lite'),
     value: "compare-coupons",
-    settings: {
-      type: "coupons",
-      param: "coupons",
-      getLabels: getCouponLabels,
-      labels: {
-        title: __("Compare Coupon Codes", 'dokan-lite'),
-        update: __("Compare", 'dokan-lite'),
-        helpText: __(
-          "Check at least two coupon codes below to compare",
-          'dokan-lite'
-        ),
+    settings: searchFilterSettings(
+      {
+        type: "coupons",
       },
-      onClick: addCesSurveyForAnalytics,
-    },
+      {
+        param: "coupons",
+        getLabels: getCouponLabels,
+        labels: {
+          title: __("Compare Coupon Codes", 'dokan-lite'),
+          update: __("Compare", 'dokan-lite'),
+          helpText: __(
+            "Check at least two coupon codes below to compare",
+            'dokan-lite'
+          ),
+        },
+        onClick: addCesSurveyForAnalytics,
+      }
+    ),
   },
 ];
 

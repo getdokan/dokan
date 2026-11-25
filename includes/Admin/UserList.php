@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Utilities\VendorUtil;
+
 /**
  * User List related tasks for wp-admin.
  * Adds Pending Vendor tab and Approve Vendors bulk action.
@@ -147,6 +149,10 @@ class UserList {
 
             // Check if the user is a vendor and is currently disabled.
             if ( ! user_can( $user_id, 'dokandar' ) ) {
+                continue;
+            }
+
+            if ( ! VendorUtil::current_user_can_manage_vendor( (int) $user_id ) ) {
                 continue;
             }
 

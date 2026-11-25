@@ -16,6 +16,17 @@ This skill provides guidance for developing Dokan Lite backend PHP code accordin
 -   Modifying existing backend PHP code
 -   Adding hooks, filters, or REST endpoints
 
+**Settings:** when the change adds, changes, or reads a setting, also load `dokan-setting-impact` and run its Build gate.
+
+## References
+
+-   [`references/authorization.md`](./references/authorization.md) — roles,
+    capabilities, ownership scoping, REST permission patterns, `map_meta_cap`,
+    and the Abilities/MCP scoping layer. **Read before writing any permission
+    callback, capability check, or ownership guard.** Includes verified
+    measurements of where WooCommerce's own permission helpers do *not* form an
+    authorization boundary.
+
 ## Namespace & File Structure
 
 -   **Root namespace:** `WeDevs\Dokan\`

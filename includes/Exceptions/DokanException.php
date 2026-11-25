@@ -11,7 +11,7 @@ class DokanException extends Exception {
      *
      * @since 2.9.16
      *
-     * @var string
+     * @var string|\WP_Error
      */
     protected $error_code = '';
 
@@ -38,7 +38,7 @@ class DokanException extends Exception {
      *
      * @since 2.9.16
      *
-     * @return string
+     * @return string|\WP_Error
      */
     final public function get_error_code() {
         return $this->error_code;

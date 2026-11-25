@@ -34,8 +34,17 @@ export class BasePage {
         await this.page.waitForLoadState(state, options);
     }
 
-    // Reload the current page.
+    // Reload the current page. The legacy app reloads itself after saving a
+    // field flagged `refresh_after_save` (e.g. `dokan_live_chat.provider`); when
+    // that wins the race it aborts ours, and the page is freshly loaded anyway.
     async reload(): Promise<void> {
-        await this.page.reload();
+        try {
+            await this.page.reload();
+        } catch (error) {
+            if (!String(error).includes('ERR_ABORTED')) {
+                throw error;
+            }
+            await this.page.waitForLoadState('load');
+        }
     }
 }

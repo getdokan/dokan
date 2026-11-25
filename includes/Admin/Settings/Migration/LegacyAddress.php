@@ -11,7 +11,7 @@ namespace WeDevs\Dokan\Admin\Settings\Migration;
  * The first segment is the wp_option name; every segment after that is a
  * path inside the option array.
  *
- * @since DOKAN_SINCE
+ * @since 5.2.0
  */
 final class LegacyAddress {
 

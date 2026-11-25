@@ -1,0 +1,32 @@
+/* TODO BFCM-2026-REMOVE: seasonal Black Friday / Cyber Monday page. Remove manually after the campaign ends (Dec 5, 2026); nothing switches itself off. */
+/* Black Friday campaign page. Tailwind utilities come from the dokan-tailwind bundle; only what utilities cannot express cleanly lives here. */
+
+.dokan-black-friday {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.21; /* Figma's text boxes use the font's own line height, not Tailwind's 1.5. */
+}
+
+/* wp-admin sizes every <p> at 13px/1.5, which would override what the page sets on a parent. */
+.dokan-black-friday p {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.dokan-black-friday .dokan-bf-hero {
+    background-color: #0f0043;
+    background-image:
+        radial-gradient(430px 171px at 62% 100%, rgba(192, 75, 232, 0.6), rgba(192, 75, 232, 0) 70%),
+        radial-gradient(484px 192px at 98% 90%, rgba(255, 138, 76, 0.75), rgba(255, 138, 76, 0) 70%),
+        radial-gradient(538px 213px at 82% 10%, rgba(59, 59, 245, 0.85), rgba(59, 59, 245, 0) 70%);
+}
+
+.dokan-black-friday .dokan-bf-hero-badge-text,
+.dokan-black-friday .dokan-bf-hero-eyebrow {
+    font-family: 'Plus Jakarta Sans', Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Black Friday exclusive bundle: pale blue band behind the product list and price card. */
+.dokan-black-friday .dokan-bf-bundle {
+    line-height: 1.2;
+    background-image: linear-gradient(90deg, #f0f5ff 0%, #e8eeff 43%, #eef9ff 75%, #dde8ff 100%);
+}

@@ -26,7 +26,7 @@
                             <div class="store-header">
                                 <div class="store-banner">
                                     <a href="<?php echo esc_url( $store_url ); ?>">
-                                        <img src="<?php echo is_array( $store_banner_url ) ? esc_attr( $store_banner_url[0] ) : esc_attr( $store_banner_url ); ?>" alt="<?php echo esc_attr( $store_banner_alt ); ?>">
+                                        <img src="<?php echo is_array( $store_banner_url ) ? esc_url( $store_banner_url[0] ) : esc_url( $store_banner_url ); ?>" alt="<?php echo esc_attr( $store_banner_alt ); ?>">
                                     </a>
                                 </div>
                             </div>

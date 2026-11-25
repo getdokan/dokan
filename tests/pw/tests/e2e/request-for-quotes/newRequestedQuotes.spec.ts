@@ -4,6 +4,7 @@ import { NewRequestedQuotesPage } from './newRequestedQuotesPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
+import { expectTabCountAtLeast } from '@utils/dataViews';
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)
@@ -105,7 +106,7 @@ test.describe('Requested Quotes (React) functionality', () => {
         test('the status tabs render with counts (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             await seedQuote('pending');
             await quotes.goto();
-            expect(await quotes.getTabCount('all'), 'All tab count >= 1 after seeding').toBeGreaterThanOrEqual(1);
+            await expectTabCountAtLeast(() => quotes.getTabCount('all'), 1, 'All tab count >= 1 after seeding');
         });
 
         test('the Pending tab keeps the seeded pending quote (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {

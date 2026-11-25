@@ -104,19 +104,16 @@ test.describe('Abuse Reports Tests @pro', () => {
         await abuseReportsPage.goToSettingsPage();
         await abuseReportsPage.searchSettings(abuseReportsPage.testData.abuseReports.settingsSearchKeyword);
 
-        const isHeadingVisible = await abuseReportsPage.isSettingsHeadingVisible();
-        expect(isHeadingVisible, '"Product Report Abuse Settings" heading should be visible').toBe(true);
+        await abuseReportsPage.assertSettingsHeadingVisible();
 
         const docLinkHref = await abuseReportsPage.getSettingsDocLinkHref();
         expect(docLinkHref, 'Doc link should contain the correct Dokan documentation URL').toContain(abuseReportsPage.testData.abuseReports.settingsDocUrl);
 
-        const isReportedByVisible = await abuseReportsPage.isReportedByHeadingVisible();
-        expect(isReportedByVisible, '"Reported by" heading should be visible').toBe(true);
+        await abuseReportsPage.assertReportedByHeadingVisible();
 
         await abuseReportsPage.enableReportedBySliderIfDisabled();
 
-        const isReasonsVisible = await abuseReportsPage.isReasonsHeadingVisible();
-        expect(isReasonsVisible, '"Reasons for Abuse Report" heading should be visible').toBe(true);
+        await abuseReportsPage.assertReasonsHeadingVisible();
 
         await abuseReportsPage.fillNewAbuseReason(abuseReportsPage.testData.abuseReports.newReasonText);
         await abuseReportsPage.clickAddReasonPlusButton();
@@ -196,10 +193,7 @@ test.describe('Abuse Reports Tests @pro', () => {
         await abuseReportsPage.searchSettings(abuseReportsPage.testData.abuseReports.settingsSearchKeyword);
 
         // Heading
-        expect(
-            await abuseReportsPage.isSettingsHeadingVisible(),
-            '"Product Report Abuse Settings" heading should be visible',
-        ).toBe(true);
+        await abuseReportsPage.assertSettingsHeadingVisible();
 
         // Doc link
         const docHref = await abuseReportsPage.getSettingsDocLinkHref();
@@ -209,8 +203,8 @@ test.describe('Abuse Reports Tests @pro', () => {
         ).toContain(abuseReportsPage.testData.abuseReports.settingsDocUrl);
 
         // Sub-headings
-        expect(await abuseReportsPage.isReportedByHeadingVisible(), '"Reported by" heading should be visible').toBe(true);
-        expect(await abuseReportsPage.isReasonsHeadingVisible(), '"Reasons for Abuse Report" heading should be visible').toBe(true);
+        await abuseReportsPage.assertReportedByHeadingVisible();
+        await abuseReportsPage.assertReasonsHeadingVisible();
 
         await abuseReportsPage.waitForPageReady();
         await adminPage.close();
@@ -364,16 +358,18 @@ test.describe('Abuse Reports Tests @pro', () => {
         // "after === before" against the post-render count, which differs.
         await adminPage.locator(abuseReportsPage.adminReact.dataRow).first().waitFor({ state: 'visible', timeout: 20000 });
 
-        // Capture row count before opening delete
-        const before = await abuseReportsPage.getRowCount();
+        // Capture row count before opening delete. Must be the SETTLED count: DataViews paints an
+        // intermediate row set and re-renders, so a bare read here can bake in a transient number
+        // (CI captured 20, which re-rendered to the real 2) and fail the comparison below for a
+        // reason unrelated to cancelling a delete.
+        const before = await abuseReportsPage.getStableRowCount();
 
         await abuseReportsPage.openRowActionMenu(abuseReportsPage.testData.abuseReports.reportReason);
         await abuseReportsPage.clickDeleteActionFromMenu();
         await abuseReportsPage.cancelDeleteInModal();
 
-        // Row count should be unchanged after cancel
-        const after = await abuseReportsPage.getRowCount();
-        expect(after, 'Row count should not change when delete is cancelled').toBe(before);
+        // Row count should be unchanged after cancel — web-first so a late re-render can't win the race.
+        await abuseReportsPage.expectRowCount(before, 'Row count should not change when delete is cancelled');
 
         await adminPage.close();
         await context.close();
@@ -649,6 +645,15 @@ test.describe('Abuse Reports Tests @pro', () => {
         const adminPage = await adminCtx.newPage();
         const abuseReportsPage = new AbuseReportsPage(adminPage);
 
+        // Server-side baseline. Unlike TC11/TC12/MD-4 this test had no
+        // post-condition proving the delete actually happened, so its single
+        // "modal stayed hidden" assertion was true even if nothing was deleted.
+        const apiCtx = await request.newContext();
+        const readTotal = async () =>
+            Number((await abuseReportsPage.restGetReports(apiCtx)).headers()['x-dokan-abusereports-total'] ?? '0');
+        const totalBeforeDelete = await readTotal();
+        expect(totalBeforeDelete, 'The seeded report should exist before the delete').toBeGreaterThan(0);
+
         await abuseReportsPage.goToAbuseReportsReact();
         await abuseReportsPage.waitForListReady();
 
@@ -661,6 +666,10 @@ test.describe('Abuse Reports Tests @pro', () => {
         await abuseReportsPage.clickDeleteActionFromMenu();
         await abuseReportsPage.confirmDeleteInModal();
         await abuseReportsPage.waitForListReady();
+
+        // The delete must have really removed a row server-side.
+        await expect.poll(readTotal, { timeout: 10000 }).toBe(totalBeforeDelete - 1);
+        await apiCtx.dispose();
 
         // Detail modal should NOT auto-open after delete
         expect(

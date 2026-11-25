@@ -243,22 +243,33 @@ class CustomersControllerTest extends DokanTestCase {
 			]
         );
 
+        $current_email = get_userdata( $this->customers[0] )->user_email;
+
         $test_cases = [
-            // Valid update
+            // Valid profile update (no login-identity fields).
             [
                 'data' => [
                     'first_name' => 'Updated',
                     'last_name'  => 'Name',
-                    'email'      => 'updated.email@example.com',
                 ],
                 'expected_status' => 200,
                 'assertions' => function ( $response ) {
-                    $data = $response->get_data();
-                    $this->assertEquals( 'Updated', $data['first_name'] );
-                    $this->assertEquals( 'updated.email@example.com', $data['email'] );
+                    $this->assertEquals( 'Updated', $response->get_data()['first_name'] );
                 },
             ],
-            // Invalid email update
+            // Echoing the unchanged email back is allowed.
+            [
+                'data' => [
+                    'first_name' => 'EchoedEmail',
+                    'email'      => $current_email,
+                ],
+                'expected_status' => 200,
+                'assertions' => function ( $response ) use ( $current_email ) {
+                    $this->assertEquals( 'EchoedEmail', $response->get_data()['first_name'] );
+                    $this->assertEquals( $current_email, $response->get_data()['email'] );
+                },
+            ],
+            // A malformed email is still rejected by request validation, before the permission check.
             [
                 'data' => [
                     'email' => 'invalid-email',
@@ -790,6 +801,169 @@ class CustomersControllerTest extends DokanTestCase {
             );
             $test_case['assertions']( $response );
         }
+    }
+
+    /**
+     * A vendor must not be able to reset the password or change the login email of one of their own
+     * customers (one that passes the object-level guard by having ordered), while other fields stay editable.
+     *
+     * @throws Exception
+     */
+    public function test_cannot_change_own_customer_login_identity() {
+        wp_set_current_user( $this->seller_id1 );
+
+        // Establish the vendor/customer relationship so the object-level guard allows the edit.
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create(
+            [
+                'customer_id' => $this->customers[0],
+            ]
+        );
+
+        $original_hash  = get_userdata( $this->customers[0] )->user_pass;
+        $original_email = get_userdata( $this->customers[0] )->user_email;
+
+        // A password reset is rejected and the stored hash is untouched.
+        $response = $this->put_request( "customers/{$this->customers[0]}", [ 'password' => 'pwned_by_vendor' ] );
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertEquals( 'dokan_rest_forbidden_field', $response->get_data()['code'] );
+        $this->assertEquals( $original_hash, get_userdata( $this->customers[0] )->user_pass );
+
+        // Changing the login email is rejected and the stored email is untouched.
+        $response = $this->put_request( "customers/{$this->customers[0]}", [ 'email' => 'attacker@example.test' ] );
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertEquals( 'dokan_rest_forbidden_field', $response->get_data()['code'] );
+        $this->assertEquals( $original_email, get_userdata( $this->customers[0] )->user_email );
+
+        // A non-identity field stays editable, and a blank password is ignored (hash untouched).
+        $response = $this->put_request( "customers/{$this->customers[0]}", [ 'first_name' => 'StillEditable', 'password' => '' ] );
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertEquals( 'StillEditable', $response->get_data()['first_name'] );
+        $this->assertEquals( $original_hash, get_userdata( $this->customers[0] )->user_pass );
+    }
+
+    /**
+     * Batch updates hit the same per-item guard, including malformed values that skip request validation.
+     */
+    public function test_batch_cannot_change_own_customer_login_identity() {
+        wp_set_current_user( $this->seller_id1 );
+
+        // Establish the vendor/customer relationship so the object-level guard allows the edit.
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create(
+            [
+                'customer_id' => $this->customers[0],
+            ]
+        );
+
+        $original_hash  = get_userdata( $this->customers[0] )->user_pass;
+        $original_email = get_userdata( $this->customers[0] )->user_email;
+
+        $response = $this->post_request(
+            'customers/batch',
+            [
+                'update' => [
+                    [
+                        'id'       => $this->customers[0],
+                        'password' => 'pwned_by_vendor',
+                    ],
+                    [
+                        'id'    => $this->customers[0],
+                        'email' => [ 'not-a-string' ],
+                    ],
+                ],
+            ]
+        );
+
+        $entries = $response->get_data()['update'];
+        $this->assertEquals( 'dokan_rest_forbidden_field', $entries[0]['error']['code'] );
+        $this->assertEquals( 'dokan_rest_forbidden_field', $entries[1]['error']['code'] );
+        $this->assertEquals( $original_hash, get_userdata( $this->customers[0] )->user_pass );
+        $this->assertEquals( $original_email, get_userdata( $this->customers[0] )->user_email );
+    }
+
+    /**
+     * The list total must not reveal customers outside the vendor's own, e.g. when looking up an email.
+     */
+    public function test_get_items_total_counts_only_vendor_customers() {
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create(
+            [
+                'customer_id' => $this->customers[1],
+            ]
+        );
+
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->get_request(
+            'customers',
+            [
+                'email' => 'john.doe@example.com',
+                'role'  => 'all',
+            ]
+        );
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
+
+        $response = $this->get_request( 'customers', [ 'role' => 'all' ] );
+        $this->assertSame( [ $this->customers[1] ], wp_list_pluck( $response->get_data(), 'id' ) );
+        $this->assertSame( 1, (int) $response->get_headers()['X-WP-Total'] );
+
+        $response = $this->get_request( 'customers', [ 'include' => [ $this->customers[0] ] ] );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
+    }
+
+    /**
+     * The customer list query works with both HPOS and posts order storage.
+     */
+    public function test_get_items_in_both_order_storages() {
+        foreach ( [ 'no', 'yes' ] as $hpos ) {
+            $use_storage = static function () use ( $hpos ) {
+                return $hpos;
+            };
+            add_filter( 'pre_option_woocommerce_custom_orders_table_enabled', $use_storage, 99 );
+
+            try {
+                $this->assertSame( 'yes' === $hpos, \WeDevs\Dokan\Utilities\OrderUtil::is_hpos_enabled() );
+
+                $customer_id = $this->factory()->customer->create( [ 'email' => "storage-$hpos@example.com" ] );
+                $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => $customer_id ] );
+                $this->factory()->order->set_seller_id( $this->seller_id1 )->create( [ 'customer_id' => 0 ] );
+
+                wp_set_current_user( $this->seller_id1 );
+                $response = $this->get_request( 'customers', [ 'include' => [ $customer_id, $this->customers[0] ] ] );
+                $this->assertSame( [ $customer_id ], wp_list_pluck( $response->get_data(), 'id' ), "storage hpos=$hpos" );
+                $this->assertSame( 1, (int) $response->get_headers()['X-WP-Total'] );
+
+                wp_set_current_user( $this->seller_id2 );
+                $this->assertEmpty( $this->get_request( 'customers', [ 'include' => [ $customer_id ] ] )->get_data() );
+            } finally {
+                remove_filter( 'pre_option_woocommerce_custom_orders_table_enabled', $use_storage, 99 );
+            }
+        }
+    }
+
+    /**
+     * The customer IDs SQL is filterable, and an empty filtered value lists no one instead of breaking the query.
+     */
+    public function test_customer_ids_sql_by_seller_filter() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $only_first_customer = function () {
+            return 'SELECT ' . (int) $this->customers[0];
+        };
+        add_filter( 'dokan_order_customer_ids_sql_by_seller', $only_first_customer );
+        $response = $this->get_request( 'customers', [ 'role' => 'all' ] );
+        remove_filter( 'dokan_order_customer_ids_sql_by_seller', $only_first_customer );
+
+        $this->assertSame( [ $this->customers[0] ], wp_list_pluck( $response->get_data(), 'id' ) );
+
+        add_filter( 'dokan_order_customer_ids_sql_by_seller', '__return_empty_string' );
+        $response = $this->get_request( 'customers', [ 'role' => 'all' ] );
+        remove_filter( 'dokan_order_customer_ids_sql_by_seller', '__return_empty_string' );
+
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertEmpty( $response->get_data() );
+        $this->assertSame( 0, (int) $response->get_headers()['X-WP-Total'] );
     }
 
     /**

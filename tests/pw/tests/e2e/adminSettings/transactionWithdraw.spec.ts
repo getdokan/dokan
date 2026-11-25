@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 const oldDataset = [
     {
@@ -29,20 +30,23 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Transaction -> Withdraw',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_transaction >> #dokan_settings_transaction_withdraw_charge',
+    selector: '[data-testid="settings-menu-transaction"] >> [data-testid="settings-menu-withdraw_charge"]',
     fields: [
         {
-            selector: '#dokan_settings_transaction_withdraw_charge_minimum_withdraw_limit_section_minimum_withdraw_limit input[type="number"]',
+            selector: '[data-testid="settings-field-minimum_withdraw_limit"] input[type="number"]',
             type: 'number',
             value: '11',
         },
         {
-            selector: '#dokan_settings_transaction_withdraw_charge_withdraw_threshold_section_withdraw_threshold input[type="number"]',
+            selector: '[data-testid="settings-field-withdraw_threshold"] input[type="number"]',
             type: 'number',
             value: '11',
         },
     ],
 };
+
+// Put back every dokan_* option this file saves, so its settings don't leak into shard-mates.
+dbUtils.restoreDokanOptionsAfterAll(test);
 
 test.describe('Admin Setting: Transaction -> Withdraw', () => {
     let loginPage: LoginPage;

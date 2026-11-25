@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WeDevs\Dokan\Traits\VendorAuthorizable;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WeDevs\Dokan\Vendor\Vendor;
 use WP_Error;
 use WP_Query;
@@ -150,20 +151,26 @@ class StoreController extends WP_REST_Controller {
                     'callback'            => [ $this, 'send_email' ],
                     'args'                => [
                         'name'    => [
-                            'type'        => 'string',
-                            'description' => __( 'Your Name', 'dokan-lite' ),
-                            'required'    => true,
+                            'type'              => 'string',
+                            'description'       => __( 'Your Name', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => 'rest_validate_request_arg',
                         ],
                         'email'   => [
-                            'type'        => 'string',
-                            'format'      => 'email',
-                            'description' => __( 'Your email', 'dokan-lite' ),
-                            'required'    => true,
+                            'type'              => 'string',
+                            'format'            => 'email',
+                            'description'       => __( 'Your email', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_email',
+                            'validate_callback' => 'rest_validate_request_arg',
                         ],
                         'message' => [
-                            'type'        => 'string',
-                            'description' => __( 'Your Message', 'dokan-lite' ),
-                            'required'    => true,
+                            'type'              => 'string',
+                            'description'       => __( 'Your Message', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                            'validate_callback' => 'rest_validate_request_arg',
                         ],
                     ],
                     'permission_callback' => '__return_true',
@@ -379,7 +386,7 @@ class StoreController extends WP_REST_Controller {
         // Resolve vendor ID: handles both vendor IDs and vendor staff IDs
         $store_id = $this->get_vendor_id_for_user( $requested_id );
 
-        return $this->can_access_vendor_store( $store_id );
+        return $this->can_access_vendor_store( $store_id ) && VendorUtil::current_user_can_manage_vendor( $store_id );
     }
 
     /**
@@ -435,7 +442,7 @@ class StoreController extends WP_REST_Controller {
         $updated_store_id = dokan()->vendor->update( $store->get_id(), $params );
 
         if ( is_wp_error( $updated_store_id ) ) {
-            return new WP_Error( $updated_store_id->get_error_code(), $updated_store_id->get_error_message() );
+            return new WP_Error( $updated_store_id->get_error_code(), $updated_store_id->get_error_message(), $updated_store_id->get_error_data() );
         }
 
         $store = dokan()->vendor->get( $updated_store_id );
@@ -498,7 +505,7 @@ class StoreController extends WP_REST_Controller {
         $store = dokan()->vendor->create( $params );
 
         if ( is_wp_error( $store ) ) {
-            return new WP_Error( $store->get_error_code(), $store->get_error_message() );
+            return new WP_Error( $store->get_error_code(), $store->get_error_message(), $store->get_error_data() );
         }
 
         do_action( 'dokan_rest_stores_create_store', $store, $request );
@@ -600,10 +607,24 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store_products( $request ) {
+        $store_id = absint( $request['id'] );
+
+        if ( ! $store_id ) {
+            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
         $product_controller = new ProductController();
 
+        /**
+         * This route is served with a public `permission_callback`, so the author scope is pinned
+         * here instead of being left to the capability based gate in `prepare_objects_query()`.
+         * An anonymous caller resolves to author `0` there, and `WP_Query` drops the clause
+         * altogether — which used to return the whole catalogue for every store id.
+         */
+        $product_controller->set_forced_author( $store_id );
+
         $request->set_param( 'status', [ 'publish' ] );
-        $request->set_param( 'author', $request['id'] );
+        $request->set_param( 'author', $store_id );
         $request->set_param( 'per_page', $request['per_page'] );
         $request->set_param( 'paged', $request['page'] );
 
@@ -779,10 +800,8 @@ class StoreController extends WP_REST_Controller {
 
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
 
-        $is_admin = current_user_can( 'manage_options' );
-
         // Restrict admin commission fields for all except admins and vendor only
-        if ( ! $is_admin && ! dokan_is_user_seller( get_current_user_id(), true ) ) {
+        if ( ! $this->can_view_commission_settings() ) {
             $restricted_fields[] = 'admin_category_commission';
             $restricted_fields[] = 'admin_commission';
             $restricted_fields[] = 'admin_additional_fee';
@@ -811,6 +830,20 @@ class StoreController extends WP_REST_Controller {
         }
 
         return apply_filters( 'dokan_rest_store_restricted_fields_for_view', $restricted_fields, $store, $request );
+    }
+
+    /**
+     * Whether the current user's role may see admin-configured commission settings at all.
+     *
+     * Callers must additionally confirm the user is authorized for the store in question,
+     * since this only answers the role question — vendor staff are excluded deliberately.
+     *
+     * @since 5.0.14
+     *
+     * @return bool
+     */
+    protected function can_view_commission_settings(): bool {
+        return current_user_can( 'manage_options' ) || dokan_is_user_seller( get_current_user_id(), true );
     }
 
     /**
@@ -884,18 +917,10 @@ class StoreController extends WP_REST_Controller {
         if ( ! empty( $params['store_slug'] ) ) {
             $store_slug = sanitize_text_field( $params['store_slug'] );
 
-            if ( get_user_by( 'slug', $store_slug ) ) {
-                $response = [
-                    'url'       => $store_slug,
-                    'available' => false,
-                ];
-
-                return rest_ensure_response( $response );
-            }
-
+            // Normalized like wp_insert_user() does, so a reformatted taken URL is caught too.
             $response = [
-                'url'       => sanitize_title( $store_slug ),
-                'available' => true,
+                'url'       => VendorUtil::sanitize_shop_url( $store_slug ),
+                'available' => VendorUtil::is_shop_url_available( $store_slug ),
             ];
 
             return rest_ensure_response( $response );
@@ -1029,6 +1054,10 @@ class StoreController extends WP_REST_Controller {
             return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
+        if ( ! VendorUtil::current_user_can_manage_vendor( (int) $store_id ) ) {
+            return new WP_Error( 'dokan_rest_cannot_manage_vendor', __( 'Sorry, you are not allowed to manage this vendor.', 'dokan-lite' ), [ 'status' => rest_authorization_required_code() ] );
+        }
+
         if ( 'active' === $request['status'] ) {
             $user = dokan()->vendor->get( $store_id )->make_active();
         } else {
@@ -1062,6 +1091,20 @@ class StoreController extends WP_REST_Controller {
 
         foreach ( $params as $status => $value ) {
             if ( in_array( $status, $allowed_status, true ) ) {
+                // Skip users the current admin may not manage, e.g. another site's members on multisite, and report them back.
+                $allowed = array_filter(
+                    (array) $value,
+                    function ( $vendor_id ) {
+                        return VendorUtil::current_user_can_manage_vendor( (int) $vendor_id );
+                    }
+                );
+
+                foreach ( array_diff_key( (array) $value, $allowed ) as $vendor_id ) {
+                    $response['skipped'][] = (int) $vendor_id;
+                }
+
+                $value = $allowed;
+
                 switch ( $status ) {
                     case 'approved':
                         foreach ( $value as $vendor_id ) {
@@ -1108,24 +1151,29 @@ class StoreController extends WP_REST_Controller {
         }
 
         $category_data = $store->get_store_categories( $best_selling );
-        $commission_settings = $store->get_commission_settings();
+
+        // Terms stay public, but commission is admin-configured data, so it is limited to the callers the single-store endpoint shows it to.
+        if ( ! $this->can_access_vendor_store( $store_id ) || ! $this->can_view_commission_settings() ) {
+            return rest_ensure_response( $category_data );
+        }
+
+        $commission_settings  = $store->get_commission_settings();
         $category_commissions = $commission_settings->get_category_commissions();
+        $commission_type      = $commission_settings->get_type();
 
         foreach ( $category_data as $term ) {
-            $term->admin_commission_type = $commission_settings->get_type();
+            $term->admin_commission_type = $commission_type;
 
             if ( isset( $category_commissions['items'][ $term->term_id ] ) ) {
                 $term->commission = $category_commissions['items'][ $term->term_id ];
-            } elseif ( $category_commissions['all'] ) {
+            } elseif ( ! empty( $category_commissions['all'] ) ) {
                 $term->commission = $category_commissions['all'];
             } else {
                 $term->commission = [];
             }
         }
 
-        $response = rest_ensure_response( $category_data );
-
-        return $response;
+        return rest_ensure_response( $category_data );
     }
 
     /**

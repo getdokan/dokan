@@ -11,6 +11,7 @@ import {
     useState,
 } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
+import { decodeEntities } from '@wordpress/html-entities';
 import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
@@ -37,6 +38,20 @@ export const getActiveSubmenuKey = (
     } );
     return activeKey;
 };
+
+// Switched off from the menu manager (Pro); items it never touched carry no flag.
+export const isSwitchedOff = ( item: any ): boolean =>
+    'is_switched_on' in item && ! item.is_switched_on;
+
+// Labels arrive HTML-escaped from esc_html__, so decode for display (&amp; -> &) while JSX still escapes markup.
+const getMenuTitle = ( hookName: string, menuItem: any ): string =>
+    decodeEntities(
+        applyFilters(
+            hookName,
+            menuItem?.menu_manager_title || menuItem?.title,
+            menuItem
+        ) as string
+    );
 
 const Sidebar = ( {
     collapsed,
@@ -229,7 +244,7 @@ const Sidebar = ( {
                     href={ siteUrl || '/' }
                     className={ twMerge(
                         'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md',
-                        collapsed ? 'px-5 justify-center' : 'px-8',
+                        collapsed ? 'px-5 justify-center' : 'px-8'
                     ) }
                 >
                     { siteIcon ? (
@@ -276,11 +291,7 @@ const Sidebar = ( {
                         <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
                             { Object.entries( sidebarNav || {} ).map(
                                 ( [ key, item ]: any ) => {
-                                    // If switched off from the menu manager.
-                                    if (
-                                        'is_switched_on' in item &&
-                                        ! item.is_switched_on
-                                    ) {
+                                    if ( isSwitchedOff( item ) ) {
                                         return null;
                                     }
 
@@ -313,11 +324,10 @@ const Sidebar = ( {
                                     );
 
                                     const menuItemRef = getMenuItemRef( key );
-                                    const menuTitle = applyFilters(
+                                    const menuTitle = getMenuTitle(
                                         'dokan_sidebar_menu_title',
-                                        item?.menu_manager_title || item?.title,
                                         item
-                                    ) as string;
+                                    );
                                     const isMenuItemActive =  isParentActive || isParentActiveCollapsed ;
 
                                     return (
@@ -357,10 +367,21 @@ const Sidebar = ( {
                                                             ? 'w-0 max-w-0'
                                                             : 'w-10 max-w-10 justify-center'
                                                         : 'text-sm px-3',
-                                                    (isMenuItemActive) &&
-                                                        'active'
+                                                    isMenuItemActive && 'active'
                                                 ) }
-                                                data-active={ isMenuItemActive ? 'true' : 'false' }
+                                                data-active={
+                                                    isMenuItemActive
+                                                        ? 'true'
+                                                        : 'false'
+                                                }
+                                                target={
+                                                    item.target || '_self'
+                                                }
+                                                rel={
+                                                    item.target === '_blank'
+                                                        ? 'noopener noreferrer'
+                                                        : undefined
+                                                }
                                             >
                                                 { /* Icon: turn white when its popover is visible */ }
                                                 <span
@@ -446,11 +467,10 @@ const Sidebar = ( {
                                                                 subkey,
                                                                 subitem,
                                                             ]: any ) => {
-                                                                // If switched off from the menu manager.
                                                                 if (
-                                                                    'is_switched_on' in
-                                                                        subitem &&
-                                                                    ! subitem.is_switched_on
+                                                                    isSwitchedOff(
+                                                                        subitem
+                                                                    )
                                                                 ) {
                                                                     return null;
                                                                 }
@@ -460,12 +480,10 @@ const Sidebar = ( {
                                                                     activeSubkey;
 
                                                                 const subMenuTitle =
-                                                                    applyFilters(
+                                                                    getMenuTitle(
                                                                         'dokan_sidebar_submenu_title',
-                                                                        subitem?.menu_manager_title ||
-                                                                            subitem?.title,
                                                                         subitem
-                                                                    ) as string;
+                                                                    );
 
                                                                 return (
                                                                     <li
@@ -485,6 +503,16 @@ const Sidebar = ( {
                                                                                 isSubActive &&
                                                                                     'active'
                                                                             ) }
+                                                                            target={
+                                                                                subitem.target ||
+                                                                                '_self'
+                                                                            }
+                                                                            rel={
+                                                                                subitem.target ===
+                                                                                '_blank'
+                                                                                    ? 'noopener noreferrer'
+                                                                                    : undefined
+                                                                            }
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
                                                                             <span className="ms-2">

@@ -6,15 +6,15 @@ use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * Round-trip behavior of dokan_save_legacy_settings_section(): mapped keys
- * land in the new flat option (canonical), the legacy row holds the unmapped
- * remainder only, and a fresh get_option() read returns the synthesized
- * full view.
+ * land in the new flat option (canonical) AND — with the legacy mirror on by
+ * default — stay physically in the legacy row so a downgraded plugin version
+ * still reads current data.
  *
  * @group admin-settings
  */
 class DokanSaveLegacySettingsSectionTest extends DokanTestCase {
 
-    public function test_round_trip_strips_legacy_row_and_overlays_on_read(): void {
+    public function test_round_trip_keeps_mapped_key_in_legacy_row_and_in_new_option(): void {
         $cb = static function (): array {
             return [
                 [
@@ -40,8 +40,8 @@ class DokanSaveLegacySettingsSectionTest extends DokanTestCase {
 
         // Read the raw row directly via $wpdb — `get_option()` would route
         // through BridgeBootstrap's overlay filter and re-inject the mapped
-        // key from the new flat option, masking whether the leaf actually
-        // got stripped from storage.
+        // key from the new flat option, masking what is physically stored
+        // (which is exactly what a downgraded plugin version would read).
         global $wpdb;
         $raw_serialized = $wpdb->get_var(
             $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", 'dokan_general' )
@@ -54,13 +54,14 @@ class DokanSaveLegacySettingsSectionTest extends DokanTestCase {
         delete_option( 'dokan_admin_settings' );
 
         $this->assertSame( 'off', $new_settings['vendor_welcome_wizard_enabled'] );
-        // The legacy row must not retain the mapped key after the strip.
+        // The legacy mirror (default) keeps the mapped key physically in the
+        // row so an old plugin version without the bridge reads current data.
         $this->assertIsArray( $raw_legacy );
         $this->assertSame( 'store7', $raw_legacy['custom_store_url'] );
-        $this->assertArrayNotHasKey(
-            'disable_welcome_wizard',
-            (array) $raw_legacy,
-            'Mapped key must not persist in the legacy row.'
+        $this->assertSame(
+            'off',
+            $raw_legacy['disable_welcome_wizard'] ?? null,
+            'Mapped key must persist physically in the legacy row (downgrade safety).'
         );
     }
 }

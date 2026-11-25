@@ -1,4 +1,5 @@
 import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 interface UseApiDataOptions< T > {
     fetchFunction: ( params?: any ) => Promise< T >;
@@ -22,8 +23,12 @@ export const useDashboardApiData = < T >({
             const response = await fetchFunction( params || initialParams );
             setData( response );
         } catch ( err ) {
+            // apiFetch rejects with a plain { code, message } object, and WordPress's critical-error message is HTML, so show it as plain text.
+            const message = ( err as { message?: string } )?.message || '';
+
             setError(
-                err instanceof Error ? err.message : 'An error occurred'
+                message.replace( /<[^>]+>/g, ' ' ).trim() ||
+                    __( 'An error occurred', 'dokan-lite' )
             );
             // eslint-disable-next-line no-console
             console.error( 'API fetch error:', err );
