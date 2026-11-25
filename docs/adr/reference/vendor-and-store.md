@@ -19,7 +19,7 @@ Terminology follows `CONTEXT.md`: **Vendor** (never "seller", except where the c
 | Store URL rewrite rules and store page templates | [Lite] | `WeDevs\Dokan\Rewrites`, `templates/store*.php` |
 | Store listing (`[dokan-stores]`), widgets, Customizer, theme support | [Lite] | Several seams are consumed by add-ons (not described here) |
 | Personal data export / erase for Vendors | [Lite] on [WooCommerce] `WC_Abstract_Privacy` | `WeDevs\Dokan\Privacy` |
-| Optional "switch to vendor" integration | [Third-party: User Switching] | `WeDevs\Dokan\Vendor\UserSwitch` always registers its hooks, but its callbacks only act when `user-switching/user-switching.php` is active (`UserSwitch::is_feature_active`) |
+| Optional "switch to vendor" integration | [Third-party: User Switching] | `WeDevs\Dokan\Vendor\UserSwitch` always registers its hooks, but its switch link and dashboard notice only act when `user-switching/user-switching.php` is active (`UserSwitch::is_feature_active`). Before that, the admin Vendors list offers "Switch to" to users who can install or activate the plugin and does so through WordPress core `wp/v2/plugins` (`UserSwitch::get_plugin_status`, `src/admin/dashboard/pages/vendor-switch/SwitchToVendorDialog.tsx`) |
 
 The Store is not a separate entity: there is exactly one Store per Vendor, keyed by the Vendor's user ID, and the store slug is the Vendor's `user_nicename` (see `dokan_get_store_url()`).
 
@@ -62,7 +62,7 @@ Dokan resolves its services from a League DI container. The classes in scope are
 | `Vendor\VendorCache` | `lite:includes/Vendor/VendorCache.php` | Invalidates the `vendors` cache group (and per-vendor product caches) on Vendor lifecycle events. |
 | `Vendor\ChangeProductStatus` | `lite:includes/Vendor/ChangeProductStatus.php` | Background job (extends `Abstracts\ProductStatusChanger`) that moves a Vendor's products to `pending` on deactivation and back on activation. |
 | `Vendor\ApiMeta` | `lite:includes/Vendor/ApiMeta.php` | Adds a `dokan_meta` field (with `vendor_id`) to the core `wp/v2/users` REST resource. |
-| `Vendor\UserSwitch` | `lite:includes/Vendor/UserSwitch.php` | Integration with the User Switching plugin (switch URL on store REST data, "switched" notice on the dashboard). |
+| `Vendor\UserSwitch` | `lite:includes/Vendor/UserSwitch.php` | Integration with the User Switching plugin (switch URL on store REST data, which lands in the vendor dashboard, "switched" notice on the dashboard, plugin status and install/activate capabilities for the admin Vendors list). |
 | `Vendor\Settings\StoreSettingsWriter` | `lite:includes/Vendor/Settings/StoreSettingsWriter.php` | Merges a settings slice into `dokan_profile_settings` for the 5.3 vendor-settings REST endpoint. |
 | `Vendor\Settings\Schema\StoreSettingsSchema` | `lite:includes/Vendor/Settings/Schema/StoreSettingsSchema.php` | Flat store-settings schema (branding, store information, address, map, schedule, terms, catalog mode). |
 | `Shortcodes\Shortcodes` | `lite:includes/Shortcodes/Shortcodes.php` | Registers all Dokan shortcodes (each extends `Abstracts\DokanShortcode`, which calls `add_shortcode()` in its constructor). |
