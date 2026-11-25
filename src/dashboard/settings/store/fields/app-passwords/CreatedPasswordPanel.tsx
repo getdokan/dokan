@@ -27,7 +27,10 @@ const CreatedPasswordPanel = ( { created, username, onDismiss }: Props ) => {
                 <span className="text-sm text-gray-900">
                     { sprintf(
                         /* translators: %s: application password name */
-                        __( 'Your new password for %s is:', 'dokan-lite' ),
+                        __(
+                            'Your new application password for %s is:',
+                            'dokan-lite'
+                        ),
                         created.name
                     ) }
                 </span>
