@@ -290,7 +290,7 @@ class SetupWizardSpaTest extends DokanTestCase {
     }
 
     /**
-     * Markup printed while assets were enqueued is replayed once, inside the body.
+     * Markup printed while assets were enqueued is replayed once.
      *
      * @test
      */
@@ -311,6 +311,57 @@ class SetupWizardSpaTest extends DokanTestCase {
         $this->wizard->flush_deferred_output();
 
         $this->assertSame( '', ob_get_clean() );
+    }
+
+    /**
+     * A callback that prints a script while assets are enqueued (stripe-express
+     * on the payment step) prints jQuery with it. Replayed ahead of the queue,
+     * jQuery still loads before the head scripts that need it, and nothing
+     * lands ahead of the doctype.
+     *
+     * @test
+     */
+    public function printed_enqueue_output_keeps_jquery_ahead_of_its_dependents() {
+        // The replay is shared by both modes; legacy needs no built bundle.
+        update_option( 'dokan_appearance', [ 'vendor_setup_wizard' => 'legacy' ] );
+        wp_cache_delete( 'dokan_appearance', 'options' );
+
+        wp_scripts()->done = [];
+        wp_register_script( 'dokan-test-printed-gateway', 'https://example.org/gateway.js', [ 'jquery' ], '1.0', true );
+        wp_register_script( 'dokan-test-head-consumer', 'https://example.org/consumer.js', [ 'jquery' ], '1.0', false );
+        wp_enqueue_script( 'dokan-test-head-consumer' );
+
+        add_action(
+            'dokan_setup_wizard_enqueue_scripts',
+            static function () {
+                wp_print_scripts( 'dokan-test-printed-gateway' );
+            }
+        );
+
+        // The same sequence setup_wizard() runs: capture the enqueue pass, then open the document.
+        ob_start();
+        $this->wizard->enqueue_scripts();
+        $this->wizard->capture_output( (string) ob_get_clean() );
+
+        ob_start();
+        $this->wizard->setup_wizard_header();
+        $html = (string) ob_get_clean();
+
+        wp_dequeue_script( 'dokan-test-head-consumer' );
+        wp_deregister_script( 'dokan-test-head-consumer' );
+        wp_deregister_script( 'dokan-test-printed-gateway' );
+
+        $doctype  = strpos( $html, '<!DOCTYPE html>' );
+        $jquery   = strpos( $html, 'jquery-core-js' );
+        $consumer = strpos( $html, 'dokan-test-head-consumer-js' );
+        $head_end = strpos( $html, '</head>' );
+
+        $this->assertNotFalse( $doctype );
+        $this->assertSame( '', trim( substr( $html, 0, $doctype ) ) );
+        $this->assertNotFalse( $jquery );
+        $this->assertNotFalse( $consumer );
+        $this->assertLessThan( $consumer, $jquery );
+        $this->assertLessThan( $head_end, $consumer );
     }
 
     /**

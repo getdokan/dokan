@@ -47,8 +47,8 @@ class SetupWizard extends DokanSetupWizard {
      * The enqueue action runs before the document opens, so anything printed
      * from it would precede the doctype and drop the page into quirks mode —
      * and the SPA fires that action once per step, so an identical blob (Pro's
-     * media templates) arrives several times. Held here, replayed once, inside
-     * the body.
+     * media templates) arrives several times. Held here, replayed once, at the
+     * top of the head.
      *
      * @since DOKAN_SINCE
      *
@@ -183,7 +183,12 @@ class SetupWizard extends DokanSetupWizard {
     }
 
     /**
-     * Replay what the enqueue callbacks printed, now that the body is open.
+     * Replay what the enqueue callbacks printed, ahead of the queued scripts.
+     *
+     * A callback that prints a script (stripe-express on the payment step)
+     * prints its dependencies too, jQuery included, and WordPress then counts
+     * them as done — so this has to land before `wp_print_scripts()`, or the
+     * queue's head scripts run before the jQuery they need.
      *
      * @since DOKAN_SINCE
      *
@@ -661,6 +666,7 @@ class SetupWizard extends DokanSetupWizard {
         <meta name="viewport" content="width=device-width"/>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title><?php esc_attr_e( 'Vendor &rsaquo; Setup Wizard', 'dokan-lite' ); ?></title>
+        <?php $this->render_deferred_output(); ?>
         <?php wp_print_scripts(); ?>
         <?php wp_print_styles(); ?>
         <?php do_action( 'dokan_setup_wizard_styles' ); ?>
@@ -784,9 +790,6 @@ class SetupWizard extends DokanSetupWizard {
         <a class="wc-return-to-dashboard" href="<?php echo esc_url( site_url() ); ?>"><?php esc_attr_e( 'Return to the Marketplace', 'dokan-lite' ); ?></a>
             <?php
         }
-
-        // Whatever the enqueue callbacks printed belongs here — the document is open and each blob lands once.
-        $this->render_deferred_output();
 		?>
     </body>
     </html>
