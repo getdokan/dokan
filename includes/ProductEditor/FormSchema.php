@@ -733,6 +733,7 @@ class FormSchema {
                 'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
                 'required'       => true,
                 'is_mandatory'   => true,
+                'is_required_editable' => true,
                 'visibility'     => true,
             ],
             [
