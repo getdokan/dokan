@@ -46,7 +46,15 @@ class VendorOnboardingControllerTest extends DokanTestCase {
         $_POST = [];
 
         // The payment step describes only the methods the admin enabled, and saves nothing else.
-        update_option( 'dokan_withdraw', [ 'withdraw_methods' => [ 'paypal' => 'paypal', 'bank' => 'bank' ] ] );
+        update_option(
+            'dokan_withdraw',
+            [
+                'withdraw_methods' => [
+                    'paypal' => 'paypal',
+                    'bank'   => 'bank',
+                ],
+            ]
+        );
 
         $this->seam_b_calls = [];
         $this->seam_a_calls = 0;

@@ -326,6 +326,10 @@ class SetupWizardSpaTest extends DokanTestCase {
         update_option( 'dokan_appearance', [ 'vendor_setup_wizard' => 'legacy' ] );
         wp_cache_delete( 'dokan_appearance', 'options' );
 
+        // The header prints the whole global queue; put it back afterwards so later tests see what they queued.
+        $scripts_state = [ wp_scripts()->done, wp_scripts()->queue, wp_scripts()->to_do ];
+        $styles_state  = [ wp_styles()->done, wp_styles()->queue, wp_styles()->to_do ];
+
         wp_scripts()->done = [];
         wp_register_script( 'dokan-test-printed-gateway', 'https://example.org/gateway.js', [ 'jquery' ], '1.0', true );
         wp_register_script( 'dokan-test-head-consumer', 'https://example.org/consumer.js', [ 'jquery' ], '1.0', false );
@@ -347,7 +351,8 @@ class SetupWizardSpaTest extends DokanTestCase {
         $this->wizard->setup_wizard_header();
         $html = (string) ob_get_clean();
 
-        wp_dequeue_script( 'dokan-test-head-consumer' );
+        [ wp_scripts()->done, wp_scripts()->queue, wp_scripts()->to_do ] = $scripts_state;
+        [ wp_styles()->done, wp_styles()->queue, wp_styles()->to_do ]    = $styles_state;
         wp_deregister_script( 'dokan-test-head-consumer' );
         wp_deregister_script( 'dokan-test-printed-gateway' );
 
