@@ -106,20 +106,36 @@ class VendorOnboardingController extends VendorStoreSettingsController {
     }
 
     /**
-     * Permission check — wizard parity, deliberately looser than the Store
-     * settings page: the legacy wizard gates on login only (any logged-in
-     * user can load and POST `?page=dokan-seller-setup`), so requiring
-     * `dokan_view_store_settings_menu` here would lock vendors out of
-     * onboarding flows the legacy path allows. `dokandar` is the floor every
-     * seller-role user has. Tightening the legacy hole is tracked separately
+     * Permission check — wizard parity for Vendors, dashboard parity for
+     * Vendor Staff.
+     *
+     * A Vendor needs only `dokandar`, the floor every seller-role user has:
+     * the legacy wizard gates on login alone, and onboarding must not lock a
+     * Vendor out. Vendor Staff resolve to their Vendor's store, so they also
+     * need the dashboard capability that guards the same fields — the store
+     * settings menu for the store step, the payment menu for payout details.
+     * Tightening the legacy page itself is tracked separately
      * (plugin-internal-tasks#2130, open question 3).
      *
      * @since DOKAN_SINCE
      *
+     * @param \WP_REST_Request|null $request Request object.
+     *
      * @return bool
      */
-    public function check_permission() {
-        return current_user_can( 'dokandar' );
+    public function check_permission( $request = null ) {
+        if ( ! current_user_can( 'dokandar' ) ) {
+            return false;
+        }
+
+        if ( ! current_user_can( 'vendor_staff' ) ) {
+            return true;
+        }
+
+        // Runs before the handlers pin $this->step, so the step comes from the route.
+        $step = $request instanceof \WP_REST_Request ? (string) $request['step'] : 'store';
+
+        return current_user_can( 'payment' === $step ? 'dokan_view_store_payment_menu' : 'dokan_view_store_settings_menu' );
     }
 
     /**
@@ -158,7 +174,61 @@ class VendorOnboardingController extends VendorStoreSettingsController {
          * @param int    $vendor_id Vendor user ID.
          * @param string $step      Wizard step being served.
          */
-        return apply_filters( 'dokan_rest_vendor_onboarding_response', $schema, $vendor_id, $this->step );
+        $schema = apply_filters( 'dokan_rest_vendor_onboarding_response', $schema, $vendor_id, $this->step );
+
+        // Same as the Store settings response: server-side hooks never leave the server.
+        foreach ( array_keys( $schema ) as $index ) {
+            unset( $schema[ $index ]['sanitize_callback'], $schema[ $index ]['validation_func'] );
+        }
+
+        return $schema;
+    }
+
+    /**
+     * Keep only the gateways and field keys the payment step declares.
+     *
+     * Everything under `payment` is read by the withdraw code and the gateway
+     * modules, so a key the step never rendered (another gateway's connection
+     * data, a nested array where a string belongs) must not reach it.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $field The field schema element.
+     * @param mixed $value The raw submitted value.
+     *
+     * @return mixed Sanitized value.
+     */
+    protected function sanitize_field_value( array $field, $value ) {
+        $value = parent::sanitize_field_value( $field, $value );
+
+        if ( 'payment_methods' !== ( $field['variant'] ?? '' ) ) {
+            return $value;
+        }
+
+        $value = (array) $value;
+        $clean = [];
+
+        foreach ( (array) ( $field['gateways'] ?? [] ) as $gateway ) {
+            $gateway_id = (string) ( $gateway['id'] ?? '' );
+            $keys       = wp_list_pluck( (array) ( $gateway['fields'] ?? [] ), 'key' );
+
+            if ( ! empty( $gateway['declaration'] ) ) {
+                $keys[] = 'declaration';
+            }
+
+            // Connect-only rows declare no fields, so nothing of theirs is saved here.
+            if ( '' === $gateway_id || empty( $keys ) || ! isset( $value[ $gateway_id ] ) || ! is_array( $value[ $gateway_id ] ) ) {
+                continue;
+            }
+
+            foreach ( $keys as $key ) {
+                if ( isset( $value[ $gateway_id ][ $key ] ) && is_scalar( $value[ $gateway_id ][ $key ] ) ) {
+                    $clean[ $gateway_id ][ $key ] = $value[ $gateway_id ][ $key ];
+                }
+            }
+        }
+
+        return $clean;
     }
 
     /**
@@ -240,7 +310,8 @@ class VendorOnboardingController extends VendorStoreSettingsController {
             $slice = [ 'payment' => $payment ];
             $slice = $this->award_payment_completion( $slice, $prev, $methods );
 
-            ( new WizardStoreSaver() )->save( $vendor_id, $slice );
+            // Not WizardStoreSaver: its address-completion replay would re-add the address weight on every payment save.
+            $this->writer->save( $vendor_id, $slice, [ 'apply_settings_args_filter' => false ] );
         }
 
         /** This action is documented in includes/REST/VendorStoreSettingsController.php */
