@@ -154,6 +154,52 @@ class ApiClientTest extends DokanTestCase {
         $this->assertSame( Status::NEEDS_RECONNECT, Status::get_state() );
     }
 
+    public function test_adding_the_encryption_constant_later_keeps_the_key_readable() {
+        // Encrypted with the salt, as before the admin added the constant.
+        $nonce = random_bytes( SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
+        $salt  = hash( 'sha256', 'dokan-cj|' . wp_salt( 'auth' ), true );
+        $old   = 'dcj1:' . base64_encode( $nonce . sodium_crypto_secretbox( 'fake_api_key_123', $nonce, $salt ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+        $token = 'dcj1:' . base64_encode( $nonce . sodium_crypto_secretbox( 'fake_refresh_token_1', $nonce, $salt ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+        update_option(
+            Credentials::OPTION,
+            [
+                'api_key'       => $old,
+                'refresh_token' => $token,
+            ],
+            false
+        );
+
+        // Constants can't be undefined; later tests still read salt-encrypted data through the fallback.
+        if ( ! defined( 'DOKAN_CJ_ENCRYPTION_KEY' ) ) {
+            define( 'DOKAN_CJ_ENCRYPTION_KEY', 'test_secret_xxx_for_cj' );
+        }
+
+        $this->assertFalse( Crypto::is_current( $old ) );
+        $this->assertSame( 'fake_api_key_123', Credentials::get( 'api_key' ) );
+
+        $raw = get_option( Credentials::OPTION );
+
+        // Reading one secret moves all of them to the constant.
+        $this->assertNotSame( $old, $raw['api_key'] );
+        $this->assertTrue( Crypto::is_current( $raw['api_key'] ) );
+        $this->assertTrue( Crypto::is_current( $raw['refresh_token'] ) );
+        $this->assertSame( 'fake_refresh_token_1', Credentials::get( 'refresh_token' ) );
+        $this->assertFalse( Credentials::is_unreadable() );
+    }
+
+    public function test_settings_summary_flags_an_unreadable_key_right_away() {
+        $this->connect();
+
+        $raw            = get_option( Credentials::OPTION );
+        $raw['api_key'] = 'dcj1:' . base64_encode( str_repeat( 'x', 40 ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+        update_option( Credentials::OPTION, $raw, false );
+
+        $summary = ( new Connection() )->summary();
+
+        $this->assertSame( Status::NEEDS_RECONNECT, $summary['state'] );
+        $this->assertSame( '', $summary['masked_key'] );
+    }
+
     public function test_points_info_is_recorded_and_data_unwrapped() {
         $this->connect();
         $this->queue(

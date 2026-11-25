@@ -152,13 +152,15 @@ export default function CJConnectionField( { element }: Props ) {
 
             { connection && 'disconnected' !== state && (
                 <div className="flex flex-col gap-1 text-sm">
-                    <span>
-                        { sprintf(
-                            /* translators: %s: masked CJ API key */
-                            __( 'API key: %s', 'dokan-lite' ),
-                            connection.masked_key
-                        ) }
-                    </span>
+                    { connection.masked_key && (
+                        <span>
+                            { sprintf(
+                                /* translators: %s: masked CJ API key */
+                                __( 'API key: %s', 'dokan-lite' ),
+                                connection.masked_key
+                            ) }
+                        </span>
+                    ) }
                     { connection.account_name && (
                         <span>
                             { sprintf(
@@ -234,6 +236,18 @@ export default function CJConnectionField( { element }: Props ) {
                             : __( 'Connect', 'dokan-lite' ) }
                     </Button>
                 </div>
+            ) }
+
+            { 'suspended' !== state && (
+                <span
+                    className="text-xs text-muted-foreground leading-relaxed"
+                    data-testid="cj-encryption-hint"
+                >
+                    { __(
+                        "The key is stored encrypted with your site's security salts. If a security plugin or host changes them, you'll need to paste the key again. To avoid that, add define( 'DOKAN_CJ_ENCRYPTION_KEY', 'any long random text' ); to wp-config.php, and don't remove it later.",
+                        'dokan-lite'
+                    ) }
+                </span>
             ) }
 
             { 'connected' === state && (

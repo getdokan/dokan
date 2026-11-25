@@ -97,6 +97,11 @@ class Connection {
      * @return array
      */
     public function summary(): array {
+        // Show an unreadable key on the settings screen right away, not after the next CJ call.
+        if ( Credentials::is_unreadable() ) {
+            Status::mark_needs_reconnect( __( 'The saved CJ key can no longer be read. Reconnect the CJ account.', 'dokan-lite' ) );
+        }
+
         $raw     = Status::raw();
         $api_key = Credentials::has_key() ? (string) Credentials::get( 'api_key' ) : '';
 

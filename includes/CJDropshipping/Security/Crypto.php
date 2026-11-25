@@ -32,7 +32,7 @@ class Crypto {
     }
 
     /**
-     * Decrypt a stored secret.
+     * Decrypt a stored secret, also with the salt when DOKAN_CJ_ENCRYPTION_KEY was added later.
      *
      * @since DOKAN_SINCE
      *
@@ -41,6 +41,33 @@ class Crypto {
      * @return string|null Null when it can't be decrypted, e.g. after the salts changed.
      */
     public static function decrypt( string $stored ): ?string {
+        return self::open( $stored, self::keys() );
+    }
+
+    /**
+     * Whether a stored secret is encrypted with the current key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $stored Value written by encrypt().
+     *
+     * @return bool
+     */
+    public static function is_current( string $stored ): bool {
+        return null !== self::open( $stored, [ self::key() ] );
+    }
+
+    /**
+     * Decrypt with the first key that works.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string   $stored Value written by encrypt().
+     * @param string[] $keys   Keys to try.
+     *
+     * @return string|null
+     */
+    private static function open( string $stored, array $keys ): ?string {
         if ( '' === $stored ) {
             return '';
         }
@@ -58,13 +85,30 @@ class Crypto {
         $nonce  = substr( $raw, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
         $cipher = substr( $raw, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
 
-        try {
-            $plain = sodium_crypto_secretbox_open( $cipher, $nonce, self::key() );
-        } catch ( \Throwable $e ) {
-            return null;
+        foreach ( $keys as $key ) {
+            try {
+                $plain = sodium_crypto_secretbox_open( $cipher, $nonce, $key );
+            } catch ( \Throwable $e ) {
+                $plain = false;
+            }
+
+            if ( false !== $plain ) {
+                return $plain;
+            }
         }
 
-        return false === $plain ? null : $plain;
+        return null;
+    }
+
+    /**
+     * Current key first, then the salt key that was used before DOKAN_CJ_ENCRYPTION_KEY was set.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string[]
+     */
+    private static function keys(): array {
+        return array_values( array_unique( [ self::key(), self::derive( wp_salt( 'auth' ) ) ] ) );
     }
 
     /**
@@ -79,6 +123,19 @@ class Crypto {
             ? (string) DOKAN_CJ_ENCRYPTION_KEY
             : wp_salt( 'auth' );
 
+        return self::derive( $secret );
+    }
+
+    /**
+     * 32-byte secretbox key from a secret.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $secret Constant or salt.
+     *
+     * @return string
+     */
+    private static function derive( string $secret ): string {
         return hash( 'sha256', 'dokan-cj|' . $secret, true );
     }
 }

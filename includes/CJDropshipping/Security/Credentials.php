@@ -48,7 +48,39 @@ class Credentials {
             return in_array( $key, self::SECRETS, true ) ? '' : null;
         }
 
-        return in_array( $key, self::SECRETS, true ) ? Crypto::decrypt( (string) $stored[ $key ] ) : $stored[ $key ];
+        if ( ! in_array( $key, self::SECRETS, true ) ) {
+            return $stored[ $key ];
+        }
+
+        $plain = Crypto::decrypt( (string) $stored[ $key ] );
+
+        // Still under the salt after DOKAN_CJ_ENCRYPTION_KEY was added: re-encrypt every secret with the constant.
+        if ( null !== $plain && ! Crypto::is_current( (string) $stored[ $key ] ) ) {
+            self::rekey();
+        }
+
+        return $plain;
+    }
+
+    /**
+     * Re-encrypt every readable secret with the current key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    private static function rekey(): void {
+        $plain = [];
+
+        foreach ( self::SECRETS as $key ) {
+            $value = Crypto::decrypt( (string) ( self::raw()[ $key ] ?? '' ) );
+
+            if ( null !== $value && '' !== $value ) {
+                $plain[ $key ] = $value;
+            }
+        }
+
+        self::save( $plain );
     }
 
     /**
