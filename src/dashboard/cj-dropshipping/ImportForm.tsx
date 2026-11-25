@@ -273,6 +273,15 @@ const ImportForm = ( { product, status }: Props ) => {
                                     ) : (
                                         <span>…</span>
                                     ) }
+                                    <span
+                                        className="col-span-2 text-xs text-gray-500"
+                                        data-testid="cj-fee-note"
+                                    >
+                                        { __(
+                                            "Payment processing fees aren't included and may come out of your earning, depending on the payment method.",
+                                            'dokan-lite'
+                                        ) }
+                                    </span>
                                 </div>
                             ) }
                         </div>
