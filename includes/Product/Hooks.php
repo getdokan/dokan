@@ -63,6 +63,37 @@ class Hooks {
         add_filter( 'woocommerce_rest_pre_insert_product_object', [ $this, 'protect_per_product_commission_meta' ] );
 
         add_filter( 'woocommerce_new_product_variation_data', [ $this, 'set_new_variation_author_to_vendor' ] );
+
+        // WooCommerce's variation AJAX checks only edit_products, which every vendor holds.
+        foreach ( [ 'load_variations', 'save_variations', 'bulk_edit_variations', 'add_variation', 'link_all_variations', 'remove_variations' ] as $action ) {
+            add_action( 'wp_ajax_woocommerce_' . $action, [ $this, 'block_variation_ajax_on_foreign_products' ], 1 );
+        }
+    }
+
+    /**
+     * Stop WooCommerce's variation AJAX when it targets a product the user does not own.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function block_variation_ajax_on_foreign_products() {
+        // Admins and shop managers may edit any product.
+        if ( current_user_can( 'edit_others_products' ) ) {
+            return;
+        }
+
+        $request = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce verifies its nonce right after this.
+
+        // Variations are saved and deleted by their own ids, so their parent products count too.
+        $variation_ids = array_merge( (array) ( $request['variable_post_id'] ?? [] ), (array) ( $request['variation_ids'] ?? [] ) );
+        $product_ids   = array_merge( [ $request['product_id'] ?? 0, $request['post_id'] ?? 0 ], array_map( 'wp_get_post_parent_id', array_map( 'absint', $variation_ids ) ) );
+
+        foreach ( array_filter( array_map( 'absint', $product_ids ) ) as $product_id ) {
+            if ( ! dokan_is_product_author( $product_id ) ) {
+                wp_die( -1 );
+            }
+        }
     }
 
     /**
