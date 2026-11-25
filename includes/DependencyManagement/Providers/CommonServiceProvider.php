@@ -13,6 +13,7 @@ class CommonServiceProvider extends BaseServiceProvider {
 	protected $services = [
         \WeDevs\Dokan\Withdraw\Hooks::class,
         \WeDevs\Dokan\Product\Hooks::class,
+        \WeDevs\Dokan\Product\VariationAuthorizationGuard::class,
         \WeDevs\Dokan\ProductCategory\Hooks::class,
         \WeDevs\Dokan\Upgrade\Hooks::class,
         \WeDevs\Dokan\Vendor\Hooks::class,
