@@ -175,4 +175,46 @@ class VariantRepository {
             ARRAY_A
         );
     }
+
+    /**
+     * Delete variants (and their stock) no store product uses, left untouched for a while.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $age Seconds since the last update; newer rows may belong to an import in progress.
+     *
+     * @return int Variants deleted.
+     */
+    public function delete_unused( int $age ): int {
+        global $wpdb;
+
+        $variants = Schema::tables()['variants'];
+        $stock    = Schema::tables()['stock'];
+        $links    = Schema::tables()['links'];
+        $before   = gmdate( 'Y-m-d H:i:s', time() - $age );
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        $vids = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT v.vid FROM {$variants} v LEFT JOIN {$links} l ON l.vid = v.vid WHERE l.vid IS NULL AND v.updated_at < %s LIMIT 1000",
+                $before
+            )
+        );
+
+        if ( ! $vids ) {
+            return 0;
+        }
+
+        $in = implode( ',', array_fill( 0, count( $vids ), '%s' ) );
+        $wpdb->query( $wpdb->prepare( "DELETE FROM {$stock} WHERE vid IN ( {$in} )", $vids ) );
+        $wpdb->query( $wpdb->prepare( "DELETE FROM {$variants} WHERE vid IN ( {$in} )", $vids ) );
+        // phpcs:enable
+
+        foreach ( $vids as $vid ) {
+            wp_cache_delete( $vid, 'dokan_cj_variants' );
+            wp_cache_delete( $vid, 'dokan_cj_stock' );
+        }
+
+        return count( $vids );
+    }
 }

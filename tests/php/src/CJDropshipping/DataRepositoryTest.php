@@ -149,4 +149,34 @@ class DataRepositoryTest extends DokanTestCase {
         $this->assertNull( $this->links->get( $product_id ) );
         $this->assertNull( $this->links->get( $other_id ) );
     }
+
+    public function test_unused_variants_are_deleted_after_a_day() {
+        global $wpdb;
+
+        $product_id = $this->factory()->product->create_and_get()->get_id();
+
+        foreach ( [ 'vid-used', 'vid-unused-old', 'vid-unused-new' ] as $vid ) {
+            $this->variants->save( $vid, [ 'pid' => 'pid-5' ] );
+        }
+
+        $this->variants->save_stock(
+            'vid-unused-old', [
+				'CN' => [
+					'cj' => 3,
+					'factory' => 0,
+				],
+			]
+        );
+        $this->links->link( $product_id, $product_id, $this->seller_id1, 'vid-used', 'pid-5' );
+
+        // Two of them were last touched two days ago.
+        $wpdb->query( $wpdb->prepare( 'UPDATE ' . Schema::tables()['variants'] . " SET updated_at = %s WHERE vid IN ( 'vid-used', 'vid-unused-old' )", gmdate( 'Y-m-d H:i:s', time() - 2 * DAY_IN_SECONDS ) ) ); // phpcs:ignore WordPress.DB
+        wp_cache_flush();
+
+        $this->assertSame( 1, $this->variants->delete_unused( DAY_IN_SECONDS ) );
+        $this->assertNull( $this->variants->get( 'vid-unused-old' ) );
+        $this->assertSame( [], $this->variants->get_stock( 'vid-unused-old' ) );
+        $this->assertNotNull( $this->variants->get( 'vid-used' ) );
+        $this->assertNotNull( $this->variants->get( 'vid-unused-new' ) );
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\CJDropshipping\Data;
 
+use WeDevs\Dokan\CJDropshipping\Queue;
+use WeDevs\Dokan\CJDropshipping\Settings;
 use WeDevs\Dokan\Contracts\Hookable;
 
 /**
@@ -10,6 +12,8 @@ use WeDevs\Dokan\Contracts\Hookable;
  * @since DOKAN_SINCE
  */
 class Cleanup implements Hookable {
+
+    public const UNUSED_HOOK = 'dokan_cj_delete_unused_variants';
 
     protected LinkRepository $links;
 
@@ -34,6 +38,32 @@ class Cleanup implements Hookable {
     public function register_hooks(): void {
         add_action( 'delete_user', [ $this, 'delete_vendor_data' ] );
         add_action( 'before_delete_post', [ $this, 'delete_product_links' ] );
+        add_action( 'init', [ $this, 'schedule' ], 20 );
+        add_action( self::UNUSED_HOOK, [ $this, 'delete_unused_variants' ] );
+    }
+
+    /**
+     * Keep the daily clean-up scheduled while CJ is on.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function schedule(): void {
+        if ( Settings::is_enabled() && function_exists( 'WC' ) ) {
+            Queue::ensure_recurring( self::UNUSED_HOOK, DAY_IN_SECONDS );
+        }
+    }
+
+    /**
+     * Delete CJ variants no product uses: left by deleted products, or saved while browsing the catalog.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function delete_unused_variants(): void {
+        ( new VariantRepository() )->delete_unused( DAY_IN_SECONDS );
     }
 
     /**
