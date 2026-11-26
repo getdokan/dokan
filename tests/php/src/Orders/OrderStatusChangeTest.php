@@ -173,6 +173,8 @@ class OrderStatusChangeTest extends DokanTestCase {
             // #2354. Cancelling the parent must cancel the vendor's sub-order, otherwise
             // vendors keep fulfilling an order the customer already cancelled.
             [ 'processing', 'cancelled' ],
+            // Cancelling an on-hold parent must cancel its on-hold sub-orders (dokan-pro#6444).
+            [ 'on-hold', 'cancelled' ],
         ];
     }
 
@@ -184,6 +186,7 @@ class OrderStatusChangeTest extends DokanTestCase {
             [ 'completed', 'processing' ],
             [ 'refunded', 'completed' ],
             [ 'cancelled', 'processing' ],
+            [ 'on-hold', 'refunded' ],
         ];
     }
 
