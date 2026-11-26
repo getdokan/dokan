@@ -571,10 +571,10 @@ class Hooks {
 
                 <span class="wrapper">
                     <input type="hidden" value="fixed" name="_per_product_admin_commission_type">
-                    <input id="admin_commission" class="input-text wc_input_price" min="0" max="100" type="text" name="_per_product_admin_commission" value="<?php echo wc_format_localized_price( $admin_commission ); ?>">
+                    <input id="admin_commission" class="input-text wc_input_price" min="0" max="100" type="text" name="_per_product_admin_commission" value="<?php echo esc_attr( wc_format_localized_price( $admin_commission ) ); ?>">
                     <span class="additional_fee">
                         <?php echo esc_html( '% &nbsp;&nbsp; +' ); ?>
-                        <input class="input-text wc_input_price" type="text" name="_per_product_admin_additional_fee" value="<?php echo wc_format_localized_price( $additional_fee ); ?>">
+                        <input class="input-text wc_input_price" type="text" name="_per_product_admin_additional_fee" value="<?php echo esc_attr( wc_format_localized_price( $additional_fee ) ); ?>">
                     </span>
                     <span class="combine-commission-description"></span>
                 </span>
