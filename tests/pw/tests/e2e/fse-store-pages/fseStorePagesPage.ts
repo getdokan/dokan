@@ -269,7 +269,10 @@ export class FseStorePagesPage {
         }, selectors);
     }
 
-    // How far a filter bar's contents spill out of it (the narrow-container regression)
+    // How far a filter bar's contents spill out of it (the narrow-container regression).
+    // Anything inside a clipping ancestor (overflow != visible) is skipped: Pro draws its Google map inside the bar,
+    // and the map's tile/overlay nodes extend past the bar's box while being clipped from view.
+    // Reproduce locally: set an invalid Google map key (dokan_admin_settings.google_map_api_key).
     async getBarLayout(barIndex = 0): Promise<BarLayout> {
         return this.page.evaluate(
             ({ sel, index }) => {
@@ -278,6 +281,10 @@ export class FseStorePagesPage {
                 const barRect = bar.getBoundingClientRect();
                 const overflowingChildren = Array.from(bar.querySelectorAll<HTMLElement>('*'))
                     .filter(e => {
+                        for (let p = e.parentElement; p && p !== bar; p = p.parentElement) {
+                            const { overflowX, overflowY } = getComputedStyle(p);
+                            if (overflowX !== 'visible' || overflowY !== 'visible') return false;
+                        }
                         const r = e.getBoundingClientRect();
                         return r.width > 0 && (r.right > barRect.right + 1 || r.left < barRect.left - 1);
                     })

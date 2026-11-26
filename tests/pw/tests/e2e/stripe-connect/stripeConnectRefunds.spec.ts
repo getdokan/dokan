@@ -36,7 +36,10 @@ test.describe.serial('Stripe Connect — refunds and reversals @pro', () => {
         if (!hasCredentials) {
             return;
         }
-        await ensureStripeConnectConfigured();
+        // The CI seed has the seller paying the Stripe fee, which defers the vendor transfer until the
+        // charge.updated / payment_intent.succeeded webhook reports the fee — a webhook Stripe cannot deliver
+        // to a local wp-env. Admin pays the fee (the gateway default) so the transfer is created at checkout.
+        await ensureStripeConnectConfigured({ seller_pays_the_processing_fee: 'no' });
         await seedBothConnectedVendors(VENDOR_ID, VENDOR2_ID);
         const api = new ApiUtils(await request.newContext());
         const [, id1] = await api.createProduct({ ...payloads.createProduct(), name: 'Stripe Connect Refund V1' }, payloads.vendorAuth);
