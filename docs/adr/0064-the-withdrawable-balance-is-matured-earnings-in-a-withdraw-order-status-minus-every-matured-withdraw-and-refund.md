@@ -11,7 +11,7 @@ Status: Accepted (retroactive — no recorded decision; documents observed behav
 The withdrawable Balance of a Vendor on a given day is:
 
 ```
-Balance = SUM(debit of rows with an active order status and balance_date <= today)
+Balance = SUM(debit of rows with an active order status, or of type dokan_refund, and balance_date <= today)
         − SUM(credit of all rows with balance_date <= today)
 ```
 
@@ -33,7 +33,7 @@ The value is cached per Vendor and day under `seller_balance_{id}_{Y_m_d}` in th
 Two other readers apply the same earning-status list but are **not** the withdrawable Balance and are not used by Withdraw validation:
 
 - `Vendor::get_earnings()` (`lite:includes/Vendor/Vendor.php::get_earnings()`): `SUM(debit)` of `dokan_orders` rows whose status is in the list, minus `SUM(credit)` of `dokan_refund` rows with status `approved`, both limited to `balance_date` up to the given day. Withdraw credits are not subtracted. It feeds the legacy dashboard "Earning" counter ([ADR-0107](./0107-the-legacy-dashboard-earning-counter-is-ledger-earnings-in-withdraw-statuses-minus-approved-refunds.md)).
-- `VendorBalanceStore::get_total_earning_by_vendor()` (`lite:includes/Models/DataStore/VendorBalanceStore.php::get_total_earning_by_vendor()`): `SUM(debit) - SUM(credit)` over `dokan_orders` and `dokan_refund` rows whose status is in the list or `approved`, with the filters `dokan_vendor_total_balance_order_status` and `dokan_vendor_total_balance_trn_types`.
+- `VendorBalanceStore::get_total_earning_by_vendor()` (`lite:includes/Models/DataStore/VendorBalanceStore.php::get_total_earning_by_vendor()`): `SUM(debit) - SUM(credit)` over `dokan_orders` and `dokan_refund` rows whose status is in the list or `approved`, with the filters `dokan_vendor_total_balance_order_status` and `dokan_vendor_total_balance_trn_types`. Unlike `get_balance()`, it still applies the status list to `dokan_refund` debit rows, so a gateway refund re-credit saved as `wc-completed` is left out when Completed is not selected. Nothing in Lite or Pro calls it, so this is recorded as a known difference, not changed (dokan-pro#6440).
 
 `approved` is a ledger status, not an order status: Refund and Withdraw rows use it.
 
