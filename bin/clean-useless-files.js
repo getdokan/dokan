@@ -14,6 +14,8 @@ const targetFiles = [
     // Unnecessary JS files generated from CSS/LESS-only webpack entries
     'assets/js',
     'assets/css',
+    // Built store blocks, so removed blocks don't linger in the zip.
+    'assets/blocks',
 ];
 
 console.log(

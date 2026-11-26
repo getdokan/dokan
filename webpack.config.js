@@ -116,9 +116,12 @@ const updatedConfig = {
     },
 
     plugins: [
+        // CopyPlugin would copy src/blocks/* into assets/js/blocks; build:blocks owns those.
         ...defaultConfig.plugins.filter(
             ( plugin ) =>
-                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+                ! [ 'DependencyExtractionWebpackPlugin', 'CopyPlugin' ].includes(
+                    plugin.constructor.name
+                )
         ),
         new MiniCssExtractPlugin( {
             filename: ( { chunk } ) => {

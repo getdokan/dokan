@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.3.6
+Stable tag: 5.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -379,6 +379,14 @@ A. Please report security bugs found in the source code of the plugin through th
 
 == Changelog ==
 
+= v5.3.7 ( Nov 26, 2026 ) =
+- **new:** Added Gutenberg blocks and patterns for the store listing and single store pages, so block themes can lay them out in the Site Editor.
+- **update:** On block themes, the single store page now uses Dokan's new block template, unless the theme provides its own store page template.
+- **fix:** The per-product admin commission fields on the product edit screen now escape their stored values, closing a stored XSS vulnerability.
+- **fix:** Searching the admin settings now finds the option you search for, showing only the matching settings instead of every field on the page.
+- **fix:** Store listing cards and vendor avatars now keep their layout on themes that don't use border-box sizing, such as Astra.
+- **fix:** The store listing grid and list buttons now show the active view, and each listing on a page responds only to its own controls.
+
 = v5.3.6 ( Nov 23, 2026 ) =
 - **update:** The Black Friday page in the Dokan admin now shows the current Black Friday deals, including the Enterprise Bundle, Black Friday prices for the Lifetime and Annual plans, and a live countdown.
 - **fix:** Vendor dashboard menu links that are set to open in a new tab, such as wePOS, now do so from the new dashboard sidebar, including its collapsed menu.
@@ -414,9 +422,5 @@ A. Please report security bugs found in the source code of the plugin through th
 - **fix:** Products created through the vendor products API now respect the vendor's selling status and are held for review when the vendor isn't allowed to publish directly.
 - **fix:** Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.
 - **fix:** A vendor's social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.
-
-= v5.3.2 ( Oct 22, 2026 ) =
-- **fix:** Prevented tampered product attribute data from being turned into PHP objects when a vendor saves or edits a product, closing a PHP object injection vulnerability.
-- **fix:** Saving a vendor from the WordPress Users screen no longer resets their custom commission to the global rate.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
