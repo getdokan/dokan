@@ -59,6 +59,11 @@ class Quote {
             return $this->item_error( 'dokan_cj_blocked', $items );
         }
 
+        // The USD rate was set for another currency: a converted price would be wrong.
+        if ( Settings::rate_is_stale() ) {
+            return new WP_Error( 'dokan_cj_unavailable', __( 'We couldn\'t get a shipping price for these items right now. Please try again in a few minutes.', 'dokan-lite' ) );
+        }
+
         $plans = $this->plans( $items );
 
         if ( is_wp_error( $plans ) ) {

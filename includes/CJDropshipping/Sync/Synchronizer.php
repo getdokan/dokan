@@ -29,6 +29,11 @@ class Synchronizer implements Hookable {
     public const BATCH_HOOK   = 'dokan_cj_sync_batch';
     public const PRODUCT_HOOK = 'dokan_cj_sync_product';
 
+    public const RECHECK_HOOK = 'dokan_cj_recheck_losses';
+
+    // Products per re-check job.
+    public const RECHECK_PAGE = 50;
+
     // product/query + getInventoryByPid.
     public const COST_PER_PRODUCT = 20;
 
@@ -67,6 +72,70 @@ class Synchronizer implements Hookable {
         add_action( self::BATCH_HOOK, [ $this, 'run_batch' ] );
         add_action( self::PRODUCT_HOOK, [ $this, 'sync_product' ] );
         add_action( 'transition_post_status', [ $this, 'clear_loss_on_publish' ], 10, 3 );
+        add_action( 'dokan_after_saving_settings', [ $this, 'on_settings_saved' ], 10, 3 );
+        add_action( self::RECHECK_HOOK, [ $this, 'recheck_losses' ] );
+    }
+
+    /**
+     * After the admin saves CJ settings: confirm the USD rate for this currency, and re-check
+     * prices when the rate or safety margin changed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $option    Saved option.
+     * @param mixed  $value     New value.
+     * @param mixed  $old_value Old value.
+     *
+     * @return void
+     */
+    public function on_settings_saved( $option, $value, $old_value = [] ): void {
+        if ( Settings::OPTION !== $option ) {
+            return;
+        }
+
+        $was_stale = Settings::rate_is_stale();
+        Settings::confirm_rate_currency();
+
+        $new     = (array) $value;
+        $old     = (array) $old_value;
+        $changed = static fn( string $key ): bool => isset( $new[ $key ] ) && (float) $new[ $key ] !== (float) ( $old[ $key ] ?? 0 );
+
+        if ( $was_stale || $changed( 'usd_rate' ) || $changed( 'currency_margin' ) ) {
+            Queue::enqueue( self::RECHECK_HOOK, [ 'after' => 0 ] );
+        }
+    }
+
+    /**
+     * Re-run the loss check from saved CJ costs, a page at a time; no CJ calls.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $after Last product id already checked.
+     *
+     * @return void
+     */
+    public function recheck_losses( $after = 0 ): void {
+        if ( ! Settings::is_enabled() || Settings::rate_is_stale() ) {
+            return;
+        }
+
+        $rows = $this->links->page( (int) $after, self::RECHECK_PAGE );
+
+        foreach ( $rows as $link ) {
+            $product = wc_get_product( (int) $link['product_id'] );
+            $variant = $this->variants->get( (string) $link['vid'] );
+
+            if ( ! $product || ! $variant || get_post_meta( $product->get_id(), self::REMOVED_META, true ) || BlockedCategories::is_blocked( (int) $link['parent_id'] ) ) {
+                continue;
+            }
+
+            $cost = round( Settings::to_store_currency( (float) $variant['cost_usd'] ), wc_get_price_decimals() );
+            $this->check_loss( $product, $link, $cost );
+        }
+
+        if ( count( $rows ) === self::RECHECK_PAGE ) {
+            Queue::enqueue( self::RECHECK_HOOK, [ 'after' => (int) end( $rows )['product_id'] ] );
+        }
     }
 
     /**
@@ -223,7 +292,8 @@ class Synchronizer implements Hookable {
             Stock::apply( $product, $link['vid'] );
             Alerts::clear( (int) $link['vendor_id'], 'sync_failed', (int) $link['parent_id'] );
 
-            if ( ! isset( $blocked[ (int) $link['parent_id'] ] ) ) {
+            // Skipped while the USD rate is meant for another currency; the re-check runs once it's updated.
+            if ( ! isset( $blocked[ (int) $link['parent_id'] ] ) && ! Settings::rate_is_stale() ) {
                 $this->check_loss( $product, $link, (float) $variants[ $link['vid'] ]['cost'] );
             }
         }

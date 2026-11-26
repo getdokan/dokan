@@ -134,6 +134,10 @@ class Importer {
             return new WP_Error( 'dokan_cj_no_variant', __( 'Pick a variant to import.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
+        if ( Settings::rate_is_stale() ) {
+            return new WP_Error( 'dokan_cj_rate_stale', __( 'CJ prices are paused while the marketplace updates its currency settings. Try again later.', 'dokan-lite' ), [ 'status' => 409 ] );
+        }
+
         if ( count( $vids ) > 1 && ! self::supports_variable() ) {
             return new WP_Error( 'dokan_cj_variable_needs_pro', __( 'Importing several variants as one product needs Dokan Pro. Pick one variant.', 'dokan-lite' ), [ 'status' => 400 ] );
         }

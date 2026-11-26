@@ -190,6 +190,28 @@ class Monitor implements Hookable {
             ];
         }
 
+        if ( Settings::rate_is_stale() ) {
+            $notices[] = [
+                'type'        => 'alert',
+                'scope'       => 'global',
+                'priority'    => 2,
+                'title'       => __( 'Update the CJ USD rate for your new store currency', 'dokan-lite' ),
+                'description' => sprintf(
+                    /* translators: 1: currency the rate was set for, 2: current store currency */
+                    __( 'Your store currency changed from %1$s to %2$s, but the CJ USD rate was set for %1$s. CJ shipping at checkout and new CJ imports are paused until you enter how much %2$s one US dollar buys and save the CJ Dropshipping settings.', 'dokan-lite' ),
+                    Settings::rate_currency(),
+                    get_woocommerce_currency()
+                ),
+                'actions'     => [
+                    [
+                        'type'   => 'primary',
+                        'text'   => __( 'Open CJ settings', 'dokan-lite' ),
+                        'action' => self::settings_url(),
+                    ],
+                ],
+            ];
+        }
+
         return $notices;
     }
 

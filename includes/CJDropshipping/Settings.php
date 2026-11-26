@@ -11,6 +11,9 @@ class Settings {
 
     public const OPTION = 'dokan_cj_dropshipping';
 
+    // Store currency the CJ USD rate was saved for.
+    public const RATE_CURRENCY_OPTION = 'dokan_cj_rate_currency';
+
     /**
      * Get one setting from the CJ settings group.
      *
@@ -207,6 +210,55 @@ class Settings {
      */
     public static function shows_warehouse_country(): bool {
         return 'on' === self::get( 'show_warehouse_country', 'off' );
+    }
+
+    /**
+     * Whether the store currency changed since the CJ USD rate was saved.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function rate_is_stale(): bool {
+        if ( ! function_exists( 'get_woocommerce_currency' ) ) {
+            return false;
+        }
+
+        $currency = get_woocommerce_currency();
+        $saved    = (string) get_option( self::RATE_CURRENCY_OPTION, '' );
+
+        // Sites set up before this check: today's currency is the one the rate was meant for.
+        if ( '' === $saved ) {
+            self::confirm_rate_currency();
+
+            return false;
+        }
+
+        return 'USD' !== $currency && $saved !== $currency;
+    }
+
+    /**
+     * Record that the USD rate is meant for the current store currency.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public static function confirm_rate_currency(): void {
+        if ( function_exists( 'get_woocommerce_currency' ) ) {
+            update_option( self::RATE_CURRENCY_OPTION, get_woocommerce_currency(), false );
+        }
+    }
+
+    /**
+     * Store currency the USD rate was saved for.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public static function rate_currency(): string {
+        return (string) get_option( self::RATE_CURRENCY_OPTION, '' );
     }
 
     /**

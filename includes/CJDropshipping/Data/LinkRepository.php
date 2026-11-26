@@ -108,6 +108,22 @@ class LinkRepository {
     }
 
     /**
+     * Links in product id order, for going through all of them in pages.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $after Last product id of the previous page.
+     * @param int $limit Page size.
+     *
+     * @return array[]
+     */
+    public function page( int $after, int $limit ): array {
+        global $wpdb;
+
+        return (array) $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . Schema::tables()['links'] . ' WHERE product_id > %d ORDER BY product_id ASC LIMIT %d', $after, $limit ), ARRAY_A ); // phpcs:ignore WordPress.DB
+    }
+
+    /**
      * Every product linked to a CJ product, across vendors.
      *
      * @since DOKAN_SINCE

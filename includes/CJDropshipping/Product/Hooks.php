@@ -707,7 +707,8 @@ class Hooks implements Hookable {
         // `price` only syncs on save, so judge the regular and sale prices being saved.
         $prices = array_filter( [ $product->get_regular_price( 'edit' ), $product->get_sale_price( 'edit' ) ], static fn( $price ) => '' !== (string) $price );
 
-        if ( ! $variant || ! $prices ) {
+        // A USD rate meant for another currency can't judge the price.
+        if ( ! $variant || ! $prices || Settings::rate_is_stale() ) {
             return null;
         }
 

@@ -11,6 +11,7 @@ use WeDevs\Dokan\CJDropshipping\Queue;
 use WeDevs\Dokan\CJDropshipping\Security\Credentials;
 use WeDevs\Dokan\CJDropshipping\Security\Crypto;
 use WeDevs\Dokan\CJDropshipping\Settings;
+use WeDevs\Dokan\CJDropshipping\Shipping\Quote;
 use WeDevs\Dokan\CJDropshipping\Status;
 use WeDevs\Dokan\CJDropshipping\Sync\Synchronizer;
 use WeDevs\Dokan\CJDropshipping\Sync\Webhooks;
@@ -191,6 +192,86 @@ class SyncTest extends DokanTestCase {
 			]
         );
         $this->assertArrayNotHasKey( 'loss:' . $product_id, Alerts::all( $this->seller_id1 ) );
+    }
+
+    public function test_store_currency_change_pauses_cj_prices_until_the_rate_is_saved() {
+        delete_option( Settings::RATE_CURRENCY_OPTION );
+        $currency = 'JPY';
+        add_filter(
+            'woocommerce_currency', function () use ( &$currency ) {
+				return $currency;
+			}
+        );
+
+        // Existing site: today's currency is taken as the rate's currency.
+        $this->assertFalse( Settings::rate_is_stale() );
+
+        $currency = 'BDT';
+        $this->assertTrue( Settings::rate_is_stale() );
+
+        $quote = ( new Quote() )->get(
+            [
+				[
+					'vid' => 'V1',
+					'quantity' => 1,
+					'name' => 'Case',
+				],
+			], 'US'
+        );
+        $this->assertSame( 'dokan_cj_unavailable', $quote->get_error_code() );
+
+        $import = ( new Importer() )->import(
+            $this->seller_id1, [
+				'pid' => 'P1',
+				'vids' => [ 'V1' ],
+				'prices' => [ 'V1' => 10 ],
+				'category_ids' => [ 1 ],
+			]
+        );
+        $this->assertSame( 'dokan_cj_rate_stale', $import->get_error_code() );
+
+        // Admin saves the CJ settings for BDT: prices resume and every product is re-checked.
+        ( new Synchronizer() )->on_settings_saved( Settings::OPTION, [ 'usd_rate' => 120 ], [ 'usd_rate' => 120 ] );
+
+        $this->assertFalse( Settings::rate_is_stale() );
+        $this->assertTrue( Queue::is_pending( Synchronizer::RECHECK_HOOK ) );
+        as_unschedule_all_actions( Synchronizer::RECHECK_HOOK );
+    }
+
+    public function test_rate_change_rechecks_prices_from_saved_costs_without_calling_cj() {
+        delete_option( Settings::RATE_CURRENCY_OPTION );
+        add_filter( 'woocommerce_currency', fn() => 'EUR' );
+        $settings = array_merge(
+            (array) get_option( Settings::OPTION ), [
+				'usd_rate' => 1,
+				'currency_margin' => 0,
+			]
+        );
+        update_option( Settings::OPTION, $settings );
+
+        $product_id = $this->import_product();
+        $this->assertNotSame( 'draft', get_post_status( $product_id ) );
+
+        // CJ cost $2 at a rate of 6 is €12, above the €10 price.
+        $old = $settings;
+        $settings['usd_rate'] = 6;
+        update_option( Settings::OPTION, $settings );
+
+        $sync = new Synchronizer();
+        $sync->on_settings_saved( Settings::OPTION, $settings, $old );
+        $this->assertTrue( Queue::is_pending( Synchronizer::RECHECK_HOOK, [ 'after' => 0 ] ) );
+
+        $calls = $this->calls;
+        $sync->recheck_losses( 0 );
+
+        $this->assertSame( 'draft', get_post_status( $product_id ) );
+        $this->assertSame( 'loss', get_post_meta( $product_id, Drafts::DRAFT_REASON_META, true ) );
+        $this->assertSame( $calls, $this->calls );
+
+        // Saving without a rate or margin change queues nothing new.
+        as_unschedule_all_actions( Synchronizer::RECHECK_HOOK );
+        $sync->on_settings_saved( Settings::OPTION, $settings, $settings );
+        $this->assertFalse( Queue::is_pending( Synchronizer::RECHECK_HOOK ) );
     }
 
     public function test_product_cj_stopped_selling_goes_out_of_stock() {
