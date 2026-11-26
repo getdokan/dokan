@@ -8,7 +8,7 @@ The legacy Vendor dashboard (WooCommerce Analytics off) shows an "Order" counter
 
 ## Rule
 
-**Per-status counts.** `Order\Manager::count_orders()` (`lite:includes/Order/Manager.php::count_orders()`) counts the Vendor's `dokan_orders` rows grouped by `order_status`, joined to the order table and excluding orders whose post or HPOS status is `trash`. It starts from the statuses pending, completed, on-hold, processing, refunded, cancelled, failed and checkout-draft, filterable through `dokan_order_status_count`; rows in any other status are ignored. `total` is the sum of the listed statuses. Results are cached per Vendor.
+**Per-status counts.** `Order\Manager::count_orders()` (`lite:includes/Order/Manager.php::count_orders()`) counts the Vendor's `dokan_orders` rows grouped by `order_status`, joined to the order table and excluding orders whose post or HPOS status is `trash`. It starts from the statuses pending, completed, on-hold, processing, refunded, cancelled, failed and checkout-draft, filterable through `dokan_order_status_count`; rows in any other status are ignored. The final counts pass through `dokan_seller_order_counts` after the cache. `total` is the sum of the listed statuses. Results are cached per Vendor.
 
 **The counter.** The big-counter template sums the per-status counts only for the statuses returned by `dokan_withdraw_get_active_order_status()` (`lite:templates/dashboard/big-counter-widget.php`, the "Order" counter): the "Order Status for Withdraw" statuses plus `wc-refunded` (`lite:includes/Withdraw/functions.php::dokan_withdraw_get_active_order_status()`).
 

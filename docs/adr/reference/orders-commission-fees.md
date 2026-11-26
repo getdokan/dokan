@@ -314,6 +314,7 @@ Always (Lite and Pro), `Shipping\Hooks::add_shipping_method_rate` on `woocommerc
 | `dokan_get_child_orders_args` | filter | `Manager::get_child_orders` | Query args for Suborders. |
 | `dokan_get_vendor_orders_args`, `dokan_get_vendor_orders`, `dokan_get_vendor_orders_count` | filters | `Manager::all` | Order list query and result. |
 | `dokan_order_status_count` | filter | `Manager::count_orders` | Status buckets. |
+| `dokan_seller_order_counts` | filter | `Manager::count_orders` | Final per-status counts and `total`; runs after the cache, so it may depend on the request. |
 | `dokan_get_customer_orders_by_seller` | filter | `Manager::get_customer_order_ids_by_seller` | Query args. |
 | `dokan_after_deleting_seller_order` | action | `Manager::delete_seller_order` | After sync and refund rows are deleted. |
 | `dokan_get_sellers_by` | filter | `dokan_get_sellers_by()` | Vendor of a line item. |

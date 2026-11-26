@@ -352,7 +352,15 @@ class Manager {
             Cache::set( $cache_key, $counts, $cache_group );
         }
 
-        return $counts;
+        /**
+         * Filter a seller's order counts by status. Runs after the cache, so it may depend on the request.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param object $counts    Order counts keyed by status, plus `total`.
+         * @param int    $seller_id Seller ID.
+         */
+        return apply_filters( 'dokan_seller_order_counts', $counts, $seller_id );
     }
 
     /**
