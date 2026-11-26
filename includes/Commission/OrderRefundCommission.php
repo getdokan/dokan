@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Commission;
 
+use Automattic\WooCommerce\Utilities\NumberUtil;
 use WC_Order;
 use WC_Order_Refund;
 use WeDevs\Dokan\Commission\Model\Commission;
@@ -281,6 +282,7 @@ class OrderRefundCommission {
      * (0 unless the gateway supplies it via `dokan_refund_gateway_fee`).
      *
      * @since 5.0.10
+     * @since DOKAN_SINCE Counts refunds entered as an amount only.
      *
      * @return float
      */
@@ -289,9 +291,43 @@ class OrderRefundCommission {
             return 0;
         }
 
-        $total = $this->get_vendor_net_earning() + $this->get_vendor_tax_refund() + $this->get_vendor_shipping_refund() - $this->get_vendor_gateway_fee_refund();
+        $total = $this->get_vendor_net_earning() + $this->get_vendor_tax_refund() + $this->get_vendor_shipping_refund();
+        $total = $this->spread_amount_only_refunds( $total ) - $this->get_vendor_gateway_fee_refund();
 
         return floatval( $total );
+    }
+
+    /**
+     * Count refunds entered as an amount only in the vendor's share of this refund.
+     *
+     * Such a refund has no lines and is spread over what is left of the order. With one on the
+     * order, the share is what this refund takes off the vendor's earning on the order, so it
+     * is right only while this is the order's latest refund.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param float $itemised_share The vendor's share of this refund's lines.
+     *
+     * @return float
+     */
+    protected function spread_amount_only_refunds( float $itemised_share ): float {
+        // A fresh order, so that its refunds include this one.
+        $order_commission = dokan_get_container()->get( OrderCommission::class );
+        $order_commission->set_order( wc_get_order( $this->get_order()->get_id() ) );
+
+        $share_left = $order_commission->get_share_left_by_amount_only_refunds();
+
+        if ( 1.0 === $share_left ) {
+            return $itemised_share;
+        }
+
+        $order_commission->calculate();
+
+        // What the itemised refunds left of the vendor's earning; the gateway fee is added back, as on the balance debit.
+        $earning           = $order_commission->get_vendor_net_earning() + $order_commission->get_total_vendor_fees() + $order_commission->get_vendor_gateway_fee();
+        $share_left_before = $order_commission->get_share_left_by_amount_only_refunds( $this->refund );
+
+        return NumberUtil::round( $share_left_before * ( $earning + $itemised_share ) - $share_left * $earning, wc_get_price_decimals() );
     }
 
     /**

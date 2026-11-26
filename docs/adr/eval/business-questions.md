@@ -507,26 +507,30 @@ In Lite the calculation runs as soon as the refund is created (see ADR 0049).
 
 **Expected answer:**
 
-No. Dokan works out the Vendor's and admin's shares from the refund's line rows (products, shipping, tax). A refund that has only a total amount and no line rows takes $0 from the Vendor's balance.
+Yes. A refund that has only a total amount and no line rows is spread over what is left of the order: the Vendor gives back the same share of their Earning as the refund is of the order. A full refund by amount takes the whole Earning back.
 
 How the code does it:
 
-- Product lines: `OrderCommission::calculate_for_refund` loops over `$refund->get_items()`, the refunded product lines only, and prorates each one against the original line's Commission (`lite:includes/Commission/OrderCommission.php::calculate_for_refund()`, especially its `$refund->get_items()` loop).
-- Shipping: read only from the refund's shipping rows (`lite:includes/Commission/OrderRefundCommission.php::get_shipping_refund_for()`).
-- Tax: read only from the refund's tax rows (`lite:includes/Commission/OrderRefundCommission.php::get_refunded_tax_totals()`).
-- WooCommerce only creates refund rows for lines that were given a quantity, total or tax (the line-items loop in `wc:includes/wc-order-functions.php::wc_create_refund()`). With no lines filled in, the refund carries just its total (same function).
-- So `get_vendor_total_refund()` = 0 (`lite:includes/Commission/OrderRefundCommission.php::get_vendor_total_refund()`).
-- `RefundHandler::insert_into_balance_table` only writes a `dokan_refund` row when the amount is above 0: `apply_filters( 'dokan_refund_should_insert_into_vendor_balance', $vendor_earning_refund > 0, ... )` (`lite:includes/Order/RefundHandler.php::insert_into_balance_table()`). With 0, no row is written and the Vendor's balance does not change. The admin carries the whole refund.
+- WooCommerce only creates refund rows for lines that were given a quantity, total or tax (the line-items loop in `wc:includes/wc-order-functions.php::wc_create_refund()`). With no lines filled in, the refund carries just its total (same function). A Dokan Pro refund request sends its lines with a 0 total, so its refund has lines of 0; Dokan counts both as a refund without lines (`lite:includes/Commission/OrderCommission.php::is_amount_only_refund()`).
+- `get_vendor_total_refund()` works out the share of the refund's lines (0 here) and passes it to `spread_amount_only_refunds()` (`lite:includes/Commission/OrderRefundCommission.php::get_vendor_total_refund()`, `::spread_amount_only_refunds()`).
+- For a refund without lines the share is refund amount ÷ (order total − itemised refunds) × the Vendor's Earning that the itemised refunds left. `OrderCommission::get_share_left_by_amount_only_refunds()` gives the share of the order such refunds leave (`lite:includes/Commission/OrderCommission.php::get_share_left_by_amount_only_refunds()`).
+- `RefundHandler::insert_into_balance_table` writes the `dokan_refund` credit for that amount (`lite:includes/Order/RefundHandler.php::insert_into_balance_table()`).
+- The order's own figures follow: `get_vendor_earning()`, `get_admin_commission()` and `get_admin_total_earning()` are multiplied by the share left, so `dokan_orders.net_amount` and the Commissions box go down too (`lite:includes/Commission/OrderCommission.php::get_vendor_earning()`).
 
-The same applies when the order status is set to Refunded without an itemised refund. WooCommerce's `wc_order_fully_refunded` (`wc:includes/wc-order-functions.php::wc_order_fully_refunded()`) then creates an automatic refund for whatever is left, with `'line_items' => array()` and no gateway call. Lite also has an older handler, `manage_refunded_for_order`, that would credit the full earning (`lite:includes/Order/Hooks.php::manage_refunded_for_order()`). It does not write a credit on this path.
+Example: order total 110.00, Vendor Earning 100.00. A refund of 55.00 by amount takes 55 ÷ 110 × 100.00 = 50.00 from the Vendor.
 
-Practical guidance: to charge a refund back to the Vendor, enter it against the product lines, plus the shipping and tax lines if those were refunded.
+The same applies when the order status is set to Refunded without an itemised refund. WooCommerce's `wc_order_fully_refunded` (`wc:includes/wc-order-functions.php::wc_order_fully_refunded()`) then creates an automatic refund for whatever is left, with `'line_items' => array()` and no gateway call, and the Vendor gives back what was left of the Earning.
 
-**Code citations:** `lite:includes/Commission/OrderCommission.php::calculate_for_refund()` · `lite:includes/Commission/OrderRefundCommission.php::get_vendor_total_refund()` · `lite:includes/Commission/OrderRefundCommission.php::get_shipping_refund_for()` · `lite:includes/Commission/OrderRefundCommission.php::get_refunded_tax_totals()` · `lite:includes/Order/RefundHandler.php::insert_into_balance_table()` · `wc:includes/wc-order-functions.php::wc_create_refund()` · `wc:includes/wc-order-functions.php::wc_order_fully_refunded()` · `lite:includes/Order/Hooks.php::manage_refunded_for_order()`
+Two limits:
+
+- A refund with lines plus an extra unallocated amount is charged by its lines only; the extra is charged to nobody.
+- Refunds by amount made before DOKAN_SINCE took nothing from the Vendor and are not rebooked.
+
+**Code citations:** `lite:includes/Commission/OrderRefundCommission.php::get_vendor_total_refund()` · `lite:includes/Commission/OrderRefundCommission.php::spread_amount_only_refunds()` · `lite:includes/Commission/OrderCommission.php::get_share_left_by_amount_only_refunds()` · `lite:includes/Commission/OrderCommission.php::get_vendor_earning()` · `lite:includes/Order/RefundHandler.php::insert_into_balance_table()` · `wc:includes/wc-order-functions.php::wc_create_refund()` · `wc:includes/wc-order-functions.php::wc_order_fully_refunded()`
 
 **Answering ADR:** [ADR-0050](../0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md)
 
-**Last eval verdict:** pass (2026-10-22)
+**Last eval verdict:** not run since the rule changed in DOKAN_SINCE
 
 ### 04-refund-Q4
 

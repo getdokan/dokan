@@ -338,7 +338,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float|int
      */
     public function get_vendor_earning(): float {
-        return $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
+        return ( $this->get_vendor_net_earning() + $this->get_total_vendor_fees() ) * $this->get_share_left_by_amount_only_refunds();
     }
 
     /**
@@ -529,7 +529,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
     public function get_admin_commission(): float {
-        return $this->get_admin_net_commission() + $this->get_total_admin_fees();
+        return ( $this->get_admin_net_commission() + $this->get_total_admin_fees() ) * $this->get_share_left_by_amount_only_refunds();
     }
 
     /**
@@ -540,7 +540,63 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
     public function get_admin_total_earning(): float {
-        return parent::get_admin_commission() + $this->get_total_admin_fees();
+        return ( parent::get_admin_commission() + $this->get_total_admin_fees() ) * $this->get_share_left_by_amount_only_refunds();
+    }
+
+    /**
+     * Whether a refund was entered as an amount only.
+     *
+     * Its lines then carry no amount: WooCommerce creates none, and a Dokan Pro refund request creates them at zero.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order_Refund $refund Refund.
+     *
+     * @return bool
+     */
+    protected function is_amount_only_refund( WC_Order_Refund $refund ): bool {
+        foreach ( $refund->get_items( [ 'line_item', 'shipping', 'fee' ] ) as $item ) {
+            if ( (float) $item->get_total() || (float) $item->get_total_tax() ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the share of the order's earnings that amount-only refunds leave.
+     *
+     * A refund entered as an amount only has nothing on its lines, so the line, shipping and tax
+     * refund adjustments miss it. It is spread over what the itemised refunds left of the order total.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order_Refund|null $without A refund to leave out, for the share before that refund.
+     *
+     * @return float 1 when the order has no such refund, 0 when they refund the rest of the order.
+     */
+    public function get_share_left_by_amount_only_refunds( ?WC_Order_Refund $without = null ): float {
+        if ( ! $this->get_should_adjust_refund() ) {
+            return 1.0;
+        }
+
+        $left        = (float) $this->order->get_total();
+        $amount_only = 0.0;
+
+        foreach ( $this->order->get_refunds() as $refund ) {
+            if ( $without && $without->get_id() === $refund->get_id() ) {
+                continue;
+            }
+
+            if ( $this->is_amount_only_refund( $refund ) ) {
+                $amount_only += (float) $refund->get_amount();
+            } else {
+                $left -= (float) $refund->get_amount();
+            }
+        }
+
+        return $left > 0 ? max( 0.0, 1 - $amount_only / $left ) : 1.0;
     }
 
     /**
