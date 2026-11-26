@@ -15,14 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * front end, the editor document and the editor's iframed canvas each need a
  * different set, so they live here rather than in the block registry.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class Assets implements Hookable {
 
     /**
      * Register WordPress hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -45,7 +45,7 @@ class Assets implements Hookable {
      * editor canvas. Lite owns the object so a Dokan block and an extension
      * script cannot end up with two different copies of it.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -65,7 +65,7 @@ class Assets implements Hookable {
      * blocks does not, and enqueuing from the render callbacks would print the
      * stylesheets in the footer, after the markup they style.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -82,7 +82,7 @@ class Assets implements Hookable {
     /**
      * Enqueue the front-end store assets, honouring the same switches as Dokan's own enqueue.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -108,7 +108,7 @@ class Assets implements Hookable {
      * render callbacks enqueue never reach the editor iframe, so the same
      * stylesheets must ride `enqueue_block_assets` for preview parity.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -124,7 +124,7 @@ class Assets implements Hookable {
     /**
      * Load the front-end store styles inside the block editor canvas.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -148,7 +148,7 @@ class Assets implements Hookable {
          * styled by the stylesheet that registered it. Extensions add their
          * handles here so their markup previews the way it looks on the store.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param string[] $handles Registered style handles.
          */
@@ -171,7 +171,7 @@ class Assets implements Hookable {
          * the default palette. Extensions return their front-end CSS here to keep
          * the preview honest.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param string $css Inline CSS.
          */
@@ -188,7 +188,7 @@ class Assets implements Hookable {
      * Server rendered previews are inert HTML — nothing wires up the filter,
      * sort or layout controls the way the front end does.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -201,7 +201,7 @@ class Assets implements Hookable {
          * once the block markup exists. Declare `dokan-blocks-store-listing`
          * as a dependency to be sure the registry is there.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param string[] $handles Registered script handles.
          */
@@ -227,7 +227,7 @@ class Assets implements Hookable {
      * Sort options are filterable and Pro modules add to them, so the inspector
      * has to be told what exists rather than shipping a hardcoded list.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -235,7 +235,7 @@ class Assets implements Hookable {
         /**
          * Listing data handed to the block editor.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param array $data Editor data.
          */
@@ -258,7 +258,7 @@ class Assets implements Hookable {
                  * `filterLabels` attribute under the field's key, which the extension
                  * reads back as it renders the field.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.3.7
                  *
                  * @param array[] $fields Extension filter fields.
                  */
@@ -282,7 +282,7 @@ class Assets implements Hookable {
      * the id-less preview store, which is what extensions check to offer their
      * tabs in the editor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -312,7 +312,7 @@ class Assets implements Hookable {
      * The "Customize this header" control replaces the block with the pattern it
      * renders, which it can only do if it knows which pattern that is.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -334,7 +334,7 @@ class Assets implements Hookable {
     /**
      * Read a registered block's generated asset handles.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param string $block_name Block name.
      * @param string $property   Handle property on the block type.

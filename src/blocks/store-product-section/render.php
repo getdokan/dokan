@@ -11,7 +11,7 @@
  * render every enabled section again. The block exists for merchants who want
  * to place a section explicitly — see the editor notice about the overlap.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

@@ -222,7 +222,7 @@ class Rewrites {
     /**
      * Whether the single store page should render through the block template.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param string $classic_template Classic template the page would otherwise load.
      *
@@ -238,7 +238,7 @@ class Rewrites {
          * Page-builder integrations (e.g. the Elementor module) can return false
          * to keep their own template takeover on block themes.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param bool $use_block_template Defaults to whether a single store block template is available.
          */

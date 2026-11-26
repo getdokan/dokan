@@ -5,7 +5,7 @@
  * See docs/adr/0009-store-header-blocks-emit-fresh-markup.md for why this block
  * does not reuse `templates/store-header.php`.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

@@ -9,7 +9,7 @@
  * Block attributes are client-supplied, so a toggle may only ever *subtract* a
  * field — never reveal one the marketplace or the vendor has hidden.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

@@ -10,7 +10,7 @@
  * Precedence follows the rule the rest of the blocks use: the Appearance
  * setting supplies the default, and the block attribute overrides it locally.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

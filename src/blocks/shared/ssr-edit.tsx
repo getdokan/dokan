@@ -11,7 +11,7 @@ import ServerSideRender from '@wordpress/server-side-render';
  * prints them again on its own wrapper. Text colour, typography (text align) and
  * link colour are kept: they look the same applied twice, and the markup reads them.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @param attributes Block attributes.
  */
@@ -65,7 +65,7 @@ type SSREditProps = {
  * and typography ones the block supports add — to its block.json default, the
  * per-block counterpart of the template's own Reset.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @param root0
  * @param root0.name

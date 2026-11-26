@@ -1354,7 +1354,7 @@ function dokan_get_store_tabs( $store_id ) {
  * Lite only knows its own tabs. Extensions that add a tab register their query
  * var through the `dokan_current_store_tab` filter.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @param int $store_id Store (vendor) id the tabs belong to.
  *
@@ -1386,7 +1386,7 @@ function dokan_get_current_store_tab( $store_id = 0 ) {
      * Pro and third parties resolve their own tabs here — the query vars that
      * mark them are registered outside Lite, so Lite cannot detect them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param string $tab       Tab key, or an empty string outside a store page.
      * @param int    $store_id  Store (vendor) id.

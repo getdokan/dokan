@@ -12,7 +12,7 @@
  *
  * @see     https://docs.woocommerce.com/document/template-structure/
  * @package Dokan/Templates
- * @version DOKAN_SINCE
+ * @version 5.3.7
  *
  * @var array  $stores             Store query result.
  * @var int    $number_of_store    Total stores matching the current filters.

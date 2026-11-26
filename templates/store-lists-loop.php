@@ -16,7 +16,7 @@
  *
  * @see     https://docs.woocommerce.com/document/template-structure/
  * @package Dokan/Templates
- * @version DOKAN_SINCE
+ * @version 5.3.7
  *
  * @var array $sellers Seller query result.
  * @var int   $per_row Cards per row.

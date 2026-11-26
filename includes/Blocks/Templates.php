@@ -16,21 +16,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  * slug there lets `locate_block_template()` pick it up with the correct
  * precedence: theme-shipped file > user Site Editor edits > this registration.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class Templates implements Hookable {
 
     /**
      * Template slug.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      */
     public const TEMPLATE_SLUG = 'single-store';
 
     /**
      * Register WordPress hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -42,7 +42,7 @@ class Templates implements Hookable {
     /**
      * Register the single store block template.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -75,7 +75,7 @@ class Templates implements Hookable {
      * handing the request to the block canvas would fall through to the index
      * template and show the blog instead of the store.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return bool
      */
@@ -110,7 +110,7 @@ class Templates implements Hookable {
     /**
      * Put the single store template first in line on store page requests.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param array $templates Template hierarchy candidates.
      *

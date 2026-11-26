@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.3.6\n"
+"Project-Id-Version: Dokan 5.3.7\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-23T09:54:00+00:00\n"
+"POT-Creation-Date: 2026-11-26T09:04:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -19,6 +19,7 @@ msgstr ""
 #: includes/Admin/AdminBar.php:46
 #: includes/Admin/Menu.php:52
 #: includes/Admin/Menu.php:53
+#: includes/Blocks/Manager.php:181
 #: includes/Customizer.php:56
 #: includes/Privacy.php:30
 #: assets/js/vendor-dashboard/layout/index.js:2
@@ -41,6 +42,101 @@ msgstr ""
 msgid "Dokan Inc."
 msgstr ""
 
+#: assets/blocks/store-banner/render.php:69
+msgid "Store banner"
+msgstr ""
+
+#: assets/blocks/store-category-menu/render.php:60
+msgid "Store Categories"
+msgstr ""
+
+#: assets/blocks/store-contact-form/render.php:95
+msgid "Contact form is off in Dokan settings. This block won't show."
+msgstr ""
+
+#: assets/blocks/store-contact-form/render.php:112
+#: includes/template-tags.php:585
+#: includes/Widgets/StoreContactForm.php:40
+#: includes/Widgets/StoreContactForm.php:122
+msgid "Contact Vendor"
+msgstr ""
+
+#: assets/blocks/store-info/render.php:176
+#: templates/store-header.php:27
+#: assets/blocks/store-info/index.js:1
+msgid "Store Open"
+msgstr ""
+
+#: assets/blocks/store-info/render.php:177
+#: templates/store-header.php:28
+#: assets/blocks/store-info/index.js:1
+msgid "Store Closed"
+msgstr ""
+
+#: assets/blocks/store-info/render.php:191
+#: templates/store-header.php:135
+msgid "Weekly Store Timing"
+msgstr ""
+
+#: assets/blocks/store-info/render.php:192
+#: templates/store-header.php:136
+msgid "CLOSED"
+msgstr ""
+
+#: assets/blocks/store-location-map/render.php:72
+#: includes/template-tags.php:559
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:238
+#: includes/Widgets/StoreLocation.php:41
+#: includes/Widgets/StoreLocation.php:102
+msgid "Store Location"
+msgstr ""
+
+#: assets/blocks/store-location-map/render.php:87
+msgid "Map is off or has no API key in Dokan settings. This block won't show."
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/render.php:63
+#: includes/template-tags.php:572
+#: includes/Widgets/StoreOpenClose.php:39
+#: includes/Widgets/StoreOpenClose.php:112
+msgid "Store Time"
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/render.php:76
+msgid "Opening hours are off in Dokan settings. This block won't show."
+msgstr ""
+
+#: assets/blocks/store-product-section/render.php:77
+msgid "This section isn't available. Its extension may be off."
+msgstr ""
+
+#: assets/blocks/store-product-section/render.php:92
+msgid "This section is hidden in Appearance settings. It won't show."
+msgstr ""
+
+#: assets/blocks/store-product-section/render.php:112
+msgid "This store has no products in this section yet."
+msgstr ""
+
+#: assets/blocks/store-tab-content/render.php:102
+#: templates/store-toc.php:42
+msgid "Terms And Conditions"
+msgstr ""
+
+#: assets/blocks/store-tab-content/render.php:249
+msgid "Product Pagination"
+msgstr ""
+
+#: assets/blocks/store-tab-content/render.php:272
+msgid "Products show here once the store has some."
+msgstr ""
+
+#: assets/blocks/store-tab-content/render.php:273
+#: templates/store.php:70
+#: assets/blocks/store-tab-content/index.js:1
+msgid "No products were found of this vendor!"
+msgstr ""
+
 #. translators: 1: Required PHP Version 2: Running php version
 #: dokan-class.php:166
 msgid "The Minimum PHP Version Requirement for <b>Dokan</b> is %1$s. You are Running PHP %2$s"
@@ -57,6 +153,20 @@ msgstr ""
 #: includes/Dashboard/Templates/Settings.php:62
 #: includes/Dashboard/Templates/Settings.php:69
 #: includes/functions-dashboard-navigation.php:75
+#: assets/blocks/store-avatar/index.js:1
+#: assets/blocks/store-banner/index.js:1
+#: assets/blocks/store-category-menu/index.js:1
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-filter-bar/index.js:5
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-location-map/index.js:1
+#: assets/blocks/store-name/index.js:1
+#: assets/blocks/store-open-close-hours/index.js:1
+#: assets/blocks/store-product-section/index.js:1
+#: assets/blocks/store-sidebar/index.js:1
+#: assets/blocks/store-social/index.js:1
+#: assets/blocks/store-tab-content/index.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Settings"
@@ -270,7 +380,7 @@ msgstr ""
 #: includes/Admin/Settings/Schema/SettingsSchema.php:801
 #: includes/Admin/SetupWizard.php:287
 #: includes/functions-dashboard-navigation.php:66
-#: includes/functions.php:2917
+#: includes/functions.php:2969
 #: templates/withdraw/header.php:11
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
@@ -2230,7 +2340,7 @@ msgstr ""
 
 #: includes/Admin/Settings.php:1012
 #: includes/Admin/Settings/Schema/SettingsSchema.php:2120
-#: includes/functions.php:3385
+#: includes/functions.php:3445
 msgid "Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]"
 msgstr ""
 
@@ -2305,6 +2415,8 @@ msgstr ""
 #: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:125
 #: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:131
 #: includes/Vendor/SetupWizard.php:708
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-tabs/index.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Store"
@@ -2483,14 +2595,14 @@ msgid "Select a commission type for your marketplace"
 msgstr ""
 
 #: includes/Admin/Settings/Schema/SettingsSchema.php:665
-#: includes/functions.php:3410
+#: includes/functions.php:3470
 #: templates/products/dokan-products-edit-bulk-commission.php:28
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Fixed"
 msgstr ""
 
 #: includes/Admin/Settings/Schema/SettingsSchema.php:670
-#: includes/functions.php:3411
+#: includes/functions.php:3471
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Category Based"
 msgstr ""
@@ -2931,8 +3043,8 @@ msgid "Yes, Delete"
 msgstr ""
 
 #: includes/Admin/Settings/Schema/SettingsSchema.php:2187
-#: includes/Assets.php:1086
-#: includes/Assets.php:1372
+#: includes/Assets.php:1087
+#: includes/Assets.php:1373
 #: includes/Product/functions.php:310
 #: templates/my-orders.php:95
 #: templates/orders/details.php:240
@@ -2940,12 +3052,13 @@ msgstr ""
 #: templates/products/new-product.php:232
 #: templates/products/tmpl-add-product-popup.php:67
 #: templates/settings/bank-payment-method-settings.php:203
-#: templates/store-lists-filter.php:83
+#: templates/store-lists-filter.php:148
 #: templates/withdraw/pending-request-listing-dashboard.php:24
 #: templates/withdraw/pending-request-listing-dashboard.php:46
 #: templates/withdraw/pending-request-listing.php:19
 #: templates/withdraw/pending-request-listing.php:39
 #: templates/withdraw/pending-request-listing.php:63
+#: assets/blocks/store-filter-bar/index.js:5
 #: assets/js/components.js:2
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/dokan-admin-notice.js:2
@@ -3181,7 +3294,7 @@ msgid "Insert Cloudflare Turnstile secret key."
 msgstr ""
 
 #: includes/Admin/Settings/Schema/SettingsSchema.php:2892
-#: includes/functions.php:2918
+#: includes/functions.php:2970
 #: templates/emails/vendor-completed-order.php:54
 #: templates/emails/vendor-new-order.php:53
 #: assets/js/components.js:2
@@ -3491,7 +3604,7 @@ msgstr[1] ""
 
 #: includes/Admin/UserProfile.php:41
 #: includes/Ajax.php:194
-#: includes/Assets.php:867
+#: includes/Assets.php:868
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -3499,7 +3612,7 @@ msgid "Available"
 msgstr ""
 
 #: includes/Admin/UserProfile.php:42
-#: includes/Assets.php:868
+#: includes/Assets.php:869
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -3554,6 +3667,7 @@ msgstr ""
 
 #: includes/Admin/UserProfile.php:140
 #: includes/REST/ReverseWithdrawalController.php:722
+#: assets/blocks/store-list/index.js:1
 msgid "Store name"
 msgstr ""
 
@@ -3679,6 +3793,7 @@ msgid "Vendor ID"
 msgstr ""
 
 #: includes/Admin/WithdrawLogExporter.php:112
+#: includes/Blocks/PreviewVendor.php:42
 #: includes/Privacy.php:178
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:117
 #: templates/settings/store-form.php:113
@@ -4005,7 +4120,7 @@ msgstr ""
 msgid "Are you sure ?"
 msgstr ""
 
-#: includes/Assets.php:870
+#: includes/Assets.php:871
 #: includes/Product/functions.php:504
 #: templates/products/products-listing.php:109
 #: assets/js/components.js:2
@@ -4017,55 +4132,55 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: includes/Assets.php:871
+#: includes/Assets.php:872
 #: assets/js/frontend.js:2
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: includes/Assets.php:885
+#: includes/Assets.php:886
 msgid "Are you sure you want to revoke access to this download?"
 msgstr ""
 
-#: includes/Assets.php:886
+#: includes/Assets.php:887
 msgid "Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved."
-msgstr ""
-
-#: includes/Assets.php:1044
-msgctxt "time constant"
-msgid "am"
 msgstr ""
 
 #: includes/Assets.php:1045
 msgctxt "time constant"
-msgid "pm"
+msgid "am"
 msgstr ""
 
 #: includes/Assets.php:1046
 msgctxt "time constant"
-msgid "AM"
+msgid "pm"
 msgstr ""
 
 #: includes/Assets.php:1047
 msgctxt "time constant"
-msgid "PM"
+msgid "AM"
 msgstr ""
 
 #: includes/Assets.php:1048
 msgctxt "time constant"
-msgid "hr"
+msgid "PM"
 msgstr ""
 
 #: includes/Assets.php:1049
 msgctxt "time constant"
-msgid "hrs"
+msgid "hr"
 msgstr ""
 
 #: includes/Assets.php:1050
 msgctxt "time constant"
+msgid "hrs"
+msgstr ""
+
+#: includes/Assets.php:1051
+msgctxt "time constant"
 msgid "mins"
 msgstr ""
 
-#: includes/Assets.php:1053
+#: includes/Assets.php:1054
 #: includes/ProductEditor/FormSchema.php:650
 #: templates/products/edit-product-single.php:382
 #: templates/products/new-product.php:252
@@ -4074,7 +4189,7 @@ msgstr ""
 msgid "To"
 msgstr ""
 
-#: includes/Assets.php:1055
+#: includes/Assets.php:1056
 #: includes/ProductEditor/FormSchema.php:639
 #: templates/products/edit-product-single.php:375
 #: templates/products/new-product.php:245
@@ -4082,25 +4197,26 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: includes/Assets.php:1056
+#: includes/Assets.php:1057
 msgid " - "
 msgstr ""
 
-#: includes/Assets.php:1057
+#: includes/Assets.php:1058
 msgid "W"
 msgstr ""
 
-#: includes/Assets.php:1058
+#: includes/Assets.php:1059
 #: templates/orders/listing.php:20
 #: templates/products/products-listing.php:108
-#: templates/store-lists-filter.php:84
+#: templates/store-lists-filter.php:149
+#: assets/blocks/store-filter-bar/index.js:5
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
 msgid "Apply"
 msgstr ""
 
-#: includes/Assets.php:1059
+#: includes/Assets.php:1060
 #: assets/js/components.js:2
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
@@ -4109,89 +4225,89 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
-#: includes/Assets.php:1060
+#: includes/Assets.php:1061
 #: includes/Withdraw/Hooks.php:88
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Custom"
 msgstr ""
 
-#: includes/Assets.php:1062
+#: includes/Assets.php:1063
 msgid "Su"
 msgstr ""
 
-#: includes/Assets.php:1063
+#: includes/Assets.php:1064
 msgid "Mo"
 msgstr ""
 
-#: includes/Assets.php:1064
+#: includes/Assets.php:1065
 msgid "Tu"
 msgstr ""
 
-#: includes/Assets.php:1065
+#: includes/Assets.php:1066
 msgid "We"
 msgstr ""
 
-#: includes/Assets.php:1066
+#: includes/Assets.php:1067
 msgid "Th"
 msgstr ""
 
-#: includes/Assets.php:1067
+#: includes/Assets.php:1068
 msgid "Fr"
 msgstr ""
 
-#: includes/Assets.php:1068
+#: includes/Assets.php:1069
 msgid "Sa"
 msgstr ""
 
-#: includes/Assets.php:1071
+#: includes/Assets.php:1072
 msgid "January"
 msgstr ""
 
-#: includes/Assets.php:1072
+#: includes/Assets.php:1073
 msgid "February"
 msgstr ""
 
-#: includes/Assets.php:1073
+#: includes/Assets.php:1074
 msgid "March"
 msgstr ""
 
-#: includes/Assets.php:1074
+#: includes/Assets.php:1075
 msgid "April"
 msgstr ""
 
-#: includes/Assets.php:1075
+#: includes/Assets.php:1076
 msgid "May"
 msgstr ""
 
-#: includes/Assets.php:1076
+#: includes/Assets.php:1077
 msgid "June"
 msgstr ""
 
-#: includes/Assets.php:1077
+#: includes/Assets.php:1078
 msgid "July"
 msgstr ""
 
-#: includes/Assets.php:1078
+#: includes/Assets.php:1079
 msgid "August"
 msgstr ""
 
-#: includes/Assets.php:1079
+#: includes/Assets.php:1080
 msgid "September"
 msgstr ""
 
-#: includes/Assets.php:1080
+#: includes/Assets.php:1081
 msgid "October"
 msgstr ""
 
-#: includes/Assets.php:1081
+#: includes/Assets.php:1082
 msgid "November"
 msgstr ""
 
-#: includes/Assets.php:1082
+#: includes/Assets.php:1083
 msgid "December"
 msgstr ""
 
-#: includes/Assets.php:1087
+#: includes/Assets.php:1088
 #: includes/Product/functions.php:321
 #: templates/orders/details.php:391
 #: templates/settings/store-form.php:39
@@ -4200,12 +4316,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/Assets.php:1088
-#: includes/Assets.php:1371
+#: includes/Assets.php:1089
+#: includes/Assets.php:1372
 msgid "OK"
 msgstr ""
 
-#: includes/Assets.php:1089
+#: includes/Assets.php:1090
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:283
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:430
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:446
@@ -4216,321 +4332,321 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: includes/Assets.php:1090
+#: includes/Assets.php:1091
 msgid "Close this dialog"
 msgstr ""
 
-#: includes/Assets.php:1118
+#: includes/Assets.php:1119
 msgid "This field is required"
 msgstr ""
 
-#: includes/Assets.php:1119
+#: includes/Assets.php:1120
 msgid "Please fix this field."
 msgstr ""
 
-#: includes/Assets.php:1120
+#: includes/Assets.php:1121
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: includes/Assets.php:1121
+#: includes/Assets.php:1122
 msgid "Please enter a valid URL."
 msgstr ""
 
-#: includes/Assets.php:1122
+#: includes/Assets.php:1123
 msgid "Please enter a valid date."
 msgstr ""
 
-#: includes/Assets.php:1123
+#: includes/Assets.php:1124
 msgid "Please enter a valid date (ISO)."
 msgstr ""
 
-#: includes/Assets.php:1124
+#: includes/Assets.php:1125
 #: includes/REST/AdminSettingsController.php:380
 msgid "Please enter a valid number."
 msgstr ""
 
-#: includes/Assets.php:1125
+#: includes/Assets.php:1126
 msgid "Please enter only digits."
 msgstr ""
 
-#: includes/Assets.php:1126
+#: includes/Assets.php:1127
 msgid "Please enter a valid credit card number."
 msgstr ""
 
-#: includes/Assets.php:1127
+#: includes/Assets.php:1128
 msgid "Please enter the same value again."
 msgstr ""
 
-#: includes/Assets.php:1128
+#: includes/Assets.php:1129
 msgid "Please enter no more than {0} characters."
 msgstr ""
 
-#: includes/Assets.php:1129
+#: includes/Assets.php:1130
 msgid "Please enter at least {0} characters."
 msgstr ""
 
-#: includes/Assets.php:1130
+#: includes/Assets.php:1131
 msgid "Please enter a value between {0} and {1} characters long."
 msgstr ""
 
-#: includes/Assets.php:1131
+#: includes/Assets.php:1132
 msgid "Please enter a value between {0} and {1}."
 msgstr ""
 
-#: includes/Assets.php:1132
+#: includes/Assets.php:1133
 msgid "Please enter a value less than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:1133
+#: includes/Assets.php:1134
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:1295
+#: includes/Assets.php:1296
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/Assets.php:1296
+#: includes/Assets.php:1297
 msgid "Choose a file"
 msgstr ""
 
-#: includes/Assets.php:1297
+#: includes/Assets.php:1298
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/Assets.php:1298
+#: includes/Assets.php:1299
 msgid "Set featured image"
 msgstr ""
 
-#: includes/Assets.php:1299
+#: includes/Assets.php:1300
 #: includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/Assets.php:1300
+#: includes/Assets.php:1301
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/Assets.php:1301
+#: includes/Assets.php:1302
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/Assets.php:1302
+#: includes/Assets.php:1303
 msgid "Warning! This product will not have any variations if this option is not checked."
 msgstr ""
 
-#: includes/Assets.php:1303
+#: includes/Assets.php:1304
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/Assets.php:1304
+#: includes/Assets.php:1305
 msgid "Remove this attribute?"
 msgstr ""
 
 #. translators: %d: max linked variation.
-#: includes/Assets.php:1313
+#: includes/Assets.php:1314
 msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
 msgstr ""
 
-#: includes/Assets.php:1314
+#: includes/Assets.php:1315
 msgid "Enter a value"
 msgstr ""
 
-#: includes/Assets.php:1315
+#: includes/Assets.php:1316
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/Assets.php:1316
+#: includes/Assets.php:1317
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/Assets.php:1317
+#: includes/Assets.php:1318
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/Assets.php:1318
+#: includes/Assets.php:1319
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/Assets.php:1319
+#: includes/Assets.php:1320
 msgid "Choose an image"
 msgstr ""
 
-#: includes/Assets.php:1320
+#: includes/Assets.php:1321
 msgid "Set variation image"
 msgstr ""
 
-#: includes/Assets.php:1321
+#: includes/Assets.php:1322
 msgid "variation added"
 msgstr ""
 
-#: includes/Assets.php:1322
+#: includes/Assets.php:1323
 msgid "variations added"
 msgstr ""
 
-#: includes/Assets.php:1323
+#: includes/Assets.php:1324
 msgid "No variations added"
 msgstr ""
 
-#: includes/Assets.php:1324
+#: includes/Assets.php:1325
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/Assets.php:1325
+#: includes/Assets.php:1326
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:1326
+#: includes/Assets.php:1327
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:1327
+#: includes/Assets.php:1328
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/Assets.php:1328
+#: includes/Assets.php:1329
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/Assets.php:1329
+#: includes/Assets.php:1330
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/Assets.php:1330
+#: includes/Assets.php:1331
 msgid "No Result Found"
 msgstr ""
 
-#: includes/Assets.php:1331
+#: includes/Assets.php:1332
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
 #. translators: %s: decimal
-#: includes/Assets.php:1333
-#: includes/Assets.php:1525
+#: includes/Assets.php:1334
+#: includes/Assets.php:1526
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
 #. translators: %s: price decimal separator
-#: includes/Assets.php:1335
-#: includes/Assets.php:1527
-msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
-msgstr ""
-
 #: includes/Assets.php:1336
 #: includes/Assets.php:1528
-msgid "Please enter in country code with two capital letters."
+msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
 msgstr ""
 
 #: includes/Assets.php:1337
 #: includes/Assets.php:1529
-msgid "Please enter in a value less than the regular price."
+msgid "Please enter in country code with two capital letters."
 msgstr ""
 
 #: includes/Assets.php:1338
 #: includes/Assets.php:1530
-msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
+msgid "Please enter in a value less than the regular price."
 msgstr ""
 
 #: includes/Assets.php:1339
 #: includes/Assets.php:1531
-msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
+msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
 msgstr ""
 
-#: includes/Assets.php:1349
-#: assets/js/dokan-admin-dashboard.js:2
-#: assets/js/frontend.js:2
-msgid "Select and Crop"
+#: includes/Assets.php:1340
+#: includes/Assets.php:1532
+msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
 msgstr ""
 
 #: includes/Assets.php:1350
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
-msgid "Choose Image"
+msgid "Select and Crop"
 msgstr ""
 
 #: includes/Assets.php:1351
-msgid "Product title is required"
+#: assets/js/dokan-admin-dashboard.js:2
+#: assets/js/frontend.js:2
+msgid "Choose Image"
 msgstr ""
 
 #: includes/Assets.php:1352
-msgid "Product category is required"
+msgid "Product title is required"
 msgstr ""
 
 #: includes/Assets.php:1353
+msgid "Product category is required"
+msgstr ""
+
+#: includes/Assets.php:1354
 msgid "Product created successfully"
 msgstr ""
 
-#: includes/Assets.php:1358
+#: includes/Assets.php:1359
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/Assets.php:1359
+#: includes/Assets.php:1360
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/Assets.php:1360
+#: includes/Assets.php:1361
 msgid "No matches found"
 msgstr ""
 
-#: includes/Assets.php:1361
+#: includes/Assets.php:1362
 msgid "Loading failed"
 msgstr ""
 
-#: includes/Assets.php:1362
+#: includes/Assets.php:1363
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/Assets.php:1363
+#: includes/Assets.php:1364
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/Assets.php:1364
+#: includes/Assets.php:1365
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/Assets.php:1365
+#: includes/Assets.php:1366
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/Assets.php:1366
+#: includes/Assets.php:1367
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/Assets.php:1367
+#: includes/Assets.php:1368
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/Assets.php:1368
+#: includes/Assets.php:1369
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1369
+#: includes/Assets.php:1370
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1370
+#: includes/Assets.php:1371
 msgid "Calculating"
 msgstr ""
 
-#: includes/Assets.php:1373
+#: includes/Assets.php:1374
 msgid "Attribute Name"
 msgstr ""
 
-#: includes/Assets.php:1375
+#: includes/Assets.php:1376
 msgid "Are you sure? You have uploaded banner but didn't click the Update Settings button!"
 msgstr ""
 
-#: includes/Assets.php:1376
+#: includes/Assets.php:1377
 #: templates/settings/header.php:20
 #: templates/settings/payment-manage.php:48
 #: templates/settings/store-form.php:268
 msgid "Update Settings"
 msgstr ""
 
-#: includes/Assets.php:1378
+#: includes/Assets.php:1379
 msgid "Please enter 3 or more characters"
 msgstr ""
 
-#: includes/Assets.php:1576
+#: includes/Assets.php:1577
 #: assets/js/dashboard-charts.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
@@ -4544,6 +4660,46 @@ msgstr ""
 
 #: includes/BackgroundProcess/Manager.php:74
 msgid "Dokan variable products author IDs regenerated successfully!"
+msgstr ""
+
+#: includes/Blocks/Patterns.php:72
+msgid "Dokan Single Store"
+msgstr ""
+
+#: includes/Blocks/Patterns.php:73
+msgid "Dokan Store Listing"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:45
+msgid "New York, United States (US)"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:266
+msgid "Clothing"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:267
+msgid "Men"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:268
+msgid "Women"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:269
+msgid "Electronics"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:270
+msgid "Home & Kitchen"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:271
+msgid "Books"
+msgstr ""
+
+#: includes/Blocks/PreviewVendor.php:316
+msgid "The vendor's terms and conditions show here."
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:30
@@ -4584,6 +4740,14 @@ msgstr ""
 #: templates/products/new-product.php:273
 #: templates/products/tmpl-add-product-popup.php:18
 msgid "Select product tags"
+msgstr ""
+
+#: includes/Blocks/Templates.php:63
+msgid "Single Store"
+msgstr ""
+
+#: includes/Blocks/Templates.php:64
+msgid "A store page with header and products."
 msgstr ""
 
 #: includes/Captcha/Manager.php:218
@@ -5629,6 +5793,7 @@ msgstr ""
 #: includes/functions-dashboard-navigation.php:49
 #: includes/functions.php:1334
 #: templates/dashboard/products-widget.php:22
+#: assets/blocks/store-tab-content/index.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
@@ -5653,7 +5818,8 @@ msgstr ""
 
 #: includes/functions-dashboard-navigation.php:346
 #: templates/settings/header.php:14
-#: templates/store-lists-loop.php:107
+#: templates/store-lists-loop.php:54
+#: assets/blocks/store-list/index.js:1
 #: assets/js/components.js:2
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vendor-dashboard/layout/index.js:2
@@ -5743,114 +5909,114 @@ msgid "Terms and Conditions"
 msgstr ""
 
 #. translators: 1) bank account name
-#: includes/functions.php:1378
+#: includes/functions.php:1430
 #: assets/js/vue-admin.js:2
 msgid "Account Name: %s"
 msgstr ""
 
 #. translators: 1) bank account number
-#: includes/functions.php:1383
+#: includes/functions.php:1435
 #: assets/js/vue-admin.js:2
 msgid "Account Number: %s"
 msgstr ""
 
 #. translators: 1) bank name
-#: includes/functions.php:1388
+#: includes/functions.php:1440
 #: assets/js/vue-admin.js:2
 msgid "Bank Name: %s"
 msgstr ""
 
 #. translators: 1)  bank address
-#: includes/functions.php:1393
+#: includes/functions.php:1445
 msgid "Address: %s"
 msgstr ""
 
 #. translators: 1) bank routing number
-#: includes/functions.php:1398
+#: includes/functions.php:1450
 #: assets/js/vue-admin.js:2
 msgid "Routing Number: %s"
 msgstr ""
 
 #. translators: 1) bank iban
-#: includes/functions.php:1403
+#: includes/functions.php:1455
 #: assets/js/vue-admin.js:2
 msgid "IBAN: %s"
 msgstr ""
 
 #. translators: 1) bank swift
-#: includes/functions.php:1408
+#: includes/functions.php:1460
 msgid "SWIFT: %s"
 msgstr ""
 
-#: includes/functions.php:1770
+#: includes/functions.php:1822
 msgid "Date is not valid"
 msgstr ""
 
-#: includes/functions.php:2142
+#: includes/functions.php:2194
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:2146
-#: includes/functions.php:2170
+#: includes/functions.php:2198
+#: includes/functions.php:2222
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:2166
+#: includes/functions.php:2218
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:2189
+#: includes/functions.php:2241
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:2190
+#: includes/functions.php:2242
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:2191
+#: includes/functions.php:2243
 msgid "1-2 business days"
 msgstr ""
 
-#: includes/functions.php:2192
+#: includes/functions.php:2244
 msgid "1-3 business days"
 msgstr ""
 
-#: includes/functions.php:2193
+#: includes/functions.php:2245
 msgid "3-5 business days"
 msgstr ""
 
-#: includes/functions.php:2194
+#: includes/functions.php:2246
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:2195
+#: includes/functions.php:2247
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:2196
+#: includes/functions.php:2248
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:2197
+#: includes/functions.php:2249
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:2198
+#: includes/functions.php:2250
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:2298
+#: includes/functions.php:2350
 #: assets/js/frontend.js:2
 msgid "All dates"
 msgstr ""
 
 #. translators: 1: month name, 2: 4-digit year
-#: includes/functions.php:2313
+#: includes/functions.php:2365
 #: includes/REST/ProductControllerV2.php:236
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:2328
+#: includes/functions.php:2380
 #: includes/ProductEditor/FormSchema.php:209
 #: includes/REST/ProductControllerV2.php:274
 #: templates/products/edit-product-single.php:272
@@ -5861,243 +6027,243 @@ msgstr ""
 msgid "Simple"
 msgstr ""
 
-#: includes/functions.php:2413
+#: includes/functions.php:2465
 #: includes/Privacy.php:201
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Facebook"
 msgstr ""
 
-#: includes/functions.php:2417
+#: includes/functions.php:2469
 #: includes/Privacy.php:202
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "X"
 msgstr ""
 
-#: includes/functions.php:2421
+#: includes/functions.php:2473
 #: includes/Privacy.php:203
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Pinterest"
 msgstr ""
 
-#: includes/functions.php:2425
+#: includes/functions.php:2477
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:2429
+#: includes/functions.php:2481
 #: includes/Privacy.php:205
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Youtube"
 msgstr ""
 
-#: includes/functions.php:2433
+#: includes/functions.php:2485
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "TikTok"
 msgstr ""
 
-#: includes/functions.php:2437
+#: includes/functions.php:2489
 #: includes/Privacy.php:206
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Instagram"
 msgstr ""
 
-#: includes/functions.php:2441
+#: includes/functions.php:2493
 #: includes/Privacy.php:207
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Flickr"
 msgstr ""
 
-#: includes/functions.php:2445
+#: includes/functions.php:2497
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Threads"
 msgstr ""
 
-#: includes/functions.php:2709
+#: includes/functions.php:2761
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/functions.php:2838
+#: includes/functions.php:2890
 msgid "View sales overview"
 msgstr ""
 
-#: includes/functions.php:2839
+#: includes/functions.php:2891
 msgid "View sales report chart"
 msgstr ""
 
-#: includes/functions.php:2840
+#: includes/functions.php:2892
 msgid "View announcement"
 msgstr ""
 
-#: includes/functions.php:2841
+#: includes/functions.php:2893
 msgid "View order report"
 msgstr ""
 
-#: includes/functions.php:2842
+#: includes/functions.php:2894
 msgid "View review report"
 msgstr ""
 
-#: includes/functions.php:2843
+#: includes/functions.php:2895
 msgid "View product status report"
 msgstr ""
 
-#: includes/functions.php:2846
+#: includes/functions.php:2898
 msgid "View overview report"
 msgstr ""
 
-#: includes/functions.php:2847
+#: includes/functions.php:2899
 msgid "View daily sales report"
 msgstr ""
 
-#: includes/functions.php:2848
+#: includes/functions.php:2900
 msgid "View top selling report"
 msgstr ""
 
-#: includes/functions.php:2849
+#: includes/functions.php:2901
 msgid "View top earning report"
 msgstr ""
 
-#: includes/functions.php:2850
+#: includes/functions.php:2902
 msgid "View statement report"
 msgstr ""
 
-#: includes/functions.php:2853
+#: includes/functions.php:2905
 msgid "View order"
 msgstr ""
 
-#: includes/functions.php:2854
+#: includes/functions.php:2906
 msgid "Manage order"
 msgstr ""
 
-#: includes/functions.php:2855
+#: includes/functions.php:2907
 msgid "Manage order note"
 msgstr ""
 
-#: includes/functions.php:2856
+#: includes/functions.php:2908
 msgid "Manage refund"
 msgstr ""
 
-#: includes/functions.php:2857
+#: includes/functions.php:2909
 msgid "Export order"
 msgstr ""
 
-#: includes/functions.php:2860
+#: includes/functions.php:2912
 msgid "Add coupon"
 msgstr ""
 
-#: includes/functions.php:2861
+#: includes/functions.php:2913
 msgid "Edit coupon"
 msgstr ""
 
-#: includes/functions.php:2862
+#: includes/functions.php:2914
 msgid "Delete coupon"
 msgstr ""
 
-#: includes/functions.php:2865
+#: includes/functions.php:2917
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2866
+#: includes/functions.php:2918
 msgid "Manage reviews"
 msgstr ""
 
-#: includes/functions.php:2870
+#: includes/functions.php:2922
 msgid "Manage withdraw"
 msgstr ""
 
-#: includes/functions.php:2873
+#: includes/functions.php:2925
 msgid "Add product"
 msgstr ""
 
-#: includes/functions.php:2874
+#: includes/functions.php:2926
 msgid "Edit product"
 msgstr ""
 
-#: includes/functions.php:2875
+#: includes/functions.php:2927
 msgid "Delete product"
 msgstr ""
 
-#: includes/functions.php:2876
+#: includes/functions.php:2928
 msgid "View product"
 msgstr ""
 
-#: includes/functions.php:2877
+#: includes/functions.php:2929
 msgid "Duplicate product"
 msgstr ""
 
-#: includes/functions.php:2878
+#: includes/functions.php:2930
 msgid "Import product"
 msgstr ""
 
-#: includes/functions.php:2879
+#: includes/functions.php:2931
 msgid "Export product"
 msgstr ""
 
-#: includes/functions.php:2882
+#: includes/functions.php:2934
 msgid "View overview menu"
 msgstr ""
 
-#: includes/functions.php:2883
+#: includes/functions.php:2935
 msgid "View product menu"
 msgstr ""
 
-#: includes/functions.php:2884
+#: includes/functions.php:2936
 msgid "View order menu"
 msgstr ""
 
-#: includes/functions.php:2885
+#: includes/functions.php:2937
 msgid "View coupon menu"
 msgstr ""
 
-#: includes/functions.php:2886
+#: includes/functions.php:2938
 msgid "View report menu"
 msgstr ""
 
-#: includes/functions.php:2887
+#: includes/functions.php:2939
 msgid "View review menu"
 msgstr ""
 
-#: includes/functions.php:2888
+#: includes/functions.php:2940
 msgid "View withdraw menu"
 msgstr ""
 
-#: includes/functions.php:2889
+#: includes/functions.php:2941
 msgid "View store settings menu"
 msgstr ""
 
-#: includes/functions.php:2890
+#: includes/functions.php:2942
 msgid "View payment settings menu"
 msgstr ""
 
-#: includes/functions.php:2891
+#: includes/functions.php:2943
 msgid "View shipping settings menu"
 msgstr ""
 
-#: includes/functions.php:2892
+#: includes/functions.php:2944
 msgid "View social settings menu"
 msgstr ""
 
-#: includes/functions.php:2893
+#: includes/functions.php:2945
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/functions.php:2912
+#: includes/functions.php:2964
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vendor-dashboard/reports/index.js:2
 #: assets/js/vue-admin.js:2
 msgid "Overview"
 msgstr ""
 
-#: includes/functions.php:2913
+#: includes/functions.php:2965
 msgid "Report"
 msgstr ""
 
-#: includes/functions.php:2914
+#: includes/functions.php:2966
 #: templates/dashboard/big-counter-widget.php:29
 #: templates/my-orders.php:25
 #: templates/orders/details.php:19
@@ -6112,93 +6278,93 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: includes/functions.php:2915
+#: includes/functions.php:2967
 #: assets/js/components.js:2
 msgid "Coupon"
 msgstr ""
 
-#: includes/functions.php:2916
+#: includes/functions.php:2968
 msgid "Review"
 msgstr ""
 
-#: includes/functions.php:2919
+#: includes/functions.php:2971
 msgid "Menu"
 msgstr ""
 
-#: includes/functions.php:3048
+#: includes/functions.php:3100
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:350
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:3049
+#: includes/functions.php:3101
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:302
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:3050
+#: includes/functions.php:3102
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:310
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:3051
+#: includes/functions.php:3103
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:318
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:3052
+#: includes/functions.php:3104
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:326
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:3053
+#: includes/functions.php:3105
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:334
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:3054
+#: includes/functions.php:3106
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:342
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:3059
+#: includes/functions.php:3111
 msgid "Sun"
 msgstr ""
 
-#: includes/functions.php:3060
+#: includes/functions.php:3112
 msgid "Mon"
 msgstr ""
 
-#: includes/functions.php:3061
+#: includes/functions.php:3113
 msgid "Tue"
 msgstr ""
 
-#: includes/functions.php:3062
+#: includes/functions.php:3114
 msgid "Wed"
 msgstr ""
 
-#: includes/functions.php:3063
+#: includes/functions.php:3115
 msgid "Thu"
 msgstr ""
 
-#: includes/functions.php:3064
+#: includes/functions.php:3116
 msgid "Fri"
 msgstr ""
 
-#: includes/functions.php:3065
+#: includes/functions.php:3117
 msgid "Sat"
 msgstr ""
 
-#: includes/functions.php:3363
+#: includes/functions.php:3423
 msgid "privacy policy"
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3642
+#: includes/functions.php:3702
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3655
+#: includes/functions.php:3715
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -6856,6 +7022,8 @@ msgstr ""
 #: includes/Privacy.php:180
 #: includes/Vendor/Settings/Schema/StoreSettingsSchema.php:416
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:165
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 msgid "Phone"
@@ -6866,6 +7034,7 @@ msgstr ""
 #: templates/admin-setup-wizard/step-store-wc-fields.php:33
 #: templates/maps/mapbox-with-search.php:5
 #: templates/settings/address-form.php:26
+#: assets/blocks/store-info/index.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/frontend.js:2
 #: assets/js/vue-admin.js:2
@@ -7262,6 +7431,10 @@ msgstr ""
 
 #: includes/ProductEditor/FormSchema.php:539
 #: templates/products/edit-product-single.php:251
+#: assets/blocks/store-category-menu/index.js:1
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-location-map/index.js:1
+#: assets/blocks/store-open-close-hours/index.js:1
 msgid "Title"
 msgstr ""
 
@@ -7577,6 +7750,7 @@ msgid "Enable product reviews"
 msgstr ""
 
 #: includes/ProductSections/BestSelling.php:39
+#: assets/blocks/store-product-section/index.js:1
 msgid "Best Selling Products"
 msgstr ""
 
@@ -7585,6 +7759,7 @@ msgid "best selling products"
 msgstr ""
 
 #: includes/ProductSections/Featured.php:39
+#: assets/blocks/store-product-section/index.js:1
 msgid "Featured Products"
 msgstr ""
 
@@ -7593,6 +7768,7 @@ msgid "featured products"
 msgstr ""
 
 #: includes/ProductSections/Latest.php:39
+#: assets/blocks/store-product-section/index.js:1
 msgid "Latest Products"
 msgstr ""
 
@@ -7615,6 +7791,7 @@ msgid "All Products"
 msgstr ""
 
 #: includes/ProductSections/TopRated.php:39
+#: assets/blocks/store-product-section/index.js:1
 msgid "Top Rated Products"
 msgstr ""
 
@@ -9771,7 +9948,8 @@ msgid "Reassign the deleted user's posts and links to this user ID."
 msgstr ""
 
 #: includes/REST/StoreController.php:155
-#: templates/widgets/store-contact-form.php:15
+#: templates/widgets/store-contact-form.php:28
+#: assets/blocks/store-contact-form/index.js:1
 #: assets/js/vue-admin.js:2
 msgid "Your Name"
 msgstr ""
@@ -10605,13 +10783,13 @@ msgstr ""
 
 #: includes/template-tags.php:121
 #: includes/template-tags.php:125
-#: templates/store-lists-loop.php:131
+#: templates/store-lists-loop.php:56
 msgid "&larr; Previous"
 msgstr ""
 
 #: includes/template-tags.php:137
 #: includes/template-tags.php:140
-#: templates/store-lists-loop.php:132
+#: templates/store-lists-loop.php:57
 msgid "Next &rarr;"
 msgstr ""
 
@@ -10627,25 +10805,6 @@ msgstr ""
 #: includes/Widgets/StoreCategoryMenu.php:37
 #: includes/Widgets/StoreCategoryMenu.php:81
 msgid "Store Product Category"
-msgstr ""
-
-#: includes/template-tags.php:559
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:238
-#: includes/Widgets/StoreLocation.php:41
-#: includes/Widgets/StoreLocation.php:102
-msgid "Store Location"
-msgstr ""
-
-#: includes/template-tags.php:572
-#: includes/Widgets/StoreOpenClose.php:39
-#: includes/Widgets/StoreOpenClose.php:110
-msgid "Store Time"
-msgstr ""
-
-#: includes/template-tags.php:585
-#: includes/Widgets/StoreContactForm.php:40
-#: includes/Widgets/StoreContactForm.php:117
-msgid "Contact Vendor"
 msgstr ""
 
 #: includes/ThemeSupport/Divi.php:119
@@ -11007,6 +11166,7 @@ msgstr ""
 #: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/PayPal.php:50
 #: includes/Vendor/SetupWizard.php:340
 #: templates/settings/store-form.php:151
+#: assets/blocks/store-info/index.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -11366,6 +11526,8 @@ msgstr ""
 
 #: includes/Vendor/SetupWizard.php:322
 #: templates/settings/store-form.php:171
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
 msgid "Map"
 msgstr ""
 
@@ -11385,16 +11547,16 @@ msgstr ""
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
-#: includes/Vendor/StoreListsFilter.php:83
+#: includes/Vendor/StoreListsFilter.php:137
 msgid "Most Recent"
 msgstr ""
 
-#: includes/Vendor/StoreListsFilter.php:84
+#: includes/Vendor/StoreListsFilter.php:138
 #: assets/js/dokan-black-friday.js:1
 msgid "Most Popular"
 msgstr ""
 
-#: includes/Vendor/StoreListsFilter.php:85
+#: includes/Vendor/StoreListsFilter.php:139
 msgid "Random"
 msgstr ""
 
@@ -11572,9 +11734,9 @@ msgstr ""
 #: includes/Widgets/FilterByAttributes.php:110
 #: includes/Widgets/ProductCategoryMenu.php:96
 #: includes/Widgets/StoreCategoryMenu.php:88
-#: includes/Widgets/StoreContactForm.php:124
+#: includes/Widgets/StoreContactForm.php:129
 #: includes/Widgets/StoreLocation.php:109
-#: includes/Widgets/StoreOpenClose.php:117
+#: includes/Widgets/StoreOpenClose.php:119
 #: includes/Widgets/TopratedProducts.php:75
 #: assets/js/dokan-intelligence.js:1
 #: assets/js/frontend.js:2
@@ -12829,13 +12991,29 @@ msgstr ""
 #: templates/orders/date-export.php:27
 #: templates/products/listing-filter.php:101
 #: templates/reverse-withdrawal/filters.php:15
-#: templates/store-lists-filter.php:43
+#: templates/store-lists-filter.php:101
+#: assets/blocks/store-filter-bar/index.js:5
 #: assets/js/components.js:2
 msgid "Filter"
 msgstr ""
 
 #: templates/orders/date-export.php:28
 #: templates/products/listing-filter.php:102
+#: assets/blocks/store-avatar/index.js:1
+#: assets/blocks/store-banner/index.js:1
+#: assets/blocks/store-category-menu/index.js:1
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-filter-bar/index.js:1
+#: assets/blocks/store-header/index.js:1
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-location-map/index.js:1
+#: assets/blocks/store-name/index.js:1
+#: assets/blocks/store-open-close-hours/index.js:1
+#: assets/blocks/store-product-section/index.js:1
+#: assets/blocks/store-social/index.js:1
+#: assets/blocks/store-tab-content/index.js:1
+#: assets/blocks/store-tabs/index.js:1
 #: assets/js/components.js:2
 msgid "Reset"
 msgstr ""
@@ -13611,7 +13789,8 @@ msgid "There is no payment method to show."
 msgstr ""
 
 #: templates/settings/store-form.php:40
-#: templates/store-lists-loop.php:45
+#: templates/store-lists-loop.php:52
+#: assets/blocks/store-list/index.js:1
 msgid "Open"
 msgstr ""
 
@@ -13635,76 +13814,55 @@ msgstr ""
 msgid "+123456.."
 msgstr ""
 
-#: templates/store-header.php:27
-msgid "Store Open"
-msgstr ""
-
-#: templates/store-header.php:28
-msgid "Store Closed"
-msgstr ""
-
-#: templates/store-header.php:135
-msgid "Weekly Store Timing"
-msgstr ""
-
-#: templates/store-header.php:136
-msgid "CLOSED"
+#: templates/store-lists-filter.php:51
+msgid "Sort by"
 msgstr ""
 
 #. translators: 1) number of stores
-#: templates/store-lists-filter.php:28
+#: templates/store-lists-filter.php:83
 msgid "Total store showing: %s"
 msgid_plural "Total stores showing: %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/store-lists-filter.php:48
-#: templates/store-lists-filter.php:50
-msgid "Sort by"
-msgstr ""
-
-#: templates/store-lists-filter.php:74
+#: templates/store-lists-filter.php:139
+#: assets/blocks/store-filter-bar/index.js:5
 #: assets/js/vue-admin.js:2
 msgid "Search Vendors"
 msgstr ""
 
-#: templates/store-lists-loop.php:38
+#: templates/store-lists-loop.php:51
+#: assets/blocks/store-list/index.js:1
 #: assets/js/dokan-admin-dashboard.js:2
 msgid "Featured"
 msgstr ""
 
-#: templates/store-lists-loop.php:45
-msgid "Store is Open"
-msgstr ""
-
-#: templates/store-lists-loop.php:47
-msgid "Store is Closed"
-msgstr ""
-
-#: templates/store-lists-loop.php:47
+#: templates/store-lists-loop.php:53
+#: assets/blocks/store-list/index.js:1
 msgid "Closed"
 msgstr ""
 
+#: templates/store-lists-loop.php:55
+#: assets/blocks/store-list/index.js:1
+msgid "No vendor found!"
+msgstr ""
+
+#: templates/store-lists-loop.php:109
+msgid "Store is Open"
+msgstr ""
+
+#: templates/store-lists-loop.php:111
+msgid "Store is Closed"
+msgstr ""
+
 #. translators: 1) seller rating
-#: templates/store-lists-loop.php:60
+#: templates/store-lists-loop.php:124
 msgid "Rated %s out of 5"
 msgstr ""
 
 #. translators: 1) seller rating
-#: templates/store-lists-loop.php:69
+#: templates/store-lists-loop.php:133
 msgid "%s out of 5"
-msgstr ""
-
-#: templates/store-lists-loop.php:158
-msgid "No vendor found!"
-msgstr ""
-
-#: templates/store-toc.php:42
-msgid "Terms And Conditions"
-msgstr ""
-
-#: templates/store.php:70
-msgid "No products were found of this vendor!"
 msgstr ""
 
 #: templates/sub-orders.php:19
@@ -13722,19 +13880,22 @@ msgid_plural "%s Reviews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/widgets/store-contact-form.php:18
-msgid "you@example.com"
-msgstr ""
-
-#: templates/widgets/store-contact-form.php:21
-msgid "Type your message..."
-msgstr ""
-
-#: templates/widgets/store-contact-form.php:30
+#: templates/widgets/store-contact-form.php:27
+#: assets/blocks/store-contact-form/index.js:1
 msgid "Send Message"
 msgstr ""
 
-#: templates/widgets/store-open-close.php:18
+#: templates/widgets/store-contact-form.php:29
+#: assets/blocks/store-contact-form/index.js:1
+msgid "you@example.com"
+msgstr ""
+
+#: templates/widgets/store-contact-form.php:30
+msgid "Type your message..."
+msgstr ""
+
+#: templates/widgets/store-open-close.php:16
+#: assets/blocks/store-open-close-hours/index.js:1
 msgid "Off Day"
 msgstr ""
 
@@ -13861,6 +14022,7 @@ msgid "View Payments"
 msgstr ""
 
 #: templates/withdraw/withdraw-dashboard.php:108
+#: assets/blocks/store-list/index.js:1
 #: assets/js/frontend.js:2
 msgid "Default"
 msgstr ""
@@ -13868,6 +14030,746 @@ msgstr ""
 #: templates/withdraw/withdraw-dashboard.php:110
 #: assets/js/frontend.js:2
 msgid "Make Default"
+msgstr ""
+
+#: assets/blocks/store-avatar/index.js:1
+#: assets/blocks/store-banner/index.js:1
+#: assets/blocks/store-category-menu/index.js:1
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-filter-bar/index.js:1
+#: assets/blocks/store-header/index.js:1
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-location-map/index.js:1
+#: assets/blocks/store-name/index.js:1
+#: assets/blocks/store-open-close-hours/index.js:1
+#: assets/blocks/store-product-section/index.js:1
+#: assets/blocks/store-social/index.js:1
+#: assets/blocks/store-tab-content/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Reset block settings"
+msgstr ""
+
+#: assets/blocks/store-avatar/index.js:1
+#: assets/blocks/store-banner/index.js:1
+#: assets/blocks/store-category-menu/index.js:1
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-filter-bar/index.js:1
+#: assets/blocks/store-header/index.js:1
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-location-map/index.js:1
+#: assets/blocks/store-name/index.js:1
+#: assets/blocks/store-open-close-hours/index.js:1
+#: assets/blocks/store-product-section/index.js:1
+#: assets/blocks/store-social/index.js:1
+#: assets/blocks/store-tab-content/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Resets this block’s settings. Reset colors and fonts from the Styles panel."
+msgstr ""
+
+#: assets/blocks/store-avatar/index.js:1
+msgid "Shape"
+msgstr ""
+
+#: assets/blocks/store-avatar/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "Circle"
+msgstr ""
+
+#: assets/blocks/store-avatar/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "Square"
+msgstr ""
+
+#: assets/blocks/store-avatar/index.js:1
+msgid "Size (px)"
+msgstr ""
+
+#: assets/blocks/store-avatar/index.js:1
+#: assets/blocks/store-banner/index.js:1
+#: assets/blocks/store-name/index.js:1
+msgid "Link to store page"
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Height (px)"
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Set to 0 for the default height."
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Focal point — horizontal"
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Which part stays visible when the banner is cropped."
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Focal point — vertical"
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Overlay strength"
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "How strong the overlay is."
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Overlay"
+msgstr ""
+
+#: assets/blocks/store-banner/index.js:1
+msgid "Overlay color"
+msgstr ""
+
+#: assets/blocks/store-category-menu/index.js:1
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-location-map/index.js:1
+#: assets/blocks/store-open-close-hours/index.js:1
+msgid "Show title"
+msgstr ""
+
+#: assets/blocks/store-category-menu/index.js:1
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-location-map/index.js:1
+#: assets/blocks/store-open-close-hours/index.js:1
+msgid "Leave empty to use the default title."
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+msgid "Send button"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+msgid "Name placeholder"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+msgid "Email placeholder"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+msgid "Message placeholder"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+msgid "Type your message…"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+msgid "Form Text"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+msgid "Button"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Button background"
+msgstr ""
+
+#: assets/blocks/store-contact-form/index.js:1
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Button text"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:1
+msgid "Show store count"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:1
+msgid "Store count text"
+msgstr ""
+
+#. translators: %s is typed by the editor and marks where the store count appears.
+#: assets/blocks/store-filter-bar/index.js:3
+msgid "Put %s where the number goes. Leave empty for the default."
+msgstr ""
+
+#. translators: %s is the number of stores.
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Total stores showing: %s"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Show filter panel"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Shows the Filter button and its panel: search, plus filters like category, rating or location."
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Filter button label"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Show sorting"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Sorting label"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Sort by:"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Show grid/list switch"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Search placeholder"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Apply button"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Cancel button"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Filter Panel Text"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Sorting Options"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/index.js:5
+msgid "Buttons"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Use the marketplace default"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Panel — beside the banner"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Banner above, details below"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Stacked and centred"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Split — no banner"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Compact — no banner"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Header Layout"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+#: assets/blocks/store-info/index.js:1
+msgid "Layout"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Uses the layout from Dokan settings. Pick one to change it for this template only."
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Customize"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Customize this header"
+msgstr ""
+
+#: assets/blocks/store-header/index.js:1
+msgid "Breaks the header into separate blocks you can edit one by one. The layout choice above stops working after this."
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Default icon"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "No icon"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Custom…"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Icon class"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Font Awesome class, e.g. \"fas fa-phone\"."
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Find us"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "Map marker"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "Home"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Call us"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "Mobile"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "WhatsApp"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Email us"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Envelope"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Envelope, solid"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "At sign"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "Rating"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Rated"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Star"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Star, outline"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Thumbs up"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Opening hours"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/js/dokan-black-friday.js:1
+msgid "Hours"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Cart"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Clock"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Show icons"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "List"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Inline"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "These can only hide fields. Anything hidden by privacy settings or the vendor stays hidden."
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Labels and Icons"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-list/index.js:1
+msgid "Leave empty for no label."
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "Icon"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Open text"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "The vendor's own message shows first."
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Closed text"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Bold labels"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Icon size"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Small"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Medium"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Large"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+#: assets/blocks/store-social/index.js:1
+msgid "Icons"
+msgstr ""
+
+#: assets/blocks/store-info/index.js:1
+msgid "Icon color"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Store details"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Featured badge"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Open badge"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Closed badge"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Visit store link"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "No vendors message"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Previous page link"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "← Previous"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Next page link"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Next →"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Left"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Center"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Right"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Stores per page"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-tab-content/index.js:1
+msgid "Columns"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Featured vendors only"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Vendors with products only"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Store categories"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Store categories to show, separated by commas. Needs store categories turned on."
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Fallback store name"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Used when a store has no name."
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Order by"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Site default"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Card Elements"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Store picture"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Open/closed status"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Store address"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Phone number"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Card Layout"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Store picture shape"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Rounded"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Store picture position"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Applies to grid view."
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Card text alignment"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Phone icon"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Address icon"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+#: assets/blocks/store-tabs/index.js:1
+msgid "No icon (default)"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Address label"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Text"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Card Text Size"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Card"
+msgstr ""
+
+#: assets/blocks/store-list/index.js:1
+msgid "Card background"
+msgstr ""
+
+#: assets/blocks/store-location-map/index.js:1
+msgid "Map height (px)"
+msgstr ""
+
+#: assets/blocks/store-location-map/index.js:1
+msgid "Set to 0 to use the default height."
+msgstr ""
+
+#: assets/blocks/store-name/index.js:1
+msgid "Heading level"
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/index.js:1
+msgid "Closed day text"
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/index.js:1
+#: assets/blocks/store-tab-content/index.js:1
+msgid "Leave empty for the default."
+msgstr ""
+
+#: assets/blocks/store-product-section/index.js:1
+msgid "Section"
+msgstr ""
+
+#: assets/blocks/store-product-section/index.js:1
+msgid "Heading"
+msgstr ""
+
+#: assets/blocks/store-product-section/index.js:1
+msgid "Leave empty to use the section default."
+msgstr ""
+
+#: assets/blocks/store-product-section/index.js:1
+#: assets/blocks/store-tab-content/index.js:1
+msgid "No products message"
+msgstr ""
+
+#: assets/blocks/store-product-section/index.js:1
+msgid "Shown when there are no products. Leave empty to hide the section."
+msgstr ""
+
+#: assets/blocks/store-product-section/index.js:1
+msgid "Store pages already show this section. Hide it in Appearance → Customize → Store first, or it shows twice."
+msgstr ""
+
+#: assets/blocks/store-sidebar/index.js:1
+msgid "Sticky on scroll"
+msgstr ""
+
+#: assets/blocks/store-sidebar/index.js:1
+msgid "Keeps the sidebar in view while scrolling."
+msgstr ""
+
+#: assets/blocks/store-social/index.js:1
+msgid "Icon size (px)"
+msgstr ""
+
+#: assets/blocks/store-social/index.js:1
+msgid "Open in new tab"
+msgstr ""
+
+#: assets/blocks/store-social/index.js:1
+msgid "Show network names"
+msgstr ""
+
+#: assets/blocks/store-social/index.js:1
+msgid "Screen readers always read the names."
+msgstr ""
+
+#: assets/blocks/store-social/index.js:1
+msgid "Icon background"
+msgstr ""
+
+#: assets/blocks/store-tab-content/index.js:1
+msgid "Set to 0 to use the theme default."
+msgstr ""
+
+#: assets/blocks/store-tab-content/index.js:1
+msgid "Show pagination"
+msgstr ""
+
+#: assets/blocks/store-tab-content/index.js:1
+msgid "Preview tab"
+msgstr ""
+
+#: assets/blocks/store-tab-content/index.js:1
+msgid "The tab to preview here. Visitors see the tab they open."
+msgstr ""
+
+#: assets/blocks/store-tabs/index.js:1
+msgid "Box"
+msgstr ""
+
+#: assets/blocks/store-tabs/index.js:1
+msgid "Document"
+msgstr ""
+
+#: assets/blocks/store-tabs/index.js:1
+msgid "Person"
+msgstr ""
+
+#: assets/blocks/store-tabs/index.js:1
+msgid "Comments"
+msgstr ""
+
+#: assets/blocks/store-tabs/index.js:1
+#: assets/js/dokan-status.js:1
+msgid "Tabs"
+msgstr ""
+
+#: assets/blocks/store-tabs/index.js:1
+msgid "Rename tabs or add icons. Changes apply to every store page."
+msgstr ""
+
+#: assets/blocks/store-tabs/index.js:1
+msgid "Active tab"
 msgstr ""
 
 #: assets/js/components.js:2
@@ -16626,10 +17528,6 @@ msgid "Click Here"
 msgstr ""
 
 #: assets/js/dokan-black-friday.js:1
-msgid "Hours"
-msgstr ""
-
-#: assets/js/dokan-black-friday.js:1
 msgid "Mins"
 msgstr ""
 
@@ -17507,10 +18405,6 @@ msgstr ""
 
 #: assets/js/dokan-status.js:1
 msgid "Select a tab"
-msgstr ""
-
-#: assets/js/dokan-status.js:1
-msgid "Tabs"
 msgstr ""
 
 #: assets/js/dokan-status.js:1
@@ -18795,4 +19689,491 @@ msgstr ""
 
 #: assets/js/vue-bootstrap.js:2
 msgid "Option refreshed!"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+msgctxt "block title"
+msgid "Store Profile Picture"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+msgctxt "block description"
+msgid "The store's profile picture."
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+#: assets/blocks/store-banner/block.json
+#: assets/blocks/store-category-menu/block.json
+#: assets/blocks/store-contact-form/block.json
+#: assets/blocks/store-filter-bar/block.json
+#: assets/blocks/store-header/block.json
+#: assets/blocks/store-info/block.json
+#: assets/blocks/store-list/block.json
+#: assets/blocks/store-location-map/block.json
+#: assets/blocks/store-name/block.json
+#: assets/blocks/store-open-close-hours/block.json
+#: assets/blocks/store-product-section/block.json
+#: assets/blocks/store-sidebar/block.json
+#: assets/blocks/store-social/block.json
+#: assets/blocks/store-tab-content/block.json
+#: assets/blocks/store-tabs/block.json
+msgctxt "block keyword"
+msgid "dokan"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+#: assets/blocks/store-banner/block.json
+#: assets/blocks/store-category-menu/block.json
+#: assets/blocks/store-contact-form/block.json
+#: assets/blocks/store-filter-bar/block.json
+#: assets/blocks/store-header/block.json
+#: assets/blocks/store-info/block.json
+#: assets/blocks/store-list/block.json
+#: assets/blocks/store-location-map/block.json
+#: assets/blocks/store-name/block.json
+#: assets/blocks/store-open-close-hours/block.json
+#: assets/blocks/store-product-section/block.json
+#: assets/blocks/store-sidebar/block.json
+#: assets/blocks/store-social/block.json
+#: assets/blocks/store-tab-content/block.json
+#: assets/blocks/store-tabs/block.json
+msgctxt "block keyword"
+msgid "store"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+#: assets/blocks/store-banner/block.json
+#: assets/blocks/store-category-menu/block.json
+#: assets/blocks/store-contact-form/block.json
+#: assets/blocks/store-filter-bar/block.json
+#: assets/blocks/store-header/block.json
+#: assets/blocks/store-info/block.json
+#: assets/blocks/store-list/block.json
+#: assets/blocks/store-location-map/block.json
+#: assets/blocks/store-name/block.json
+#: assets/blocks/store-open-close-hours/block.json
+#: assets/blocks/store-product-section/block.json
+#: assets/blocks/store-sidebar/block.json
+#: assets/blocks/store-social/block.json
+#: assets/blocks/store-tab-content/block.json
+#: assets/blocks/store-tabs/block.json
+msgctxt "block keyword"
+msgid "vendor"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+msgctxt "block keyword"
+msgid "avatar"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+#: assets/blocks/store-social/block.json
+msgctxt "block keyword"
+msgid "profile"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+msgctxt "block keyword"
+msgid "picture"
+msgstr ""
+
+#: assets/blocks/store-avatar/block.json
+msgctxt "block keyword"
+msgid "logo"
+msgstr ""
+
+#: assets/blocks/store-banner/block.json
+msgctxt "block title"
+msgid "Store Banner"
+msgstr ""
+
+#: assets/blocks/store-banner/block.json
+msgctxt "block description"
+msgid "The store's banner image."
+msgstr ""
+
+#: assets/blocks/store-banner/block.json
+#: assets/blocks/store-header/block.json
+msgctxt "block keyword"
+msgid "banner"
+msgstr ""
+
+#: assets/blocks/store-banner/block.json
+msgctxt "block keyword"
+msgid "cover"
+msgstr ""
+
+#: assets/blocks/store-category-menu/block.json
+msgctxt "block title"
+msgid "Store Categories"
+msgstr ""
+
+#: assets/blocks/store-category-menu/block.json
+msgctxt "block description"
+msgid "Categories this store sells in."
+msgstr ""
+
+#: assets/blocks/store-category-menu/block.json
+msgctxt "block keyword"
+msgid "categories"
+msgstr ""
+
+#: assets/blocks/store-category-menu/block.json
+#: assets/blocks/store-tabs/block.json
+msgctxt "block keyword"
+msgid "menu"
+msgstr ""
+
+#: assets/blocks/store-category-menu/block.json
+#: assets/blocks/store-tabs/block.json
+msgctxt "block keyword"
+msgid "navigation"
+msgstr ""
+
+#: assets/blocks/store-contact-form/block.json
+msgctxt "block title"
+msgid "Store Contact Form"
+msgstr ""
+
+#: assets/blocks/store-contact-form/block.json
+msgctxt "block description"
+msgid "Lets customers message the store."
+msgstr ""
+
+#: assets/blocks/store-contact-form/block.json
+msgctxt "block keyword"
+msgid "contact"
+msgstr ""
+
+#: assets/blocks/store-contact-form/block.json
+msgctxt "block keyword"
+msgid "form"
+msgstr ""
+
+#: assets/blocks/store-contact-form/block.json
+msgctxt "block keyword"
+msgid "message"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/block.json
+msgctxt "block title"
+msgid "Store Filter Bar"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/block.json
+msgctxt "block description"
+msgid "Search, sort and view options for the store list."
+msgstr ""
+
+#: assets/blocks/store-filter-bar/block.json
+msgctxt "block keyword"
+msgid "filter"
+msgstr ""
+
+#: assets/blocks/store-filter-bar/block.json
+msgctxt "block keyword"
+msgid "search"
+msgstr ""
+
+#: assets/blocks/store-header/block.json
+msgctxt "block title"
+msgid "Store Header"
+msgstr ""
+
+#: assets/blocks/store-header/block.json
+msgctxt "block description"
+msgid "The store's header, in your chosen layout."
+msgstr ""
+
+#: assets/blocks/store-header/block.json
+msgctxt "block keyword"
+msgid "header"
+msgstr ""
+
+#: assets/blocks/store-header/block.json
+msgctxt "block keyword"
+msgid "layout"
+msgstr ""
+
+#: assets/blocks/store-info/block.json
+msgctxt "block title"
+msgid "Store Info"
+msgstr ""
+
+#: assets/blocks/store-info/block.json
+msgctxt "block description"
+msgid "Address, phone, email, rating and hours."
+msgstr ""
+
+#: assets/blocks/store-info/block.json
+#: assets/blocks/store-location-map/block.json
+msgctxt "block keyword"
+msgid "address"
+msgstr ""
+
+#: assets/blocks/store-info/block.json
+msgctxt "block keyword"
+msgid "phone"
+msgstr ""
+
+#: assets/blocks/store-info/block.json
+msgctxt "block keyword"
+msgid "rating"
+msgstr ""
+
+#: assets/blocks/store-info/block.json
+#: assets/blocks/store-open-close-hours/block.json
+msgctxt "block keyword"
+msgid "hours"
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block title"
+msgid "Store List"
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block description"
+msgid "A grid of stores."
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block keyword"
+msgid "stores"
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block keyword"
+msgid "marketplace"
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block style label"
+msgid "Default"
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block style label"
+msgid "Shadow"
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block style label"
+msgid "Bordered"
+msgstr ""
+
+#: assets/blocks/store-list/block.json
+msgctxt "block style label"
+msgid "Flat"
+msgstr ""
+
+#: assets/blocks/store-location-map/block.json
+msgctxt "block title"
+msgid "Store Location"
+msgstr ""
+
+#: assets/blocks/store-location-map/block.json
+msgctxt "block description"
+msgid "Map of where the store is."
+msgstr ""
+
+#: assets/blocks/store-location-map/block.json
+msgctxt "block keyword"
+msgid "location"
+msgstr ""
+
+#: assets/blocks/store-location-map/block.json
+msgctxt "block keyword"
+msgid "map"
+msgstr ""
+
+#: assets/blocks/store-name/block.json
+msgctxt "block title"
+msgid "Store Name"
+msgstr ""
+
+#: assets/blocks/store-name/block.json
+msgctxt "block description"
+msgid "The store's name."
+msgstr ""
+
+#: assets/blocks/store-name/block.json
+msgctxt "block keyword"
+msgid "name"
+msgstr ""
+
+#: assets/blocks/store-name/block.json
+msgctxt "block keyword"
+msgid "heading"
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/block.json
+msgctxt "block title"
+msgid "Store Opening Hours"
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/block.json
+msgctxt "block description"
+msgid "The store's weekly hours."
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/block.json
+msgctxt "block keyword"
+msgid "opening"
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/block.json
+msgctxt "block keyword"
+msgid "time"
+msgstr ""
+
+#: assets/blocks/store-open-close-hours/block.json
+msgctxt "block keyword"
+msgid "schedule"
+msgstr ""
+
+#: assets/blocks/store-product-section/block.json
+msgctxt "block title"
+msgid "Store Product Section"
+msgstr ""
+
+#: assets/blocks/store-product-section/block.json
+msgctxt "block description"
+msgid "Featured, latest, best selling or top rated products."
+msgstr ""
+
+#: assets/blocks/store-product-section/block.json
+#: assets/blocks/store-tab-content/block.json
+msgctxt "block keyword"
+msgid "products"
+msgstr ""
+
+#: assets/blocks/store-product-section/block.json
+msgctxt "block keyword"
+msgid "featured"
+msgstr ""
+
+#: assets/blocks/store-product-section/block.json
+msgctxt "block keyword"
+msgid "latest"
+msgstr ""
+
+#: assets/blocks/store-product-section/block.json
+msgctxt "block keyword"
+msgid "best selling"
+msgstr ""
+
+#: assets/blocks/store-product-section/block.json
+msgctxt "block keyword"
+msgid "top rated"
+msgstr ""
+
+#: assets/blocks/store-sidebar/block.json
+msgctxt "block title"
+msgid "Store Sidebar"
+msgstr ""
+
+#: assets/blocks/store-sidebar/block.json
+msgctxt "block description"
+msgid "Holds store widgets on block themes."
+msgstr ""
+
+#: assets/blocks/store-sidebar/block.json
+msgctxt "block keyword"
+msgid "sidebar"
+msgstr ""
+
+#: assets/blocks/store-sidebar/block.json
+msgctxt "block keyword"
+msgid "widgets"
+msgstr ""
+
+#: assets/blocks/store-sidebar/block.json
+msgctxt "block keyword"
+msgid "aside"
+msgstr ""
+
+#: assets/blocks/store-social/block.json
+msgctxt "block title"
+msgid "Store Social Icons"
+msgstr ""
+
+#: assets/blocks/store-social/block.json
+msgctxt "block description"
+msgid "Links to the store's social profiles."
+msgstr ""
+
+#: assets/blocks/store-social/block.json
+msgctxt "block keyword"
+msgid "social"
+msgstr ""
+
+#: assets/blocks/store-social/block.json
+msgctxt "block keyword"
+msgid "links"
+msgstr ""
+
+#: assets/blocks/store-social/block.json
+msgctxt "block style label"
+msgid "Plain"
+msgstr ""
+
+#: assets/blocks/store-social/block.json
+msgctxt "block style label"
+msgid "Circle"
+msgstr ""
+
+#: assets/blocks/store-social/block.json
+msgctxt "block style label"
+msgid "Square"
+msgstr ""
+
+#: assets/blocks/store-tab-content/block.json
+msgctxt "block title"
+msgid "Store Tab Content"
+msgstr ""
+
+#: assets/blocks/store-tab-content/block.json
+msgctxt "block description"
+msgid "Shows the content of the open tab."
+msgstr ""
+
+#: assets/blocks/store-tab-content/block.json
+msgctxt "block keyword"
+msgid "tab"
+msgstr ""
+
+#: assets/blocks/store-tab-content/block.json
+msgctxt "block keyword"
+msgid "content"
+msgstr ""
+
+#: assets/blocks/store-tabs/block.json
+msgctxt "block title"
+msgid "Store Tabs"
+msgstr ""
+
+#: assets/blocks/store-tabs/block.json
+msgctxt "block description"
+msgid "Links to the store's tabs, like Products and Terms."
+msgstr ""
+
+#: assets/blocks/store-tabs/block.json
+msgctxt "block keyword"
+msgid "tabs"
+msgstr ""
+
+#: assets/blocks/store-tabs/block.json
+msgctxt "block style label"
+msgid "Underline"
+msgstr ""
+
+#: assets/blocks/store-tabs/block.json
+msgctxt "block style label"
+msgid "Pills"
+msgstr ""
+
+#: assets/blocks/store-tabs/block.json
+msgctxt "block style label"
+msgid "Boxed"
 msgstr ""

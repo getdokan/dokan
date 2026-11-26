@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Block attributes are client-supplied, so an icon class or a colour typed into
  * the inspector is untrusted until it has been through here.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class Styles {
 
@@ -22,7 +22,7 @@ class Styles {
      * An empty value keeps today's icon, `none` removes it, and anything else is
      * a Font Awesome class list reduced to the characters a class name can hold.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param mixed  $value         Attribute value.
      * @param string $default_class Class list rendered when the attribute is empty.
@@ -49,7 +49,7 @@ class Styles {
     /**
      * Render an icon attribute as an `<i>` element.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param mixed  $value         Attribute value.
      * @param string $default_class Class list rendered when the attribute is empty.
@@ -73,7 +73,7 @@ class Styles {
      * Accepts any colour syntax a picker or theme palette can produce, using only
      * characters that cannot leave the CSS declaration.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param mixed $value Attribute value.
      *
@@ -103,7 +103,7 @@ class Styles {
     /**
      * Sanitize a CSS font size: a length, a theme preset variable or a fluid clamp().
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param mixed $value Attribute value.
      *
@@ -130,7 +130,7 @@ class Styles {
      *
      * Empty values are dropped so a setting left alone writes nothing.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param array<string, string> $properties Map of custom property name => value.
      *
@@ -154,7 +154,7 @@ class Styles {
     /**
      * Pick a text override, falling back to the default when it is empty.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param mixed  $value        Attribute value.
      * @param string $default_text Text rendered when the attribute is empty.

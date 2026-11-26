@@ -15,7 +15,7 @@ use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
  * Registers the Gutenberg/FSE block services (block types, assets, patterns,
  * block templates and the shared vendor context resolver) with the container.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @package WeDevs\Dokan\DependencyManagement\Providers
  */
@@ -39,7 +39,7 @@ class BlocksServiceProvider extends BaseServiceProvider {
     /**
      * Register the block services with the dependency container.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */

@@ -3,7 +3,7 @@
  * Dokan Store Open Close Time Widget
  *
  * @since   2.7.3
- * @version DOKAN_SINCE
+ * @version 5.3.7
  *
  * @package dokan
  *

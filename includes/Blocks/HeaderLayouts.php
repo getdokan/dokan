@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * falls back to the classic Appearance option, so the render callback and the
  * editor's "Customize this header" button agree on which pattern a header is.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class HeaderLayouts {
 
     /**
      * Layouts as layout key => registered pattern slug.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return array<string, string>
      */
@@ -31,7 +31,7 @@ class HeaderLayouts {
          * Extensions add their own header patterns here to make them selectable from
          * the block, without shipping a second copy of the markup.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param array $layouts Map of layout key => registered pattern slug.
          */
@@ -57,7 +57,7 @@ class HeaderLayouts {
      * The classic keys do not match the pattern names, because the classic
      * "default" is the panel layout and the others shift along by one.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param string     $layout  Block setting; empty for the marketplace default.
      * @param array|null $layouts Map from get_layouts(), when the caller already has it.

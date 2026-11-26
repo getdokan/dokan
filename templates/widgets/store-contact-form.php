@@ -3,7 +3,7 @@
  * Dokan Store Contact Form widget Template
  *
  * @since   2.4
- * @version DOKAN_SINCE
+ * @version 5.3.7
  *
  * @package dokan
  *
