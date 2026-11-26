@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Analytics\Reports\Orders\Stats;
 
+use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter as OrdersQueryFilter;
 
 /**
@@ -46,6 +47,7 @@ class QueryFilter extends OrdersQueryFilter {
      * Modifies the admin report columns to include Dokan-specific data.
      *
      * @since 4.0.0
+     * @since DOKAN_SINCE Counts sub-orders in `gross_sales`.
      *
      * @param array  $column        The existing report columns.
      * @param string $context       The context of the report.
@@ -69,6 +71,12 @@ class QueryFilter extends OrdersQueryFilter {
 		$column['avg_order_value']      = "COALESCE(SUM({$wc_table_name}.net_total) / {$order_count_safe}, 0) AS avg_order_value";
 		$column['avg_admin_commission'] = "COALESCE(SUM({$table_name}.admin_commission) / {$order_count_safe}, 0) AS avg_admin_commission";
 		$column['avg_vendor_earning']   = "COALESCE(SUM({$table_name}.vendor_earning) / {$order_count_safe}, 0) AS avg_vendor_earning";
+
+		$refund_types = implode( ',', ( new OrderType() )->get_refund_types() );
+
+		// WooCommerce counts gross sales only where parent_id is 0, which leaves out every sub-order.
+		// discount_amount comes from WooCommerce's coupon join, so it takes no table prefix.
+		$column['gross_sales'] = "SUM( CASE WHEN {$table_name}.order_type NOT IN ( {$refund_types} ) THEN {$wc_table_name}.total_sales - {$wc_table_name}.tax_total - {$wc_table_name}.shipping_total ELSE 0 END ) + COALESCE( SUM( discount_amount ), 0 ) AS gross_sales";
 
 		return $column;
 	}
