@@ -286,6 +286,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminExtensionsController.php'         => '\WeDevs\Dokan\REST\AdminExtensionsController',
                 DOKAN_DIR . '/includes/REST/ToolsController.php'                   => '\WeDevs\Dokan\REST\ToolsController',
                 DOKAN_DIR . '/includes/REST/VendorStoreSettingsController.php'     => '\WeDevs\Dokan\REST\VendorStoreSettingsController',
+                DOKAN_DIR . '/includes/REST/VendorOnboardingController.php'        => '\WeDevs\Dokan\REST\VendorOnboardingController',
             )
         );
     }
