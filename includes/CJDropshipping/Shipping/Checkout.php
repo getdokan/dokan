@@ -250,11 +250,40 @@ class Checkout implements Hookable {
     public function hide_cod( $gateways ): array {
         $gateways = (array) $gateways;
 
-        if ( isset( $gateways['cod'] ) && ! is_admin() && self::cart_has_cj_items() ) {
+        if ( isset( $gateways['cod'] ) && ! is_admin() && ( self::cart_has_cj_items() || self::pay_order_has_cj_items() ) ) {
             unset( $gateways['cod'] );
         }
 
         return $gateways;
+    }
+
+    /**
+     * Whether the order on the "Pay for order" page has a CJ item; the cart is empty there.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    protected static function pay_order_has_cj_items(): bool {
+        global $wp;
+
+        if ( ! function_exists( 'is_checkout_pay_page' ) || ! is_checkout_pay_page() ) {
+            return false;
+        }
+
+        $order = wc_get_order( absint( $wp->query_vars['order-pay'] ?? 0 ) );
+
+        if ( ! $order instanceof WC_Order ) {
+            return false;
+        }
+
+        foreach ( $order->get_items() as $item ) {
+            if ( $item->get_meta( '_dokan_cj_vid' ) ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

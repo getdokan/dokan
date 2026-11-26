@@ -297,6 +297,34 @@ class CheckoutTest extends DokanTestCase {
         $this->assertSame( 'admin', $checkout->vendor_gets_shipping( 'admin', $plain->get_id() ) );
     }
 
+    public function test_cod_is_hidden_on_the_pay_page_of_an_order_with_cj_items() {
+        global $wp;
+
+        $order = wc_create_order();
+        $item  = new \WC_Order_Item_Product();
+        $item->set_name( 'CJ thing' );
+        $item->add_meta_data( '_dokan_cj_vid', 'VA', true );
+        $order->add_item( $item );
+        $order->save();
+        $plain = wc_create_order();
+
+        add_filter( 'woocommerce_is_checkout', '__return_true' );
+        $gateways = [
+            'cod'  => 'Cash on delivery',
+            'bacs' => 'Bank transfer',
+        ];
+        $checkout = new Checkout();
+
+        $wp->query_vars['order-pay'] = $order->get_id();
+        $this->assertSame( [ 'bacs' ], array_keys( $checkout->hide_cod( $gateways ) ) );
+
+        $wp->query_vars['order-pay'] = $plain->get_id();
+        $this->assertSame( [ 'cod', 'bacs' ], array_keys( $checkout->hide_cod( $gateways ) ) );
+
+        unset( $wp->query_vars['order-pay'] );
+        remove_filter( 'woocommerce_is_checkout', '__return_true' );
+    }
+
     public function test_label_names_warehouse_country_only_when_admin_allows_and_one_group() {
         $quote = [
             'groups' => [ [ 'warehouse' => 'CN' ] ],
