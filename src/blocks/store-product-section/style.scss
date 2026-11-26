@@ -1,0 +1,27 @@
+/*
+ * Front-end + editor styles for dokan/store-product-section.
+ *
+ * The section markup is templates/store-products-section.php verbatim, and its
+ * grid is WooCommerce's — styled through the `woocommerce` class render.php
+ * puts
+ * on the wrapper. Only the wrapper and the editor placeholder belong here.
+ */
+
+.wp-block-dokan-store-product-section {
+
+	.products-list-heading {
+		margin-block-start: 0;
+	}
+
+	.seller-items {
+		clear: both;
+	}
+
+	&.is-editor-placeholder .dokan-info {
+		padding: 1.5em;
+		text-align: center;
+		border: 1px dashed currentcolor;
+		border-radius: 4px;
+		opacity: 0.7;
+	}
+}

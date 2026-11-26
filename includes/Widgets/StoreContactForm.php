@@ -80,6 +80,11 @@ class StoreContactForm extends WP_Widget {
 					'store_info' => $store_info,
 					'username'   => $username,
 					'email'      => $email,
+                    // Text overrides the store contact form block passes through its instance.
+                    'button_text'         => isset( $instance['button_text'] ) ? (string) $instance['button_text'] : '',
+                    'name_placeholder'    => isset( $instance['name_placeholder'] ) ? (string) $instance['name_placeholder'] : '',
+                    'email_placeholder'   => isset( $instance['email_placeholder'] ) ? (string) $instance['email_placeholder'] : '',
+                    'message_placeholder' => isset( $instance['message_placeholder'] ) ? (string) $instance['message_placeholder'] : '',
                 )
             );
 

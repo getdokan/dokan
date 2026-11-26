@@ -1,3 +1,61 @@
+<?php
+/**
+ * The template for displaying the store listing loop
+ *
+ * This template can be overridden by copying it to yourtheme/dokan/store-lists-loop.php
+ *
+ * HOWEVER, on occasion WooCommerce will need to update template files and you
+ * (the theme developer) will need to copy the new files to your theme to
+ * maintain compatibility. We try to do this as little as possible, but it does
+ * happen. When this occurs the version of the template file will be bumped and
+ * the readme will list any important changes.
+ *
+ * Note for overrides: the store list block passes its card settings through
+ * $args. A copy of this template that predates them keeps working, but it renders
+ * every card element and silently ignores those block settings.
+ *
+ * @see     https://docs.woocommerce.com/document/template-structure/
+ * @package Dokan/Templates
+ * @version DOKAN_SINCE
+ *
+ * @var array $sellers Seller query result.
+ * @var int   $per_row Cards per row.
+ * @var array $args    Optional card display overrides, see the defaults below.
+ */
+
+// Only the store listing block passes these; every other caller gets the full card.
+$card = wp_parse_args(
+    isset( $args ) ? $args : [],
+    [
+        'show_avatar'        => true,
+        'show_featured'      => true,
+        'show_open_close'    => true,
+        'show_rating'        => true,
+        'show_address'       => true,
+        'show_phone'         => true,
+        'default_store_name' => '',
+        // Text and icon overrides; empty keeps today's wording and icons.
+        'featured_text'      => '',
+        'open_text'          => '',
+        'closed_text'        => '',
+        'visit_store_text'   => '',
+        'no_vendor_text'     => '',
+        'prev_text'          => '',
+        'next_text'          => '',
+        'phone_icon'         => 'fas fa-phone-alt',
+        'address_icon'       => '',
+        'address_label'      => '',
+    ]
+);
+
+$featured_text    = \WeDevs\Dokan\Blocks\Styles::text( $card['featured_text'], __( 'Featured', 'dokan-lite' ) );
+$open_text        = \WeDevs\Dokan\Blocks\Styles::text( $card['open_text'], __( 'Open', 'dokan-lite' ) );
+$closed_text      = \WeDevs\Dokan\Blocks\Styles::text( $card['closed_text'], __( 'Closed', 'dokan-lite' ) );
+$visit_store_text = \WeDevs\Dokan\Blocks\Styles::text( $card['visit_store_text'], __( 'Visit Store', 'dokan-lite' ) );
+$no_vendor_text   = \WeDevs\Dokan\Blocks\Styles::text( $card['no_vendor_text'], __( 'No vendor found!', 'dokan-lite' ) );
+$prev_text        = \WeDevs\Dokan\Blocks\Styles::text( $card['prev_text'], __( '&larr; Previous', 'dokan-lite' ) );
+$next_text        = \WeDevs\Dokan\Blocks\Styles::text( $card['next_text'], __( 'Next &rarr;', 'dokan-lite' ) );
+?>
 <div id="dokan-seller-listing-wrap" class="grid-view">
     <div class="seller-listing-content">
         <?php if ( $sellers['users'] ) : ?>
@@ -6,8 +64,13 @@
                 foreach ( $sellers['users'] as $seller ) {
                     $vendor                   = dokan()->vendor->get( $seller->ID );
                     $store_name               = $vendor->get_shop_name();
+                    $store_name               = '' !== $store_name ? $store_name : $card['default_store_name'];
                     $store_url                = $vendor->get_shop_url();
-                    $store_rating             = $vendor->get_rating();
+                    // Uncached per-card SQL, so it is only paid for when the stars are shown.
+                    $store_rating             = $card['show_rating'] ? $vendor->get_rating() : [
+						'rating' => 0,
+						'count' => 0,
+					];
                     $is_store_featured        = $vendor->is_featured();
                     $store_phone              = $vendor->get_phone();
                     $store_info               = dokan_get_store_info( $seller->ID );
@@ -18,7 +81,8 @@
                     $store_banner_alt         = ! empty( $banner_image_alt ) ? $banner_image_alt : $store_name;
                     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
                     $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
-                    $store_open_is_on         = ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled && ! $is_store_featured ) ? 'store_open_is_on' : '';
+                    $store_open_close_visible = $card['show_open_close'] && 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled;
+                    $store_open_is_on         = ( $store_open_close_visible && ! $is_store_featured ) ? 'store_open_is_on' : '';
                     ?>
 
                     <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?>">
@@ -34,24 +98,24 @@
                             <div class="store-content">
                                 <div class="store-data-container">
                                     <div class="featured-favourite">
-                                        <?php if ( $is_store_featured ) : ?>
-                                            <div class="featured-label"><?php esc_html_e( 'Featured', 'dokan-lite' ); ?></div>
+                                        <?php if ( $is_store_featured && $card['show_featured'] ) : ?>
+                                            <div class="featured-label"><?php echo esc_html( $featured_text ); ?></div>
                                         <?php endif ?>
 
                                         <?php do_action( 'dokan_seller_listing_after_featured', $seller, $store_info ); ?>
                                     </div>
-                                    <?php if ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled ) : ?>
+                                    <?php if ( $store_open_close_visible ) : ?>
                                         <?php if ( dokan_is_store_open( $seller->ID ) ) { ?>
-                                            <span class="dokan-store-is-open-close-status dokan-store-is-open-status" title="<?php esc_attr_e( 'Store is Open', 'dokan-lite' ); ?>"><?php esc_html_e( 'Open', 'dokan-lite' ); ?></span>
+                                            <span class="dokan-store-is-open-close-status dokan-store-is-open-status" title="<?php esc_attr_e( 'Store is Open', 'dokan-lite' ); ?>"><?php echo esc_html( $open_text ); ?></span>
                                         <?php } else { ?>
-                                            <span class="dokan-store-is-open-close-status dokan-store-is-closed-status" title="<?php esc_attr_e( 'Store is Closed', 'dokan-lite' ); ?>"><?php esc_html_e( 'Closed', 'dokan-lite' ); ?></span>
+                                            <span class="dokan-store-is-open-close-status dokan-store-is-closed-status" title="<?php esc_attr_e( 'Store is Closed', 'dokan-lite' ); ?>"><?php echo esc_html( $closed_text ); ?></span>
                                         <?php } ?>
                                     <?php endif ?>
 
                                     <div class="store-data <?php echo esc_attr( $store_open_is_on ); ?>">
                                         <h2><a href="<?php echo esc_attr( $store_url ); ?>"><?php echo esc_html( $store_name ); ?></a> <?php do_action( 'dokan_store_list_loop_after_store_name', $vendor ); ?></h2>
 
-                                        <?php if ( ! empty( $store_rating['count'] ) ) : ?>
+                                        <?php if ( $card['show_rating'] && ! empty( $store_rating['count'] ) ) : ?>
                                             <div class="dokan-seller-rating"
                                                 title="
                                                 <?php
@@ -73,7 +137,7 @@
                                             </div>
                                         <?php endif ?>
 
-                                        <?php if ( ! dokan_is_vendor_info_hidden( 'address' ) && $store_address ) : ?>
+                                        <?php if ( $card['show_address'] && ! dokan_is_vendor_info_hidden( 'address' ) && $store_address ) : ?>
                                             <?php
                                             $allowed_tags = [
                                                 'span' => [
@@ -81,14 +145,18 @@
                                                 ],
                                                 'br'   => [],
                                             ];
+
+                                            // Built first so the paragraph holds no stray whitespace; list view shows it inline.
+                                            $address_html  = '' !== $card['address_icon'] ? '<i class="' . esc_attr( $card['address_icon'] ) . '" aria-hidden="true"></i>' : '';
+                                            $address_html .= '' !== $card['address_label'] ? '<span class="store-address-label">' . esc_html( $card['address_label'] ) . '</span>' : '';
+                                            $address_html .= wp_kses( $store_address, $allowed_tags );
                                             ?>
-                                            <p class="store-address"><?php echo wp_kses( $store_address, $allowed_tags ); ?></p>
+                                            <p class="store-address<?php echo '' !== $card['address_icon'] ? ' has-address-icon' : ''; ?>"><?php echo $address_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each part is escaped above. ?></p>
                                         <?php endif ?>
 
-                                        <?php if ( ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
-                                            <p class="store-phone">
-                                                <i class="fas fa-phone-alt" aria-hidden="true"></i> <?php echo esc_html( $store_phone ); ?>
-                                            </p>
+                                        <?php if ( $card['show_phone'] && ! dokan_is_vendor_info_hidden( 'phone' ) && $store_phone ) { ?>
+                                            <?php $phone_html = ( '' !== $card['phone_icon'] ? '<i class="' . esc_attr( $card['phone_icon'] ) . '" aria-hidden="true"></i> ' : '' ) . esc_html( $store_phone ); ?>
+                                            <p class="store-phone"><?php echo $phone_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each part is escaped above. ?></p>
                                         <?php } ?>
 
                                         <?php do_action( 'dokan_seller_listing_after_store_data', $seller, $store_info ); ?>
@@ -97,14 +165,16 @@
                             </div>
 
                             <div class="store-footer">
-                                <div class="seller-avatar">
-                                    <a href="<?php echo esc_url( $store_url ); ?>">
-                                        <img src="<?php echo esc_url( $vendor->get_avatar() ); ?>"
-                                            alt="<?php echo esc_attr( $vendor->get_shop_name() ); ?>"
-                                            size="150" />
-                                    </a>
-                                </div>
-                                <a href="<?php echo esc_url( $store_url ); ?>" title="<?php esc_attr_e( 'Visit Store', 'dokan-lite' ); ?>">
+                                <?php if ( $card['show_avatar'] ) : ?>
+                                    <div class="seller-avatar">
+                                        <a href="<?php echo esc_url( $store_url ); ?>">
+                                            <img src="<?php echo esc_url( $vendor->get_avatar() ); ?>"
+                                                alt="<?php echo esc_attr( $store_name ); ?>"
+                                                size="150" />
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                                <a href="<?php echo esc_url( $store_url ); ?>" title="<?php echo esc_attr( $visit_store_text ); ?>" aria-label="<?php echo esc_attr( $visit_store_text ); ?>">
                                     <span class="dashicons dashicons-arrow-right-alt2 dokan-btn-theme dokan-btn-round"></span>
                                 </a>
                                 <?php do_action( 'dokan_seller_listing_footer_content', $seller, $store_info ); ?>
@@ -128,8 +198,8 @@
                     'total'     => $num_of_pages,
                     'base'      => $pagination_base,
                     'type'      => 'array',
-                    'prev_text' => __( '&larr; Previous', 'dokan-lite' ),
-                    'next_text' => __( 'Next &rarr;', 'dokan-lite' ),
+                    'prev_text' => $prev_text,
+                    'next_text' => $next_text,
                 ];
 
                 if ( ! empty( $search_query ) ) {
@@ -155,7 +225,7 @@
             ?>
 
         <?php else : ?>
-            <p class="dokan-error"><?php esc_html_e( 'No vendor found!', 'dokan-lite' ); ?></p>
+            <p class="dokan-error"><?php echo esc_html( $no_vendor_text ); ?></p>
         <?php endif; ?>
     </div>
 </div>

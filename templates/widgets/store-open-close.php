@@ -3,9 +3,17 @@
  * Dokan Store Open Close Time Widget
  *
  * @since   2.7.3
+ * @version DOKAN_SINCE
  *
  * @package dokan
+ *
+ * @var int    $seller_id
+ * @var array  $dokan_store_time
+ * @var array  $dokan_days
+ * @var string $off_day_text Optional wording for a closed day, from the opening hours block; empty keeps today's.
  */
+
+$off_day_text = \WeDevs\Dokan\Blocks\Styles::text( $off_day_text ?? '', __( 'Off Day', 'dokan-lite' ) );
 ?>
 <div class="dokan-store-open-close">
     <?php foreach ( $dokan_days as $day => $value ) : ?>
@@ -15,7 +23,7 @@
                 '<div class="open-close-day %1$s-time"><div class="working-day">%2$s</div> : <div class="store-times"> %3$s </div></div>',
                 esc_attr( $day ),
                 esc_html( ucfirst( dokan_get_translated_days( $day ) ) ),
-                esc_html__( 'Off Day', 'dokan-lite' )
+                esc_html( $off_day_text )
             );
             continue;
         }
