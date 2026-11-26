@@ -15,14 +15,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * work on an empty marketplace — the same approach the Elementor module's
  * StoreData editing mode uses.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class PreviewVendor extends Vendor {
 
     /**
      * Class constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      */
     public function __construct() {
         parent::__construct( null );
@@ -31,7 +31,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview data set, filterable for extensions.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return array
      */
@@ -59,7 +59,7 @@ class PreviewVendor extends Vendor {
     /**
      * Whether this vendor instance is an editor preview stand-in.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return bool
      */
@@ -70,7 +70,7 @@ class PreviewVendor extends Vendor {
     /**
      * Vendor id of the stand-in.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return int
      */
@@ -81,7 +81,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview store name.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
@@ -92,7 +92,7 @@ class PreviewVendor extends Vendor {
     /**
      * Placeholder store URL; a preview links nowhere.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
@@ -103,7 +103,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview store banner URL.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
@@ -114,7 +114,7 @@ class PreviewVendor extends Vendor {
     /**
      * Attachment id of the preview banner.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return int
      */
@@ -125,7 +125,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview store avatar URL.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
@@ -136,7 +136,7 @@ class PreviewVendor extends Vendor {
     /**
      * Attachment id of the preview avatar.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return int
      */
@@ -147,7 +147,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview phone number.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
@@ -158,7 +158,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview email address.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
@@ -169,7 +169,7 @@ class PreviewVendor extends Vendor {
     /**
      * Whether the preview shows its email.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return bool
      */
@@ -180,7 +180,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview rating, as `rating` and `count`.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return array
      */
@@ -194,7 +194,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview social profile URLs.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return array
      */
@@ -205,7 +205,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview store info.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return array
      */
@@ -216,7 +216,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview opening hours, in the shape the vendor settings store them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return array
      */
@@ -243,7 +243,7 @@ class PreviewVendor extends Vendor {
     /**
      * Whether the preview advertises opening hours.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return bool
      */
@@ -255,7 +255,7 @@ class PreviewVendor extends Vendor {
      * Preview product categories, shaped like the terms get_store_categories()
      * returns so the store category walker can render them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param bool $best_selling Unused; the preview has no sales.
      *
@@ -286,7 +286,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview store location, as the one-line address a map marker labels.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
@@ -297,7 +297,7 @@ class PreviewVendor extends Vendor {
     /**
      * Whether the preview is a featured vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return bool
      */
@@ -308,7 +308,7 @@ class PreviewVendor extends Vendor {
     /**
      * Preview terms and conditions copy.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */

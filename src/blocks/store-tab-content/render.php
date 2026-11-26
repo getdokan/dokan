@@ -8,7 +8,7 @@
  * product sort form, all hang off `dokan_store_profile_frame_after` and keep
  * working here before a single Pro block exists.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.
@@ -124,7 +124,7 @@ if ( '' !== $current_tab && 'products' !== $current_tab ) {
             /**
              * Renders the body of a store tab that is not one of Lite's own.
              *
-             * @since DOKAN_SINCE
+             * @since 5.3.7
              *
              * @param string                       $current_tab Tab key from `dokan_get_store_tabs()`.
              * @param \WeDevs\Dokan\Vendor\Vendor   $vendor      Vendor whose store is being rendered.

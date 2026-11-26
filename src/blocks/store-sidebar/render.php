@@ -8,7 +8,7 @@
  * from `dokan_sidebar_store_after` and would otherwise have nowhere to go on a
  * block theme.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content — inner blocks, already rendered.

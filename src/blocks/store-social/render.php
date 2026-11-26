@@ -9,7 +9,7 @@
  * buttons attach to through Block Hooks — being a registered block type is all
  * that requires, so nothing here needs to know about them.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

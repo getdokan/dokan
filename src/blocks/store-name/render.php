@@ -7,7 +7,7 @@
  * chain no sibling block can reproduce. See
  * docs/adr/0009-store-header-blocks-emit-fresh-markup.md.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

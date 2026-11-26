@@ -16,14 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * URLs resolve at include time. Pro contributes files through the
  * `dokan_block_pattern_files` filter.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class Patterns implements Hookable {
 
     /**
      * Register WordPress hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -34,7 +34,7 @@ class Patterns implements Hookable {
     /**
      * Register pattern categories and patterns.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -48,7 +48,7 @@ class Patterns implements Hookable {
         /**
          * Block pattern files to register. Pro modules append theirs here.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param string[] $files Absolute paths of pattern PHP files.
          */
@@ -62,7 +62,7 @@ class Patterns implements Hookable {
     /**
      * Register the Dokan pattern categories.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -76,7 +76,7 @@ class Patterns implements Hookable {
     /**
      * Register a single pattern file.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param string $file Absolute path of the pattern PHP file.
      *
@@ -141,7 +141,7 @@ class Patterns implements Hookable {
     /**
      * Get a pattern file's block markup.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param string $file Absolute path of the pattern PHP file.
      *

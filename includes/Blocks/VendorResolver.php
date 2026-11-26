@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * explicit block context, then the queried store page, then a preview
  * vendor inside the editor, then nothing.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class VendorResolver {
 
@@ -27,7 +27,7 @@ class VendorResolver {
      * attribute or block context, so saved markup cannot point a block at an
      * arbitrary user.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param array $block_context Block context. Unused, kept for the render.php call shape.
      * @param array $attributes    Block attributes. Unused, kept for the render.php call shape.
@@ -62,7 +62,7 @@ class VendorResolver {
      * live on any page, so the context is set up for the duration of the render
      * and restored afterwards.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param Vendor   $vendor   Vendor being rendered.
      * @param callable $renderer Renderer that echoes its output.
@@ -101,7 +101,7 @@ class VendorResolver {
      * Site Editor), and those requests carry `context=edit`. `is_admin()` covers
      * the widgets screen and classic-editor previews.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return bool
      */

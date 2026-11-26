@@ -7,7 +7,7 @@
  * Biography tabs appear here with no block-side work — the same as on the
  * classic page.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

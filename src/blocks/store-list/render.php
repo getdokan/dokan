@@ -5,7 +5,7 @@
  * Mirrors the `[dokan-stores]` shortcode query path and reuses the
  * `store-lists-loop` template so cards, hooks and pagination stay identical.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array $attributes Block attributes.
  */

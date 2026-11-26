@@ -16,14 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * `dokan_block_type_collections` filter — the same Lite → Pro extension
  * pattern used for REST controllers (`dokan_rest_api_class_map`).
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  */
 class Manager implements Hookable {
 
     /**
      * Register WordPress hooks.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -43,7 +43,7 @@ class Manager implements Hookable {
      * where helpers such as `dokan_store_sidebar_args()` would otherwise be
      * undefined and fatal.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -56,7 +56,7 @@ class Manager implements Hookable {
     /**
      * Publish the attributes of the block about to render.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param array  $attributes Block attributes.
      * @param string $block_name Name of the block rendering, e.g. `dokan/store-list`.
@@ -73,7 +73,7 @@ class Manager implements Hookable {
          * its setting listens here — Dokan Pro's map toggle lives on the filter
          * bar, but the map itself can render inside the grid.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param array  $attributes Block attributes.
          * @param string $block_name Name of the block rendering, so a listener can tell the bar from the grid.
@@ -94,7 +94,7 @@ class Manager implements Hookable {
      * Dokan's own listener draws the classic filter template the blocks replace,
      * so it stands aside for the dispatch and goes back on the hook afterwards.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param array $stores Store query result passed to the action.
      *
@@ -128,7 +128,7 @@ class Manager implements Hookable {
     /**
      * Register all block types from the built metadata collections.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return void
      */
@@ -136,7 +136,7 @@ class Manager implements Hookable {
         /**
          * Block metadata collections to register. Pro modules append theirs here.
          *
-         * @since DOKAN_SINCE
+         * @since 5.3.7
          *
          * @param array $collections Map of collection path => manifest file path.
          */
@@ -161,7 +161,7 @@ class Manager implements Hookable {
     /**
      * Register the `dokan` block category.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @param array $categories Registered block categories.
      *

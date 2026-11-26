@@ -6,7 +6,7 @@
  * override stay shared with the classic listing. Talks to `dokan/store-list`
  * through GET params only.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array $attributes Block attributes.
  */

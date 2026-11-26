@@ -7,7 +7,7 @@
  * The widget gates on `dokan_is_store_page()` and reads the `author` query var,
  * both of which `VendorResolver::render_in_store_context()` supplies.
  *
- * @since DOKAN_SINCE
+ * @since 5.3.7
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block content.

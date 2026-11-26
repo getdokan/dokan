@@ -4,6 +4,42 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.7',
+        'released' => '2026-11-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added Gutenberg blocks and patterns for the store listing and single store pages, so block themes can lay them out in the Site Editor.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'On block themes, the single store page now uses Dokan\'s new block template, unless the theme provides its own store page template.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'The per-product admin commission fields on the product edit screen now escape their stored values, closing a stored XSS vulnerability.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Searching the admin settings now finds the option you search for, showing only the matching settings instead of every field on the page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store listing cards and vendor avatars now keep their layout on themes that don\'t use border-box sizing, such as Astra.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The store listing grid and list buttons now show the active view, and each listing on a page responds only to its own controls.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.3.6',
         'released' => '2026-11-23',
         'changes'  => [

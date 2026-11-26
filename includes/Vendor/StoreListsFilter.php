@@ -81,7 +81,7 @@ class StoreListsFilter {
      * blocks each render in a request of their own, so this is what keeps their
      * results describing the same result set.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return array
      */
@@ -111,7 +111,7 @@ class StoreListsFilter {
     /**
      * Get the sort option in effect, falling back to the marketplace default.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.7
      *
      * @return string
      */
