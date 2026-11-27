@@ -98,6 +98,11 @@ class Manager {
             'banner'    => $store->get_banner(),
         );
 
+        // The admin's "Hide Store Address" setting covers the embedded store too; only the owning vendor and admins keep it.
+        if ( dokan_is_vendor_info_hidden( 'address' ) && ! current_user_can( 'manage_woocommerce' ) && absint( $author_id ) !== absint( dokan_get_current_user_id() ) ) {
+            unset( $data['store']['address'] );
+        }
+
         $response->set_data( $data );
         return $response;
     }

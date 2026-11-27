@@ -1129,6 +1129,11 @@ class ProductController extends DokanRESTController {
             'row_actions'           => $can_view_private ? dokan_product_get_row_action( $product->get_id(), false ) : [],
         ];
 
+        // The admin's "Hide Store Address" setting covers the embedded store too; only the owning vendor and admins keep it.
+        if ( dokan_is_vendor_info_hidden( 'address' ) && ! current_user_can( 'manage_woocommerce' ) && absint( $author_id ) !== absint( dokan_get_current_user_id() ) ) {
+            unset( $data['store']['address'] );
+        }
+
         $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
         $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
 
