@@ -13,6 +13,7 @@ use WP_REST_Response;
  *
  * @covers \WeDevs\Dokan\REST\ProductController::prepare_data_for_response
  * @covers \WeDevs\Dokan\REST\Manager::prepare_product_response
+ * @covers \WeDevs\Dokan\Utilities\VendorUtil::can_view_store_address
  */
 class ProductStoreAddressVisibilityTest extends DokanTestCase {
 

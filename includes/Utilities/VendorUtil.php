@@ -134,6 +134,25 @@ class VendorUtil {
     }
 
     /**
+     * Check whether the current user may see a vendor's store address.
+     *
+     * The admin's "Hide Store Address" setting hides it from everyone except the vendor, their staff and store admins.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id Vendor ID.
+     *
+     * @return bool
+     */
+    public static function can_view_store_address( int $vendor_id ): bool {
+        if ( ! dokan_is_vendor_info_hidden( 'address' ) || current_user_can( 'manage_woocommerce' ) ) {
+            return true;
+        }
+
+        return $vendor_id > 0 && dokan_get_current_user_id() === $vendor_id;
+    }
+
+    /**
      * Check whether the current user may manage the given user's vendor account on this site.
      *
      * @since 5.3.3
