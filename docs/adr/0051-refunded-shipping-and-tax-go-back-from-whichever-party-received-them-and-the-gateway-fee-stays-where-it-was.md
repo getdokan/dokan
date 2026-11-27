@@ -48,7 +48,7 @@ Partial example (defaults): refund only the shipping line 10.00 and its 1.00 tax
 
 ## Edge cases
 
-- Refunded shipping and tax are taken from the refund's own `shipping` and `tax` lines. A refund entered as an amount only (no lines) has none, so nothing is routed to anybody; see [ADR-0050](./0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md).
+- Refunded shipping and tax are taken from the refund's own `shipping` and `tax` lines. A refund entered as an amount only (no lines) has none. It is spread over what is left of the order, so each party gives back the share the order left them; see [ADR-0050](./0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md).
 - The gateway-fee filter fires for both recipients even when the order has no stored gateway fee, so an integration can return a fee that Dokan never recorded.
 - If `dokan_gateway_fee` is set but `dokan_gateway_fee_paid_by` is empty, the payer is inferred: `admin` for `dokan-stripe-connect`, otherwise `seller` (`lite:includes/Commission/OrderRefundCommission.php::get_dokan_gateway_fee()`).
 

@@ -152,6 +152,44 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 	}
 
 	/**
+	 * Create a refund entered as an amount only, with no lines.
+	 *
+	 * @param WC_Order $order
+	 * @param float    $amount
+	 *
+	 * @return \WC_Order_Refund
+	 */
+	protected function create_amount_only_refund( WC_Order $order, float $amount ) {
+		$refund = wc_create_refund(
+			[
+				'amount'         => $amount,
+				'reason'         => 'Testing refund',
+				'order_id'       => $order->get_id(),
+				'line_items'     => [],
+				'refund_payment' => false,
+			]
+		);
+
+		$this->assertNotWPError( $refund );
+
+		return $refund;
+	}
+
+	/**
+	 * Get the order's commission after refunds, from a fresh order.
+	 *
+	 * @param WC_Order $order
+	 *
+	 * @return OrderCommission
+	 */
+	protected function get_order_commission( WC_Order $order ): OrderCommission {
+		$order_commission = dokan_get_container()->get( OrderCommission::class );
+		$order_commission->set_order( wc_get_order( $order->get_id() ) );
+
+		return $order_commission->calculate();
+	}
+
+	/**
 	 * Get a fresh calculator instance for a refund.
 	 *
 	 * @param \WC_Order_Refund $refund
@@ -399,5 +437,199 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 		$this->assertEquals( 0.0, $refund_commission->get_admin_net_commission() );
 
 		$this->assertEquals( 0.0, floatval( apply_filters( 'dokan_vendor_earning_in_refund', $refund, $order ) ) );
+	}
+
+	/**
+	 * A refund entered as an amount only has no lines, so it is spread over the order.
+	 *
+	 * Order total 45: item 30 (vendor 27, admin 3) and shipping 15 to the admin.
+	 * Refund 15 by amount, a third of the order: the vendor gives back 27 / 3 = 9.
+	 */
+	public function test_amount_only_refund_is_spread_over_the_order() {
+		$order  = $this->create_order();
+		$refund = $this->create_amount_only_refund( $order, 15 );
+
+		$this->assertEquals( 9.0, $this->get_refund_commission( $refund, $order )->get_vendor_total_refund() );
+		$this->assertEquals( 9.0, floatval( apply_filters( 'dokan_vendor_earning_in_refund', $refund, $order ) ) );
+
+		// The order keeps two thirds of each party's figure.
+		$order_commission = $this->get_order_commission( $order );
+
+		$this->assertEquals( 18.0, round( $order_commission->get_vendor_earning(), 2 ) );
+		$this->assertEquals( 12.0, round( $order_commission->get_admin_commission(), 2 ) );
+	}
+
+	/**
+	 * A refund whose lines carry no amount is an amount-only refund too.
+	 *
+	 * Dokan Pro's refund requests send every line with a '0.00' total, which WooCommerce keeps as a zero line.
+	 */
+	public function test_refund_with_zero_lines_is_spread_like_an_amount_only_refund() {
+		$order   = $this->create_order();
+		$item_id = array_key_first( $order->get_items() );
+
+		$refund = wc_create_refund(
+			[
+				'amount'         => 15,
+				'order_id'       => $order->get_id(),
+				'line_items'     => [
+					$item_id => [
+						'qty'          => 0,
+						'refund_total' => '0.00',
+						'refund_tax'   => [],
+					],
+				],
+				'refund_payment' => false,
+			]
+		);
+
+		$this->assertCount( 1, $refund->get_items() );
+		$this->assertEquals( 9.0, $this->get_refund_commission( $refund, $order )->get_vendor_total_refund() );
+		$this->assertEquals( 18.0, round( $this->get_order_commission( $order )->get_vendor_earning(), 2 ) );
+	}
+
+	/**
+	 * The amount-only refund is booked once on the vendor balance and kept in dokan_orders.
+	 */
+	public function test_amount_only_refund_is_booked_on_the_balance_and_in_dokan_orders() {
+		global $wpdb;
+
+		$order = $this->create_order();
+
+		$this->create_amount_only_refund( $order, 15 );
+
+		$this->assertDatabaseCount(
+			'dokan_vendor_balance',
+			1,
+			[
+				'trn_id'   => $order->get_id(),
+				'trn_type' => 'dokan_refund',
+			]
+		);
+		$this->assertEquals( 9.0, (float) $wpdb->get_var( $wpdb->prepare( "SELECT credit FROM {$wpdb->dokan_vendor_balance} WHERE trn_id = %d AND trn_type = 'dokan_refund'", $order->get_id() ) ) );
+
+		// The order's own balance row is untouched.
+		$this->assertEquals( 27.0, (float) $wpdb->get_var( $wpdb->prepare( "SELECT debit FROM {$wpdb->dokan_vendor_balance} WHERE trn_id = %d AND trn_type = 'dokan_orders'", $order->get_id() ) ) );
+
+		// dokan_orders is rewritten on every order save, so the figure has to survive one.
+		wc_get_order( $order->get_id() )->save();
+
+		$this->assertEquals( 18.0, (float) $wpdb->get_var( $wpdb->prepare( "SELECT net_amount FROM {$wpdb->dokan_orders} WHERE order_id = %d", $order->get_id() ) ) );
+	}
+
+	/**
+	 * An amount-only refund after an itemised one takes what the itemised refund left.
+	 *
+	 * Vendor earning 27. Refund 10 of the item by items (vendor 9), then the rest of the order by amount.
+	 * Each share is read when its refund is made, as the refund handlers do.
+	 */
+	public function test_amount_only_refund_after_an_itemised_one_takes_what_is_left() {
+		$order    = $this->create_order();
+		$itemised = $this->create_refund( $order, 10 );
+
+		$this->assertEquals( 9.0, $this->get_refund_commission( $itemised, $order )->get_vendor_total_refund() );
+
+		$the_rest = $this->create_amount_only_refund( $order, 35 );
+
+		$this->assertEquals( 18.0, $this->get_refund_commission( $the_rest, $order )->get_vendor_total_refund() );
+		$this->assertEquals( 0.0, round( $this->get_order_commission( $order )->get_vendor_earning(), 2 ) );
+		$this->assertEquals( 0.0, round( $this->get_order_commission( $order )->get_admin_commission(), 2 ) );
+	}
+
+	/**
+	 * An itemised refund after an amount-only one takes what the amount-only refund left.
+	 *
+	 * Vendor earning 27. Refund a third of the order by amount (vendor 9), then the whole item by items.
+	 * Without the amount-only refund the item refund alone would take 27, and 36 in all.
+	 */
+	public function test_itemised_refund_after_an_amount_only_one_takes_what_is_left() {
+		$order       = $this->create_order();
+		$amount_only = $this->create_amount_only_refund( $order, 15 );
+
+		$this->assertEquals( 9.0, $this->get_refund_commission( $amount_only, $order )->get_vendor_total_refund() );
+
+		$item_id  = array_key_first( $order->get_items() );
+		$itemised = wc_create_refund(
+			[
+				'amount'         => 30,
+				'order_id'       => $order->get_id(),
+				'line_items'     => [
+					$item_id => [
+						'qty'          => 3,
+						'refund_total' => 30,
+						'refund_tax'   => [],
+					],
+				],
+				'refund_payment' => false,
+			]
+		);
+
+		$this->assertEquals( 18.0, $this->get_refund_commission( $itemised, $order )->get_vendor_total_refund() );
+		$this->assertEquals( 0.0, round( $this->get_order_commission( $order )->get_vendor_earning(), 2 ) );
+	}
+
+	/**
+	 * Setting the order to Refunded makes WooCommerce refund the rest by amount, which takes back the whole earning.
+	 */
+	public function test_setting_the_order_to_refunded_takes_back_the_vendor_earning() {
+		global $wpdb;
+
+		$order = $this->create_order();
+		$order->update_status( 'refunded' );
+
+		$this->assertEquals( 27.0, (float) $wpdb->get_var( $wpdb->prepare( "SELECT SUM( credit ) FROM {$wpdb->dokan_vendor_balance} WHERE trn_id = %d AND trn_type = 'dokan_refund'", $order->get_id() ) ) );
+		$this->assertEquals( 0.0, round( $this->get_order_commission( $order )->get_vendor_earning(), 2 ) );
+	}
+
+	/**
+	 * A refund of a line that is not the vendor's is still not charged to the vendor.
+	 */
+	public function test_shipping_only_refund_is_not_an_amount_only_refund() {
+		$order            = $this->create_order();
+		$shipping_item_id = array_key_first( $order->get_items( 'shipping' ) );
+
+		$refund = wc_create_refund(
+			[
+				'amount'         => 15,
+				'order_id'       => $order->get_id(),
+				'line_items'     => [
+					$shipping_item_id => [
+						'qty'          => 0,
+						'refund_total' => 15,
+						'refund_tax'   => [],
+					],
+				],
+				'refund_payment' => false,
+			]
+		);
+
+		// Shipping went to the admin, so the vendor gives nothing back and keeps the full earning.
+		$this->assertEquals( 0.0, $this->get_refund_commission( $refund, $order )->get_vendor_total_refund() );
+		$this->assertEquals( 27.0, round( $this->get_order_commission( $order )->get_vendor_earning(), 2 ) );
+	}
+
+	/**
+	 * With cash on delivery excluded from the balance, the refund is not booked but the order figure follows.
+	 */
+	public function test_amount_only_refund_of_an_excluded_cod_order_is_not_booked() {
+		$withdraw_options                        = get_option( 'dokan_withdraw', [] );
+		$withdraw_options['exclude_cod_payment'] = 'on';
+		update_option( 'dokan_withdraw', $withdraw_options );
+
+		$order = $this->create_order();
+		$order->set_payment_method( 'cod' );
+		$order->save();
+
+		$this->create_amount_only_refund( $order, 15 );
+
+		$this->assertDatabaseCount(
+			'dokan_vendor_balance',
+			0,
+			[
+				'trn_id'   => $order->get_id(),
+				'trn_type' => 'dokan_refund',
+			]
+		);
+		$this->assertEquals( 18.0, round( $this->get_order_commission( $order )->get_vendor_earning(), 2 ) );
 	}
 }

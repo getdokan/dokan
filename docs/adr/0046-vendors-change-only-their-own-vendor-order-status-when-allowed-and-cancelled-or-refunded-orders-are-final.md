@@ -52,7 +52,7 @@ With `order_status_change` = `off`, steps 1 and 4 are refused too; only the Stor
 
 ## Edge cases
 
-- **Setting Refunded from the dashboard** produces a WooCommerce status-only refund that does not change the Vendor's Balance ([ADR-0050](./0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md)).
+- **Setting Refunded from the dashboard** produces a WooCommerce status-only refund for the remaining total, which takes back what was left of the Vendor's Earning ([ADR-0050](./0050-only-the-itemised-part-of-a-refund-is-charged-to-the-vendor.md), case 2).
 - **Statuses offered** are all registered WooCommerce statuses (`wc_get_order_statuses()`, `lite:templates/orders/details.php` (the `$statuses` assignment at the top); REST validates against the same list, `lite:includes/REST/OrderController.php::prepare_object_for_database()`), including custom ones.
 - **The Store Admin is not bound by the final-status rule.** WP-admin and `manage_woocommerce` users can reopen cancelled or refunded orders.
 
