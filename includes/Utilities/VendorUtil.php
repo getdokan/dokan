@@ -136,7 +136,7 @@ class VendorUtil {
     /**
      * Check whether the current user may see a vendor's store address.
      *
-     * The Store Admin's "Store Address" visibility setting hides it from everyone except the Vendor, their Vendor Staff and Store Admins.
+     * A hidden store address stays visible only to the Store Admin and the Vendor.
      *
      * @since DOKAN_SINCE
      *
