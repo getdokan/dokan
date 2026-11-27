@@ -17,6 +17,7 @@ use WC_Product_Download;
 use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
 use WeDevs\Dokan\Product\ProductAttribute;
+use WeDevs\Dokan\Utilities\VendorUtil;
 
 /**
  * Store API Controller
@@ -1124,10 +1125,13 @@ class ProductController extends DokanRESTController {
                 'name'    => $store->get_shop_name(),
                 'url'     => $store->get_shop_url(),
                 'avatar'  => $store->get_avatar(),
-                'address' => $store->get_address(),
             ],
             'row_actions'           => $can_view_private ? dokan_product_get_row_action( $product->get_id(), false ) : [],
         ];
+
+        if ( VendorUtil::current_user_can_view_store_address( (int) $store->get_id() ) ) {
+            $data['store']['address'] = $store->get_address();
+        }
 
         $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
         $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
