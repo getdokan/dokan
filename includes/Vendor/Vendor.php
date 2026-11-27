@@ -882,9 +882,10 @@ class Vendor {
         $earning       = Cache::get( $cache_key, $cache_group );
         $on_date       = $on_date->format( 'Y-m-d H:i:s' );
 
-
         if ( false === $earning ) {
             $status = dokan_withdraw_get_active_order_status_in_comma();
+            // A refund re-credit is not an order, so the withdraw order status setting must not hide it.
+            // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $status is escaped in dokan_withdraw_get_active_order_status_in_comma().
             $result = $wpdb->get_row(
                 $wpdb->prepare(
                     "SELECT SUM(debit) as earnings,
@@ -893,10 +894,12 @@ class Vendor {
                         WHERE vendor_id = %d AND DATE(balance_date) <= %s
                     ) as withdraw
                     from {$wpdb->prefix}dokan_vendor_balance
-                    WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status)",
+                    WHERE vendor_id = %d AND DATE(balance_date) <= %s
+                    AND ( status IN($status) OR trn_type = 'dokan_refund' )",
                     $seller_id, $on_date, $seller_id, $on_date
                 )
             );
+            // phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
             $earning = (float) $result->earnings - (float) NumberUtil::round( $result->withdraw, wc_get_rounding_precision() );
 
