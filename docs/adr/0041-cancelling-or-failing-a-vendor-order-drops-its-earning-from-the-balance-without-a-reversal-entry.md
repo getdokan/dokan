@@ -30,7 +30,7 @@ Teammates ask "what happens to the Vendor's money when an order is cancelled?" a
 
 **Who can cancel what:**
 
-- On a multi-vendor Order, cancelling the parent cancels only the Suborders whose current status accepts `wc-cancelled` under the whitelist: `pending`, `processing` and `failed` ones. `completed` and `on-hold` Suborders keep their status and their Earning status ([ADR-0039](./0039-a-parent-order-status-change-is-copied-to-its-suborders-only-along-an-allowed-transition-list.md)). A failed parent likewise fails only `pending`, `on-hold` and `processing` Suborders.
+- On a multi-vendor Order, cancelling the parent cancels only the Suborders whose current status accepts `wc-cancelled` under the whitelist: `pending`, `on-hold`, `processing` and `failed` ones. `completed` Suborders keep their status and their Earning status ([ADR-0039](./0039-a-parent-order-status-change-is-copied-to-its-suborders-only-along-an-allowed-transition-list.md)). A failed parent likewise fails only `pending`, `on-hold` and `processing` Suborders.
 - A Vendor can cancel their own Vendor order from the Vendor dashboard when allowed ([ADR-0046](./0046-vendors-change-only-their-own-vendor-order-status-when-allowed-and-cancelled-or-refunded-orders-are-final.md)). Cancelling a Suborder does not change the parent Order.
 - WooCommerce itself cancels unpaid `pending` orders when the hold-stock time runs out; those Earnings had not counted anyway.
 

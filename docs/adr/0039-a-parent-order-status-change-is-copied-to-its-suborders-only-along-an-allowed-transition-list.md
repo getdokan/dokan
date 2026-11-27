@@ -20,7 +20,7 @@ Lite ADR 0004 (`docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`
 | Suborder's current status | Parent statuses that are copied down |
 |---|---|
 | `wc-pending` | any status |
-| `wc-on-hold` | `wc-pending`, `wc-on-hold`, `wc-processing`, `wc-completed`, `wc-failed` |
+| `wc-on-hold` | `wc-pending`, `wc-on-hold`, `wc-processing`, `wc-completed`, `wc-failed`, `wc-cancelled` |
 | `wc-processing` | `wc-completed`, `wc-failed`, `wc-cancelled`, `wc-refunded` |
 | `wc-completed` | `wc-refunded` |
 | `wc-failed` | `wc-pending`, `wc-on-hold`, `wc-processing`, `wc-failed`, `wc-cancelled` |
@@ -31,7 +31,7 @@ Lite ADR 0004 (`docs/adr/0004-vendor-order-is-authoritative-parent-is-mirror.md`
 
 | Parent set to | Suborders that follow | Suborders that do not follow |
 |---|---|---|
-| `cancelled` | `pending`, `processing`, `failed` | `on-hold`, `completed`, `cancelled`, `refunded` |
+| `cancelled` | `pending`, `on-hold`, `processing`, `failed` | `completed`, `cancelled`, `refunded` |
 | `failed` | `pending`, `on-hold`, `processing`, `failed` | `completed`, `cancelled`, `refunded` |
 | `refunded` | `pending`, `processing`, `completed` | `on-hold`, `failed`, `cancelled`, `refunded` |
 | `completed` | `pending`, `on-hold`, `processing` | `completed` (logged as skipped), `failed`, `cancelled`, `refunded` |
@@ -67,7 +67,7 @@ Result: the Order says `processing`, Vendor A's order says `completed`, Vendor B
 
 ## Edge cases
 
-- **On-hold orders are not cancelled or refunded from the parent.** `wc-on-hold` does not list `wc-cancelled` or `wc-refunded`. An Order paid by bank transfer that sits `on-hold` and is then cancelled by the Store Admin leaves its Suborders `on-hold`; they must be cancelled one by one.
+- **On-hold orders are cancelled from the parent, but not refunded.** `wc-on-hold` lists `wc-cancelled`, so an Order paid by bank transfer that sits `on-hold` and is then cancelled by the Store Admin cancels its `on-hold` Suborders too. Before this was added the Suborders stayed `on-hold` (dokan-pro#6444). `wc-on-hold` still does not list `wc-refunded`.
 - **Processing orders do not go back.** `wc-processing` does not list `wc-pending` or `wc-on-hold`, so putting a paid parent back on hold does not move its Suborders.
 - **Completed orders only follow a refund.** A completed Suborder can still be moved to `refunded` by the parent, but not to `cancelled`, `failed` or `processing`.
 - **Unpaid Suborders follow a refund too.** A `pending` Suborder accepts any parent status, so setting the parent to `refunded` also moves `pending` Suborders to `refunded`, after which later parent status changes no longer reach them.
@@ -88,7 +88,7 @@ The whitelist and its filter were introduced together (`@since 3.12.2`, docblock
 
 ## Recommendations
 
-- Consider adding `wc-cancelled` (and possibly `wc-refunded`) to the `wc-on-hold` row; cancelling an unpaid bank-transfer Order is the most common case where the current list surprises admins.
+- Consider adding `wc-refunded` to the `wc-on-hold` row, as `wc-cancelled` already is.
 - Consider treating statuses that are not keys as "deny" for the *current* status of a final Suborder, so custom parent statuses cannot overwrite `cancelled` or `refunded` Suborders.
 - Add an order note on the parent when a Suborder is skipped, so the divergence is visible where the admin is looking.
 

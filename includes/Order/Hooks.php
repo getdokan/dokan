@@ -206,7 +206,7 @@ class Hooks {
         // Define the default whitelist of allowed status transitions
         $default_whitelist = [
             'wc-pending'    => [ 'any' ],
-            'wc-on-hold'    => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-completed', 'wc-failed' ],
+            'wc-on-hold'    => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-completed', 'wc-failed', 'wc-cancelled' ],
             'wc-processing' => [ 'wc-completed', 'wc-failed', 'wc-cancelled', 'wc-refunded' ],
             'wc-completed'  => [ 'wc-refunded' ],
             'wc-failed'     => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-failed', 'wc-cancelled' ],
