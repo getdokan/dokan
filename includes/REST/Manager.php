@@ -98,7 +98,7 @@ class Manager {
             'banner'    => $store->get_banner(),
         );
 
-        if ( VendorUtil::can_view_store_address( (int) $store->get_id() ) ) {
+        if ( VendorUtil::current_user_can_view_store_address( (int) $store->get_id() ) ) {
             $data['store']['address'] = $store->get_address();
         }
 

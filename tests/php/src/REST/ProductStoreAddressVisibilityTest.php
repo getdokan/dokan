@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test\REST;
 
 use WeDevs\Dokan\Test\DokanTestCase;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_REST_Response;
 
 /**
@@ -13,7 +14,7 @@ use WP_REST_Response;
  *
  * @covers \WeDevs\Dokan\REST\ProductController::prepare_data_for_response
  * @covers \WeDevs\Dokan\REST\Manager::prepare_product_response
- * @covers \WeDevs\Dokan\Utilities\VendorUtil::can_view_store_address
+ * @covers \WeDevs\Dokan\Utilities\VendorUtil::current_user_can_view_store_address
  */
 class ProductStoreAddressVisibilityTest extends DokanTestCase {
 
@@ -104,6 +105,15 @@ class ProductStoreAddressVisibilityTest extends DokanTestCase {
      * @return int
      */
     protected function get_caller_id( string $caller ): int {
+        if ( 'owner_staff' === $caller || 'other_staff' === $caller ) {
+            $staff_id = $this->factory()->user->create( [ 'role' => 'customer' ] );
+
+            ( new \WP_User( $staff_id ) )->add_cap( 'vendor_staff' );
+            update_user_meta( $staff_id, '_vendor_id', 'owner_staff' === $caller ? $this->seller_id1 : $this->seller_id2 );
+
+            return $staff_id;
+        }
+
         $ids = [
             'anonymous'     => 0,
             'customer'      => $this->customer_id,
@@ -122,9 +132,10 @@ class ProductStoreAddressVisibilityTest extends DokanTestCase {
      */
     public function other_caller_provider(): array {
         return [
-            'anonymous'    => [ 'anonymous' ],
-            'customer'     => [ 'customer' ],
-            'other vendor' => [ 'other_vendor' ],
+            'anonymous'          => [ 'anonymous' ],
+            'customer'           => [ 'customer' ],
+            'other vendor'       => [ 'other_vendor' ],
+            'other vendor staff' => [ 'other_staff' ],
         ];
     }
 
@@ -136,8 +147,18 @@ class ProductStoreAddressVisibilityTest extends DokanTestCase {
     public function owner_and_admin_provider(): array {
         return [
             'owner'         => [ 'owner' ],
+            'owner staff'   => [ 'owner_staff' ],
             'administrator' => [ 'administrator' ],
         ];
+    }
+
+    /**
+     * Every caller.
+     *
+     * @return array
+     */
+    public function all_caller_provider(): array {
+        return array_merge( $this->other_caller_provider(), $this->owner_and_admin_provider() );
     }
 
     /**
@@ -176,7 +197,7 @@ class ProductStoreAddressVisibilityTest extends DokanTestCase {
     }
 
     /**
-     * @dataProvider other_caller_provider
+     * @dataProvider all_caller_provider
      *
      * @param string $caller Caller label.
      *
@@ -190,5 +211,36 @@ class ProductStoreAddressVisibilityTest extends DokanTestCase {
         foreach ( $this->get_embedded_stores() as $label => $store ) {
             $this->assertSame( '1 Test Street', $store['address']['street_1'], "{$caller} on {$label}" );
         }
+    }
+
+    /**
+     * WooCommerce's own product route is readable by other vendors, so it follows the setting too.
+     *
+     * @return void
+     */
+    public function test_hidden_address_is_omitted_on_the_woocommerce_product_route(): void {
+        $this->hide_store_address( true );
+
+        wp_set_current_user( $this->seller_id2 );
+
+        $this->namespace = 'wc/v3';
+
+        $response = $this->get_request( "products/{$this->product_id}" );
+
+        $this->assertEquals( 200, $response->get_status() );
+        $this->assertArrayNotHasKey( 'address', $response->get_data()['store'] );
+    }
+
+    /**
+     * A product without a vendor does not make a logged-out visitor its owner.
+     *
+     * @return void
+     */
+    public function test_logged_out_visitor_never_matches_a_missing_vendor(): void {
+        $this->hide_store_address( true );
+
+        wp_set_current_user( 0 );
+
+        $this->assertFalse( VendorUtil::current_user_can_view_store_address( 0 ) );
     }
 }

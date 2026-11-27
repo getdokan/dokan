@@ -1129,7 +1129,7 @@ class ProductController extends DokanRESTController {
             'row_actions'           => $can_view_private ? dokan_product_get_row_action( $product->get_id(), false ) : [],
         ];
 
-        if ( VendorUtil::can_view_store_address( (int) $store->get_id() ) ) {
+        if ( VendorUtil::current_user_can_view_store_address( (int) $store->get_id() ) ) {
             $data['store']['address'] = $store->get_address();
         }
 

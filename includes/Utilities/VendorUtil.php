@@ -136,7 +136,7 @@ class VendorUtil {
     /**
      * Check whether the current user may see a vendor's store address.
      *
-     * A hidden store address stays visible only to the Store Admin and the Vendor.
+     * A hidden store address stays visible only to the Store Admin, the Vendor and their Vendor Staff.
      *
      * @since DOKAN_SINCE
      *
@@ -144,7 +144,7 @@ class VendorUtil {
      *
      * @return bool
      */
-    public static function can_view_store_address( int $vendor_id ): bool {
+    public static function current_user_can_view_store_address( int $vendor_id ): bool {
         if ( ! dokan_is_vendor_info_hidden( 'address' ) || current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
