@@ -4,6 +4,9 @@ import DokanVendorInfoPreview from './fields/DokanVendorInfoPreview';
 import DokanSingleProductPreview from './fields/DokanSingleProductPreview';
 import DokanDoubleInput from './fields/DokanDoubleInput';
 import DokanRepeaterField from './fields/DokanRepeaterField';
+import CJConnectionField from './fields/CJConnectionField';
+import CJBlockedCategoriesField from './fields/CJBlockedCategoriesField';
+import CJVendorTermsField from './fields/CJVendorTermsField';
 import DokanCombineInput from './fields/commission-fields/DokanCombineInput';
 import DokanCategoryBasedCommission from './fields/commission-fields/DokanCategoryBasedCommission';
 import DokanCommissionInheritanceSwitch from './fields/commission-fields/DokanCommissionInheritanceSwitch';
@@ -62,6 +65,33 @@ export function registerSettingsFields(): void {
         'dokan-lite/double-input',
         ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
             <DokanDoubleInput element={ element } />
+        )
+    );
+
+    // CJ Dropshipping: connect the marketplace CJ account.
+    addFilter(
+        'dokan_settings_cj_connection_field',
+        'dokan-lite/cj-connection',
+        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
+            <CJConnectionField element={ element } />
+        )
+    );
+
+    // CJ Dropshipping: categories vendors can't import from.
+    addFilter(
+        'dokan_settings_cj_blocked_categories_field',
+        'dokan-lite/cj-blocked-categories',
+        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
+            <CJBlockedCategoriesField element={ element } />
+        )
+    );
+
+    // CJ Dropshipping: what vendors confirm, one row per point.
+    addFilter(
+        'dokan_settings_cj_vendor_terms_field',
+        'dokan-lite/cj-vendor-terms',
+        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
+            <CJVendorTermsField element={ element } />
         )
     );
 

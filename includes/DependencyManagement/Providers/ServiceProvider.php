@@ -73,6 +73,7 @@ class ServiceProvider extends BootableServiceProvider {
 		$this->getContainer()->addServiceProvider( new CaptchaServiceProvider() );
 		$this->getContainer()->addServiceProvider( new BlocksServiceProvider() );
 		$this->getContainer()->addServiceProvider( new CliServiceProvider() );
+		$this->getContainer()->addServiceProvider( new CJDropshippingServiceProvider() );
 	}
 
     /**
