@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.3.7\n"
+"Project-Id-Version: Dokan 5.3.8\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-26T09:04:15+00:00\n"
+"POT-Creation-Date: 2026-11-27T05:53:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -312,14 +312,14 @@ msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
 #: includes/Abstracts/DokanRESTController.php:109
-#: includes/REST/ProductController.php:1224
+#: includes/REST/ProductController.php:1228
 msgid "To manipulate product variations you should use the /products/&lt;product_id&gt;/variations/&lt;id&gt; endpoint."
 msgstr ""
 
 #: includes/Abstracts/DokanRESTController.php:111
 #: includes/REST/OrderController.php:238
-#: includes/REST/ProductController.php:430
-#: includes/REST/ProductController.php:455
+#: includes/REST/ProductController.php:431
+#: includes/REST/ProductController.php:456
 msgid "Invalid ID."
 msgstr ""
 
@@ -7614,7 +7614,7 @@ msgstr ""
 
 #: includes/ProductEditor/FormSchema.php:795
 #: includes/REST/DummyDataController.php:444
-#: includes/REST/ProductController.php:2283
+#: includes/REST/ProductController.php:2287
 msgid "Controls whether or not the product is listed as \"in stock\" or \"out of stock\" on the frontend."
 msgstr ""
 
@@ -8404,403 +8404,403 @@ msgstr ""
 
 #: includes/REST/DummyDataController.php:181
 #: includes/REST/OrderController.php:926
-#: includes/REST/ProductController.php:2050
+#: includes/REST/ProductController.php:2054
 #: includes/REST/VendorProductCategoriesController.php:58
 msgid "Unique identifier for the resource."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:187
 #: includes/REST/OrderController.php:1282
-#: includes/REST/ProductController.php:2056
+#: includes/REST/ProductController.php:2060
 msgid "Product name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:193
-#: includes/REST/ProductController.php:2061
+#: includes/REST/ProductController.php:2065
 msgid "Product slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:199
-#: includes/REST/ProductController.php:2066
+#: includes/REST/ProductController.php:2070
 msgid "Product URL."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:207
-#: includes/REST/ProductController.php:2073
+#: includes/REST/ProductController.php:2077
 msgid "The date the product was created, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:214
-#: includes/REST/ProductController.php:2079
+#: includes/REST/ProductController.php:2083
 msgid "The date the product was created, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:221
-#: includes/REST/ProductController.php:2085
+#: includes/REST/ProductController.php:2089
 msgid "The date the product was last modified, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:228
-#: includes/REST/ProductController.php:2091
+#: includes/REST/ProductController.php:2095
 msgid "The date the product was last modified, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:235
-#: includes/REST/ProductController.php:2097
+#: includes/REST/ProductController.php:2101
 msgid "Product type."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:244
-#: includes/REST/ProductController.php:2104
+#: includes/REST/ProductController.php:2108
 msgid "Product status (post status)."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:253
-#: includes/REST/ProductController.php:2111
+#: includes/REST/ProductController.php:2115
 msgid "Featured product."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:259
-#: includes/REST/ProductController.php:2117
+#: includes/REST/ProductController.php:2121
 msgid "Catalog visibility."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:267
-#: includes/REST/ProductController.php:2124
+#: includes/REST/ProductController.php:2128
 msgid "Product description."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:273
-#: includes/REST/ProductController.php:2129
+#: includes/REST/ProductController.php:2133
 msgid "Product short description."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:279
-#: includes/REST/ProductController.php:2134
+#: includes/REST/ProductController.php:2138
 msgid "Unique identifier."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:285
-#: includes/REST/ProductController.php:2139
+#: includes/REST/ProductController.php:2143
 msgid "Current product price."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:291
-#: includes/REST/ProductController.php:2145
+#: includes/REST/ProductController.php:2149
 msgid "Product regular price."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:297
-#: includes/REST/ProductController.php:2150
+#: includes/REST/ProductController.php:2154
 msgid "Product sale price."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:304
-#: includes/REST/ProductController.php:2155
+#: includes/REST/ProductController.php:2159
 msgid "Start date of sale price, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:310
-#: includes/REST/ProductController.php:2160
+#: includes/REST/ProductController.php:2164
 msgid "Start date of sale price, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:316
-#: includes/REST/ProductController.php:2165
+#: includes/REST/ProductController.php:2169
 msgid "End date of sale price, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:322
-#: includes/REST/ProductController.php:2170
+#: includes/REST/ProductController.php:2174
 msgid "End date of sale price, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:328
-#: includes/REST/ProductController.php:2181
+#: includes/REST/ProductController.php:2185
 msgid "Shows if the product is on sale."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:334
-#: includes/REST/ProductController.php:2187
+#: includes/REST/ProductController.php:2191
 msgid "Shows if the product can be bought."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:340
-#: includes/REST/ProductController.php:2193
+#: includes/REST/ProductController.php:2197
 msgid "Amount of sales."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:347
-#: includes/REST/ProductController.php:2199
+#: includes/REST/ProductController.php:2203
 msgid "If the product is virtual."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:354
-#: includes/REST/ProductController.php:2205
+#: includes/REST/ProductController.php:2209
 msgid "If the product is downloadable."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:361
-#: includes/REST/ProductController.php:2211
+#: includes/REST/ProductController.php:2215
 msgid "List of downloadable files."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:368
-#: includes/REST/ProductController.php:2218
+#: includes/REST/ProductController.php:2222
 msgid "File MD5 hash."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:375
-#: includes/REST/ProductController.php:2224
+#: includes/REST/ProductController.php:2228
 msgid "File name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:381
-#: includes/REST/ProductController.php:2229
+#: includes/REST/ProductController.php:2233
 msgid "File URL."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:390
-#: includes/REST/ProductController.php:2237
+#: includes/REST/ProductController.php:2241
 msgid "Number of times downloadable files can be downloaded after purchase."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:397
-#: includes/REST/ProductController.php:2243
+#: includes/REST/ProductController.php:2247
 msgid "Number of days until access to downloadable files expires."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:404
-#: includes/REST/ProductController.php:2249
+#: includes/REST/ProductController.php:2253
 msgid "Product external URL. Only for external products."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:411
-#: includes/REST/ProductController.php:2255
+#: includes/REST/ProductController.php:2259
 msgid "Product external button text. Only for external products."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:417
-#: includes/REST/ProductController.php:2260
+#: includes/REST/ProductController.php:2264
 msgid "Tax status."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:425
-#: includes/REST/ProductController.php:2267
+#: includes/REST/ProductController.php:2271
 msgid "Tax class."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:431
-#: includes/REST/ProductController.php:2272
+#: includes/REST/ProductController.php:2276
 msgid "Stock management at product level."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:437
-#: includes/REST/ProductController.php:2278
+#: includes/REST/ProductController.php:2282
 msgid "Stock quantity."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:450
-#: includes/REST/ProductController.php:2289
+#: includes/REST/ProductController.php:2293
 msgid "If managing stock, this controls if backorders are allowed."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:457
-#: includes/REST/ProductController.php:2296
+#: includes/REST/ProductController.php:2300
 msgid "Shows if backorders are allowed."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:463
-#: includes/REST/ProductController.php:2302
+#: includes/REST/ProductController.php:2306
 msgid "Shows if the product is on backordered."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:469
-#: includes/REST/ProductController.php:2308
+#: includes/REST/ProductController.php:2312
 msgid "Allow one item to be bought in a single order."
 msgstr ""
 
 #. translators: %s: weight unit
 #: includes/REST/DummyDataController.php:477
-#: includes/REST/ProductController.php:2315
+#: includes/REST/ProductController.php:2319
 msgid "Product weight (%s)."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:483
-#: includes/REST/ProductController.php:2320
+#: includes/REST/ProductController.php:2324
 msgid "Product dimensions."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:489
-#: includes/REST/ProductController.php:2326
+#: includes/REST/ProductController.php:2330
 msgid "Product length (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:496
-#: includes/REST/ProductController.php:2332
+#: includes/REST/ProductController.php:2336
 msgid "Product width (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:503
-#: includes/REST/ProductController.php:2338
+#: includes/REST/ProductController.php:2342
 msgid "Product height (%s)."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:511
-#: includes/REST/ProductController.php:2345
+#: includes/REST/ProductController.php:2349
 msgid "Shows if the product need to be shipped."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:517
-#: includes/REST/ProductController.php:2351
+#: includes/REST/ProductController.php:2355
 msgid "Shows whether or not the product shipping is taxable."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:523
-#: includes/REST/ProductController.php:2357
+#: includes/REST/ProductController.php:2361
 msgid "Shipping class slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:529
-#: includes/REST/ProductController.php:2362
+#: includes/REST/ProductController.php:2366
 msgid "Shipping class ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:536
-#: includes/REST/ProductController.php:2368
+#: includes/REST/ProductController.php:2372
 msgid "Allow reviews."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:542
-#: includes/REST/ProductController.php:2374
+#: includes/REST/ProductController.php:2378
 msgid "Reviews average rating."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:549
-#: includes/REST/ProductController.php:2380
+#: includes/REST/ProductController.php:2384
 msgid "Amount of reviews that the product have."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:556
-#: includes/REST/ProductController.php:2386
+#: includes/REST/ProductController.php:2390
 msgid "List of related products IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:565
-#: includes/REST/ProductController.php:2395
+#: includes/REST/ProductController.php:2399
 msgid "List of up-sell products IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:573
-#: includes/REST/ProductController.php:2403
+#: includes/REST/ProductController.php:2407
 msgid "List of cross-sell products IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:581
-#: includes/REST/ProductController.php:2411
+#: includes/REST/ProductController.php:2415
 msgid "Product parent ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:588
-#: includes/REST/ProductController.php:2416
+#: includes/REST/ProductController.php:2420
 msgid "Optional note to send the customer after purchase."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:594
-#: includes/REST/ProductController.php:2421
+#: includes/REST/ProductController.php:2425
 msgid "List of categories."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:601
-#: includes/REST/ProductController.php:2428
+#: includes/REST/ProductController.php:2432
 msgid "Category ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:607
-#: includes/REST/ProductController.php:2433
+#: includes/REST/ProductController.php:2437
 msgid "Category name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:614
-#: includes/REST/ProductController.php:2439
+#: includes/REST/ProductController.php:2443
 msgid "Category slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:624
-#: includes/REST/ProductController.php:2448
+#: includes/REST/ProductController.php:2452
 msgid "List of tags."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:631
-#: includes/REST/ProductController.php:2455
+#: includes/REST/ProductController.php:2459
 msgid "Tag ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:637
-#: includes/REST/ProductController.php:2460
+#: includes/REST/ProductController.php:2464
 msgid "Tag name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:644
-#: includes/REST/ProductController.php:2466
+#: includes/REST/ProductController.php:2470
 msgid "Tag slug."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:654
-#: includes/REST/ProductController.php:2475
+#: includes/REST/ProductController.php:2479
 msgid "List of images."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:661
-#: includes/REST/ProductController.php:2482
+#: includes/REST/ProductController.php:2486
 msgid "Image ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:667
-#: includes/REST/ProductController.php:2487
+#: includes/REST/ProductController.php:2491
 msgid "The date the image was created, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:675
-#: includes/REST/ProductController.php:2493
+#: includes/REST/ProductController.php:2497
 msgid "The date the image was created, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:683
-#: includes/REST/ProductController.php:2499
+#: includes/REST/ProductController.php:2503
 msgid "The date the image was last modified, in the site's timezone."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:691
-#: includes/REST/ProductController.php:2505
+#: includes/REST/ProductController.php:2509
 msgid "The date the image was last modified, as GMT."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:699
-#: includes/REST/ProductController.php:2511
+#: includes/REST/ProductController.php:2515
 msgid "Image URL."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:706
-#: includes/REST/ProductController.php:2517
+#: includes/REST/ProductController.php:2521
 msgid "Image name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:712
-#: includes/REST/ProductController.php:2522
+#: includes/REST/ProductController.php:2526
 msgid "Image alternative text."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:718
-#: includes/REST/ProductController.php:2527
+#: includes/REST/ProductController.php:2531
 msgid "Image position. 0 means that the image is featured."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:728
-#: includes/REST/ProductController.php:2535
+#: includes/REST/ProductController.php:2539
 msgid "List of attributes."
 msgstr ""
 
@@ -8808,61 +8808,61 @@ msgstr ""
 #: includes/REST/DummyDataController.php:785
 #: includes/REST/ProductAttributeController.php:77
 #: includes/REST/ProductAttributeController.php:103
-#: includes/REST/ProductController.php:2542
-#: includes/REST/ProductController.php:2587
+#: includes/REST/ProductController.php:2546
+#: includes/REST/ProductController.php:2591
 msgid "Attribute ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:741
 #: includes/REST/DummyDataController.php:791
 #: includes/REST/ProductAttributeController.php:265
-#: includes/REST/ProductController.php:2547
-#: includes/REST/ProductController.php:2592
+#: includes/REST/ProductController.php:2551
+#: includes/REST/ProductController.php:2596
 msgid "Attribute name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:747
-#: includes/REST/ProductController.php:2552
+#: includes/REST/ProductController.php:2556
 msgid "Attribute position."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:754
-#: includes/REST/ProductController.php:2557
+#: includes/REST/ProductController.php:2561
 msgid "Define if the attribute is visible on the \"Additional information\" tab in the product's page."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:760
-#: includes/REST/ProductController.php:2563
+#: includes/REST/ProductController.php:2567
 msgid "Define if the attribute can be used as variation."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:766
-#: includes/REST/ProductController.php:2569
+#: includes/REST/ProductController.php:2573
 msgid "List of available term names of the attribute."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:778
-#: includes/REST/ProductController.php:2580
+#: includes/REST/ProductController.php:2584
 msgid "Defaults variation attributes."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:797
-#: includes/REST/ProductController.php:2597
+#: includes/REST/ProductController.php:2601
 msgid "Selected attribute term name."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:806
-#: includes/REST/ProductController.php:2605
+#: includes/REST/ProductController.php:2609
 msgid "List of variations IDs."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:816
-#: includes/REST/ProductController.php:2614
+#: includes/REST/ProductController.php:2618
 msgid "List of grouped products ID."
 msgstr ""
 
 #: includes/REST/DummyDataController.php:825
-#: includes/REST/ProductController.php:2622
+#: includes/REST/ProductController.php:2626
 msgid "Menu order, used to custom sort products."
 msgstr ""
 
@@ -8873,7 +8873,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1532
 #: includes/REST/OrderController.php:1630
 #: includes/REST/OrderController.php:1688
-#: includes/REST/ProductController.php:2627
+#: includes/REST/ProductController.php:2631
 msgid "Meta data."
 msgstr ""
 
@@ -8884,7 +8884,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1539
 #: includes/REST/OrderController.php:1637
 #: includes/REST/OrderController.php:1695
-#: includes/REST/ProductController.php:2634
+#: includes/REST/ProductController.php:2638
 msgid "Meta ID."
 msgstr ""
 
@@ -8895,7 +8895,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1545
 #: includes/REST/OrderController.php:1643
 #: includes/REST/OrderController.php:1701
-#: includes/REST/ProductController.php:2640
+#: includes/REST/ProductController.php:2644
 msgid "Meta key."
 msgstr ""
 
@@ -8906,7 +8906,7 @@ msgstr ""
 #: includes/REST/OrderController.php:1550
 #: includes/REST/OrderController.php:1648
 #: includes/REST/OrderController.php:1706
-#: includes/REST/ProductController.php:2645
+#: includes/REST/ProductController.php:2649
 msgid "Meta value."
 msgstr ""
 
@@ -9002,9 +9002,9 @@ msgstr ""
 #: includes/REST/OrderController.php:121
 #: includes/REST/OrderController.php:152
 #: includes/REST/ProductBlockController.php:42
-#: includes/REST/ProductController.php:153
-#: includes/REST/ProductController.php:177
-#: includes/REST/ProductController.php:223
+#: includes/REST/ProductController.php:154
+#: includes/REST/ProductController.php:178
+#: includes/REST/ProductController.php:224
 #: includes/REST/ProductControllerV3.php:264
 #: includes/REST/StoreController.php:65
 #: includes/REST/StoreController.php:101
@@ -9030,14 +9030,14 @@ msgid "Invalid Order ID."
 msgstr ""
 
 #: includes/REST/OrderController.php:232
-#: includes/REST/ProductController.php:380
-#: includes/REST/ProductController.php:424
+#: includes/REST/ProductController.php:381
+#: includes/REST/ProductController.php:425
 msgid "No seller found"
 msgstr ""
 
 #: includes/REST/OrderController.php:244
-#: includes/REST/ProductController.php:436
-#: includes/REST/ProductController.php:461
+#: includes/REST/ProductController.php:437
+#: includes/REST/ProductController.php:462
 msgid "Sorry, you have no permission to do this. Since it's not your product."
 msgstr ""
 
@@ -9068,7 +9068,7 @@ msgstr ""
 
 #. translators: 1) %s: post type name
 #: includes/REST/OrderController.php:648
-#: includes/REST/ProductController.php:389
+#: includes/REST/ProductController.php:390
 msgid "Cannot create existing %s."
 msgstr ""
 
@@ -9618,83 +9618,83 @@ msgstr ""
 msgid "The resource cannot be deleted."
 msgstr ""
 
-#: includes/REST/ProductController.php:132
+#: includes/REST/ProductController.php:133
 msgid "If truthy value then only downloadable products will be returned"
 msgstr ""
 
-#: includes/REST/ProductController.php:201
+#: includes/REST/ProductController.php:202
 msgid "Whether to bypass trash and force deletion."
 msgstr ""
 
-#: includes/REST/ProductController.php:228
-#: includes/REST/ProductController.php:245
-#: includes/REST/ProductController.php:271
-#: includes/REST/ProductController.php:297
-#: includes/REST/ProductController.php:323
+#: includes/REST/ProductController.php:229
+#: includes/REST/ProductController.php:246
+#: includes/REST/ProductController.php:272
+#: includes/REST/ProductController.php:298
+#: includes/REST/ProductController.php:324
 msgid "Number of product you want to get top rated product"
 msgstr ""
 
-#: includes/REST/ProductController.php:250
-#: includes/REST/ProductController.php:276
-#: includes/REST/ProductController.php:302
-#: includes/REST/ProductController.php:328
+#: includes/REST/ProductController.php:251
+#: includes/REST/ProductController.php:277
+#: includes/REST/ProductController.php:303
+#: includes/REST/ProductController.php:329
 msgid "Number of page number"
 msgstr ""
 
-#: includes/REST/ProductController.php:255
-#: includes/REST/ProductController.php:281
-#: includes/REST/ProductController.php:307
-#: includes/REST/ProductController.php:333
+#: includes/REST/ProductController.php:256
+#: includes/REST/ProductController.php:282
+#: includes/REST/ProductController.php:308
+#: includes/REST/ProductController.php:334
 msgid "Top rated product for specific vendor"
 msgstr ""
 
-#: includes/REST/ProductController.php:384
+#: includes/REST/ProductController.php:385
 msgid "Error! Your account is not enabled for selling, please contact the admin"
 msgstr ""
 
-#: includes/REST/ProductController.php:393
+#: includes/REST/ProductController.php:394
 msgid "Product title must be required"
 msgstr ""
 
-#: includes/REST/ProductController.php:399
+#: includes/REST/ProductController.php:400
 msgid "Category must be required"
 msgstr ""
 
-#: includes/REST/ProductController.php:404
+#: includes/REST/ProductController.php:405
 msgid "You can not select more than category"
 msgstr ""
 
-#: includes/REST/ProductController.php:512
+#: includes/REST/ProductController.php:513
 msgid "Sorry, you are not allowed to view this product."
 msgstr ""
 
-#: includes/REST/ProductController.php:628
+#: includes/REST/ProductController.php:629
 msgid "Product type slugs to exclude from the vendor listing (e.g. booking)."
 msgstr ""
 
-#: includes/REST/ProductController.php:1647
-#: includes/REST/ProductController.php:1648
+#: includes/REST/ProductController.php:1651
+#: includes/REST/ProductController.php:1652
 msgid "Placeholder"
 msgstr ""
 
 #. translators: %s: attachment id
-#: includes/REST/ProductController.php:1865
+#: includes/REST/ProductController.php:1869
 msgid "#%s is an invalid image ID."
 msgstr ""
 
-#: includes/REST/ProductController.php:2175
+#: includes/REST/ProductController.php:2179
 msgid "Price formatted in HTML."
 msgstr ""
 
-#: includes/REST/ProductController.php:2653
+#: includes/REST/ProductController.php:2657
 msgid "Minimum price for variable product, null for other product types."
 msgstr ""
 
-#: includes/REST/ProductController.php:2659
+#: includes/REST/ProductController.php:2663
 msgid "Maximum price for variable product, null for other product types."
 msgstr ""
 
-#: includes/REST/ProductController.php:2665
+#: includes/REST/ProductController.php:2669
 msgid "Product edit URL."
 msgstr ""
 

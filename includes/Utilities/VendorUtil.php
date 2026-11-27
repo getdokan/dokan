@@ -138,7 +138,7 @@ class VendorUtil {
      *
      * A hidden store address stays visible only to the Store Admin, the Vendor and their Vendor Staff.
      *
-     * @since DOKAN_SINCE
+     * @since 5.3.8
      *
      * @param int $vendor_id Vendor ID.
      *
