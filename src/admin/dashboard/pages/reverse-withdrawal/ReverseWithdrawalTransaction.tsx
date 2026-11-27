@@ -155,12 +155,14 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
     ];
 
     const fetchStore = useCallback( async () => {
-        if ( ! vendorId ) {
+        // Guard the route id to a positive integer so it can't inject query args onto the nonce-bearing REST path (CSRF, dokan-pro#6452).
+        const storeId = Number( vendorId );
+        if ( ! Number.isInteger( storeId ) || storeId <= 0 ) {
             return;
         }
         try {
             const response = await apiFetch( {
-                path: `dokan/v1/stores/${ vendorId }`,
+                path: `dokan/v1/stores/${ storeId }`,
             } );
             setStore( response );
         } catch {

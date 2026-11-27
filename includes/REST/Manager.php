@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WC_Data;
+use WeDevs\Dokan\Utilities\VendorUtil;
 
 /**
  * API_Registrar class
@@ -93,10 +94,13 @@ class Manager {
             'name'      => $store->get_name(),
             'shop_name' => $store->get_shop_name(),
             'url'       => $store->get_shop_url(),
-            'address'   => $store->get_address(),
             'avatar'    => $store->get_avatar(),
             'banner'    => $store->get_banner(),
         );
+
+        if ( VendorUtil::current_user_can_view_store_address( (int) $store->get_id() ) ) {
+            $data['store']['address'] = $store->get_address();
+        }
 
         $response->set_data( $data );
         return $response;

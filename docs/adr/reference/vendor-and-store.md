@@ -405,7 +405,7 @@ Settings are read with `dokan_get_option( $key, $section )` (`lite:includes/func
 | `disable_welcome_wizard` (`dokan_selling`) | `off` | Wizard redirect |
 | `show_register_as_vendor` (`dokan_appearance`) | `on` | Registration role allow-list and role selector |
 | `enable_theme_store_sidebar` (`dokan_appearance`) | `off` | `dokan_store_theme_sidebar_enabled()` (`lite:includes/store-functions.php::dokan_store_theme_sidebar_enabled()`) |
-| `store_header_template`, `hide_vendor_info[email/phone/address]`, `store_products[hide_product_filter]`, `store_map`, `contact_seller`, `store_open_close`, `store_list_sort_by` (`dokan_appearance`) | | Store templates, widgets, `StoreListsFilter`; editable in the Customizer |
+| `store_header_template`, `hide_vendor_info[email/phone/address]`, `store_products[hide_product_filter]`, `store_map`, `contact_seller`, `store_open_close`, `store_list_sort_by` (`dokan_appearance`) | | Store templates, widgets, `StoreListsFilter`; editable in the Customizer. `hide_vendor_info` also applies to the store and product REST responses |
 | `dashboard`, `store_listing`, `my_orders`, `vendor_onboarding` (`dokan_pages`) | created on install | Page IDs created by `Installer::setup_pages` |
 | `dokan_pages_created` | `true` after install | Prevents re-creating pages |
 | `dokan_rewrite_rules_needs_flashing` | `yes` until first flush | `Rewrites::maybe_flash_rewrite_rules` |

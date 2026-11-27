@@ -1,3 +1,8 @@
+### v5.3.8 ( Nov 27, 2026 ) ###
+
+- **fix:** Prevented crafted links to the vendor edit and reverse withdrawal store pages in the Dokan admin from sending requests on the admin's behalf.
+- **fix:** Prevented product REST responses from showing a vendor's store address to customers, guests and other vendors when the admin hides store addresses in the Vendor Info Visibility setting.
+
 ### v5.3.7 ( Nov 26, 2026 ) ###
 
 - **new:** Added Gutenberg blocks and patterns for the store listing and single store pages, so block themes can lay them out in the Site Editor.

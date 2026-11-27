@@ -7,7 +7,7 @@ Tested up to: 7.1
 WC requires at least: 8.5.0
 WC tested up to: 11.0.1
 Requires PHP: 7.4
-Stable tag: 5.3.7
+Stable tag: 5.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -379,6 +379,10 @@ A. Please report security bugs found in the source code of the plugin through th
 
 == Changelog ==
 
+= v5.3.8 ( Nov 27, 2026 ) =
+- **fix:** Prevented crafted links to the vendor edit and reverse withdrawal store pages in the Dokan admin from sending requests on the admin's behalf.
+- **fix:** Prevented product REST responses from showing a vendor's store address to customers, guests and other vendors when the admin hides store addresses in the Vendor Info Visibility setting.
+
 = v5.3.7 ( Nov 26, 2026 ) =
 - **new:** Added Gutenberg blocks and patterns for the store listing and single store pages, so block themes can lay them out in the Site Editor.
 - **update:** On block themes, the single store page now uses Dokan's new block template, unless the theme provides its own store page template.
@@ -412,15 +416,5 @@ A. Please report security bugs found in the source code of the plugin through th
 - **fix:** The Reverse Withdrawal Invoice email now works in the WooCommerce email preview and test email instead of showing an error.
 - **fix:** Vendor dashboard reports no longer show "Something went wrong" after an update because a browser or CDN served outdated files.
 - **fix:** The commission settings now name the empty field and explain that 0 is allowed when a commission amount is missing.
-
-= v5.3.3 ( Oct 30, 2026 ) =
-- **fix:** Prevented guests from viewing multi-vendor parent orders, along with their notes and downloads, through the orders REST endpoint.
-- **fix:** Prevented public product REST endpoints from exposing vendor-only data such as download file links, vendor earnings, purchase notes, and private product details.
-- **fix:** The store contact form now sends email from the store's own address and uses the visitor's email only for replies, so it can no longer be used to spoof the sender or add extra recipients.
-- **fix:** Prevented subsite admins on a multisite network from changing the selling status of vendors who belong to other sites.
-- **fix:** Reverse withdrawal payments can no longer be discounted with coupons, and the vendor's balance is now credited only with the amount actually paid.
-- **fix:** Products created through the vendor products API now respect the vendor's selling status and are held for review when the vendor isn't allowed to publish directly.
-- **fix:** Vendor dashboard menus switched off by the admin now stay hidden in the collapsed sidebar and can no longer be opened from a direct link.
-- **fix:** A vendor's social profile links on the store page are now hidden when the Social Profile menu is switched off in the Dashboard Menu Manager.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

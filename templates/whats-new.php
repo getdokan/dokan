@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.3.8',
+        'released' => '2026-11-27',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevented crafted links to the vendor edit and reverse withdrawal store pages in the Dokan admin from sending requests on the admin\'s behalf.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented product REST responses from showing a vendor\'s store address to customers, guests and other vendors when the admin hides store addresses in the Vendor Info Visibility setting.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.3.7',
         'released' => '2026-11-26',
         'changes'  => [

@@ -8,7 +8,6 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { applyFilters } from '@wordpress/hooks';
 import { ChevronLeft, Hand } from 'lucide-react';
-import { addQueryArgs } from '@wordpress/url';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
 import { isEqual } from 'lodash';
 import {
@@ -111,11 +110,17 @@ function Edit( props ) {
     };
 
     useEffect( () => {
+        // Only use the route id as a positive-integer store id so it can't inject query args onto the nonce-bearing REST path (CSRF, dokan-pro#6452).
+        const vendorId = Number( id );
+        if ( ! Number.isInteger( vendorId ) || vendorId <= 0 ) {
+            return;
+        }
+
         setCreateOrEditVendor( {} as Vendor );
         setCreateOrEditVendorErrors( [] );
 
         apiFetch( {
-            path: addQueryArgs( `dokan/v1/stores/${ id }`, {} ),
+            path: `dokan/v1/stores/${ vendorId }`,
         } ).then( async ( response: Vendor ) => {
             await setCreateOrEditVendor( response );
             setOriginalVendor( response );
