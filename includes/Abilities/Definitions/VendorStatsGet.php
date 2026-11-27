@@ -35,8 +35,8 @@ class VendorStatsGet extends AbstractVendorAbility {
             'description'         => __( 'Get the current vendor\'s available balance and withdrawal summary.', 'dokan-lite' ),
             'category'            => 'dokan',
             'input_schema'        => [
+                // No `properties` key: an empty PHP array encodes as `[]`, which MCP clients reject.
                 'type'                 => 'object',
-                'properties'           => [],
                 'additionalProperties' => false,
                 // Allows the ability to be invoked with no arguments: the Abilities API normalizes a
                 // null input to this default before schema validation (see WP_Ability::normalize_input()).
